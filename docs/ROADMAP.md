@@ -37,6 +37,8 @@ A single macOS screen that proves the magic, end to end:
 - Own-GRIB weather (GFS / GFS-Wave / RTOFS) composited and offline-cached.
 - Depth-on-satellite.
 - Mandatory "supplemental, not for primary nav" disclaimer on satellite.
+- **Places overlay** — OpenStreetMap/Overpass + OpenSeaMap pulled by bbox, cached offline,
+  rendered as a symbol layer (anchorages/marinas/fuel/services).
 
 ## Phase 2 — True ENC + owned routing + anchor watch + PredictWind import
 
@@ -48,6 +50,8 @@ A single macOS screen that proves the magic, end to end:
 - Tides/currents harmonics + dashboard instruments.
 - **PredictWind import** (Track A) — client-side GPX/GRIB import via file picker + iOS
   `.gpx`/`.grb` share-sheet handlers, kept device-local and out of cloud sync.
+- **NoForeignLand push** + Helm user pins/reviews (own backend); optional personal-use NFL
+  pull behind an experimental flag. See [integrations/noforeignland.md](integrations/noforeignland.md).
 
 ## Phase 3 — Licensed premium charts + (conditional) Windy + plugins
 

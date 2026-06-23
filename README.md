@@ -42,6 +42,8 @@ and the research behind it — **no application code yet.** The first milestone 
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
+| [docs/COMPETITIVE.md](docs/COMPETITIVE.md) | Market landscape + where Helm wins |
+| [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
 | [docs/LEGAL.md](docs/LEGAL.md) | Source licensing tiers — **read before touching a tile** |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Phases 0–3 |
 | [docs/decisions/](docs/decisions/) | Architecture decision records (ADRs) |

@@ -109,6 +109,10 @@ currently split between Navionics/Aqua Map (charts) and Windy/PredictWind (weath
 - **PredictWind route import** — import an exported GPX route/GRIB, overlaid distinctly,
   kept device-local.
 - **Helm weather routing** — own isochrone router on GRIB + boat polars (Phase 2).
+- **Places overlay** — anchorages/marinas/fuel/services from open data
+  (OpenStreetMap/Overpass + OpenSeaMap), cached offline, plus Helm user pins.
+  ([integration scope](docs/integrations/noforeignland.md))
+- **NoForeignLand push** — mirror your track to NFL via your own NFL boat API key.
 - **Command palette (⌘K)** — go to port/waypoint/chart/layer.
 
 ## 7. The "one screen" layer model
@@ -219,6 +223,9 @@ Full detail: [docs/ROADMAP.md](docs/ROADMAP.md).
 - **PredictWind GPX** may carry waypoints only (losing per-leg ETA/wind metadata).
 - **Anchor-watch background location** is the likeliest App Store review friction point.
 - **Satellite/SDB liability** even with disclaimers — keep SDB shading conservative.
+- **Community data is walled** — NoForeignLand / SeaPeople / ActiveCaptain have no usable
+  read API; the Places overlay leans on open OSM/OpenSeaMap, with NFL push-only + pull only
+  via partnership or a personal-use flag ([ADR-0005](docs/decisions/0005-community-places-overlay.md)).
 
 ## 15. Success criteria
 
