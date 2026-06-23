@@ -285,11 +285,11 @@
 
 <!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
 <div class="ib glass">
+  <div class="it"><div class="l">Wind Speed</div><div class="v"><span id="nv-wind">14</span><span class="u"> kt</span></div></div>
   <div class="it"><div class="l">SOG</div><div class="v"><span id="nv-sog">6.2</span><span class="u"> kn</span></div></div>
+  <div class="it"><div class="l">Wind Dir</div><div class="v"><span id="nv-winddir">95</span><span class="u">°</span></div></div>
   <div class="it"><div class="l">COG</div><div class="v"><span id="nv-cog">316</span><span class="u">°</span></div></div>
-  <div class="it"><div class="l">HDG</div><div class="v"><span id="nv-hdg">319</span><span class="u">°</span></div></div>
   <div class="it"><div class="l">Depth</div><div class="v"><span id="nv-depth">8.4</span><span class="u"> m</span></div></div>
-  <div class="it"><div class="l">Wind</div><div class="v"><span id="nv-wind">14</span><span class="u"> kt</span></div></div>
   <div class="it wide">
     <div><div class="l">Position</div><div class="v2" id="nv-pos">17°29.4′S · 149°49.6′W</div></div>
     <div class="r"><div class="l">Next</div><div class="v2" id="nv-next">R "4" · 0.3 NM</div></div>
@@ -510,6 +510,7 @@
     function applyNav(s) {
       set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
       set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
+      set('nv-winddir', Math.round(s.wind.dir));
       set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
       set('nv-eta', s.active.eta); set('nv-ttg', s.active.ttg); set('nv-vmg', s.active.vmg);
       set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
@@ -517,7 +518,7 @@
       const src = s.sources;
       const mark = (id, key) => { const e = document.getElementById(id); if (e && src) e.title = key.toUpperCase() + ' source: ' + src[key]; };
       mark('nv-pos', 'pos'); mark('nv-sog', 'sog'); mark('nv-cog', 'cog');
-      mark('nv-hdg', 'hdg'); mark('nv-depth', 'depth'); mark('nv-wind', 'wind');
+      mark('nv-depth', 'depth'); mark('nv-wind', 'wind'); mark('nv-winddir', 'wind');
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       try {
