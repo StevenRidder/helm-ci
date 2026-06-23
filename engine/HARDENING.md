@@ -88,11 +88,17 @@ drops `senc_manager.cpp.o`'s `U top_frame::Get()`; then **delete `HeadlessTopFra
 the `top_frame::Get()` definition, and its instantiation** from `chart_stubs.cpp` (478→368 lines). **Verified:**
 `nm` shows zero `top_frame`/`AbstractTopFrame` symbols in `libhelm-chartrender.a`, `helm-tiles`, and
 `chart-spike` (no `U`, no `T`, no vtable/typeinfo); both binaries link clean; and **all 91 z13/z15 content
-tiles render byte-identical** to the pre-change baseline (warm-vs-warm, deterministic). Removing the abort
+tiles render byte-identical** to the pre-change baseline (warm-vs-warm, same build). Removing the abort
 tripwire is net-safer here: re-enabling the `#else` arm would now be a loud *link* failure, not a runtime
-abort. *(Observed, pre-existing + orthogonal: the very first tile rendered on a fresh process differs from
-steady state, then converges to the identical bytes on re-request — a one-time render warmup, not a seam
-change. Tracked separately: add a startup warmup render so the first served tile is deterministic.)*
+abort. *(Correction, established later: the S-52 renderer is **per-process non-deterministic** — across
+fresh processes ~30/112 z13/z15 tiles flip between stable "attractor" values (ASLR / address-ordered
+iteration in the s52plib render path), though each process is internally consistent. So this byte-identical
+evidence holds within a build but is attractor-dependent across relinks — it is corroboration, not the
+proof; the seam's correctness rests on the logical argument above (the removed code was never on the render
+path). An earlier note here proposed a "startup warmup render"; that was a **misdiagnosis** — a same-process
+warmup cannot touch cross-process variance and was measured equally non-deterministic on/off. The real fix
+is a stable render-path object order (`std::stable_sort` / a stable tiebreak key on display-priority +
+SENC index/RCID), tracked as separate render-determinism hardening.)*
 
 **Next:** vendor OpenCPN as a maintained patch series (`patches/0001`, `0002`, …) rather than building
 against a mutable clone — the remaining Step-6 work.
