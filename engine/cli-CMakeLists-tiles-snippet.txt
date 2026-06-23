@@ -2,7 +2,6 @@
 add_executable(helm-tiles
   helm_tiles.cpp
   chart_stubs.cpp
-  chart_typeinfo.cpp
   ${CHART_SPIKE_GUI_SRC}
 )
 set_property(TARGET helm-tiles PROPERTY ENABLE_EXPORTS ON)
@@ -17,7 +16,7 @@ target_include_directories(helm-tiles PRIVATE
   ${PROJECT_SOURCE_DIR}/libs/ssl_sha1/include
   ${PROJECT_SOURCE_DIR}/libs/IXWebSocket
 )
-target_compile_definitions(helm-tiles PUBLIC USE_MOCK_DEFS)
+target_compile_definitions(helm-tiles PUBLIC USE_MOCK_DEFS OCPN_HEADLESS)
 target_link_libraries(helm-tiles PRIVATE
   ocpn::s52plib ocpn::s57-charts ocpn::geoprim ocpn::iso8211 ocpn::gl-headers)
 target_link_libraries(helm-tiles PRIVATE ocpn::model-src ocpn::model)
