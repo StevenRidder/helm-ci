@@ -25,6 +25,7 @@
 #include <wx/frame.h>
 #include <wx/filename.h>
 #include <cstdio>
+#include <cstdlib>
 
 #include "gl_headers.h"
 
@@ -138,6 +139,16 @@ wxString ChartBase::GetHashKey() const {
 class MyFrame;
 MyFrame* gFrame = nullptr;
 
+// Fail-and-fix tripwire: these overrides are believed render-path-dead (the
+// render path was traced + verified to call none of them; the background-SENC
+// callers are bypassed by DisableBackgroundSENC). If that assumption is ever
+// wrong, abort LOUDLY at the exact method rather than returning a silent default.
+[[noreturn]] static void helm_dead(const char* m) {
+  std::fprintf(stderr, "FATAL: HeadlessTopFrame::%s() called but assumed dead on the "
+              "render path. Aborting to surface the broken assumption.\n", m);
+  std::abort();
+}
+
 class HeadlessTopFrame : public AbstractTopFrame {
 public:
   HeadlessTopFrame()
@@ -150,88 +161,88 @@ public:
   // are background-SENC paths bypassed by DisableBackgroundSENC(). Kept only to
   // satisfy the fat AbstractTopFrame interface until it is split (HARDENING.md
   // step 6). The return value is never consumed.
-  double GetBestVPScale(AbstractChart* /*arg*/) override { return 0.0; }
+  double GetBestVPScale(AbstractChart* /*arg*/) override { helm_dead("GetBestVPScale"); return 0.0; }
 
   // ---- everything below is a no-op; never invoked in the headless path ----
-  void FastClose() override {}
-  void InvalidateAllGL() override {}
-  void SetGPSCompassScale() override {}
-  void RefreshAllCanvas(bool) override {}
-  void UpdateStatusBar() override {}
-  void ToggleFullScreen() override {}
-  bool DoChartUpdate(void) override { return false; }
-  Track* TrackOff(bool) override { return nullptr; }
-  void TrackOn(void) override {}
-  void ProcessOptionsDialog(int) override {}
-  void SetAlertString(wxString) override {}
-  void JumpToPosition(double, double) override {}
-  void JumpToPosition(double, double, double) override {}
-  void JumpToPosition(AbstractChartCanvas*, double, double, double) override {}
-  void JumpToPosition(AbstractChartCanvas*, double, double) override {}
-  double GetPixPerMM() override { return 4.0; }
-  double GetContentScaleFactor() override { return 1.0; }
-  void RequestNewToolbars(bool) override {}
-  AbstractChartCanvas* GetAbstractPrimaryCanvas() override { return nullptr; }
-  double GetCanvasTrueScale() override { return 10000.0; }
-  bool GetCanvasPointPix(double, double, wxPoint*) override { return false; }
-  wxSize GetFocusCanvasSize() override { return wxSize(1, 1); }
-  void CancelAllMouseRoute() override {}
-  void InvalidateAllCanvasUndo() override {}
-  void PositionConsole() override {}
-  void DoStackUp(AbstractChartCanvas*) override {}
-  void DoStackDown(AbstractChartCanvas*) override {}
-  void LoadHarmonics() override {}
-  bool DropMarker(bool) override { return false; }
-  double GetMag(double, double, double) override { return 0.0; }
-  void SetMasterToolbarItemState(int, bool) override {}
-  void ProcessCanvasResize() override {}
-  bool SetGlobalToolbarViz(bool) override { return false; }
-  void ToggleQuiltMode(AbstractChartCanvas*) override {}
-  void UpdateGlobalMenuItems(AbstractChartCanvas*) override {}
-  void UpdateGlobalMenuItems() override {}
-  void RefreshCanvasOther(AbstractChartCanvas*) override {}
-  double* GetCOGTable() override { return nullptr; }
-  void StartCogTimer() override {}
-  wxGLCanvas* GetWxGlCanvas() override { return nullptr; }
-  wxWindow* GetPrimaryCanvasWindow() override { return nullptr; }
-  void ApplyGlobalSettings(bool) override {}
-  void SetMenubarItemState(int, bool) override {}
-  void ToggleColorScheme() override {}
-  void ActivateMOB() override {}
-  void ToggleTestPause() override {}
-  void ToggleChartBar(AbstractChartCanvas*) override {}
-  void DoSettings() override {}
-  void SwitchKBFocus(AbstractChartCanvas*) override {}
-  void UpdateRotationState(double) override {}
-  void SetChartUpdatePeriod() override {}
-  wxStatusBar* GetStatusBar() override { return nullptr; }
-  wxStatusBar* GetFrameStatusBar() const override { return nullptr; }
-  void SetENCDisplayCategory(AbstractChartCanvas*, enum _DisCat) override {}
-  int GetCanvasIndexUnderMouse() override { return 0; }
-  double GetCanvasRefScale() override { return 10000.0; }
-  void SendGlJsonConfigMsg() override {}
-  int GetNextToolbarToolId() override { return 0; }
-  void SetToolbarItemBitmaps(int, wxBitmap*, wxBitmap*) override {}
-  void SetToolbarItemSVG(int, wxString, wxString, wxString) override {}
-  void UpdateAllFonts() override {}
-  bool CanAccelerateGlPanning() override { return false; }
-  void SetupGlCompression() override {}
-  void ScheduleReconfigAndSettingsReload(bool, bool) override {}
-  void ScheduleReloadCharts() override {}
-  void FreezeCharts() override {}
-  void ThawCharts() override {}
-  wxString GetGlVersionString() override { return wxEmptyString; }
-  void ScheduleDeleteSettingsDialog() override {}
-  void ChartsRefresh() override {}
-  void OnToolLeftClick(wxCommandEvent&) override {}
-  AbstractChartCanvas* GetAbstractFocusCanvas() override { return nullptr; }
+  void FastClose() override { helm_dead("FastClose");}
+  void InvalidateAllGL() override { helm_dead("InvalidateAllGL");}
+  void SetGPSCompassScale() override { helm_dead("SetGPSCompassScale");}
+  void RefreshAllCanvas(bool) override { helm_dead("RefreshAllCanvas");}
+  void UpdateStatusBar() override { helm_dead("UpdateStatusBar");}
+  void ToggleFullScreen() override { helm_dead("ToggleFullScreen");}
+  bool DoChartUpdate(void) override { helm_dead("DoChartUpdate"); return false; }
+  Track* TrackOff(bool) override { helm_dead("TrackOff"); return nullptr; }
+  void TrackOn(void) override { helm_dead("TrackOn");}
+  void ProcessOptionsDialog(int) override { helm_dead("ProcessOptionsDialog");}
+  void SetAlertString(wxString) override { helm_dead("SetAlertString");}
+  void JumpToPosition(double, double) override { helm_dead("JumpToPosition");}
+  void JumpToPosition(double, double, double) override { helm_dead("JumpToPosition");}
+  void JumpToPosition(AbstractChartCanvas*, double, double, double) override { helm_dead("JumpToPosition");}
+  void JumpToPosition(AbstractChartCanvas*, double, double) override { helm_dead("JumpToPosition");}
+  double GetPixPerMM() override { helm_dead("GetPixPerMM"); return 4.0; }
+  double GetContentScaleFactor() override { helm_dead("GetContentScaleFactor"); return 1.0; }
+  void RequestNewToolbars(bool) override { helm_dead("RequestNewToolbars");}
+  AbstractChartCanvas* GetAbstractPrimaryCanvas() override { helm_dead("GetAbstractPrimaryCanvas"); return nullptr; }
+  double GetCanvasTrueScale() override { helm_dead("GetCanvasTrueScale"); return 10000.0; }
+  bool GetCanvasPointPix(double, double, wxPoint*) override { helm_dead("GetCanvasPointPix"); return false; }
+  wxSize GetFocusCanvasSize() override { helm_dead("GetFocusCanvasSize"); return wxSize(1, 1); }
+  void CancelAllMouseRoute() override { helm_dead("CancelAllMouseRoute");}
+  void InvalidateAllCanvasUndo() override { helm_dead("InvalidateAllCanvasUndo");}
+  void PositionConsole() override { helm_dead("PositionConsole");}
+  void DoStackUp(AbstractChartCanvas*) override { helm_dead("DoStackUp");}
+  void DoStackDown(AbstractChartCanvas*) override { helm_dead("DoStackDown");}
+  void LoadHarmonics() override { helm_dead("LoadHarmonics");}
+  bool DropMarker(bool) override { helm_dead("DropMarker"); return false; }
+  double GetMag(double, double, double) override { helm_dead("GetMag"); return 0.0; }
+  void SetMasterToolbarItemState(int, bool) override { helm_dead("SetMasterToolbarItemState");}
+  void ProcessCanvasResize() override { helm_dead("ProcessCanvasResize");}
+  bool SetGlobalToolbarViz(bool) override { helm_dead("SetGlobalToolbarViz"); return false; }
+  void ToggleQuiltMode(AbstractChartCanvas*) override { helm_dead("ToggleQuiltMode");}
+  void UpdateGlobalMenuItems(AbstractChartCanvas*) override { helm_dead("UpdateGlobalMenuItems");}
+  void UpdateGlobalMenuItems() override { helm_dead("UpdateGlobalMenuItems");}
+  void RefreshCanvasOther(AbstractChartCanvas*) override { helm_dead("RefreshCanvasOther");}
+  double* GetCOGTable() override { helm_dead("GetCOGTable"); return nullptr; }
+  void StartCogTimer() override { helm_dead("StartCogTimer");}
+  wxGLCanvas* GetWxGlCanvas() override { helm_dead("GetWxGlCanvas"); return nullptr; }
+  wxWindow* GetPrimaryCanvasWindow() override { helm_dead("GetPrimaryCanvasWindow"); return nullptr; }
+  void ApplyGlobalSettings(bool) override { helm_dead("ApplyGlobalSettings");}
+  void SetMenubarItemState(int, bool) override { helm_dead("SetMenubarItemState");}
+  void ToggleColorScheme() override { helm_dead("ToggleColorScheme");}
+  void ActivateMOB() override { helm_dead("ActivateMOB");}
+  void ToggleTestPause() override { helm_dead("ToggleTestPause");}
+  void ToggleChartBar(AbstractChartCanvas*) override { helm_dead("ToggleChartBar");}
+  void DoSettings() override { helm_dead("DoSettings");}
+  void SwitchKBFocus(AbstractChartCanvas*) override { helm_dead("SwitchKBFocus");}
+  void UpdateRotationState(double) override { helm_dead("UpdateRotationState");}
+  void SetChartUpdatePeriod() override { helm_dead("SetChartUpdatePeriod");}
+  wxStatusBar* GetStatusBar() override { helm_dead("GetStatusBar"); return nullptr; }
+  wxStatusBar* GetFrameStatusBar() const override { helm_dead("GetFrameStatusBar"); return nullptr; }
+  void SetENCDisplayCategory(AbstractChartCanvas*, enum _DisCat) override { helm_dead("SetENCDisplayCategory");}
+  int GetCanvasIndexUnderMouse() override { helm_dead("GetCanvasIndexUnderMouse"); return 0; }
+  double GetCanvasRefScale() override { helm_dead("GetCanvasRefScale"); return 10000.0; }
+  void SendGlJsonConfigMsg() override { helm_dead("SendGlJsonConfigMsg");}
+  int GetNextToolbarToolId() override { helm_dead("GetNextToolbarToolId"); return 0; }
+  void SetToolbarItemBitmaps(int, wxBitmap*, wxBitmap*) override { helm_dead("SetToolbarItemBitmaps");}
+  void SetToolbarItemSVG(int, wxString, wxString, wxString) override { helm_dead("SetToolbarItemSVG");}
+  void UpdateAllFonts() override { helm_dead("UpdateAllFonts");}
+  bool CanAccelerateGlPanning() override { helm_dead("CanAccelerateGlPanning"); return false; }
+  void SetupGlCompression() override { helm_dead("SetupGlCompression");}
+  void ScheduleReconfigAndSettingsReload(bool, bool) override { helm_dead("ScheduleReconfigAndSettingsReload");}
+  void ScheduleReloadCharts() override { helm_dead("ScheduleReloadCharts");}
+  void FreezeCharts() override { helm_dead("FreezeCharts");}
+  void ThawCharts() override { helm_dead("ThawCharts");}
+  wxString GetGlVersionString() override { helm_dead("GetGlVersionString"); return wxEmptyString; }
+  void ScheduleDeleteSettingsDialog() override { helm_dead("ScheduleDeleteSettingsDialog");}
+  void ChartsRefresh() override { helm_dead("ChartsRefresh");}
+  void OnToolLeftClick(wxCommandEvent&) override { helm_dead("OnToolLeftClick");}
+  AbstractChartCanvas* GetAbstractFocusCanvas() override { helm_dead("GetAbstractFocusCanvas"); return nullptr; }
   void BeforeUndoableAction(UndoType, RoutePoint*, UndoBeforePointerType,
-                            UndoItemPointer) override {}
-  void AfterUndoableAction(UndoItemPointer) override {}
-  void TouchAISActive() override {}
-  void UpdateAISMOBRoute(const AisTargetData*) override {}
-  void ActivateAISMOBRoute(const AisTargetData*) override {}
-  void EnableSettingsTool(bool) override {}
+                            UndoItemPointer) override { helm_dead("wrapped");}
+  void AfterUndoableAction(UndoItemPointer) override { helm_dead("AfterUndoableAction");}
+  void TouchAISActive() override { helm_dead("TouchAISActive");}
+  void UpdateAISMOBRoute(const AisTargetData*) override { helm_dead("UpdateAISMOBRoute");}
+  void ActivateAISMOBRoute(const AisTargetData*) override { helm_dead("ActivateAISMOBRoute");}
+  void EnableSettingsTool(bool) override { helm_dead("EnableSettingsTool");}
 };
 
 static HeadlessTopFrame* s_headless_frame = nullptr;

@@ -80,7 +80,10 @@
 
   HelmField.prototype.load = function (url) {
     var self = this;
-    return fetch(url).then(function (r) { return r.json(); }).then(function (field) {
+    return fetch(url).then(function (r) {
+      if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
+      return r.json();
+    }).then(function (field) {
       self.current = field;
       var coords = [[field.west, field.north], [field.east, field.north],
                     [field.east, field.south], [field.west, field.south]];
@@ -100,7 +103,7 @@
       return field;
     }).catch(function (e) {
       console.warn('[HelmField] could not load', url, e && e.message);
-      return null;
+      throw e;   // propagate — never silently swallow a failed weather load
     });
   };
 

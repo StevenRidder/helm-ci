@@ -79,6 +79,19 @@ placeholders. Audited the tile server + engine + UI for silent masking and fixed
 - **A simulated position was badged "LIVE".** The engine now declares `posSource`; a simulated own-ship
   reads **"ENGINE · SIM POS"** (amber) — green "LIVE" is reserved for a real GPS/NMEA/SignalK feed.
 - Boundary input validation + a blank-tile generation check fail loud at startup.
+- **Real data now overrides sim per-field, and every field declares its source.** The engine listens
+  for **NMEA 0183 over TCP (port 10110)**; a fresh, checksum-valid sentence overrides the matching
+  field (`pos`/`sog`/`cog`/`hdg`/`depth`/`wind`) and stamps `sources.<field> = "nmea"`; stale or absent
+  fields fall back to sim as `"simulated"`. Corrupt (bad-checksum) sentences are rejected, not trusted.
+  The UI dots each still-simulated reading amber and promotes the badge to green **LIVE** once the
+  position is real. To take the boat off sim, stop emitting the sim fallbacks. *(Verified: fed RMC+DBT →
+  pos/sog/cog/depth flipped to `nmea`, hdg/wind stayed dotted; a corrupt sentence was rejected.)*
+- **The render-path-dead `HeadlessTopFrame` stubs now abort-on-call** (`helm_dead()`), so if our "this
+  is unreachable" assumption is ever wrong it fails loud at the exact method instead of returning a
+  silent default. *(Verified: tiles still render at every zoom — none of the 79 are reached.)*
+- **Weather-layer load failures no longer swallow.** `field-layer.js` propagates a failed/404 fetch
+  instead of returning `null`; the UI surfaces a visible "data unavailable" notice. *(Verified: a
+  missing field rejects with `HTTP 404`.)*
 
 ## Patches
 `patches/` holds the OpenCPN source changes (against the upstream clone). They are deliberately small,

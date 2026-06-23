@@ -37,6 +37,9 @@
   .srcbadge.lost{color:#fff;background:var(--danger);animation:srcpulse 1s infinite} .srcbadge.lost .dot{background:#fff}
   @keyframes srcpulse{0%,100%{opacity:1}50%{opacity:.5}}
   .stale{opacity:.38;transition:opacity .3s}
+  /* per-instrument source: an amber dot flags a reading still coming from sim, not a real sensor */
+  .simfield::after{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
+    background:var(--warn);margin-left:5px;vertical-align:middle;box-shadow:0 0 4px var(--warn)}
   .tb .spacer{flex:1}
   .tb .search{display:flex;align-items:center;gap:8px;background:var(--glass2);border-radius:8px;
     padding:6px 11px;min-width:160px}
@@ -233,6 +236,8 @@
     </div>
     <div id="tlabel"></div>
   </div>
+  <div id="wx-notice" style="display:none;margin-top:10px;font-size:11px;color:var(--warn);
+    background:rgba(255,192,106,.1);border:.5px solid var(--warn);border-radius:7px;padding:6px 9px"></div>
   <div class="hint">Live weather via Open-Meteo (the same models as Windy — see docs/WEATHER-DATA.md).
     Run the pipeline for depth + offline charts.</div>
 </div>
@@ -323,6 +328,16 @@
   const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
   const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
 
+  let wxNoticeTimer = null;
+  function wxNotice(layer) {            // surface a failed weather load instead of silently showing nothing
+    const n = document.getElementById('wx-notice'); if (!n) return;
+    n.textContent = '⚠ ' + layer + ' data unavailable — not fetched (run the pipeline)';
+    n.style.display = 'block';
+    if (wxNoticeTimer) clearTimeout(wxNoticeTimer);
+    wxNoticeTimer = setTimeout(() => { n.style.display = 'none'; }, 6000);
+  }
+  function wxNoticeClear() { const n = document.getElementById('wx-notice'); if (n) n.style.display = 'none'; }
+
   function buildLegend(f) {
     const leg = document.getElementById('legend');
     if (!f) { leg.style.display = 'none'; return; }
@@ -350,7 +365,7 @@
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
     if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: (100 - (+document.getElementById('wxopacity').value)) / 100 });
-    if (field) field.load(fieldUrl(name)).then(buildLegend);
+    if (field) field.load(fieldUrl(name)).then(f => { wxNoticeClear(); buildLegend(f); }).catch(() => wxNotice(name));
     if (iso && name === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
     const partOn = document.getElementById('particles').checked;
     if (wind) {
@@ -368,7 +383,7 @@
       ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
       : ('+' + frame + 'h');
     if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
-      if (field) field.load(fieldUrl(activeWx)).then(buildLegend);
+      if (field) field.load(fieldUrl(activeWx)).then(buildLegend).catch(() => wxNotice(activeWx));
       if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
       if (wind && VECTOR[activeWx] && document.getElementById('particles').checked) wind.load(velUrl(activeWx));
     }
@@ -474,6 +489,11 @@
       set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
       set('nv-eta', s.active.eta); set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
       set('nv-windrange', s.wind.range);
+      // per-field source: dot the readings still coming from sim (engine sends `sources`)
+      const src = s.sources;
+      const mark = (id, key) => { const e = document.getElementById(id); if (e) e.classList.toggle('simfield', !!src && src[key] === 'simulated'); };
+      mark('nv-pos', 'pos'); mark('nv-sog', 'sog'); mark('nv-cog', 'cog');
+      mark('nv-hdg', 'hdg'); mark('nv-depth', 'depth'); mark('nv-wind', 'wind');
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       try {
@@ -504,7 +524,7 @@
       document.querySelectorAll('.ib, .insp').forEach(e => e.classList.toggle('stale', state === 'lost'));
     }
     // engine declares its position source; a simulated position is never badged as LIVE truth
-    const realPos = s => s && s.posSource && s.posSource !== 'simulated' && s.posSource !== 'sim';
+    const realPos = s => { const p = (s && s.sources && s.sources.pos) || (s && s.posSource); return !!p && p !== 'simulated' && p !== 'sim'; };
     let sim = null, everEngine = false;
     const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); };
     const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
