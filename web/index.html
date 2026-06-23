@@ -3,31 +3,183 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Helm — tracer bullet</title>
+<title>Helm</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <style>
-  html,body{margin:0;height:100%;background:#05080c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  :root{
+    --glass:rgba(13,19,27,.74);--glass2:rgba(30,41,54,.62);
+    --line:rgba(255,255,255,.13);--line2:rgba(255,255,255,.07);
+    --ctext:#eef4f9;--cdim:#9bb0c0;--cdim2:#6f8597;
+    --accent:#5bc0ff;--mag:#d6219a;--ok:#46e0a0;--danger:#ff6b6b;--warn:#ffc06a;
+    --windlo:#1aa58c;--windhi:#c8781a;
+  }
+  html,body{margin:0;height:100%;overflow:hidden;background:#05080c;color:var(--ctext);
+    font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif}
   #map{position:absolute;inset:0}
-  .panel{position:absolute;top:12px;left:12px;z-index:2;background:rgba(13,19,27,.82);backdrop-filter:blur(18px);
-    -webkit-backdrop-filter:blur(18px);border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 12px;color:#eef4f9;width:212px}
-  .panel h1{font-size:13px;font-weight:600;margin:0 0 8px}
-  .lbl{font-size:10px;color:#8aa3b5;margin:9px 0 5px;letter-spacing:.05em}
-  .row{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd9e3;padding:2px 0;cursor:pointer}
-  .row input{accent-color:#5bc0ff}
-  .wx{display:flex;flex-wrap:wrap;gap:5px}
-  .wx button{font-size:11px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);
-    border-radius:7px;padding:4px 8px;cursor:pointer}
-  .wx button.on{background:#5bc0ff;color:#05121d;border-color:#5bc0ff;font-weight:500}
-  .legend{margin-top:9px}
+
+  /* ---- shared glass ---- */
+  .glass{background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:.5px solid var(--line);box-shadow:0 18px 60px -24px rgba(0,0,0,.85)}
+
+  /* ---- top toolbar ---- */
+  .tb{position:absolute;top:12px;left:12px;right:12px;height:44px;z-index:7;border-radius:13px;
+    display:flex;align-items:center;gap:11px;padding:0 14px;box-sizing:border-box}
+  .tb .traffic{display:flex;gap:8px}
+  .tb .traffic span{width:12px;height:12px;border-radius:50%}
+  .tb .wordmark{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--ctext);margin-left:2px}
+  .tb .spacer{flex:1}
+  .tb .search{display:flex;align-items:center;gap:8px;background:var(--glass2);border-radius:8px;
+    padding:6px 11px;min-width:160px}
+  .tb .search svg{width:14px;height:14px;color:var(--cdim)}
+  .tb .search .ph{font-size:12px;color:var(--cdim);flex:1}
+  .tb .search .kbd{font-size:10px;color:var(--cdim);border:.5px solid var(--line);border-radius:4px;padding:1px 5px}
+  .seg{display:flex;gap:1px;background:var(--glass2);border-radius:8px;padding:2px}
+  .seg span{font-size:11px;color:var(--cdim);padding:5px 10px;border-radius:6px;cursor:pointer;user-select:none}
+  .seg span.on{background:var(--accent);color:#05121d;font-weight:500}
+
+  /* ---- left icon rail ---- */
+  .rail{position:absolute;left:12px;top:68px;width:48px;z-index:6;border-radius:14px;
+    display:flex;flex-direction:column;align-items:center;gap:4px;padding:8px 0}
+  .ri{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;
+    color:var(--cdim);cursor:pointer;transition:background .12s,color .12s}
+  .ri svg{width:20px;height:20px}
+  .ri:hover{color:var(--ctext)}
+  .ri.on{color:var(--accent);background:var(--glass2)}
+  .rail .sep{width:22px;height:.5px;background:var(--line);margin:3px 0}
+
+  /* ---- drawers (hold the existing controls) ---- */
+  .drawer{position:absolute;left:72px;top:68px;width:230px;z-index:6;border-radius:14px;
+    padding:13px 14px;box-sizing:border-box;color:var(--ctext);max-height:calc(100% - 160px);overflow-y:auto}
+  .drawer[hidden]{display:none}
+  .drawer h2{font-size:12px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
+  .drawer .sub{font-size:10.5px;color:var(--cdim);margin:0 0 10px}
+  .lbl{font-size:10px;color:var(--cdim2);margin:12px 0 6px;letter-spacing:.08em;text-transform:uppercase}
+  .row{display:flex;align-items:center;gap:9px;font-size:12.5px;color:#cdd9e3;padding:3px 0;cursor:pointer}
+  .row input{accent-color:var(--accent);width:14px;height:14px}
+
+  /* weather switcher */
+  .wx{display:flex;flex-wrap:wrap;gap:6px}
+  .wx button{font-size:11px;color:#cdd9e3;background:rgba(255,255,255,.05);border:.5px solid var(--line);
+    border-radius:8px;padding:5px 9px;cursor:pointer;transition:background .12s,color .12s}
+  .wx button:hover{background:rgba(255,255,255,.1)}
+  .wx button.on{background:var(--accent);color:#05121d;border-color:var(--accent);font-weight:500}
+
+  /* legend */
+  .legend{margin-top:12px}
   .legend .bar{height:9px;border-radius:5px;border:.5px solid rgba(255,255,255,.18)}
-  .legend .sc{display:flex;justify-content:space-between;font-size:10px;color:#9bb0c0;margin-top:3px}
-  .hint{font-size:11px;color:#8aa3b5;margin-top:8px;line-height:1.4}
+  .legend .sc{display:flex;justify-content:space-between;font-size:10px;color:var(--cdim);margin-top:4px}
+
+  /* time scrubber */
+  #time{margin-top:12px}
+  #time .scrub{display:flex;align-items:center;gap:8px}
+  #play{font-size:12px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid var(--line);
+    border-radius:8px;padding:4px 11px;cursor:pointer}
+  #tslider{flex:1;accent-color:var(--accent)}
+  #tlabel{font-size:10px;color:var(--cdim);text-align:center;margin-top:4px}
+
+  .hint{font-size:11px;color:var(--cdim);margin-top:14px;line-height:1.45;
+    padding-top:12px;border-top:.5px solid var(--line)}
+
+  /* ---- right route inspector ---- */
+  .insp{position:absolute;right:12px;top:68px;width:204px;z-index:6;border-radius:14px;padding:12px}
+  .insp .ttl{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+  .insp .ttl svg{width:15px;height:15px;color:var(--mag)}
+  .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext)}
+  .insp .kpis{display:flex;gap:14px;margin-bottom:9px}
+  .insp .kpis .k .l{font-size:10px;color:var(--cdim)}
+  .insp .kpis .k .v{font-size:15px;color:var(--ctext);font-variant-numeric:tabular-nums}
+  .insp hr{border:0;height:.5px;background:var(--line);margin:8px 0}
+  .leg{display:flex;align-items:center;gap:8px;padding:5px 0}
+  .lgd{width:7px;height:7px;border-radius:50%;flex:none}
+  .leg .nm{font-size:11.5px;flex:1}
+  .leg .br{font-size:11px;color:var(--cdim);font-variant-numeric:tabular-nums}
+  .windbar{display:flex;align-items:center;gap:7px}
+  .windbar .l{font-size:10.5px;color:var(--cdim)}
+  .windbar .b{flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--windlo),var(--windhi))}
+  .windbar .v{font-size:10.5px;color:var(--ctext)}
+
+  /* ---- bottom instrument bar ---- */
+  .ib{position:absolute;left:12px;right:12px;bottom:12px;height:56px;z-index:6;border-radius:14px;
+    display:flex;align-items:center;box-sizing:border-box}
+  .it{flex:1;padding:0 15px;border-right:.5px solid var(--line)}
+  .it .l{font-size:10.5px;color:var(--cdim)}
+  .it .v{font-size:22px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;line-height:1.15}
+  .it .u{font-size:11px;color:var(--cdim);font-weight:400}
+  .it.wide{flex:1.8;display:flex;align-items:center;justify-content:space-between;border-right:0}
+  .it.wide .v2{font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .it.wide .r{text-align:right}
+
+  /* ---- restyle MapLibre native controls into glass (zoom + compass, bottom-right) ---- */
+  .maplibregl-ctrl-bottom-right{bottom:80px;right:12px}
+  .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group{
+    background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
+    border:.5px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 18px 60px -24px rgba(0,0,0,.85)}
+  .maplibregl-ctrl-group button{width:38px;height:38px;background:transparent}
+  .maplibregl-ctrl-group button+button{border-top:.5px solid var(--line)}
+  .maplibregl-ctrl-group button .maplibregl-ctrl-icon{filter:invert(92%) sepia(8%) saturate(300%) hue-rotate(170deg)}
+  .maplibregl-ctrl-bottom-left{bottom:80px;left:74px}
+  .maplibregl-ctrl-scale{background:var(--glass2);border:.5px solid var(--line);
+    color:var(--cdim);border-radius:6px;padding:1px 6px;backdrop-filter:blur(10px)}
+  .maplibregl-popup-content{background:var(--glass);backdrop-filter:blur(22px);
+    -webkit-backdrop-filter:blur(22px);border:.5px solid var(--line);border-radius:10px;color:var(--ctext);
+    box-shadow:0 18px 60px -24px rgba(0,0,0,.85)}
+  .maplibregl-popup-anchor-top .maplibregl-popup-tip,
+  .maplibregl-popup-anchor-bottom .maplibregl-popup-tip,
+  .maplibregl-popup-anchor-left .maplibregl-popup-tip,
+  .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-color:transparent;display:none}
+  .maplibregl-popup-close-button{color:var(--cdim)}
 </style>
 </head>
 <body>
 <div id="map"></div>
-<div class="panel">
-  <h1>Helm · layers</h1>
+
+<!-- ========================= TOP TOOLBAR ========================= -->
+<div class="tb glass">
+  <div class="traffic"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
+  <span class="wordmark">Helm</span>
+  <div class="spacer"></div>
+  <div class="search">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
+    <span class="ph">Search…</span><span class="kbd">⌘K</span>
+  </div>
+  <div class="seg" id="theme-seg">
+    <span class="on" data-theme="day">Day</span><span data-theme="dusk">Dusk</span><span data-theme="night">Night</span>
+  </div>
+</div>
+
+<!-- ========================= LEFT ICON RAIL ========================= -->
+<div class="rail glass">
+  <div class="ri on" data-rail="chart" title="Chart">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/><line x1="9" y1="3" x2="9" y2="18"/><line x1="15" y1="6" x2="15" y2="21"/></svg>
+  </div>
+  <div class="ri" data-rail="layers" title="Layers">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><polygon points="12 2 22 8.5 12 15 2 8.5 12 2"/><polyline points="2 15.5 12 22 22 15.5"/></svg>
+  </div>
+  <div class="ri" data-rail="weather" title="Weather">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><path d="M17.5 18a4.5 4.5 0 0 0 0-9 6 6 0 0 0-11.6 1.5A4 4 0 0 0 6 18z"/></svg>
+  </div>
+  <div class="ri" data-rail="routes" title="Routes">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 17 C 14 13 10 7 16 6"/></svg>
+  </div>
+  <div class="ri" data-rail="ais" title="AIS">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18l-2 5H5z"/><path d="M12 3v10"/><path d="M8 8h8"/></svg>
+  </div>
+  <div class="ri" data-rail="places" title="Places">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+  </div>
+  <div class="sep"></div>
+  <div class="ri" data-rail="download" title="Download charts">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
+  </div>
+  <div class="ri" data-rail="settings" title="Settings">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.5-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1l-.4-2.6h-3.8l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.5a7.6 7.6 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.4 2.6h3.8l.4-2.6a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4z"/></svg>
+  </div>
+</div>
+
+<!-- ========================= LAYERS DRAWER (chart toggles) ========================= -->
+<div class="drawer glass" id="drawer-layers" hidden>
+  <h2>Layers</h2>
+  <p class="sub">Chart &amp; data overlays</p>
   <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite</label>
   <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth areas</label>
@@ -35,8 +187,12 @@
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
   <label class="row"><input type="checkbox" data-layer="ais" checked> AIS</label>
+</div>
 
-  <div class="lbl">WEATHER</div>
+<!-- ========================= WEATHER DRAWER (wx switcher + particles + legend + scrubber) ========================= -->
+<div class="drawer glass" id="drawer-weather" hidden>
+  <h2>Weather</h2>
+  <p class="sub">Live models via Open-Meteo</p>
   <div class="wx" id="wx">
     <button data-wx="wind">Wind</button>
     <button data-wx="gust">Gust</button>
@@ -52,20 +208,52 @@
     <button data-wx="current">Current</button>
     <button data-wx="off">Off</button>
   </div>
-  <label class="row" style="margin-top:6px"><input type="checkbox" id="particles" checked> Animated particles</label>
+  <label class="row" style="margin-top:10px"><input type="checkbox" id="particles" checked> Animated particles</label>
+  <div class="row" style="margin-top:2px"><span style="font-size:11px;color:var(--cdim);min-width:74px">Transparency</span><input type="range" id="wxopacity" min="0" max="100" value="62" step="1" style="flex:1;accent-color:var(--accent)"></div>
   <div class="legend" id="legend" style="display:none">
     <div class="bar" id="legbar"></div>
     <div class="sc"><span id="legmin"></span><span id="leglabel"></span><span id="legmax"></span></div>
   </div>
-  <div id="time" style="display:none;margin-top:9px">
-    <div style="display:flex;align-items:center;gap:7px">
-      <button id="play" style="font-size:12px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);border-radius:7px;padding:2px 9px;cursor:pointer">&#9658;</button>
-      <input type="range" id="tslider" min="0" max="0" value="0" step="1" style="flex:1;accent-color:#5bc0ff">
+  <div id="time" style="display:none">
+    <div class="scrub">
+      <button id="play">&#9658;</button>
+      <input type="range" id="tslider" min="0" max="0" value="0" step="1">
     </div>
-    <div id="tlabel" style="font-size:10px;color:#9bb0c0;text-align:center;margin-top:3px"></div>
+    <div id="tlabel"></div>
   </div>
   <div class="hint">Live weather via Open-Meteo (the same models as Windy — see docs/WEATHER-DATA.md).
     Run the pipeline for depth + offline charts.</div>
+</div>
+
+<!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
+<div class="insp glass">
+  <div class="ttl">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 17 C 14 13 10 7 16 6"/></svg>
+    <span>Route to Marina</span>
+  </div>
+  <div class="kpis">
+    <div class="k"><div class="l">ETA</div><div class="v">11:42</div></div>
+    <div class="k"><div class="l">DTG</div><div class="v">2.4 NM</div></div>
+    <div class="k"><div class="l">XTE</div><div class="v" style="color:var(--ok)">12 m</div></div>
+  </div>
+  <hr>
+  <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" style="color:var(--ctext)">WP4 · marina</span><span class="br">315°</span></div>
+  <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" style="color:var(--cdim)">WP3 · channel</span><span class="br">331°</span></div>
+  <hr>
+  <div class="windbar"><span class="l">Wind</span><div class="b"></div><span class="v">8–24 kt</span></div>
+</div>
+
+<!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
+<div class="ib glass">
+  <div class="it"><div class="l">SOG</div><div class="v">6.2<span class="u"> kn</span></div></div>
+  <div class="it"><div class="l">COG</div><div class="v">316<span class="u">°</span></div></div>
+  <div class="it"><div class="l">HDG</div><div class="v">319<span class="u">°</span></div></div>
+  <div class="it"><div class="l">Depth</div><div class="v">8.4<span class="u"> m</span></div></div>
+  <div class="it"><div class="l">Wind</div><div class="v">14<span class="u"> kt</span></div></div>
+  <div class="it wide">
+    <div><div class="l">Position</div><div class="v2">17°29.4′S · 149°49.6′W</div></div>
+    <div class="r"><div class="l">Next</div><div class="v2">R "4" · 0.3 NM</div></div>
+  </div>
 </div>
 
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
@@ -124,7 +312,7 @@
     }
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
-    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.52 });
+    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: (100 - (+document.getElementById('wxopacity').value)) / 100 });
     if (field) field.load(fieldUrl(name)).then(buildLegend);
     if (iso && name === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
     const partOn = document.getElementById('particles').checked;
@@ -169,6 +357,15 @@
     if (active) setWeather(active.dataset.wx);
   });
 
+  const opSlider = document.getElementById('wxopacity');
+  function applyOpacity() {
+    const o = (100 - (+opSlider.value)) / 100;     // slider right = more transparent
+    if (field) field.setOpacity(o);
+    if (wind) wind.setOpacity(Math.max(0.04, o * 0.7));
+  }
+  opSlider.addEventListener('input', applyOpacity);
+  applyOpacity();
+
   map.on('load', () => {
     if (map.getLayer('wind-arrows')) map.setLayoutProperty('wind-arrows', 'visibility', 'none'); // replaced by particles
     setWeather('wind');
@@ -181,6 +378,37 @@
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
   map.on('click', 'ais-vessels', e => { const p = e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || 'AIS target') + '</b><br>SOG ' + (p.sog ?? '?') + ' · COG ' + (p.cog ?? '?') + (p.cpa != null ? ' · CPA ' + p.cpa + ' NM' : '')).addTo(map); });
+
+  // ================= CHROME-ONLY UI (no map logic) =================
+  // Left rail -> toggle drawers via display (controls stay in the DOM, JS untouched).
+  (function () {
+    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather' };
+    const rail = document.querySelectorAll('.ri[data-rail]');
+    function closeDrawers() { Object.values(drawers).forEach(id => { document.getElementById(id).hidden = true; }); }
+    rail.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const key = btn.dataset.rail, drawerId = drawers[key];
+        if (drawerId) {
+          const d = document.getElementById(drawerId), wasOpen = !d.hidden;
+          closeDrawers();
+          d.hidden = wasOpen;          // toggle
+          rail.forEach(r => r.classList.toggle('on', !wasOpen && r === btn));
+        } else {
+          // decorative rail items: just move the active highlight
+          closeDrawers();
+          rail.forEach(r => r.classList.toggle('on', r === btn));
+        }
+      });
+    });
+  })();
+
+  // Day/Dusk/Night segmented control (visual only — no wiring required).
+  (function () {
+    const seg = document.querySelectorAll('#theme-seg span');
+    seg.forEach(s => s.addEventListener('click', () => {
+      seg.forEach(o => o.classList.toggle('on', o === s));
+    }));
+  })();
 </script>
 </body>
 </html>

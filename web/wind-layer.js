@@ -196,6 +196,7 @@
     this._interacting = false;
     this._destroyed = false;
     this._neutral = false;   // true => white particles (color comes from the heatmap field)
+    this._neutralAlpha = 0.27; // white-particle opacity (tunable via setOpacity)
 
     // scratch
     this._uv = [0, 0];
@@ -444,7 +445,7 @@
         ctx.lineTo(arr2[k + 2], arr2[k + 3]);
       }
       var w2 = base * (0.85 + (bk2 / COLOR_BUCKETS) * 1.2);
-      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,0.3)' : bucketColors[bk2];
+      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,' + this._neutralAlpha + ')' : bucketColors[bk2];
       ctx.globalAlpha = 0.04;          // soft glow halo
       ctx.lineWidth = w2 * 3.2;
       ctx.stroke();
@@ -536,6 +537,7 @@
 
   HelmWindLayer.prototype.isVisible = function () { return this._visible; };
   HelmWindLayer.prototype.setNeutral = function (v) { this._neutral = !!v; };
+  HelmWindLayer.prototype.setOpacity = function (a) { this._neutralAlpha = Math.max(0.03, Math.min(0.95, a)); };
 
   HelmWindLayer.prototype.destroy = function () {
     if (this._destroyed) return;

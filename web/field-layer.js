@@ -104,6 +104,10 @@
     });
   };
 
+  HelmField.prototype.setOpacity = function (o) {
+    this.opacity = Math.max(0, Math.min(1, o));
+    if (this.map.getLayer(LYR)) this.map.setPaintProperty(LYR, 'raster-opacity', this.opacity);
+  };
   HelmField.prototype.setVisible = function (v) {
     if (this.map.getLayer(LYR)) this.map.setLayoutProperty(LYR, 'visibility', v ? 'visible' : 'none');
   };
