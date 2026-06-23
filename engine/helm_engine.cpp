@@ -145,7 +145,11 @@ int main(int, char**) {
 
     char json[1200];
     std::snprintf(json, sizeof json,
-      "{\"type\":\"nav\",\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
+      // posSource is "simulated": own-ship is a demo advance, not a real GPS/NMEA
+      // fix. Surfaced so the UI never badges a placeholder position as live truth.
+      // Becomes "signalk"/"nmea" when a real position feed is wired in.
+      "{\"type\":\"nav\",\"posSource\":\"simulated\","
+      "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
       "\"sog\":%.1f,\"cog\":%ld,\"hdg\":%d,\"depth\":%.1f,"
       "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},"
       "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"dtg\":\"%s\",\"xte\":\"%d m\","

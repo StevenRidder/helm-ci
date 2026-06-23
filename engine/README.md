@@ -32,6 +32,7 @@ Identical to what `web/nav-source.js` (the sim) emits — the UI prefers the eng
 sim when the engine isn't running, with **no code difference** between real and simulated nav:
 ```json
 { "type":"nav",
+  "posSource":"simulated",        // "simulated" demo own-ship, or "signalk"/"nmea"/"gps" when wired
   "pos":{"lat":24.45867,"lon":-81.8078}, "posStr":"24°27.5′N · 81°48.5′W",
   "sog":6.1, "cog":15, "hdg":14, "depth":13.2,
   "wind":{"spd":17,"dir":105,"range":"13–25 kt"},

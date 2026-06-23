@@ -63,8 +63,12 @@ static std::string g_blank;          // transparent TS×TS PNG for no-coverage t
 static const int TS = 256;           // tile size px
 
 // ---- main-thread render job queue (CoreGraphics is main-thread) -------------
-struct Job { int z; long x, y; std::string result; bool done = false;
-             std::mutex m; std::condition_variable cv; };
+// Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
+// be masked as an empty/transparent tile that the navigator reads as open water.
+enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
+struct Job { int z; long x, y; std::string result;
+             TileStatus status = TileStatus::RenderFailed;
+             bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
 static std::mutex g_jobs_m;
 static std::condition_variable g_jobs_cv;
@@ -76,16 +80,27 @@ static double tile_lat(double y, int z) {
   return std::atan(std::sinh(n)) * 180.0 / M_PI;
 }
 
-// ---- render one tile -> PNG bytes (MAIN THREAD ONLY). "" => fail ------------
-static std::string render_tile(int z, long x, long y) {
+// ---- render one tile (MAIN THREAD ONLY) -> status, PNG bytes in `out` --------
+// Every failure path is surfaced with its stage; the caller turns RenderFailed
+// into an HTTP 5xx + log, never a silent transparent tile.
+static TileStatus render_tile(int z, long x, long y, std::string& out) {
+  // boundary validation: reject malformed tile coordinates loudly
+  if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
+    fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld (coords out of range)\n", z, x, y);
+    return TileStatus::BadRequest;
+  }
   double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
-  // cull tiles that don't touch the cell -> caller serves a transparent tile
+  // genuinely outside the chart cell -> legitimately empty (NOT a failure)
   if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
-    return std::string();
+    return TileStatus::NoCoverage;
+
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
-  if (span_m <= 0) return std::string();
+  if (span_m <= 0) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: non-positive latitude span\n", z, x, y);
+    return TileStatus::RenderFailed;
+  }
   double ppm = (double)TS / span_m;
 
   ViewPort vp;
@@ -100,22 +115,38 @@ static std::string render_tile(int z, long x, long y) {
   vp.SetBoxes(); vp.Validate();
 
   wxBitmap bmp(TS, TS, BPP);
-  if (!bmp.IsOk()) return std::string();
+  if (!bmp.IsOk()) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: wxBitmap(%dx%d,%d) not ok\n", z, x, y, TS, TS, BPP);
+    return TileStatus::RenderFailed;
+  }
   wxMemoryDC dc(bmp);
-  if (!dc.IsOk()) return std::string();
+  if (!dc.IsOk()) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: wxMemoryDC not ok\n", z, x, y);
+    return TileStatus::RenderFailed;
+  }
   OCPNRegion region(0, 0, TS, TS);
   bool ok = g_chart->RenderRegionViewOnDC(dc, vp, region);
   // single-cell render ends with pDIB->SelectIntoDC(dc): grab the selected bitmap
   wxBitmap rendered = dc.GetSelectedBitmap();
   dc.SelectObject(wxNullBitmap);
-  if (!ok || !rendered.IsOk()) return std::string();
+  if (!ok || !rendered.IsOk()) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: RenderRegionViewOnDC=%d bitmapOk=%d\n",
+            z, x, y, ok, rendered.IsOk());
+    return TileStatus::RenderFailed;
+  }
   wxImage img = rendered.ConvertToImage();
-  if (!img.IsOk()) return std::string();
+  if (!img.IsOk()) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: ConvertToImage\n", z, x, y);
+    return TileStatus::RenderFailed;
+  }
   wxMemoryOutputStream mos;
-  if (!img.SaveFile(mos, wxBITMAP_TYPE_PNG)) return std::string();
-  std::string out; out.resize(mos.GetSize());
+  if (!img.SaveFile(mos, wxBITMAP_TYPE_PNG)) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: PNG encode\n", z, x, y);
+    return TileStatus::RenderFailed;
+  }
+  out.resize(mos.GetSize());
   mos.CopyTo(&out[0], out.size());
-  return out;
+  return TileStatus::Ok;
 }
 
 static std::string make_blank() {
@@ -147,9 +178,22 @@ static bool init_chart(const wxString& enc_path) {
   if (g_chart->Init(enc_path, FULL_INIT) != INIT_OK) { printf("chart Init FAILED\n"); return false; }
   g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
   if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return false; }
+
+  // FAIL CLOSED on an invalid native scale: scale <= 1 means SCAMIN / safety-
+  // contour filtering would be wrong (SENC missing DSPM:CSCL). Refuse to serve a
+  // chart whose safety features we cannot trust, rather than render it silently.
+  int ns = g_chart->GetNativeScale();
+  if (ns <= 1) {
+    printf("FATAL: chart native scale invalid (%d) -- SCAMIN/safety-contour "
+           "selection would be wrong; refusing to serve this cell.\n", ns);
+    return false;
+  }
+
   g_blank = make_blank();
+  if (g_blank.empty()) { printf("FATAL: transparent no-coverage tile generation failed\n"); return false; }
+
   printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d  blankPNG=%zuB\n",
-         g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, g_chart->GetNativeScale(), g_blank.size());
+         g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns, g_blank.size());
   return true;
 }
 
@@ -174,9 +218,23 @@ public:
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
-          h["Content-Type"] = "image/png";
-          const std::string& body = job.result.empty() ? g_blank : job.result;
-          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body);
+          switch (job.status) {
+            case TileStatus::Ok:
+              h["Content-Type"] = "image/png";
+              return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
+            case TileStatus::NoCoverage:           // legitimately no chart here -> transparent
+              h["Content-Type"] = "image/png";
+              return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
+            case TileStatus::BadRequest:
+              h["Content-Type"] = "text/plain";
+              return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h,
+                std::string("invalid tile coordinates\n"));
+            case TileStatus::RenderFailed:
+            default:                               // surface it; do NOT mask a broken render as open water
+              h["Content-Type"] = "text/plain";
+              return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h,
+                std::string("S-52 tile render failed; see server log\n"));
+          }
         }
         if (req->uri == "/" || req->uri == "/health") {
           h["Content-Type"] = "text/plain";
@@ -204,7 +262,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m);
       g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->result = render_tile(j->z, j->x, j->y);
+    j->status = render_tile(j->z, j->x, j->y, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; }
     j->cv.notify_one();
   }

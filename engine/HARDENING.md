@@ -64,6 +64,22 @@ number drives the render path.
 DPmm feeds `m_LOD_meters`; it's inert today (`g_SENC_LOD_pixels == 0` gates LOD decimation off), but
 production tile-LOD parity would pin it to the SENC build environment. **Verified:** byte-identical tiles.
 
+## Fail-and-fix-early hardening (no masked failures)
+A nav system must surface problems the moment they occur, never hide them behind fallbacks or
+placeholders. Audited the tile server + engine + UI for silent masking and fixed:
+- **Tile render failure was served as a transparent tile** — indistinguishable from open water. Now
+  `render_tile` returns a distinct status and the HTTP layer answers `200` (chart), `200`-transparent
+  (genuinely no coverage), `400` (bad tile coords), or **`500` + a logged stage** on a real failure. A
+  broken chart render is never served as blank ocean.
+- **Invalid native scale is now fail-closed** — the tile server *refuses to serve* a cell whose
+  SCAMIN/safety-contour filtering can't be trusted, instead of rendering it silently.
+- **A dropped live engine silently fell back to the simulator** (a plausible fake position). The UI now
+  raises a red **"ENGINE LOST"** alarm and dims the readings stale; the browser sim is used *only* when
+  no engine was ever present (honest prototype mode).
+- **A simulated position was badged "LIVE".** The engine now declares `posSource`; a simulated own-ship
+  reads **"ENGINE · SIM POS"** (amber) — green "LIVE" is reserved for a real GPS/NMEA/SignalK feed.
+- Boundary input validation + a blank-tile generation check fail loud at startup.
+
 ## Patches
 `patches/` holds the OpenCPN source changes (against the upstream clone). They are deliberately small,
 real, and upstreamable — not workarounds. The build still happens against a clone today; **Step 6**

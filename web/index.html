@@ -27,6 +27,16 @@
   .tb .traffic{display:flex;gap:8px}
   .tb .traffic span{width:12px;height:12px;border-radius:50%}
   .tb .wordmark{font-size:14px;font-weight:600;letter-spacing:.02em;color:var(--ctext);margin-left:2px}
+  /* navigation data-source badge — always tells the truth about live vs sim vs lost */
+  .srcbadge{display:flex;align-items:center;gap:6px;font-size:10.5px;font-weight:600;letter-spacing:.03em;
+    padding:4px 9px;border-radius:7px;background:var(--glass2);user-select:none;margin-left:10px}
+  .srcbadge .dot{width:8px;height:8px;border-radius:50%;flex:none}
+  .srcbadge.live{color:var(--ok)} .srcbadge.live .dot{background:var(--ok);box-shadow:0 0 6px var(--ok)}
+  .srcbadge.sim{color:var(--warn)} .srcbadge.sim .dot{background:var(--warn)}
+  .srcbadge.simpos{color:var(--warn)} .srcbadge.simpos .dot{background:var(--warn)}
+  .srcbadge.lost{color:#fff;background:var(--danger);animation:srcpulse 1s infinite} .srcbadge.lost .dot{background:#fff}
+  @keyframes srcpulse{0%,100%{opacity:1}50%{opacity:.5}}
+  .stale{opacity:.38;transition:opacity .3s}
   .tb .spacer{flex:1}
   .tb .search{display:flex;align-items:center;gap:8px;background:var(--glass2);border-radius:8px;
     padding:6px 11px;min-width:160px}
@@ -137,6 +147,7 @@
 <div class="tb glass">
   <div class="traffic"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
   <span class="wordmark">Helm</span>
+  <span class="srcbadge sim" id="data-src" title="Navigation data source"><span class="dot"></span><span id="data-src-txt">SIM</span></span>
   <div class="spacer"></div>
   <div class="search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
@@ -476,16 +487,42 @@
         boat.setLngLat([s.pos.lon, s.pos.lat]).setRotation(s.cog);
       } catch (e) { /* map not ready this tick */ }
     }
-    let sim = null, engineLive = false;
-    const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); window.__navSource = engineLive ? 'engine' : 'sim'; };
+    // Always show the truth about where nav data comes from. Critically: if the
+    // live engine DROPS, do NOT silently fall back to the simulator presenting a
+    // plausible fake position — that masks a lost real feed. Surface it as an
+    // alarm and mark the readings stale. The sim is only ever used when no engine
+    // was present to begin with (honest prototype mode).
+    function setSource(state) {
+      window.__navSource = state;
+      const b = document.getElementById('data-src'), t = document.getElementById('data-src-txt');
+      if (!b) return;
+      b.classList.remove('live', 'sim', 'lost', 'simpos');
+      if (state === 'live') { b.classList.add('live'); t.textContent = 'LIVE'; b.title = 'Live navigation from the Helm Engine (real position)'; }
+      else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, but position is simulated (no GPS/NMEA feed wired)'; }
+      else if (state === 'lost') { b.classList.add('lost'); t.textContent = 'ENGINE LOST'; b.title = 'The live engine disconnected — readings are NOT current'; }
+      else { b.classList.add('sim'); t.textContent = 'SIM'; b.title = 'Simulated navigation (no engine running)'; }
+      document.querySelectorAll('.ib, .insp').forEach(e => e.classList.toggle('stale', state === 'lost'));
+    }
+    // engine declares its position source; a simulated position is never badged as LIVE truth
+    const realPos = s => s && s.posSource && s.posSource !== 'simulated' && s.posSource !== 'sim';
+    let sim = null, everEngine = false;
+    const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); };
     const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
     try {
       const ws = new WebSocket('ws://127.0.0.1:8081');
-      ws.onmessage = e => { engineLive = true; window.__navSource = 'engine'; stopSim(); try { applyNav(JSON.parse(e.data)); } catch (x) {} };
-      ws.onerror = () => { if (!engineLive) startSim(); };
-      ws.onclose = () => { engineLive = false; startSim(); };
-      setTimeout(() => { if (!engineLive) startSim(); }, 1500);
-    } catch (e) { startSim(); }
+      ws.onmessage = e => {
+        everEngine = true; stopSim();
+        let s; try { s = JSON.parse(e.data); } catch (x) { return; }
+        setSource(realPos(s) ? 'live' : 'simpos');
+        applyNav(s);
+      };
+      ws.onerror = () => { if (!everEngine) { startSim(); setSource('sim'); } };
+      ws.onclose = () => {
+        if (everEngine) { setSource('lost'); }          // real feed dropped -> alarm, do NOT fake it
+        else { startSim(); setSource('sim'); }           // never had an engine -> honest prototype sim
+      };
+      setTimeout(() => { if (!everEngine) { startSim(); setSource('sim'); } }, 1500);
+    } catch (e) { startSim(); setSource('sim'); }
   })();
 </script>
 </body>
