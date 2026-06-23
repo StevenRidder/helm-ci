@@ -41,10 +41,14 @@
     <button data-wx="wind">Wind</button>
     <button data-wx="gust">Gust</button>
     <button data-wx="rain">Rain</button>
+    <button data-wx="radar">Radar</button>
     <button data-wx="temp">Temp</button>
+    <button data-wx="sst">SST</button>
+    <button data-wx="clouds">Cloud</button>
     <button data-wx="waves">Waves</button>
     <button data-wx="swell">Swell</button>
     <button data-wx="pressure">Pressure</button>
+    <button data-wx="cape">CAPE</button>
     <button data-wx="current">Current</button>
     <button data-wx="off">Off</button>
   </div>
@@ -60,6 +64,7 @@
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
+<script src="radar.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
@@ -78,6 +83,7 @@
   const wind = window.HelmWind ? HelmWind(map) : null;
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;
+  const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
 
   function buildLegend(f) {
@@ -98,6 +104,11 @@
 
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
+    if (name === 'radar') {
+      if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
+      if (radar) radar.load(); return;
+    }
+    if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
     if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.6 });
     if (field) field.load('data/field-' + name + '.json').then(buildLegend);

@@ -40,6 +40,8 @@ LAYERS = {
                    stops=[[0,[60,120,205]],[1,[60,200,205]],[2,[80,220,120]],[3,[245,210,70]],[5,[240,120,50]],[7,[220,40,40]]]),
   "current":  dict(api="marine", var="ocean_current_velocity", dir="ocean_current_direction", conv="to", unit="km/h", kind="vector",
                    stops=[[0,[40,90,170]],[1,[60,180,205]],[2,[120,210,120]],[4,[240,200,70]],[6,[230,90,50]]]),
+  "sst":      dict(api="marine", var="sea_surface_temperature", unit="°C", kind="scalar",
+                   stops=[[16,[70,90,200]],[22,[80,180,235]],[26,[70,200,130]],[29,[245,205,60]],[31,[240,120,40]],[34,[210,40,40]]]),
 }
 
 
