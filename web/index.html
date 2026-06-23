@@ -37,9 +37,6 @@
   .srcbadge.lost{color:#fff;background:var(--danger);animation:srcpulse 1s infinite} .srcbadge.lost .dot{background:#fff}
   @keyframes srcpulse{0%,100%{opacity:1}50%{opacity:.5}}
   .stale{opacity:.38;transition:opacity .3s}
-  /* per-instrument source: an amber dot flags a reading still coming from sim, not a real sensor */
-  .simfield::after{content:'';display:inline-block;width:5px;height:5px;border-radius:50%;
-    background:var(--warn);margin-left:5px;vertical-align:middle;box-shadow:0 0 4px var(--warn)}
   .tb .spacer{flex:1}
   .tb .search{display:flex;align-items:center;gap:8px;background:var(--glass2);border-radius:8px;
     padding:6px 11px;min-width:160px}
@@ -95,10 +92,13 @@
 
   /* ---- right route inspector ---- */
   .insp{position:absolute;right:12px;top:68px;width:204px;z-index:6;border-radius:14px;padding:12px}
-  .insp .ttl{display:flex;align-items:center;gap:7px;margin-bottom:9px}
+  .insp .ttl{display:flex;align-items:center;gap:7px;margin-bottom:9px;cursor:move;user-select:none}
   .insp .ttl svg{width:15px;height:15px;color:var(--mag)}
   .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext)}
-  .insp .kpis{display:flex;gap:14px;margin-bottom:9px}
+  .insp .eta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
+  .insp .eta .l{font-size:10px;color:var(--cdim);letter-spacing:.04em}
+  .insp .eta .v{font-size:12.5px;color:var(--ctext);font-variant-numeric:tabular-nums}
+  .insp .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:9px}
   .insp .kpis .k .l{font-size:10px;color:var(--cdim)}
   .insp .kpis .k .v{font-size:15px;color:var(--ctext);font-variant-numeric:tabular-nums}
   .insp hr{border:0;height:.5px;background:var(--line);margin:8px 0}
@@ -267,20 +267,20 @@
 
 <!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
 <div class="insp glass">
-  <div class="ttl">
+  <div class="ttl" id="insp-handle">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 17 C 14 13 10 7 16 6"/></svg>
     <span>Route to Marina</span>
   </div>
+  <div class="eta"><span class="l">ETA</span><span class="v" id="nv-eta">—</span></div>
   <div class="kpis">
-    <div class="k"><div class="l">ETA</div><div class="v" id="nv-eta">11:42</div></div>
-    <div class="k"><div class="l">DTG</div><div class="v" id="nv-dtg">2.4 NM</div></div>
-    <div class="k"><div class="l">XTE</div><div class="v" id="nv-xte" style="color:var(--ok)">12 m</div></div>
+    <div class="k"><div class="l">Time to go</div><div class="v" id="nv-ttg">—</div></div>
+    <div class="k"><div class="l">DTG</div><div class="v" id="nv-dtg">—</div></div>
+    <div class="k"><div class="l">VMG</div><div class="v" id="nv-vmg">—</div></div>
+    <div class="k"><div class="l">XTE</div><div class="v" id="nv-xte" style="color:var(--ok)">—</div></div>
   </div>
   <hr>
   <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" id="nv-leg0nm" style="color:var(--ctext)">WP4 · marina</span><span class="br" id="nv-leg0br">315°</span></div>
   <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" id="nv-leg1nm" style="color:var(--cdim)">WP3 · channel</span><span class="br" id="nv-leg1br">331°</span></div>
-  <hr>
-  <div class="windbar"><span class="l">Wind</span><div class="b"></div><span class="v" id="nv-windrange">8–24 kt</span></div>
 </div>
 
 <!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
@@ -476,6 +476,24 @@
     if (map.isStyleLoaded()) applyTheme('day'); else map.on('load', () => applyTheme('day'));
   })();
 
+  // make the route box draggable by its title bar
+  (function () {
+    const insp = document.querySelector('.insp'), handle = document.getElementById('insp-handle');
+    if (!insp || !handle) return;
+    let drag = false, ox = 0, oy = 0;
+    handle.addEventListener('mousedown', e => {
+      const r = insp.getBoundingClientRect();
+      insp.style.left = r.left + 'px'; insp.style.top = r.top + 'px'; insp.style.right = 'auto';
+      drag = true; ox = e.clientX - r.left; oy = e.clientY - r.top; e.preventDefault();
+    });
+    window.addEventListener('mousemove', e => {
+      if (!drag) return;
+      insp.style.left = Math.max(0, Math.min(window.innerWidth - insp.offsetWidth, e.clientX - ox)) + 'px';
+      insp.style.top = Math.max(0, Math.min(window.innerHeight - 40, e.clientY - oy)) + 'px';
+    });
+    window.addEventListener('mouseup', () => { drag = false; });
+  })();
+
   // ============ LIVE NAV FEED ============
   // Prefer the live Helm Engine (ws://127.0.0.1:8081 — OpenCPN's real Routeman driven headless);
   // fall back to the in-browser sim (nav-source.js) when the engine isn't running. Both emit the
@@ -487,11 +505,11 @@
       set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
       set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
       set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
-      set('nv-eta', s.active.eta); set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
-      set('nv-windrange', s.wind.range);
-      // per-field source: dot the readings still coming from sim (engine sends `sources`)
+      set('nv-eta', s.active.eta); set('nv-ttg', s.active.ttg); set('nv-vmg', s.active.vmg);
+      set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
+      // per-field source kept truthful, but as an unobtrusive tooltip (no on-screen dots)
       const src = s.sources;
-      const mark = (id, key) => { const e = document.getElementById(id); if (e) e.classList.toggle('simfield', !!src && src[key] === 'simulated'); };
+      const mark = (id, key) => { const e = document.getElementById(id); if (e && src) e.title = key.toUpperCase() + ' source: ' + src[key]; };
       mark('nv-pos', 'pos'); mark('nv-sog', 'sog'); mark('nv-cog', 'cog');
       mark('nv-hdg', 'hdg'); mark('nv-depth', 'depth'); mark('nv-wind', 'wind');
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
@@ -521,7 +539,7 @@
       else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, but position is simulated (no GPS/NMEA feed wired)'; }
       else if (state === 'lost') { b.classList.add('lost'); t.textContent = 'ENGINE LOST'; b.title = 'The live engine disconnected — readings are NOT current'; }
       else { b.classList.add('sim'); t.textContent = 'SIM'; b.title = 'Simulated navigation (no engine running)'; }
-      document.querySelectorAll('.ib, .insp').forEach(e => e.classList.toggle('stale', state === 'lost'));
+      document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', state === 'lost'));  // route box stays solid
     }
     // engine declares its position source; a simulated position is never badged as LIVE truth
     const realPos = s => { const p = (s && s.sources && s.sources.pos) || (s && s.posSource); return !!p && p !== 'simulated' && p !== 'sim'; };

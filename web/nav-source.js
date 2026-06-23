@@ -69,8 +69,14 @@
       const d13 = dist(A, pos) / R, th13 = toR(brg(A, pos)), th12 = toR(brg(A, B));
       const xteM = Math.round(Math.abs(Math.asin(Math.sin(d13) * Math.sin(th13 - th12)) * R) * 1852);
 
-      const eta = new Date(t + (dtg / Math.max(0.1, sog)) * 3600 * 1000)
-        .toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+      const etaDate = new Date(t + (dtg / Math.max(0.1, sog)) * 3600 * 1000);
+      const eta = etaDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' · ' +
+                  etaDate.toLocaleDateString([], { weekday: 'short', day: 'numeric', month: 'short' });
+      const ttgMin = Math.round((dtg / Math.max(0.1, sog)) * 60);
+      const ttg = ttgMin < 60 ? ttgMin + 'm'
+                : ttgMin < 1440 ? (Math.floor(ttgMin / 60) + 'h ' + String(ttgMin % 60).padStart(2, '0') + 'm')
+                : (Math.floor(ttgMin / 1440) + 'd ' + Math.floor((ttgMin % 1440) / 60) + 'h');
+      const vmg = (sog * Math.cos(toR(brg(pos, B) - cog))).toFixed(1) + ' kn';   // velocity made good to WP
 
       const windSpd = 14 + Math.sin(t / 11000) * 3;
       const windDir = Math.round((95 + Math.sin(t / 13000) * 10 + 360) % 360);
@@ -86,7 +92,7 @@
         pos, posStr: fmtPos(pos), sog, cog, hdg, depth,
         wind: { spd: windSpd, dir: windDir, range: Math.round(windSpd - 4) + '–' + Math.round(windSpd + 8) + ' kt' },
         active: {
-          name: 'Route to Marina', eta, dtg: fmtNM(dtg), xte: xteM + ' m',
+          name: 'Route to Marina', eta, ttg, vmg, dtg: fmtNM(dtg), xte: xteM + ' m',
           legs,
           nextWp: route[li + 1].name.split(' · ')[0] + ' · ' + fmtNM(dtw)
         }

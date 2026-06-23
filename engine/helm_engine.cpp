@@ -59,6 +59,15 @@ static std::string fmtPos(double lat, double lon) {
 static std::string fmtNM(double nm) {
   char b[32]; std::snprintf(b, sizeof b, "%.1f NM", nm); return b;
 }
+static std::string fmtDur(double hours) {              // time-to-go as a human duration
+  if (!(hours >= 0)) hours = 0;
+  long mins = (long)std::lround(hours * 60.0);
+  char b[24];
+  if (mins < 60)            std::snprintf(b, sizeof b, "%ldm", mins);
+  else if (mins < 24 * 60)  std::snprintf(b, sizeof b, "%ldh %02ldm", mins / 60, mins % 60);
+  else                      std::snprintf(b, sizeof b, "%ldd %ldh", mins / 1440, (mins % 1440) / 60);
+  return b;
+}
 
 // ---------------------------------------------------------------------------
 // Real-data overlay — NMEA 0183 over TCP (port 10110, the standard boat feed).
@@ -252,9 +261,12 @@ int main(int, char**) {
     double xteNM = std::fabs(std::asin(std::sin(dAP / 3440.065) *
                    std::sin((brgAP - legBrg) * M_PI / 180.0)) * 3440.065);
 
+    double hoursToGo = dtg / std::max(0.1, sog);
     std::time_t now = std::time(nullptr);
-    std::time_t etaT = now + (std::time_t)((dtg / std::max(0.1, sog)) * 3600.0);
-    char etabuf[16]; std::strftime(etabuf, sizeof etabuf, "%I:%M %p", std::localtime(&etaT));
+    std::time_t etaT = now + (std::time_t)(hoursToGo * 3600.0);
+    char etabuf[40]; std::strftime(etabuf, sizeof etabuf, "%I:%M %p \xC2\xB7 %a %d %b", std::localtime(&etaT));
+    std::string ttg = fmtDur(hoursToGo);
+    double vmg = sog * std::cos((brgW - cog) * M_PI / 180.0);   // velocity made good toward the active WP
 
     std::string actName = act ? std::string(act->GetName().ToUTF8()) : "—";
     std::string nextShort = actName.substr(0, actName.find(" \xC2\xB7 "));
@@ -281,14 +293,15 @@ int main(int, char**) {
       "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
       "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
       "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},"
-      "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"dtg\":\"%s\",\"xte\":\"%d m\","
+      "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
+      "\"dtg\":\"%s\",\"xte\":\"%d m\","
       "\"legs\":%s,\"nextWp\":\"%s \xC2\xB7 %s\"}}",
       src_pos,
       src_pos, src_sog, src_cog, src_hdg, src_depth, src_wind,
       gLat, gLon, fmtPos(gLat, gLon).c_str(),
       sog, cog, hdg, depth,
       wspd, wdir, std::lround(wspd - 4), std::lround(wspd + 8),
-      etabuf, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
+      etabuf, ttg.c_str(), vmg, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
       legs.c_str(), nextShort.c_str(), fmtNM(dtw).c_str());
 
     for (auto& c : server.getClients()) c->send(json);
