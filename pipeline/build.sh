@@ -22,9 +22,10 @@ have() { command -v "$1" >/dev/null 2>&1; }
 step "region: $REGION_NAME   charts bbox $BBOX   wind bbox $WIND_BBOX"
 
 # --- quick overlay data (the web prototype needs these) ---
-step "wind  (Open-Meteo, ${WIND_NX}x${WIND_NY} grid)"
-python3 "$SCRIPT_DIR/fetch_wind.py" --bbox="$WIND_BBOX" --nx="$WIND_NX" --ny="$WIND_NY" --out "$DATA" \
-  || echo "  ! wind step failed (network?) — continuing"
+step "weather  (Open-Meteo: wind/rain/temp/pressure/waves/current heatmap fields + wind particles)"
+python3 "$SCRIPT_DIR/fetch_weather.py" --bbox="$WIND_BBOX" --nx=14 --ny=14 \
+  --layers wind,rain,temp,pressure,waves,current --out "$DATA" \
+  || echo "  ! weather step failed (network/rate-limit?) — continuing"
 
 step "places  (OpenStreetMap / Overpass)"
 python3 "$SCRIPT_DIR/fetch_places.py" \

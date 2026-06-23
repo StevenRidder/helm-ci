@@ -6,5 +6,10 @@ soundg.geojson
 wind.json
 wind_points.geojson
 places.geojson
+field-*.json
+waves.json
+swell.json
+current.json
+*-points.geojson
 # keep the committed samples (route.geojson, ais-sample.geojson) and this file
 !.gitignore

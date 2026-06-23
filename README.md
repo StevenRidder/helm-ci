@@ -42,6 +42,7 @@ the **first real code** — a reusable data pipeline + a MapLibre prototype
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
+| [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
 | [docs/COMPETITIVE.md](docs/COMPETITIVE.md) | Market landscape + where Helm wins |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
 | [TRACER-BULLET.md](TRACER-BULLET.md) | **The first code** — run the pipeline + prototype |

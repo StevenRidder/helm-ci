@@ -8,58 +8,120 @@
 <style>
   html,body{margin:0;height:100%;background:#05080c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
   #map{position:absolute;inset:0}
-  .panel{position:absolute;top:12px;left:12px;z-index:2;background:rgba(13,19,27,.78);backdrop-filter:blur(18px);
-    border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 12px;color:#eef4f9}
+  .panel{position:absolute;top:12px;left:12px;z-index:2;background:rgba(13,19,27,.82);backdrop-filter:blur(18px);
+    -webkit-backdrop-filter:blur(18px);border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 12px;color:#eef4f9;width:212px}
   .panel h1{font-size:13px;font-weight:600;margin:0 0 8px}
-  .row{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd9e3;padding:3px 0;cursor:pointer}
+  .lbl{font-size:10px;color:#8aa3b5;margin:9px 0 5px;letter-spacing:.05em}
+  .row{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd9e3;padding:2px 0;cursor:pointer}
   .row input{accent-color:#5bc0ff}
-  .hint{font-size:11px;color:#8aa3b5;margin-top:8px;max-width:200px;line-height:1.4}
+  .wx{display:flex;flex-wrap:wrap;gap:5px}
+  .wx button{font-size:11px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);
+    border-radius:7px;padding:4px 8px;cursor:pointer}
+  .wx button.on{background:#5bc0ff;color:#05121d;border-color:#5bc0ff;font-weight:500}
+  .legend{margin-top:9px}
+  .legend .bar{height:9px;border-radius:5px;border:.5px solid rgba(255,255,255,.18)}
+  .legend .sc{display:flex;justify-content:space-between;font-size:10px;color:#9bb0c0;margin-top:3px}
+  .hint{font-size:11px;color:#8aa3b5;margin-top:8px;line-height:1.4}
 </style>
 </head>
 <body>
 <div id="map"></div>
 <div class="panel">
   <h1>Helm · layers</h1>
-  <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite (Sentinel-2)</label>
+  <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite</label>
   <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth areas</label>
-  <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours</label>
   <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
-  <label class="row"><input type="checkbox" data-layer="wind-arrows" checked> Wind (arrows)</label>
-  <label class="row"><input type="checkbox" id="wind-toggle"> Wind (animated)</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
-  <label class="row"><input type="checkbox" data-layer="ais" checked> AIS targets</label>
-  <div class="hint">Satellite + route load live. Depth, wind, places &amp; AIS appear after
-    you run the pipeline (see pipeline/README.md).</div>
+  <label class="row"><input type="checkbox" data-layer="ais" checked> AIS</label>
+
+  <div class="lbl">WEATHER</div>
+  <div class="wx" id="wx">
+    <button data-wx="wind">Wind</button>
+    <button data-wx="gust">Gust</button>
+    <button data-wx="rain">Rain</button>
+    <button data-wx="temp">Temp</button>
+    <button data-wx="waves">Waves</button>
+    <button data-wx="swell">Swell</button>
+    <button data-wx="pressure">Pressure</button>
+    <button data-wx="current">Current</button>
+    <button data-wx="off">Off</button>
+  </div>
+  <label class="row" style="margin-top:6px"><input type="checkbox" id="particles" checked> Animated particles</label>
+  <div class="legend" id="legend" style="display:none">
+    <div class="bar" id="legbar"></div>
+    <div class="sc"><span id="legmin"></span><span id="leglabel"></span><span id="legmax"></span></div>
+  </div>
+  <div class="hint">Live weather via Open-Meteo (the same models as Windy — see docs/WEATHER-DATA.md).
+    Run the pipeline for depth + offline charts.</div>
 </div>
+
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
 <script src="wind-layer.js"></script>
+<script src="field-layer.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
-  // layer toggles: data-layer matches a layer id OR a group prefix (places-, ais-)
+
+  // chart layer toggles (data-layer matches a layer id, or a group prefix like places-/ais-)
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {
     cb.addEventListener('change', () => {
-      const id = cb.dataset.layer;
-      const vis = cb.checked ? 'visible' : 'none';
-      map.getStyle().layers
-        .filter(l => l.id === id || l.id.startsWith(id + '-'))
+      const id = cb.dataset.layer, vis = cb.checked ? 'visible' : 'none';
+      map.getStyle().layers.filter(l => l.id === id || l.id.startsWith(id + '-'))
         .forEach(l => map.setLayoutProperty(l.id, 'visibility', vis));
     });
   });
 
-  // animated wind (a canvas overlay, not a style layer)
-  const wind = window.HelmWind ? window.HelmWind(map) : null;
-  map.on('load', () => { if (wind) wind.load('data/wind.json'); });
-  const wt = document.getElementById('wind-toggle');
-  if (wt && wind) wt.addEventListener('change', () => wind.setVisible(wt.checked));
-  // tap a sounding/wind node to inspect it
+  // ---- weather: heatmap color field (HelmField) + animated particles (HelmWind) ----
+  const wind = window.HelmWind ? HelmWind(map) : null;
+  if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
+  let field = null;
+  const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
+
+  function buildLegend(f) {
+    const leg = document.getElementById('legend');
+    if (!f) { leg.style.display = 'none'; return; }
+    const span = (f.vmax - f.vmin) || 1;
+    const grad = f.stops.map(s => {
+      const pct = Math.max(0, Math.min(100, (s[0] - f.vmin) / span * 100));
+      const c = s[1], a = c.length > 3 ? c[3] : 1;
+      return `rgba(${c[0]},${c[1]},${c[2]},${a}) ${pct}%`;
+    }).join(',');
+    document.getElementById('legbar').style.background = `linear-gradient(90deg, ${grad})`;
+    document.getElementById('legmin').textContent = Math.round(f.vmin);
+    document.getElementById('legmax').textContent = Math.round(f.vmax) + ' ' + f.unit;
+    document.getElementById('leglabel').textContent = f.layer;
+    leg.style.display = 'block';
+  }
+
+  function setWeather(name) {
+    document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
+    if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
+    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.72 });
+    if (field) field.load('data/field-' + name + '.json').then(buildLegend);
+    const partOn = document.getElementById('particles').checked;
+    if (wind) {
+      if (VECTOR[name] && partOn) { wind.load('data/' + VECTOR[name]); wind.setVisible(true); }
+      else wind.setVisible(false);
+    }
+  }
+
+  document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx)));
+  document.getElementById('particles').addEventListener('change', () => {
+    const active = document.querySelector('#wx button.on');
+    if (active) setWeather(active.dataset.wx);
+  });
+
+  map.on('load', () => {
+    if (map.getLayer('wind-arrows')) map.setLayoutProperty('wind-arrows', 'visibility', 'none'); // replaced by particles
+    setWeather('wind');
+  });
+
+  // click popups
   map.on('click', 'soundg-text', e => new maplibregl.Popup().setLngLat(e.lngLat)
     .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
-  map.on('click', 'wind-arrows', e => new maplibregl.Popup().setLngLat(e.lngLat)
-    .setHTML(e.features[0].properties.speed_kn + ' kn @ ' + e.features[0].properties.dir_deg + '°').addTo(map));
   map.on('click', 'places-icon', e => { const p = e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
   map.on('click', 'ais-vessels', e => { const p = e.features[0].properties;
