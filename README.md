@@ -15,9 +15,9 @@ chart itself). Nothing on the market shows it all on one screen. **That is the p
 
 ## Status
 
-Concept / pre-alpha. This repo currently holds the product definition, architecture,
-and the research behind it — **no application code yet.** The first milestone is a
-"tracer bullet" (below).
+Pre-alpha. Holds the product definition, architecture, research, the canonical UI, and now
+the **first real code** — a reusable data pipeline + a MapLibre prototype
+(see [TRACER-BULLET.md](TRACER-BULLET.md)). Native app is the next step.
 
 ## The three differentiators
 
@@ -44,6 +44,9 @@ and the research behind it — **no application code yet.** The first milestone 
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/COMPETITIVE.md](docs/COMPETITIVE.md) | Market landscape + where Helm wins |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
+| [TRACER-BULLET.md](TRACER-BULLET.md) | **The first code** — run the pipeline + prototype |
+| [pipeline/](pipeline/) | Reusable engine: tiler · depth · wind |
+| [web/](web/) | MapLibre prototype + shared `style.json` |
 | [docs/LEGAL.md](docs/LEGAL.md) | Source licensing tiers — **read before touching a tile** |
 | [docs/ROADMAP.md](docs/ROADMAP.md) | Phases 0–3 |
 | [docs/decisions/](docs/decisions/) | Architecture decision records (ADRs) |

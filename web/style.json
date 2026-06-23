@@ -1,0 +1,47 @@
+{
+  "version": 8,
+  "name": "Helm — tracer bullet",
+  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "sources": {
+    "sat": {
+      "type": "raster", "tileSize": 256,
+      "tiles": ["https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg"],
+      "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0)"
+    },
+    "charts": {
+      "type": "raster", "tileSize": 256,
+      "tiles": ["https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png"],
+      "attribution": "NOAA ENC (public domain)"
+    },
+    "depare": { "type": "geojson", "data": "data/depare.geojson" },
+    "depcnt": { "type": "geojson", "data": "data/depcnt.geojson" },
+    "soundg": { "type": "geojson", "data": "data/soundg.geojson" },
+    "route":  { "type": "geojson", "data": "data/route.geojson" },
+    "wind":   { "type": "geojson", "data": "data/wind_points.geojson" }
+  },
+  "layers": [
+    { "id": "satellite", "type": "raster", "source": "sat" },
+    { "id": "charts", "type": "raster", "source": "charts", "layout": { "visibility": "none" }, "paint": { "raster-opacity": 0.85 } },
+    { "id": "depare-fill", "type": "fill", "source": "depare",
+      "paint": { "fill-color": ["interpolate", ["linear"], ["coalesce", ["get", "DRVAL1"], 0],
+        0, "#a9d6ec", 5, "#bfe2f0", 10, "#d8eef8", 30, "#eef7fc"],
+        "fill-opacity": 0.45 } },
+    { "id": "depcnt-line", "type": "line", "source": "depcnt",
+      "paint": { "line-color": "#2f6f8f", "line-width": 0.8, "line-dasharray": [3, 3], "line-opacity": 0.7 } },
+    { "id": "soundg-text", "type": "symbol", "source": "soundg",
+      "layout": { "text-field": ["number-format", ["get", "DEPTH"], { "max-fraction-digits": 0 }],
+        "text-font": ["Open Sans Regular"], "text-size": 11, "text-allow-overlap": false },
+      "paint": { "text-color": "#345", "text-halo-color": "#fff", "text-halo-width": 1 } },
+    { "id": "route-line", "type": "line", "source": "route",
+      "layout": { "line-cap": "round", "line-join": "round" },
+      "paint": { "line-color": "#d6219a", "line-width": 3 } },
+    { "id": "wind-arrows", "type": "symbol", "source": "wind",
+      "layout": { "text-field": "➤", "text-font": ["Open Sans Regular"], "text-size": 18,
+        "text-rotate": ["get", "dir_deg"], "text-rotation-alignment": "map", "text-allow-overlap": true },
+      "paint": { "text-color": ["interpolate", ["linear"], ["get", "speed_kn"],
+        0, "#1aa58c", 12, "#7fae3a", 20, "#d98a1a", 30, "#dd3b3b"],
+        "text-opacity": 0.9 } }
+  ],
+  "center": [-81.77, 24.52],
+  "zoom": 12
+}

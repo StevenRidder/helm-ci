@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helm — tracer bullet</title>
+<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<style>
+  html,body{margin:0;height:100%;background:#05080c;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+  #map{position:absolute;inset:0}
+  .panel{position:absolute;top:12px;left:12px;z-index:2;background:rgba(13,19,27,.78);backdrop-filter:blur(18px);
+    border:.5px solid rgba(255,255,255,.14);border-radius:12px;padding:10px 12px;color:#eef4f9}
+  .panel h1{font-size:13px;font-weight:600;margin:0 0 8px}
+  .row{display:flex;align-items:center;gap:8px;font-size:12px;color:#cdd9e3;padding:3px 0;cursor:pointer}
+  .row input{accent-color:#5bc0ff}
+  .hint{font-size:11px;color:#8aa3b5;margin-top:8px;max-width:200px;line-height:1.4}
+</style>
+</head>
+<body>
+<div id="map"></div>
+<div class="panel">
+  <h1>Helm · layers</h1>
+  <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite (Sentinel-2)</label>
+  <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
+  <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth areas</label>
+  <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours</label>
+  <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
+  <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
+  <label class="row"><input type="checkbox" data-layer="wind-arrows" checked> Wind</label>
+  <div class="hint">Satellite + route load live. Depth &amp; wind appear after you run the
+    pipeline (see pipeline/README.md).</div>
+</div>
+<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script>
+  const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
+  map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
+  map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
+  document.querySelectorAll('.row input').forEach(cb => {
+    cb.addEventListener('change', () => {
+      const id = cb.dataset.layer;
+      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked ? 'visible' : 'none');
+    });
+  });
+  // tap a sounding/wind node to inspect it
+  map.on('click', 'soundg-text', e => new maplibregl.Popup().setLngLat(e.lngLat)
+    .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
+  map.on('click', 'wind-arrows', e => new maplibregl.Popup().setLngLat(e.lngLat)
+    .setHTML(e.features[0].properties.speed_kn + ' kn @ ' + e.features[0].properties.dir_deg + '°').addTo(map));
+</script>
+</body>
+</html>

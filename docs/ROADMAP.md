@@ -25,6 +25,9 @@ A single macOS screen that proves the magic, end to end:
 
 **Go/no-go:** if that screen feels worth using, the project is real.
 
+> Code now lives in [pipeline/](../pipeline/) (tiler · depth · wind) + [web/](../web/) —
+> see [TRACER-BULLET.md](../TRACER-BULLET.md).
+
 ## Phase 1 — MVP: native chart + safe on-demand charts + connectivity + own GRIB
 
 - SwiftUI/MapLibre shell on all three platforms.

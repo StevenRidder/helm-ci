@@ -1,0 +1,19 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    {
+      "type": "Feature",
+      "properties": { "name": "Key West approach" },
+      "geometry": {
+        "type": "LineString",
+        "coordinates": [
+          [-81.808, 24.458],
+          [-81.800, 24.485],
+          [-81.793, 24.515],
+          [-81.786, 24.540],
+          [-81.781, 24.557]
+        ]
+      }
+    }
+  ]
+}
