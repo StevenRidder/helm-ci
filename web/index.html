@@ -449,23 +449,20 @@
   })();
 
   // ============ LIVE NAV FEED ============
-  // Drives the instrument bar + route inspector from HelmNav. The state object is the
-  // exact shape the Helm Engine's WebSocket will emit (Phase 3) — swap the source, not the UI.
+  // Prefer the live Helm Engine (ws://127.0.0.1:8081 — OpenCPN's real Routeman driven headless);
+  // fall back to the in-browser sim (nav-source.js) when the engine isn't running. Both emit the
+  // SAME state shape, so the cockpit code below is identical for real and simulated nav.
   (function () {
-    if (!window.HelmNav) return;
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
     let boat = null;
-    HelmNav(function (s) {
-      // bottom instrument bar
-      set('nv-sog', s.sog.toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
-      set('nv-depth', s.depth.toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
+    function applyNav(s) {
+      set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
+      set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
       set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
-      // right route inspector
       set('nv-eta', s.active.eta); set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
       set('nv-windrange', s.wind.range);
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
-      // ownship marker on the chart (markers attach independent of style/tile load)
       try {
         if (!boat) {
           const el = document.createElement('div');
@@ -476,7 +473,17 @@
         }
         boat.setLngLat([s.pos.lon, s.pos.lat]).setRotation(s.cog);
       } catch (e) { /* map not ready this tick */ }
-    });
+    }
+    let sim = null, engineLive = false;
+    const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); window.__navSource = engineLive ? 'engine' : 'sim'; };
+    const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
+    try {
+      const ws = new WebSocket('ws://127.0.0.1:8081');
+      ws.onmessage = e => { engineLive = true; window.__navSource = 'engine'; stopSim(); try { applyNav(JSON.parse(e.data)); } catch (x) {} };
+      ws.onerror = () => { if (!engineLive) startSim(); };
+      ws.onclose = () => { engineLive = false; startSim(); };
+      setTimeout(() => { if (!engineLive) startSim(); }, 1500);
+    } catch (e) { startSim(); }
   })();
 </script>
 </body>

@@ -1,0 +1,22 @@
+# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
+add_executable(helm-engine helm_engine.cpp api_shim.cpp)
+set_property(TARGET helm-engine PROPERTY ENABLE_EXPORTS ON)
+target_include_directories(helm-engine PRIVATE
+  ${PROJECT_SOURCE_DIR}/include ${PROJECT_SOURCE_DIR}/gui/include
+  ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
+target_compile_definitions(helm-engine PUBLIC USE_MOCK_DEFS)
+if (TARGET ocpn::wxcurl)
+  target_link_libraries(helm-engine PRIVATE ocpn::wxcurl)
+else ()
+  target_link_libraries(helm-engine PRIVATE ${SYS_WXCURL_LIBRARIES})
+endif ()
+target_link_libraries(helm-engine PRIVATE ${wxWidgets_LIBRARIES})
+if (TARGET ocpn::wxsvg)
+  target_link_libraries(helm-engine PRIVATE ocpn::wxsvg)
+endif ()
+target_link_libraries(helm-engine PRIVATE ocpn::serial ocpn::tinyxml ocpn::filesystem ocpn::gl-headers)
+if (HAVE_LIBUDEV)
+  target_link_libraries(helm-engine PRIVATE ocpn::libudev)
+endif ()
+target_link_libraries(helm-engine PRIVATE ocpn::model ocpn::model-src)
+target_link_libraries(helm-engine PRIVATE ixwebsocket)

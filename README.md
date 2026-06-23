@@ -20,8 +20,10 @@ Pre-alpha. Holds the product definition, architecture, research, the canonical U
 (see [TRACER-BULLET.md](TRACER-BULLET.md)). **Phase 1 of the build plan is proven** — *both* reuse halves run headless on a Mac: OpenCPN's
 `model/` nav core ([spike/opencpn-headless/](spike/opencpn-headless/)) **and** its S-52 ENC renderer
 ([spike/opencpn-headless/chart-render/](spike/opencpn-headless/chart-render/), which rendered a real
-NOAA cell to a PNG with no GUI). The plan is to reuse both under our UI
-([docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md)).
+NOAA cell to a PNG with no GUI). **Phase 2 has begun**: the [Helm Engine](engine/) skeleton drives
+OpenCPN's real `Routeman` headless and streams nav state over a WebSocket the web UI consumes — the
+cockpit is now live against the actual engine (S-52 chart-tile HTTP server is the next increment).
+See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 
 ## The three differentiators
 

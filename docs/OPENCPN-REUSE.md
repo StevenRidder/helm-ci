@@ -120,8 +120,12 @@ clean-room cross-platform/commercial version (slow, separate). Or just embrace t
   - *S-52 renderer* — rendered NOAA cell US5FL96M to a real S-52 PNG, no GUI / no GL context. See
     [spike/opencpn-headless/chart-render/](../spike/opencpn-headless/chart-render/).
   Option A is validated end-to-end: OpenCPN's nav engine **and** chart picture both reusable headless.
-- **Phase 2 — engine:** the Helm Engine — link `model/` + `s57chart`; serve nav state over localhost
-  WS + S-52 tiles over localhost HTTP. Do the two relocations (`UpdateProgress`, tides).
+- **Phase 2 — engine (started):** the Helm Engine — link `model/` + `s57chart`; serve nav state over
+  localhost WS + S-52 tiles over localhost HTTP. Do the two relocations (`UpdateProgress`, tides).
+  - ✅ *nav-state WebSocket live* ([engine/](../engine/)): OpenCPN's real `Routeman` driven headless →
+    `ws://127.0.0.1:8081` → the UI cockpit (instruments + route inspector + ownship), verified
+    end-to-end. The UI prefers the engine, falls back to the JS sim — same JSON contract.
+  - ⬜ *S-52 chart-tile HTTP server* next (`/chart/{z}/{x}/{y}.png` via the proven chart-render path).
 - **Phase 3 — wire the UI:** connect this web UI to the engine — real S-52 charts + real
   position/route/AIS, alongside the existing satellite/weather/places. Now it's a real chartplotter
   with this face.
