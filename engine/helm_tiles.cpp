@@ -49,8 +49,7 @@ extern wxString g_SENCPrefix;
 extern wxString g_SData_Locn;
 void EnsureHeadlessGlobals();
 
-static wxString s_shared_data = wxT("/tmp/opencpn/data/");
-extern "C" wxString* GetpSharedDataLocation() { return &s_shared_data; }
+// GetpSharedDataLocation() is provided by the chart-render library (chart_stubs.cpp).
 
 static const wxString kDataDir = wxT("/tmp/opencpn/data/");
 static const wxString kS57Data = wxT("/tmp/opencpn/data/s57data/");

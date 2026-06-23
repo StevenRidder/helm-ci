@@ -53,10 +53,7 @@ extern wxString g_SData_Locn;   // owned by chart_stubs.cpp
 // m_pRegistrarMan->getAttributeID() UNGUARDED -> we MUST set it.
 void EnsureHeadlessGlobals();
 
-// ---- shared-data location hook (used by s52plib DURING init to find
-//      s57data/s57objectclasses.csv). MUST point at the dir CONTAINING s57data.
-static wxString s_shared_data = wxT("/tmp/opencpn/data/");
-extern "C" wxString* GetpSharedDataLocation() { return &s_shared_data; }
+// GetpSharedDataLocation() is provided by the chart-render library (chart_stubs.cpp).
 
 // ---------------------------------------------------------------------------
 

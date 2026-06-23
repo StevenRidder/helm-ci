@@ -24,7 +24,7 @@ app globals. **Recommendation: Option A — extract a first-class `ocpn::chart-r
 | 3 | Sever the GUI top-frame from the render path (drop magic `GetBestVPScale`) | ✅ **done + verified** |
 | 4 | Platform `GetDisplayDPmm()` hardcoded `4.0` → real `BasePlatform::GetDisplayDPmm()` | ✅ **done + verified** |
 | 5 | **ChartDB + quilting** (real multi-cell, not one hardcoded cell) | ⬜ larger (~1.5–3 wk) |
-| 6 | Extract `ocpn::chart-render` library; vendor OpenCPN + maintained patches (Option A) | ⬜ larger (~1–2 wk) |
+| 6 | Extract `ocpn::chart-render` library; vendor OpenCPN + maintained patches (Option A) | 🟡 **library extracted**; seam + vendoring next |
 
 ### ✅ 1 — Native-scale / safety-contour fix (the dangerous one)
 `s57chart::BuildRAZFromSENCFile()` ingested the SENC but **never copied the decoded native
@@ -63,6 +63,18 @@ number drives the render path.
 `BasePlatform::GetDisplayDPmm()` (linked from `model-src`) — actual platform code, not a constant.
 DPmm feeds `m_LOD_meters`; it's inert today (`g_SENC_LOD_pixels == 0` gates LOD decimation off), but
 production tile-LOD parity would pin it to the SENC build environment. **Verified:** byte-identical tiles.
+
+### 🟡 6 — chart-render as a first-class library (in progress)
+The headless S-52 renderer was a `gui/src` source *slice* recompiled into each executable, propped up
+by stubs. **Increment 1 (done):** it's now a real static library, `ocpn::chart-render`
+(`libhelm-chartrender.a`) — the slice + stubs compiled once, with `PUBLIC` include/define/link usage
+requirements that flow to consumers, and `GetpSharedDataLocation()` moved into the library so it has
+**no back-reference to its host executable**. Both `chart-spike` and `helm-tiles` now just link it;
+because the library carries `OCPN_HEADLESS`, **the faked-RTTI shim (`chart_typeinfo.cpp`) is no longer
+needed by any target** and is retired. Verified: both build from the library and render identically
+(nativeScale 40000, same tiles). **Next:** finish the `AbstractTopFrame` seam so the library needs no
+no-op frame stub at all, then vendor OpenCPN as a maintained patch series rather than building against
+a clone.
 
 ## Fail-and-fix-early hardening (no masked failures)
 A nav system must surface problems the moment they occur, never hide them behind fallbacks or

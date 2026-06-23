@@ -51,6 +51,12 @@ PlugInManager* g_pi_manager = nullptr;   // optional plugin/light overlay; unuse
 wxString g_SData_Locn;                   // shared-data dir
 bool     g_OsencVerbose = false;
 
+// Shared-data location hook (s52plib uses it during init to find s57data/). The
+// chart-render LIBRARY owns it now (was duplicated per-main), so the library has
+// no back-reference to its host executable. Defaults to the in-repo data dir.
+wxString g_helm_shared_data = wxT("/tmp/opencpn/data/");
+extern "C" wxString* GetpSharedDataLocation() { return &g_helm_shared_data; }
+
 // ---------------------------------------------------------------------------
 // ChartBase ctor/dtor/GetHashKey -- lifted from gui/src/chartimg.cpp:122-178 so
 // that chartimg.cpp (the large BSB raster reader) is NOT compiled into the
