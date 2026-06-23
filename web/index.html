@@ -65,6 +65,7 @@
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
+<script src="isolines.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
@@ -84,6 +85,7 @@
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
+  const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
 
   function buildLegend(f) {
@@ -104,6 +106,7 @@
 
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
+    if (iso) iso.setVisible(name === 'pressure');
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
       if (radar) radar.load(); return;
@@ -112,6 +115,7 @@
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
     if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.6 });
     if (field) field.load('data/field-' + name + '.json').then(buildLegend);
+    if (iso && name === 'pressure') iso.load('data/field-pressure.json', { interval: 1 });
     const partOn = document.getElementById('particles').checked;
     if (wind) {
       if (VECTOR[name] && partOn) { wind.load('data/' + VECTOR[name]); wind.setVisible(true); }
