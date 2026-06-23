@@ -37,7 +37,7 @@
     maxParticleAge: 50,    // shorter life -> shorter streaks + more frequent respawns
     fadeOpacity: 0.85,     // faster fade -> short tails (not long silky trails)
     lineWidth: 0.9,
-    speedFactor: 0.11,     // gentle drift — Windy's slow pace
+    speedFactor: 0.073,    // very gentle drift — ~0.66x of 0.11
     frameRate: 60,         // target fps (rAF-driven; soft cap)
     minVisibleZoomStep: 0  // reserved
   };

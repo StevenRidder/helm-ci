@@ -329,7 +329,7 @@
   const WINDY_WIND = [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],
                       [22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]];
   const fieldOpts = n => n === 'wind' ? { stops: WINDY_WIND } : undefined;
-  const showIsobars = n => n === 'pressure' || n === 'wind';   // isobars on the wind view too
+  const showIsobars = n => false;   // isobars OFF for now (revisit later — coarse grid looks jagged)
   let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
   const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
   const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
