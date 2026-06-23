@@ -54,6 +54,9 @@ def main():
     with urllib.request.urlopen(req, timeout=40) as r:
         payload = json.load(r)
     nodes = payload if isinstance(payload, list) else [payload]
+    if len(nodes) != a.nx * a.ny:
+        raise SystemExit(f"Open-Meteo returned {len(nodes)} nodes, expected {a.nx * a.ny} "
+                         f"(grid {a.nx}x{a.ny}); reduce --nx/--ny or retry.")
 
     us, vs, feats = [], [], []
     for k, node in enumerate(nodes):
@@ -69,7 +72,7 @@ def main():
     dx = (e - w) / (a.nx - 1)
     dy = (n - s) / (a.ny - 1)
     header = {"nx": a.nx, "ny": a.ny, "lo1": w, "la1": n, "lo2": e, "la2": s,
-              "dx": dx, "dy": dy, "refTime": payload[0].get("current", {}).get("time", "") if nodes else ""}
+              "dx": dx, "dy": dy, "refTime": nodes[0].get("current", {}).get("time", "") if nodes else ""}
     velocity = [
         {"header": {**header, "parameterCategory": 2, "parameterNumber": 2, "parameterNumberName": "U-component_of_wind"}, "data": us},
         {"header": {**header, "parameterCategory": 2, "parameterNumber": 3, "parameterNumberName": "V-component_of_wind"}, "data": vs},

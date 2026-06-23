@@ -1,0 +1,12 @@
+{
+  "type": "FeatureCollection",
+  "_comment": "Helm AIS sample (synthetic) -- a handful of vessels for the prototype. sog=speed over ground (kn), cog=course over ground (deg true), cpa=closest point of approach to ownship (nm).",
+  "features": [
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.805, 24.555] }, "properties": { "name": "Sea Fox", "mmsi": 369000001, "sog": 6.2, "cog": 95, "cpa": 1.8, "type": "vessel" } },
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.776, 24.56] }, "properties": { "name": "Conch Express", "mmsi": 367000123, "sog": 12.4, "cog": 210, "cpa": 0.42, "type": "vessel" } },
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.752, 24.5] }, "properties": { "name": "Reef Wanderer", "mmsi": 338000777, "sog": 0.0, "cog": 0, "cpa": 3.1, "type": "vessel" } },
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.73, 24.535] }, "properties": { "name": "Marathon Maru", "mmsi": 367111222, "sog": 18.7, "cog": 305, "cpa": 0.15, "type": "vessel" } },
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.7, 24.512] }, "properties": { "name": "Salty Paws", "mmsi": 366998877, "sog": 4.5, "cog": 140, "cpa": 2.6, "type": "vessel" } },
+    { "type": "Feature", "geometry": { "type": "Point", "coordinates": [-81.84, 24.48] }, "properties": { "name": "Gulf Drifter", "mmsi": 368445566, "sog": 9.1, "cog": 60, "cpa": 5.0, "type": "vessel" } }
+  ]
+}

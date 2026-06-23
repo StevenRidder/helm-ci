@@ -26,26 +26,44 @@
   <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours</label>
   <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
-  <label class="row"><input type="checkbox" data-layer="wind-arrows" checked> Wind</label>
-  <div class="hint">Satellite + route load live. Depth &amp; wind appear after you run the
-    pipeline (see pipeline/README.md).</div>
+  <label class="row"><input type="checkbox" data-layer="wind-arrows" checked> Wind (arrows)</label>
+  <label class="row"><input type="checkbox" id="wind-toggle"> Wind (animated)</label>
+  <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
+  <label class="row"><input type="checkbox" data-layer="ais" checked> AIS targets</label>
+  <div class="hint">Satellite + route load live. Depth, wind, places &amp; AIS appear after
+    you run the pipeline (see pipeline/README.md).</div>
 </div>
 <script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="wind-layer.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
-  document.querySelectorAll('.row input').forEach(cb => {
+  // layer toggles: data-layer matches a layer id OR a group prefix (places-, ais-)
+  document.querySelectorAll('.row input[data-layer]').forEach(cb => {
     cb.addEventListener('change', () => {
       const id = cb.dataset.layer;
-      if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', cb.checked ? 'visible' : 'none');
+      const vis = cb.checked ? 'visible' : 'none';
+      map.getStyle().layers
+        .filter(l => l.id === id || l.id.startsWith(id + '-'))
+        .forEach(l => map.setLayoutProperty(l.id, 'visibility', vis));
     });
   });
+
+  // animated wind (a canvas overlay, not a style layer)
+  const wind = window.HelmWind ? window.HelmWind(map) : null;
+  map.on('load', () => { if (wind) wind.load('data/wind.json'); });
+  const wt = document.getElementById('wind-toggle');
+  if (wt && wind) wt.addEventListener('change', () => wind.setVisible(wt.checked));
   // tap a sounding/wind node to inspect it
   map.on('click', 'soundg-text', e => new maplibregl.Popup().setLngLat(e.lngLat)
     .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
   map.on('click', 'wind-arrows', e => new maplibregl.Popup().setLngLat(e.lngLat)
     .setHTML(e.features[0].properties.speed_kn + ' kn @ ' + e.features[0].properties.dir_deg + '°').addTo(map));
+  map.on('click', 'places-icon', e => { const p = e.features[0].properties;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
+  map.on('click', 'ais-vessels', e => { const p = e.features[0].properties;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || 'AIS target') + '</b><br>SOG ' + (p.sog ?? '?') + ' · COG ' + (p.cog ?? '?') + (p.cpa != null ? ' · CPA ' + p.cpa + ' NM' : '')).addTo(map); });
 </script>
 </body>
 </html>

@@ -5,5 +5,6 @@ depcnt.geojson
 soundg.geojson
 wind.json
 wind_points.geojson
-# keep the sample route.geojson and this file
+places.geojson
+# keep the committed samples (route.geojson, ais-sample.geojson) and this file
 !.gitignore

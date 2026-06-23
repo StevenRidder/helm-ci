@@ -60,23 +60,25 @@ def main():
     for z in range(a.minzoom, a.maxzoom + 1):
         x0, y0 = deg2num(w, n, z)   # NW corner
         x1, y1 = deg2num(e, s, z)   # SE corner
+        zget = zmiss = ztot = 0     # per-zoom counters
         for x in range(min(x0, x1), max(x0, x1) + 1):
             for y in range(min(y0, y1), max(y0, y1) + 1):
-                total += 1
+                ztot += 1
                 url = a.source.format(z=z, x=x, y=y)
                 try:
                     data = fetch(url)
                 except (urllib.error.HTTPError, urllib.error.URLError, TimeoutError) as ex:
-                    miss += 1
+                    zmiss += 1
                     continue
                 tms_y = (2 ** z - 1) - y   # XYZ -> TMS flip
                 cur.execute("INSERT OR REPLACE INTO tiles VALUES (?,?,?,?)",
                             (z, x, tms_y, sqlite3.Binary(data)))
-                got += 1
+                zget += 1
                 if a.delay:
                     time.sleep(a.delay)
+        got += zget; miss += zmiss; total += ztot
         con.commit()
-        print(f"  z{z}: {got} kept, {miss} missing ({total} seen)", file=sys.stderr)
+        print(f"  z{z}: {zget} kept, {zmiss} missing ({ztot} seen)", file=sys.stderr)
 
     con.commit()
     con.close()
