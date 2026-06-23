@@ -57,6 +57,13 @@
     <div class="bar" id="legbar"></div>
     <div class="sc"><span id="legmin"></span><span id="leglabel"></span><span id="legmax"></span></div>
   </div>
+  <div id="time" style="display:none;margin-top:9px">
+    <div style="display:flex;align-items:center;gap:7px">
+      <button id="play" style="font-size:12px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid rgba(255,255,255,.14);border-radius:7px;padding:2px 9px;cursor:pointer">&#9658;</button>
+      <input type="range" id="tslider" min="0" max="0" value="0" step="1" style="flex:1;accent-color:#5bc0ff">
+    </div>
+    <div id="tlabel" style="font-size:10px;color:#9bb0c0;text-align:center;margin-top:3px"></div>
+  </div>
   <div class="hint">Live weather via Open-Meteo (the same models as Windy — see docs/WEATHER-DATA.md).
     Run the pipeline for depth + offline charts.</div>
 </div>
@@ -87,6 +94,9 @@
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
+  let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
+  const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
+  const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
 
   function buildLegend(f) {
     const leg = document.getElementById('legend');
@@ -106,6 +116,7 @@
 
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
+    activeWx = name;
     if (iso) iso.setVisible(name === 'pressure');
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
@@ -114,14 +125,43 @@
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
     if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.6 });
-    if (field) field.load('data/field-' + name + '.json').then(buildLegend);
-    if (iso && name === 'pressure') iso.load('data/field-pressure.json', { interval: 1 });
+    if (field) field.load(fieldUrl(name)).then(buildLegend);
+    if (iso && name === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
     const partOn = document.getElementById('particles').checked;
     if (wind) {
-      if (VECTOR[name] && partOn) { wind.load('data/' + VECTOR[name]); wind.setVisible(true); }
+      if (VECTOR[name] && partOn) { wind.load(velUrl(name)); wind.setVisible(true); }
       else wind.setVisible(false);
     }
   }
+
+  function setFrame(i) {
+    if (!forecast) return;
+    frame = Math.max(0, Math.min(forecast.hours - 1, i));
+    document.getElementById('tslider').value = frame;
+    const t = forecast.times && forecast.times[frame];
+    document.getElementById('tlabel').textContent = t
+      ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
+      : ('+' + frame + 'h');
+    if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
+      if (field) field.load(fieldUrl(activeWx)).then(buildLegend);
+      if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
+      if (wind && VECTOR[activeWx] && document.getElementById('particles').checked) wind.load(velUrl(activeWx));
+    }
+  }
+  fetch('data/forecast.json').then(r => r.ok ? r.json() : null).then(fc => {
+    if (!fc) return;
+    forecast = fc;
+    const sl = document.getElementById('tslider');
+    sl.max = fc.hours - 1; sl.value = 0;
+    document.getElementById('time').style.display = 'block';
+    sl.addEventListener('input', () => setFrame(+sl.value));
+    const playBtn = document.getElementById('play');
+    playBtn.addEventListener('click', () => {
+      if (playTimer) { clearInterval(playTimer); playTimer = null; playBtn.innerHTML = '&#9658;'; }
+      else { playBtn.innerHTML = '&#10073;&#10073;'; playTimer = setInterval(() => setFrame((frame + 1) % forecast.hours), 900); }
+    });
+    setFrame(0);
+  }).catch(() => {});
 
   document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx)));
   document.getElementById('particles').addEventListener('change', () => {

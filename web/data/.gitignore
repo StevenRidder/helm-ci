@@ -11,5 +11,7 @@ waves.json
 swell.json
 current.json
 *-points.geojson
+*-t*.json
+forecast.json
 # keep the committed samples (route.geojson, ais-sample.geojson) and this file
 !.gitignore
