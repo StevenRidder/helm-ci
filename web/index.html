@@ -255,27 +255,27 @@
     <span>Route to Marina</span>
   </div>
   <div class="kpis">
-    <div class="k"><div class="l">ETA</div><div class="v">11:42</div></div>
-    <div class="k"><div class="l">DTG</div><div class="v">2.4 NM</div></div>
-    <div class="k"><div class="l">XTE</div><div class="v" style="color:var(--ok)">12 m</div></div>
+    <div class="k"><div class="l">ETA</div><div class="v" id="nv-eta">11:42</div></div>
+    <div class="k"><div class="l">DTG</div><div class="v" id="nv-dtg">2.4 NM</div></div>
+    <div class="k"><div class="l">XTE</div><div class="v" id="nv-xte" style="color:var(--ok)">12 m</div></div>
   </div>
   <hr>
-  <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" style="color:var(--ctext)">WP4 · marina</span><span class="br">315°</span></div>
-  <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" style="color:var(--cdim)">WP3 · channel</span><span class="br">331°</span></div>
+  <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" id="nv-leg0nm" style="color:var(--ctext)">WP4 · marina</span><span class="br" id="nv-leg0br">315°</span></div>
+  <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" id="nv-leg1nm" style="color:var(--cdim)">WP3 · channel</span><span class="br" id="nv-leg1br">331°</span></div>
   <hr>
-  <div class="windbar"><span class="l">Wind</span><div class="b"></div><span class="v">8–24 kt</span></div>
+  <div class="windbar"><span class="l">Wind</span><div class="b"></div><span class="v" id="nv-windrange">8–24 kt</span></div>
 </div>
 
 <!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
 <div class="ib glass">
-  <div class="it"><div class="l">SOG</div><div class="v">6.2<span class="u"> kn</span></div></div>
-  <div class="it"><div class="l">COG</div><div class="v">316<span class="u">°</span></div></div>
-  <div class="it"><div class="l">HDG</div><div class="v">319<span class="u">°</span></div></div>
-  <div class="it"><div class="l">Depth</div><div class="v">8.4<span class="u"> m</span></div></div>
-  <div class="it"><div class="l">Wind</div><div class="v">14<span class="u"> kt</span></div></div>
+  <div class="it"><div class="l">SOG</div><div class="v"><span id="nv-sog">6.2</span><span class="u"> kn</span></div></div>
+  <div class="it"><div class="l">COG</div><div class="v"><span id="nv-cog">316</span><span class="u">°</span></div></div>
+  <div class="it"><div class="l">HDG</div><div class="v"><span id="nv-hdg">319</span><span class="u">°</span></div></div>
+  <div class="it"><div class="l">Depth</div><div class="v"><span id="nv-depth">8.4</span><span class="u"> m</span></div></div>
+  <div class="it"><div class="l">Wind</div><div class="v"><span id="nv-wind">14</span><span class="u"> kt</span></div></div>
   <div class="it wide">
-    <div><div class="l">Position</div><div class="v2">17°29.4′S · 149°49.6′W</div></div>
-    <div class="r"><div class="l">Next</div><div class="v2">R "4" · 0.3 NM</div></div>
+    <div><div class="l">Position</div><div class="v2" id="nv-pos">17°29.4′S · 149°49.6′W</div></div>
+    <div class="r"><div class="l">Next</div><div class="v2" id="nv-next">R "4" · 0.3 NM</div></div>
   </div>
 </div>
 
@@ -284,6 +284,7 @@
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
 <script src="isolines.js"></script>
+<script src="nav-source.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
@@ -445,6 +446,37 @@
       applyTheme(s.dataset.theme);
     }));
     if (map.isStyleLoaded()) applyTheme('day'); else map.on('load', () => applyTheme('day'));
+  })();
+
+  // ============ LIVE NAV FEED ============
+  // Drives the instrument bar + route inspector from HelmNav. The state object is the
+  // exact shape the Helm Engine's WebSocket will emit (Phase 3) — swap the source, not the UI.
+  (function () {
+    if (!window.HelmNav) return;
+    const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
+    let boat = null;
+    HelmNav(function (s) {
+      // bottom instrument bar
+      set('nv-sog', s.sog.toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
+      set('nv-depth', s.depth.toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
+      set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
+      // right route inspector
+      set('nv-eta', s.active.eta); set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
+      set('nv-windrange', s.wind.range);
+      if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
+      if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
+      // ownship marker on the chart (markers attach independent of style/tile load)
+      try {
+        if (!boat) {
+          const el = document.createElement('div');
+          el.style.cssText = 'width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;' +
+            'border-bottom:20px solid var(--accent);filter:drop-shadow(0 0 5px rgba(91,192,255,.9));';
+          boat = new maplibregl.Marker({ element: el });
+          boat.setLngLat([s.pos.lon, s.pos.lat]).addTo(map);
+        }
+        boat.setLngLat([s.pos.lon, s.pos.lat]).setRotation(s.cog);
+      } catch (e) { /* map not ready this tick */ }
+    });
   })();
 </script>
 </body>
