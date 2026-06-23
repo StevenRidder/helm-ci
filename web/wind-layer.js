@@ -31,12 +31,13 @@
   'use strict';
 
   // ---- Tunables -----------------------------------------------------------
+  // Tuned to the Windy look: SHORT, SPARSE, SLOW white streaks (not long/dense/fast).
   var DEFAULTS = {
-    particleCount: 9000,   // cap; actual count scales with canvas area (see _resize)
-    maxParticleAge: 110,   // frames before a particle is forcibly respawned
-    fadeOpacity: 0.92,     // trail persistence (higher = longer, silkier tails)
-    lineWidth: 1.0,
-    speedFactor: 0.3,      // global multiplier on advection step (lower = gentler drift)
+    particleCount: 7000,   // cap; actual count scales with canvas area (see _resize)
+    maxParticleAge: 50,    // shorter life -> shorter streaks + more frequent respawns
+    fadeOpacity: 0.85,     // faster fade -> short tails (not long silky trails)
+    lineWidth: 0.9,
+    speedFactor: 0.16,     // gentle drift — Windy's pace, not a fast scroll
     frameRate: 60,         // target fps (rAF-driven; soft cap)
     minVisibleZoomStep: 0  // reserved
   };
@@ -245,8 +246,9 @@
     this._clear();
     // Particle budget scales with area so big screens aren't starved and
     // small screens aren't overworked.
+    // Sparser field than before — Windy-like spacing ("fewer and farther between").
     this._budget = Math.round(
-      Math.max(900, Math.min(this.opts.particleCount, (w * h) / 640))
+      Math.max(550, Math.min(this.opts.particleCount, (w * h) / 1050))
     );
     if (this._particles) this._initParticles();
   };

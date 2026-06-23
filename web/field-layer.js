@@ -78,12 +78,13 @@
     this.current = null;
   }
 
-  HelmField.prototype.load = function (url) {
+  HelmField.prototype.load = function (url, opts) {
     var self = this;
     return fetch(url).then(function (r) {
       if (!r.ok) throw new Error('HTTP ' + r.status + ' for ' + url);
       return r.json();
     }).then(function (field) {
+      if (opts && opts.stops) field.stops = opts.stops;   // palette override (e.g. the Windy wind ramp)
       self.current = field;
       var coords = [[field.west, field.north], [field.east, field.north],
                     [field.east, field.south], [field.west, field.south]];

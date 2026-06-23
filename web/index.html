@@ -324,6 +324,12 @@
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
+  // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
+  // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
+  const WINDY_WIND = [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],
+                      [22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]];
+  const fieldOpts = n => n === 'wind' ? { stops: WINDY_WIND } : undefined;
+  const showIsobars = n => n === 'pressure' || n === 'wind';   // isobars on the wind view too
   let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
   const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
   const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
@@ -357,7 +363,7 @@
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
     activeWx = name;
-    if (iso) iso.setVisible(name === 'pressure');
+    if (iso) iso.setVisible(showIsobars(name));
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
       if (radar) radar.load(); return;
@@ -365,8 +371,8 @@
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
     if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: (100 - (+document.getElementById('wxopacity').value)) / 100 });
-    if (field) field.load(fieldUrl(name)).then(f => { wxNoticeClear(); buildLegend(f); }).catch(() => wxNotice(name));
-    if (iso && name === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
+    if (field) field.load(fieldUrl(name), fieldOpts(name)).then(f => { wxNoticeClear(); buildLegend(f); }).catch(() => wxNotice(name));
+    if (iso && showIsobars(name)) iso.load(fieldUrl('pressure'), { interval: 2 });
     const partOn = document.getElementById('particles').checked;
     if (wind) {
       if (VECTOR[name] && partOn) { wind.load(velUrl(name)); wind.setVisible(true); }
@@ -383,8 +389,8 @@
       ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
       : ('+' + frame + 'h');
     if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
-      if (field) field.load(fieldUrl(activeWx)).then(buildLegend).catch(() => wxNotice(activeWx));
-      if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
+      if (field) field.load(fieldUrl(activeWx), fieldOpts(activeWx)).then(buildLegend).catch(() => wxNotice(activeWx));
+      if (iso && showIsobars(activeWx)) iso.load(fieldUrl('pressure'), { interval: 2 });
       if (wind && VECTOR[activeWx] && document.getElementById('particles').checked) wind.load(velUrl(activeWx));
     }
   }
