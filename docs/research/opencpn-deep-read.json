@@ -1,0 +1,406 @@
+{
+  "summary": "Read the OpenCPN repo file-by-file across subsystems (routing/tracks, charts/rendering, comms/AIS, architecture) to inventory the full chartplotter, assess reuse-vs-rebuild, and answer \"does Option B do the same / how much do I need\"",
+  "agentCount": 5,
+  "logs": [
+    "Four deep readers over the cloned OpenCPN repo at /tmp/opencpn",
+    "Synthesizing the inventory + the honest B answer + reframed A"
+  ],
+  "result": {
+    "reads": [
+      {
+        "subsystem": "Routing, Waypoints, Tracks & Active-Route Navigation (the \"draw a route, navigate it, record a track\" core)",
+        "summary": "OpenCPN's routing/waypoint/track/active-navigation core is almost entirely implemented in the UI-independent `model/` library (the `opencpn-model` lib that links without wxWidgets GUI). The data model (Route, RoutePoint, Track/ActiveTrack, WayPointman), the route manager and active-leg state machine (Routeman: activate/advance/deactivate, arrival flags, autopilot NMEA0183/N2K emission), GPX import/export, and SQLite persistence (NavObj_dB) all live in model/. The GUI (gui/) layer contributes three things on top: (1) all rendering (companion classes RouteGui/RoutePointGui/TrackGui), (2) the on-canvas route-CREATION mouse interaction in chcanv.cpp, and (3) — importantly — the per-tick navigation MATH itself, `RoutemanGui::UpdateProgress()` in gui/src/routeman_gui.cpp, which computes BRG/DTG/XTE/arrival and triggers waypoint advance. So the *state container and the advance/arrival/autopilot logic* is in the model, but the *geometry that drives it each GPS fix* currently sits in the GUI. A headless rebuild would need to relocate or re-implement UpdateProgress(); everything else is directly drivable.",
+        "how_it_works": "CREATE/EDIT: A Route is a model object (model/src/route.cpp, class Route) holding an ordered RoutePointList. Points are added/inserted/removed via Route::AddPoint / AddPointAndSegment / InsertPointAndSegment / InsertPointBefore/After / RemovePoint / DeletePoint / Reverse, with RenameRoutePoints() doing the \"001/002/NM003\" auto-naming. Route::UpdateSegmentDistance/UpdateSegmentDistances compute per-leg distance+bearing (DistanceBearingMercator from model/georef) and, given a planned speed, fill each RoutePoint's m_seg_len/m_seg_vmg/ETE/ETA/ETD — i.e. the route PLANNING ETA math lives in the model. The interactive \"click points on the chart\" gesture is GUI: gui/src/chcanv.cpp StartRoute()/FinishRoute(), m_pMouseRoute = new Route(), m_routeState, then it calls the model methods (AddPoint) and NavObj_dB::InsertRoute()/pRouteList->push_back. pSelect (model/Select) maintains hit-test selectables for points/segments.\n\nACTIVATE/NAVIGATE: Routeman (model/src/routeman.cpp, model/include/model/routeman.h, global g_pRouteMan) is the engine. Routeman::ActivateRoute() sets pActiveRoute/pActivePoint, scans active comm drivers for NMEA0183/N2K OUTPUT, fabricates a virtual \"Begin\" RoutePoint at present position (gLat/gLon) when starting from point 1, fires EventVar json_msg \"OCPN_RTE_ACTIVATED\", and resets arrival state (m_bArrival, m_arrival_min, m_arrival_test). ActivateRoutePoint() sets the active leg's begin point (pActiveRouteSegmentBeginPoint) and blink flags. ActivateNextPoint() advances to the next point and emits \"OCPN_WPT_ARRIVED\". DeactivateRoute() tears down and emits \"OCPN_RTE_DEACTIVATED\"/\"OCPN_RTE_ENDED\". FindBestActivatePoint() picks the smartest start leg from cog/sog.\n\nThe per-fix navigation MATH, however, is RoutemanGui::UpdateProgress() in gui/src/routeman_gui.cpp (friend class of Routeman), called once per position update from MyFrame in gui/src/ocpn_frame.cpp:5640. It computes CurrentBrgToActivePoint (Mercator bearing via toSM), CurrentRngToActivePoint (DistGreatCircle), CurrentXTEToActivePoint + XTEDir (vector2D normal-to-segment via vGetLengthOfNormal), CurrentRangeToActiveNormalCrossing, then does arrival detection against pActivePoint->GetWaypointArrivalRadius() (incl. the \"moving away for >2s\" heuristic and g_bAdvanceRouteWaypointOnArrivalOnly), and calls DoAdvance()->Routeman::ActivateNextPoint(), auto-deleting the route on arrival if m_bDeleteOnArrival. It writes results back into the Routeman's private fields and calls Routeman::UpdateAutopilot(), which (model side) packages ActiveLegDat{Btw,Dtw,Xte,wp_name,arrival} to plugins and calls UpdateAutopilotN0183/N2K (model/src/autopilot_output.cpp) to emit RMB/RMC/APB/XTE/PGN sentences.\n\nTRACKS: model/src/track.cpp. Track/TrackPoint hold the recorded path with a binary-tree SubTracks structure for fast render/cull. ActiveTrack (subclass, wxTimer-driven, 1s tick OnTimerTrack) is the recorder: a dynamic XTE/angle/distance-threshold algorithm (SetPrecision low/med/high, GetXTE, skipPoints queue, Douglas-Peucker back-simplification) decides when to commit a point; AddNewPoint() persists via NavObj_dB::AddTrackPoint and fires \"OCPN_TRK_POINT_ADDED\". Started from MyFrame::TrackOn() (ocpn_frame.cpp:3105) which does new ActiveTrack + g_pActiveTrack->Start(). Track::Simplify (Douglas-Peucker) and Track::RouteFromTrack (convert a track to a route) are model. Track deletion is duplicated: a model Routeman::DeleteTrack and a GUI RoutemanGui::DeleteTrack (adds progress dialog).\n\nPERSISTENCE: Two model subsystems. (1) Live store: NavObj_dB singleton (model/src/navobj_db.cpp, ~71KB, SQLite) with InsertRoute/UpdateRoute/DeleteRoute, InsertRoutePoint/Update/Delete, InsertTrack/AddTrackPoint/DeleteTrack, LoadAllRoutes/Tracks/Points, plus ImportLegacyNavobj/FullSchemaMigrate. Model code calls it inline (e.g. Route::RemovePoint, Routeman::DeleteRoute, Track::AddNewPoint). (2) GPX XML interchange: model/src/nav_object_database.cpp class NavObjectCollection1 (pugixml) with GPXLoadRoute1/GPXLoadTrack1/GPXLoadTrackPoint1, InsertRouteA, AddGPXRoute/Track/Waypoint(+List), LoadAllGPXObjects, LoadAllGPXObjectsAsLayer — full GPX read/write is model-side. GpxDocument (model/src/gpx_document.cpp) is thin (UUID/random only). GUI just wires file dialogs and layer UI (gui/src/navutil.cpp, routemanagerdialog.cpp, ocpn_frame.cpp).",
+        "ui_independent": "partly",
+        "reuse_assessment": "High reuse potential, but with one real seam. A new GUI (or headless app) can drive the routing/track/persistence core directly: construct Routeman(RoutePropDlgCtx, RoutemanDlgCtx) — both are plain std::function callback structs that default to no-ops, explicitly designed to decouple Routeman from the GUI — and call ActivateRoute/ActivateNextPoint/DeactivateRoute; build routes with Route::AddPoint etc.; record with ActiveTrack (a self-contained wxTimer object needing only a wxEvtHandler loop and the gLat/gLon globals from model/own_ship.h); persist via NavObj_dB and exchange GPX via NavObjectCollection1 — all without instantiating any window. Outputs are already abstracted as EventVar/Observable notifications (json_msg, json_leg_info, OCPN_* messages) and NMEA sentences, so a new front-end consumes the same bus the plugins do.\n\nThe seam: the active-leg geometry per GPS fix lives in RoutemanGui::UpdateProgress() (gui/), not in Routeman. It writes Routeman's PRIVATE members via friend access. A headless consumer that wants live BRG/XTE/DTG/auto-advance must either link enough of gui/ to get RoutemanGui, or (cleaner) lift UpdateProgress() down into Routeman — it depends only on model primitives (toSM, DistGreatCircle, DistanceBearingMercator, vector2D, gLat/gLon, arrival radius), except a small g_bShowShipToActive block that calls top_frame::Get()->GetCanvasPointPix (pixel math) which would be dropped. The PLANNING ETA math (Route::UpdateSegmentDistances) is already in the model and needs no change.",
+        "reuse_assessment_note": "",
+        "what_a_rebuild_must_replicate": "1) Data model: Route(ordered RoutePointList, GUID, arrival radius, planned speed/departure, viz/layer flags) and RoutePoint(lat/lon, GUID, name, icon, shared/isolated flags, per-leg m_seg_len/vmg/ETE/ETA/ETD), Track/TrackPoint with the SubTracks binary-tree for scalable rendering/culling. 2) Route editing semantics: add/insert/remove/reverse, dynamic \"001/002/NM###\" renaming (RenameRoutePoints), shared-waypoint handling, round-trip/duplicate-point safety, and selectable hit-test index (Select). 3) Planning math: per-leg DistanceBearingMercator distance+bearing and speed→ETE/ETA/ETD chaining (UpdateSegmentDistances). 4) Active-leg engine: activate/advance/deactivate state machine + the UpdateProgress() geometry — Mercator BRG, great-circle DTG, vector XTE + side (XTEDir), normal-crossing range, arrival test (radius + 2s moving-away heuristic + advance-on-arrival-only option), and the virtual present-position begin-waypoint. 5) Autopilot/output: RMB/RMC/APB/XTE NMEA0183 + N2K PGNs and the ActiveLegDat/OCPN_* event bus (autopilot_output.cpp, json_leg_info). 6) Track recorder: the dynamic-precision threshold algorithm (angle/XTE/time/distance, skip-queue, on-the-fly Douglas-Peucker), daily-track extension, track→route conversion. 7) Persistence: a live route/track/point store with incremental insert/update/delete (NavObj_dB SQLite) AND GPX import/export incl. layers (NavObjectCollection1/pugixml). 8) The math dependencies from model/georef: toSM/fromSM, DistGreatCircle, DistanceBearingMercator, ll_gc_ll, and the vector2D helpers (vGetLengthOfNormal, vDotProduct, vSubtractVectors).",
+        "quality_notes": "Mature, battle-tested code (copyrights back to 2010) but carries legacy smell: raw owning pointers and manual new/delete everywhere (Route::pRoutePointList, global pRouteList/g_TrackList), global singletons (g_pRouteMan, pWayPointMan, pSelect, gLat/gLon), and commented-out dead code (the large #if 0 NMEA block in Routeman::UpdateAutopilot duplicates autopilot_output.cpp; commented pRoutePropDialog refs). There is a known wart flagged in-source: UpdateSegmentDistance comment \"why are we using mercator rather than great circle here?? [sean]\". DeleteTrack is duplicated in model and gui. The decoupling is recent/in-progress: the RoutemanDlgCtx/RoutePropDlgCtx callback structs and the model/gui split (RouteGui/TrackGui companions, NavObj_dB replacing the old NavObjectChanges changeset file — note many commented-out NavObjectChanges lines) show an active refactor toward UI independence, but UpdateProgress() being a friend that mutates Routeman's privates from gui/ is the clearest unfinished seam.",
+        "key_files": [
+          {
+            "file": "/tmp/opencpn/model/src/route.cpp",
+            "role": "Route model: point add/insert/remove/reverse, dynamic renaming, per-leg distance/bearing + speed→ETA/ETD planning math (UpdateSegmentDistances), bbox"
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/route.h",
+            "role": "Route class decl: arrival radius, planned speed/departure, viz/layer/shared state"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/routeman.cpp",
+            "role": "Routeman engine: ActivateRoute/ActivateRoutePoint/ActivateNextPoint/DeactivateRoute, arrival state, UpdateAutopilot, route/track delete, WayPointman; emits OCPN_RTE/WPT_* events"
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/routeman.h",
+            "role": "Routeman + WayPointman decl; RoutemanDlgCtx/RoutePropDlgCtx std::function callback structs (the GUI-decoupling seam); active-leg accessors (BRG/RNG/XTE/Dir)"
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/routeman_gui.cpp",
+            "role": "RoutemanGui::UpdateProgress() — THE per-fix navigation math (BRG/DTG/XTE/XTEDir/normal-crossing + arrival detection + DoAdvance); lives in GUI but mutates Routeman privates via friend"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/route_point.cpp",
+            "role": "RoutePoint model: position, naming (dynamic 001/NM), arrival radius, planned speed, ETA/ETD/ETE getters/setters, range rings"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/track.cpp",
+            "role": "Track/TrackPoint + ActiveTrack recorder: SubTracks tree, dynamic-precision XTE/angle/time thresholding, Douglas-Peucker simplify, RouteFromTrack, GetXTE"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/autopilot_output.cpp",
+            "role": "NMEA0183 (RMB/RMC/APB/XTE) and N2K autopilot sentence/PGN generation from active-leg data — model side output"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/nav_object_database.cpp",
+            "role": "GPX import/export: NavObjectCollection1 (pugixml) GPXLoadRoute1/GPXLoadTrack1, AddGPXRoute/Track/Waypoint, LoadAllGPXObjects(+AsLayer), InsertRouteA"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/navobj_db.cpp",
+            "role": "NavObj_dB SQLite singleton: live Insert/Update/Delete/Load for routes, points, tracks, trackpoints; legacy navobj.xml import + schema migration"
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/chcanv.cpp",
+            "role": "On-canvas route CREATION interaction: StartRoute/FinishRoute, m_pMouseRoute, m_routeState, great-circle leg expansion; drives model Route + NavObj_dB"
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/route_gui.cpp",
+            "role": "RouteGui rendering companion (Draw/RenderSegment/DrawGL/CalculateDCRect) — pure GUI, no nav logic"
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/track_gui.cpp",
+            "role": "TrackGui/TrackPointGui rendering companions (Assemble/Draw using SubTracks) — pure GUI"
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/ocpn_frame.cpp",
+            "role": "Drives the engine from the app frame: calls RoutemanGui::UpdateProgress() each fix (~:5640) and TrackOn() creates/starts ActiveTrack (:3105)"
+          }
+        ]
+      },
+      {
+        "subsystem": "OpenCPN S-52/S-57 ENC chart rendering engine (s52plib presentation library + s57chart + SENC pipeline + chart DB/quilting)",
+        "summary": "OpenCPN's vector-chart rendering is a faithful S-52 presentation-library implementation built around three layers: (1) an ingest/SENC pipeline (gui/src/o_senc.cpp + s57chart.cpp) that reads raw S-57 .000/.NNN cells via GDAL's OGR S-57 driver and bakes them into a compact binary \"SENC\" cache of S57Obj features; (2) the s52plib engine (libs/s52plib/) that loads the S-52 presentation library (chartsymbols.xml + color tables + lookup tables), assigns each feature a LUP (look-up) rule chain, runs the S-52 conditional-symbology procedures, and interprets rule chains into draw primitives (symbols, lines, area fills, text, soundings); and (3) the app-level chart classes (s57chart : ChartBase) plus chart DB, quilting, and the gl_chart_canvas/ocpnDC drivers that tile/composite charts. Rendering is DUAL-PATH: the exact same rule interpreter (s52plib::DoRenderObject) drives either a wxDC raster path (RenderObjectToDC -> renders into a wxMemoryDC/pDIB bitmap) or an OpenGL path (RenderObjectToGL, GLSL shaders), branched per-primitive on whether m_pdc is set. The engine is tightly coupled to wxWidgets types throughout and to OpenCPN's ViewPort/geometry context.",
+        "how_it_works": "INGEST/SENC: s57chart::FindOrCreateSenc (s57chart.cpp:2645) checks for a cached SENC, rebuilding it (BuildSENCFile:4043) when the cell edition/updates/format change. SENC build (Osenc::createSenc200 in o_senc.cpp) opens the .000 cell through GDAL's OGR S-57 driver (#include \"ogr_s57.h\", OGRS57DataSource, S57Reader, iso8211 DDFModule for update files), applies .NNN updates, projects geometry to a chart-local SM (simple-Mercator) frame about a ref_lat/ref_lon, does LOD line-reduction, and serializes S57Obj features + edge/connected-node geometry (VE/VC element vectors) to a versioned binary file (CURRENT_SENC_FORMAT_VERSION gate). At display time BuildRAZFromSENCFile (4092) ingests the SENC back into S57Obj vectors and _insertRules (4323) attaches each object to its S-52 LUP, producing ObjRazRules (object + look-up + rule chain) bucketed by display priority.\n\nS-52 ENGINE: The s52plib constructor loads the presentation library; ChartSymbols (chartsymbols.cpp) parses chartsymbols.xml into colTables (one per scheme DAY/DUSK/NIGHT — see SetPLIBColorScheme at s52plib.cpp:1389/1409 mapping GLOBAL_COLOR_SCHEME_* to \"DAY\"/\"DUSK\"/\"NIGHT\" and FindColorTable/SetColorTableIndex), raster+vector (HPGL) symbol definitions, line/pattern rules, and the five LUP arrays (line/areaPlain/areaSymbol/pointSimple/pointPaper). Each feature is matched to its best LUP (FindBestLUP) by attributes. Conditional symbology lives in s52cnsy.cpp (6254 lines): procedures like DEPARE01, RESCSP01, _UDWHAZ03, OBSTRN04, WRECKS02, LIGHTS05/06, SNDFRM02, QUAPNT01, SEABED01, DEPCNT02 run at render time, reading feature attributes (GetDoubleAttr DRVAL1/DRVAL2/VALSOU/VALDCO/SECTR1...) AND querying neighboring geometry through obj->m_chart_context (e.g. GetChartFloatingATONArray -> pRigidATONArray, and DEPARE-intersection tests) to emit a dynamic rule string that is parsed (StringToRules) and cached on the object. The safety contour is data-dependent: s57chart::SetSafetyContour (2917) picks m_next_safe_cnt from the cell's actual VALDCO list given the mariner's S52_MAR_SAFETY_CONTOUR. The rule interpreter DoRenderObject (s52plib.cpp:7618) switches on ruleType (RUL_SYM_PT->RenderSY, RUL_SIM_LN->RenderLS/RenderGLLS, RUL_COM_LN->RenderLC, RUL_ARC_2C->RenderCARC, RUL_MUL_SG->RenderMPS soundings, RUL_TXT_TX/TE->RenderTX/TE, RUL_CND_SY-> resolve CS then recurse). Text/sounding placement does its own pixel-space declutter (TextRenderCheck, CheckTextRectList, m_textObjList, AdjustTextList) and uses TexFont/DepthFont for GL glyph rendering.\n\nRENDER DRIVERS: s57chart exposes RenderRegionViewOnDC/RenderViewOnDC (renders into a wxMemoryDC-backed pDIB bitmap, with a pan-reuse cache keyed on viewport+colorscheme+state-hash) and RenderRegionViewOnGL (OpenGL, via gl_chart_canvas + GLSL shaders in s52shaders/Cs52_shaders). Both call PrepareForRender(ViewPort) then iterate ObjRazRules by priority calling ps52plib->RenderObjectToDC/GL. ocpnDC is a unified wxDC-or-GL device-context wrapper. Quilt (quilt.cpp) composes multiple overlapping charts of different scales into one seamless view; chartdb/chartdbs manage the chart database and groups; mbtiles.cpp (ChartMbTiles:ChartBase, GL+sqlite) and chartimg.cpp (ChartBaseBSB/KAP/GEO raster RNC) are SEPARATE chart types that bypass the S-52 engine entirely.",
+        "ui_independent": "partly",
+        "reuse_assessment": "OPTION A (headless reuse of OpenCPN's engine) — MODERATELY FEASIBLE but wxWidgets-bound, not GL-bound. The DC raster path is the headless-friendly one: s57chart::RenderRegionViewOnDC/RenderViewOnDC already render the full S-52 picture into a wxMemoryDC/wxBitmap (gui/src/s57chart.cpp:2016, ~1856-2037), which you can pull out as a bitmap — exactly the render(viewport,scale,scheme)->bitmap shape you want, and it needs NO GL context (the GL branches in DoRenderObject are only taken when m_pdc==NULL). What it DOES hard-depend on: (1) wxWidgets — pervasive (wxDC, wxColour, wxFont, wxPoint, wxString, wxArray, wx hash maps, wxMemoryDC; s52plib.h alone pulls wx/dcgraph.h, wx/hashmap.h). You'd need wxWidgets compiled (it can build headless with a \"base\"+minimal GUI/dc, but wxDC/wxBitmap pull in a display abstraction; on Linux this typically still wants an X/display or an off-screen wxImage-backed DC). (2) GDAL with the OGR S-57 driver + the S-57 class registrar CSV data (s57data/) for SENC creation. (3) tess2, geoprim, pugixml, the chartsymbols.xml/S52 raster data set. (4) A set of app-level globals the engine reaches for (g_Platform, g_poRegistrar, g_SencThreadManager, g_SENCPrefix, g_pi_manager, ps52plib, top_frame::Get()->GetBestVPScale) — these are real coupling you must stub/provide, and ViewPort (gui/include/gui/viewport.h) and the ChartCtx/m_chart_context plumbing must be supplied. Practical path: link libs/s52plib + a trimmed s57chart + o_senc, provide a minimal Platform/registrar/SENC-manager shim, build wxWidgets headless, drive RenderViewOnDC into an off-screen wxBitmap. This is a real porting/decoupling project (weeks, not days) but the rendering math/symbology is reused verbatim and is byte-faithful S-52. The OpenGL path is NOT a good headless target (needs a live GL/GLSL context, FBOs, VBOs — possible via EGL offscreen but far more fragile).\n\nOPTION B (re-implement on GDAL from scratch) — GDAL gives you the EASY 20%: GDAL's OGR S-57 driver already does S-57/iso8211 parsing, update application, and feature/attribute extraction (OpenCPN itself uses exactly this for ingest). What GDAL does NOT give you is the S-52 PICTURE, which is the hard 80% and would all have to be re-implemented: (1) the LUP look-up system + chartsymbols.xml parsing + DAY/DUSK/NIGHT color tables; (2) the ~dozen conditional-symbology procedures in s52cnsy.cpp (6254 LOC) — DEPARE/RESCSP/UDWHAZ/OBSTRN/WRECKS/LIGHTS05-06/SNDFRM/QUAPNT/SEABED/DEPCNT — several of which require SPATIAL cross-feature queries (a depth area's symbol depends on intersecting DEPAREs; ATON/light decluttering depends on co-located features), so you also need a spatial index over the cell, not just per-feature styling; (3) safety-contour selection from the cell's actual VALDCO set (s57chart.cpp:2917); (4) HPGL/raster symbol rendering, complex line styles (LC), light arcs (CARC), area pattern fills; (5) S-52-correct text and sounding placement with declutter. There is NO off-the-shelf GDAL/OGR S-52 symbolizer — you would be reproducing ~370k LOC of s52plib.cpp + s52cnsy.cpp behavior to be chart-correct/compliant. Re-implementing only a \"good-enough\" subset is plausible if strict S-52 compliance isn't required, but matching OpenCPN/IHO output is a major effort.\n\nRECOMMENDATION INPUT: If the goal is byte-faithful S-52 output, Option A (drive the existing wxDC path headless) preserves correctness for far less work than Option B. If the goal is a lightweight, dependency-free styled vector tile and strict S-52 compliance is negotiable, Option B over GDAL is cleaner architecturally but you re-own all of conditional symbology + symbol/text placement.",
+        "what_a_rebuild_must_replicate": "To match S-52 on a GDAL rebuild (Option B) you must replicate: (1) LUP lookup engine — load chartsymbols.xml, build the 5 LUP arrays, and match each S-57 feature to its best look-up by object class + attributes (FindBestLUP logic). (2) Color schemes — parse the DAY/DUSK/NIGHT color tables and resolve every symbology color token through the active table (s52plib SetPLIBColorScheme:1389; chartsymbols.cpp colTable). (3) ALL conditional-symbology procedures in s52cnsy.cpp (the single hardest part): DEPARE01, _RESCSP01, _UDWHAZ03, _DEPVAL01, OBSTRN04/WRECKS02, LIGHTS05/LIGHTS06 (sector lights, valnmr/sectr1/sectr2), SNDFRM02, CSQUAPNT01, SEABED01, DEPCNT02, RESTRN — including their spatial cross-feature intersection tests against neighboring DEPARE/DRGARE and co-located ATON/LIGHTS (these read obj->m_chart_context arrays, so you need a per-cell spatial index, not just per-feature styling). (4) Data-driven safety contour: pick the contour from the cell's actual VALDCO values vs the mariner S52_MAR_SAFETY_CONTOUR (s57chart.cpp SetSafetyContour:2917), and re-prioritize/regenerate when mariner params change. (5) The rule-chain interpreter and its primitive renderers: SY (point symbols, both raster and HPGL vector), LS/LC (simple + complex/patterned lines), AC/AP (area color + area pattern fills, tessellated), CARC (light arcs), MPS (multipoint soundings with DepthFont), and TX/TE text. (6) S-52 text + sounding placement and declutter (pixel-space overlap rejection, the m_textObjList/CheckTextRectList machinery, national/important-text filters). (7) Display category + SCAMIN + noshow filtering (ObjectRenderCheck* family). (8) Display-priority bucketing and line-feature priority assignment. Reference files to mine: libs/s52plib/src/s52cnsy.cpp, s52plib.cpp (DoRenderObject:7618, Render* methods), chartsymbols.cpp, and gui/src/s57chart.cpp (SetSafetyContour, SetLinePriorities, UpdateLUPs).",
+        "key_files": [
+          {
+            "file": "/tmp/opencpn/libs/s52plib/src/s52plib.h",
+            "role": "Public API of the S-52 engine. Render entry points RenderObjectToDC/RenderObjectToGL/RenderAreaToDC/RenderAreaToGL (lines 268-330), color-scheme + mariner-param setters, VPointCompat (the decoupled viewport struct, 171), the private rule-primitive renderers (RenderTX/SY/LS/LC/CARC/MPS). Shows the wxWidgets+GL coupling (wxDC* m_pdc, wxGLContext* m_glcc)."
+          },
+          {
+            "file": "/tmp/opencpn/libs/s52plib/src/s52plib.cpp",
+            "role": "371k-LOC engine core. DoRenderObject:7618 = the rule-chain interpreter that branches DC vs GL per primitive (m_pdc test, 7662/7700). SetPLIBColorScheme:1389/1409 = DAY/DUSK/NIGHT scheme selection. PrepareForRender:11147. All Render* primitive implementations and tessellation."
+          },
+          {
+            "file": "/tmp/opencpn/libs/s52plib/src/s52cnsy.cpp",
+            "role": "6254-LOC S-52 conditional symbology procedures — the hardest part to reproduce. DEPARE01:617, OBSTRN04:1655, LIGHTS05/06:1012/1328, _UDWHAZ03:521, SNDFRM02, CSQUAPNT01. Includes spatial cross-feature queries via obj->m_chart_context (GetChartFloatingATONArray:64, DEPARE intersect tests)."
+          },
+          {
+            "file": "/tmp/opencpn/libs/s52plib/src/chartsymbols.cpp",
+            "role": "Parses chartsymbols.xml into color tables (DAY/DUSK/NIGHT colTables), raster+HPGL vector symbol definitions, and the LUP/line/pattern rule tables. GetColor/GetwxColor/SetColorTableIndex implement scheme lookup."
+          },
+          {
+            "file": "/tmp/opencpn/libs/s52plib/CMakeLists.txt",
+            "role": "Dependency manifest for the engine: links wxWidgets, ocpn::geoprim, ocpn::gl-headers, ocpn::pugixml, ocpn::gdal, ocpn::tess2. Confirms wxWidgets is mandatory and GDAL/tess2 are required."
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/s57chart.cpp",
+            "role": "6988-LOC app-level S-57 chart class (s57chart:ChartBase). SENC pipeline: FindOrCreateSenc:2645, BuildSENCFile:4043, BuildRAZFromSENCFile:4092, _insertRules:4323. Render drivers: RenderViewOnDC:2016 / DoRenderViewOnDC:2041 (renders into wxMemoryDC/pDIB bitmap with pan-reuse cache — the Option-A headless hook), RenderRegionViewOnGL:1516. SetSafetyContour:2917 (data-driven). Lists app-global couplings (g_Platform, g_poRegistrar, g_SencThreadManager)."
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/o_senc.cpp",
+            "role": "Osenc: builds and ingests the SENC binary cache. createSenc200/ingestCell use GDAL OGR S-57 driver (ogr_s57.h, OGRS57DataSource, S57Reader) + iso8211 DDFModule for update files. This is the part GDAL already solves for Option B."
+          },
+          {
+            "file": "/tmp/opencpn/gui/include/gui/ocpndc.h",
+            "role": "ocpnDC: the unified device-context abstraction (ocpnDC:60) that wraps either a wxDC or a glChartCanvas/wxGLCanvas — the seam where DC vs OpenGL rendering is unified."
+          },
+          {
+            "file": "/tmp/opencpn/gui/include/gui/viewport.h",
+            "role": "ViewPort class (56) — the projection/scale/rotation state the renderer consumes (GetPixFromLL/GetLLFromPix). A core dependency that must be supplied to drive the engine headless; mirrored in the engine by VPointCompat."
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/gl_chart_canvas.cpp",
+            "role": "OpenGL chart canvas driver: iterates quilted charts calling RenderRegionViewOnGL with a live wxGLContext (m_pcontext). Demonstrates the GL path needs a real GL/GLSL context (not headless-friendly)."
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/quilt.cpp",
+            "role": "Quilting: composites multiple overlapping charts of differing scales into one seamless viewport. Relevant if a rebuild must reproduce multi-cell seamless display."
+          },
+          {
+            "file": "/tmp/opencpn/gui/include/gui/mbtiles.h",
+            "role": "ChartMbTiles:ChartBase (69) — MBTiles raster/vector tiles, GL+sqlite, a SEPARATE chart type that bypasses the S-52 engine. Same for chartimg.h (ChartBaseBSB/KAP/GEO raster RNC). Shows S-52 is only for S-57 ENC."
+          }
+        ],
+        "quality_notes": "Mature, production-grade, IHO S-52 compliant engine (the de-facto open-source reference implementation), authored originally by David Register; heavily battle-tested. Caveats for reuse: (1) Heavy wxWidgets entanglement at the type level (wx strings, arrays, hash maps, DC, fonts everywhere) — not a clean C++/STL core; STL is mixed in (std::unordered_map, std::vector) but the public surface is wx. (2) App-global singletons (ps52plib, g_Platform, g_poRegistrar, g_SencThreadManager, g_pi_manager) create hidden coupling that any headless harness must satisfy. (3) The engine is GPL v2+ (COPYING.gplv2) — relevant to how it can be embedded in a product. (4) SENC creation is threaded via g_SencThreadManager and can return BUILD_SENC_PENDING (async), which a headless driver must handle (or set m_disableBackgroundSENC for synchronous build). (5) GL and DC paths have diverged in capability (GL has GLSL, VBO, FBO paths) — the DC path is simpler and the right headless target. (6) s52plib.cpp is a single 371k-LOC/12.5k-line file and s52cnsy.cpp 6.2k lines — large, dense, comment-light in places; extraction requires care.\""
+      },
+      {
+        "subsystem": "OpenCPN connectivity / comms core (model/src) — NMEA 0183 & 2000, SignalK, AIS, autopilot/NMEA output",
+        "summary": "OpenCPN's connectivity layer is a clean, three-tier message architecture living almost entirely in model/ (the non-GUI core library). Tier 1 is a set of pluggable transport DRIVERS (serial/TCP/UDP/CAN) one per protocol; Tier 2 is a singleton raw-message bus (NavMsgBus) carrying undecoded NMEA0183/NMEA2000/SignalK frames keyed by sentence/PGN; Tier 3 is a decoded application-message bus (AppMsgBus) carrying protocol-neutral structs (position, fix, AisData). Consumers (the AIS decoder, the CommBridge multi-source arbiter, plugins) SUBSCRIBE to the bus by message key via an observer/EventVar mechanism rather than touching drivers. Protocols: NMEA 0183 (serial, TCP/UDP, Android BT/internal-GPS, Garmin), NMEA 2000 (Actisense serial, YachtDevices/network, Linux SocketCAN), SignalK (websocket/JSON over IP), plus loopback/internal/file replay. AIS is decoded from 0183 (VDM/VDO/TTM/TLL/DSC), seven N2K PGNs, and SignalK into a unified AisTargetData target list, with CPA/TCPA computed geometrically against own-ship. Output to autopilots is done two ways: NMEA0183 APB/XTE/RMB/RMC sentences broadcast to every output-capable 0183 driver, and NMEA2000 PGNs 129283/129284/129285 sent to a selected N2K driver. The comms/AIS core is highly UI-independent and reusable; equally, a brand-new app could just consume the same standard SignalK/NMEA feeds directly and skip OpenCPN entirely.",
+        "how_it_works": "THREE-TIER BUS ARCHITECTURE (documented in model/include/model/comm_driver.h: \"the three layers drivers, raw messages (navmsg) and decoded application messages (appmsg)\").\n\nTier 1 — Drivers. `AbstractCommDriver` (comm_driver.h) is the common interface: every driver has a `bus` (NavAddr::Bus enum: N0183, N2000, Signalk, Onenet, Plugin, AppMsg) and an `iface` string, plus `SendMessage(NavMsg, NavAddr)` and `SetListener(DriverListener&)`. Concrete drivers: CommDriverN0183Serial/Net, CommDriverN2KSerial/Net/SocketCAN, CommDriverSignalKNet, plus LoopbackDriver, CommDriverInternal, CommDriverN0183AndroidInt/BT. `MakeCommDriver(ConnectionParams*)` in comm_drv_factory.cpp is the factory: it switches on Type (SERIAL/NETWORK/SOCKETCAN/INTERNAL_GPS/BT) and Protocol/NetProtocol (PROTO_NMEA0183/PROTO_NMEA2000/SIGNALK) and instantiates the right driver, registering it in `CommDriverRegistry` (comm_drv_registry.cpp), a singleton vector of DriverPtr keyed by bus+iface, with `FindDriver()` lookup and an `evt_driverlist_change` observable. Drivers run their own RX threads (e.g. CommDriverN0183Serial uses a `SerialIo` worker; SignalK uses an ixwebsocket IoThread/ThreadCtrl).\n\nDriver → bus handoff. Each driver is given a `DriverListener`. The factory wires N0183 serial/net drivers to an `N0183Listener` whose `Notify(NavMsg)` routes bad/filtered messages to `evt_dropped_msg` and good ones to `NavMsgBus::GetInstance().Notify()`. N2K/SignalK drivers take the NavMsgBus directly as their listener.\n\nTier 2 — Raw message bus. `NavMsgBus` (comm_navmsg_bus.cpp) is a singleton wxEvtHandler + DriverListener. Messages are `NavMsg` subclasses (comm_navmsg.h): `Nmea0183Msg` (talker+type+payload, key \"n0183-<TYPE>\"), `Nmea2000Msg` (PGN+payload, key \"n2000-<PGN>\"), `SignalkMsg` (raw JSON, key \"signalK\"), PluginMsg. NavMsgBus::Notify builds a key \"<bus>::<msgkey>\", registers it in m_active_messages (so the UI can show which sentence types are live), then `Observable(*msg).Notify(msg)` fans it out to all listeners that registered for that key. This is the publish step of an observer pattern (observable.h / observable_evtvar.h / EventVar).\n\nTier 3 — Decoded app bus. `AppMsgBus` (comm_appmsg_bus.cpp) carries `AppMsg` subclasses (comm_appmsg.h): BasicNavDataMsg (lat/lon/SOG/COG/VAR/HDT + validity bitmask), GnssFix, GPSWatchdogMsg, and `AisData` (a fully protocol-neutral vessel struct: pos, sog, cog, heading, rate_of_turn, type, name, callsign, dest, length/beam/draft, status). These are the clean, transport-agnostic outputs.\n\nTHE BRIDGE / MULTI-SOURCE ARBITRATION. `CommBridge` (comm_bridge.cpp) is the central translator+prioritizer. InitCommListeners() subscribes (via ObservableListener) to specific raw messages: N0183 RMC/THS/HDT/HDG/HDM/VTG/GSV/GGA/GLL/AIVDO, N2K PGNs 129029/129025/129026/127250/127258/129540, and SignalK. Each handler decodes into shared global nav state (gLat/gLon/gSog/gCog/gHdt/gVar via CommDecoder which wraps the classic NMEA0183 parser). Because the same datum (e.g. position) can arrive from multiple sources, the bridge maintains PriorityMaps (priority_map_position/velocity/heading/variation/satellites) and an active_priority per datum, with watchdogs that demote a silent source and SelectNextLowerPriority() to fail over. It then emits BasicNavDataMsg on the AppMsgBus. This is the piece that makes \"GPS + instruments + AIS\" behave as one integrated picture.\n\nAIS DECODING + CPA/TCPA. `AisDecoder` (ais_decoder.cpp, ~4700 lines) is a wxEvtHandler that, like the bridge, calls InitCommListeners() to subscribe to AIS-bearing messages across ALL transports: N0183 VDM/VDO/FRPOS/CDDSC/CDDSE/TLL/TTM/OSD/WPL; SignalK; and seven N2K PGNs (129038/129039/129041/129794/129809/129810/129793). Bit-level 0183 payloads are unpacked by `AIS_Bitstring` (ais_bitstring.cpp — get_int/get_str over the 6-bit armoring). All sources converge into one `AISTargetList` (unordered_map<mmsi, shared_ptr<AisTargetData>>). `AisTargetData` (ais_target_data.h) holds MMSI, Class, SOG/COG, plus computed Range_NM, Brg, CPA (NM), TCPA (minutes), bCPA_Valid, n_alert_state. `UpdateOneCPA()` (ais_decoder.cpp ~4009) computes CPA/TCPA geometrically: it projects own-ship and target onto a local easting/northing plane, converts COGs to unit-circle vectors, solves tcpa = ((fc*east)+(fs*north))/d for the closest-approach time, then uses ll_gc_ll great-circle projection to predict both positions at TCPA and DistGreatCircle for the CPA distance. It guards anchored/no-COG/own-ship/meteo cases. UpdateAllCPA() runs on a timer and on each new fix; UpdateAllAlarms() raises collision alerts against globals g_CPAWarn_NM / g_TCPA_Max / g_bCPAMax etc. The decoder exposes results purely via EventVars (info_update, touch_state, new_ais_wp, new_track, plugin_msg) — the GUI listens to those.\n\nAUTOPILOT / NMEA OUTPUT. autopilot_output.cpp drives a connected pilot/MFD from the active route (Routeman). `UpdateAutopilotN0183(Routeman&)` builds RMB, RMC, APB and XTE sentences (cross-track error, heading-to-steer, bearing-to-destination, arrival flag; magnetic vs true per g_bMagneticAPB) and calls `BroadcastNMEA0183Message()` (comm_n0183_output.cpp). That broadcast iterates CommDriverRegistry and sends the sentence to EVERY N0183 driver whose IOSelect is OUTPUT/INPUT_OUTPUT and that passes the output filter — i.e. fan-out to all output ports plus plugins. `UpdateAutopilotN2K(Routeman&)` instead finds the chosen N2K driver, ensures its TX PGN list includes 129283/129284/129285, and sends PGN 129283 (XTE), 129284 (nav data: distance/bearing/ETA/VMG to waypoint), 129285 (route/waypoint list) as Nmea2000Msg via driver->SendMessage(). Comm_out_queue.cpp / comm_buffers.cpp provide rate-limited TX buffering.",
+        "ui_independent": "yes-mostly",
+        "reuse_assessment": "HIGHLY REUSABLE — this is arguably the most cleanly reusable subsystem in OpenCPN, and it was deliberately refactored that way (the 3-tier model, the Copyright 2022-2025 Alec Leamas rewrite). It lives in model/ which is built as a separate library distinct from the gui/ app. The core bus plumbing is essentially UI-free: comm_navmsg_bus.cpp, comm_appmsg_bus.cpp, comm_drv_registry.cpp, comm_drv_factory.cpp, the driver classes, comm_decoder.cpp, and comm_bridge.cpp have NO direct dialog/window dependencies — they communicate outward only through observer EventVars and shared nav globals, and inward through ConnectionParams. comm_bridge.cpp's only UI touchpoint is an optional NmeaLog data-monitor found by window name (a soft, guarded lookup), and autopilot_output.cpp similarly only uses the log for display. The AisDecoder is the least decoupled piece but still highly portable: it depends on wxWidgets primitives (wxEvtHandler, wxString, wxTimer, wxDateTime) and a couple of GUI globals (g_pais_alert_dialog_active pointer, AisDecoderCallbacks with confirm_stop_track/get_target_mmsi std::functions) — but those are injected callbacks/pointers, not hard links, so the decoder + CPA/TCPA math could be lifted with modest effort. CAVEATS for reuse: (1) the whole layer is wxWidgets-coupled (wxEvtHandler/wxString/wxLog/wxSocket pervasively), so reusing the C++ as-is pulls in wx; (2) it leans on process-wide singletons (NavMsgBus, AppMsgBus, CommDriverRegistry) and global nav state (gLat/gLon/gSog/gCog via own_ship.h/comm_vars.h), which is fine for one app instance but not multi-tenant; (3) the CPA/TCPA and AIS-bit-unpack ALGORITHMS (ais_decoder.cpp UpdateOneCPA, ais_bitstring.cpp) are self-contained, dependency-light, and the most valuable bits to port verbatim. \n\nSEPARATELY — a NEW app does NOT need this code at all. The entire point of the architecture is that everything on the wire is a STANDARD feed. A greenfield app can connect a websocket to a SignalK server (which most modern boats already run, and which itself aggregates NMEA0183 + NMEA2000 + AIS into normalized JSON deltas) and receive position, heading, wind, depth AND fully-decoded AIS targets with no parsing at all — replacing comm_drv_signalk_net.cpp + the entire decode/bridge stack with a few hundred lines. Or it can read raw NMEA0183 over TCP/UDP/serial and NMEA2000 over SocketCAN/Actisense and parse with off-the-shelf libraries (e.g. CANBoat/NMEA2000 lib for PGNs, any 0183 parser, a small AIS-bitstring decoder). For autopilot, the new app would emit the same standard APB/XTE/RMB/RMC 0183 sentences or PGN 129283/129284/129285 — there is nothing OpenCPN-proprietary about the output. NET: OpenCPN's comms core is excellent as a REFERENCE for exactly which sentences/PGNs to consume and emit and how to compute CPA/TCPA and arbitrate multi-source priority, but a from-scratch app integrating AIS+NMEA+instruments+autopilot is best built directly on SignalK (primary) with raw NMEA as fallback, not by embedding this wx-bound C++.",
+        "what_a_rebuild_must_replicate": "1) Multi-transport ingestion: NMEA0183 (serial 4800/38400, TCP, UDP), NMEA2000 (SocketCAN on Linux, Actisense/serial, YachtDevices network gateways), and SignalK (websocket JSON). 2) A normalization layer that maps all three onto a SINGLE protocol-neutral data model (the AppMsg/AisData equivalent) so consumers don't care about the source. 3) Multi-source PRIORITY ARBITRATION with watchdog failover (comm_bridge.cpp PriorityMaps) — the same datum from GPS vs N2K vs SignalK must be deduplicated to one authoritative value with graceful failover; this is essential and easy to underestimate. 4) A unified AIS target list merging 0183 VDM/VDO, N2K PGNs 129038/129039/129041/129794/129809/129810/129793, and SignalK, including 6-bit AIS payload unpacking (ais_bitstring.cpp) and DSC/SART handling. 5) CPA/TCPA computation per target against own-ship with proper guards for anchored/zero-SOG/unknown-COG/own-ship/meteo, plus configurable collision alarms (CPA-warn distance, TCPA-max, range gating, moored suppression) — port UpdateOneCPA logic. 6) Autopilot/route output BOTH as NMEA0183 (APB/XTE/RMB/RMC, with magnetic-vs-true bearing option and 82-char sentence-length truncation) AND NMEA2000 (PGN 129283 XTE, 129284 nav-to-waypoint with ETA/VMG, 129285 route/waypoint list), fanned out to all selected output ports. 7) Output filtering, TX rate-limiting/queueing (comm_out_queue), and a data-monitor/log view of in/out traffic. 8) Per-source addressing/identity (NavAddr / N2k NAME via J1939 address-claim) so devices stay stable across CAN address changes.",
+        "key_files": [
+          {
+            "file": "/tmp/opencpn/model/include/model/comm_driver.h",
+            "role": "AbstractCommDriver + DriverListener interfaces; defines the 3-tier model in its doc comment; NavAddr::Bus enum"
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/comm_navmsg.h",
+            "role": "Raw message types: NavMsg base, Nmea0183Msg, Nmea2000Msg (PGN), SignalkMsg, PluginMsg; NavAddr/NavAddr2000/N2kName(J1939) addressing"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_navmsg_bus.cpp",
+            "role": "NavMsgBus singleton (Tier-2 raw bus): Notify() registers active keys and fans messages to observers"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_appmsg_bus.cpp",
+            "role": "AppMsgBus singleton (Tier-3 decoded bus)"
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/comm_appmsg.h",
+            "role": "Decoded protocol-neutral structs: BasicNavDataMsg, GnssFix, GPSWatchdogMsg, AisData"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_factory.cpp",
+            "role": "MakeCommDriver() factory + N0183Listener; switches Type/Protocol to instantiate & register drivers"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_registry.cpp",
+            "role": "CommDriverRegistry singleton; Activate/Deactivate/FindDriver; driver-list change observable"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_n0183_serial.cpp",
+            "role": "Representative NMEA0183 serial driver (SerialIo RX thread, Garmin handler, SendMessage)"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_n2k_net.cpp",
+            "role": "NMEA2000 over network (largest driver, gateway/fastpacket handling)"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_n2k_socketcan.cpp",
+            "role": "NMEA2000 over Linux SocketCAN"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_drv_signalk_net.cpp",
+            "role": "SignalK websocket/JSON driver (ixwebsocket IoThread); shows the standard-feed consumption path"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_bridge.cpp",
+            "role": "CommBridge: subscribes to N0183/N2K/SignalK nav sentences, decodes to globals, multi-source PRIORITY arbitration + watchdog failover, emits BasicNavDataMsg"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_decoder.cpp",
+            "role": "CommDecoder: wraps classic NMEA0183 parser for RMC/HDM/HDG/VTG/GGA/GLL etc."
+          },
+          {
+            "file": "/tmp/opencpn/model/src/ais_decoder.cpp",
+            "role": "AisDecoder: unified AIS from 0183+7 N2K PGNs+SignalK into AISTargetList; UpdateOneCPA/UpdateAllCPA CPA/TCPA math (~line 4009); alarms; EventVar outputs"
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/ais_target_data.h",
+            "role": "AisTargetData target struct: MMSI/Class/SOG/COG + computed Range/Brg/CPA/TCPA/bCPA_Valid/n_alert_state"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/ais_bitstring.cpp",
+            "role": "AIS 6-bit armored payload bit-unpacking (get_int/get_str)"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/autopilot_output.cpp",
+            "role": "Autopilot output: UpdateAutopilotN0183 (APB/XTE/RMB/RMC) and UpdateAutopilotN2K (PGN 129283/129284/129285)"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_n0183_output.cpp",
+            "role": "BroadcastNMEA0183Message() fans output sentences to all OUTPUT-capable 0183 drivers + plugins, with output filtering"
+          },
+          {
+            "file": "/tmp/opencpn/model/src/comm_out_queue.cpp",
+            "role": "TX rate-limiting/queueing for output"
+          }
+        ],
+        "quality_notes": "Mature, deliberately-layered code (clear 3-tier doc, observer-based decoupling, GPL-2). Strengths: protocol-agnostic AppMsg model, clean driver factory/registry, real multi-source priority + watchdog failover, broad transport coverage (0183/2000/SignalK/SocketCAN/Garmin/Android/BT), CPA/TCPA correctly guarded. Weaknesses for reuse: pervasive wxWidgets coupling (wxEvtHandler/wxString/wxSocket/wxLog) makes the C++ hard to extract standalone; heavy reliance on process-wide singletons and shared mutable nav globals (gLat/gLon/...), so not naturally re-entrant/multi-instance; ais_decoder.cpp is a ~4700-line monolith mixing parse/state/alarm/track concerns; a few soft UI couplings (data-monitor window lookup by name, g_pais_alert_dialog_active global). None of these are blockers for using it as a reference; they are reasons a greenfield app should consume SignalK/NMEA directly rather than embed this layer."
+      },
+      {
+        "subsystem": "OpenCPN big-picture architecture: model/ (UI-independent nav core) vs gui/ (wxWidgets), the headless cli/ build, plugin API, tides/currents, and test/",
+        "summary": "OpenCPN is cleanly split into a standalone, UI-independent nav-core library (model/, exported as the CMake targets ocpn::model + ocpn::model-src) and a wxWidgets GUI (gui/). The model library compiles and links WITHOUT the GUI: the headless cli/ command-line tool (opencpn-cmd), the gtest suite in test/, and several helper executables all link ocpn::model-src directly and stub out the GUI-provided plugin-API symbols via cli/api_shim.cpp (\"Plugin API shim providing linkage but no functionality\"). The model owns routing, tracks, comms (NMEA0183/2000, SignalK, serial/net drivers), AIS decode, the NavObj SQLite DB, GPX, REST/IPC server, downloader, and plugin loading. wxWidgets IS a hard dependency of the model, but it is almost entirely wxBase (non-GUI: wxString, wxLog, wxFileName, wxDateTime, wxSocket, wxFileConfig, wxJSON); only a handful of files touch GUI-level wx, and the model never drives the GUI directly — it calls back through injected std::function hooks. Tides/currents (tcmgr.cpp) live in gui/, NOT model/, so they are the main nav capability that is GUI-side. License is GPLv2+ (project code) with a basket of permissive/LGPL bundled libs.",
+        "how_it_works": "model/CMakeLists.txt builds two CMake targets: an INTERFACE lib _OCPN_MODEL (alias ocpn::model, carrying include dirs + ~25 bundled-lib link deps) and an OBJECT lib _model_src (alias ocpn::model-src) compiled from 109 .cpp + 122 headers under model/src and model/include/model. Crucially the model CMakeLists has NO reference to wxWidgets_LIBRARIES and NO reference to any gui target — wx is pulled in transitively at the final-link stage by whoever links the model (gui app, cli, or tests). The headless build: top-level CMakeLists.txt does add_subdirectory(cli) (gated only by NOT QT_ANDROID) and add_subdirectory(model); cli/CMakeLists.txt builds opencpn-cmd from console.cpp + api_shim.cpp and links ocpn::model + ocpn::model-src plus wx — but NO gui target. cli/console.cpp actually instantiates the nav core headlessly: it news up a Routeman, a RestServer, reads config — proving the routing/comms model runs without a window. The model↔GUI seam is inversion-of-control: e.g. Routeman's constructor takes a RoutemanDlgCtx / RoutePropDlgCtx struct of std::function callbacks (confirm_delete_ais_mob, get_global_colour, show_with_fresh_fonts, set_route_and_update…) that the GUI supplies and the CLI stubs. The model also communicates outward through an observable event bus (libs/observable; used by ~12 model files: comm_navmsg_bus, comm_appmsg_bus, etc.) rather than calling GUI code. Route/RoutePoint/Track are pure data objects — Route::FinalizeForRendering() merely invalidates a bounding box; no wxDC/GL drawing lives in the model (0 ocpnDC/Render hits in route_point.cpp/track.cpp). The plugin API is include/ocpn_plugin.h (~7435 lines, API 1.21, versioned opencpn_plugin_16…_122 ABI classes); its host-side functions are implemented in the GUI and stubbed by cli/api_shim.cpp so the model/CLI link cleanly. test/ uses GoogleTest (ocpn::gtest), links ocpn::model-src + api_shim, and covers datetime, NMEA2000 parsing, comm buffers/filters, REST, IPC/dbus, route_point, navutil — i.e. the model is unit-tested in isolation from the GUI.",
+        "ui_independent": "yes-mostly",
+        "reuse_assessment": "Strongly reusable as a nav core, with one caveat. POSITIVE: model/ already IS a separate library (ocpn::model / ocpn::model-src) that links and runs without the GUI — proven three ways in-tree (the opencpn-cmd headless CLI, the gtest suite, and helper exes like cli-server/ipc-client/std-instance, all linking ocpn::model-src and stubbing GUI symbols via cli/api_shim.cpp). Comms (NMEA0183/2000, SignalK, serial/TCP/UDP/CAN drivers, multiplexer, comm_bridge), AIS decode (ais_decoder.cpp — 0 GUI-wx includes), routing/tracks, the SQLite NavObj DB, GPX I/O, the REST/IPC peer server, and plugin loading are all in the model and are GUI-free in substance. The GUI is decoupled via dependency-injected std::function context structs (RoutemanDlgCtx etc.) and an observable event bus, so a brand-new GUI would implement those callbacks + subscribe to the bus rather than patch the core. CAVEATS: (1) wxWidgets is a hard, pervasive dependency of the model — 71 of 109 model .cpp files include a wx header — but it is overwhelmingly wxBase (string/log/filename/datetime/socket/fileconfig/JSON), not wxGUI; a new GUI in Qt/web/etc. would still need to link libwx_base (or do a non-trivial port to strip it). The model leaks a few GUI-flavored types as data (wxColour/wxPen/wxBitmap on Route/icons) that you'd keep as opaque attributes. (2) Tides & currents (tcmgr.cpp, tide_time.h) live in gui/, not model/ — so 'tides' is the one nav capability from the prompt that is NOT in the reusable core and would have to be lifted out of gui/ (tcmgr is largely standalone harmonic-constituent math, so this is feasible but is extra work). Bottom line: keeping routing/tracks/comms/AIS as a reusable core and building a new GUI on top is realistic and the codebase was clearly engineered for it; budget for the wxBase link dependency and for relocating tcmgr out of gui/.",
+        "what_a_rebuild_must_replicate": "A new-GUI-on-model build must: (1) link libwx_base (or port away from it) since the model hard-depends on wxBase across ~65% of its files; (2) implement the GUI-side of the inversion-of-control seam — supply the std::function callback structs the model constructors expect (RoutemanDlgCtx/RoutePropDlgCtx confirm_delete_ais_mob/get_global_colour/hide/set_route_and_update, plus the dialog ctx structs in other managers) and subscribe to the observable event bus (libs/observable) for nav/AIS/comm messages instead of expecting direct GUI calls; (3) provide the plugin-API host functions declared in include/ocpn_plugin.h if plugin support is wanted — cli/api_shim.cpp is the canonical list of symbols the GUI must define (the CLI ships them as no-ops); (4) relocate tides/currents (gui/src/tcmgr.cpp + tide_time.h) into the reusable core, as they are not in model/ today; (5) keep Route/RoutePoint/Track's wxColour/wxPen/wxBitmap fields as opaque rendering attributes and do the actual drawing in the new GUI (the model only computes bounding boxes via FinalizeForRendering, it does not render); (6) honor GPLv2+ — the model is GPL, so a derivative GUI is bound by it.",
+        "key_files": [
+          {
+            "file": "/tmp/opencpn/model/CMakeLists.txt",
+            "role": "Builds the reusable nav core as ocpn::model (INTERFACE) + ocpn::model-src (OBJECT); NO wxWidgets_LIBRARIES and NO gui target referenced — wx is linked transitively by consumers. Lists all 109 src / 122 headers (comms, AIS, routing, NavObj DB, REST/IPC, plugin loader)."
+          },
+          {
+            "file": "/tmp/opencpn/cli/CMakeLists.txt",
+            "role": "Headless opencpn-cmd build: links ocpn::model + ocpn::model-src + wx + api_shim, NO gui target — proves the model builds/links without the GUI."
+          },
+          {
+            "file": "/tmp/opencpn/cli/api_shim.cpp",
+            "role": "'Plugin API shim providing linkage but no functionality' — stubs the GUI-provided plugin-API symbols so model/CLI/tests link without the GUI. Canonical list of the model↔GUI symbol contract."
+          },
+          {
+            "file": "/tmp/opencpn/cli/console.cpp",
+            "role": "Headless entry point; actually instantiates Routeman and RestServer and reads config — demonstrates the nav core running without a window."
+          },
+          {
+            "file": "/tmp/opencpn/include/ocpn_plugin.h",
+            "role": "The plugin API (~7435 lines, API 1.21; versioned opencpn_plugin_16.._122 ABI classes). Host-side implemented by the GUI, stubbed by api_shim.cpp."
+          },
+          {
+            "file": "/tmp/opencpn/model/include/model/routeman.h",
+            "role": "Shows the inversion-of-control seam: Routeman/RoutePropDlgCtx/RoutemanDlgCtx take std::function callbacks (get_global_colour, confirm_delete_ais_mob, hide…) the GUI injects — the model never calls the GUI directly."
+          },
+          {
+            "file": "/tmp/opencpn/model/src/route.cpp",
+            "role": "Route is a pure data object; FinalizeForRendering() only invalidates a bounding box — confirms no drawing lives in the model."
+          },
+          {
+            "file": "/tmp/opencpn/model/src/ais_decoder.cpp",
+            "role": "AIS decode subsystem in the model with zero GUI-wx includes — a clean reusable capability."
+          },
+          {
+            "file": "/tmp/opencpn/gui/src/tcmgr.cpp",
+            "role": "Tides & currents (harmonic constituents) — lives in gui/, NOT model/; the one nav capability that must be lifted into the core for reuse. Paired with gui/include/gui/tcmgr.h and tide_time.h."
+          },
+          {
+            "file": "/tmp/opencpn/test/CMakeLists.txt",
+            "role": "GoogleTest suite linking ocpn::model-src + api_shim; unit-tests the model (datetime, n2k, buffers, filters, REST, IPC, route_point) in isolation from the GUI."
+          },
+          {
+            "file": "/tmp/opencpn/libs/observable",
+            "role": "Observable event bus used by ~12 model files (comm_navmsg_bus etc.) to emit nav/AIS/comm events to subscribers — the outbound decoupling mechanism a new GUI subscribes to."
+          },
+          {
+            "file": "/tmp/opencpn/LICENSING",
+            "role": "Project code is GPLv2+; bundled libs span GPLv3/LGPL/BSD/MIT/Apache/zlib/CC0 — governs any reuse of the model."
+          }
+        ],
+        "quality_notes": "High-quality, deliberately layered codebase. The model/ vs gui/ split is real and enforced at the CMake level (model has no GUI link deps), not just by convention. Decoupling is done with modern C++ patterns: std::function dependency-injection context structs for GUI callbacks, an observable pub/sub bus for events, versioned ABI plugin classes, and a shim library (api_shim.cpp) that lets the core link headless. Comms is impressively modular — a driver registry + factory with per-transport drivers (n0183 serial/net, n2k serial/net/socketcan, signalk, file, loopback) behind a common comm_driver interface and a multiplexer/comm_bridge. Test coverage is meaningful (gtest over n2k, datetime, buffers, filters, REST, IPC) and runs against the model in isolation. Code is C++17, clang-format + cmake-format + pre-commit enforced, CI present (.circleci, .travis, .github). The main structural smell for a would-be reuser is the pervasive wxBase dependency baked into the core (string/log/filename types are wx, not std), plus a couple of stray duplicate lines in model/CMakeLists.txt (comm_navmsg.cpp and periodic_timer.h listed twice) — cosmetic, not functional. Tides being in gui/ rather than model/ is the only notable layering inconsistency relative to the other nav capabilities."
+      }
+    ],
+    "synth": {
+      "repo_assessment": "OpenCPN is a genuinely well-architected, mature C++17 codebase — not a hobbyist tangle. The single most important structural fact: there is a real, CMake-enforced split between `model/` (the UI-independent nav core, exported as `ocpn::model` / `ocpn::model-src`) and `gui/` (the wxWidgets app). This isn't aspirational — `model/CMakeLists.txt` references no wxWidgets GUI libs and no gui target, and the core is proven to build and run headless THREE ways in-tree: the `opencpn-cmd` CLI (cli/console.cpp actually instantiates Routeman + RestServer with no window), the GoogleTest suite, and helper executables — all linking `ocpn::model-src` and stubbing the GUI-side plugin API via `cli/api_shim.cpp`. The decoupling uses modern patterns: std::function dependency-injection context structs (RoutemanDlgCtx/RoutePropDlgCtx default to no-ops), an observable pub/sub event bus, and versioned-ABI plugin classes. The comms layer in particular (deliberate 2022–2025 3-tier rewrite: drivers → raw NavMsgBus → decoded AppMsgBus) is the cleanest subsystem I've seen in any open chartplotter.\n\nThe honest caveats: (1) wxWidgets is a HARD dependency of the core — 71 of 109 model .cpp files include a wx header — but it's overwhelmingly wxBase (wxString/wxLog/wxFileName/wxDateTime/wxSocket/wxFileConfig/wxJSON), not GUI. You don't escape linking libwx_base without a non-trivial port. (2) Legacy smell in the older subsystems: raw owning pointers and manual new/delete (Route::pRoutePointList, global pRouteList/g_TrackList), process-wide singletons (g_pRouteMan, pWayPointMan, pSelect, gLat/gLon globals), commented-out dead code (the #if 0 NMEA block in Routeman::UpdateAutopilot), and known in-source warts (the \"why mercator not great-circle here?? [sean]\" comment). (3) The S-52 chart engine is a different quality tier of difficulty: s52plib.cpp is a single ~12.5k-line file and s52cnsy.cpp is 6.2k lines, dense and comment-light, deeply wxWidgets-entangled at the TYPE level (not just wxBase) and reaching for app-global singletons (ps52plib, g_Platform, g_poRegistrar, g_SencThreadManager). (4) Two layering inconsistencies: tides/currents (tcmgr.cpp) live in gui/, not model/, and the per-GPS-fix navigation MATH (RoutemanGui::UpdateProgress) lives in gui/ as a friend that mutates Routeman's privates — both are unfinished seams in an otherwise-clean split. (5) License reality: project code is GPLv2+. Anything you embed or derive from is bound by it — this matters if you ever want to ship a proprietary product. Overall: a trustworthy, battle-tested (copyrights to 2010), reference-grade implementation whose core was deliberately engineered for exactly the reuse you're contemplating — with the chart RENDERER being the one piece that resists clean extraction.",
+      "feature_inventory": [
+        {
+          "feature": "ENC vector-chart S-52 rendering (the chart picture)",
+          "disposition": "reuse-renderer",
+          "effort": "very-high",
+          "opencpn_location": "libs/s52plib/src/s52plib.cpp (DoRenderObject:7618), s52cnsy.cpp (6.2k LOC conditional symbology), chartsymbols.cpp; gui/src/s57chart.cpp (RenderViewOnDC:2016, SetSafetyContour:2917), gui/src/o_senc.cpp (GDAL OGR S-57 ingest)",
+          "note": "This is the ONLY thing Option B was ever about. Rebuilding on GDAL gives you the easy 20% (S-57/iso8211 parsing); the hard 80% is the S-52 picture: LUP lookup, DAY/DUSK/NIGHT color tables, ~dozen conditional-symbology procedures (several needing cross-feature spatial queries), data-driven safety contour, HPGL symbols, light arcs, declutter. There is NO off-the-shelf GDAL S-52 symbolizer. Option A (drive OpenCPN's existing wxDC raster path headless into a wxBitmap) preserves byte-faithful S-52 for far less work but pulls in wxWidgets + the app-global shims."
+        },
+        {
+          "feature": "Raster charts (RNC/KAP/BSB/GEO)",
+          "disposition": "reuse-model-lib",
+          "effort": "medium",
+          "opencpn_location": "gui/src/chartimg.cpp (ChartBaseBSB)",
+          "note": "Separate chart type that bypasses the S-52 engine entirely. Much simpler than ENC — georeferenced bitmap warping. Either reuse or rebuild on GDAL is tractable."
+        },
+        {
+          "feature": "MBTiles (raster/vector tiles)",
+          "disposition": "reuse-model-lib",
+          "effort": "medium",
+          "opencpn_location": "gui/src/mbtiles.cpp (ChartMbTiles, GL+sqlite)",
+          "note": "Also bypasses S-52. Standard tile format; easy to render with off-the-shelf tooling if you don't reuse OpenCPN's class."
+        },
+        {
+          "feature": "Quilting (seamless multi-chart composite)",
+          "disposition": "rebuild",
+          "effort": "high",
+          "opencpn_location": "gui/src/quilt.cpp",
+          "note": "Composites overlapping charts of differing scales into one view. GUI-side, viewport-coupled. Needed for a polished display but is a render-layer concern, not nav-safety-critical."
+        },
+        {
+          "feature": "Routes & waypoints (create/edit/plan, ETA math)",
+          "disposition": "reuse-model-lib",
+          "effort": "low",
+          "opencpn_location": "model/src/route.cpp, route_point.cpp (UpdateSegmentDistances = planning ETA/ETD math), model/include/model/route.h",
+          "note": "Data model + add/insert/remove/reverse/auto-rename + per-leg distance/bearing + speed→ETA all in model/. Drives directly. ONLY the on-canvas click-to-draw mouse gesture (gui/src/chcanv.cpp StartRoute/FinishRoute) is GUI — that's your new front-end's job anyway."
+        },
+        {
+          "feature": "Active-route navigation (activate, advance, arrival, XTE)",
+          "disposition": "rebuild",
+          "effort": "medium",
+          "opencpn_location": "model/src/routeman.cpp (ActivateRoute/ActivateNextPoint/DeactivateRoute state machine) BUT gui/src/routeman_gui.cpp RoutemanGui::UpdateProgress() = the per-fix BRG/DTG/XTE/arrival MATH",
+          "note": "THE seam. The activate/advance/deactivate/autopilot-emit STATE MACHINE is in model/ and drivable. But the geometry that runs every GPS fix (Mercator BRG, great-circle DTG, vector XTE+side, arrival test w/ 2s moving-away heuristic, auto-advance) lives in the GUI as a friend that mutates Routeman's privates. You must lift UpdateProgress() down into the model or re-implement it — it depends only on model primitives (toSM, DistGreatCircle, vector2D, gLat/gLon, arrival radius) except a droppable pixel-math block. This is the load-bearing safety code; treat it carefully."
+        },
+        {
+          "feature": "Track recording (auto-record the boat's path)",
+          "disposition": "reuse-model-lib",
+          "effort": "low",
+          "opencpn_location": "model/src/track.cpp (ActiveTrack recorder: wxTimer 1s tick, dynamic XTE/angle/time/distance precision, on-the-fly Douglas-Peucker, RouteFromTrack)",
+          "note": "Fully in model/. Self-contained wxTimer object needing only an event loop + gLat/gLon globals. Reuse verbatim. Started via new ActiveTrack + Start()."
+        },
+        {
+          "feature": "GPX import/export + SQLite persistence",
+          "disposition": "reuse-model-lib",
+          "effort": "low",
+          "opencpn_location": "model/src/nav_object_database.cpp (NavObjectCollection1/pugixml GPX), model/src/navobj_db.cpp (NavObj_dB SQLite live store)",
+          "note": "Both full read/write live in model/. Reuse directly — this is how you keep route/track interchange with your existing tooling and other plotters."
+        },
+        {
+          "feature": "AIS decode + unified target list + CPA/TCPA",
+          "disposition": "reuse-model-lib",
+          "effort": "medium",
+          "opencpn_location": "model/src/ais_decoder.cpp (UpdateOneCPA ~4009), ais_bitstring.cpp (6-bit unpack), model/include/model/ais_target_data.h",
+          "note": "All in model/ with ZERO GUI-wx includes in the decode path. Merges 0183 VDM/VDO + 7 N2K PGNs + SignalK into one target list; CPA/TCPA geometry is self-contained and the most valuable bit to port verbatim. Collision alarms guard anchored/zero-SOG/own-ship cases. Reuse — OR get fully-decoded AIS targets free from a SignalK server."
+        },
+        {
+          "feature": "NMEA 0183 / 2000 / SignalK comms (drivers + bus + multi-source arbitration)",
+          "disposition": "standard-feed",
+          "effort": "medium",
+          "opencpn_location": "model/src/comm_drv_*.cpp, comm_navmsg_bus.cpp, comm_appmsg_bus.cpp, comm_bridge.cpp (PriorityMaps + watchdog failover)",
+          "note": "Highly reusable in model/ (3-tier rewrite), BUT this is the subsystem most replaceable by a STANDARD FEED. Everything on the wire is standard. A new app can connect a websocket to a SignalK server (most modern boats run one; it already aggregates 0183+2000+AIS into normalized JSON) and get position/heading/wind/depth/AIS with near-zero parsing. The ONE thing easy to underestimate and worth porting if you go raw-NMEA: comm_bridge's multi-source priority arbitration + watchdog failover."
+        },
+        {
+          "feature": "Autopilot / route output (drive the pilot)",
+          "disposition": "standard-feed",
+          "effort": "low",
+          "opencpn_location": "model/src/autopilot_output.cpp (UpdateAutopilotN0183 APB/XTE/RMB/RMC; UpdateAutopilotN2K PGN 129283/129284/129285), comm_n0183_output.cpp",
+          "note": "In model/ and reusable, but nothing here is OpenCPN-proprietary — it emits standard sentences/PGNs. A new app emits the same APB/XTE/RMB/RMC or PGNs. The CONTENT comes from active-route nav, so it's gated on rebuilding UpdateProgress()."
+        },
+        {
+          "feature": "Tides & currents (harmonic prediction)",
+          "disposition": "reuse-model-lib",
+          "effort": "medium",
+          "opencpn_location": "gui/src/tcmgr.cpp + tide_time.h",
+          "note": "LAYERING WART: lives in gui/, NOT model/. But it's largely standalone harmonic-constituent math, so lifting it into a reusable core is feasible — just extra work the model/ split doesn't do for you."
+        },
+        {
+          "feature": "Dashboard / instruments (wind/depth/speed gauges)",
+          "disposition": "standard-feed",
+          "effort": "low",
+          "opencpn_location": "Dashboard is a PLUGIN (not core); data comes from the comms AppMsgBus",
+          "note": "Gauges are pure presentation over standard data. Your new GUI draws them from the same SignalK/NMEA feed. No OpenCPN code needed."
+        },
+        {
+          "feature": "GRIB weather overlay",
+          "disposition": "optional",
+          "effort": "medium",
+          "opencpn_location": "GRIB is a PLUGIN",
+          "note": "GRIB2 is a standard format with mature off-the-shelf decoders (eccodes, etc.). Rebuild fresh or reuse the plugin via the plugin API. Not safety-core."
+        },
+        {
+          "feature": "Anchor watch / MOB",
+          "disposition": "rebuild",
+          "effort": "low",
+          "opencpn_location": "gui/-side; MOB ties into Routeman/own-ship; anchor watch is a simple geofence on gLat/gLon",
+          "note": "Small, self-contained safety features. Anchor watch = distance-from-set-point alarm; MOB = drop waypoint at present position + activate. Cheap to rebuild on the nav core you're already reusing. Don't skip them — they're safety features."
+        },
+        {
+          "feature": "Plugins (the whole ecosystem)",
+          "disposition": "optional",
+          "effort": "very-high",
+          "opencpn_location": "include/ocpn_plugin.h (~7435 LOC, API 1.21), host-side in gui/, stubbed by cli/api_shim.cpp",
+          "note": "Supporting the existing plugin ABI means implementing the entire host-side API surface in your new GUI — a very large contract. Only do this if you specifically need third-party plugins (GRIB, weather routing, etc.). Otherwise skip and rebuild the few plugins you actually use."
+        }
+      ],
+      "does_B_do_the_same": "No — and this is the single most important thing to be clear about. Option B was ONLY ever about the chart PICTURE: rebuilding the S-52/S-57 ENC symbology renderer on top of GDAL. \"Draw a route, have the boat navigate it, record a track\" is a COMPLETELY SEPARATE set of subsystems that Option B does not touch at all.\n\nConcretely, the chartplotter things you rely on at sea come from different code than the renderer:\n- Drawing/editing a route, the planning ETA math, waypoints → model/src/route.cpp + route_point.cpp.\n- The boat actually NAVIGATING the active route (activate, cross-track error, arrival detection, auto-advance to the next waypoint, autopilot output) → model/src/routeman.cpp PLUS the per-GPS-fix math in gui/src/routeman_gui.cpp (UpdateProgress).\n- Recording your track as you sail → model/src/track.cpp (ActiveTrack).\n- AIS targets and CPA/TCPA collision warnings → model/src/ais_decoder.cpp.\n- Talking to your GPS/instruments/autopilot (NMEA 0183/2000, SignalK) → model/src/comm_*.cpp.\n- Tides/currents → gui/src/tcmgr.cpp.\n\nNone of that is in GDAL, and none of it is produced by an S-52 renderer. So a \"rebuild on GDAL\" gives you a styled chart on screen and NOTHING that navigates. The good news: every one of those navigation subsystems already exists, GUI-free, in OpenCPN's reusable model/ library (the lone exceptions being tides, which sit in gui/, and the per-fix nav geometry UpdateProgress, which sits in gui/ as a friend of the model class). So \"does B do the same chartplotter things?\" → B by itself does essentially none of them, but you do NOT have to rebuild them — you reuse model/.",
+      "how_much_you_need": "Think of it as three tiers.\n\nMUST-HAVE, and genuinely OpenCPN-valuable (reuse model/, don't reinvent):\n- Routes/waypoints + planning math (route.cpp/route_point.cpp) — reuse, low effort.\n- Active-route navigation state machine (routeman.cpp) PLUS the per-fix geometry (UpdateProgress, today in gui/) — reuse the state machine, lift/re-implement the math. This is the one piece of safety-critical code you actually have to relocate. Medium effort.\n- Track recording (track.cpp ActiveTrack) — reuse verbatim, low effort.\n- GPX + SQLite persistence (nav_object_database.cpp + navobj_db.cpp) — reuse, low effort. Keeps you interoperable with other plotters and your own backups.\n- AIS + CPA/TCPA (ais_decoder.cpp) — reuse the CPA/TCPA math verbatim; it's the highest-value, dependency-light algorithm in the tree.\n- Anchor watch + MOB — tiny rebuilds on the nav core. Don't skip; they're safety.\n\nSTANDARD FEED, not OpenCPN-specific (you do NOT need OpenCPN code for these):\n- All comms (0183/2000/SignalK) and autopilot output. Everything on the wire is a standard. If your boat runs a SignalK server (most modern ones do), you get position/heading/wind/depth AND fully-decoded AIS as normalized JSON over a websocket — replacing the entire driver/decode/bridge stack with a few hundred lines. Keep raw-NMEA as fallback. The one subtle thing worth porting even on the SignalK path is comm_bridge's multi-source priority arbitration + watchdog failover (when GPS, N2K and SignalK all report position, which one wins, and how you fail over when one goes silent).\n- Dashboard/instrument gauges — pure presentation over the feed.\n\nGENUINELY HARD / OPTIONAL:\n- ENC S-52 rendering (Option B's actual scope) — very high effort to rebuild faithfully; either reuse OpenCPN's renderer headless (Option A) or accept non-compliant \"good-enough\" styling.\n- Quilting — high effort, render-layer polish.\n- GRIB, plugins — optional; GRIB is a standard format, plugins are a very large ABI to host.\n\nSo the surface area you ACTUALLY need beyond a SignalK feed and a renderer is small and mostly low-effort: route model, the nav state machine + UpdateProgress geometry, track recorder, GPX/SQLite, CPA/TCPA, anchor/MOB. That's the irreducible chartplotter core.",
+      "reframed_A": "Here's the insight that reframes the whole question: \"headless OpenCPN\" does NOT have to mean \"headless RENDERER.\" OpenCPN's reusable asset is its ENTIRE model/ library — routing, active-nav, tracks, comms, AIS, persistence (and, with a lift, tides) — not just the chart-drawing code. The renderer (Option A/B) is the HARDEST thing to extract and the LEAST OpenCPN-specific in value (a chart picture), while the navigation core is the EASIEST to reuse and the MOST valuable (it's what keeps you safe and it's already GUI-free).\n\nSo the strongest architecture is: reuse OpenCPN's model/ library as your nav engine and build a NEW GUI on top of it. Feasibility is high and the codebase was explicitly engineered for exactly this — proven in-tree by opencpn-cmd, the test suite, and the api_shim. A new GUI implements the std::function callback structs the model constructors expect (RoutemanDlgCtx/RoutePropDlgCtx — they default to no-ops) and subscribes to the observable event bus for nav/AIS/comm events, rather than patching the core. The model talks outward only through EventVars/OCPN_* messages and standard NMEA — the same bus the plugins consume.\n\nThe real, bounded costs of this path: (1) you must link libwx_base — wxBase is baked into ~65% of model files (wxString/wxLog/wxFileName etc.); you don't escape it without a heavy port, and it's fine for a single-app build. (2) You must relocate two things the split didn't finish: tides/currents (tcmgr.cpp) out of gui/, and the per-fix nav geometry (RoutemanGui::UpdateProgress) down into Routeman. (3) GPLv2+ binds any derivative GUI. (4) Route/RoutePoint carry a few wxColour/wxPen/wxBitmap fields you keep as opaque attributes and draw yourself. None of these are blockers — they're a known, finite punch-list. This is far more attractive than rebuilding nav from scratch, and it cleanly separates the \"should I reuse or rebuild the renderer\" question from the \"do I have a real chartplotter\" question.",
+      "recommendation": "Candid, risk-aware path — and the governing principle is: never put the safety-critical navigation core on a rebuild-from-scratch track. You sail the world relying on this; the parts that keep you off the rocks (active-route nav, XTE, arrival, AIS/CPA-TCPA, anchor watch) are mature, battle-tested since 2010, and already reusable. Reuse them; don't reinvent them.\n\nRecommended decomposition:\n\n1. NAVIGATION CORE → reuse OpenCPN's model/ library wholesale. Link ocpn::model-src + libwx_base, build a new GUI that implements the dependency-injection callback structs and subscribes to the event bus. Reuse route/route_point/track/ais_decoder/navobj_db/nav_object_database verbatim. Do the two relocations: lift UpdateProgress() into Routeman (the safety-critical per-fix geometry) and lift tcmgr.cpp into your core. Port the CPA/TCPA math as-is. This is medium total effort and it keeps every safety behavior byte-identical to what you trust today.\n\n2. COMMS → consume SignalK as primary, raw NMEA 0183/2000 as fallback. Don't embed the wx-bound driver stack unless you need to; do port comm_bridge's multi-source priority + watchdog failover (this is the easy-to-underestimate safety piece). Autopilot output is standard sentences/PGNs — emit them directly.\n\n3. CHART RENDERER → this is the only genuinely hard decision, and I'd NOT rush Option B. For byte-faithful S-52 (what you rely on for reading hazards, lights, depth contours correctly), Option A — driving OpenCPN's existing wxDC raster path headless into a bitmap — preserves IHO S-52 correctness for weeks-not-months of porting, versus Option B which makes you re-own ~370k LOC of conditional symbology and symbol/text placement to be chart-correct. Reserve Option B (GDAL rebuild) only if strict S-52 compliance is negotiable AND you want a dependency-light styled vector layer; even then, expect the conditional-symbology + spatial-cross-feature work (s52cnsy.cpp, 6.2k LOC) to dominate. Raster (RNC/KAP) and MBTiles bypass S-52 entirely and are cheap regardless of which path you pick — a pragmatic first milestone is raster + MBTiles working end-to-end with the reused nav core, before you touch ENC at all.\n\n4. SEQUENCING (de-risked): (a) Stand up the reused model/ nav core headless and validate it against recorded GPX/NMEA logs — prove route activation, XTE, arrival/advance, track recording, and CPA/TCPA match stock OpenCPN exactly before any UI. (b) Add raster/MBTiles display. (c) Add AIS + anchor/MOB. (d) ONLY THEN decide ENC: Option A first (correct, reuse), Option B only if you've consciously accepted the compliance/effort trade. (e) Keep stock OpenCPN installed and authoritative until your build has crossed an ocean's worth of real-world validation. Never sail offshore on a chart renderer or nav engine that hasn't been cross-checked against the tool you currently trust.\n\nBottom line: Option B alone gives you a pretty chart and a boat that does nothing. The chartplotter you actually want is mostly already sitting in model/, reusable and proven — so reuse the navigation core, treat the renderer as a separate and slower decision, and validate against stock OpenCPN before you ever depend on it at sea."
+    }
+  }
+}

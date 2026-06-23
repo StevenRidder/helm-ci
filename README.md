@@ -43,6 +43,7 @@ the **first real code** — a reusable data pipeline + a MapLibre prototype
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
+| [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md) | Read OpenCPN file-by-file: reuse its nav core; the new plan |
 | [docs/COMPETITIVE.md](docs/COMPETITIVE.md) | Market landscape + where Helm wins |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
 | [TRACER-BULLET.md](TRACER-BULLET.md) | **The first code** — run the pipeline + prototype |
