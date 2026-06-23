@@ -60,9 +60,23 @@ server reject every connection with "Server callback improperly registered" and 
 ## Built on the same model/ that drives a real boat
 Links the identical `ocpn::model-src` proven in [../spike/opencpn-headless/](../spike/opencpn-headless/).
 
+## S-52 chart-tile server (`helm_tiles.cpp`) ✅
+`helm-tiles` loads a NOAA ENC headless (the proven [chart-render](../spike/opencpn-headless/chart-render/)
+path) and serves `http://127.0.0.1:8082/chart/{z}/{x}/{y}.png` — per-tile S-52 renders — to a MapLibre
+raster source (`enc` in `web/style.json`, the "S-52 charts (engine)" toggle). Verified: real S-52 tiles
+(soundings, depth areas, contours, cell boundary) render in the Helm UI. Notes:
+- Renders on the **main thread** (CoreGraphics): HTTP worker threads hand each tile to a main-thread job
+  queue and wait — see `render_tile` + the `main()` loop.
+- Slippy-tile → ViewPort: tile-bbox center + `ppm = 256 / lat_span_m`, `RenderRegionViewOnDC`, then
+  `dc.GetSelectedBitmap()` → PNG to memory. Tiles outside the cell return a transparent tile.
+- Build: `cmake --build … --target helm-tiles` (clones the chart-spike slice + `ixwebsocket`). Built first-try.
+- Sandbox gotcha (not a product bug): network-blocked basemap tiles can saturate MapLibre's image-request
+  pool and starve the ENC tiles; with a reachable basemap they load fine.
+
 ## Next increment
-- **S-52 chart-tile HTTP server** — `http://127.0.0.1:8082/chart/{z}/{x}/{y}.png` rendering ENC tiles
-  via the proven [chart-render](../spike/opencpn-headless/chart-render/) path → a MapLibre raster
-  source. Then the UI shows real S-52 charts under real nav.
-- Real position in (SignalK / NMEA) instead of the demo own-ship advance.
-- The tides + `UpdateProgress` relocations into the core (see ../docs/OPENCPN-REUSE.md).
+- **NODTA → transparent**: make the S-52 no-data grey transparent so charts composite *over* satellite
+  (the "depth on satellite" vision) instead of an opaque grey blanket.
+- **One binary**: merge `helm-engine` (nav WS) + `helm-tiles` (chart HTTP) into a single engine (mind the
+  `api_shim` vs `chart_stubs` symbol overlap).
+- **Real position in** (SignalK / NMEA) instead of the demo own-ship advance.
+- Align the demo route + ENC cell so the boat rides the S-52 chart; tides + `UpdateProgress` relocations.

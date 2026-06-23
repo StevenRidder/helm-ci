@@ -182,6 +182,7 @@
   <p class="sub">Chart &amp; data overlays</p>
   <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite</label>
   <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
+  <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 charts<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth areas</label>
   <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
@@ -287,6 +288,7 @@
 <script src="nav-source.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
+  window.map = map;   // debug/automation hook
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
 

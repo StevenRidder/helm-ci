@@ -19,6 +19,16 @@
       ],
       "attribution": "NOAA ENC (public domain)"
     },
+    "enc": {
+      "type": "raster",
+      "tileSize": 256,
+      "minzoom": 10,
+      "maxzoom": 17,
+      "tiles": [
+        "http://127.0.0.1:8082/chart/{z}/{x}/{y}.png"
+      ],
+      "attribution": "S-52 via OpenCPN (Helm Engine)"
+    },
     "depare": {
       "type": "geojson",
       "data": "data/depare.geojson"
@@ -64,6 +74,17 @@
       },
       "paint": {
         "raster-opacity": 0.85
+      }
+    },
+    {
+      "id": "enc-chart",
+      "type": "raster",
+      "source": "enc",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 1.0
       }
     },
     {

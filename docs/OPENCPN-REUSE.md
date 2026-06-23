@@ -125,7 +125,11 @@ clean-room cross-platform/commercial version (slow, separate). Or just embrace t
   - ✅ *nav-state WebSocket live* ([engine/](../engine/)): OpenCPN's real `Routeman` driven headless →
     `ws://127.0.0.1:8081` → the UI cockpit (instruments + route inspector + ownship), verified
     end-to-end. The UI prefers the engine, falls back to the JS sim — same JSON contract.
-  - ⬜ *S-52 chart-tile HTTP server* next (`/chart/{z}/{x}/{y}.png` via the proven chart-render path).
+  - ✅ *S-52 chart-tile HTTP server live* ([engine/helm_tiles.cpp](../engine/helm_tiles.cpp)): renders
+    NOAA ENC tiles headless → `http://127.0.0.1:8082/chart/{z}/{x}/{y}.png` → a MapLibre raster source;
+    real S-52 charts (soundings/depth/contours) display under the live nav in the UI.
+  - ⬜ Next: NODTA→transparent (depth-on-satellite compositing), real position-in (SignalK/NMEA), merge
+    to one binary, the two relocations.
 - **Phase 3 — wire the UI:** connect this web UI to the engine — real S-52 charts + real
   position/route/AIS, alongside the existing satellite/weather/places. Now it's a real chartplotter
   with this face.
