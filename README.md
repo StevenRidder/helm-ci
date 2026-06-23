@@ -17,9 +17,10 @@ chart itself). Nothing on the market shows it all on one screen. **That is the p
 
 Pre-alpha. Holds the product definition, architecture, research, the canonical UI, and the
 **first real code** — a reusable data pipeline + a MapLibre prototype
-(see [TRACER-BULLET.md](TRACER-BULLET.md)). **Phase 1 of the build plan is proven**: OpenCPN's
-`model/` nav core runs fully headless on a Mac (see
-[spike/opencpn-headless/](spike/opencpn-headless/)), so the plan is to reuse it under our UI
+(see [TRACER-BULLET.md](TRACER-BULLET.md)). **Phase 1 of the build plan is proven** — *both* reuse halves run headless on a Mac: OpenCPN's
+`model/` nav core ([spike/opencpn-headless/](spike/opencpn-headless/)) **and** its S-52 ENC renderer
+([spike/opencpn-headless/chart-render/](spike/opencpn-headless/chart-render/), which rendered a real
+NOAA cell to a PNG with no GUI). The plan is to reuse both under our UI
 ([docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md)).
 
 ## The three differentiators

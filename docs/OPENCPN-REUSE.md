@@ -67,9 +67,12 @@ plugins.
    This is the one piece of safety-critical code that has to move.
 2. **Tides/currents (`tcmgr.cpp`)** sits in `gui/` but is standalone harmonic math — lift into the core.
 
-## Charts: Option A beats B (and got easier)
-`s57chart::RenderRegionViewOnDC` already renders the **full S-52 picture into a `wxBitmap` with NO GL
-context** (the GL branches are only taken when `m_pdc == NULL`). That's exactly the
+## Charts: Option A beats B (and got easier) — ✅ PROVEN headless (2026-06-23)
+`s57chart::RenderRegionViewOnDC` renders the **full S-52 picture into a `wxBitmap` with NO GL
+context** — **proven**: it rendered NOAA cell US5FL96M (Key West) to a real S-52 PNG headless, no GUI
+window, no display. See [spike/opencpn-headless/chart-render/](../spike/opencpn-headless/chart-render/)
+(harness + recipe + the proof image + the hard-won gotchas: keep `ocpnUSE_GL` ON for ABI, grab
+`dc.GetSelectedBitmap()` after render, assign `m_pRegistrarMan`). That's exactly the
 `render(viewport, scale, scheme) → bitmap` shape Option A needs → serve as raster tiles to MapLibre.
 So **A preserves true IHO S-52 correctness in weeks**, vs B rebuilding the hard 80% (S-52 conditional
 symbology, color schemes, safety contours, text placement) from scratch. B stays the optional
@@ -111,10 +114,12 @@ You can have both eventually: the GPL desktop app you actually sail with (fast),
 clean-room cross-platform/commercial version (slow, separate). Or just embrace the GPL open path.
 
 ## The phased plan
-- **Phase 1 — spike ✅ PROVEN (2026-06-23):** stood up `ocpn::model-src` headless — built a route,
-  `ActivateRoute`, advanced waypoints, computed live BRG/DTW, **all with no GUI**, on a Mac. See
-  [spike/opencpn-headless/](../spike/opencpn-headless/). The nav-core reuse is real; the only
-  gotcha is pinning **wxWidgets 3.2** (3.3 removed `wxNode`).
+- **Phase 1 — spike ✅ PROVEN (2026-06-23): BOTH reuse halves run headless on a Mac.**
+  - *Nav core* — built a route, `ActivateRoute`, advanced waypoints, computed live BRG/DTW, no GUI.
+    See [spike/opencpn-headless/](../spike/opencpn-headless/). (Gotcha: pin **wxWidgets 3.2**.)
+  - *S-52 renderer* — rendered NOAA cell US5FL96M to a real S-52 PNG, no GUI / no GL context. See
+    [spike/opencpn-headless/chart-render/](../spike/opencpn-headless/chart-render/).
+  Option A is validated end-to-end: OpenCPN's nav engine **and** chart picture both reusable headless.
 - **Phase 2 — engine:** the Helm Engine — link `model/` + `s57chart`; serve nav state over localhost
   WS + S-52 tiles over localhost HTTP. Do the two relocations (`UpdateProgress`, tides).
 - **Phase 3 — wire the UI:** connect this web UI to the engine — real S-52 charts + real
