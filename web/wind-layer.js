@@ -36,7 +36,7 @@
     maxParticleAge: 110,   // frames before a particle is forcibly respawned
     fadeOpacity: 0.92,     // trail persistence (higher = longer, silkier tails)
     lineWidth: 1.0,
-    speedFactor: 0.5,      // global multiplier on advection step
+    speedFactor: 0.3,      // global multiplier on advection step (lower = gentler drift)
     frameRate: 60,         // target fps (rAF-driven; soft cap)
     minVisibleZoomStep: 0  // reserved
   };
