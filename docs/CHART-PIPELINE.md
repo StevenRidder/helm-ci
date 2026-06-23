@@ -1,0 +1,91 @@
+# Chart pipeline — on-demand acquisition + depth-on-satellite
+
+> The signature capability: "ChartLocker, but live." Lasso an area → fetch → pack
+> mbtiles → cache offline. Plus ENC depth overlaid on satellite imagery.
+
+## What ChartLocker actually is (and isn't)
+
+[ChartLocker](https://chartlocker.brucebalan.com) (Bruce Balan & Alene Rice) is **not
+software** — it's a hand-curated catalog of **pre-built regional `.mbtiles` ZIPs**
+(Bing/Google/ArcGIS satellite + rasterized Navionics) downloaded from MediaFire and
+loaded into OpenCPN 5.x via Chart Groups + quilting. The authors georeference and tile
+each region by hand, then post the ZIPs.
+
+The "select-an-area, fetch-on-demand" behavior the user wants **does not exist in
+ChartLocker** — it's the live version we're building. The engineering is easy; the hard
+part is licensing ([LEGAL.md](LEGAL.md)).
+
+## The on-demand tiler
+
+Runs **server/edge-side** (not on-device), so source credentials and source-swapping
+stay off the device.
+
+```
+bbox + max-zoom
+   │
+   ├─ bbox → XYZ tile list            (standard slippy-map enumeration)
+   ├─ fetch tiles from source         (Sentinel-2 / NOAA / OpenSeaMap — clean only)
+   ├─ georeference                    (pre-georeferenced sources skip this;
+   │                                   ad-hoc imagery → gdalwarp + GCPs)
+   ├─ pack to mbtiles                 (GDAL MBTiles driver / gdal2tiles.py)
+   │     ⚠ TMS Y-flip: mbtiles uses y=0 at SOUTH, XYZ uses y=0 at NORTH
+   └─ device downloads packed mbtiles → caches offline → MapLibre + quilting
+```
+
+Tooling is entirely off-the-shelf GDAL:
+[`gdal2tiles`](https://gdal.org/en/stable/programs/gdal2tiles.html) /
+[MBTiles driver](https://gdal.org/en/stable/drivers/raster/mbtiles.html).
+
+### Tile / size math (set user expectations)
+
+Web-Mercator tile side = 40,075,017 m / 2^z:
+
+| Zoom | m/tile | typical use |
+|---|---|---|
+| Z16 | ~611 m | default cap |
+| Z17 | ~305 m | coastal detail |
+| Z18 | ~153 m | anchorages (opt-in) |
+
+Each zoom is ~4× the tiles of the previous. A moderate cruising region at Z8–Z18 runs
+**hundreds of MB to several GB per source** (ChartLocker's Fiji BingSat set is 5.93 GB).
+Implication: cap default max zoom (~Z16), make Z18 opt-in for anchorages, fetch
+incrementally, show an estimated size before download.
+
+## Source tiers (summary — see LEGAL.md for the binding rules)
+
+- **Clean (ship it):** Sentinel-2/Copernicus (free, commercial-OK, attribution req'd,
+  10 m), NOAA ENC + NCDS raster (US public domain), OpenSeaMap (ODbL, seamarks overlay
+  only).
+- **Bring-your-own:** Google, Bing (ToS bars cache/bulk-download; Bing EOL 2028) — user
+  imports their own `.mbtiles`; we never server-fetch or host.
+- **Partnership:** Navionics (official API is online-display-only; scraping prohibited),
+  Esri World Imagery (SDK-locked, per-export cap, Maxar downstream terms).
+
+The full ChartLocker workflow is preserved 1:1 via **"import my own `.mbtiles`"** — so
+the product never has to touch a prohibited tile.
+
+## Depth-on-satellite (the wholybee technique, generalized)
+
+[wholybee/chartplotter](https://github.com/wholybee/chartplotter) is a Qt6 + GDAL **S-57
+ENC viewer** that depth-shades areas and labels soundings (and now follows routes +
+drives an autopilot). It proved the **hard half** — parsing depth out of S-57. It does
+*not* itself touch satellite.
+
+Helm composites that depth layer **over** satellite raster:
+
+- **Base raster:** satellite mbtiles (Sentinel-2 / BYO Bing / Google).
+- **Overlay vector:** NOAA ENC S-57 →
+  - `DEPARE` — depth-area fills (translucent),
+  - `DEPCNT` — depth contours,
+  - `SOUNDG` — soundings, with depth labels.
+
+Rendered translucent on top of the imagery, with depth labels. The satellite shows you
+the reef and the sandbar; the ENC overlay puts the numbers on it. This is "satellite
+piloting with depth" — the holy grail for thin water and poorly-charted atolls.
+
+All public-domain (NOAA ENC) over a clean base (Sentinel-2) → fully offline, fully
+shippable.
+
+> ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
+> primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
+> A permanent "cross-reference official charts" disclaimer is mandatory on these layers.
