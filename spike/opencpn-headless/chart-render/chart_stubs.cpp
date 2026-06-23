@@ -126,17 +126,12 @@ wxString ChartBase::GetHashKey() const {
 }
 
 // ---------------------------------------------------------------------------
-// gFrame / top_frame::Get()
+// gFrame
 //
-// The real type is `MyFrame* gFrame` (MyFrame : AbstractTopFrame); the model/gui
-// split reaches it through the abstract `top_frame::Get()`. We do NOT compile
-// gui/src/top_frame.cpp; instead we own top_frame::Get() and return a concrete
-// HeadlessTopFrame whose ~70 pure virtuals are all no-op'd. Only
-// GetBestVPScale() is actually invoked (s57chart.cpp:4130) and its result feeds
-// only LOD decimation, so returning the chart's native scale is safe.
-//
-// gFrame itself (the `MyFrame*` global) is referenced by some TUs; we define it
-// as nullptr with a forward decl and never dereference it through that name.
+// gFrame (the `MyFrame*` global) is referenced by name from some model/gui TUs;
+// we define it as nullptr with a forward decl and never dereference it. The
+// abstract top_frame::Get() seam that used to live here was removed in Step 6
+// (see the seam note below) — the headless render path needs no AbstractTopFrame.
 // ---------------------------------------------------------------------------
 
 #include "top_frame.h"
@@ -145,117 +140,14 @@ wxString ChartBase::GetHashKey() const {
 class MyFrame;
 MyFrame* gFrame = nullptr;
 
-// Fail-and-fix tripwire: these overrides are believed render-path-dead (the
-// render path was traced + verified to call none of them; the background-SENC
-// callers are bypassed by DisableBackgroundSENC). If that assumption is ever
-// wrong, abort LOUDLY at the exact method rather than returning a silent default.
-[[noreturn]] static void helm_dead(const char* m) {
-  std::fprintf(stderr, "FATAL: HeadlessTopFrame::%s() called but assumed dead on the "
-              "render path. Aborting to surface the broken assumption.\n", m);
-  std::abort();
-}
-
-class HeadlessTopFrame : public AbstractTopFrame {
-public:
-  HeadlessTopFrame()
-      : AbstractTopFrame(nullptr, wxT("headless"), wxPoint(0, 0),
-                         wxSize(1, 1), 0) {}
-
-  // Render-path-dead: s57chart's render path no longer calls this — it was
-  // severed under OCPN_HEADLESS in BuildRAZFromSENCFile, which uses the chart's
-  // own (correct) native scale directly. The remaining top_frame::Get() callers
-  // are background-SENC paths bypassed by DisableBackgroundSENC(). Kept only to
-  // satisfy the fat AbstractTopFrame interface until it is split (HARDENING.md
-  // step 6). The return value is never consumed.
-  double GetBestVPScale(AbstractChart* /*arg*/) override { helm_dead("GetBestVPScale"); return 0.0; }
-
-  // ---- everything below is a no-op; never invoked in the headless path ----
-  void FastClose() override { helm_dead("FastClose");}
-  void InvalidateAllGL() override { helm_dead("InvalidateAllGL");}
-  void SetGPSCompassScale() override { helm_dead("SetGPSCompassScale");}
-  void RefreshAllCanvas(bool) override { helm_dead("RefreshAllCanvas");}
-  void UpdateStatusBar() override { helm_dead("UpdateStatusBar");}
-  void ToggleFullScreen() override { helm_dead("ToggleFullScreen");}
-  bool DoChartUpdate(void) override { helm_dead("DoChartUpdate"); return false; }
-  Track* TrackOff(bool) override { helm_dead("TrackOff"); return nullptr; }
-  void TrackOn(void) override { helm_dead("TrackOn");}
-  void ProcessOptionsDialog(int) override { helm_dead("ProcessOptionsDialog");}
-  void SetAlertString(wxString) override { helm_dead("SetAlertString");}
-  void JumpToPosition(double, double) override { helm_dead("JumpToPosition");}
-  void JumpToPosition(double, double, double) override { helm_dead("JumpToPosition");}
-  void JumpToPosition(AbstractChartCanvas*, double, double, double) override { helm_dead("JumpToPosition");}
-  void JumpToPosition(AbstractChartCanvas*, double, double) override { helm_dead("JumpToPosition");}
-  double GetPixPerMM() override { helm_dead("GetPixPerMM"); return 4.0; }
-  double GetContentScaleFactor() override { helm_dead("GetContentScaleFactor"); return 1.0; }
-  void RequestNewToolbars(bool) override { helm_dead("RequestNewToolbars");}
-  AbstractChartCanvas* GetAbstractPrimaryCanvas() override { helm_dead("GetAbstractPrimaryCanvas"); return nullptr; }
-  double GetCanvasTrueScale() override { helm_dead("GetCanvasTrueScale"); return 10000.0; }
-  bool GetCanvasPointPix(double, double, wxPoint*) override { helm_dead("GetCanvasPointPix"); return false; }
-  wxSize GetFocusCanvasSize() override { helm_dead("GetFocusCanvasSize"); return wxSize(1, 1); }
-  void CancelAllMouseRoute() override { helm_dead("CancelAllMouseRoute");}
-  void InvalidateAllCanvasUndo() override { helm_dead("InvalidateAllCanvasUndo");}
-  void PositionConsole() override { helm_dead("PositionConsole");}
-  void DoStackUp(AbstractChartCanvas*) override { helm_dead("DoStackUp");}
-  void DoStackDown(AbstractChartCanvas*) override { helm_dead("DoStackDown");}
-  void LoadHarmonics() override { helm_dead("LoadHarmonics");}
-  bool DropMarker(bool) override { helm_dead("DropMarker"); return false; }
-  double GetMag(double, double, double) override { helm_dead("GetMag"); return 0.0; }
-  void SetMasterToolbarItemState(int, bool) override { helm_dead("SetMasterToolbarItemState");}
-  void ProcessCanvasResize() override { helm_dead("ProcessCanvasResize");}
-  bool SetGlobalToolbarViz(bool) override { helm_dead("SetGlobalToolbarViz"); return false; }
-  void ToggleQuiltMode(AbstractChartCanvas*) override { helm_dead("ToggleQuiltMode");}
-  void UpdateGlobalMenuItems(AbstractChartCanvas*) override { helm_dead("UpdateGlobalMenuItems");}
-  void UpdateGlobalMenuItems() override { helm_dead("UpdateGlobalMenuItems");}
-  void RefreshCanvasOther(AbstractChartCanvas*) override { helm_dead("RefreshCanvasOther");}
-  double* GetCOGTable() override { helm_dead("GetCOGTable"); return nullptr; }
-  void StartCogTimer() override { helm_dead("StartCogTimer");}
-  wxGLCanvas* GetWxGlCanvas() override { helm_dead("GetWxGlCanvas"); return nullptr; }
-  wxWindow* GetPrimaryCanvasWindow() override { helm_dead("GetPrimaryCanvasWindow"); return nullptr; }
-  void ApplyGlobalSettings(bool) override { helm_dead("ApplyGlobalSettings");}
-  void SetMenubarItemState(int, bool) override { helm_dead("SetMenubarItemState");}
-  void ToggleColorScheme() override { helm_dead("ToggleColorScheme");}
-  void ActivateMOB() override { helm_dead("ActivateMOB");}
-  void ToggleTestPause() override { helm_dead("ToggleTestPause");}
-  void ToggleChartBar(AbstractChartCanvas*) override { helm_dead("ToggleChartBar");}
-  void DoSettings() override { helm_dead("DoSettings");}
-  void SwitchKBFocus(AbstractChartCanvas*) override { helm_dead("SwitchKBFocus");}
-  void UpdateRotationState(double) override { helm_dead("UpdateRotationState");}
-  void SetChartUpdatePeriod() override { helm_dead("SetChartUpdatePeriod");}
-  wxStatusBar* GetStatusBar() override { helm_dead("GetStatusBar"); return nullptr; }
-  wxStatusBar* GetFrameStatusBar() const override { helm_dead("GetFrameStatusBar"); return nullptr; }
-  void SetENCDisplayCategory(AbstractChartCanvas*, enum _DisCat) override { helm_dead("SetENCDisplayCategory");}
-  int GetCanvasIndexUnderMouse() override { helm_dead("GetCanvasIndexUnderMouse"); return 0; }
-  double GetCanvasRefScale() override { helm_dead("GetCanvasRefScale"); return 10000.0; }
-  void SendGlJsonConfigMsg() override { helm_dead("SendGlJsonConfigMsg");}
-  int GetNextToolbarToolId() override { helm_dead("GetNextToolbarToolId"); return 0; }
-  void SetToolbarItemBitmaps(int, wxBitmap*, wxBitmap*) override { helm_dead("SetToolbarItemBitmaps");}
-  void SetToolbarItemSVG(int, wxString, wxString, wxString) override { helm_dead("SetToolbarItemSVG");}
-  void UpdateAllFonts() override { helm_dead("UpdateAllFonts");}
-  bool CanAccelerateGlPanning() override { helm_dead("CanAccelerateGlPanning"); return false; }
-  void SetupGlCompression() override { helm_dead("SetupGlCompression");}
-  void ScheduleReconfigAndSettingsReload(bool, bool) override { helm_dead("ScheduleReconfigAndSettingsReload");}
-  void ScheduleReloadCharts() override { helm_dead("ScheduleReloadCharts");}
-  void FreezeCharts() override { helm_dead("FreezeCharts");}
-  void ThawCharts() override { helm_dead("ThawCharts");}
-  wxString GetGlVersionString() override { helm_dead("GetGlVersionString"); return wxEmptyString; }
-  void ScheduleDeleteSettingsDialog() override { helm_dead("ScheduleDeleteSettingsDialog");}
-  void ChartsRefresh() override { helm_dead("ChartsRefresh");}
-  void OnToolLeftClick(wxCommandEvent&) override { helm_dead("OnToolLeftClick");}
-  AbstractChartCanvas* GetAbstractFocusCanvas() override { helm_dead("GetAbstractFocusCanvas"); return nullptr; }
-  void BeforeUndoableAction(UndoType, RoutePoint*, UndoBeforePointerType,
-                            UndoItemPointer) override { helm_dead("wrapped");}
-  void AfterUndoableAction(UndoItemPointer) override { helm_dead("AfterUndoableAction");}
-  void TouchAISActive() override { helm_dead("TouchAISActive");}
-  void UpdateAISMOBRoute(const AisTargetData*) override { helm_dead("UpdateAISMOBRoute");}
-  void ActivateAISMOBRoute(const AisTargetData*) override { helm_dead("ActivateAISMOBRoute");}
-  void EnableSettingsTool(bool) override { helm_dead("EnableSettingsTool");}
-};
-
-static HeadlessTopFrame* s_headless_frame = nullptr;
-
-namespace top_frame {
-AbstractTopFrame* Get() { return s_headless_frame; }
-}  // namespace top_frame
+// Step 6 seam: the headless renderer needs no AbstractTopFrame at all.
+// A HeadlessTopFrame (~79 no-op overrides) used to be defined here solely to
+// satisfy top_frame::Get(). Its only render-path caller (s57chart GetBestVPScale)
+// is compiled out under OCPN_HEADLESS, and the background-SENC callers in
+// senc_manager.cpp are now #ifndef OCPN_HEADLESS-guarded (see patches/), so NO
+// compiled TU references top_frame::Get(). HeadlessTopFrame, its singleton
+// storage, and the top_frame::Get() definition are therefore deleted outright —
+// the library carries no frame object and no abort-tripwire stub.
 
 // ---------------------------------------------------------------------------
 // g_Platform / HeadlessPlatform
@@ -473,6 +365,4 @@ void EnsureHeadlessGlobals() {
   // Platform (only GetDisplayDPmm() is exercised).
   if (!g_Platform) g_Platform = new OCPNPlatform();
 
-  // Headless top frame (only GetBestVPScale() is exercised).
-  if (!s_headless_frame) s_headless_frame = new HeadlessTopFrame();
 }

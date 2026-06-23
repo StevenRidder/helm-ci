@@ -24,7 +24,7 @@ app globals. **Recommendation: Option A — extract a first-class `ocpn::chart-r
 | 3 | Sever the GUI top-frame from the render path (drop magic `GetBestVPScale`) | ✅ **done + verified** |
 | 4 | Platform `GetDisplayDPmm()` hardcoded `4.0` → real `BasePlatform::GetDisplayDPmm()` | ✅ **done + verified** |
 | 5 | **ChartDB + quilting** (real multi-cell, not one hardcoded cell) | ⬜ larger (~1.5–3 wk) |
-| 6 | Extract `ocpn::chart-render` library; vendor OpenCPN + maintained patches (Option A) | 🟡 **library extracted**; seam + vendoring next |
+| 6 | Extract `ocpn::chart-render` library; vendor OpenCPN + maintained patches (Option A) | 🟡 **library extracted + AbstractTopFrame seam done** (no frame stub left); vendoring next |
 
 ### ✅ 1 — Native-scale / safety-contour fix (the dangerous one)
 `s57chart::BuildRAZFromSENCFile()` ingested the SENC but **never copied the decoded native
@@ -72,9 +72,30 @@ requirements that flow to consumers, and `GetpSharedDataLocation()` moved into t
 **no back-reference to its host executable**. Both `chart-spike` and `helm-tiles` now just link it;
 because the library carries `OCPN_HEADLESS`, **the faked-RTTI shim (`chart_typeinfo.cpp`) is no longer
 needed by any target** and is retired. Verified: both build from the library and render identically
-(nativeScale 40000, same tiles). **Next:** finish the `AbstractTopFrame` seam so the library needs no
-no-op frame stub at all, then vendor OpenCPN as a maintained patch series rather than building against
-a clone.
+(nativeScale 40000, same tiles).
+
+**Increment 2 (done) — the `AbstractTopFrame` seam.** The library no longer contains a frame object at
+all. Previously `chart_stubs.cpp` defined a `HeadlessTopFrame` (~79 `helm_dead()` no-op overrides of the
+fat `AbstractTopFrame : wxFrame` interface) purely to satisfy `top_frame::Get()`. A workflow mapped +
+adversarially verified the real dependency: under `OCPN_HEADLESS` the **only render-path call**
+(`s57chart.cpp` `GetBestVPScale`) is already compiled out (Step 3), and the **5 remaining `top_frame::Get()`
+callers all live in `senc_manager.cpp`** (background-SENC status-bar cosmetics) — runtime-dead
+(`g_SencThreadManager` is never instantiated: `s57_load.cpp` isn't in the slice, and both harnesses call
+`DisableBackgroundSENC()`), but still a *link* dependency because they compile unconditionally. Seam:
+guard those 5 call sites under `#ifndef OCPN_HEADLESS` (upstream patch
+[`0002-senc_manager-headless-topframe-seam.patch`](patches/) — mirrors the Step-3 s57chart pattern), which
+drops `senc_manager.cpp.o`'s `U top_frame::Get()`; then **delete `HeadlessTopFrame`, its singleton storage,
+the `top_frame::Get()` definition, and its instantiation** from `chart_stubs.cpp` (478→368 lines). **Verified:**
+`nm` shows zero `top_frame`/`AbstractTopFrame` symbols in `libhelm-chartrender.a`, `helm-tiles`, and
+`chart-spike` (no `U`, no `T`, no vtable/typeinfo); both binaries link clean; and **all 91 z13/z15 content
+tiles render byte-identical** to the pre-change baseline (warm-vs-warm, deterministic). Removing the abort
+tripwire is net-safer here: re-enabling the `#else` arm would now be a loud *link* failure, not a runtime
+abort. *(Observed, pre-existing + orthogonal: the very first tile rendered on a fresh process differs from
+steady state, then converges to the identical bytes on re-request — a one-time render warmup, not a seam
+change. Tracked separately: add a startup warmup render so the first served tile is deterministic.)*
+
+**Next:** vendor OpenCPN as a maintained patch series (`patches/0001`, `0002`, …) rather than building
+against a mutable clone — the remaining Step-6 work.
 
 ## Fail-and-fix-early hardening (no masked failures)
 A nav system must surface problems the moment they occur, never hide them behind fallbacks or
@@ -98,9 +119,11 @@ placeholders. Audited the tile server + engine + UI for silent masking and fixed
   The UI dots each still-simulated reading amber and promotes the badge to green **LIVE** once the
   position is real. To take the boat off sim, stop emitting the sim fallbacks. *(Verified: fed RMC+DBT →
   pos/sog/cog/depth flipped to `nmea`, hdg/wind stayed dotted; a corrupt sentence was rejected.)*
-- **The render-path-dead `HeadlessTopFrame` stubs now abort-on-call** (`helm_dead()`), so if our "this
-  is unreachable" assumption is ever wrong it fails loud at the exact method instead of returning a
-  silent default. *(Verified: tiles still render at every zoom — none of the 79 are reached.)*
+- **The render-path-dead `HeadlessTopFrame` stub is now deleted outright** (Step 6 increment 2). It
+  formerly abort-on-call'd (`helm_dead()`) so a wrong "unreachable" assumption failed loud; the seam went
+  further and removed the frame object entirely, so the `top_frame::Get()` callers are `#ifndef
+  OCPN_HEADLESS`-guarded and re-introducing one would be a loud *link* failure rather than a silent
+  default. *(Verified: zero `top_frame` symbols remain; all 91 z13/z15 tiles byte-identical.)*
 - **Weather-layer load failures no longer swallow.** `field-layer.js` propagates a failed/404 fetch
   instead of returning `null`; the UI surfaces a visible "data unavailable" notice. *(Verified: a
   missing field rejects with `HTTP 404`.)*
