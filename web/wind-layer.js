@@ -34,8 +34,8 @@
   var DEFAULTS = {
     particleCount: 9000,   // cap; actual count scales with canvas area (see _resize)
     maxParticleAge: 110,   // frames before a particle is forcibly respawned
-    fadeOpacity: 0.95,     // trail persistence (higher = longer, silkier tails)
-    lineWidth: 1.3,
+    fadeOpacity: 0.92,     // trail persistence (higher = longer, silkier tails)
+    lineWidth: 1.0,
     speedFactor: 0.5,      // global multiplier on advection step
     frameRate: 60,         // target fps (rAF-driven; soft cap)
     minVisibleZoomStep: 0  // reserved
@@ -245,7 +245,7 @@
     // Particle budget scales with area so big screens aren't starved and
     // small screens aren't overworked.
     this._budget = Math.round(
-      Math.max(1200, Math.min(this.opts.particleCount, (w * h) / 420))
+      Math.max(900, Math.min(this.opts.particleCount, (w * h) / 640))
     );
     if (this._particles) this._initParticles();
   };
@@ -444,8 +444,8 @@
         ctx.lineTo(arr2[k + 2], arr2[k + 3]);
       }
       var w2 = base * (0.85 + (bk2 / COLOR_BUCKETS) * 1.2);
-      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,0.92)' : bucketColors[bk2];
-      ctx.globalAlpha = 0.15;          // soft glow halo
+      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,0.5)' : bucketColors[bk2];
+      ctx.globalAlpha = 0.07;          // soft glow halo
       ctx.lineWidth = w2 * 3.2;
       ctx.stroke();
       ctx.globalAlpha = 1;             // crisp core

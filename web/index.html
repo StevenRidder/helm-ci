@@ -99,7 +99,7 @@
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
-    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.72 });
+    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.6 });
     if (field) field.load('data/field-' + name + '.json').then(buildLegend);
     const partOn = document.getElementById('particles').checked;
     if (wind) {
