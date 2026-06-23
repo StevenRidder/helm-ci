@@ -1,19 +1,31 @@
 # Mockups
 
-Hand-authored UI mockups for Helm (the agent-generated HTML was flagged broken by the
-design critic and re-authored). Each is a self-contained HTML file — open in any browser.
+Hand-authored UI for Helm. Each file is a self-contained HTML document — open in any
+browser. Toggle **Day / Dusk / Night** (top-right on desktop/iPad, the sun button on
+iPhone) to see the three real S-52 chart schemes.
+
+## Canonical UI (pixel-perfect set) — the reference design
+
+The shipped look, the same chart scene (Baie de Cook, Moorea) re-laid-out per device:
 
 | File | Screen |
 |---|---|
-| [macos-weather-overlay.html](macos-weather-overlay.html) | **macOS hero** — full-bleed chart with satellite + ENC depth overlay, the full Windy-class weather catalog composited from GRIB, an imported PredictWind route, AIS, the layers/weather panel, and the instrument strip. Toggle Day/Dusk/Night top-right. |
-| _(to add)_ on-demand-download.html | "Charts for this area" — lasso → 4 sources with honest license badges → depth-on-satellite toggle → size/zoom → download. |
-| _(to add)_ ipad-iphone.html | iPad landscape + iPhone portrait, in device frames. |
-| _(to add)_ architecture.html | The system architecture + source-tier diagram. |
+| [macos.html](macos.html) | **macOS** — full-bleed chart, floating glass toolbar / rail / route inspector / instrument bar, zoom + compass. |
+| [ipad.html](ipad.html) | **iPadOS** — landscape, touch targets, floating toolbar, status bar + home indicator. |
+| [iphone.html](iphone.html) | **iOS** — portrait, underway: dynamic island, glance card, route bottom-sheet, tab bar. |
 
-> Design language ("Helm"): chart-first / full-bleed; calm glass chrome that recedes;
-> OpenCPN's Day/Dusk/Night schemes as a first-class toggle; legible tabular-number
-> instruments; Tabler outline icons. The macOS file is the canonical reference for the
-> palette and layout.
+These three are the **canonical visual reference** for the product: palette, typography,
+chart conventions (depth shading, contours, soundings, buoys `R "4"`/`G "3"`, lit beacon
+with `Fl(2) 10s` + light sector, marina/anchorage symbols, current arrow, wind barbs), the
+own-ship heading/COG vectors, the magenta route with per-leg labels, the mint PredictWind
+route, AIS with CPA highlight, and the source-attribution line.
 
-The remaining three were rendered in the design conversation and can be exported to files
-on request.
+> Fidelity note: in the shipped app the chart is rendered live by the S-52 engine from real
+> ENC data. These files are a faithful hand-built representation of that output at one
+> moment, not the live renderer.
+
+## Earlier explorations
+
+| File | Notes |
+|---|---|
+| [macos-weather-overlay.html](macos-weather-overlay.html) | First hero — emphasizes the composited weather-layer catalog over a stylized chart. Kept for the layers/weather-panel detail. |

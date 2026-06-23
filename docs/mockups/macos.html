@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Helm — macOS (canonical UI)</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3/dist/tabler-icons.min.css">
+<style>
+html,body{margin:0;background:#05080c;min-height:100vh;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif}
+body{display:flex;align-items:center;justify-content:center;padding:24px;box-sizing:border-box}
+.stage{width:100%;max-width:780px}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);border:0}
+</style>
+</head>
+<body>
+<div class="stage">
+<div style="background:#05080c;border-radius:16px;padding:16px;">
+<h2 class="sr-only">Pixel-perfect macOS screenshot of the Helm chartplotter showing the approach to a harbor.</h2>
+<style>
+.pp{--deepw:#ecf6fc;--midw:#cfe7f4;--shoalw:#a9d6ec;--dry:#c7dcb4;--land:#ece3c0;--ledge:#bda972;--contour:#8fb4c9;--sound:#4f6c80;--grn:#0a9a46;--red:#dd3b3b;--mag:#d6219a;--windlo:#1aa58c;--windhi:#c8781a;--cur:#2f7fc4;
+--glass:rgba(13,19,27,.74);--glass2:rgba(30,41,54,.62);--line:rgba(255,255,255,.13);--ctext:#eef4f9;--cdim:#9bb0c0;--accent:#5bc0ff;--ok:#46e0a0;--danger:#ff6b6b;--warn:#ffc06a;--pw:#54f0ad;
+font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text','Segoe UI',sans-serif}
+.pp.dusk{--deepw:#160d12;--midw:#241620;--shoalw:#3a2236;--dry:#2a2414;--land:#2a2013;--ledge:#5a4022;--contour:#7a5a64;--sound:#caa090;--grn:#5ec47e;--red:#ff7a7a;--mag:#ff79b0;--windlo:#e0a86a;--windhi:#ffd08a;--cur:#c79152}
+.pp.night{--deepw:#061521;--midw:#0c2738;--shoalw:#143f55;--dry:#1d3327;--land:#242a1b;--ledge:#4c5531;--contour:#356a83;--sound:#8fb7cf;--grn:#2ec46b;--red:#ff5b5b;--mag:#ff5ba6;--windlo:#5fe0c8;--windhi:#ffd16b;--cur:#5aa6e8}
+.win{position:relative;border-radius:13px;overflow:hidden;border:.5px solid var(--line);box-shadow:0 26px 80px -22px rgba(0,0,0,.8)}
+.glass{background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);border:.5px solid var(--line)}
+.tb{position:absolute;top:0;left:0;right:0;height:40px;display:flex;align-items:center;gap:10px;padding:0 13px;z-index:6}
+.tbtn{width:30px;height:30px;border-radius:8px;display:flex;align-items:center;justify-content:center;color:var(--cdim);font-size:17px}
+.seg{display:flex;gap:1px;background:var(--glass2);border-radius:8px;padding:2px}
+.seg span{font-size:11px;color:var(--cdim);padding:4px 9px;border-radius:6px;cursor:pointer}
+.seg span.on{background:var(--accent);color:#05121d;font-weight:500}
+.rail{position:absolute;left:12px;top:52px;width:46px;border-radius:14px;display:flex;flex-direction:column;align-items:center;gap:3px;padding:7px 0;z-index:5}
+.ri{width:36px;height:36px;border-radius:10px;display:flex;align-items:center;justify-content:center;color:var(--cdim);font-size:18px}
+.ri.on{color:var(--accent);background:var(--glass2)}
+.insp{position:absolute;right:12px;top:52px;width:196px;border-radius:14px;padding:11px;z-index:5}
+.leg{display:flex;align-items:center;gap:8px;padding:5px 0}
+.lgd{width:7px;height:7px;border-radius:50%;flex:none}
+.zc{position:absolute;right:18px;top:294px;display:flex;flex-direction:column;gap:7px;z-index:5}
+.zb{width:38px;height:38px;border-radius:11px;display:flex;align-items:center;justify-content:center;color:var(--ctext);font-size:19px}
+.ib{position:absolute;left:12px;right:12px;bottom:12px;height:52px;border-radius:14px;display:flex;align-items:center;z-index:5}
+.it{flex:1;padding:0 13px;border-right:.5px solid var(--line)}
+.it .l{font-size:10.5px;color:var(--cdim)}
+.it .v{font-size:22px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;line-height:1.1}
+.it .u{font-size:11px;color:var(--cdim)}
+</style>
+<div class="pp" id="pp">
+<div class="win" style="height:432px;background:var(--deepw)">
+  <svg viewBox="0 0 660 432" preserveAspectRatio="xMidYMid slice" style="position:absolute;inset:0;width:100%;height:100%">
+    <defs>
+      <radialGradient id="dw" cx="0.62" cy="0.5" r="0.7"><stop offset="0" stop-color="var(--deepw)"/><stop offset="1" stop-color="var(--midw)"/></radialGradient>
+      <marker id="cur" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,1 L8,4.5 L0,8" fill="none" stroke="var(--cur)" stroke-width="1.4"/></marker>
+    </defs>
+    <rect width="660" height="432" fill="url(#dw)"/>
+    <path d="M150,432 C150,360 130,300 175,250 C150,225 150,205 200,185 C240,170 250,150 235,110 C228,86 250,50 235,0 L0,0 L0,432 Z" fill="var(--midw)"/>
+    <ellipse cx="540" cy="350" rx="86" ry="46" fill="var(--shoalw)"/><ellipse cx="560" cy="362" rx="30" ry="15" fill="var(--dry)"/><ellipse cx="512" cy="338" rx="16" ry="9" fill="var(--dry)"/>
+    <path d="M150,432 C150,360 130,300 175,250 C150,225 150,205 200,185 C240,170 250,150 235,110 C228,86 250,50 235,0 L0,0 L0,432 Z" fill="var(--land)" stroke="var(--ledge)" stroke-width="1.5"/>
+    <path d="M610,420 Q470,360 360,250 Q300,190 250,180" fill="none" stroke="var(--contour)" stroke-width="1" stroke-dasharray="4 5" opacity=".7"/>
+    <path d="M640,300 Q520,250 430,180" fill="none" stroke="var(--contour)" stroke-width="1" stroke-dasharray="4 5" opacity=".55"/>
+    <g fill="var(--sound)" font-size="9" font-family="ui-monospace,monospace" opacity=".85">
+      <text x="300" y="120">42</text><text x="380" y="95">55</text><text x="470" y="120">38</text><text x="560" y="110">61</text><text x="620" y="150">48</text>
+      <text x="330" y="200">24</text><text x="420" y="225">18</text><text x="300" y="270">12</text><text x="500" y="270">9</text><text x="600" y="240">31</text>
+      <text x="470" y="330">6</text><text x="560" y="395">3</text><text x="250" y="330">15</text><text x="200" y="400">8</text><text x="360" y="380">11</text>
+    </g>
+    <g stroke-linecap="round">
+      <g stroke="var(--windlo)" stroke-width="1.5" opacity=".8"><path d="M300,60 l22,-11 M322,49 l5,3 M318,52 l5,3"/><path d="M460,70 l22,-11 M482,59 l5,3 M478,62 l5,3 M474,65 l5,3"/></g>
+      <g stroke="var(--windhi)" stroke-width="1.6" opacity=".85"><path d="M560,60 l22,-11 M582,49 l6,3.5 M578,52 l6,3.5 M574,55 l6,3.5"/><path d="M610,170 l22,-11 M632,159 l6,3.5 M628,162 l6,3.5 M624,165 l6,3.5"/><path d="M540,210 l22,-11 M562,199 l6,3.5 M558,202 l6,3.5"/></g>
+    </g>
+    <path d="M250,310 L330,250" stroke="var(--cur)" stroke-width="1.4" marker-end="url(#cur)" opacity=".7"/>
+    <text x="262" y="304" fill="var(--cur)" font-size="9">1.2 kt</text>
+    <g transform="translate(252,300)"><path d="M0,-12 L0,-4 M-7,-9 a7,7 0 0,1 14,0 M-7,-9 l-3,3 M-7,-9 l3,3 M7,-9 l-3,3 M7,-9 l3,3" stroke="var(--mag)" stroke-width="1.4" fill="none"/><path d="M0,16 L0,-4" stroke="var(--mag)" stroke-width="1.4"/></g>
+    <path d="M252,288 A60,60 0 0,1 360,300" fill="none" stroke="var(--mag)" stroke-width="1" stroke-dasharray="3 4" opacity=".55"/>
+    <text x="232" y="284" fill="var(--mag)" font-size="9">Fl(2) 10s</text>
+    <g><circle cx="540" cy="352" r="4.5" fill="var(--grn)"/><line x1="540" y1="347" x2="540" y2="333" stroke="var(--grn)" stroke-width="1.2"/><text x="546" y="340" fill="var(--grn)" font-size="9">G "3"</text></g>
+    <g><circle cx="478" cy="312" r="4.5" fill="var(--red)"/><rect x="475.5" y="294" width="5" height="5" fill="var(--red)"/><text x="484" y="302" fill="var(--red)" font-size="9">R "4"</text></g>
+    <g><circle cx="408" cy="262" r="4.5" fill="var(--grn)"/><text x="414" y="256" fill="var(--grn)" font-size="9">G "5"</text></g>
+    <g><circle cx="350" cy="222" r="4.5" fill="var(--red)"/><text x="356" y="216" fill="var(--red)" font-size="9">R "6"</text></g>
+    <g transform="translate(150,186)"><path d="M-14,0 h28 M-10,0 v-9 h6 v9 M-2,0 v-9 h6 v9 M6,0 v-9 h6 v9" stroke="var(--ledge)" stroke-width="1.4" fill="none"/></g>
+    <g transform="translate(120,96)"><path d="M0,-9 L0,5 M-6,-1 a6,6 0 0,0 12,0 M-3,-9 h6" stroke="var(--cur)" stroke-width="1.3" fill="none"/></g>
+    <polyline points="612,398 540,352 460,312 360,235 250,186" fill="none" stroke="var(--mag)" stroke-width="2.4" opacity=".9" stroke-linejoin="round"/>
+    <line x1="460" y1="312" x2="360" y2="235" stroke="var(--mag)" stroke-width="3.6" stroke-linecap="round"/>
+    <g fill="var(--deepw)" stroke="var(--mag)" stroke-width="1.7"><rect x="607" y="393" width="10" height="10" transform="rotate(45 612 398)"/><rect x="535" y="347" width="10" height="10" transform="rotate(45 540 352)"/><rect x="355" y="230" width="10" height="10" transform="rotate(45 360 235)"/><rect x="245" y="181" width="10" height="10" transform="rotate(45 250 186)"/></g>
+    <text x="392" y="262" fill="var(--mag)" font-size="9.5" font-weight="500">315° · 0.8 NM</text>
+    <path d="M612,398 Q640,330 612,270 Q592,228 640,196" fill="none" stroke="var(--pw)" stroke-width="2.2" stroke-dasharray="8 5" opacity=".95"/>
+    <circle cx="640" cy="196" r="3.4" fill="var(--pw)"/><text x="588" y="250" fill="var(--pw)" font-size="9.5">PredictWind</text>
+    <line x1="500" y1="318" x2="540" y2="262" stroke="var(--mag)" stroke-width="1.3" stroke-dasharray="5 4" opacity=".75"/>
+    <line x1="500" y1="318" x2="500" y2="280" stroke="var(--accent)" stroke-width="1.3" opacity=".8"/>
+    <g transform="translate(500,318) rotate(34)"><path d="M0,-13 L7,9 L0,4.5 L-7,9 Z" fill="var(--accent)" stroke="#fff" stroke-width="1.1"/></g>
+    <g><circle cx="586" cy="186" r="14" fill="none" stroke="var(--danger)" stroke-width="1.5"/><line x1="586" y1="186" x2="520" y2="250" stroke="var(--danger)" stroke-width="1.6"/><g transform="translate(586,186) rotate(225)"><path d="M0,-9 L6.5,8 L-6.5,8 Z" fill="var(--danger)"/></g><text x="600" y="184" fill="var(--danger)" font-size="9.5" font-weight="500">ARANUI</text><text x="600" y="195" fill="var(--sound)" font-size="9">CPA 0.3 · 4min</text></g>
+    <g transform="translate(430,120)"><g transform="rotate(200)"><path d="M0,-8 L5,7 L-5,7 Z" fill="var(--grn)"/></g><line x1="0" y1="0" x2="-6" y2="14" stroke="var(--grn)" stroke-width="1.3"/></g><text x="438" y="118" fill="var(--sound)" font-size="9">SV Pelagia</text>
+    <g stroke="var(--ctext)" stroke-width="1.4" opacity=".55"><line x1="74" y1="356" x2="154" y2="356"/><line x1="74" y1="352" x2="74" y2="360"/><line x1="114" y1="353" x2="114" y2="359"/><line x1="154" y1="352" x2="154" y2="360"/></g>
+    <text x="96" y="350" fill="var(--ctext)" font-size="9.5" opacity=".6">½ NM</text>
+    <text x="74" y="372" fill="var(--ctext)" font-size="9" opacity=".4">NOAA ENC · Sentinel-2 · wind ECMWF</text>
+  </svg>
+  <div class="tb glass">
+    <span style="display:flex;gap:8px"><span style="width:12px;height:12px;border-radius:50%;background:#ff5f57"></span><span style="width:12px;height:12px;border-radius:50%;background:#febc2e"></span><span style="width:12px;height:12px;border-radius:50%;background:#28c840"></span></span>
+    <i class="ti ti-layout-sidebar tbtn" style="font-size:16px;color:var(--cdim);margin-left:2px" aria-hidden="true"></i>
+    <span style="font-size:13px;font-weight:500;color:var(--ctext);margin-left:2px">Baie de Cook · Moorea</span>
+    <div style="flex:1"></div>
+    <div class="tbtn"><i class="ti ti-route" aria-hidden="true"></i></div>
+    <div class="tbtn"><i class="ti ti-ruler-2" aria-hidden="true"></i></div>
+    <div class="tbtn" style="color:var(--accent)"><i class="ti ti-wind" aria-hidden="true"></i></div>
+    <div class="tbtn"><i class="ti ti-stack-2" aria-hidden="true"></i></div>
+    <div style="display:flex;align-items:center;gap:7px;background:var(--glass2);border-radius:8px;padding:5px 10px"><i class="ti ti-search" style="font-size:13px;color:var(--cdim)" aria-hidden="true"></i><span style="font-size:11.5px;color:var(--cdim)">Search</span><span style="font-size:10px;color:var(--cdim);border:.5px solid var(--line);border-radius:4px;padding:0 4px">⌘K</span></div>
+    <div class="seg"><span id="pd">Day</span><span id="pu">Dusk</span><span id="pn">Night</span></div>
+  </div>
+  <div class="rail glass">
+    <div class="ri on" aria-label="Chart"><i class="ti ti-map-2" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="Routes"><i class="ti ti-route" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="AIS"><i class="ti ti-ship" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="Weather"><i class="ti ti-cloud" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="Places"><i class="ti ti-map-pin" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="Download charts"><i class="ti ti-download" aria-hidden="true"></i></div>
+    <div class="ri" aria-label="Settings"><i class="ti ti-settings" aria-hidden="true"></i></div>
+  </div>
+  <div class="insp glass">
+    <div style="display:flex;align-items:center;gap:7px;margin-bottom:8px"><i class="ti ti-route" style="font-size:15px;color:var(--mag)" aria-hidden="true"></i><span style="font-size:13px;font-weight:500;color:var(--ctext)">Route to Marina</span></div>
+    <div style="display:flex;gap:12px;margin-bottom:8px">
+      <div><div style="font-size:10px;color:var(--cdim)">ETA</div><div style="font-size:14px;color:var(--ctext);font-variant-numeric:tabular-nums">11:42</div></div>
+      <div><div style="font-size:10px;color:var(--cdim)">DTG</div><div style="font-size:14px;color:var(--ctext);font-variant-numeric:tabular-nums">2.4 NM</div></div>
+      <div><div style="font-size:10px;color:var(--cdim)">XTE</div><div style="font-size:14px;color:var(--ok);font-variant-numeric:tabular-nums">12 m</div></div>
+    </div>
+    <div style="height:.5px;background:var(--line);margin:2px 0 6px"></div>
+    <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span style="font-size:11.5px;color:var(--ctext);flex:1">WP4 · marina</span><span style="font-size:11px;color:var(--cdim);font-variant-numeric:tabular-nums">315°</span></div>
+    <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span style="font-size:11.5px;color:var(--cdim);flex:1">WP3 · channel</span><span style="font-size:11px;color:var(--cdim);font-variant-numeric:tabular-nums">331°</span></div>
+    <div style="height:.5px;background:var(--line);margin:6px 0"></div>
+    <div style="display:flex;align-items:center;gap:6px"><span style="font-size:10.5px;color:var(--cdim)">Wind</span><div style="flex:1;height:5px;border-radius:3px;background:linear-gradient(90deg,var(--windlo),var(--windhi))"></div><span style="font-size:10.5px;color:var(--ctext)">8–24 kt</span></div>
+  </div>
+  <div class="zc">
+    <div class="zb glass" aria-label="Zoom in"><i class="ti ti-plus" aria-hidden="true"></i></div>
+    <div class="zb glass" aria-label="Zoom out"><i class="ti ti-minus" aria-hidden="true"></i></div>
+    <div class="zb glass" aria-label="North up"><i class="ti ti-navigation" style="color:var(--mag)" aria-hidden="true"></i></div>
+  </div>
+  <div class="ib glass">
+    <div class="it"><div class="l">SOG</div><div class="v">6.2<span class="u"> kn</span></div></div>
+    <div class="it"><div class="l">COG</div><div class="v">316<span class="u">°</span></div></div>
+    <div class="it"><div class="l">HDG</div><div class="v">319<span class="u">°</span></div></div>
+    <div class="it"><div class="l">Depth</div><div class="v">8.4<span class="u"> m</span></div></div>
+    <div style="flex:1.5;padding:0 14px;display:flex;align-items:center;justify-content:space-between">
+      <div><div class="l" style="font-size:10.5px;color:var(--cdim)">Position</div><div style="font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums">17°29.4′S · 149°49.6′W</div></div>
+      <div style="text-align:right"><div class="l" style="font-size:10.5px;color:var(--cdim)">Next</div><div style="font-size:13.5px;font-weight:500;color:var(--ctext)">R "4" · 0.3 NM</div></div>
+    </div>
+  </div>
+</div>
+</div>
+<script>
+(function(){var r=document.getElementById('pp');var m={pd:'',pu:'dusk',pn:'night'};Object.keys(m).forEach(function(id){document.getElementById(id).addEventListener('click',function(){r.className='pp'+(m[id]?' '+m[id]:'');Object.keys(m).forEach(function(o){document.getElementById(o).classList.toggle('on',o===id)});});});document.getElementById('pd').classList.add('on');})();
+</script>
+</div>
+</div>
+</body>
+</html>
