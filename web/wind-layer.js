@@ -32,11 +32,11 @@
 
   // ---- Tunables -----------------------------------------------------------
   var DEFAULTS = {
-    particleCount: 3500,   // scaled down on small canvases
-    maxParticleAge: 90,    // frames before a particle is forcibly respawned
-    fadeOpacity: 0.92,     // trail persistence (higher = longer tails)
-    lineWidth: 1.4,
-    speedFactor: 0.55,     // global multiplier on advection step
+    particleCount: 9000,   // cap; actual count scales with canvas area (see _resize)
+    maxParticleAge: 110,   // frames before a particle is forcibly respawned
+    fadeOpacity: 0.95,     // trail persistence (higher = longer, silkier tails)
+    lineWidth: 1.3,
+    speedFactor: 0.5,      // global multiplier on advection step
     frameRate: 60,         // target fps (rAF-driven; soft cap)
     minVisibleZoomStep: 0  // reserved
   };
@@ -244,7 +244,7 @@
     // Particle budget scales with area so big screens aren't starved and
     // small screens aren't overworked.
     this._budget = Math.round(
-      Math.max(800, Math.min(this.opts.particleCount, (w * h) / 900))
+      Math.max(1200, Math.min(this.opts.particleCount, (w * h) / 420))
     );
     if (this._particles) this._initParticles();
   };
@@ -429,20 +429,29 @@
       p.age++;
     }
 
-    // 2) Draw all segments, batched by color bucket.
-    ctx.lineWidth = this.opts.lineWidth;
+    // 2) Draw all segments, batched by color bucket: a soft glow underlay + a
+    //    crisp core, with the line growing thicker for stronger wind.
     ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+    var base = this.opts.lineWidth;
     for (var bk2 = 0; bk2 < COLOR_BUCKETS; bk2++) {
       var arr2 = segs[bk2];
       if (!arr2.length) continue;
-      ctx.strokeStyle = bucketColors[bk2];
       ctx.beginPath();
       for (var k = 0; k < arr2.length; k += 4) {
         ctx.moveTo(arr2[k], arr2[k + 1]);
         ctx.lineTo(arr2[k + 2], arr2[k + 3]);
       }
+      var w2 = base * (0.85 + (bk2 / COLOR_BUCKETS) * 1.2);
+      ctx.strokeStyle = bucketColors[bk2];
+      ctx.globalAlpha = 0.15;          // soft glow halo
+      ctx.lineWidth = w2 * 3.2;
+      ctx.stroke();
+      ctx.globalAlpha = 1;             // crisp core
+      ctx.lineWidth = w2;
       ctx.stroke();
     }
+    ctx.globalAlpha = 1;
   };
 
   // Degrees-per-CSS-pixel at the map center, used to convert pixel motion to

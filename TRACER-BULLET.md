@@ -32,12 +32,9 @@ throwaway and the prototype *is* the product. We decide that **after** feeling t
 # 0) see the chart immediately (live satellite + sample route, no pipeline yet)
 cd web && python3 -m http.server 8080      # open http://localhost:8080
 
-# 1) build the data (new terminal)
-cd pipeline && source region.env
-python3 fetch_tiles.py --source "$SRC_CHART" --bbox "$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-charts.mbtiles --name "NOAA"
-python3 fetch_tiles.py --source "$SRC_SAT" --fmt jpg --bbox "$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-sat.mbtiles --name "Sentinel-2"
-python3 fetch_wind.py --bbox "$BBOX" --out ../web/data
-./extract_depth.sh ~/Downloads/US5FLxxx.000 ../web/data   # after downloading the ENC cell
+# 1) build the data (new terminal) — one command: wind + places + offline charts
+bash pipeline/build.sh
+bash pipeline/build.sh ~/Downloads/US5FLxxx.000   # ...also ENC depth (needs GDAL)
 ```
 
 Reload the page → depth + wind light up over the chart.

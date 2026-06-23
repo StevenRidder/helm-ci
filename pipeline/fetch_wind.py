@@ -43,20 +43,24 @@ def main():
             qlat.append(round(la, 4))
             qlon.append(round(lo, 4))
 
-    params = {
-        "latitude": ",".join(map(str, qlat)),
-        "longitude": ",".join(map(str, qlon)),
-        "current": "wind_speed_10m,wind_direction_10m",
-        "wind_speed_unit": "kn",
-    }
-    url = "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params)
-    req = urllib.request.Request(url, headers={"User-Agent": UA})
-    with urllib.request.urlopen(req, timeout=40) as r:
-        payload = json.load(r)
-    nodes = payload if isinstance(payload, list) else [payload]
+    # Open-Meteo multi-point GET has a URL-length limit (~HTTP 414), so batch the grid.
+    CHUNK = 90
+    nodes = []
+    for off in range(0, len(qlat), CHUNK):
+        params = {
+            "latitude": ",".join(map(str, qlat[off:off + CHUNK])),
+            "longitude": ",".join(map(str, qlon[off:off + CHUNK])),
+            "current": "wind_speed_10m,wind_direction_10m",
+            "wind_speed_unit": "kn",
+        }
+        url = "https://api.open-meteo.com/v1/forecast?" + urllib.parse.urlencode(params)
+        req = urllib.request.Request(url, headers={"User-Agent": UA})
+        with urllib.request.urlopen(req, timeout=40) as r:
+            payload = json.load(r)
+        nodes.extend(payload if isinstance(payload, list) else [payload])
     if len(nodes) != a.nx * a.ny:
         raise SystemExit(f"Open-Meteo returned {len(nodes)} nodes, expected {a.nx * a.ny} "
-                         f"(grid {a.nx}x{a.ny}); reduce --nx/--ny or retry.")
+                         f"(grid {a.nx}x{a.ny}); retry.")
 
     us, vs, feats = [], [], []
     for k, node in enumerate(nodes):

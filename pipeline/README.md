@@ -13,25 +13,18 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 ## Run it
 
 ```bash
-cd pipeline
-source region.env          # bbox + sources (default: Key West)
+# one command (wind + places + offline charts; pass an ENC cell to also extract depth)
+bash pipeline/build.sh
+bash pipeline/build.sh ~/Downloads/US5FLxxx.000
 
-# 1) NOAA charts → offline mbtiles   (pure python, runs now)
-python3 fetch_tiles.py --source "$SRC_CHART" --bbox "$BBOX" \
-    --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" \
-    --out ../web/data/$REGION_NAME-charts.mbtiles --name "NOAA $REGION_NAME"
-
-# 2) Sentinel-2 satellite → offline mbtiles
-python3 fetch_tiles.py --source "$SRC_SAT" --fmt jpg --bbox "$BBOX" \
-    --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" \
-    --out ../web/data/$REGION_NAME-sat.mbtiles --name "Sentinel-2 $REGION_NAME"
-
-# 3) wind grid   (pure python, runs now)
-python3 fetch_wind.py --bbox "$BBOX" --out ../web/data
-
-# 4) ENC depth → GeoJSON   (needs GDAL + a downloaded ENC .000 cell)
-#    grab the cell covering the bbox from https://www.charts.noaa.gov/ENCs/ENCs.shtml
-./extract_depth.sh ~/Downloads/US5FLxxx.000 ../web/data
+# ...or step by step. NOTE the --bbox= form: a bbox starting with "-" is otherwise
+# mistaken for a flag (argparse). Wind covers WIND_BBOX (much larger than the charts).
+cd pipeline && source region.env
+python3 fetch_wind.py  --bbox="$WIND_BBOX" --nx="$WIND_NX" --ny="$WIND_NY" --out ../web/data
+python3 fetch_places.py
+python3 fetch_tiles.py --source "$SRC_CHART" --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-charts.mbtiles --name "NOAA"
+python3 fetch_tiles.py --source "$SRC_SAT" --fmt jpg --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-sat.mbtiles --name "Sentinel-2"
+./extract_depth.sh ~/Downloads/US5FLxxx.000 ../web/data   # needs GDAL
 ```
 
 Then serve the prototype: `cd ../web && python3 -m http.server 8080` → open
