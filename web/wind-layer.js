@@ -444,8 +444,8 @@
         ctx.lineTo(arr2[k + 2], arr2[k + 3]);
       }
       var w2 = base * (0.85 + (bk2 / COLOR_BUCKETS) * 1.2);
-      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,0.5)' : bucketColors[bk2];
-      ctx.globalAlpha = 0.07;          // soft glow halo
+      ctx.strokeStyle = this._neutral ? 'rgba(255,255,255,0.3)' : bucketColors[bk2];
+      ctx.globalAlpha = 0.04;          // soft glow halo
       ctx.lineWidth = w2 * 3.2;
       ctx.stroke();
       ctx.globalAlpha = 1;             // crisp core

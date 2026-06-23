@@ -124,7 +124,7 @@
     }
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
-    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.6 });
+    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: 0.52 });
     if (field) field.load(fieldUrl(name)).then(buildLegend);
     if (iso && name === 'pressure') iso.load(fieldUrl('pressure'), { interval: 1 });
     const partOn = document.getElementById('particles').checked;
