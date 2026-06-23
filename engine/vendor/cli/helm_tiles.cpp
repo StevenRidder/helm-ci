@@ -196,6 +196,38 @@ static bool init_chart(const wxString& enc_path) {
   return true;
 }
 
+// ---- one-time render-path warmup (MAIN THREAD ONLY) -------------------------
+// A one-time lazy init somewhere in the S-52 render path (s52plib / font / DC /
+// GL state on the first RenderRegionViewOnDC) makes the VERY FIRST tile a fresh
+// process renders differ byte-wise from steady state; it then converges to
+// identical, deterministic output on re-request. Chart CONTENT is correct either
+// way -- this is sub-pixel/encoding settling, not a data bug -- but for a nav
+// tool every served tile must be the deterministic warm output. So we render one
+// throwaway tile here, after the chart is loaded and BEFORE the server accepts
+// connections, and discard it. The first SERVED tile is then always steady state.
+//
+// We target the center of the chart extent (always in-coverage, so it exercises
+// the full RenderRegionViewOnDC path rather than the NoCoverage early-return),
+// computed from g_ext so this self-adapts to whatever ENC was loaded.
+static void warmup_render() {
+  double clat = (g_ext.SLAT + g_ext.NLAT) / 2.0;
+  double clon = (g_ext.WLON + g_ext.ELON) / 2.0;
+  const int z = 13;
+  const double n = std::pow(2.0, z);
+  long x = (long)((clon + 180.0) / 360.0 * n);
+  double lat_rad = clat * M_PI / 180.0;
+  long y = (long)((1.0 - std::log(std::tan(lat_rad) + 1.0 / std::cos(lat_rad)) / M_PI) / 2.0 * n);
+
+  std::string scratch;
+  TileStatus st = render_tile(z, x, y, scratch);
+  // The lazy init is tripped by RenderRegionViewOnDC running at all, regardless of
+  // the encoded result, so any status leaves us warm. Log it for transparency; a
+  // hard RenderFailed at the extent center would also mean real requests fail, but
+  // that path is already surfaced as a 500 per-request -- don't mask it here.
+  printf("warmup render z%d/%ld/%ld -> status=%d (%zuB, discarded); first served "
+         "tile is now steady-state\n", z, x, y, (int)st, scratch.size());
+}
+
 class TileApp : public wxApp {
 public:
   ix::HttpServer* server = nullptr;
@@ -203,6 +235,10 @@ public:
     SetAppName(wxT("opencpn"));
     wxString enc = (argc >= 2) ? wxString(argv[1]) : wxString(wxT("/tmp/ENC_ROOT/US5FL96M/US5FL96M.000"));
     if (!init_chart(enc)) return false;
+
+    // Settle the first-render lazy init BEFORE we accept connections, so the first
+    // SERVED tile is deterministic steady-state output (see warmup_render).
+    if (!getenv("HELM_TILES_NO_WARMUP")) warmup_render();   // TEMP control toggle
 
     server = new ix::HttpServer(8082, "127.0.0.1");
     server->setOnConnectionCallback(

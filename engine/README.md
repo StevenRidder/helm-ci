@@ -42,15 +42,16 @@ sim when the engine isn't running, with **no code difference** between real and 
     "legs":[{"name":"WP2 · sea buoy","brg":"15°","active":true}, …], "nextWp":"WP2 · 1.6 NM" } }
 ```
 
-## Build & run (against the OpenCPN clone, like the spikes)
+## Build & run
+
+The build is reproducible from a pinned OpenCPN + maintained patch series — see
+[VENDORING.md](VENDORING.md). `helm_engine.cpp` lives in [`vendor/cli/`](vendor/cli/) and
+its target is added by `patches/0003`; do not hand-edit a clone.
 ```bash
-cp helm_engine.cpp /tmp/opencpn/cli/
-cat cli-CMakeLists-engine-snippet.txt >> /tmp/opencpn/cli/CMakeLists.txt   # after the helm-spike block
-cmake -S /tmp/opencpn -B /tmp/opencpn/build -DwxWidgets_CONFIG_EXECUTABLE=$WX ...   # (see ../spike/opencpn-headless/README.md)
-cmake --build /tmp/opencpn/build --target helm-engine --parallel 8
+engine/bootstrap.sh                          # clone @ pin → patch → overlay → build all helm targets
 DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib \
-  /tmp/opencpn/build/cli/helm-engine        # streams on ws://127.0.0.1:8081
-node wsclient-test.js                        # dependency-free check: prints 3 nav frames
+  "$HELM_OCPN_DIR/build/cli/helm-engine"     # streams on ws://127.0.0.1:8081 ($HELM_OCPN_DIR=/tmp/helm-opencpn)
+node engine/wsclient-test.js                 # dependency-free check: prints 3 nav frames
 ```
 Then open `web/index.html` (served) — the cockpit picks up the engine automatically
 (`window.__navSource === 'engine'`); kill the engine and it falls back to the sim.

@@ -1,5 +1,0 @@
-# ---- Helm tile server: S-52 ENC -> HTTP tiles (clones the chart-spike slice) ----
-add_executable(helm-tiles helm_tiles.cpp)
-set_property(TARGET helm-tiles PROPERTY ENABLE_EXPORTS ON)
-target_include_directories(helm-tiles PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
-target_link_libraries(helm-tiles PRIVATE ocpn::chart-render ixwebsocket)

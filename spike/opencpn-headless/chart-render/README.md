@@ -20,15 +20,15 @@ in-process → `SetColorScheme` → a `ViewPort` fitted to the cell → `wxBitma
 `RenderRegionViewOnDC` → save PNG. CoreGraphics-backed `wxMemoryDC` needs no display session.
 
 ## Build
-Same toolchain + wx-3.2 pin as the [nav spike](../README.md). The `chart-spike` CMake target
-(see `cli-CMakeLists-chart-snippet.txt`) compiles a hand-picked slice of `gui/src` + the three
-files here, linking `ocpn::s52plib ocpn::s57-charts ocpn::geoprim ocpn::iso8211 ssl::sha1`.
+The build is now reproducible from a pinned OpenCPN + maintained patch series —
+see [`engine/VENDORING.md`](../../../engine/VENDORING.md). The `chart-spike` target
+(added by `patches/0003`) compiles a hand-picked slice of `gui/src` + the overlay files,
+linking `ocpn::s52plib ocpn::s57-charts ocpn::geoprim ocpn::iso8211 ssl::sha1`.
+`chart_stubs.cpp` (the headless globals) lives in [`engine/vendor/cli/`](../../../engine/vendor/cli/);
+`chart_typeinfo.cpp` is **retired** (the seam severs the plugin `dynamic_cast`, so no faked RTTI).
 ```bash
-cp chart_spike.cpp chart_stubs.cpp chart_typeinfo.cpp /tmp/opencpn/cli/
-cat cli-CMakeLists-chart-snippet.txt >> /tmp/opencpn/cli/CMakeLists.txt   # after the helm-spike block
-cmake -S /tmp/opencpn -B /tmp/opencpn/build -DwxWidgets_CONFIG_EXECUTABLE=$WX ...   # (as in ../README.md)
-cmake --build /tmp/opencpn/build --target chart-spike --parallel 8
-/tmp/opencpn/build/cli/chart-spike /tmp/ENC_ROOT/US5FL96M/US5FL96M.000 /tmp/helm_chart.png
+engine/bootstrap.sh                          # builds chart-spike (+ helm-tiles/helm-engine)
+"$HELM_OCPN_DIR/build/cli/chart-spike" /tmp/ENC_ROOT/US5FL96M/US5FL96M.000 /tmp/helm_chart.png
 ```
 
 ## The hard-won gotchas (6 build passes + 2 runtime fixes)
