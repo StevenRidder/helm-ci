@@ -15,9 +15,12 @@ chart itself). Nothing on the market shows it all on one screen. **That is the p
 
 ## Status
 
-Pre-alpha. Holds the product definition, architecture, research, the canonical UI, and now
-the **first real code** — a reusable data pipeline + a MapLibre prototype
-(see [TRACER-BULLET.md](TRACER-BULLET.md)). Native app is the next step.
+Pre-alpha. Holds the product definition, architecture, research, the canonical UI, and the
+**first real code** — a reusable data pipeline + a MapLibre prototype
+(see [TRACER-BULLET.md](TRACER-BULLET.md)). **Phase 1 of the build plan is proven**: OpenCPN's
+`model/` nav core runs fully headless on a Mac (see
+[spike/opencpn-headless/](spike/opencpn-headless/)), so the plan is to reuse it under our UI
+([docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md)).
 
 ## The three differentiators
 

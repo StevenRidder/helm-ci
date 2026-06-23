@@ -111,9 +111,10 @@ You can have both eventually: the GPL desktop app you actually sail with (fast),
 clean-room cross-platform/commercial version (slow, separate). Or just embrace the GPL open path.
 
 ## The phased plan
-- **Phase 1 — spike (1–2 wks):** stand up `ocpn::model-src` headless; from a tiny non-wx program,
-  build a route, `ActivateRoute`, feed it positions, read back the active-leg nav. **Proves the
-  nav-core reuse before betting anything.**
+- **Phase 1 — spike ✅ PROVEN (2026-06-23):** stood up `ocpn::model-src` headless — built a route,
+  `ActivateRoute`, advanced waypoints, computed live BRG/DTW, **all with no GUI**, on a Mac. See
+  [spike/opencpn-headless/](../spike/opencpn-headless/). The nav-core reuse is real; the only
+  gotcha is pinning **wxWidgets 3.2** (3.3 removed `wxNode`).
 - **Phase 2 — engine:** the Helm Engine — link `model/` + `s57chart`; serve nav state over localhost
   WS + S-52 tiles over localhost HTTP. Do the two relocations (`UpdateProgress`, tides).
 - **Phase 3 — wire the UI:** connect this web UI to the engine — real S-52 charts + real
