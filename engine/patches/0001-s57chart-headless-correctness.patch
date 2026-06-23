@@ -1,8 +1,8 @@
 diff --git a/gui/src/s57chart.cpp b/gui/src/s57chart.cpp
-index eb5a18e..2f4a645 100644
+index eb5a18e..734c779 100644
 --- a/gui/src/s57chart.cpp
 +++ b/gui/src/s57chart.cpp
-@@ -4122,6 +4122,21 @@ int s57chart::BuildRAZFromSENCFile(const wxString &FullPath) {
+@@ -4122,12 +4122,35 @@ int s57chart::BuildRAZFromSENCFile(const wxString &FullPath) {
    ref_lat = (ext.NLAT + ext.SLAT) / 2.;
    ref_lon = (ext.ELON + ext.WLON) / 2.;
  
@@ -24,7 +24,21 @@ index eb5a18e..2f4a645 100644
    //  Process the Edge feature arrays.
  
    //    Create a hash map of VE_Element pointers as a chart class member
-@@ -6888,7 +6903,15 @@ bool s57_GetVisibleLightSectors(ChartCanvas *cc, double lat, double lon,
+   int n_ve_elements = VEs.size();
+ 
++#ifdef OCPN_HEADLESS
++  // Headless engine has no GUI top-frame. `scale` is only passed to
++  // SendVectorChartObjectInfo() below — a plugin notification that is a no-op
++  // with no plugins loaded — so use this chart's true native scale directly
++  // rather than routing the render path through a stub frame.
++  double scale = GetNativeScale();
++#else
+   double scale = top_frame::Get()->GetBestVPScale(this);
++#endif
+   int nativescale = GetNativeScale();
+ 
+   for (int i = 0; i < n_ve_elements; i++) {
+@@ -6888,7 +6911,15 @@ bool s57_GetVisibleLightSectors(ChartCanvas *cc, double lat, double lon,
    if (target_chart) {
      if ((target_chart->GetChartType() == CHART_TYPE_PLUGIN) &&
          (target_chart->GetChartFamily() == CHART_FAMILY_VECTOR))
@@ -40,7 +54,7 @@ index eb5a18e..2f4a645 100644
      else
        Chs57 = dynamic_cast<s57chart *>(target_chart);
    }
-@@ -6943,7 +6966,15 @@ bool s57_CheckExtendedLightSectors(ChartCanvas *cc, int mx, int my,
+@@ -6943,7 +6974,15 @@ bool s57_CheckExtendedLightSectors(ChartCanvas *cc, int mx, int my,
    if (target_chart) {
      if ((target_chart->GetChartType() == CHART_TYPE_PLUGIN) &&
          (target_chart->GetChartFamily() == CHART_FAMILY_VECTOR))

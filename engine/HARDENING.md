@@ -21,8 +21,8 @@ app globals. **Recommendation: Option A — extract a first-class `ocpn::chart-r
 |---|------|--------|
 | 1 | **Native-scale → SCAMIN / safety-contour** (SAFETY) | ✅ **done + verified** |
 | 2 | **Sever faked `ChartPlugInWrapper` RTTI** (the loader landmine) | ✅ **done + verified** |
-| 3 | `HeadlessTopFrame` (~79 no-op virtuals) → structurally dead / real `GetBestVPScale` | ⬜ next (~1 day) |
-| 4 | Platform `GetDisplayDPmm()` hardcoded `4.0` → real `BasePlatform::GetDisplayDPmm()` | ⬜ next (~0.5 day) |
+| 3 | Sever the GUI top-frame from the render path (drop magic `GetBestVPScale`) | ✅ **done + verified** |
+| 4 | Platform `GetDisplayDPmm()` hardcoded `4.0` → real `BasePlatform::GetDisplayDPmm()` | ✅ **done + verified** |
 | 5 | **ChartDB + quilting** (real multi-cell, not one hardcoded cell) | ⬜ larger (~1.5–3 wk) |
 | 6 | Extract `ocpn::chart-render` library; vendor OpenCPN + maintained patches (Option A) | ⬜ larger (~1–2 wk) |
 
@@ -46,6 +46,23 @@ helpers** that take a `ChartCanvas*` (cursor interaction, never the tile-render 
 **plugin charts**, which a headless engine never loads. Fix: guard them out under `OCPN_HEADLESS`
 (`target_plugin_chart = NULL`) — structural severance, not a fake — and drop `chart_typeinfo.cpp`.
 **Verified:** links with no undefined typeinfo; tiles still render correctly; no `__ZTI18ChartPlugInWrapper`.
+
+### ✅ 3 — Sever the GUI top-frame from the render path
+The spike's `HeadlessTopFrame` returned a **magic `10000.0`** from `GetBestVPScale()`. Tracing it:
+`s57chart::BuildRAZFromSENCFile` calls `top_frame::Get()->GetBestVPScale(this)` and the result feeds
+**only** `SendVectorChartObjectInfo()` — a plugin notification that is a no-op with no plugins loaded.
+So the render path doesn't need a frame at all. Fix: under `OCPN_HEADLESS`, compute `scale` from the
+chart's own (now-correct) `GetNativeScale()` and drop the `top_frame::Get()` call. The residual
+`HeadlessTopFrame` is now render-path-dead (its remaining callers are background-SENC paths bypassed by
+`DisableBackgroundSENC()`); it survives only to satisfy the fat `AbstractTopFrame` interface until
+Step 6 splits it. **Verified:** tiles render byte-identical (the severed value was inert), no magic
+number drives the render path.
+
+### ✅ 4 — Real platform DPmm
+`OCPNPlatform::GetDisplayDPmm()` was hardcoded to `4.0`. Replaced with the real
+`BasePlatform::GetDisplayDPmm()` (linked from `model-src`) — actual platform code, not a constant.
+DPmm feeds `m_LOD_meters`; it's inert today (`g_SENC_LOD_pixels == 0` gates LOD decimation off), but
+production tile-LOD parity would pin it to the SENC build environment. **Verified:** byte-identical tiles.
 
 ## Patches
 `patches/` holds the OpenCPN source changes (against the upstream clone). They are deliberately small,

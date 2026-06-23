@@ -144,9 +144,13 @@ public:
       : AbstractTopFrame(nullptr, wxT("headless"), wxPoint(0, 0),
                          wxSize(1, 1), 0) {}
 
-  // The one method that is actually called by the render path. The argument is
-  // the s57chart (an AbstractChart*); return a benign native-ish scale.
-  double GetBestVPScale(AbstractChart* /*arg*/) override { return 10000.0; }
+  // Render-path-dead: s57chart's render path no longer calls this — it was
+  // severed under OCPN_HEADLESS in BuildRAZFromSENCFile, which uses the chart's
+  // own (correct) native scale directly. The remaining top_frame::Get() callers
+  // are background-SENC paths bypassed by DisableBackgroundSENC(). Kept only to
+  // satisfy the fat AbstractTopFrame interface until it is split (HARDENING.md
+  // step 6). The return value is never consumed.
+  double GetBestVPScale(AbstractChart* /*arg*/) override { return 0.0; }
 
   // ---- everything below is a no-op; never invoked in the headless path ----
   void FastClose() override {}
@@ -258,7 +262,12 @@ AbstractTopFrame* Get() { return s_headless_frame; }
 // The real ctor calls EnumerateMonitors(); ours is a no-op.
 OCPNPlatform::OCPNPlatform() {}
 OCPNPlatform::~OCPNPlatform() {}
-double OCPNPlatform::GetDisplayDPmm() { return 4.0; }       // ~96 dpi
+// Use the REAL platform computation, not a magic constant. BasePlatform (linked
+// from model-src) computes the actual display DPmm for a GUI app and returns the
+// 12.0 console convention otherwise — never a hardcoded value. Inert today
+// (g_SENC_LOD_pixels == 0 gates all LOD decimation off); production tile-LOD
+// parity would pin this to the SENC build environment.
+double OCPNPlatform::GetDisplayDPmm() { return BasePlatform::GetDisplayDPmm(); }
 void   OCPNPlatform::ShowBusySpinner(void) {}
 void   OCPNPlatform::HideBusySpinner(void) {}
 wxSize OCPNPlatform::getDisplaySize() { return wxSize(1024, 768); }
