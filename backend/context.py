@@ -26,55 +26,71 @@ def _valid_at(weather, t):
     return chosen, chosen.get("t")
 
 
-def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False):
-    weather = get_weather(lat, lon)                      # real (Open-Meteo) at runtime
-    wx_at, wx_time = _valid_at(weather, t)
+def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False, layers=None):
+    """Fuse the enabled layers at (lat, lon, t) into one source-tagged slice.
+    `layers` (list of keys) filters which layers participate — the selectable layer toggles
+    drive the slice (ADR-0007). None = all layers."""
+    want = set(layers) if layers else None
+    def on(key):
+        return want is None or key in want
 
-    nearby, saved_near = [], []
-    for p in store.all_places():
-        d = store.haversine_nm(lat, lon, p["lat"], p["lon"])
-        if d <= radius_nm:
-            entry = {"id": p["id"], "name": p["name"], "source": p["source"], "kind": p["kind"],
-                     "distanceNm": round(d, 1),
-                     "reviews": [{"text": r["text"], "author": r["author"], "url": r.get("url")}
-                                 for r in store.reviews_for(p["id"])[:2]]}
-            nearby.append(entry)
-            if p["source"] == "owned":
-                saved_near.append(entry)
-    nearby.sort(key=lambda x: x["distanceNm"])
+    L, sources = {}, []
 
-    climate = {  # TODO: replace stub with the real climatology/tropical tier (WEATHER-ROUTING §5)
-        "note": "Seasonal & cyclone context (climatology tier — stub).",
-        "source": {"title": "NOAA climatology / pilot charts", "url": "https://www.noaa.gov", "kind": "open"},
-    }
-    nfl = ({"available": False, "locked": True,
-            "reason": "NoForeignLand read is experimental / partnership-gated"}
-           if not nfl_enabled else
-           {"available": True, "locked": False, "note": "NFL enrichment active (experimental/partnership)"})
+    if on("weather"):
+        weather = get_weather(lat, lon)                 # real (Open-Meteo) at runtime
+        wx_at, wx_time = _valid_at(weather, t)
+        L["weather"] = {"validAt": wx_time, "atTime": wx_at, "now": weather.get("now"),
+                        "sea": weather.get("sea"), "series": weather.get("next"),
+                        "horizon": "good ~0-7d; beyond is climatology",
+                        "error": weather.get("windError") or weather.get("seaError")}
+        sources.append({"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"})
+    else:
+        wx_time = None
 
-    sources = [{"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"},
-               climate["source"]]
-    for p in nearby:
-        sources.append({"title": p["name"], "kind": p["source"]})
-        for r in p["reviews"]:
-            if r.get("url"):
-                sources.append({"title": r["author"], "url": r["url"], "kind": "rag"})
+    if on("places") or on("saved"):
+        nearby, saved_near = [], []
+        for p in store.all_places():
+            d = store.haversine_nm(lat, lon, p["lat"], p["lon"])
+            if d <= radius_nm:
+                entry = {"id": p["id"], "name": p["name"], "source": p["source"], "kind": p["kind"],
+                         "distanceNm": round(d, 1),
+                         "reviews": [{"text": r["text"], "author": r["author"], "url": r.get("url")}
+                                     for r in store.reviews_for(p["id"])[:2]]}
+                if p["source"] == "owned":
+                    saved_near.append(entry)
+                nearby.append(entry)
+        nearby.sort(key=lambda x: x["distanceNm"])
+        if on("places"):
+            L["places"] = nearby[:6]
+            for p in nearby[:6]:
+                sources.append({"title": p["name"], "kind": p["source"]})
+                for r in p["reviews"]:
+                    if r.get("url"):
+                        sources.append({"title": r["author"], "url": r["url"], "kind": "rag"})
+        if on("saved"):
+            L["saved"] = saved_near
+
+    if on("climate"):
+        L["climate"] = {"note": "Seasonal & cyclone context (climatology tier — stub).",
+                        "source": {"title": "NOAA climatology / pilot charts", "url": "https://www.noaa.gov", "kind": "open"}}
+        sources.append(L["climate"]["source"])
+
+    if on("nfl"):
+        L["nfl"] = ({"available": False, "locked": True,
+                     "reason": "NoForeignLand read is experimental / partnership-gated"}
+                    if not nfl_enabled else
+                    {"available": True, "locked": False, "note": "NFL enrichment active"})
+
+    if on("chart"):
+        L["chart"] = {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",
+                      "source": {"title": "NOAA ENC (S-52)", "kind": "open"}}
 
     return {
         "point": {"lat": lat, "lon": lon, "t": t, "weatherValidAt": wx_time},
-        "layers": {
-            "weather": {"validAt": wx_time, "atTime": wx_at, "now": weather.get("now"),
-                        "sea": weather.get("sea"), "series": weather.get("next"),
-                        "horizon": "good ~0-7d; beyond is climatology",
-                        "error": weather.get("windError") or weather.get("seaError")},
-            "climate": climate,
-            "places": nearby[:6],
-            "saved": saved_near,
-            "nfl": nfl,
-            "chart": {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",
-                      "source": {"title": "NOAA ENC (S-52)", "kind": "open"}},
-        },
+        "layers": L,
         "boat": boat,
+        "enabledLayers": sorted(L.keys()),
         "sources": sources,
         "disclaimer": "Fused from layered, cited sources. Supplemental — verify on official charts.",
     }
+

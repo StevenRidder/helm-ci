@@ -119,6 +119,60 @@ class ResearchAgent:
             d["note"] = f"(agent unavailable, stub used: {e})"
             return d
 
+    def narrate_passage(self, slices, boat=None):
+        """Narrate a sequence of slices along a path P(t) — the 'along the way' briefing.
+        Same spacetime probe, path geometry (SPACETIME-PROBE.md §4)."""
+        legs = [self._leg_summary(s, i) for i, s in enumerate(slices)]
+        srcs = []
+        for s in slices:
+            srcs.extend(s.get("sources", []))
+        if self.llm.provider == "stub":
+            return {"provider": "stub", "narration": self._stub_passage(legs), "legs": legs, "sources": srcs}
+        try:
+            from openai import OpenAI
+            client = OpenAI(api_key=self.llm.key)
+            sys = ("You are Helm's first-mate. Narrate the PASSAGE from these ordered slices "
+                   "(time + wind/sea + nearest shelter at points along the route). 3-5 short "
+                   "sentences: what the sailor will encounter and when, where it gets rough, "
+                   "and any shelter. Use ONLY the data; never invent; note forecast horizon; "
+                   "end 'verify on official charts'.")
+            resp = client.chat.completions.create(model=self.llm.model, temperature=0.3,
+                messages=[{"role": "system", "content": sys},
+                          {"role": "user", "content": json.dumps({"boat": boat, "legs": legs})[:9000]}])
+            return {"provider": "openai", "narration": resp.choices[0].message.content.strip(),
+                    "legs": legs, "sources": srcs}
+        except Exception as e:
+            return {"provider": "stub", "narration": self._stub_passage(legs) + f" (LLM unavailable: {e})",
+                    "legs": legs, "sources": srcs}
+
+    def _leg_summary(self, ctx, i):
+        L, pt = ctx.get("layers", {}), ctx.get("point", {})
+        w = (L.get("weather") or {}).get("atTime") or (L.get("weather") or {}).get("now") or {}
+        sea = (L.get("weather") or {}).get("sea") or {}
+        near = (L.get("places") or [{}])
+        return {"leg": i + 1, "t": pt.get("weatherValidAt") or pt.get("t"),
+                "lat": round(pt.get("lat", 0), 3), "lon": round(pt.get("lon", 0), 3),
+                "windKt": w.get("windKt"), "windFromDeg": w.get("windFromDeg"), "gustKt": w.get("gustKt"),
+                "waveM": sea.get("waveM"),
+                "nearest": near[0].get("name") if near and near[0] else None,
+                "nearestNm": near[0].get("distanceNm") if near and near[0] else None,
+                "wxError": (L.get("weather") or {}).get("error")}
+
+    def _stub_passage(self, legs):
+        out = []
+        for lg in legs:
+            when = lg["t"] or f"leg {lg['leg']}"
+            if lg["wxError"] or lg["windKt"] is None:
+                out.append(f"{when}: weather n/a.")
+            else:
+                s = f"{when}: ~{lg['windKt']} kt from {lg['windFromDeg']}°"
+                if lg["waveM"] is not None:
+                    s += f", seas {lg['waveM']} m"
+                if lg["nearest"]:
+                    s += f" (near {lg['nearest']}, {lg['nearestNm']} NM)"
+                out.append(s + ".")
+        return "Passage: " + " ".join(out) + " Forecast skill drops beyond ~7 days — recheck en route. Verify on official charts."
+
     def narrate_context(self, ctx):
         """Speak a fused spacetime context (from context.resolve_context) in plain language,
         with citations + honesty. The keystone: pick a point in space+time -> narration."""
@@ -133,24 +187,29 @@ class ResearchAgent:
                     "provider": "stub", "sources": ctx.get("sources", [])}
 
     def _stub_narration(self, ctx):
-        L, pt = ctx["layers"], ctx["point"]
-        w = L["weather"].get("atTime") or L["weather"].get("now") or {}
-        sea = L["weather"].get("sea") or {}
+        L, pt = ctx.get("layers", {}), ctx["point"]
         when = pt.get("weatherValidAt") or pt.get("t") or "now"
         parts = [f"At {pt['lat']:.3f}, {pt['lon']:.3f} ({when}):"]
-        if L["weather"].get("error"):
-            parts.append("weather unavailable here — verify locally.")
-        elif w:
-            parts.append(f"wind ~{w.get('windKt','?')} kt from {w.get('windFromDeg','?')}°,"
-                         f" gusts {w.get('gustKt','?')} kt; seas {sea.get('waveM','?')} m.")
-        if L["places"]:
+        wx = L.get("weather")
+        if wx is not None:
+            w = wx.get("atTime") or wx.get("now") or {}
+            sea = wx.get("sea") or {}
+            if wx.get("error"):
+                parts.append("weather unavailable here — verify locally.")
+            elif w:
+                parts.append(f"wind ~{w.get('windKt','?')} kt from {w.get('windFromDeg','?')}°,"
+                             f" gusts {w.get('gustKt','?')} kt; seas {sea.get('waveM','?')} m.")
+        if L.get("places"):
             p = L["places"][0]
             rv = f" — \"{p['reviews'][0]['text']}\"" if p["reviews"] else ""
             parts.append(f"Nearest: {p['name']} ({p['distanceNm']} NM, {p['source']}){rv}.")
-        parts.append(L["climate"]["note"])
-        parts.append("NFL community data: locked (experimental)." if L["nfl"]["locked"]
-                     else "NFL enrichment active.")
-        parts.append(L["chart"]["note"])
+        if L.get("climate"):
+            parts.append(L["climate"]["note"])
+        if L.get("nfl"):
+            parts.append("NFL community data: locked (experimental)." if L["nfl"].get("locked")
+                         else "NFL enrichment active.")
+        if L.get("chart"):
+            parts.append(L["chart"]["note"])
         return " ".join(parts)
 
     def _llm_narration(self, ctx):

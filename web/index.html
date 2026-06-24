@@ -295,8 +295,8 @@
   <p class="sub" id="comm-status">Connecting to Helm backend…</p>
 
   <div class="lbl">Narrate (spacetime probe)</div>
-  <div class="wx"><button id="narrate-arm" data-wx="narr">✨ Narrate a point</button></div>
-  <p class="sub" style="margin:7px 0 0;font-size:10.5px" id="narrate-hint">Tap the chart to fuse every layer at that point &amp; the current time.</p>
+  <div class="wx"><button id="narrate-arm" data-wx="narr">✨ Narrate a point</button><button id="narrate-path" data-wx="path">Narrate the passage</button></div>
+  <p class="sub" style="margin:7px 0 0;font-size:10.5px" id="narrate-hint">Tap the chart to fuse the enabled layers at that point &amp; the current time. Only checked layers join the slice.</p>
 
   <div class="lbl">Where to go</div>
   <div class="wx"><button id="wt-go" data-wx="go">Suggest for tonight</button><button id="wt-clear" data-wx="clear">Clear</button></div>
@@ -421,7 +421,7 @@
 
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
-    activeWx = name;
+    activeWx = name; window.__activeWx = name;            // shared with the spacetime probe's layer filter
     if (iso) iso.setVisible(showIsobars(name));
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
@@ -703,6 +703,53 @@
     }
     armBtn.addEventListener('click', () => setArmed(!armed));
     document.getElementById('nc-x').addEventListener('click', () => { card.hidden = true; });
+
+    // selectable layers drive the slice (ADR-0007): only checked layers join the probe
+    function enabledLayers() {
+      const on = id => { const cb = document.querySelector('.row input[data-layer="' + id + '"]'); return cb ? cb.checked : false; };
+      const layers = [];
+      if (window.__activeWx && window.__activeWx !== 'off') layers.push('weather');
+      if (on('places')) layers.push('places');
+      if (on('saved')) layers.push('saved');
+      if (on('charts') || on('enc-chart') || on('depare-fill')) layers.push('chart');
+      layers.push('climate');                              // contextual, always available
+      return layers;
+    }
+
+    // probe along the route P(t): sample times by distance/speed, narrate the passage
+    function hav(a, b) { const R = 3440.065, r = x => x * Math.PI / 180;
+      const dLat = r(b[1] - a[1]), dLon = r(a[0] - b[0]);
+      const s = Math.sin(dLat / 2) ** 2 + Math.cos(r(a[1])) * Math.cos(r(b[1])) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.asin(Math.sqrt(s)); }
+    async function buildPath() {
+      let coords = [];
+      try { const r = await (await fetch('data/route.geojson')).json();
+        const f = r.features ? r.features[0] : r; coords = (f.geometry && f.geometry.coordinates) || []; } catch (e) {}
+      if (coords.length < 2) { const c = map.getCenter(); return [{ lat: c.lat, lon: c.lng, t: window.__helmTime || null }]; }
+      const N = coords.length, step = Math.max(1, Math.floor(N / 6)), idx = [];
+      for (let i = 0; i < N; i += step) idx.push(i); if (idx[idx.length - 1] !== N - 1) idx.push(N - 1);
+      const startT = window.__helmTime ? new Date(window.__helmTime + 'Z') : new Date();
+      const spd = 5; let cum = 0; const pts = [];
+      idx.forEach((i, k) => { if (k > 0) cum += hav(coords[idx[k - 1]], coords[i]);
+        const t = new Date(startT.getTime() + (cum / spd) * 3600 * 1000);
+        pts.push({ lat: coords[i][1], lon: coords[i][0], t: t.toISOString().slice(0, 16) }); });
+      return pts;
+    }
+    document.getElementById('narrate-path').addEventListener('click', async () => {
+      card.hidden = false;
+      document.getElementById('nc-ttl').textContent = 'Passage briefing';
+      document.getElementById('nc-pos').textContent = '';
+      document.getElementById('nc-text').textContent = 'Narrating the passage…';
+      document.getElementById('nc-layers').innerHTML = ''; document.getElementById('nc-foot').textContent = '';
+      const j = await comm.briefing({ points: await buildPath(), boat: { draft: 1.8 }, layers: enabledLayers() });
+      if (j.offline) { document.getElementById('nc-text').textContent = 'Backend offline — run backend/ to narrate the passage.'; return; }
+      document.getElementById('nc-prov').textContent = (j.provider || 'ai').toUpperCase();
+      document.getElementById('nc-text').textContent = j.narration || '—';
+      document.getElementById('nc-layers').innerHTML = (j.legs || []).map((lg, i) =>
+        '<span class="nc-chip">leg ' + (i + 1) + (lg.windKt != null ? ' · ' + lg.windKt + 'kt' : '') + '</span>').join('');
+      const srcs = (j.sources || []).map(s => s.title).filter((v, i, a) => a.indexOf(v) === i).slice(0, 6).join(' · ');
+      document.getElementById('nc-foot').textContent = (j.legs ? j.legs.length + ' legs · ' : '') + srcs + ' · verify on official charts';
+    });
     const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open' }[s] || 't-open');
     function renderNarrate(j, ll) {
       const txt = document.getElementById('nc-text'), lay = document.getElementById('nc-layers'), foot = document.getElementById('nc-foot');
@@ -735,7 +782,8 @@
       document.getElementById('nc-layers').innerHTML = '';
       document.getElementById('nc-foot').textContent = '';
       renderNarrate(await comm.narrate({ lat: e.lngLat.lat, lon: e.lngLat.lng,
-        t: window.__helmTime || null, boat: { draft: 1.8 }, nflEnabled: false }), e.lngLat);
+        t: window.__helmTime || null, boat: { draft: 1.8 }, nflEnabled: false,
+        layers: enabledLayers() }), e.lngLat);
     });
 
     map.on('click', 'saved-icon', e => { const p = e.features[0].properties;

@@ -66,11 +66,21 @@ window.HelmCommunity = function (map, opts) {
 
   function clearWhereTo() { setData('whereto', { type: 'FeatureCollection', features: [] }); }
 
-  // Spacetime probe: narrate the fused slice (all layers) at a point + time.
+  // Spacetime probe: narrate the fused slice (enabled layers) at a point + time.
   async function narrate(body) {
     if (!online) return { offline: true };
     try {
       return await (await fetch(API + '/narrate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      })).json();
+    } catch (e) { return { error: String(e) }; }
+  }
+
+  // Probe along a path P(t): narrate the passage from ordered {lat,lon,t} points.
+  async function briefing(body) {
+    if (!online) return { offline: true };
+    try {
+      return await (await fetch(API + '/briefing', {
         method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
       })).json();
     } catch (e) { return { error: String(e) }; }
@@ -105,5 +115,5 @@ window.HelmCommunity = function (map, opts) {
   }
 
   return { health, onStatus, isOnline: () => online, loadPlaces, loadSaved, whereTo,
-           clearWhereTo, narrate, nflPush, osmNote, savePin };
+           clearWhereTo, narrate, briefing, nflPush, osmNote, savePin };
 };

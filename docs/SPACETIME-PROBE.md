@@ -155,7 +155,9 @@ The ReAct agent ([agents.py](../backend/agents.py) `narrate_context`) turns a sl
 
 ## 7. Build order to "any layer, fully"
 
-1. **Wire the probe into the chart** — tap a point (+ scrub time) → `/narrate` → a slice card.
+1. ~~**Wire the probe into the chart** — tap a point (+ scrub time) → `/narrate` → a slice card.~~ **Done.**
+1a. ~~**Path geometry** — narrate along the route (`/briefing`) = the passage briefing.~~ **Done.**
+1b. ~~**Selectable layers drive the slice** — layer toggles filter what the probe fuses.~~ **Done** (`resolve_context(layers=…)`).
 2. **Promote more weather fields** into `get_weather` (swell/rain/pressure/current/SST/CAPE).
 3. **Depth-at-point** from the engine + **tides/currents** harmonics into the slice.
 4. **AIS + route-weather** layers join the slice (engine already computes CPA/TCPA).

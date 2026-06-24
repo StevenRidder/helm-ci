@@ -156,22 +156,39 @@ class NarrateReq(BaseModel):
     t: str | None = None                   # ISO time on the passage timeline
     boat: dict | None = None
     nflEnabled: bool = False               # experimental NFL read toggle
+    layers: list[str] | None = None        # selectable layers drive the slice (ADR-0007)
+
+
+class BriefingReq(BaseModel):
+    points: list[dict]                     # ordered [{lat, lon, t}] along the path P(t)
+    boat: dict | None = None
+    layers: list[str] | None = None
+    nflEnabled: bool = False
 
 
 @app.post("/context")
 def context(req: NarrateReq):
-    """The spacetime mash: fuse every layer at (lat, lon, t) into one source-tagged object."""
-    return resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled)
+    """The spacetime mash: fuse the enabled layers at (lat, lon, t) into one source-tagged object."""
+    return resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled, layers=req.layers)
 
 
 @app.post("/narrate")
 def narrate(req: NarrateReq):
     """Keystone: pick a point in space + time -> the agent narrates the fused layers, cited."""
-    ctx = resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled)
+    ctx = resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled, layers=req.layers)
     out = agent.narrate_context(ctx)
     out["point"] = ctx["point"]
     out["layers"] = ctx["layers"]
     return out
+
+
+@app.post("/briefing")
+def briefing(req: BriefingReq):
+    """Probe along a path P(t): resolve a slice at each point, narrate the passage."""
+    slices = [resolve_context(p["lat"], p["lon"], p.get("t"), req.boat,
+                              nfl_enabled=req.nflEnabled, layers=req.layers)
+              for p in req.points[:8]]
+    return agent.narrate_passage(slices, req.boat)
 
 
 class DossierReq(BaseModel):
