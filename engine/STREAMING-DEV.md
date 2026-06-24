@@ -52,10 +52,22 @@ cd web && python3 -m http.server 5173      # terminal 2
 - **Mocked:** `mock-engine.js` stands in for the engine's network surface only. It is **not**
   navigation and renders no real charts.
 
-## Next increment (engine side)
+## Real engine — now speaks this contract ✅
 
-Teach the real engine ([README.md](README.md)) to serve this contract: one TLS origin, emit
-`snapshot`+`delta`+`seq`+`ping` instead of the full 1 Hz blob, bind a configurable host
-(default localhost, flag to open to the LAN), immutable tile cache headers + HTTP/2, then
-Bonjour (`_helm._tcp`) and TOFU pairing. That's an **appended engine patch** (`0004+`), leaving
-the existing patch series untouched. See [../docs/STREAMING-API.md](../docs/STREAMING-API.md) §8.
+The real engine ([README.md](README.md)) has been taught the streaming contract (overlay edits to
+`vendor/cli/helm_engine.cpp` + `helm_tiles.cpp`, no patch-series changes):
+
+- `helm-engine` emits `snapshot`+`delta`+`seq`+`ts` (was a full blob each tick); new clients get a
+  snapshot baseline, established clients get deltas. **Verified** against the real `model/` core,
+  identically over localhost and a LAN IP:
+  ```bash
+  HELM_BIND=0.0.0.0 HELM_PORT=8091 "$HELM_OCPN_DIR/build/cli/helm-engine"
+  node engine/stream-smoke.js 127.0.0.1 8091 --ws-only      # ALL PASS
+  node engine/stream-smoke.js <lan-ip>  8091 --ws-only      # ALL PASS (identical)
+  ```
+- `helm-tiles` binds configurably and serves immutable tiles (ETag + 304). The web client points the
+  `enc` source at the resolved origin.
+
+To connect the **web UI** to the real engine in this increment (still two ports: nav 8081, tiles 8082),
+load it with `?server=<host>:8081` for nav. Collapsing both onto **one TLS origin** + Bonjour + pairing
+is the next step — see [../docs/STREAMING-API.md](../docs/STREAMING-API.md) §5–8.

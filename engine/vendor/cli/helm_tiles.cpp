@@ -13,6 +13,7 @@
 #include <cstdlib>
 #include <cmath>
 #include <cstring>
+#include <cctype>
 #include <deque>
 #include <mutex>
 #include <condition_variable>
@@ -59,7 +60,20 @@ static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
 static s57chart* g_chart = nullptr;
 static Extent    g_ext;
 static std::string g_blank;          // transparent TS×TS PNG for no-coverage tiles
+static std::string g_etag;           // immutable cache validator: cell + scheme + native scale
 static const int TS = 256;           // tile size px
+
+// case-insensitive header lookup (ixwebsocket preserves the sender's casing)
+static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name) {
+  std::string want(name);
+  for (auto& c : want) c = (char)std::tolower((unsigned char)c);
+  for (auto& kv : h) {
+    std::string k = kv.first;
+    for (auto& c : k) c = (char)std::tolower((unsigned char)c);
+    if (k == want) return kv.second;
+  }
+  return std::string();
+}
 
 // ---- main-thread render job queue (CoreGraphics is main-thread) -------------
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
@@ -191,6 +205,15 @@ static bool init_chart(const wxString& enc_path) {
   g_blank = make_blank();
   if (g_blank.empty()) { printf("FATAL: transparent no-coverage tile generation failed\n"); return false; }
 
+  // Immutable cache validator. A tile is fully determined by (cell + edition + color
+  // scheme + native scale), none of which change over this server's lifetime, so tiles
+  // are safely immutable. (Product target per docs/STREAMING-API.md §2.1: carry this
+  // token as a URL version segment so multi-cell/edition caches never collide.)
+  wxString cell = wxFileName(enc_path).GetName();   // e.g. US5FL96M
+  char etag[96];
+  std::snprintf(etag, sizeof etag, "\"%s.day.s%d\"", (const char*)cell.ToUTF8(), ns);
+  g_etag = etag;
+
   printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d  blankPNG=%zuB\n",
          g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns, g_blank.size());
   return true;
@@ -240,14 +263,26 @@ public:
     // SERVED tile is deterministic steady-state output (see warmup_render).
     if (!getenv("HELM_TILES_NO_WARMUP")) warmup_render();   // TEMP control toggle
 
-    server = new ix::HttpServer(8082, "127.0.0.1");
+    // Bind configurable so the SAME server feeds localhost (dev) or the boat LAN (iPad/
+    // iPhone): HELM_BIND (default 127.0.0.1; 0.0.0.0 to expose) + HELM_TILE_PORT.
+    const char* bindHost = std::getenv("HELM_BIND");
+    if (!bindHost || !*bindHost) bindHost = "127.0.0.1";
+    int tilePort = 8082;
+    if (const char* p = std::getenv("HELM_TILE_PORT")) { int v = std::atoi(p); if (v > 0) tilePort = v; }
+
+    server = new ix::HttpServer(tilePort, bindHost);
     server->setOnConnectionCallback(
       [](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
         ix::WebSocketHttpHeaders h;
         h["Access-Control-Allow-Origin"] = "*";
-        h["Cache-Control"] = "no-cache";
         int z; long x, y;
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
+          // S-52 tiles are immutable for this cell/scheme — cache hard (huge win when a Pi
+          // feeds several iPads) and honor revalidation cheaply without re-rendering.
+          h["Cache-Control"] = "public, max-age=31536000, immutable";
+          h["ETag"] = g_etag;
+          if (header_ci(req->headers, "If-None-Match") == g_etag)
+            return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
           // hand the render to the main thread (CoreGraphics) and wait
           Job job; job.z = z; job.x = x; job.y = y;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
@@ -262,11 +297,13 @@ public:
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
             case TileStatus::BadRequest:
               h["Content-Type"] = "text/plain";
+              h["Cache-Control"] = "no-store"; h.erase("ETag");   // never cache an error as if it were the tile
               return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h,
                 std::string("invalid tile coordinates\n"));
             case TileStatus::RenderFailed:
             default:                               // surface it; do NOT mask a broken render as open water
               h["Content-Type"] = "text/plain";
+              h["Cache-Control"] = "no-store"; h.erase("ETag");   // a 500 must not be cached forever
               return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h,
                 std::string("S-52 tile render failed; see server log\n"));
           }
@@ -278,8 +315,10 @@ public:
         }
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string());
       });
-    if (!server->listenAndStart()) { printf("HTTP listen on 8082 FAILED\n"); return false; }
-    printf("S-52 tile server: http://127.0.0.1:8082/chart/{z}/{x}/{y}.png  (cell US5FL96M)\n");
+    if (!server->listenAndStart()) { printf("HTTP listen on %s:%d FAILED\n", bindHost, tilePort); return false; }
+    printf("S-52 tile server: http://%s:%d/chart/{z}/{x}/{y}.png  (immutable, ETag %s)\n", bindHost, tilePort, g_etag.c_str());
+    if (std::strcmp(bindHost, "127.0.0.1") != 0)
+      printf("  serving the LAN — an iPad/iPhone on the same WiFi can load charts from http://<this-host>:%d/\n", tilePort);
     return false;  // no wx event loop; main() runs the render job loop
   }
 };

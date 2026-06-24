@@ -6,6 +6,14 @@
 // relocation). Streams the nav state as JSON over ws://127.0.0.1:8081 — the SAME shape
 // web/nav-source.js (HelmNav) emits, so the UI swaps the JS sim for this socket unchanged.
 //
+// Streaming contract (docs/STREAMING-API.md): on connect the client gets a full `snapshot`
+// (the baseline); thereafter `delta` frames carry only the fields that move, each stamped
+// with a monotonic `seq` + wall-clock `ts`, plus a `snapshot` keyframe every 30th tick so a
+// late/recovering client always resyncs. The bind address is configurable — HELM_BIND
+// (default 127.0.0.1; set 0.0.0.0 to serve iPad/iPhone over boat WiFi) + HELM_PORT — so the
+// engine behaves identically whether the client is on this Mac or across the cabin. The web
+// client (web/nav-client.js) merges snapshot/delta and also accepts a legacy full frame.
+//
 // This is the nav half of the engine. The S-52 chart-tile HTTP server (proven separately
 // in spike/opencpn-headless/chart-render) is the next increment.
 #include <wx/init.h>
@@ -25,6 +33,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <set>
 #include <ctime>
 #include <mutex>
 #include <sys/socket.h>
@@ -33,6 +42,14 @@
 #include <unistd.h>
 
 void* g_pi_manager = reinterpret_cast<void*>(1L);
+
+// Monotonic frame sequence, and the set of clients already handed a full snapshot
+// baseline. A newly-connected client must receive a `snapshot` as its FIRST frame,
+// never a partial `delta` — and we can't send it from the connection callback (that
+// fires before the WS handshake completes, so the frame is dropped). Instead the nav
+// loop sends each not-yet-seen client a snapshot. Touched only by the loop thread.
+static long                    g_seq = 0;
+static std::set<ix::WebSocket*> g_seen;
 
 struct WP { double lat, lon; const char* name; };
 static std::vector<WP> ROUTE = {            // web/data/route.geojson — "Key West approach"
@@ -200,16 +217,28 @@ int main(int, char**) {
   }
 
   // --- WebSocket server: push nav state to all clients ---
-  ix::WebSocketServer server(8081, "127.0.0.1");
+  // Bind is configurable so the SAME engine serves localhost (dev) or the boat LAN (iPad/
+  // iPhone). HELM_BIND defaults to 127.0.0.1; set 0.0.0.0 to expose it on the boat network.
+  const char* bindHost = std::getenv("HELM_BIND");
+  if (!bindHost || !*bindHost) bindHost = "127.0.0.1";
+  int navPort = 8081;
+  if (const char* p = std::getenv("HELM_PORT")) { int v = std::atoi(p); if (v > 0) navPort = v; }
+
+  ix::WebSocketServer server(navPort, bindHost);
   server.setOnConnectionCallback(
     [](std::weak_ptr<ix::WebSocket> wptr, std::shared_ptr<ix::ConnectionState> cs) {
+      // ixwebsocket requires a per-socket message callback registered here, even for a
+      // push-only server (omitting it makes the server reject the connection). The
+      // snapshot baseline is sent by the nav loop, not here — see g_seen.
       if (auto ws = wptr.lock())
-        ws->setOnMessageCallback([](const ix::WebSocketMessagePtr&) {}); // push-only; ignore inbound
+        ws->setOnMessageCallback([](const ix::WebSocketMessagePtr&) {}); // push-only; hello/ack reserved
       std::printf("client connected: %s\n", cs->getId().c_str());
       std::fflush(stdout);
     });
-  if (!server.listenAndStart()) { std::printf("WS listen on 8081 FAILED\n"); return 2; }
-  std::printf("nav-state WebSocket: ws://127.0.0.1:8081  (streaming 1 Hz)\n");
+  if (!server.listenAndStart()) { std::printf("WS listen on %s:%d FAILED\n", bindHost, navPort); return 2; }
+  std::printf("nav-state WebSocket: ws://%s:%d/  (snapshot+delta, seq, ~1 Hz)\n", bindHost, navPort);
+  if (std::strcmp(bindHost, "127.0.0.1") != 0)
+    std::printf("  serving the LAN — reach it from an iPad/iPhone on the same WiFi at ws://<this-host>:%d/\n", navPort);
 
   std::thread(nmea_listener).detach();   // real NMEA (port 10110) overrides the sim per-field
 
@@ -284,11 +313,18 @@ int main(int, char**) {
     }
     legs += "]";
 
-    // Per-field `sources` carry the truth: "nmea" where a fresh real sentence
-    // overrode the value, "simulated" where the demo scaffolding is still showing.
-    char json[1500];
-    std::snprintf(json, sizeof json,
-      "{\"type\":\"nav\",\"posSource\":\"%s\","
+    // ---- frame the state on the streaming contract (docs/STREAMING-API.md) ----
+    // snapshot = full state (on connect + every 30th tick keyframe); delta = only the
+    // fields that move. seq is monotonic; ts is wall-clock seconds. Per-field `sources`
+    // carry the truth ("nmea" vs "simulated") so a sim value is never badged as real.
+    long seq = ++g_seq;
+    double ts = (double)now;
+    bool keyframe = (tick % 10 == 0);    // periodic full snapshot so any client resyncs
+
+    char snap[1700];
+    std::snprintf(snap, sizeof snap,
+      "{\"t\":\"snapshot\",\"seq\":%ld,\"ts\":%.3f,"
+      "\"type\":\"nav\",\"posSource\":\"%s\","
       "\"sources\":{\"pos\":\"%s\",\"sog\":\"%s\",\"cog\":\"%s\",\"hdg\":\"%s\",\"depth\":\"%s\",\"wind\":\"%s\"},"
       "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
       "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
@@ -296,6 +332,7 @@ int main(int, char**) {
       "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
       "\"dtg\":\"%s\",\"xte\":\"%d m\","
       "\"legs\":%s,\"nextWp\":\"%s \xC2\xB7 %s\"}}",
+      seq, ts,
       src_pos,
       src_pos, src_sog, src_cog, src_hdg, src_depth, src_wind,
       gLat, gLon, fmtPos(gLat, gLon).c_str(),
@@ -304,10 +341,43 @@ int main(int, char**) {
       etabuf, ttg.c_str(), vmg, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
       legs.c_str(), nextShort.c_str(), fmtNM(dtw).c_str());
 
-    for (auto& c : server.getClients()) c->send(json);
+    std::string frame;
+    if (keyframe) {
+      frame = snap;
+    } else {
+      // delta: position/instruments every tick; wind only every ~5th (it drifts slowly)
+      char dlt[1000];
+      std::snprintf(dlt, sizeof dlt,
+        "{\"t\":\"delta\",\"seq\":%ld,\"ts\":%.3f,"
+        "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
+        "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
+        "\"active\":{\"dtg\":\"%s\",\"xte\":\"%d m\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\",\"nextWp\":\"%s \xC2\xB7 %s\"}}",
+        seq, ts, gLat, gLon, fmtPos(gLat, gLon).c_str(),
+        sog, cog, hdg, depth,
+        fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852), etabuf, ttg.c_str(), vmg,
+        nextShort.c_str(), fmtNM(dtw).c_str());
+      frame = dlt;
+      if (tick % 5 == 0) {                       // splice the wind block in before "active"
+        char wbuf[160];
+        std::snprintf(wbuf, sizeof wbuf,
+          "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},",
+          wspd, wdir, std::lround(wspd - 4), std::lround(wspd + 8));
+        frame.insert(frame.find("\"active\""), wbuf);
+      }
+    }
+
+    // Send each client its frame: a brand-new client gets the full snapshot as its
+    // baseline; established clients get the delta (or the keyframe snapshot). g_seen is
+    // rebuilt from the live client set each tick, so disconnects drop out naturally.
+    auto clients = server.getClients();
+    std::set<ix::WebSocket*> live;
+    for (auto& c : clients) live.insert(c.get());
+    for (auto& c : clients)
+      c->send(g_seen.count(c.get()) ? frame : snap);   // unseen client → full snapshot baseline
+    g_seen.swap(live);
     if (tick % 10 == 0)
-      std::printf("  [%ld] %s [%s]  SOG %.1f  COG %d  DTG %s  -> %s  (clients: %zu)\n",
-                  tick, fmtPos(gLat, gLon).c_str(), src_pos, sog, cog,
+      std::printf("  [%ld] seq %ld %-5s %s [%s]  SOG %.1f  COG %d  DTG %s  -> %s  (clients: %zu)\n",
+                  tick, seq, keyframe ? "snap" : "delta", fmtPos(gLat, gLon).c_str(), src_pos, sog, cog,
                   fmtNM(dtg).c_str(), nextShort.c_str(), server.getClients().size());
 
     std::this_thread::sleep_for(std::chrono::seconds(1));

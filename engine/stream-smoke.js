@@ -6,7 +6,9 @@
 //   4. GET /health is ok
 // Usage:  node engine/stream-smoke.js [host] [port]      (default 127.0.0.1 8090)
 const http = require('http'), crypto = require('crypto');
-const HOST = process.argv[2] || '127.0.0.1', PORT = +(process.argv[3] || 8090);
+const args = process.argv.slice(2).filter(a => a !== '--ws-only');
+const WS_ONLY = process.argv.includes('--ws-only');   // nav stream only (e.g. the real engine on 8081; tiles are a separate server)
+const HOST = args[0] || '127.0.0.1', PORT = +(args[1] || 8090);
 let failures = 0;
 const ok = (c, m) => { console.log((c ? '  ok   ' : '  FAIL ') + m); if (!c) failures++; };
 
@@ -65,8 +67,9 @@ function get(path, headers) {
 }
 
 (async () => {
-  console.log('stream-smoke → ' + HOST + ':' + PORT);
+  console.log('stream-smoke → ' + HOST + ':' + PORT + (WS_ONLY ? '  (ws-only)' : ''));
   await checkWs();
+  if (WS_ONLY) { console.log(failures ? '\nFAILED (' + failures + ')' : '\nALL PASS (ws-only)'); process.exit(failures ? 1 : 0); }
   const health = await get('/health');
   ok(health.status === 200, 'GET /health → 200');
   const tile = await get('/chart/13/2280/3629.png');

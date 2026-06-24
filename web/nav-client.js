@@ -68,8 +68,12 @@
       lastFrameAt = Date.now();
       if (typeof msg.seq === 'number') lastSeq = msg.seq;
       // snapshot replaces; delta merges; a legacy full frame (no t) replaces.
-      if (msg.t === 'delta') state = mergeState(state, msg);
-      else state = mergeState(msg.t === 'snapshot' ? {} : state, msg);
+      if (msg.t === 'delta') {
+        if (!state) { classify(); return; }   // no baseline yet — ignore the partial, await a snapshot
+        state = mergeState(state, msg);
+      } else {
+        state = mergeState(msg.t === 'snapshot' ? {} : state, msg);
+      }
       try { onState(state); } catch (e) {}
       classify();
     }
