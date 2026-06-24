@@ -119,6 +119,59 @@ class ResearchAgent:
             d["note"] = f"(agent unavailable, stub used: {e})"
             return d
 
+    def narrate_context(self, ctx):
+        """Speak a fused spacetime context (from context.resolve_context) in plain language,
+        with citations + honesty. The keystone: pick a point in space+time -> narration."""
+        if self.llm.provider == "stub":
+            return {"narration": self._stub_narration(ctx), "provider": "stub",
+                    "sources": ctx.get("sources", [])}
+        try:
+            return {"narration": self._llm_narration(ctx), "provider": "openai",
+                    "sources": ctx.get("sources", [])}
+        except Exception as e:
+            return {"narration": self._stub_narration(ctx) + f" (LLM unavailable: {e})",
+                    "provider": "stub", "sources": ctx.get("sources", [])}
+
+    def _stub_narration(self, ctx):
+        L, pt = ctx["layers"], ctx["point"]
+        w = L["weather"].get("atTime") or L["weather"].get("now") or {}
+        sea = L["weather"].get("sea") or {}
+        when = pt.get("weatherValidAt") or pt.get("t") or "now"
+        parts = [f"At {pt['lat']:.3f}, {pt['lon']:.3f} ({when}):"]
+        if L["weather"].get("error"):
+            parts.append("weather unavailable here — verify locally.")
+        elif w:
+            parts.append(f"wind ~{w.get('windKt','?')} kt from {w.get('windFromDeg','?')}°,"
+                         f" gusts {w.get('gustKt','?')} kt; seas {sea.get('waveM','?')} m.")
+        if L["places"]:
+            p = L["places"][0]
+            rv = f" — \"{p['reviews'][0]['text']}\"" if p["reviews"] else ""
+            parts.append(f"Nearest: {p['name']} ({p['distanceNm']} NM, {p['source']}){rv}.")
+        parts.append(L["climate"]["note"])
+        parts.append("NFL community data: locked (experimental)." if L["nfl"]["locked"]
+                     else "NFL enrichment active.")
+        parts.append(L["chart"]["note"])
+        return " ".join(parts)
+
+    def _llm_narration(self, ctx):
+        from openai import OpenAI
+        client = OpenAI(api_key=self.llm.key)
+        sys = (
+            "You are Helm's first-mate narrator. Given a FUSED spacetime context (weather "
+            "valid at a time, climate, nearby places + reviews, saved pins, the NFL slot, and "
+            "chart pointers at one lat/lon/time), narrate what a sailor needs to know in 2-4 "
+            "short sentences. Use ONLY the provided data; never invent weather, depths, fees, "
+            "or reviews. Note the forecast horizon/confidence. If NFL is locked, say it's "
+            "experimental/partnership-gated, don't fabricate it. End with 'verify on official "
+            "charts'. Cite place/review names inline."
+        )
+        resp = client.chat.completions.create(
+            model=self.llm.model, temperature=0.3,
+            messages=[{"role": "system", "content": sys},
+                      {"role": "user", "content": json.dumps(ctx)[:9000]}],
+        )
+        return resp.choices[0].message.content.strip()
+
     def _section(self, key, summary, sources, facts=None):
         return {"summary": summary, "facts": facts or {}, "sources": sources,
                 "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ")}

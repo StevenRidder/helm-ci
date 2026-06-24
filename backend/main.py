@@ -27,6 +27,7 @@ import store
 from llm import LLMClient, prefilter
 from publisher import NFLPublisher, OSMNotes
 from agents import ResearchAgent, get_weather
+from context import resolve_context
 
 app = FastAPI(title="Helm backend", version="0.1")
 app.add_middleware(
@@ -147,6 +148,30 @@ def giveback_status():
 def weather(lat: float, lon: float):
     """Real forecast at a point (Open-Meteo) — the agent's weather tool, exposed directly."""
     return get_weather(lat, lon)
+
+
+class NarrateReq(BaseModel):
+    lat: float
+    lon: float
+    t: str | None = None                   # ISO time on the passage timeline
+    boat: dict | None = None
+    nflEnabled: bool = False               # experimental NFL read toggle
+
+
+@app.post("/context")
+def context(req: NarrateReq):
+    """The spacetime mash: fuse every layer at (lat, lon, t) into one source-tagged object."""
+    return resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled)
+
+
+@app.post("/narrate")
+def narrate(req: NarrateReq):
+    """Keystone: pick a point in space + time -> the agent narrates the fused layers, cited."""
+    ctx = resolve_context(req.lat, req.lon, req.t, req.boat, nfl_enabled=req.nflEnabled)
+    out = agent.narrate_context(ctx)
+    out["point"] = ctx["point"]
+    out["layers"] = ctx["layers"]
+    return out
 
 
 class DossierReq(BaseModel):
