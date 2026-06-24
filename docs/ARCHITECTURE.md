@@ -72,6 +72,22 @@ iOS has **no serial/USB** for NMEA. Boat data is ingested over the network:
 
 Proven by Aqua Map, NMEAremote, qtVlm.
 
+## Boat server ↔ thin displays (the iOS path)
+
+The engine is a **network server**; every screen — macOS, iPad, iPhone, cockpit — is a thin
+client over the boat LAN, not a host of the engine. This is how iOS works *on the GPL engine*
+without a clean-room rebuild and without shipping GPL through the App Store (network use ≠
+distribution; an arm's-length protocol client ≠ a derivative work). It also keeps `wxWidgets`,
+the C++ core, and serial ingest **on the server**, off the phone. The Phase 2 engine is
+already this server, just bound to `127.0.0.1` instead of the LAN. Rationale and the GPL
+reasoning: [ADR-0006](decisions/0006-server-client-thin-display.md).
+
+The stream quality *is* the iOS product surface, so it gets its own spec — one TLS origin
+(`wss://helm.local/nav` + `https://helm.local/chart/…`), Bonjour discovery, snapshot+delta
+framing with always-visible staleness, reconnect/resume over flaky WiFi, an alarm reliability
+tier (APNs critical alerts for anchor/MOB), immutable tile caching over HTTP/2, and TOFU
+pairing. See **[STREAMING-API.md](STREAMING-API.md)**.
+
 ## The GPL boundary (critical)
 
 OpenCPN is **GPLv2-or-later**. You cannot statically link GPL source into a closed
