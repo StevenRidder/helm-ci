@@ -27,6 +27,8 @@ dist/
 # Secrets / API keys (Windy, etc.)
 .env
 .env.*
+# the committed template carries no secrets — keep it tracked
+!.env.example
 *.key
 secrets/
 

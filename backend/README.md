@@ -7,6 +7,8 @@ offline-first, NFL-slot-open. Spec: [../docs/BUILD-PLAN-COMMUNITY-LLM.md](../doc
 
 ## Run
 
+Requires **Python 3.9+** (verified on 3.9.6 — the macOS system `python3` — and 3.13).
+
 ```bash
 cd backend
 pip install -r requirements.txt

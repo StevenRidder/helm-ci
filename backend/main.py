@@ -12,6 +12,7 @@ The web prototype (web/community.js) auto-detects this at http://127.0.0.1:8090 
 back to local sample data when it's not running — so the chart never breaks.
 """
 import os
+from typing import List, Optional   # explicit (not PEP 604 `|`) so this runs on Python 3.9+ too
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
@@ -46,34 +47,34 @@ class SavedPin(BaseModel):
     category: str = "pin"
     lat: float
     lon: float
-    note: str | None = None
-    sourceUrl: str | None = None
-    collectionId: str | None = None
+    note: Optional[str] = None
+    sourceUrl: Optional[str] = None
+    collectionId: Optional[str] = None
 
 
 class Review(BaseModel):
     placeId: str
     author: str
     text: str
-    boat: str | None = None
+    boat: Optional[str] = None
     ratings: dict = {}
-    url: str | None = None
+    url: Optional[str] = None
 
 
 class WhereTo(BaseModel):
     query: str = "Where should I go?"
-    position: dict | None = None           # {lat, lon}
-    boat: dict | None = None               # {draft, airDraft}
-    forecast: dict | None = None           # {windFromDeg, windKt}
-    sources: list[str] | None = None       # restrict candidate sources
+    position: Optional[dict] = None           # {lat, lon}
+    boat: Optional[dict] = None               # {draft, airDraft}
+    forecast: Optional[dict] = None           # {windFromDeg, windKt}
+    sources: Optional[List[str]] = None       # restrict candidate sources
     top: int = 3
 
 
 class PushPos(BaseModel):
     lat: float
     lon: float
-    sog: float | None = None
-    cog: float | None = None
+    sog: Optional[float] = None
+    cog: Optional[float] = None
 
 
 class NoteReq(BaseModel):
@@ -90,7 +91,7 @@ def health():
 
 
 @app.get("/places")
-def places(sources: str | None = None):
+def places(sources: Optional[str] = None):
     src = sources.split(",") if sources else None
     return store.to_feature_collection(store.all_places(src))
 
@@ -153,16 +154,16 @@ def weather(lat: float, lon: float):
 class NarrateReq(BaseModel):
     lat: float
     lon: float
-    t: str | None = None                   # ISO time on the passage timeline
-    boat: dict | None = None
-    nflEnabled: bool = False               # experimental NFL read toggle
-    layers: list[str] | None = None        # selectable layers drive the slice (ADR-0007)
+    t: Optional[str] = None                   # ISO time on the passage timeline
+    boat: Optional[dict] = None
+    nflEnabled: bool = False                  # experimental NFL read toggle
+    layers: Optional[List[str]] = None        # selectable layers drive the slice (ADR-0007)
 
 
 class BriefingReq(BaseModel):
-    points: list[dict]                     # ordered [{lat, lon, t}] along the path P(t)
-    boat: dict | None = None
-    layers: list[str] | None = None
+    points: List[dict]                        # ordered [{lat, lon, t}] along the path P(t)
+    boat: Optional[dict] = None
+    layers: Optional[List[str]] = None
     nflEnabled: bool = False
 
 
@@ -192,10 +193,10 @@ def briefing(req: BriefingReq):
 
 
 class DossierReq(BaseModel):
-    placeId: str | None = None
-    name: str | None = None
-    lat: float | None = None
-    lon: float | None = None
+    placeId: Optional[str] = None
+    name: Optional[str] = None
+    lat: Optional[float] = None
+    lon: Optional[float] = None
 
 
 @app.post("/dossier")
