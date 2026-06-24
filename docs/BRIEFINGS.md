@@ -97,6 +97,40 @@ not two products.** The helm surface must stay terse (a wall of text underway is
 the companion is where depth and links live. Committed in
 [ADR-0006](decisions/0006-destination-dossier-and-briefings.md).
 
+## 3c. Pin it — research becomes pins on the plotter (saved places)
+
+The deep-read loop has an **output**: saved places. While researching on the phone, tap
+**Pin to chart** on any spot — an anchorage, a snorkeling reef a blog raved about, a
+chandlery, a "check the bar at half-tide" hazard. It **syncs to the helm** and shows up as a
+POI/bookmark on the plotter, carrying the **note** and the **source link** you saved it from.
+Bookmarks you can sail up to. This is the feature Steve named: *"as I read and research, pin
+locations from my phone that stick on the Helm plotter — bookmarks that become POIs/waypoints
+to check out."*
+
+**Data model — a Saved Place:**
+- location (a point, or attached to a known POI), title, **category + icon** (anchorage ·
+  snorkel · provisioning · fuel · repair · hazard · must-see · sundowner …),
+- a **note** (your words, or the quote you pinned), **source link(s)** auto-attached from the
+  deep-read (the Noonsite/blog page), optional photos,
+- **status** (to-check · visited · skip), created-on device + time, color.
+
+**Behavior:**
+- **Owned · synced · offline-first.** Lives in Helm's backend (the *owned* tier of
+  [ADR-0005](decisions/0005-community-places-overlay.md)); syncs **phone ↔ iPad ↔ helm**;
+  created offline, queued, flushed on reconnect — same discipline as the NFL push. **Private
+  by default**, optionally shared with buddy boats / fleet.
+- **Distinct from waypoints — until you want them to be.** Saved places are *aspirational*
+  ("go check this out"), rendered as a toggleable **Saved / Bookmarks** POI layer, visually
+  distinct from active route waypoints. One tap **promotes** a pin to a waypoint ("Add to
+  route" / "Navigate here"). The pipeline: **research → bookmark → POI → waypoint.**
+- **Collections.** Group pins into lists ("Fiji must-dos", "Provisioning run", "Before we
+  leave") — Google-Maps-"Saved"-style; lists are shareable.
+
+This closes the loop the whole product implies: you **read** on the phone, **pin** what
+matters, and it's **waiting on the chart** when you arrive — and every pin is owned community
+data that, with permission, enriches the next sailor's dossier. Wireframe:
+[mockups/saved-places-sync.html](mockups/saved-places-sync.html).
+
 ## 4. Destination data sources — the honest map
 
 The hard truth from [integrations/noforeignland.md](integrations/noforeignland.md) and

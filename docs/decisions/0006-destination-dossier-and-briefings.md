@@ -60,6 +60,11 @@ original sources. The two tiers are the same data at two depths, not two product
   citation/attribution/ToS handling — the largest new engineering + legal surface here.
 - Inherits the satellite/community honesty posture: "verify locally," never an official
   clearance; respect every source wall.
+- **Saved places (cross-device pins).** Research on the companion produces pins that sync to
+  the helm as a toggleable POI/bookmark layer, carrying note + source link, promotable to
+  waypoints (research → bookmark → POI → waypoint). Owned data, offline-first, private by
+  default. Spec: [../BRIEFINGS.md](../BRIEFINGS.md) §3c; wireframe:
+  [../mockups/saved-places-sync.html](../mockups/saved-places-sync.html).
 - Build order is staged in [../BRIEFINGS.md](../BRIEFINGS.md) §7: open+owned dossier card →
   arrival weather → living timeline → RAG narrative → contribution loop.
 
