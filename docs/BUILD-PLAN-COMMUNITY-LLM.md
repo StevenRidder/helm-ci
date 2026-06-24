@@ -195,14 +195,17 @@ Contribution { id, target:'nfl'|'osm-note'|'osm-edit', payload, status:'queued'|
 
 ---
 
-## 6. Open decisions (resolve before building — see chat)
+## 6. Resolved decisions (2026-06-24)
 
-| # | Decision | Recommendation |
+| # | Decision | Resolution |
 |---|---|---|
-| D1 | Where-to-go LLM in the prototype: real Claude API via backend, or local stub first? | **Real API via the small backend** — it's the whole point; stub only the NFL slot. |
-| D2 | OSM contribution depth first: Notes, full node edits, or owned-queue only? | **OSM Notes (Tier 1)** — low-risk, immediate, real give-back. |
-| D3 | NFL push in prototype: real posts with your key, or mock then real? | **Mock first**, switch to your real key once the publisher is proven. |
-| D4 | Backend stack for the prototype | **Python (FastAPI)** — matches `pipeline/` + easy Claude SDK; or Node if preferred. |
+| D1 | Where-to-go LLM in the prototype | **OpenAI** (Steve provides the API key at build time). Wrap it behind a **provider-pluggable `LLMClient`** so the model is swappable; key read from **env only, never committed**. *Note:* the broader Helm docs still set the north-star default as the latest Claude models — the prototype uses OpenAI per Steve's choice; the abstraction keeps either available. |
+| D2 | OSM/OpenSeaMap give-back depth first | **OSM Notes (Tier 1)** — low-risk, immediate; node-edits deferred to Tier 2. |
+| D3 | NFL push in prototype | **Mock first** (fake endpoint to prove publisher + queue/flush), then switch to Steve's real NFL key. |
+| D4 | Backend stack | **Python / FastAPI** — matches `pipeline/`, OpenAI Python SDK, easy local run. |
+
+**Secrets handling:** all keys (OpenAI, NFL boat key) via environment / a gitignored `.env`;
+**never committed**; the NFL key stays device-local per [ADR-0005](decisions/0005-community-places-overlay.md).
 
 ---
 
