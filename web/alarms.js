@@ -11,8 +11,9 @@
 //   • Depth  — warns when depth < threshold (default 3.0 m), with hysteresis.
 //   • Anchor — drop at current position (default 30 m radius); critical alarm on drift.
 //   • MOB    — drops a man-overboard mark; critical alarm with live range/bearing.
-//   • CPA/TCPA — slot reserved; needs LIVE AIS targets (our AIS is a static sample), so
-//                it is intentionally NOT faked here.
+//   • CPA/TCPA — from the engine's LIVE AIS: OpenCPN-computed CPA/TCPA arrive in the nav
+//                stream's "ais" array; fires only on a real approaching threat (cpaValid +
+//                future TCPA), never faked.
 window.HelmAlarms = function (map, opts) {
   opts = opts || {};
   const depthLimit = opts.depthLimit != null ? opts.depthLimit : 3.0;   // metres
@@ -168,6 +169,18 @@ window.HelmAlarms = function (map, opts) {
     if (mob) {
       const d = distM(s.pos, mob), b = Math.round(bearing(s.pos, mob));
       fire('mob', 'critical', 'MAN OVERBOARD — ' + (d < 1852 ? Math.round(d) + ' m' : (d / 1852).toFixed(2) + ' NM') + ', bearing ' + b + '°');
+    }
+    // CPA/TCPA from the engine's LIVE AIS (real OpenCPN-computed values; never faked). Fire only on
+    // a genuine APPROACHING threat: cpaValid + future TCPA within 30 min + CPA under 2 NM. Pick the soonest.
+    if (Array.isArray(s.ais)) {
+      let worst = null;
+      for (const t of s.ais)
+        if (t.cpaValid && t.tcpa > 0 && t.tcpa <= 30 && t.cpa < 2.0 && (!worst || t.tcpa < worst.tcpa)) worst = t;
+      if (worst) {
+        const who = (worst.name && worst.name.trim()) ? worst.name.trim() : ('MMSI ' + worst.mmsi);
+        fire('cpa', (worst.cpa < 0.5 && worst.tcpa < 10) ? 'critical' : 'warning',
+          'Collision risk — CPA ' + (+worst.cpa).toFixed(2) + ' NM in ' + Math.round(worst.tcpa) + ' min · ' + who);
+      } else clear('cpa');
     }
   }
 

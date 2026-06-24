@@ -587,7 +587,23 @@
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       ownship.update(s);   // smooth glide + follow / course-up (ownship.js)
-      alarms.onNav(s);     // depth / anchor / MOB safety alarms (alarms.js)
+      alarms.onNav(s);     // depth / anchor / MOB / CPA safety alarms (alarms.js)
+      if (Array.isArray(s.ais)) updateAis(s.ais);   // live AIS targets from the engine
+    }
+    // Replace the static AIS sample with the engine's LIVE targets. The existing 'ais' source +
+    // layers render them, and ais-vessels already colours by the `cpa` property — but we only pass
+    // a real cpa when it's an APPROACHING threat (cpaValid + future TCPA); a receding target gets
+    // cpa=99 so the style paints it neutral, never a false red.
+    function updateAis(ais) {
+      const src = map.getSource && map.getSource('ais'); if (!src) return;
+      src.setData({ type: 'FeatureCollection', features: ais.map(t => ({
+        type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
+        properties: {
+          name: (t.name && t.name.trim()) ? t.name.trim() : ('MMSI ' + t.mmsi),
+          mmsi: t.mmsi, sog: t.sog, cog: t.cog, type: 'vessel',
+          cpa: (t.cpaValid && t.tcpa > 0) ? t.cpa : 99
+        }
+      })) });
     }
     // Always show the truth about where nav data comes from. Critically: if the
     // live engine DROPS, do NOT silently fall back to the simulator presenting a
