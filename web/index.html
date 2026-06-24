@@ -434,8 +434,53 @@
     .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
   map.on('click', 'places-icon', e => { const p = e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
-  map.on('click', 'ais-vessels', e => { const p = e.features[0].properties;
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || 'AIS target') + '</b><br>SOG ' + (p.sog ?? '?') + ' · COG ' + (p.cog ?? '?') + (p.cpa != null ? ' · CPA ' + p.cpa + ' NM' : '')).addTo(map); });
+  // ---- AIS: live engine-driven targets + rich tap inspector ----
+  // The engine streams a per-fix `ais` array (range/brg/CPA/TCPA computed by OpenCPN's
+  // AisDecoder). We drive the `ais` map source from it and render the full target detail
+  // on tap. In sim mode (no engine) the static sample in style.json stays.
+  const AIS_CLASS = { 0: 'Class A', 1: 'Class B', 2: 'AtoN', 3: 'Base station',
+                      5: 'DSC', 6: 'SART', 7: 'ARPA', 9: 'Meteo' };
+  const aisEsc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const aisNum = (v, d) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(d);
+  function aisPopupHTML(p) {
+    const cls = AIS_CLASS[p.class] != null ? AIS_CLASS[p.class] : (p.class != null ? 'Class ' + p.class : '');
+    const name = (p.name && String(p.name).trim()) ? p.name : ('MMSI ' + (p.mmsi ?? '?'));
+    const valid = p.cpaValid !== false && p.cpa != null;           // engine flags when CPA is meaningful
+    const cpa = valid ? aisNum(p.cpa, 2) + ' NM' : '—';
+    const tcpa = (valid && p.tcpa != null)
+      ? (+p.tcpa).toFixed(0) + ' min' + ((+p.tcpa) < 0 ? ' (opening)' : '') : '—';
+    const danger = valid && p.cpa < 2 && p.tcpa > 0 && p.tcpa < 30;  // close-approach heads-up
+    const rows = [
+      ['SOG', aisNum(p.sog, 1) + ' kn'],
+      ['COG', aisNum(p.cog, 0) + '°'],
+      (p.hdg != null && p.hdg < 360) ? ['HDG', aisNum(p.hdg, 0) + '°'] : null,
+      (p.range != null) ? ['Range', aisNum(p.range, 2) + ' NM'] : null,
+      (p.brg != null) ? ['Bearing', aisNum(p.brg, 0) + '°'] : null,
+      ['CPA', cpa],
+      ['TCPA', tcpa]
+    ].filter(Boolean);
+    return '<div style="min-width:152px">'
+      + '<div style="font-weight:600;font-size:13px">' + aisEsc(name) + '</div>'
+      + '<div style="font-size:10.5px;color:var(--cdim);margin-bottom:6px">' + (cls || '') + (cls && p.mmsi ? ' · ' : '') + (p.mmsi ? p.mmsi : '') + '</div>'
+      + (danger ? '<div style="font-size:10.5px;color:var(--danger);font-weight:600;margin-bottom:6px">⚠ Close approach</div>' : '')
+      + rows.map(r => '<div style="display:flex;justify-content:space-between;gap:16px;font-size:11.5px;padding:1px 0">'
+          + '<span style="color:var(--cdim)">' + r[0] + '</span>'
+          + '<span style="font-variant-numeric:tabular-nums">' + r[1] + '</span></div>').join('')
+      + '</div>';
+  }
+  function updateAisFromEngine(list) {
+    if (!Array.isArray(list)) return;
+    try {
+      const src = map.getSource('ais'); if (!src) return;
+      src.setData({ type: 'FeatureCollection', features: list
+        .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
+        .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] }, properties: t })) });
+    } catch (e) { /* style not ready this tick */ }
+  }
+  map.on('mouseenter', 'ais-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'ais-vessels', () => { map.getCanvas().style.cursor = ''; });
+  map.on('click', 'ais-vessels', e =>
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map));
 
   // ================= CHROME UI wiring =================
   (function () {
@@ -521,6 +566,7 @@
       mark('nv-depth', 'depth'); mark('nv-wind', 'wind'); mark('nv-winddir', 'wind');
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
+      if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
       try {
         if (!boat) {
           const el = document.createElement('div');

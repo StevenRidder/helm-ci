@@ -43,13 +43,14 @@ over a mostly-real *engine*, with key connecting wires unrun.
 
 **The five findings that matter most:**
 
-1. **🔴 Live AIS is computed but thrown away.** The engine drives OpenCPN's real
-   `AisDecoder` and streams full per-target **range / bearing / CPA / TCPA / heading /
-   class / MMSI** in every nav frame (`helm_engine.cpp:513`). The UI **never reads it** —
-   the map's AIS targets come from a static `data/ais-sample.geojson`, and the click popup
-   shows only `name / SOG / COG / CPA` *from that sample file*. **TCPA — the entire point
-   of collision avoidance — is calculated and discarded.** This is the single highest-value
-   fix and it is pure wiring.
+1. **✅ Live AIS — WIRED (2026-06-24).** *Was: the engine drove OpenCPN's real `AisDecoder`
+   and streamed full per-target range/bearing/CPA/TCPA/heading/class/MMSI, but the UI read a
+   static `data/ais-sample.geojson` and the popup showed only name/SOG/COG/CPA — TCPA
+   discarded.* Now `applyNav()` drives the `ais` map source from the engine's `ais[]` array,
+   and the tap inspector renders the full detail — **name · class · MMSI · SOG · COG · HDG ·
+   range · bearing · CPA · TCPA**, with a "⚠ Close approach" flag (CPA < 2 NM, TCPA 0–30
+   min). The static sample still shows in sim mode (no engine). See `web/index.html`
+   (`updateAisFromEngine` + `aisPopupHTML`).
 
 2. **🔴 No measure / range-bearing ("draw distance") tool exists.** Not in the UI, not on
    the roadmap. Every competitor — OpenCPN, every MFD, every iOS app — has a ruler. The
@@ -101,7 +102,7 @@ discover a hole at sea.
 
 | What the engine produces | Where | What the UI does with it |
 |---|---|---|
-| `ais[]` with range/brg/**CPA/TCPA**/hdg/class/mmsi/name | `helm_engine.cpp:513-537` | **Nothing** — AIS drawn from static `ais-sample.geojson` |
+| `ais[]` with range/brg/**CPA/TCPA**/hdg/class/mmsi/name | `helm_engine.cpp:513-537` | ✅ **wired** — drives the `ais` source + rich tap popup (`web/index.html`) |
 | Loaded GPX route geometry | `helm_engine.cpp` (Routeman) | **Nothing** — route line from static `route.geojson` |
 | Dangerous-target CPA flag (`g_CPAWarn_NM=2.0`) | engine AIS state | **Nothing** — no alarm channel in UI |
 | Per-field `sources` (nmea/signalk/sim) | nav frame | ✅ shown as tooltip + badge (good) |
@@ -164,9 +165,9 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 
 | Feature | TS/Diff | Helm | Notes |
 |---|---|---|---|
-| AIS target display on chart | TS | ⚠ | **static sample**, not the live `ais[]` stream |
-| Target details on tap | TS | ⚠ | shows name/SOG/COG/CPA from sample; **no TCPA/range/brg/MMSI/class** |
-| **CPA / TCPA computation** | TS | ✅(engine) / ✖(UI) | engine computes; **UI never shows TCPA** |
+| AIS target display on chart | TS | ✅ | live `ais[]` stream drives the map (sample only in sim mode) |
+| Target details on tap | TS | ✅ | name/class/MMSI/SOG/COG/HDG/range/brg/CPA/**TCPA** |
+| **CPA / TCPA computation** | TS | ✅ | engine computes; **UI now shows both** + close-approach flag |
 | CPA collision **alarm** + dangerous-target flag | TS | ⬜ | engine flags it; no UI alarm |
 | Guard zone / proximity | TS | ✖ | OCPN Watchdog; not yet |
 | COG/heading vector on targets | TS | ◐ | triangle rotates to COG; no speed-scaled vector |
@@ -311,9 +312,9 @@ Grouped by "did we forget this?" — the answer for each should be *build*, *def
 
 ## 6. Recommended build order (client-facing, value-first)
 
-1. **Live AIS end-to-end** — consume `s.ais`; drive the `ais` GeoJSON source from it; rich
-   click popup (name/MMSI/class/range/brg/CPA/**TCPA**/SOG/COG); the CPA color rule already
-   exists in `style.json`. *Highest value; mostly wiring.* (delivers named feature #2 for real)
+1. ~~**Live AIS end-to-end**~~ — ✅ **DONE (2026-06-24).** Consumes `s.ais`, drives the `ais`
+   GeoJSON source, rich tap popup (name/MMSI/class/range/brg/CPA/**TCPA**/SOG/COG/HDG) +
+   close-approach flag. CPA color rule in `style.json` already applies. (named feature #2, real)
 2. **Measure / range-bearing tool** — click-to-drop ruler, running leg + cumulative range +
    bearing; math already in `nav-source.js`. *(delivers named feature #1)*
 3. **AIS CPA alarm + dangerous-target surfacing** — the engine already flags it; add a UI
