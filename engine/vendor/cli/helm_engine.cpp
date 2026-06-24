@@ -25,6 +25,7 @@
 #include <cstring>
 #include <string>
 #include <vector>
+#include <map>
 #include <ctime>
 #include <mutex>
 #include <sys/socket.h>
@@ -34,8 +35,28 @@
 #include <fstream>
 #include <iterator>
 #include "pugixml.hpp"
+#include "model/ais_decoder.h"
+#include "model/ais_target_data.h"
+#include "model/ais_state_vars.h"
+#include "model/select.h"
+#include "model/base_platform.h"
 
 void* g_pi_manager = reinterpret_cast<void*>(1L);
+
+// OpenCPN's real AIS decoder, driven headless. We add NO nav logic: DecodeN0183 does
+// checksum + multipart reassembly + per-target range/brg/CPA/TCPA (UpdateOneCPA reads
+// the own-ship gLat/gLon/gCog/gSog globals). We only feed sentences and format the result.
+extern Select* pSelectAIS;              // model global (defined in ais_decoder.cpp), seeded in main()
+static AisDecoder* g_ais = nullptr;
+static std::mutex  g_ais_mtx;           // guards the decoder calls + our snapshot below
+
+// Our display snapshot of OpenCPN's decoded targets. We copy the decoder's results at decode
+// time (range/brg/CPA/TCPA already computed by its UpdateOneCPA) into our own map and age them
+// on our own clock — so the served set is stable and independent of the decoder's internal
+// target lifecycle (its wxTimer-driven pruning can't run in a headless tick loop anyway).
+struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
+                bool cpaValid; int cls; std::string name; std::time_t seen; };
+static std::map<int, AisRow> g_ais_rows;
 
 struct WP { double lat, lon; std::string name; };
 static std::vector<WP> ROUTE;                 // loaded from GPX at startup — no hardcoded route
@@ -176,6 +197,21 @@ static double nmea_ll(const std::string& v, const std::string& hemi) {  // ddmm.
   return dec;
 }
 static void nmea_parse(const std::string& line) {
+  // AIS (!AIVDM / !AIVDO) -> OpenCPN's decoder (it does its own checksum + multipart reassembly).
+  // Note: AIS sentences begin with '!', so they must be routed BEFORE the $-only checksum gate.
+  if (g_ais && line.size() >= 6 &&
+      (line.compare(0, 6, "!AIVDM") == 0 || line.compare(0, 6, "!AIVDO") == 0)) {
+    std::lock_guard<std::mutex> lk(g_ais_mtx);
+    g_ais->DecodeN0183(wxString::FromUTF8(line.c_str()));     // decode + per-target CPA/TCPA (OpenCPN)
+    std::time_t snap = std::time(nullptr);
+    for (auto& kv : g_ais->GetTargetList()) {                 // snapshot the decoded results into our set
+      auto& t = kv.second;
+      g_ais_rows[t->MMSI] = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG,
+        t->Range_NM, t->Brg, t->CPA, t->TCPA, t->bCPA_Valid, (int)t->Class,
+        std::string(t->ShipName), snap };
+    }
+    return;
+  }
   if (!nmea_csum_ok(line)) {
     std::fprintf(stderr, "NMEA rejected (bad checksum): %s\n", line.c_str());
     return;
@@ -270,6 +306,20 @@ int main(int argc, char** argv) {
   g_pRouteMan->ActivateNextPoint(r, false);  // own-ship starts at WP1 → target the first destination
   std::printf("route activated: %d waypoints; Routeman live (no GUI).\n", r->GetnPoints());
 
+  // --- AIS: stand up OpenCPN's real AisDecoder headless (decode + CPA/TCPA stay in its code) ---
+  // ais_state_vars globals are plain extern doubles/bools (default 0) — seed the ones the CPA path
+  // reads so UpdateOneCPA computes a real CPA window, not a degenerate one.
+  g_CPAMax_NM = 20.0; g_CPAWarn_NM = 2.0; g_TCPA_Max = 30.0;       // CPA compute window + warn thresholds
+  g_ShowMoored_Kts = 0.2; g_AISShowTracks_Mins = 20.0;
+  g_bMarkLost = false; g_MarkLost_Mins = 10.0;
+  g_bRemoveLost = false; g_RemoveLost_Mins = 20.0;                 // OnTimerAIS can't fire headless; we age in the tick
+  g_bInlandEcdis = false; g_benableAISNameCache = false;
+  bGPSValid = true; gCog = 0; gSog = 0;                            // own-ship valid -> UpdateOneCPA can compute CPA
+  if (!g_BasePlatform) g_BasePlatform = new BasePlatform();        // Select reads GetSelectRadiusPix() from it
+  pSelectAIS = new Select();                                       // target selectable store (model, no GUI)
+  g_ais = new AisDecoder(AisDecoderCallbacks());
+  std::printf("AIS: OpenCPN AisDecoder live — feed !AIVDM on tcp://127.0.0.1:%d\n", kNmeaPort);
+
   // precompute leg lengths (NM) for the own-ship sim
   std::vector<double> legLen; double total = 0, b, d;
   for (size_t i = 0; i + 1 < ROUTE.size(); ++i) {
@@ -327,6 +377,7 @@ int main(int argc, char** argv) {
       if (fresh(g_real.wspd.t))  { wspd = g_real.wspd.v;                src_wind = "nmea"; }   else { wspd = sim_wspd;   src_wind = "simulated"; }
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
     }
+    gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
 
     // BRG/DTW to the model's active waypoint, computed from the (real-or-sim) position
     RoutePoint* act = g_pRouteMan->GetpActivePoint();
@@ -383,7 +434,32 @@ int main(int argc, char** argv) {
       etabuf, ttg.c_str(), vmg, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
       legs.c_str(), json_escape(nextShort).c_str(), fmtNM(dtw).c_str());
 
-    for (auto& c : server.getClients()) c->send(json);
+    // ---- AIS targets: OpenCPN computed range/brg/CPA/TCPA at decode time; we format + age-out ----
+    std::string aisArr = "[";
+    {
+      std::lock_guard<std::mutex> lk(g_ais_mtx);
+      std::time_t aisNow = std::time(nullptr);
+      bool first = true;
+      for (auto it = g_ais_rows.begin(); it != g_ais_rows.end(); ) {
+        AisRow& t = it->second;
+        long age = (long)(aisNow - t.seen);
+        if (age > 600) { it = g_ais_rows.erase(it); continue; }   // drop targets silent >10 min
+        char tb[440];
+        std::snprintf(tb, sizeof tb,
+          "%s{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
+          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
+          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld}",
+          first ? "" : ",", t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
+          t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
+          t.cls, json_escape(t.name).c_str(), age);
+        aisArr += tb; first = false; ++it;
+      }
+    }
+    aisArr += "]";
+
+    std::string frame(json);
+    if (!frame.empty()) frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);   // additive: top-level key, before final }
+    for (auto& c : server.getClients()) c->send(frame);
     if (tick % 10 == 0)
       std::printf("  [%ld] %s [%s]  SOG %.1f  COG %d  DTG %s  -> %s  (clients: %zu)\n",
                   tick, fmtPos(gLat, gLon).c_str(), src_pos, sog, cog,
