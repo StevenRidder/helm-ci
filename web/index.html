@@ -152,6 +152,32 @@
   .measure-hud .mx{margin-left:auto;cursor:pointer;color:var(--cdim);font-size:13px;width:22px;height:22px;
     border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none}
   .measure-hud .mx:hover{background:var(--glass2);color:var(--ctext)}
+
+  /* ---- CPA collision alarm (red glass card, top-center) ---- */
+  .cpa-alarm{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:9;max-width:440px;
+    border-radius:13px;padding:11px 12px;display:flex;gap:11px;align-items:flex-start;
+    border:.5px solid rgba(255,90,82,.55);box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 1px rgba(255,90,82,.25);
+    animation:cpapulse 1.1s infinite}
+  @keyframes cpapulse{0%,100%{box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 1px rgba(255,90,82,.25)}
+    50%{box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 2px rgba(255,90,82,.6)}}
+  .cpa-alarm[hidden]{display:none}
+  .cpa-ic{color:var(--danger);font-size:20px;line-height:1.1;flex:none}
+  .cpa-body{flex:1;min-width:0}
+  .cpa-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+  .cpa-ttl{font-size:12.5px;font-weight:600;color:#fff}
+  .cpa-role{font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:5px;flex:none}
+  .cpa-role.give{background:var(--danger);color:#1a0606}
+  .cpa-role.stand{background:var(--warn);color:#1f1402}
+  .cpa-role.mon{background:var(--glass2);color:var(--cdim)}
+  .cpa-tgt{font-size:11px;color:var(--cdim);font-variant-numeric:tabular-nums;margin-bottom:4px}
+  .cpa-act{font-size:12px;color:#ffd9d6;line-height:1.35}
+  .cpa-rule{font-size:9.5px;color:var(--cdim);border:.5px solid var(--line);border-radius:4px;padding:0 4px;margin-left:3px;white-space:nowrap}
+  .cpa-more{font-size:10.5px;color:var(--warn);margin-top:4px}
+  .cpa-disc{font-size:9.5px;color:var(--cdim2);margin-top:6px;line-height:1.3;border-top:.5px solid var(--line2);padding-top:5px}
+  .cpa-btns{display:flex;flex-direction:column;gap:5px;flex:none}
+  .cpa-btn{cursor:pointer;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    background:var(--glass2);font-size:12px;color:var(--cdim)}
+  .cpa-btn:hover{color:var(--ctext)}
 </style>
 </head>
 <body>
@@ -317,6 +343,7 @@
 <script src="isolines.js"></script>
 <script src="nav-source.js"></script>
 <script src="measure.js"></script>
+<script src="collision.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
@@ -340,6 +367,7 @@
   const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
   const measureBtn = document.querySelector('.ri[data-rail="measure"]');
   const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
+  const collision = window.HelmCollision ? HelmCollision(map) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
@@ -590,6 +618,8 @@
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
+      if (collision && s.ais && s.pos)                // CPA alarm + COLREGs avoidance guidance
+        collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais);
       try {
         if (!boat) {
           const el = document.createElement('div');

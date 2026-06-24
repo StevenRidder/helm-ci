@@ -62,10 +62,13 @@ over a mostly-real *engine*, with key connecting wires unrun.
    `data/route.geojson`; the engine's loaded GPX drives the *inspector* legs but not the
    *drawn line*. Load a different route and the chart disagrees with the instruments.
 
-4. **🟠 No alarms of any kind in the client.** Anchor watch, AIS CPA, arrival, off-course,
-   depth — none surfaced. The engine already flags the dangerous AIS target (it has CPA/TCPA
-   and `g_CPAWarn_NM`); the UI has no alarm channel. Alarms are the one *safety-class* gap
-   I would pull forward from Phase 2.
+4. **◐ Alarms — CPA collision alarm now wired (2026-06-24); others still pending.** The AIS
+   **CPA/TCPA collision alarm** is built (`web/collision.js`): it flags the most threatening
+   target, highlights it on the chart (intercept line + pulsing ring), classifies the
+   encounter against the **COLREGs** and states give-way/stand-on + the prescribed maneuver,
+   with a permanent "you are responsible" disclaimer. Still missing (Phase 2): anchor watch,
+   arrival, off-course, depth alarms — the `collision.js` banner/audio channel is the reusable
+   seam for them.
 
 5. **🟠 The S-52 tiler serves a single hard-coded cell.** `helm_tiles.cpp` loads one ENC
    (`US5FL96M`) — no quilting, no chart groups, no multi-cell. Fine for the proof; a real
@@ -105,13 +108,13 @@ discover a hole at sea.
 |---|---|---|
 | `ais[]` with range/brg/**CPA/TCPA**/hdg/class/mmsi/name | `helm_engine.cpp:513-537` | ✅ **wired** — drives the `ais` source + rich tap popup (`web/index.html`) |
 | Loaded GPX route geometry | `helm_engine.cpp` (Routeman) | **Nothing** — route line from static `route.geojson` |
-| Dangerous-target CPA flag (`g_CPAWarn_NM=2.0`) | engine AIS state | **Nothing** — no alarm channel in UI |
+| Dangerous-target CPA flag (`g_CPAWarn_NM=2.0`) | engine AIS state | ✅ **wired** — CPA alarm + COLREGs guidance (`web/collision.js`) |
 | Per-field `sources` (nmea/signalk/sim) | nav frame | ✅ shown as tooltip + badge (good) |
 | Active waypoint name/brg, DTW, nextWp | nav frame | ✅ inspector + instrument bar (good) |
 
-**Three of the engine's outputs are computed every second and dropped on the floor.** Closing
-these three wires (AIS, route line, CPA alarm) is the bulk of "make the client real," and
-none of it needs new C++ subsystems.
+**Two of those three wires are now closed** (AIS + CPA alarm, 2026-06-24). The remaining one
+— **live route geometry** — is the next step, and it's the only one that needs a few lines of
+engine JSON in addition to UI work.
 
 ---
 
@@ -169,7 +172,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | AIS target display on chart | TS | ✅ | live `ais[]` stream drives the map (sample only in sim mode) |
 | Target details on tap | TS | ✅ | name/class/MMSI/SOG/COG/HDG/range/brg/CPA/**TCPA** |
 | **CPA / TCPA computation** | TS | ✅ | engine computes; **UI now shows both** + close-approach flag |
-| CPA collision **alarm** + dangerous-target flag | TS | ⬜ | engine flags it; no UI alarm |
+| CPA collision **alarm** + dangerous-target flag | TS | ✅ | `web/collision.js` — banner + chart highlight + COLREGs action |
 | Guard zone / proximity | TS | ✖ | OCPN Watchdog; not yet |
 | COG/heading vector on targets | TS | ◐ | triangle rotates to COG; no speed-scaled vector |
 | AIS target list (sortable table) | TS | ✖ | OCPN core; not in UI |
@@ -220,7 +223,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Feature | TS/Diff | Helm | Notes |
 |---|---|---|---|
 | **Anchor watch / drag alarm** | TS | ⬜ | PRD Phase 2; every competitor has it (Aqua Map's flagship) |
-| AIS CPA collision alarm | TS | ⬜ | engine flags; **no UI channel** |
+| AIS CPA collision alarm | TS | ✅ | `web/collision.js` — most-threatening target, give-way/stand-on + maneuver |
 | Arrival alarm | TS | ✖ | trivial given DTW |
 | Off-course (XTE) alarm | TS | ✖ | trivial given XTE |
 | Depth / shallow-water alarm | TS | ✖ | given live depth |
@@ -319,8 +322,10 @@ Grouped by "did we forget this?" — the answer for each should be *build*, *def
 2. ~~**Measure / range-bearing tool**~~ — ✅ **DONE (2026-06-24).** `web/measure.js`:
    click-to-drop ruler, per-leg range + bearing °T, live rubber-band, cumulative HUD,
    undo/Esc. *(named feature #1, delivered)*
-3. **AIS CPA alarm + dangerous-target surfacing** — the engine already flags it; add a UI
-   alarm channel (banner + optional sound) reused later for anchor/arrival/depth.
+3. ~~**AIS CPA alarm + dangerous-target surfacing**~~ — ✅ **DONE (2026-06-24).** `web/collision.js`:
+   flags the worst target, chart intercept-line + pulsing ring, COLREGs give-way/stand-on +
+   maneuver, one-shot audible alert, mute/ack. The banner/audio channel is reusable for
+   anchor/arrival/depth alarms.
 4. **Live route line** — push route geometry in the nav frame; UI renders from the feed so
    chart and inspector agree.
 5. **Anchor watch** — set point + radius, drag alarm; the most-used safety feature in the
