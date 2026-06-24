@@ -302,9 +302,14 @@
 <script src="radar.js"></script>
 <script src="isolines.js"></script>
 <script src="nav-source.js"></script>
+<script src="server-endpoint.js"></script>
+<script src="nav-client.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
+  // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
+  // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
+  map.on('load', () => { try { const enc = map.getSource('enc'); if (enc && window.HelmEndpoint) enc.setTiles([HelmEndpoint.tileTemplate()]); } catch (e) {} });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
 
@@ -501,9 +506,10 @@
   })();
 
   // ============ LIVE NAV FEED ============
-  // Prefer the live Helm Engine (ws://127.0.0.1:8081 — OpenCPN's real Routeman driven headless);
-  // fall back to the in-browser sim (nav-source.js) when the engine isn't running. Both emit the
-  // SAME state shape, so the cockpit code below is identical for real and simulated nav.
+  // Prefer the live Helm Engine over the resolved boat-server origin (server-endpoint.js → the
+  // engine's WS /nav — OpenCPN's real Routeman driven headless); fall back to the in-browser sim
+  // (nav-source.js) only when no engine was ever reached. Both emit the SAME state shape, so the
+  // cockpit code below is identical for real, simulated, local, and remote nav.
   (function () {
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
     let boat = null;
@@ -537,37 +543,29 @@
     // plausible fake position — that masks a lost real feed. Surface it as an
     // alarm and mark the readings stale. The sim is only ever used when no engine
     // was present to begin with (honest prototype mode).
-    function setSource(state) {
+    function setSource(state, info) {
       window.__navSource = state;
       const b = document.getElementById('data-src'), t = document.getElementById('data-src-txt');
       if (!b) return;
+      const age = info && info.age != null ? Math.round(info.age / 1000) : null;
+      const where = info && info.endpoint ? ' · ' + info.endpoint : '';
       b.classList.remove('live', 'sim', 'lost', 'simpos');
-      if (state === 'live') { b.classList.add('live'); t.textContent = 'LIVE'; b.title = 'Live navigation from the Helm Engine (real position)'; }
-      else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, but position is simulated (no GPS/NMEA feed wired)'; }
-      else if (state === 'lost') { b.classList.add('lost'); t.textContent = 'ENGINE LOST'; b.title = 'The live engine disconnected — readings are NOT current'; }
+      if (state === 'live') { b.classList.add('live'); t.textContent = 'LIVE'; b.title = 'Live navigation from the Helm Engine' + where; }
+      else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, position simulated (no GPS/NMEA feed wired)' + where; }
+      else if (state === 'lagging') { b.classList.add('live'); t.textContent = 'LIVE · ' + age + 's'; b.title = 'Update delayed ' + age + 's — link is lagging' + where; }
+      else if (state === 'stale' || state === 'lost') { b.classList.add('lost'); t.textContent = 'STALE' + (age != null ? ' · ' + age + 's' : ''); b.title = 'No fresh fix for ' + (age != null ? age + 's' : 'a while') + ' — readings are NOT current' + where; }
+      else if (state === 'offline') { b.classList.add('lost'); t.textContent = 'OFFLINE'; b.title = 'Disconnected from the engine — reconnecting…' + where; }
       else { b.classList.add('sim'); t.textContent = 'SIM'; b.title = 'Simulated navigation (no engine running)'; }
-      document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', state === 'lost'));  // route box stays solid
+      // grey the instruments when the feed is not current — NEVER show stale data as live
+      const bad = (state === 'stale' || state === 'lost' || state === 'offline');
+      document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', bad));  // route box stays solid
     }
-    // engine declares its position source; a simulated position is never badged as LIVE truth
-    const realPos = s => { const p = (s && s.sources && s.sources.pos) || (s && s.posSource); return !!p && p !== 'simulated' && p !== 'sim'; };
-    let sim = null, everEngine = false;
-    const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); };
-    const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
-    try {
-      const ws = new WebSocket('ws://127.0.0.1:8081');
-      ws.onmessage = e => {
-        everEngine = true; stopSim();
-        let s; try { s = JSON.parse(e.data); } catch (x) { return; }
-        setSource(realPos(s) ? 'live' : 'simpos');
-        applyNav(s);
-      };
-      ws.onerror = () => { if (!everEngine) { startSim(); setSource('sim'); } };
-      ws.onclose = () => {
-        if (everEngine) { setSource('lost'); }          // real feed dropped -> alarm, do NOT fake it
-        else { startSim(); setSource('sim'); }           // never had an engine -> honest prototype sim
-      };
-      setTimeout(() => { if (!everEngine) { startSim(); setSource('sim'); } }, 1500);
-    } catch (e) { startSim(); setSource('sim'); }
+    // The robust client (nav-client.js) resolves the boat-server address (server-endpoint.js),
+    // merges snapshot/delta frames, runs the age watchdog (LIVE/LAGGING/STALE), reconnects over
+    // flaky WiFi, and falls back to the honest in-browser sim ONLY if no engine was ever reached.
+    // The address is whatever you loaded the page from — localhost here, helm.local / a LAN IP on
+    // the boat — so this single line behaves identically local or remote.
+    window.__navClient = HelmNavClient(applyNav, st => setSource(st.phase, st), { sim: window.HelmNav });
   })();
 </script>
 </body>
