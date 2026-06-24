@@ -1,0 +1,168 @@
+// mock-engine.js — a dependency-free stand-in for the Helm Engine's NETWORK surface.
+//
+// It is NOT the real engine (that links OpenCPN's GPL model/ + s57chart — see engine/README.md).
+// It speaks the SAME wire contract so the client (web/server-endpoint.js + web/nav-client.js)
+// can be built and proven end-to-end WITHOUT the heavy C++ build — and, crucially, so we can
+// prove the "behaves the same local or remote" property: it binds 0.0.0.0 on ONE origin, and
+// the client reaches it identically whether you address it as localhost or a LAN IP.
+//
+//   ONE ORIGIN (default 0.0.0.0:8090):
+//     WS  /nav                         snapshot + delta @ 2 Hz, seq, ping heartbeat
+//     GET /chart/{z}/{x}/{y}.png       S-52 stand-in tile, immutable cache + ETag
+//     GET /health                      liveness/version (unauthenticated)
+//     GET /catalog                     chart cells available (stub)
+//
+//   run:  node engine/mock-engine.js                 # 0.0.0.0:8090
+//         HELM_PORT=9000 node engine/mock-engine.js  # custom port
+//   then open web/index.html served from anywhere; the client resolves this origin.
+const http = require('http'), crypto = require('crypto'), zlib = require('zlib');
+
+const HOST = process.env.HELM_HOST || '0.0.0.0';
+const PORT = +(process.env.HELM_PORT || process.argv[2] || 8090);
+
+// ---------- nav sim (Key West approach — mirrors web/nav-source.js geometry) ----------
+const R = 3440.065, toR = d => d * Math.PI / 180, toD = r => r * 180 / Math.PI;
+const ROUTE = [
+  { lat: 24.458, lon: -81.808, name: 'WP1 · start' },
+  { lat: 24.485, lon: -81.800, name: 'WP2 · sea buoy' },
+  { lat: 24.515, lon: -81.793, name: 'WP3 · channel' },
+  { lat: 24.540, lon: -81.786, name: 'WP4 · pass' },
+  { lat: 24.557, lon: -81.781, name: 'WP5 · marina' }
+];
+function dist(a, b) {
+  const dLat = toR(b.lat - a.lat), dLon = toR(b.lon - a.lon);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.min(1, Math.sqrt(s)));
+}
+function brg(a, b) {
+  const y = Math.sin(toR(b.lon - a.lon)) * Math.cos(toR(b.lat));
+  const x = Math.cos(toR(a.lat)) * Math.sin(toR(b.lat)) - Math.sin(toR(a.lat)) * Math.cos(toR(b.lat)) * Math.cos(toR(b.lon - a.lon));
+  return (toD(Math.atan2(y, x)) + 360) % 360;
+}
+const interp = (a, b, f) => ({ lat: a.lat + (b.lat - a.lat) * f, lon: a.lon + (b.lon - a.lon) * f });
+function fmtPos(p) {
+  const f = (v, pos, neg) => { const h = v >= 0 ? pos : neg; v = Math.abs(v); const d = Math.floor(v), m = ((v - d) * 60).toFixed(1); return d + '°' + m + '′' + h; };
+  return f(p.lat, 'N', 'S') + ' · ' + f(p.lon, 'E', 'W');
+}
+const fmtNM = nm => (nm < 1 ? Math.round(nm * 100) / 100 : Math.round(nm * 10) / 10) + ' NM';
+const legLen = []; let total = 0;
+for (let i = 0; i < ROUTE.length - 1; i++) { const L = dist(ROUTE[i], ROUTE[i + 1]); legLen.push(L); total += L; }
+let along = 0; const t0 = Date.now();
+function navState() {
+  const t = Date.now();
+  const sog = 5.6 + Math.sin((t - t0) / 9000) * 0.9;
+  along += sog / 3600 * 0.5;                         // 2 Hz → half a second of travel per tick
+  if (along >= total) along = 0;
+  let acc = 0, li = 0;
+  while (li < legLen.length - 1 && acc + legLen[li] < along) { acc += legLen[li]; li++; }
+  const f = legLen[li] ? (along - acc) / legLen[li] : 0;
+  const A = ROUTE[li], B = ROUTE[li + 1], pos = interp(A, B, f);
+  const cog = Math.round(brg(A, B)), hdg = (cog + Math.round(Math.sin(t / 7000) * 4) + 360) % 360;
+  const dtw = dist(pos, B); let dtg = dtw; for (let k = li + 1; k < legLen.length; k++) dtg += legLen[k];
+  const d13 = dist(A, pos) / R, th13 = toR(brg(A, pos)), th12 = toR(brg(A, B));
+  const xteM = Math.round(Math.abs(Math.asin(Math.sin(d13) * Math.sin(th13 - th12)) * R) * 1852);
+  const etaDate = new Date(t + (dtg / Math.max(0.1, sog)) * 3600 * 1000);
+  const eta = etaDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+  const ttgMin = Math.round((dtg / Math.max(0.1, sog)) * 60);
+  const ttg = ttgMin < 60 ? ttgMin + 'm' : Math.floor(ttgMin / 60) + 'h ' + String(ttgMin % 60).padStart(2, '0') + 'm';
+  const vmg = (sog * Math.cos(toR(brg(pos, B) - cog))).toFixed(1) + ' kn';
+  const windSpd = 14 + Math.sin(t / 11000) * 3, windDir = Math.round((95 + Math.sin(t / 13000) * 10 + 360) % 360);
+  const depth = 6 + (1 - f) * 8 + Math.sin(t / 5000) * 0.6;
+  const legs = [];
+  for (let k = li + 1; k < ROUTE.length; k++) { const from = k === li + 1 ? pos : ROUTE[k - 1]; legs.push({ name: ROUTE[k].name, brg: Math.round(brg(from, ROUTE[k])) + '°', active: k === li + 1 }); }
+  return {
+    pos, posStr: fmtPos(pos), sog, cog, hdg, depth,
+    wind: { spd: windSpd, dir: windDir, range: Math.round(windSpd - 4) + '–' + Math.round(windSpd + 8) + ' kt' },
+    // mock declares position "nmea" so the UI badges it LIVE — the mock is standing in for a real feed
+    sources: { pos: 'nmea', sog: 'nmea', cog: 'nmea', hdg: 'simulated', depth: 'nmea', wind: 'simulated' },
+    active: { name: 'Route to Marina', eta, ttg, vmg, dtg: fmtNM(dtg), xte: xteM + ' m', legs, nextWp: ROUTE[li + 1].name.split(' · ')[0] + ' · ' + fmtNM(dtw) }
+  };
+}
+
+// ---------- WebSocket (server-side framing, dependency-free) ----------
+const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
+function accept(key) { return crypto.createHash('sha1').update(key + GUID).digest('base64'); }
+function frame(str) {                                  // server→client text frame, unmasked
+  const p = Buffer.from(str, 'utf8'); let head;
+  if (p.length < 126) { head = Buffer.from([0x81, p.length]); }
+  else if (p.length < 65536) { head = Buffer.alloc(4); head[0] = 0x81; head[1] = 126; head.writeUInt16BE(p.length, 2); }
+  else { head = Buffer.alloc(10); head[0] = 0x81; head[1] = 127; head.writeBigUInt64BE(BigInt(p.length), 2); }
+  return Buffer.concat([head, p]);
+}
+function readClientFrames(buf, onText, onClose) {      // minimal masked-frame reader (hello/ack/close)
+  while (buf.length >= 2) {
+    const opcode = buf[0] & 0x0f, masked = buf[1] & 0x80; let len = buf[1] & 0x7f, off = 2;
+    if (len === 126) { if (buf.length < 4) break; len = buf.readUInt16BE(2); off = 4; }
+    else if (len === 127) { if (buf.length < 10) break; len = Number(buf.readBigUInt64BE(2)); off = 10; }
+    let mask; if (masked) { if (buf.length < off + 4) break; mask = buf.slice(off, off + 4); off += 4; }
+    if (buf.length < off + len) break;
+    const data = buf.slice(off, off + len); buf = buf.slice(off + len);
+    if (masked) for (let i = 0; i < data.length; i++) data[i] ^= mask[i & 3];
+    if (opcode === 0x8) { onClose && onClose(); break; }       // client close
+    if (opcode === 0x1) { try { onText(data.toString('utf8')); } catch (e) {} } // text only (ignore ping/pong/binary)
+  }
+  return buf;
+}
+
+let clients = 0;
+function handleWs(req, socket) {
+  const key = req.headers['sec-websocket-key'];
+  socket.write('HTTP/1.1 101 Switching Protocols\r\nUpgrade: websocket\r\nConnection: Upgrade\r\nSec-WebSocket-Accept: ' + accept(key) + '\r\n\r\n');
+  const id = ++clients; let seq = 0, frames = 0; let buf = Buffer.alloc(0);
+  console.log('[nav] client #' + id + ' connected (' + req.socket.remoteAddress + ')');
+
+  const send = o => { try { socket.write(frame(JSON.stringify(o))); } catch (e) {} };
+  const snapshot = () => send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, navState()));
+  snapshot();                                           // full state on connect
+
+  const tick = setInterval(() => {
+    const s = navState(); frames++;
+    if (frames % 30 === 0) { send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, s)); return; } // keyframe
+    // delta: only the fields that move each tick (wind every ~5th tick)
+    const d = { t: 'delta', seq: ++seq, ts: Date.now() / 1000, pos: s.pos, posStr: s.posStr, sog: s.sog, cog: s.cog, hdg: s.hdg, depth: s.depth,
+      active: { dtg: s.active.dtg, xte: s.active.xte, eta: s.active.eta, ttg: s.active.ttg, vmg: s.active.vmg, nextWp: s.active.nextWp } };
+    if (frames % 5 === 0) d.wind = s.wind;
+    send(d);
+  }, 500);
+  const heart = setInterval(() => send({ t: 'ping', ts: Date.now() / 1000 }), 2000);
+
+  socket.on('data', d => { buf = readClientFrames(Buffer.concat([buf, d]), txt => {
+    let m; try { m = JSON.parse(txt); } catch (e) { return; }
+    if (m.t === 'hello') { console.log('[nav] #' + id + ' hello lastSeq=' + m.lastSeq + ' subscribe=' + (m.subscribe || []).join(',')); if (m.lastSeq) snapshot(); }
+    else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);
+  }); });
+  const done = () => { clearInterval(tick); clearInterval(heart); console.log('[nav] client #' + id + ' gone'); };
+  socket.on('close', done); socket.on('error', done);
+}
+
+// ---------- a visible S-52 stand-in tile (real engine renders true S-52; this proves transport) ----------
+function crc32(buf) { let c = ~0; for (let i = 0; i < buf.length; i++) { c ^= buf[i]; for (let k = 0; k < 8; k++) c = (c >>> 1) ^ (0xEDB88320 & -(c & 1)); } return (~c) >>> 0; }
+function png(w, h, r, g, b, a) {
+  const chunk = (type, data) => { const t = Buffer.from(type, 'ascii'); const len = Buffer.alloc(4); len.writeUInt32BE(data.length); const crc = Buffer.alloc(4); crc.writeUInt32BE(crc32(Buffer.concat([t, data]))); return Buffer.concat([len, t, data, crc]); };
+  const ihdr = Buffer.alloc(13); ihdr.writeUInt32BE(w, 0); ihdr.writeUInt32BE(h, 4); ihdr[8] = 8; ihdr[9] = 6; // 8-bit RGBA
+  const raw = Buffer.alloc(h * (1 + w * 4));
+  for (let y = 0; y < h; y++) { let o = y * (1 + w * 4); raw[o++] = 0; for (let x = 0; x < w; x++) { raw[o++] = r; raw[o++] = g; raw[o++] = b; raw[o++] = a; } }
+  return Buffer.concat([Buffer.from([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]), chunk('IHDR', ihdr), chunk('IDAT', zlib.deflateSync(raw)), chunk('IEND', Buffer.alloc(0))]);
+}
+const TILE = png(256, 256, 40, 90, 160, 90);           // translucent blue, like a depth area
+const TILE_ETAG = '"mock.enc.v1"';
+
+const server = http.createServer((req, res) => {
+  const cors = { 'Access-Control-Allow-Origin': '*' };
+  if (req.url === '/health') { res.writeHead(200, Object.assign({ 'Content-Type': 'application/json' }, cors)); return res.end(JSON.stringify({ status: 'ok', engine: 'mock', clients, ts: Date.now() / 1000 })); }
+  if (req.url === '/catalog') { res.writeHead(200, Object.assign({ 'Content-Type': 'application/json' }, cors)); return res.end(JSON.stringify({ cells: [{ id: 'US5FL96M', name: 'Key West', edition: 7, bbox: [-81.85, 24.43, -81.76, 24.57] }] })); }
+  if (/^\/chart\/\d+\/\d+\/\d+\.png$/.test(req.url)) {
+    if (req.headers['if-none-match'] === TILE_ETAG) { res.writeHead(304, cors); return res.end(); }
+    res.writeHead(200, Object.assign({ 'Content-Type': 'image/png', 'Cache-Control': 'public, max-age=31536000, immutable', 'ETag': TILE_ETAG }, cors));
+    return res.end(TILE);
+  }
+  res.writeHead(404, cors); res.end('not found');
+});
+server.on('upgrade', (req, socket) => { if (req.url === '/nav') handleWs(req, socket); else socket.destroy(); });
+server.listen(PORT, HOST, () => {
+  console.log('Helm mock engine — ONE origin on ' + HOST + ':' + PORT);
+  console.log('  ws   /nav                     snapshot+delta @ 2 Hz, ping heartbeat');
+  console.log('  GET  /chart/{z}/{x}/{y}.png   immutable tile (ETag ' + TILE_ETAG + ')');
+  console.log('  GET  /health  /catalog');
+  console.log('Reach it the SAME way local or remote:  http://localhost:' + PORT + '   or   http://<lan-ip>:' + PORT);
+});

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Helm</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <style>
@@ -141,6 +141,43 @@
   .maplibregl-popup-anchor-left .maplibregl-popup-tip,
   .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-color:transparent;display:none}
   .maplibregl-popup-close-button{color:var(--cdim)}
+
+  /* ===================== responsive + touch + safe-area (iPhone / iPad) ===================== */
+  /* safe-area insets (notch / home indicator) — these resolve to 0 on devices without them,
+     so desktop layout is unchanged. */
+  .tb{ top:calc(12px + env(safe-area-inset-top)); left:calc(12px + env(safe-area-inset-left)); right:calc(12px + env(safe-area-inset-right)); }
+  .rail{ top:calc(68px + env(safe-area-inset-top)); left:calc(12px + env(safe-area-inset-left)); }
+  .drawer{ top:calc(68px + env(safe-area-inset-top)); left:calc(72px + env(safe-area-inset-left)); }
+  .insp{ top:calc(68px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); }
+  .ib{ bottom:calc(12px + env(safe-area-inset-bottom)); left:calc(12px + env(safe-area-inset-left)); right:calc(12px + env(safe-area-inset-right)); }
+  .maplibregl-ctrl-bottom-right{ bottom:calc(80px + env(safe-area-inset-bottom)); right:calc(12px + env(safe-area-inset-right)); }
+  .maplibregl-ctrl-bottom-left{ bottom:calc(80px + env(safe-area-inset-bottom)); left:calc(74px + env(safe-area-inset-left)); }
+
+  /* bigger hit targets on touch devices (≥44px, Apple HIG) */
+  @media (pointer:coarse){
+    .ri{ width:44px; height:44px; }
+    .seg span{ padding:8px 13px; }
+    .wx button{ padding:8px 12px; }
+    .row{ padding:7px 0; } .row input{ width:18px; height:18px; }
+    .maplibregl-ctrl-group button{ width:44px; height:44px; }
+    *{ -webkit-tap-highlight-color:transparent; }
+  }
+
+  /* phones — collapse chrome; make the instrument bar a swipeable strip */
+  @media (max-width:560px){
+    .tb{ gap:8px; padding:0 10px; }
+    .tb .wordmark, .tb .search{ display:none; }      /* identity carried by the source badge */
+    .seg span{ padding:6px 10px; }
+    .rail{ max-height:calc(100% - 150px); overflow-y:auto; }
+    .drawer{ left:calc(64px + env(safe-area-inset-left)); right:calc(10px + env(safe-area-inset-right)); width:auto; max-height:44vh; }
+    .insp{ width:min(54vw,204px); padding:10px; }
+    .insp .kpis .k .v{ font-size:14px; }
+    .ib{ height:54px; overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .ib::-webkit-scrollbar{ display:none; }
+    .it{ flex:0 0 auto; min-width:86px; }
+    .it.wide{ flex:0 0 auto; min-width:158px; }
+    .it .v{ font-size:19px; }
+  }
 </style>
 </head>
 <body>
@@ -302,11 +339,28 @@
 <script src="radar.js"></script>
 <script src="isolines.js"></script>
 <script src="nav-source.js"></script>
+<script src="server-endpoint.js"></script>
+<script src="nav-client.js"></script>
+<script src="ownship.js"></script>
 <script>
+  const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
+  if (map.setMaxPitch) map.setMaxPitch(0);          // a chart is flat — no accidental 3D tilt
+  if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
+  // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
+  // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
+  map.on('load', () => {
+    // Surface wiring failures rather than silently leaving the style.json default in place.
+    if (!window.HelmEndpoint) { console.error('Helm: server-endpoint.js not loaded — ENC tiles fall back to the style.json default, not the resolved engine origin'); return; }
+    const enc = map.getSource('enc');
+    if (!enc) { console.error('Helm: no "enc" source in style.json — cannot point ENC tiles at the engine'); return; }
+    try { enc.setTiles([HelmEndpoint.tileTemplate()]); }
+    catch (e) { console.error('Helm: failed to set ENC tile origin:', e); }
+  });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
+  const ownship = HelmOwnship(map, { follow: !__initialHash });  window.__ownship = ownship;   // follow on unless a view was pinned in the URL
 
   // chart layer toggles (data-layer matches a layer id, or a group prefix like places-/ais-)
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {
@@ -501,12 +555,12 @@
   })();
 
   // ============ LIVE NAV FEED ============
-  // Prefer the live Helm Engine (ws://127.0.0.1:8081 — OpenCPN's real Routeman driven headless);
-  // fall back to the in-browser sim (nav-source.js) when the engine isn't running. Both emit the
-  // SAME state shape, so the cockpit code below is identical for real and simulated nav.
+  // Prefer the live Helm Engine over the resolved boat-server origin (server-endpoint.js → the
+  // engine's WS /nav — OpenCPN's real Routeman driven headless); fall back to the in-browser sim
+  // (nav-source.js) only when no engine was ever reached. Both emit the SAME state shape, so the
+  // cockpit code below is identical for real, simulated, local, and remote nav.
   (function () {
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
-    let boat = null;
     function applyNav(s) {
       set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
       set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
@@ -521,53 +575,37 @@
       mark('nv-depth', 'depth'); mark('nv-wind', 'wind'); mark('nv-winddir', 'wind');
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
-      try {
-        if (!boat) {
-          const el = document.createElement('div');
-          el.style.cssText = 'width:0;height:0;border-left:8px solid transparent;border-right:8px solid transparent;' +
-            'border-bottom:20px solid var(--accent);filter:drop-shadow(0 0 5px rgba(91,192,255,.9));';
-          boat = new maplibregl.Marker({ element: el });
-          boat.setLngLat([s.pos.lon, s.pos.lat]).addTo(map);
-        }
-        boat.setLngLat([s.pos.lon, s.pos.lat]).setRotation(s.cog);
-      } catch (e) { /* map not ready this tick */ }
+      ownship.update(s);   // smooth glide + follow / course-up (ownship.js)
     }
     // Always show the truth about where nav data comes from. Critically: if the
     // live engine DROPS, do NOT silently fall back to the simulator presenting a
     // plausible fake position — that masks a lost real feed. Surface it as an
     // alarm and mark the readings stale. The sim is only ever used when no engine
     // was present to begin with (honest prototype mode).
-    function setSource(state) {
+    function setSource(state, info) {
       window.__navSource = state;
       const b = document.getElementById('data-src'), t = document.getElementById('data-src-txt');
       if (!b) return;
+      const age = info && info.age != null ? Math.round(info.age / 1000) : null;
+      const where = info && info.endpoint ? ' · ' + info.endpoint : '';
       b.classList.remove('live', 'sim', 'lost', 'simpos');
-      if (state === 'live') { b.classList.add('live'); t.textContent = 'LIVE'; b.title = 'Live navigation from the Helm Engine (real position)'; }
-      else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, but position is simulated (no GPS/NMEA feed wired)'; }
-      else if (state === 'lost') { b.classList.add('lost'); t.textContent = 'ENGINE LOST'; b.title = 'The live engine disconnected — readings are NOT current'; }
+      if (state === 'live') { b.classList.add('live'); t.textContent = 'LIVE'; b.title = 'Live navigation from the Helm Engine' + where; }
+      else if (state === 'simpos') { b.classList.add('simpos'); t.textContent = 'ENGINE · SIM POS'; b.title = 'Engine connected, position simulated (no GPS/NMEA feed wired)' + where; }
+      else if (state === 'lagging') { b.classList.add('live'); t.textContent = 'LIVE · ' + age + 's'; b.title = 'Update delayed ' + age + 's — link is lagging' + where; }
+      else if (state === 'stale' || state === 'lost') { b.classList.add('lost'); t.textContent = 'STALE' + (age != null ? ' · ' + age + 's' : ''); b.title = 'No fresh fix for ' + (age != null ? age + 's' : 'a while') + ' — readings are NOT current' + where; }
+      else if (state === 'offline') { b.classList.add('lost'); t.textContent = 'OFFLINE'; b.title = 'Disconnected from the engine — reconnecting…' + where; }
       else { b.classList.add('sim'); t.textContent = 'SIM'; b.title = 'Simulated navigation (no engine running)'; }
-      document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', state === 'lost'));  // route box stays solid
+      // grey the instruments when the feed is not current — NEVER show stale data as live
+      const bad = (state === 'stale' || state === 'lost' || state === 'offline');
+      document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', bad));  // route box stays solid
+      if (window.__ownship) __ownship.setActive(!bad);   // freeze the boat when the feed isn't current
     }
-    // engine declares its position source; a simulated position is never badged as LIVE truth
-    const realPos = s => { const p = (s && s.sources && s.sources.pos) || (s && s.posSource); return !!p && p !== 'simulated' && p !== 'sim'; };
-    let sim = null, everEngine = false;
-    const startSim = () => { if (window.HelmNav && !sim) sim = HelmNav(applyNav); };
-    const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
-    try {
-      const ws = new WebSocket('ws://127.0.0.1:8081');
-      ws.onmessage = e => {
-        everEngine = true; stopSim();
-        let s; try { s = JSON.parse(e.data); } catch (x) { return; }
-        setSource(realPos(s) ? 'live' : 'simpos');
-        applyNav(s);
-      };
-      ws.onerror = () => { if (!everEngine) { startSim(); setSource('sim'); } };
-      ws.onclose = () => {
-        if (everEngine) { setSource('lost'); }          // real feed dropped -> alarm, do NOT fake it
-        else { startSim(); setSource('sim'); }           // never had an engine -> honest prototype sim
-      };
-      setTimeout(() => { if (!everEngine) { startSim(); setSource('sim'); } }, 1500);
-    } catch (e) { startSim(); setSource('sim'); }
+    // The robust client (nav-client.js) resolves the boat-server address (server-endpoint.js),
+    // merges snapshot/delta frames, runs the age watchdog (LIVE/LAGGING/STALE), reconnects over
+    // flaky WiFi, and falls back to the honest in-browser sim ONLY if no engine was ever reached.
+    // The address is whatever you loaded the page from — localhost here, helm.local / a LAN IP on
+    // the boat — so this single line behaves identically local or remote.
+    window.__navClient = HelmNavClient(applyNav, st => setSource(st.phase, st), { sim: window.HelmNav });
   })();
 </script>
 </body>
