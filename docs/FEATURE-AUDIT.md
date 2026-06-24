@@ -58,9 +58,11 @@ over a mostly-real *engine*, with key connecting wires unrun.
    cursor, cumulative total in the HUD, ⌫ undo, double-click/Esc to finish. Toggled from the
    left rail; great-circle math agrees with the engine's BRG/DTW.
 
-3. **🟠 The route line on the chart is static.** The magenta route is read from
-   `data/route.geojson`; the engine's loaded GPX drives the *inspector* legs but not the
-   *drawn line*. Load a different route and the chart disagrees with the instruments.
+3. **✅ Live route line — WIRED (2026-06-24).** *Was: the magenta route read from a static
+   `data/route.geojson`, so a different loaded GPX left the chart disagreeing with the
+   instruments.* The engine now streams the model route's geometry (`route` in the nav frame:
+   coords + `activeLeg`); the UI draws the line from it and highlights the active leg. Sim
+   mode keeps the static file. See `helm_engine.cpp` + `updateRouteFromEngine` in `web/index.html`.
 
 4. **◐ Alarms — CPA collision alarm now wired (2026-06-24); others still pending.** The AIS
    **CPA/TCPA collision alarm** is built (`web/collision.js`): it flags the most threatening
@@ -107,14 +109,14 @@ discover a hole at sea.
 | What the engine produces | Where | What the UI does with it |
 |---|---|---|
 | `ais[]` with range/brg/**CPA/TCPA**/hdg/class/mmsi/name | `helm_engine.cpp:513-537` | ✅ **wired** — drives the `ais` source + rich tap popup (`web/index.html`) |
-| Loaded GPX route geometry | `helm_engine.cpp` (Routeman) | **Nothing** — route line from static `route.geojson` |
+| Loaded GPX route geometry | `helm_engine.cpp` (Routeman) | ✅ **wired** — `route`{coords,activeLeg} drives the line + active-leg highlight |
 | Dangerous-target CPA flag (`g_CPAWarn_NM=2.0`) | engine AIS state | ✅ **wired** — CPA alarm + COLREGs guidance (`web/collision.js`) |
 | Per-field `sources` (nmea/signalk/sim) | nav frame | ✅ shown as tooltip + badge (good) |
 | Active waypoint name/brg, DTW, nextWp | nav frame | ✅ inspector + instrument bar (good) |
 
-**Two of those three wires are now closed** (AIS + CPA alarm, 2026-06-24). The remaining one
-— **live route geometry** — is the next step, and it's the only one that needs a few lines of
-engine JSON in addition to UI work.
+**All three wires are now closed** (AIS, CPA alarm, and live route geometry — 2026-06-24).
+The route line required a few lines of engine JSON (the model route's coords + active leg) in
+addition to the UI work.
 
 ---
 
@@ -152,7 +154,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Active route nav + auto-advance | TS | ✅ | real Routeman |
 | XTE / BRG / DTW / DTG / ETA / TTG / VMG | TS | ✅ | engine-computed, shown |
 | Great-circle vs rhumb | TS | ◐ | GC used; no toggle |
-| Route line drawn on chart | TS | ⚠ | **static geojson, not the loaded route** |
+| Route line drawn on chart | TS | ✅ | engine streams route coords + active leg; UI draws + highlights |
 | Create / edit / delete routes & marks in UI | TS | ⬜ | read-only today; Phase 2 (editing) |
 | Waypoint properties (arrival radius, icon, notes) | TS | ✖ | not in UI |
 | GPX import/export (UI) | TS | ◐ | engine loads GPX; **no UI import/export** |
@@ -326,8 +328,9 @@ Grouped by "did we forget this?" — the answer for each should be *build*, *def
    flags the worst target, chart intercept-line + pulsing ring, COLREGs give-way/stand-on +
    maneuver, one-shot audible alert, mute/ack. The banner/audio channel is reusable for
    anchor/arrival/depth alarms.
-4. **Live route line** — push route geometry in the nav frame; UI renders from the feed so
-   chart and inspector agree.
+4. ~~**Live route line**~~ — ✅ **DONE (2026-06-24).** Engine emits the model route's coords +
+   active leg in the nav frame; UI draws from it and highlights the active leg, so chart and
+   inspector agree.
 5. **Anchor watch** — set point + radius, drag alarm; the most-used safety feature in the
    whole category (it's Aqua Map's flagship).
 6. **Follow-mode + course-up**, **cursor readout + range rings**, **true-wind**, **UI GPX
