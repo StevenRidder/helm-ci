@@ -1,0 +1,184 @@
+"""
+Helm backend — ReAct research agents.
+
+The research engine behind the cards. A ReAct-style (reason → act → observe) tool-using agent
+fills the destination dossier and enriches "where to go" by actually researching — searching,
+fetching, extracting, and synthesizing WITH CITATIONS — rather than hallucinating.
+
+Honesty spine (docs/BRIEFINGS.md §6, WEATHER-ROUTING.md §7):
+- Tools return real data (weather from Open-Meteo; fetched page text; the place store). The
+  agent may only summarize what tools returned — never invent a fee, depth, holding, or
+  forecast. Unknowns are "verify locally". Every claim carries a source + fetch date.
+- Provider-pluggable via LLMClient. With an OpenAI key the agent runs a real tool-calling
+  loop; with no key it runs a DETERMINISTIC stub that still assembles an honest dossier from
+  the real weather tool + seed/cited sources — so the loop works now and reads better later.
+- search_web is the one tool that needs a provider (Tavily/Bing/SerpAPI) to be fully live;
+  until configured it returns curated cruiser sources (Noonsite/blogs) so citations are real
+  links a human can open. Marked clearly so it's never mistaken for an exhaustive search.
+"""
+import os
+import json
+import re
+import time
+
+import httpx
+
+UA = {"User-Agent": "Helm/0.1 (marine nav prototype; contact: steve@taikunai.com)"}
+
+
+# ----------------------------- TOOLS (real data) -----------------------------
+def get_weather(lat: float, lon: float):
+    """Real forecast at a point via Open-Meteo (free, no key). Wind + gust + wave."""
+    out = {"source": "Open-Meteo", "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ"),
+           "lat": lat, "lon": lon}
+    try:
+        w = httpx.get("https://api.open-meteo.com/v1/forecast", params={
+            "latitude": lat, "longitude": lon, "wind_speed_unit": "kn", "forecast_days": 2,
+            "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+            "current": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+        }, headers=UA, timeout=8).json()
+        cur = w.get("current", {})
+        out["now"] = {"windKt": cur.get("wind_speed_10m"), "windFromDeg": cur.get("wind_direction_10m"),
+                      "gustKt": cur.get("wind_gusts_10m")}
+        h = w.get("hourly", {})
+        out["next"] = [{"t": h["time"][i], "windKt": h["wind_speed_10m"][i],
+                        "windFromDeg": h["wind_direction_10m"][i], "gustKt": h["wind_gusts_10m"][i]}
+                       for i in range(0, min(len(h.get("time", [])), 24), 6)]
+    except Exception as e:
+        out["windError"] = str(e)
+    try:
+        m = httpx.get("https://marine-api.open-meteo.com/v1/marine", params={
+            "latitude": lat, "longitude": lon, "current": "wave_height,swell_wave_height,wave_period",
+        }, headers=UA, timeout=8).json()
+        c = m.get("current", {})
+        out["sea"] = {"waveM": c.get("wave_height"), "swellM": c.get("swell_wave_height"),
+                      "periodS": c.get("wave_period")}
+    except Exception as e:
+        out["seaError"] = str(e)
+    return out
+
+
+def fetch_page(url: str, max_chars: int = 3500):
+    """Fetch a public page and crudely extract text, for cited summarization."""
+    try:
+        r = httpx.get(url, headers=UA, timeout=10, follow_redirects=True)
+        text = re.sub(r"(?is)<(script|style).*?>.*?</\1>", " ", r.text)
+        text = re.sub(r"(?s)<[^>]+>", " ", text)
+        text = re.sub(r"\s+", " ", text).strip()
+        return {"url": url, "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ"), "text": text[:max_chars]}
+    except Exception as e:
+        return {"url": url, "error": str(e)}
+
+
+# curated, real cruiser sources so citations are openable even before a search provider is set
+SEED_SOURCES = {
+    "formalities": [{"title": "Noonsite — formalities", "url": "https://www.noonsite.com", "kind": "rag"}],
+    "anchorage": [{"title": "OpenSeaMap", "url": "https://www.openseamap.org", "kind": "open"}],
+    "services": [{"title": "OpenStreetMap", "url": "https://www.openstreetmap.org", "kind": "open"}],
+    "community": [{"title": "s/v Totem (blog)", "url": "https://www.sailingtotem.com", "kind": "rag"}],
+    "climate": [{"title": "NOAA climatology", "url": "https://www.noaa.gov", "kind": "open"}],
+}
+
+
+def search_web(query: str, section: str = "formalities"):
+    """Pluggable web search. TODO: wire Tavily/Bing/SerpAPI via env for full live search.
+    Until then, return curated real sources so the agent cites openable links."""
+    provider = os.environ.get("SEARCH_PROVIDER")
+    if provider:
+        pass  # implement real provider call here on go-live
+    return {"provider": provider or "seed", "results": SEED_SOURCES.get(section, [])}
+
+
+# --------------------------- THE ReAct AGENT ---------------------------
+TOOL_SCHEMAS = [
+    {"type": "function", "function": {"name": "get_weather", "description": "Real forecast (wind/gust/wave) at a lat/lon via Open-Meteo.",
+     "parameters": {"type": "object", "properties": {"lat": {"type": "number"}, "lon": {"type": "number"}}, "required": ["lat", "lon"]}}},
+    {"type": "function", "function": {"name": "search_web", "description": "Find sources about a topic (formalities/anchorage/services/community/climate).",
+     "parameters": {"type": "object", "properties": {"query": {"type": "string"}, "section": {"type": "string"}}, "required": ["query"]}}},
+    {"type": "function", "function": {"name": "fetch_page", "description": "Fetch a public web page and return its text for cited summarization.",
+     "parameters": {"type": "object", "properties": {"url": {"type": "string"}}, "required": ["url"]}}},
+]
+TOOLS = {"get_weather": get_weather, "search_web": search_web, "fetch_page": fetch_page}
+
+
+class ResearchAgent:
+    """ReAct tool-calling loop (OpenAI) with a deterministic stub fallback."""
+
+    def __init__(self, llm):
+        self.llm = llm
+
+    def build_dossier(self, place):
+        lat, lon, name = place["lat"], place["lon"], place["name"]
+        weather = get_weather(lat, lon)  # always real, no key needed
+        if self.llm.provider == "stub":
+            return self._stub_dossier(place, weather)
+        try:
+            return self._agent_dossier(place, weather)
+        except Exception as e:
+            d = self._stub_dossier(place, weather)
+            d["note"] = f"(agent unavailable, stub used: {e})"
+            return d
+
+    def _section(self, key, summary, sources, facts=None):
+        return {"summary": summary, "facts": facts or {}, "sources": sources,
+                "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ")}
+
+    def _stub_dossier(self, place, weather):
+        wx = weather.get("now") or {}
+        arr = "Forecast unavailable." if "windError" in weather else \
+            f"Arrival wind ~{wx.get('windKt','?')} kt from {wx.get('windFromDeg','?')}°," \
+            f" gusts {wx.get('gustKt','?')} kt; sea {((weather.get('sea') or {}).get('waveM','?'))} m."
+        return {
+            "place": {k: place[k] for k in ("id", "name", "lat", "lon", "source")},
+            "provider": "stub",
+            "arrivalWeather": self._section("weather", arr, [{"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"}], wx),
+            "sections": {
+                "formalities": self._section("formalities", "Check local port-of-entry procedure, hours and fees before arrival.", SEED_SOURCES["formalities"]),
+                "anchorage": self._section("anchorage", "See holding/shelter from open data and reviews; verify on the chart.", SEED_SOURCES["anchorage"]),
+                "services": self._section("services", "Fuel/water/provisioning/repairs from OSM nearby.", SEED_SOURCES["services"]),
+                "community": self._section("community", "Recent cruiser reports — verify currency.", SEED_SOURCES["community"]),
+                "climate": self._section("climate", "Seasonal/cyclone context from climatology.", SEED_SOURCES["climate"]),
+            },
+            "disclaimer": "Synthesized from real weather + cited public sources. Not an official clearance — verify locally.",
+        }
+
+    def _agent_dossier(self, place, weather):
+        from openai import OpenAI
+        client = OpenAI(api_key=self.llm.key)
+        sys = (
+            "You are Helm's cruising research agent. Build a destination dossier for the place. "
+            "Use the tools to gather REAL data; summarize ONLY what tools return; never invent "
+            "fees, depths, holding, or weather; cite every claim with the source url; mark gaps "
+            "'verify locally'. Sections: formalities, anchorage, services, community, climate. "
+            "When done, return STRICT JSON matching the schema the user gives."
+        )
+        schema_hint = {
+            "sections": {k: {"summary": "str", "facts": {}, "sources": [{"title": "str", "url": "str"}]}
+                         for k in ["formalities", "anchorage", "services", "community", "climate"]}
+        }
+        messages = [
+            {"role": "system", "content": sys},
+            {"role": "user", "content": json.dumps({
+                "place": place, "preloadedWeather": weather, "returnSchema": schema_hint})},
+        ]
+        for _ in range(6):  # bounded ReAct loop
+            resp = client.chat.completions.create(model=self.llm.model, temperature=0.2,
+                                                  tools=TOOL_SCHEMAS, messages=messages)
+            msg = resp.choices[0].message
+            if not msg.tool_calls:
+                content = msg.content or "{}"
+                try:
+                    parsed = json.loads(re.search(r"\{.*\}", content, re.S).group(0))
+                except Exception:
+                    parsed = {"sections": {}}
+                return {"place": {k: place[k] for k in ("id", "name", "lat", "lon", "source")},
+                        "provider": "openai", "arrivalWeather": self._section("weather", "", [], weather.get("now") or {}),
+                        "sections": parsed.get("sections", {}),
+                        "disclaimer": "Researched from real weather + cited sources. Verify locally."}
+            messages.append(msg)
+            for tc in msg.tool_calls:
+                args = json.loads(tc.function.arguments or "{}")
+                result = TOOLS.get(tc.function.name, lambda **k: {"error": "unknown tool"})(**args)
+                messages.append({"role": "tool", "tool_call_id": tc.id,
+                                 "content": json.dumps(result)[:6000]})
+        return self._stub_dossier(place, weather)

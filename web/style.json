@@ -57,6 +57,15 @@
     "ais": {
       "type": "geojson",
       "data": "data/ais-sample.geojson"
+    },
+    "saved": {
+      "type": "geojson",
+      "data": "data/saved-sample.geojson",
+      "attribution": "Helm community (owned)"
+    },
+    "whereto": {
+      "type": "geojson",
+      "data": "data/whereto-empty.geojson"
     }
   },
   "layers": [
@@ -216,6 +225,38 @@
           "#dd3b3b"
         ],
         "text-opacity": 0.9
+      }
+    },
+    {
+      "id": "whereto-ring",
+      "type": "circle",
+      "source": "whereto",
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "circle-radius": 22,
+        "circle-color": "rgba(245,196,81,0.10)",
+        "circle-stroke-width": 2,
+        "circle-stroke-color": "#f5c451",
+        "circle-stroke-opacity": 0.9,
+        "circle-pitch-alignment": "map"
+      }
+    },
+    {
+      "id": "whereto-rank",
+      "type": "symbol",
+      "source": "whereto",
+      "layout": {
+        "visibility": "visible",
+        "text-field": ["concat", "#", ["to-string", ["get", "rank"]]],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 11,
+        "text-offset": [0, -2.0],
+        "text-allow-overlap": true
+      },
+      "paint": {
+        "text-color": "#f5c451",
+        "text-halo-color": "rgba(13,19,27,0.92)",
+        "text-halo-width": 1.2
       }
     },
     {
@@ -462,6 +503,67 @@
         "text-color": "#cdd6e0",
         "text-halo-color": "rgba(13,19,27,0.92)",
         "text-halo-width": 1.3
+      }
+    },
+    {
+      "id": "saved-halo",
+      "type": "circle",
+      "source": "saved",
+      "layout": { "visibility": "visible" },
+      "paint": {
+        "circle-radius": 10,
+        "circle-color": "rgba(13,19,27,0.74)",
+        "circle-stroke-width": 1.4,
+        "circle-stroke-color": "#f5c451",
+        "circle-pitch-alignment": "map"
+      }
+    },
+    {
+      "id": "saved-icon",
+      "type": "symbol",
+      "source": "saved",
+      "layout": {
+        "visibility": "visible",
+        "text-field": [
+          "match", ["get", "kind"],
+          "anchorage", "⚓",
+          "snorkel", "S",
+          "fuel", "F",
+          "provisioning", "P",
+          "hazard", "!",
+          "must-see", "★",
+          "•"
+        ],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 12,
+        "text-allow-overlap": true,
+        "text-ignore-placement": true
+      },
+      "paint": {
+        "text-color": "#f5c451",
+        "text-halo-color": "rgba(13,19,27,0.9)",
+        "text-halo-width": 1.0
+      }
+    },
+    {
+      "id": "saved-label",
+      "type": "symbol",
+      "source": "saved",
+      "minzoom": 11,
+      "layout": {
+        "visibility": "visible",
+        "text-field": ["get", "name"],
+        "text-font": ["Noto Sans Regular"],
+        "text-size": 11,
+        "text-anchor": "top",
+        "text-offset": [0, 1.0],
+        "text-optional": true,
+        "text-max-width": 9
+      },
+      "paint": {
+        "text-color": "#f3dca0",
+        "text-halo-color": "rgba(13,19,27,0.92)",
+        "text-halo-width": 1.4
       }
     }
   ],

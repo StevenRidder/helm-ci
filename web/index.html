@@ -181,6 +181,9 @@
   <div class="ri" data-rail="places" title="Places">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
   </div>
+  <div class="ri" data-rail="community" title="Community &amp; where to go">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.7-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M18.5 20c0-2-.9-3.6-2.3-4.5"/></svg>
+  </div>
   <div class="sep"></div>
   <div class="ri" data-rail="download" title="Download charts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
@@ -201,6 +204,8 @@
   <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
+  <label class="row"><input type="checkbox" data-layer="saved" checked> Saved places<span style="margin-left:auto;font-size:9.5px;color:#f5c451">owned</span></label>
+  <label class="row"><input type="checkbox" data-layer="whereto" checked> Where to go<span style="margin-left:auto;font-size:9.5px;color:#f5c451">AI</span></label>
   <label class="row"><input type="checkbox" data-layer="ais" checked> AIS</label>
 </div>
 
@@ -265,6 +270,24 @@
   <div class="hint">Prototype. Real settings (NMEA sources, boat polars, alarms) arrive with the native app.</div>
 </div>
 
+<!-- ========================= COMMUNITY DRAWER (where-to-go + give-back, a selectable layer set) ========================= -->
+<div class="drawer glass" id="drawer-community" hidden>
+  <h2>Community</h2>
+  <p class="sub" id="comm-status">Connecting to Helm backend…</p>
+
+  <div class="lbl">Where to go</div>
+  <div class="wx"><button id="wt-go" data-wx="go">Suggest for tonight</button><button id="wt-clear" data-wx="clear">Clear</button></div>
+  <div id="wt-results" style="margin-top:9px;font-size:11.5px"></div>
+
+  <div class="lbl">Give back</div>
+  <label class="row"><input type="checkbox" id="gb-nfl"> Share my track → NoForeignLand<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">push</span></label>
+  <label class="row"><input type="checkbox" id="gb-osm"> Contribute to OpenSeaMap / OSM<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">notes</span></label>
+  <div id="gb-status" style="font-size:10.5px;color:var(--cdim);margin-top:7px;min-height:14px"></div>
+
+  <div class="hint">Runs on open + owned + RAG. NoForeignLand <i>read</i> is an experimental enrichment (off);
+    give-back (track→NFL, contribute→OSM) is sanctioned. See docs/BUILD-PLAN-COMMUNITY-LLM.md.</div>
+</div>
+
 <!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
 <div class="insp glass">
   <div class="ttl" id="insp-handle">
@@ -302,6 +325,7 @@
 <script src="radar.js"></script>
 <script src="isolines.js"></script>
 <script src="nav-source.js"></script>
+<script src="community.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
@@ -439,7 +463,7 @@
 
   // ================= CHROME UI wiring =================
   (function () {
-    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings' };
+    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', community: 'drawer-community' };
     const rail = document.querySelectorAll('.ri[data-rail]');
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }
@@ -508,6 +532,7 @@
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
     let boat = null;
     function applyNav(s) {
+      if (s.pos) window.__helmPos = { lat: s.pos.lat, lon: s.pos.lon };   // shared with community.js
       set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
       set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
       set('nv-winddir', Math.round(s.wind.dir));
@@ -568,6 +593,77 @@
       };
       setTimeout(() => { if (!everEngine) { startSim(); setSource('sim'); } }, 1500);
     } catch (e) { startSim(); setSource('sim'); }
+  })();
+
+  // ============ COMMUNITY: where-to-go + give-back (selectable layers) ============
+  (function () {
+    if (!window.HelmCommunity) return;
+    const comm = HelmCommunity(map);
+    window.__helmCommunity = comm;
+    const statusEl = document.getElementById('comm-status');
+    function setStatus(online) {
+      if (!statusEl) return;
+      statusEl.textContent = online ? 'Helm backend connected · open + owned + RAG'
+        : 'Backend offline — local sample (run backend/: uvicorn main:app --port 8090)';
+      statusEl.style.color = online ? 'var(--ok)' : 'var(--warn)';
+    }
+    comm.onStatus(setStatus);
+    comm.health().then(h => { if (h && h.ok) { comm.loadPlaces(); comm.loadSaved(); } });
+
+    const resultsEl = document.getElementById('wt-results');
+    function renderResults(j) {
+      if (!resultsEl) return;
+      if (j.offline) { resultsEl.innerHTML = '<div style="color:var(--warn)">Start the backend for live suggestions.</div>'; return; }
+      const recs = j.recommendations || [];
+      if (!recs.length) { resultsEl.innerHTML = '<div style="color:var(--cdim)">No suggestions.</div>'; return; }
+      resultsEl.innerHTML = recs.map((r, i) => {
+        const c = r.confidence, col = c === 'good' ? 'var(--ok)' : c === 'fair' ? 'var(--warn)' : 'var(--cdim)';
+        const srcs = (r.sources || []).map(s => s.label).join(' · ');
+        return '<div class="wt-card" data-lat="' + r.place.lat + '" data-lon="' + r.place.lon + '" ' +
+          'style="border:.5px solid var(--line);border-radius:9px;padding:8px 9px;margin-bottom:7px;cursor:pointer">' +
+          '<div style="display:flex;align-items:center;gap:6px"><b style="color:#f5c451">#' + (i + 1) + '</b>' +
+          '<span style="font-weight:600;color:var(--ctext);flex:1">' + r.place.name + '</span>' +
+          '<span style="font-size:9px;color:' + col + ';border:.5px solid ' + col + ';border-radius:4px;padding:0 4px">' + c + '</span></div>' +
+          '<div style="color:#cdd9e3;margin-top:3px;line-height:1.4">' + ((r.reasons || [])[0] || '') + '</div>' +
+          '<div style="color:var(--cdim2);font-size:9.5px;margin-top:4px">' + srcs + (r.nfl ? ' · NFL' : '') + ' · ' + r.llm + '</div></div>';
+      }).join('');
+      resultsEl.querySelectorAll('.wt-card').forEach(el => el.addEventListener('click', () =>
+        map.flyTo({ center: [+el.dataset.lon, +el.dataset.lat], zoom: 13 })));
+    }
+    document.getElementById('wt-go').addEventListener('click', async () => {
+      const c = map.getCenter();
+      const wd = parseFloat((document.getElementById('nv-winddir') || {}).textContent) || 45;
+      const ws = parseFloat((document.getElementById('nv-wind') || {}).textContent) || 15;
+      resultsEl.innerHTML = '<div style="color:var(--cdim)">Researching…</div>';
+      renderResults(await comm.whereTo({ query: 'Safe spot for tonight near here',
+        position: { lat: c.lat, lon: c.lng }, boat: { draft: 1.8 },
+        forecast: { windFromDeg: wd, windKt: ws }, top: 3 }));
+    });
+    document.getElementById('wt-clear').addEventListener('click', () => { comm.clearWhereTo(); resultsEl.innerHTML = ''; });
+
+    const gbStatus = document.getElementById('gb-status'), say = t => { if (gbStatus) gbStatus.textContent = t; };
+    document.getElementById('gb-nfl').addEventListener('change', async e => {
+      if (!e.target.checked) return say('Track sharing off.');
+      const p = window.__helmPos || { lat: map.getCenter().lat, lon: map.getCenter().lng };
+      const r = await comm.nflPush({ lat: p.lat, lon: p.lon });
+      say(r.offline ? 'Backend offline — would push when connected.' : 'NFL push: ' + r.status + ' (' + r.mode + ').');
+    });
+    document.getElementById('gb-osm').addEventListener('change', async e => {
+      if (!e.target.checked) return say('OSM contribution off.');
+      const c = map.getCenter();
+      const r = await comm.osmNote({ lat: c.lat, lon: c.lng, text: 'Helm: anchorage/POI note (review).' });
+      say(r.offline ? 'Backend offline.' : 'OSM note: ' + r.status + ' (' + r.mode + ').');
+    });
+
+    map.on('click', 'saved-icon', e => { const p = e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>★ ' + (p.name || 'Saved') + '</b><br>' + (p.note || p.kind) +
+        (p.sourceUrl ? '<br><a href="' + p.sourceUrl + '" target="_blank" style="color:#5bc0ff">source ↗</a>' : '')).addTo(map); });
+    map.on('click', 'whereto-rank', e => { const p = e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>#' + p.rank + ' ' + (p.name || '') + '</b><br>confidence: ' + p.confidence).addTo(map); });
+    ['saved-icon', 'whereto-rank'].forEach(l => {
+      map.on('mouseenter', l, () => map.getCanvas().style.cursor = 'pointer');
+      map.on('mouseleave', l, () => map.getCanvas().style.cursor = '');
+    });
   })();
 </script>
 </body>

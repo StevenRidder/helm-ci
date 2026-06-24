@@ -1,0 +1,170 @@
+"""
+Helm backend — FastAPI app (prototype).
+
+The small service the static web app + C++ engine don't provide: the place store, owned
+pins/reviews, the "where to go" recommender, and the give-back publishers. Source-agnostic,
+offline-first, NFL-slot-open. Run:
+
+    cd backend && pip install -r requirements.txt && cp .env.example .env
+    uvicorn main:app --reload --port 8090
+
+The web prototype (web/community.js) auto-detects this at http://127.0.0.1:8090 and falls
+back to local sample data when it's not running — so the chart never breaks.
+"""
+import os
+
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+
+try:
+    from dotenv import load_dotenv
+    load_dotenv(os.path.join(os.path.dirname(__file__), ".env"))
+except Exception:
+    pass
+
+import store
+from llm import LLMClient, prefilter
+from publisher import NFLPublisher, OSMNotes
+from agents import ResearchAgent, get_weather
+
+app = FastAPI(title="Helm backend", version="0.1")
+app.add_middleware(
+    CORSMiddleware, allow_origins=["*"], allow_methods=["*"], allow_headers=["*"],
+)
+
+llm = LLMClient()
+agent = ResearchAgent(llm)
+nfl = NFLPublisher()
+osm = OSMNotes()
+
+
+# ---- models ----
+class SavedPin(BaseModel):
+    title: str
+    category: str = "pin"
+    lat: float
+    lon: float
+    note: str | None = None
+    sourceUrl: str | None = None
+    collectionId: str | None = None
+
+
+class Review(BaseModel):
+    placeId: str
+    author: str
+    text: str
+    boat: str | None = None
+    ratings: dict = {}
+    url: str | None = None
+
+
+class WhereTo(BaseModel):
+    query: str = "Where should I go?"
+    position: dict | None = None           # {lat, lon}
+    boat: dict | None = None               # {draft, airDraft}
+    forecast: dict | None = None           # {windFromDeg, windKt}
+    sources: list[str] | None = None       # restrict candidate sources
+    top: int = 3
+
+
+class PushPos(BaseModel):
+    lat: float
+    lon: float
+    sog: float | None = None
+    cog: float | None = None
+
+
+class NoteReq(BaseModel):
+    lat: float
+    lon: float
+    text: str
+
+
+# ---- endpoints ----
+@app.get("/health")
+def health():
+    return {"ok": True, "llm": llm.provider, "model": llm.model if llm.provider == "openai" else None,
+            "nfl": nfl.status(), "osm": osm.status()}
+
+
+@app.get("/places")
+def places(sources: str | None = None):
+    src = sources.split(",") if sources else None
+    return store.to_feature_collection(store.all_places(src))
+
+
+@app.get("/saved")
+def saved():
+    pins = store.list_saved()
+    return store.to_feature_collection([
+        {"id": p["id"], "source": "owned", "kind": p.get("category", "pin"),
+         "name": p["title"], "lat": p["lat"], "lon": p["lon"],
+         "attrs": {"note": p.get("note"), "sourceUrl": p.get("sourceUrl")}}
+        for p in pins
+    ])
+
+
+@app.post("/saved")
+def add_saved(pin: SavedPin):
+    return store.add_saved(pin.model_dump())
+
+
+@app.post("/reviews")
+def add_review(r: Review):
+    return store.add_review(r.model_dump())
+
+
+@app.post("/whereto")
+def whereto(req: WhereTo):
+    cands = prefilter(store.all_places(req.sources), req.position, req.boat, req.forecast)
+    recs = llm.rank(req.query, cands, req.position, req.boat, req.forecast, top=req.top)
+    # GeoJSON of the recommended places, for the map highlight layer
+    fc = {"type": "FeatureCollection", "features": [
+        {"type": "Feature", "geometry": {"type": "Point", "coordinates": [r["place"]["lon"], r["place"]["lat"]]},
+         "properties": {"id": r["place"]["id"], "name": r["place"]["name"], "rank": i + 1,
+                        "confidence": r["confidence"]}}
+        for i, r in enumerate(recs)]}
+    return {"query": req.query, "provider": llm.provider, "recommendations": recs, "geojson": fc}
+
+
+@app.post("/giveback/nfl/push")
+def nfl_push(pos: PushPos):
+    return nfl.push(pos.lat, pos.lon, pos.sog, pos.cog)
+
+
+@app.post("/giveback/osm-note")
+def osm_note(req: NoteReq):
+    return osm.create_note(req.lat, req.lon, req.text)
+
+
+@app.get("/giveback/status")
+def giveback_status():
+    return {"nfl": nfl.status(), "osm": osm.status()}
+
+
+@app.get("/weather")
+def weather(lat: float, lon: float):
+    """Real forecast at a point (Open-Meteo) — the agent's weather tool, exposed directly."""
+    return get_weather(lat, lon)
+
+
+class DossierReq(BaseModel):
+    placeId: str | None = None
+    name: str | None = None
+    lat: float | None = None
+    lon: float | None = None
+
+
+@app.post("/dossier")
+def dossier(req: DossierReq):
+    """ReAct research agent fills the destination dossier (cited)."""
+    place = None
+    if req.placeId:
+        place = next((p for p in store.all_places() if p["id"] == req.placeId), None)
+    if place is None and req.lat is not None and req.lon is not None:
+        place = {"id": req.placeId or "adhoc", "source": "adhoc",
+                 "name": req.name or "Selected point", "lat": req.lat, "lon": req.lon, "attrs": {}}
+    if place is None:
+        return {"error": "provide placeId or lat/lon"}
+    return agent.build_dossier(place)

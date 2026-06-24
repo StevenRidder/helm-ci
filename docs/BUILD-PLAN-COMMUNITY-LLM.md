@@ -139,6 +139,26 @@ strictly Helm → NFL.
 - **Offline / online:** full model + live RAG dockside; **precomputed/cached recommendations
   per region + smaller on-device model offshore**, explicit about which mode and data age.
 
+### ReAct research agents (the research engine behind the cards)
+
+The cards are **filled by tool-using ReAct agents**, not by a single prompt — reason → act →
+observe, so claims are *researched*, not invented. Implemented in
+[../backend/agents.py](../backend/agents.py).
+
+- **Tools (return real data):** `get_weather` (live Open-Meteo wind/gust/wave), `fetch_page`
+  (real fetch + text extract for cited summarization), `search_web` (pluggable — Tavily/Bing/
+  SerpAPI via env; returns curated real cruiser sources until a provider is set).
+- **Loop:** bounded tool-calling (OpenAI function-calling) that gathers data, then emits the
+  **dossier sections** (formalities · anchorage · services · community · climate) + arrival
+  weather — each with `summary`, `facts`, and `sources[]`.
+- **Honesty:** the agent may only summarize what tools returned; **never invents** a fee /
+  depth / holding / forecast; cites every claim with a source + fetch date; gaps → "verify
+  locally". Stub mode (no key) still assembles an honest dossier from the **real weather tool**
+  + cited seed sources, so it works now and reads better once the key is added.
+- **Same agents feed weather + cards:** `get_weather` is exposed directly (`/weather`) and used
+  inside the dossier, so the "fill the weather data" and "fill the cards" needs share one
+  researched, cited pipeline.
+
 ### Prototype scope (first cut)
 
 Open + owned candidates, the deterministic pre-filter, a **shallow RAG** (owned reviews + a
