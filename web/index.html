@@ -4,7 +4,28 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Helm</title>
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="vendor/maplibre-gl/maplibre-gl.css" rel="stylesheet">
+<!-- import map: ESM integration plugins (Lab drawer) resolve bare specifiers to LOCAL vendored
+     bundles (web/vendor/, built with esbuild — offline-first, no CDN at runtime). The shim maps
+     `maplibre-gl` to the page's single MapLibre instance so plugins share it (no second copy,
+     instanceof works). deck.gl's three sub-packages resolve to one bundle (core+luma deduped). -->
+<script type="importmap">
+{
+  "imports": {
+    "maplibre-gl": "./integrations/_maplibre-shim.js",
+    "pmtiles": "./vendor/pmtiles.js",
+    "@geomatico/maplibre-cog-protocol": "./vendor/maplibre-cog-protocol.js",
+    "maplibre-contour": "./vendor/maplibre-contour.js",
+    "terra-draw": "./vendor/terra-draw.js",
+    "terra-draw-maplibre-gl-adapter": "./vendor/terra-draw-maplibre-gl-adapter.js",
+    "maplibre-gl-measures": "./vendor/maplibre-gl-measures.js",
+    "maplibre-gl-temporal-control": "./vendor/maplibre-gl-temporal-control.js",
+    "@deck.gl/mapbox": "./vendor/deck.js",
+    "@deck.gl/layers": "./vendor/deck.js",
+    "@deck.gl/aggregation-layers": "./vendor/deck.js"
+  }
+}
+</script>
 <style>
   :root{
     --glass:rgba(13,19,27,.74);--glass2:rgba(30,41,54,.62);
@@ -227,6 +248,9 @@
   <div class="ri" data-rail="download" title="Download charts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
   </div>
+  <div class="ri" data-rail="lab" title="Lab — awesome-maplibre">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M9 3h6"/><path d="M10 3v6.5L5 18a2 2 0 0 0 1.8 3h10.4A2 2 0 0 0 19 18l-5-8.5V3"/><line x1="8" y1="14" x2="16" y2="14"/></svg>
+  </div>
   <div class="ri" data-rail="settings" title="Settings">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="3"/><path d="M19.4 13a7.6 7.6 0 0 0 0-2l2-1.5-2-3.4-2.4 1a7.6 7.6 0 0 0-1.7-1l-.4-2.6h-3.8l-.4 2.6a7.6 7.6 0 0 0-1.7 1l-2.4-1-2 3.4 2 1.5a7.6 7.6 0 0 0 0 2l-2 1.5 2 3.4 2.4-1a7.6 7.6 0 0 0 1.7 1l.4 2.6h3.8l.4-2.6a7.6 7.6 0 0 0 1.7-1l2.4 1 2-3.4z"/></svg>
   </div>
@@ -307,6 +331,37 @@
   <div class="hint">Prototype. Real settings (NMEA sources, boat polars, alarms) arrive with the native app.</div>
 </div>
 
+<!-- ========================= LAB DRAWER (awesome-maplibre integrations) ========================= -->
+<div class="drawer glass" id="drawer-lab" hidden>
+  <h2>Lab</h2>
+  <p class="sub">awesome-maplibre integrations · live</p>
+
+  <div class="lbl">Projection</div>
+  <label class="row"><input type="checkbox" data-lab="globe"> Globe projection<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">v5</span></label>
+
+  <div class="lbl">Charts &amp; offline</div>
+  <label class="row"><input type="checkbox" data-lab="pmtiles"> PMTiles offline raster</label>
+  <label class="row"><input type="checkbox" data-lab="cog"> COG overlay (cog://)</label>
+
+  <div class="lbl">Weather / terrain</div>
+  <label class="row"><input type="checkbox" data-lab="mercator"> Value-encoded tiles (Mercator)</label>
+  <label class="row"><input type="checkbox" data-lab="contour"> Contours from DEM</label>
+  <label class="row"><input type="checkbox" data-lab="temporal"> Temporal control (radar)</label>
+
+  <div class="lbl">Vessels</div>
+  <label class="row"><input type="checkbox" data-lab="ais"> AIS at scale (deck.gl)</label>
+
+  <div class="lbl">Tools</div>
+  <label class="row"><input type="checkbox" data-lab="measures"> Measure distance/bearing</label>
+  <div class="wx" style="margin-top:6px">
+    <button data-lab-action="draw-route">Draw route</button>
+    <button data-lab-action="draw-lasso">Lasso area</button>
+  </div>
+
+  <div class="hint">Each toggle lazy-loads its library from a CDN the first time. Server-side pieces
+    (Martin tile server, mercator.blue) are documented in docs/decisions/0006 + docs/integrations/awesome-maplibre.md.</div>
+</div>
+
 <!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
 <div class="insp glass">
   <div class="ttl" id="insp-handle">
@@ -338,7 +393,7 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="vendor/maplibre-gl/maplibre-gl.js"></script>
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -500,7 +555,7 @@
 
   // ================= CHROME UI wiring =================
   (function () {
-    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings' };
+    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab' };
     const rail = document.querySelectorAll('.ri[data-rail]');
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }
@@ -639,5 +694,7 @@
       { sim: window.HelmNav });
   })();
 </script>
+<!-- awesome-maplibre integration lab — loads after window.map exists; lazy-imports each library -->
+<script src="integrations/lab.js"></script>
 </body>
 </html>
