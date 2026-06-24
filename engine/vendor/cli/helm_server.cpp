@@ -248,12 +248,12 @@ static bool serve_static(const std::string& uri, std::string& body, std::string&
 // pushes snapshot/delta to the WS clients of the shared ix::HttpServer.
 // ===========================================================================
 struct WP { double lat, lon; const char* name; };
-static std::vector<WP> ROUTE = {
-  { 24.458, -81.808, "WP1 \xC2\xB7 start" },
-  { 24.485, -81.800, "WP2 \xC2\xB7 sea buoy" },
-  { 24.515, -81.793, "WP3 \xC2\xB7 channel" },
-  { 24.540, -81.786, "WP4 \xC2\xB7 pass" },
-  { 24.557, -81.781, "WP5 \xC2\xB7 marina" }
+static std::vector<WP> ROUTE = {            // inside US5FL96M (24.75–24.87N, -81.61 to -81.24W)
+  { 24.770, -81.580, "WP1 \xC2\xB7 start" },
+  { 24.792, -81.515, "WP2 \xC2\xB7 sea buoy" },
+  { 24.812, -81.448, "WP3 \xC2\xB7 channel" },
+  { 24.835, -81.375, "WP4 \xC2\xB7 pass" },
+  { 24.856, -81.302, "WP5 \xC2\xB7 marina" }
 };
 static void bd(double lat1, double lon1, double lat0, double lon0, double* brg, double* nm) {
   DistanceBearingMercator(lat1, lon1, lat0, lon0, brg, nm);

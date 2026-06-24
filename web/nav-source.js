@@ -35,12 +35,12 @@
   // onState: called ~1 Hz with the engine-shaped state object. Returns the interval id.
   window.HelmNav = function (onState, opts) {
     opts = opts || {};
-    const route = opts.route || [                 // the drawn "Key West approach" (web/data/route.geojson)
-      { lat: 24.458, lon: -81.808, name: 'WP1 · start' },
-      { lat: 24.485, lon: -81.800, name: 'WP2 · sea buoy' },
-      { lat: 24.515, lon: -81.793, name: 'WP3 · channel' },
-      { lat: 24.540, lon: -81.786, name: 'WP4 · pass' },
-      { lat: 24.557, lon: -81.781, name: 'WP5 · marina' }
+    const route = opts.route || [                 // the drawn route (web/data/route.geojson) — inside US5FL96M
+      { lat: 24.770, lon: -81.580, name: 'WP1 · start' },
+      { lat: 24.792, lon: -81.515, name: 'WP2 · sea buoy' },
+      { lat: 24.812, lon: -81.448, name: 'WP3 · channel' },
+      { lat: 24.835, lon: -81.375, name: 'WP4 · pass' },
+      { lat: 24.856, lon: -81.302, name: 'WP5 · marina' }
     ];
     const legLen = []; let total = 0;
     for (let i = 0; i < route.length - 1; i++) { const L = dist(route[i], route[i + 1]); legLen.push(L); total += L; }

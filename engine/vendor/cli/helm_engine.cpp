@@ -52,12 +52,12 @@ static long                    g_seq = 0;
 static std::set<ix::WebSocket*> g_seen;
 
 struct WP { double lat, lon; const char* name; };
-static std::vector<WP> ROUTE = {            // web/data/route.geojson — "Key West approach"
-  { 24.458, -81.808, "WP1 \xC2\xB7 start" },
-  { 24.485, -81.800, "WP2 \xC2\xB7 sea buoy" },
-  { 24.515, -81.793, "WP3 \xC2\xB7 channel" },
-  { 24.540, -81.786, "WP4 \xC2\xB7 pass" },
-  { 24.557, -81.781, "WP5 \xC2\xB7 marina" }
+static std::vector<WP> ROUTE = {            // web/data/route.geojson — inside US5FL96M cell
+  { 24.770, -81.580, "WP1 \xC2\xB7 start" },
+  { 24.792, -81.515, "WP2 \xC2\xB7 sea buoy" },
+  { 24.812, -81.448, "WP3 \xC2\xB7 channel" },
+  { 24.835, -81.375, "WP4 \xC2\xB7 pass" },
+  { 24.856, -81.302, "WP5 \xC2\xB7 marina" }
 };
 
 // bearing + great-circle distance (NM) from own-ship (lat0,lon0) to target (lat1,lon1)
