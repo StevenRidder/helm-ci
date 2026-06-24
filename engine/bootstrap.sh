@@ -61,6 +61,24 @@ if patch --version 2>/dev/null | grep -qi 'GNU'; then :; else
   ln -sf "$(command -v gpatch)" "$GNUBIN/patch"   # expose GNU patch as 'patch' for OpenCPN's configure
   export PATH="$GNUBIN:$PATH"
 fi
+# The C/C++ toolchain must actually COMPILE, not just be present. A freshly
+# installed Xcode whose license hasn't been accepted makes every compile (and even
+# /usr/bin/python3) fail with a cryptic "You have not agreed to the Xcode license
+# agreements" error. Detect that, auto-fall-back to the already-licensed Command
+# Line Tools if available, else stop with the exact fix instead of a confusing
+# mid-build failure.
+if ! printf 'int main(void){return 0;}\n' | cc -x c - -o /dev/null 2>/dev/null; then
+  CLT="/Library/Developer/CommandLineTools"
+  if [ -d "$CLT" ] && printf 'int main(void){return 0;}\n' | DEVELOPER_DIR="$CLT" cc -x c - -o /dev/null 2>/dev/null; then
+    export DEVELOPER_DIR="$CLT"
+    echo "  toolchain: active Xcode unusable -> using Command Line Tools ($CLT)"
+  else
+    die "C toolchain cannot compile (the active Xcode license is likely unaccepted).
+  Fix with ONE of:
+    sudo xcodebuild -license accept
+    sudo xcode-select -s /Library/Developer/CommandLineTools"
+  fi
+fi
 echo "  wx-config: $WX_CONFIG ($("$WX_CONFIG" --version))"
 echo "  pinned:    $OPENCPN_REMOTE @ $OPENCPN_SHA"
 

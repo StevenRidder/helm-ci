@@ -126,8 +126,11 @@ placeholders. Audited the tile server + engine + UI for silent masking and fixed
   **safety contour + dangerous soundings** — the exact hazard the native-scale fix above guards against),
   `m_bShowMeta`, `m_chart_zoom_modifier_vector` — all defaulted to OpenCPN factory values (SUPER_SCAMIN
   **off** = the safe choice). Detector + regression guard: a `MallocPreScribble=1` differential (uninit
-  heap → constant fill) over 866 tiles across z9–z16 — any tile whose bytes change vs a normal run is still
-  reading uninitialized memory; now **0/866**, and the renderer is byte-identical across fresh processes.
+  heap → constant fill) — any tile whose bytes change vs a normal run is still reading uninitialized memory.
+  Breadth-validated **0 uninitialized-memory diffs, all cross-process deterministic** over: US5FL96M across
+  all three color schemes (day/dusk/night, ~2.5k tiles) **plus 5 additional cells spanning scale bands 3–5
+  (overview 1:180000 → approach 1:80000 → harbor 1:12000) in FL/GA — ~16k more tiles**. The detector makes
+  each new cell a few seconds of work, so coverage is cheap to extend further.
 - **A dropped live engine silently fell back to the simulator** (a plausible fake position). The UI now
   raises a red **"ENGINE LOST"** alarm and dims the readings stale; the browser sim is used *only* when
   no engine was ever present (honest prototype mode).
