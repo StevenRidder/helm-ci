@@ -342,6 +342,7 @@
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>
 <script src="ownship.js"></script>
+<script src="alarms.js"></script>
 <script>
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
@@ -361,6 +362,7 @@
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
   const ownship = HelmOwnship(map, { follow: !__initialHash });  window.__ownship = ownship;   // follow on unless a view was pinned in the URL
+  const alarms = HelmAlarms(map);  window.__alarms = alarms;   // depth / anchor / MOB safety alarms + banner (alarms.js)
 
   // chart layer toggles (data-layer matches a layer id, or a group prefix like places-/ais-)
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {
@@ -576,6 +578,7 @@
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       ownship.update(s);   // smooth glide + follow / course-up (ownship.js)
+      alarms.onNav(s);     // depth / anchor / MOB safety alarms (alarms.js)
     }
     // Always show the truth about where nav data comes from. Critically: if the
     // live engine DROPS, do NOT silently fall back to the simulator presenting a
@@ -599,13 +602,16 @@
       const bad = (state === 'stale' || state === 'lost' || state === 'offline');
       document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', bad));  // route box stays solid
       if (window.__ownship) __ownship.setActive(!bad);   // freeze the boat when the feed isn't current
+      if (window.__alarms) __alarms.setActive(!bad);     // hold alarm evaluation when the feed isn't current
     }
     // The robust client (nav-client.js) resolves the boat-server address (server-endpoint.js),
     // merges snapshot/delta frames, runs the age watchdog (LIVE/LAGGING/STALE), reconnects over
     // flaky WiFi, and falls back to the honest in-browser sim ONLY if no engine was ever reached.
     // The address is whatever you loaded the page from — localhost here, helm.local / a LAN IP on
     // the boat — so this single line behaves identically local or remote.
-    window.__navClient = HelmNavClient(applyNav, st => setSource(st.phase, st), { sim: window.HelmNav });
+    window.__navClient = HelmNavClient(applyNav,
+      st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
+      { sim: window.HelmNav });
   })();
 </script>
 </body>
