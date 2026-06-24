@@ -25,9 +25,10 @@
       "minzoom": 10,
       "maxzoom": 17,
       "tiles": [
-        "http://127.0.0.1:8082/chart/{z}/{x}/{y}.png"
+        "http://127.0.0.1:8090/chart/{z}/{x}/{y}.png"
       ],
-      "attribution": "S-52 via OpenCPN (Helm Engine)"
+      "attribution": "S-52 via OpenCPN (Helm Engine)",
+      "_note": "default origin only — index.html rewrites this to the resolved boat-server origin (server-endpoint.js) at load, so it is address-agnostic (localhost / helm.local / LAN IP)"
     },
     "depare": {
       "type": "geojson",

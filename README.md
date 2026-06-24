@@ -52,6 +52,7 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [docs/BUSINESS-MODEL.md](docs/BUSINESS-MODEL.md) | Software + Helm Cloud + the appliance bundle (the Home Assistant playbook) |
 | [docs/BUILD-PLAN-COMMUNITY-LLM.md](docs/BUILD-PLAN-COMMUNITY-LLM.md) | Pre-build spec — give-back, the "where to go" LLM, NFL reciprocity |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
+| [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |

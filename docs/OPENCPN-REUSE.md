@@ -106,9 +106,12 @@ Reusing OpenCPN's `model/` makes the engine **GPLv2-or-later** → the desktop a
   reuses its battle-tested nav core is honest, community-friendly, and *far* faster than clean-room.
 - The **"sell it closed later"** option from [ADR-0003](decisions/0003-license-posture.md) is then
   **off the table for this codepath** — that would require the clean-room rebuild (the B / GDAL path).
-- **iOS** can't take the wx-bound GPL engine anyway (App Store + wxWidgets + GPL) — so iPad/iPhone is a
-  **separate, later track** on the clean-room/vector path, or licensed charts. This plan is
-  **desktop-first** (macOS / Linux / Windows).
+- **iOS** can't *host* the wx-bound GPL engine (App Store + wxWidgets + GPL). But it doesn't have to:
+  the engine runs as a **boat server** (Mac mini / Pi) and iPad/iPhone are **thin network clients** —
+  no GPL or wx on the phone, App Store-clean (network use ≠ distribution; arm's-length protocol ≠
+  derivative). So iOS rides the **same GPL engine, now**, over the wire — see
+  [ADR-0006](decisions/0006-server-client-thin-display.md) + [STREAMING-API.md](STREAMING-API.md). The
+  clean-room/vector path is needed **only** for a server-less, fully-offline, phone-only app.
 
 You can have both eventually: the GPL desktop app you actually sail with (fast), and a future
 clean-room cross-platform/commercial version (slow, separate). Or just embrace the GPL open path.
@@ -135,7 +138,10 @@ clean-room cross-platform/commercial version (slow, separate). Or just embrace t
   with this face.
 - **Phase 4 — shell + parallel sea-trial:** Tauri-package it; run it on the boat **alongside OpenCPN**
   off the same SignalK feed; build trust mile by mile.
-- **Phase 5 — later/optional:** iOS via the clean-room vector path; plugin support; B as a north-star.
+- **Phase 5 — iOS thin clients:** iPad/iPhone as network clients of the boat-server engine
+  ([ADR-0006](decisions/0006-server-client-thin-display.md) + [STREAMING-API.md](STREAMING-API.md)) —
+  the existing web UI in a WKWebView first, then a native SwiftUI/MapLibre client. Clean-room vector
+  path, plugin support, and B-as-north-star stay later/optional (only a server-less phone app needs them).
 
 ## Rule zero
 **OpenCPN stays on the boat, in parallel, as backup — forever.** The new app earns primary only over
