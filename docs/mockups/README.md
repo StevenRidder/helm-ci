@@ -29,6 +29,7 @@ route, AIS with CPA highlight, and the source-attribution line.
 | File | Screen |
 |---|---|
 | [destination-dossier.html](destination-dossier.html) | **Destination dossier + living timeline** — the "once I get there" briefing (arrival weather, formalities, anchorage, services, community reports, climate) beside the "along the way" briefing, on a two-axis timeline (valid-time scrubber + issue-time updates). Interactive: drag the timeline to move the boat and watch the arrival forecast firm up; Day/Dusk/Night. See [../BRIEFINGS.md](../BRIEFINGS.md). |
+| [companion-deepread.html](companion-deepread.html) | **iOS companion — deep read** — the lean-back tier of the dossier: photo hero, an AI briefing with tappable citations, full formalities with **linked source cards** (Noonsite/blogs/Helm, badged open/cited/owned), and an anchorage page with mini-map + real cruiser reviews + "add your report". The quick-notes-at-the-helm / deep-read-on-the-phone split from [ADR-0006](../decisions/0006-destination-dossier-and-briefings.md). |
 
 ## Earlier explorations
 
