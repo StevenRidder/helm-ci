@@ -4,9 +4,12 @@
 to expect *at the destination*. Neither is a one-shot report — they ingest continuously and
 update on a timeline as the picture changes.**
 
-> Status: Spec draft v0.1 · 2026-06-24 · Owner: Steve Ridder
+> Status: **Committed** ([ADR-0006](decisions/0006-destination-dossier-and-briefings.md)) ·
+> spec v0.2 · 2026-06-24 · Owner: Steve Ridder
 > The single most-requested capability, in Steve's words: *"Briefings — what to expect along
-> the way, and what to expect once I get there — are my unmet need."* Companion to
+> the way, and what to expect once I get there — are my unmet need… It's what you need when
+> sailing. We need this!!"* Wireframe:
+> [mockups/destination-dossier.html](mockups/destination-dossier.html). Companion to
 > [WEATHER-ROUTING.md](WEATHER-ROUTING.md) (the spacetime weather engine), [VISION.md](VISION.md)
 > §8 (the copilot), and [integrations/noforeignland.md](integrations/noforeignland.md) (the
 > community-data walls).
@@ -74,6 +77,25 @@ Rendered as a card on the chart and a section on the timeline, **[LLM]**-written
 sources in §4, always with citations and "last updated."
 
 ---
+
+## 3b. Two depths, one dataset — quick notes at the helm, deep read on the companion
+
+The dossier exists at **two depths of the same data**, matched to where you are and what you
+can safely do:
+
+| | **At the helm** (chartplotter / chart canvas) | **iOS companion app** |
+|---|---|---|
+| Purpose | a **glance** while sailing — decide, don't read | **research** — dockside, off-watch, in the bunk |
+| Content | terse **quick notes**: key facts, status, source + freshness chips | full briefing text, **photos**, reviews, and **outbound links** to sources |
+| Form | the dossier card + timeline (the wireframe) | scrollable articles, the cited originals (Noonsite/blogs/charts) |
+| Reading load | seconds, arm's-length legible | minutes, lean-back |
+| Where the heavy work runs | shows the distilled result | can run heavier RAG / link-following |
+
+This is the model Steve named: *"even if the iOS companion app is where you read stuff with
+links for more info, and these are more quick notes."* **Same dataset, two presentations —
+not two products.** The helm surface must stay terse (a wall of text underway is a failure);
+the companion is where depth and links live. Committed in
+[ADR-0006](decisions/0006-destination-dossier-and-briefings.md).
 
 ## 4. Destination data sources — the honest map
 
