@@ -31,17 +31,78 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
+#include <fstream>
+#include <iterator>
+#include "pugixml.hpp"
 
 void* g_pi_manager = reinterpret_cast<void*>(1L);
 
-struct WP { double lat, lon; const char* name; };
-static std::vector<WP> ROUTE = {            // web/data/route.geojson — "Key West approach"
-  { 24.458, -81.808, "WP1 \xC2\xB7 start" },
-  { 24.485, -81.800, "WP2 \xC2\xB7 sea buoy" },
-  { 24.515, -81.793, "WP3 \xC2\xB7 channel" },
-  { 24.540, -81.786, "WP4 \xC2\xB7 pass" },
-  { 24.557, -81.781, "WP5 \xC2\xB7 marina" }
-};
+struct WP { double lat, lon; std::string name; };
+static std::vector<WP> ROUTE;                 // loaded from GPX at startup — no hardcoded route
+static std::string g_route_name = "Route";
+
+// Built-in sample (Key West approach), used only when no route file is given so the
+// engine still runs out of the box. It is REAL GPX data parsed by the same loader as a
+// user file — not a special-cased C++ route. Kept in sync with engine/sample-route-keywest.gpx.
+static const char* SAMPLE_GPX = R"GPX(<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Helm" xmlns="http://www.topografix.com/GPX/1/1">
+  <rte>
+    <name>Key West Approach</name>
+    <rtept lat="24.458" lon="-81.808"><name>WP1 · start</name></rtept>
+    <rtept lat="24.485" lon="-81.800"><name>WP2 · sea buoy</name></rtept>
+    <rtept lat="24.515" lon="-81.793"><name>WP3 · channel</name></rtept>
+    <rtept lat="24.540" lon="-81.786"><name>WP4 · pass</name></rtept>
+    <rtept lat="24.557" lon="-81.781"><name>WP5 · marina</name></rtept>
+  </rte>
+</gpx>)GPX";
+
+// Minimal JSON string escaper — route/waypoint names now come from a user GPX file.
+static std::string json_escape(const std::string& s) {
+  std::string o; o.reserve(s.size() + 8);
+  for (unsigned char c : s) {
+    switch (c) {
+      case '"': o += "\\\""; break;
+      case '\\': o += "\\\\"; break;
+      case '\n': o += "\\n"; break;
+      case '\r': o += "\\r"; break;
+      case '\t': o += "\\t"; break;
+      default:
+        if (c < 0x20) { char b[8]; std::snprintf(b, sizeof b, "\\u%04x", c); o += b; }
+        else o += (char)c;
+    }
+  }
+  return o;
+}
+
+// Parse the first <rte> of a GPX document into ROUTE waypoints + the route name.
+// pugixml-based (robust), namespace-tolerant. Returns false if there is no usable route.
+static bool load_gpx_route(const std::string& xml, std::vector<WP>& out, std::string& routeName) {
+  pugi::xml_document doc;
+  pugi::xml_parse_result res = doc.load_buffer(xml.data(), xml.size());
+  if (!res) { std::fprintf(stderr, "GPX parse error: %s\n", res.description()); return false; }
+  pugi::xml_node gpx = doc.child("gpx");
+  if (!gpx) gpx = doc.first_child();                 // tolerate a missing/namespaced root
+  pugi::xml_node rte = gpx.child("rte");
+  if (!rte) { std::fprintf(stderr, "GPX has no <rte> route\n"); return false; }
+  if (pugi::xml_node nm = rte.child("name")) routeName = nm.text().get();
+  out.clear();
+  for (pugi::xml_node pt = rte.child("rtept"); pt; pt = pt.next_sibling("rtept")) {
+    pugi::xml_attribute la = pt.attribute("lat"), lo = pt.attribute("lon");
+    if (!la || !lo) continue;                        // skip malformed points — never fabricate
+    WP w; w.lat = la.as_double(); w.lon = lo.as_double();
+    if (pugi::xml_node nm = pt.child("name")) w.name = nm.text().get();
+    if (w.name.empty()) { char b[24]; std::snprintf(b, sizeof b, "WP%zu", out.size() + 1); w.name = b; }
+    out.push_back(w);
+  }
+  return out.size() >= 2;                            // a route needs at least 2 waypoints
+}
+
+static bool read_file(const char* path, std::string& out) {
+  std::ifstream f(path, std::ios::binary);
+  if (!f) return false;
+  out.assign(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
+  return true;
+}
 
 // bearing + great-circle distance (NM) from own-ship (lat0,lon0) to target (lat1,lon1)
 static void bd(double lat1, double lon1, double lat0, double lon0, double* brg, double* nm) {
@@ -176,15 +237,32 @@ static void nmea_listener() {
   }
 }
 
-int main(int, char**) {
+int main(int argc, char** argv) {
   wxInitializer init;
   if (!init) { std::printf("wx init failed\n"); return 1; }
   std::printf("== Helm Engine (skeleton): OpenCPN model/ nav core -> WebSocket ==\n");
 
+  // --- load the active route from GPX (no hardcoded route) ---
+  const char* routePath = (argc >= 2) ? argv[1] : std::getenv("HELM_ROUTE");
+  std::string gpx;
+  if (routePath && *routePath) {
+    if (!read_file(routePath, gpx)) {
+      std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", routePath); return 3;
+    }
+    std::printf("route source: %s\n", routePath);
+  } else {
+    gpx = SAMPLE_GPX;
+    std::printf("route source: built-in sample (Key West) — override: helm-engine <route.gpx>  or  HELM_ROUTE=...\n");
+  }
+  if (!load_gpx_route(gpx, ROUTE, g_route_name)) {
+    std::fprintf(stderr, "FATAL: GPX route unusable (need a <rte> with >= 2 <rtept>)\n"); return 4;
+  }
+  std::printf("loaded route \"%s\": %zu waypoints\n", g_route_name.c_str(), ROUTE.size());
+
   // --- real model/ route + route manager, headless ---
   Route* r = new Route();
   for (auto& w : ROUTE)
-    r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name)));
+    r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name.c_str())));
   r->UpdateSegmentDistances(6.0);
   g_pRouteMan = new Routeman(RoutePropDlgCtx(), RoutemanDlgCtx());
   gLat = ROUTE[0].lat; gLon = ROUTE[0].lon;
@@ -278,7 +356,7 @@ int main(int, char**) {
       double lb, ld; bd(ROUTE[k].lat, ROUTE[k].lon, from.lat, from.lon, &lb, &ld);
       char lbuf[160];
       std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
-                    k == li + 1 ? "" : ",", ROUTE[k].name, std::lround(lb),
+                    k == li + 1 ? "" : ",", json_escape(ROUTE[k].name).c_str(), std::lround(lb),
                     k == li + 1 ? "true" : "false");
       legs += lbuf;
     }
@@ -293,7 +371,7 @@ int main(int, char**) {
       "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
       "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
       "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},"
-      "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
+      "\"active\":{\"name\":\"%s\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
       "\"dtg\":\"%s\",\"xte\":\"%d m\","
       "\"legs\":%s,\"nextWp\":\"%s \xC2\xB7 %s\"}}",
       src_pos,
@@ -301,8 +379,9 @@ int main(int, char**) {
       gLat, gLon, fmtPos(gLat, gLon).c_str(),
       sog, cog, hdg, depth,
       wspd, wdir, std::lround(wspd - 4), std::lround(wspd + 8),
+      json_escape(g_route_name).c_str(),
       etabuf, ttg.c_str(), vmg, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
-      legs.c_str(), nextShort.c_str(), fmtNM(dtw).c_str());
+      legs.c_str(), json_escape(nextShort).c_str(), fmtNM(dtw).c_str());
 
     for (auto& c : server.getClients()) c->send(json);
     if (tick % 10 == 0)
