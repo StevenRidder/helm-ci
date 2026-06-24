@@ -1,12 +1,12 @@
 # Chart engine: multi-cell tiler → quilting, vs OpenCPN
 
 **Status:** 2026-06-24 · `engine/vendor/cli/helm_tiles.cpp`
-**TL;DR:** the tiler went from **one hard-coded cell** to **multi-cell, zoom-aware selection**
-— it loads a whole folder of ENC cells and, for every `{z}/{x}/{y}` tile, renders the
-cell whose native scale best matches that zoom (overview when out, harbour when in). That is
-the tile-layer analogue of OpenCPN's quilt *reference-chart selection*, minus the GUI coupling.
-This doc explains what we built, the remaining gap to **full** quilting, and — concretely —
-**where OpenCPN's quilting falls short in its own code**, and what we do instead.
+**TL;DR:** the tiler went from **one hard-coded cell** to **full per-tile quilting**. It loads a
+whole folder of ENC cells and, for every `{z}/{x}/{y}` tile, composites the zoom-appropriate
+covering cells (coarsest→finest, no-data transparent) into one seamless tile — overview when
+zoomed out, harbour when zoomed in, no seams between cells. Because no-data is transparent it
+also composites **over satellite** (depth-on-satellite). This doc explains what we built and —
+concretely — **where OpenCPN's quilting falls short in its own code**, and what we do instead.
 
 > Honesty note: OpenCPN class/method names below come from our file-by-file read
 > ([docs/research/opencpn-deep-read.json](research/opencpn-deep-read.json)); the quilt lives in
@@ -22,13 +22,14 @@ A sea area is covered by *many* ENC cells at different **usage bands** (1 overvi
 which overlap. Showing charts well means:
 
 1. **Single-cell** *(where we were)* — load one cell, render its area, blank elsewhere.
-2. **Multi-cell selection** *(where we are now)* — load all cells; per tile, pick the
-   zoom-appropriate covering cell. Seamless coverage as you pan; right detail as you zoom.
-3. **Full quilting** *(next)* — within one view, **stitch overlapping cells of different
-   scales into one picture**: finer-on-top, coverage-clipped, no seams, no holes.
+2. **Multi-cell selection** *(done)* — load all cells; per tile, pick the zoom-appropriate
+   covering cell. Seamless coverage as you pan; right detail as you zoom.
+3. **Full quilting** *(done, 2026-06-24)* — within one tile, **stitch overlapping cells of
+   different scales into one picture**: finer-on-top, no-data transparent, no seams, no holes —
+   and, because no-data is transparent, composited over satellite too.
 
-Rung 2 gets ~80% of the daily benefit. Rung 3 is the remaining polish — and, crucially, our
-architecture lets us reach it *per tile* without inheriting OpenCPN's quilt problems.
+All three rungs are in. We reached rung 3 *per tile* — deterministic, headless, cacheable —
+without inheriting OpenCPN's quilt problems (§4).
 
 ---
 
@@ -48,21 +49,25 @@ architecture lets us reach it *per tile* without inheriting OpenCPN's quilt prob
 - Renders that cell on the main thread (CoreGraphics) via the existing job queue; transparent
   tile where no cell covers.
 
-**Known limit of rung 2:** a tile straddling two same-band cells renders the centre's cell, so
-the other sliver shows that cell's no-data background. Seam artifacts are confined to boundary
-tiles. Rung 3 (below) removes them.
-
 ---
 
-## 3. The path to full quilting (rung 3)
+## 3. Full quilting (rung 3) — DONE (2026-06-24)
 
-Two pieces, both of which our tile model makes *easier* than OpenCPN's canvas model:
+Both pieces shipped, and our tile model made them *easier* than OpenCPN's canvas model:
 
-1. **NODTA → transparent.** Make the S-52 no-data colour render transparent (already on the
-   roadmap for depth-on-satellite). Then a cell only paints where it has coverage.
-2. **Per-tile compositing.** `pick_cell` becomes `rank_cells` (all covering cells, coarsest→
-   finest); render each into the tile back-to-front and alpha-composite. Finer cells land on top
-   exactly within their M_COVR; coarser fills the rest. One tile, fully quilted, **cacheable**.
+1. **NODTA → transparent.** At init we capture the S-52 no-data colour
+   (`ps52plib->getColor("NODTA")` — the same call the renderer uses to fill it) and key those
+   pixels to alpha 0 in `render_cell_to_image`. A cell now paints **only where it has data**.
+2. **Per-tile compositing.** `rank_cells` returns every in-band covering cell coarsest→finest;
+   `render_tile` renders each into the tile and `composite_over`s them back-to-front. Finer
+   cells land on top within their coverage; coarser fills the rest. **One tile, fully quilted —
+   no seams, no holes** (the rung-2 straddle artifact is gone), and it's a pure function of the
+   tile, so it's cacheable.
+
+**Bonus — depth-on-satellite unlocked.** Because NODTA is now transparent, the ENC tiles
+composite over MapLibre's satellite layer instead of laying down an opaque grey blanket. Turn on
+*Satellite* + *S-52 charts (engine)* together and the chart sits over the imagery — Helm's
+headline differentiator, which OpenCPN's canvas model **cannot** do (§4, row 6).
 
 This is quilting *as a pure function of the tile* — deterministic, parallelizable, headless,
 and CDN/offline-cacheable. OpenCPN cannot do any of those (see §4).

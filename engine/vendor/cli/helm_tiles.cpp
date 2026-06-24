@@ -70,6 +70,11 @@ static std::vector<Cell> g_cells;    // all loaded cells, sorted most-detailed (
 static std::string g_blank;          // transparent TS×TS PNG for no-coverage tiles
 static const int TS = 256;           // tile size px
 
+// S-52 no-data (NODTA) colour, captured from the active colour table at init. Pixels matching it
+// are made transparent so cells composite over each other AND over satellite (depth-on-satellite).
+static unsigned char g_nodtaR = 0, g_nodtaG = 0, g_nodtaB = 0;
+static bool g_nodtaOk = false;
+
 // ---- main-thread render job queue (CoreGraphics is main-thread) -------------
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
 // be masked as an empty/transparent tile that the navigator reads as open water.
@@ -97,24 +102,69 @@ static double zoom_scale(int z, double lat) {
 static bool extent_hits(const Extent& e, double w, double s, double ee, double n) {
   return !(ee < e.WLON || w > e.ELON || n < e.SLAT || s > e.NLAT);
 }
-// Choose the cell to render for a tile: among cells covering it, the one whose native scale is
-// closest (in log space) to the tile's display scale — i.e. zoom-appropriate detail — preferring
-// a cell that actually contains the tile centre. Returns nullptr if no cell covers the tile.
-static Cell* pick_cell(double w, double s, double e, double n, int z) {
-  const double clat = (n + s) / 2.0, clon = (w + e) / 2.0;
-  const double ideal = std::log(zoom_scale(z, clat));
-  Cell* best = nullptr; double bestErr = 1e18; bool bestContains = false;
-  for (auto& c : g_cells) {
-    if (!extent_hits(c.ext, w, s, e, n)) continue;
-    const bool contains = (clon >= c.ext.WLON && clon <= c.ext.ELON &&
-                           clat >= c.ext.SLAT && clat <= c.ext.NLAT);
-    const double err = std::fabs(std::log((double)c.scale) - ideal);
-    if (!best || (contains && !bestContains) ||
-        (contains == bestContains && err < bestErr)) {
-      best = &c; bestErr = err; bestContains = contains;
-    }
+static const double SCALE_WIN = 3.0;   // composite cells within 3× of the tile's display scale
+static const size_t MAX_LAYERS = 4;    // …and at most this many per tile (the finest kept)
+
+// Rank the cells to composite for a tile: those covering it whose native scale is within SCALE_WIN
+// of the zoom's display scale (so we never draw a harbour chart at ocean zoom or vice-versa),
+// sorted COARSEST-first so finer cells draw on top. Falls back to the single nearest-scale covering
+// cell so we never blank water some chart covers. `out` left empty => no coverage.
+static void rank_cells(double w, double s, double e, double n, int z, std::vector<Cell*>& out) {
+  out.clear();
+  const double ideal = zoom_scale(z, (n + s) / 2.0);
+  std::vector<Cell*> cov;
+  for (auto& c : g_cells) if (extent_hits(c.ext, w, s, e, n)) cov.push_back(&c);
+  if (cov.empty()) return;
+  for (Cell* c : cov) { double r = c->scale / ideal; if (r < 1.0) r = 1.0 / r; if (r <= SCALE_WIN) out.push_back(c); }
+  if (out.empty()) {                                   // nothing in-band: keep the single nearest
+    Cell* best = nullptr; double err = 1e18;
+    for (Cell* c : cov) { double er = std::fabs(std::log((double)c->scale) - std::log(ideal)); if (er < err) { err = er; best = c; } }
+    out.push_back(best);
   }
-  return best;
+  std::sort(out.begin(), out.end(), [](Cell* a, Cell* b) { return a->scale > b->scale; });   // coarse -> fine
+  if (out.size() > MAX_LAYERS) out.erase(out.begin(), out.end() - MAX_LAYERS);                // keep finest
+}
+
+// Render one cell into a TS×TS image for `base`'s viewport, with NODTA (no-data) made transparent
+// so cells composite cleanly over each other and over satellite. Returns false on render failure.
+static bool render_cell_to_image(Cell* cell, const ViewPort& base, wxImage& out) {
+  ViewPort vp = base;
+  vp.chart_scale = cell->chart->GetNativeScale();      // per-cell scale -> correct SCAMIN/safety pick
+  vp.ref_scale = vp.chart_scale;
+  vp.SetBoxes(); vp.Validate();
+
+  wxBitmap bmp(TS, TS, BPP);
+  if (!bmp.IsOk()) return false;
+  wxMemoryDC dc(bmp);
+  if (!dc.IsOk()) return false;
+  OCPNRegion region(0, 0, TS, TS);
+  bool ok = cell->chart->RenderRegionViewOnDC(dc, vp, region);
+  wxBitmap rendered = dc.GetSelectedBitmap();          // single-cell render ends with SelectIntoDC
+  dc.SelectObject(wxNullBitmap);
+  if (!ok || !rendered.IsOk()) return false;
+  out = rendered.ConvertToImage();
+  if (!out.IsOk()) return false;
+
+  if (!out.HasAlpha()) out.InitAlpha();
+  unsigned char* a = out.GetAlpha();
+  const unsigned char* d = out.GetData();
+  const int N = TS * TS;
+  if (g_nodtaOk && a && d)
+    for (int i = 0; i < N; ++i)
+      a[i] = (d[3 * i] == g_nodtaR && d[3 * i + 1] == g_nodtaG && d[3 * i + 2] == g_nodtaB) ? 0 : 255;
+  else if (a)
+    for (int i = 0; i < N; ++i) a[i] = 255;            // NODTA unknown -> stay opaque (old behaviour)
+  return true;
+}
+
+// Composite `top` over `acc` (both TS×TS, alpha 0/255): where top is opaque, it wins.
+static void composite_over(wxImage& acc, const wxImage& top) {
+  unsigned char* ad = acc.GetData(); unsigned char* aa = acc.GetAlpha();
+  const unsigned char* td = top.GetData(); const unsigned char* ta = top.GetAlpha();
+  if (!ad || !aa || !td || !ta) return;
+  const int N = TS * TS;
+  for (int i = 0; i < N; ++i)
+    if (ta[i]) { ad[3 * i] = td[3 * i]; ad[3 * i + 1] = td[3 * i + 1]; ad[3 * i + 2] = td[3 * i + 2]; aa[i] = 255; }
 }
 
 // ---- render one tile (MAIN THREAD ONLY) -> status, PNG bytes in `out` --------
@@ -128,9 +178,10 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   }
   double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
-  // pick the zoom-appropriate cell covering this tile; no cell -> legitimately empty (NOT a failure)
-  Cell* cell = pick_cell(west, south, east, north, z);
-  if (!cell) return TileStatus::NoCoverage;
+  // rank the zoom-appropriate cells covering this tile; none -> legitimately empty (NOT a failure)
+  std::vector<Cell*> layers;
+  rank_cells(west, south, east, north, z, layers);
+  if (layers.empty()) return TileStatus::NoCoverage;
 
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
@@ -140,44 +191,35 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   }
   double ppm = (double)TS / span_m;
 
-  ViewPort vp;
-  vp.clat = clat; vp.clon = clon; vp.view_scale_ppm = ppm;
-  vp.pix_width = TS; vp.pix_height = TS;
-  vp.rotation = 0; vp.skew = 0; vp.tilt = 0;
-  vp.m_projection_type = PROJECTION_MERCATOR;
-  vp.chart_scale = cell->chart->GetNativeScale();
-  vp.ref_scale = vp.chart_scale;
-  vp.b_quilt = false;
-  vp.rv_rect = wxRect(0, 0, TS, TS);
-  vp.SetBoxes(); vp.Validate();
+  ViewPort base;
+  base.clat = clat; base.clon = clon; base.view_scale_ppm = ppm;
+  base.pix_width = TS; base.pix_height = TS;
+  base.rotation = 0; base.skew = 0; base.tilt = 0;
+  base.m_projection_type = PROJECTION_MERCATOR;
+  base.chart_scale = layers.back()->chart->GetNativeScale();   // nominal; each cell overrides per-render
+  base.ref_scale = base.chart_scale;
+  base.b_quilt = false;
+  base.rv_rect = wxRect(0, 0, TS, TS);
+  base.SetBoxes(); base.Validate();
 
-  wxBitmap bmp(TS, TS, BPP);
-  if (!bmp.IsOk()) {
-    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: wxBitmap(%dx%d,%d) not ok\n", z, x, y, TS, TS, BPP);
+  // Composite coarse -> fine, NODTA transparent: finer cells land on top within their coverage,
+  // coarser fills the rest. One tile, fully quilted across cells, no seams, no holes.
+  wxImage acc; bool any = false; int failed = 0;
+  for (Cell* c : layers) {
+    wxImage img;
+    if (!render_cell_to_image(c, base, img)) { ++failed; continue; }
+    if (!any) { acc = img; any = true; }
+    else composite_over(acc, img);
+  }
+  if (!any) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: all %zu layer(s) failed\n", z, x, y, layers.size());
     return TileStatus::RenderFailed;
   }
-  wxMemoryDC dc(bmp);
-  if (!dc.IsOk()) {
-    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: wxMemoryDC not ok\n", z, x, y);
-    return TileStatus::RenderFailed;
-  }
-  OCPNRegion region(0, 0, TS, TS);
-  bool ok = cell->chart->RenderRegionViewOnDC(dc, vp, region);
-  // single-cell render ends with pDIB->SelectIntoDC(dc): grab the selected bitmap
-  wxBitmap rendered = dc.GetSelectedBitmap();
-  dc.SelectObject(wxNullBitmap);
-  if (!ok || !rendered.IsOk()) {
-    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: RenderRegionViewOnDC=%d bitmapOk=%d\n",
-            z, x, y, ok, rendered.IsOk());
-    return TileStatus::RenderFailed;
-  }
-  wxImage img = rendered.ConvertToImage();
-  if (!img.IsOk()) {
-    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: ConvertToImage\n", z, x, y);
-    return TileStatus::RenderFailed;
-  }
+  if (failed)
+    fprintf(stderr, "tile z%d/%ld/%ld: %d of %zu layer(s) failed; served the rest\n", z, x, y, failed, layers.size());
+
   wxMemoryOutputStream mos;
-  if (!img.SaveFile(mos, wxBITMAP_TYPE_PNG)) {
+  if (!acc.SaveFile(mos, wxBITMAP_TYPE_PNG)) {
     fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: PNG encode\n", z, x, y);
     return TileStatus::RenderFailed;
   }
@@ -226,6 +268,15 @@ static bool init_charts(const wxString& root) {
   ps52plib = new s52plib(kPLibRLE, false);
   if (!ps52plib || !ps52plib->m_bOK) { printf("s52plib load FAILED\n"); return false; }
   ps52plib->SetPLIBColorScheme(GLOBAL_COLOR_SCHEME_DAY, ChartCtx(false, 0));
+
+  // Capture the no-data colour so render_cell_to_image can key it to transparent.
+  if (S52color* nd = ps52plib->getColor("NODTA")) {
+    g_nodtaR = nd->R; g_nodtaG = nd->G; g_nodtaB = nd->B; g_nodtaOk = true;
+    printf("NODTA no-data colour = rgb(%d,%d,%d) -> transparent (composite over satellite)\n",
+           g_nodtaR, g_nodtaG, g_nodtaB);
+  } else {
+    printf("WARN: NODTA colour unavailable; no-data areas will stay opaque grey\n");
+  }
 
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
 

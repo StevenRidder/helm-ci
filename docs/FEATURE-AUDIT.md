@@ -72,13 +72,13 @@ over a mostly-real *engine*, with key connecting wires unrun.
    arrival, off-course, depth alarms — the `collision.js` banner/audio channel is the reusable
    seam for them.
 
-5. **◐ Multi-cell S-52 tiler — UPGRADED (2026-06-24); full quilting next.** *Was: one
-   hard-coded cell (`US5FL96M`).* `helm_tiles.cpp` now loads a **folder of ENC cells** and picks
-   the **zoom-appropriate** covering cell per tile (overview→harbour as you zoom) — the
-   tile-layer analogue of OpenCPN's quilt reference-chart pick, headless. Still to do: per-tile
-   *compositing* (finer-on-coarser, NODTA→transparent) for seamless cross-cell quilting, and
-   chart groups. See [CHART-QUILTING.md](CHART-QUILTING.md) — incl. where OpenCPN's quilt code
-   falls short vs ours.
+5. **✅ Multi-cell S-52 quilting — DONE (2026-06-24).** *Was: one hard-coded cell (`US5FL96M`).*
+   `helm_tiles.cpp` now loads a **folder of ENC cells** and, per tile, **composites** the
+   zoom-appropriate covering cells (coarsest→finest, **NODTA made transparent**) into one
+   seamless tile — overview→harbour as you zoom, no seams between cells. Transparent no-data also
+   means ENC **composites over satellite** (depth-on-satellite unlocked). Remaining: chart
+   groups, and depth-only styling over imagery. See [CHART-QUILTING.md](CHART-QUILTING.md) — incl.
+   where OpenCPN's quilt code falls short vs ours.
 
 Everything else below is catalogued so we can decide build-vs-skip deliberately rather than
 discover a hole at sea.
@@ -135,7 +135,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Raster basemap (satellite) | TS | ✅ | Sentinel-2 via MapLibre |
 | NOAA raster charts (RNC) | TS | ✅ | tile source |
 | True S-52 vector ENC (S-57) | TS | ✅ | **multi-cell**, zoom-aware cell selection (`helm_tiles.cpp`) |
-| **Chart quilting** (seamless multi-cell) | TS | ◐ | per-tile cell **selection** done; cross-cell **compositing** next ([CHART-QUILTING.md](CHART-QUILTING.md)) |
+| **Chart quilting** (seamless multi-cell) | TS | ✅ | per-tile multi-cell **compositing**, no-data transparent ([CHART-QUILTING.md](CHART-QUILTING.md)) |
 | **Chart groups** (region sets) | TS | ⬜ | OCPN core; Phase 2 |
 | S-63 encrypted ENC | TS(offshore) | ✖ | OCPN via plugin; licensing-gated |
 | CM93 worldwide vector | Diff | ✖ | OCPN core; not planned v1 |
@@ -143,7 +143,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Day / Dusk / Night palettes | TS | ◐ | UI reskins raster; **true S-52 night palette** not switched engine-side |
 | Depth-area fill + contours + soundings | TS | ✅ | `depare`/`depcnt`/`soundg` layers |
 | Depth shading bands (safety/shallow/deep) | TS | ◐ | static fill ramp; no user safety-depth control |
-| **Depth-on-satellite** (ENC depth over imagery) | **Diff★** | ⬜ | the headline differentiator; NODTA→transparent still pending (`engine/README`) |
+| **Depth-on-satellite** (ENC over imagery) | **Diff★** | ◐ | NODTA now transparent → ENC composites over satellite; depth-only styling is a refinement |
 | S-52 display category (Base/Std/All/Mariner) | TS | ✖ | OCPN core; not yet |
 | SCAMIN / overzoom indication | TS | ◐ | engine honors SCAMIN; UI has no scale warning |
 | Chart-object query (tap any S-57 object) | TS | ✖ | OCPN core; only soundings tappable now |
@@ -280,7 +280,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Feature | Helm | Notes |
 |---|---|---|
 | **One fused screen** (charts+sat+weather+AIS+route+instruments) | ✅ | the wedge — present and good |
-| **Depth-on-satellite** | ⬜ | NODTA→transparent compositing still pending — **build this; it's the moat** |
+| **Depth-on-satellite** | ◐ | NODTA→transparent done → ENC composites over satellite; depth-only styling next — **the moat** |
 | **On-demand multi-source chart download** | ⚠ | mockup UI; CLI pipeline exists |
 | **Own full weather stack, offline** | ✅ | Open-Meteo render, our own layers |
 | **True BYO / no subscription lock-in** | ⬜ | mbtiles import; Phase 1 |
