@@ -1,8 +1,10 @@
 // helm_tiles.cpp — S-52 chart-tile HTTP server (Phase 2, second engine half).
 //
-// Loads a NOAA ENC headless via the PROVEN chart-render path (see chart_spike.cpp)
-// and serves http://127.0.0.1:8082/chart/{z}/{x}/{y}.png — per-tile S-52 renders —
-// for a MapLibre raster source. Real OpenCPN S-52 charts under the live nav.
+// Loads a whole FOLDER of NOAA ENC cells headless via the PROVEN chart-render path
+// (see chart_spike.cpp) and serves http://127.0.0.1:8082/chart/{z}/{x}/{y}.png — per-tile
+// S-52 renders — for a MapLibre raster source. Multi-cell: for each tile it picks the
+// zoom-appropriate covering cell (the tile-layer analogue of OpenCPN's quilt reference-chart
+// selection, without the GUI/viewport coupling). Real OpenCPN S-52 charts under the live nav.
 //
 // Reuses chart_spike's init + render verbatim; adds: ix::HttpServer, slippy-tile
 // ViewPort math, PNG-to-memory. macOS note: wx bitmap/DC rendering runs on the
@@ -17,12 +19,16 @@
 #include <mutex>
 #include <condition_variable>
 #include <string>
+#include <vector>
+#include <algorithm>
 #include <thread>
 #include <chrono>
 
 #include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/dcmemory.h>
+#include <wx/dir.h>
+#include <wx/filefn.h>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -56,8 +62,11 @@ static const wxString kS57Data = wxT("/tmp/opencpn/data/s57data/");
 static const wxString kPLibRLE = wxT("/tmp/opencpn/data/s57data/S52RAZDS.RLE");
 static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
 
-static s57chart* g_chart = nullptr;
-static Extent    g_ext;
+// One loaded ENC cell. The tiler is multi-cell: it loads a whole folder of cells (a region's
+// worth, across usage bands / scales) and picks the best one per tile by zoom — the tile-layer
+// analogue of OpenCPN's quilt reference-chart selection, minus the GUI/viewport coupling.
+struct Cell { s57chart* chart; Extent ext; int scale; std::string path; };
+static std::vector<Cell> g_cells;    // all loaded cells, sorted most-detailed (smallest scale) first
 static std::string g_blank;          // transparent TS×TS PNG for no-coverage tiles
 static const int TS = 256;           // tile size px
 
@@ -79,6 +88,35 @@ static double tile_lat(double y, int z) {
   return std::atan(std::sinh(n)) * 180.0 / M_PI;
 }
 
+// ---- per-tile cell selection (the quilt's reference-chart pick) -------------
+// Web-Mercator scale denominator at this zoom (OGC 0.28 mm/px, 256-px tiles). This is the
+// "paper scale" the tile is shown at, so we can pick the cell whose native scale matches.
+static double zoom_scale(int z, double lat) {
+  return 559082264.029 * std::cos(lat * M_PI / 180.0) / std::pow(2.0, z);
+}
+static bool extent_hits(const Extent& e, double w, double s, double ee, double n) {
+  return !(ee < e.WLON || w > e.ELON || n < e.SLAT || s > e.NLAT);
+}
+// Choose the cell to render for a tile: among cells covering it, the one whose native scale is
+// closest (in log space) to the tile's display scale — i.e. zoom-appropriate detail — preferring
+// a cell that actually contains the tile centre. Returns nullptr if no cell covers the tile.
+static Cell* pick_cell(double w, double s, double e, double n, int z) {
+  const double clat = (n + s) / 2.0, clon = (w + e) / 2.0;
+  const double ideal = std::log(zoom_scale(z, clat));
+  Cell* best = nullptr; double bestErr = 1e18; bool bestContains = false;
+  for (auto& c : g_cells) {
+    if (!extent_hits(c.ext, w, s, e, n)) continue;
+    const bool contains = (clon >= c.ext.WLON && clon <= c.ext.ELON &&
+                           clat >= c.ext.SLAT && clat <= c.ext.NLAT);
+    const double err = std::fabs(std::log((double)c.scale) - ideal);
+    if (!best || (contains && !bestContains) ||
+        (contains == bestContains && err < bestErr)) {
+      best = &c; bestErr = err; bestContains = contains;
+    }
+  }
+  return best;
+}
+
 // ---- render one tile (MAIN THREAD ONLY) -> status, PNG bytes in `out` --------
 // Every failure path is surfaced with its stage; the caller turns RenderFailed
 // into an HTTP 5xx + log, never a silent transparent tile.
@@ -90,9 +128,9 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   }
   double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
-  // genuinely outside the chart cell -> legitimately empty (NOT a failure)
-  if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
-    return TileStatus::NoCoverage;
+  // pick the zoom-appropriate cell covering this tile; no cell -> legitimately empty (NOT a failure)
+  Cell* cell = pick_cell(west, south, east, north, z);
+  if (!cell) return TileStatus::NoCoverage;
 
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
@@ -107,7 +145,7 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   vp.pix_width = TS; vp.pix_height = TS;
   vp.rotation = 0; vp.skew = 0; vp.tilt = 0;
   vp.m_projection_type = PROJECTION_MERCATOR;
-  vp.chart_scale = g_chart->GetNativeScale();
+  vp.chart_scale = cell->chart->GetNativeScale();
   vp.ref_scale = vp.chart_scale;
   vp.b_quilt = false;
   vp.rv_rect = wxRect(0, 0, TS, TS);
@@ -124,7 +162,7 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
     return TileStatus::RenderFailed;
   }
   OCPNRegion region(0, 0, TS, TS);
-  bool ok = g_chart->RenderRegionViewOnDC(dc, vp, region);
+  bool ok = cell->chart->RenderRegionViewOnDC(dc, vp, region);
   // single-cell render ends with pDIB->SelectIntoDC(dc): grab the selected bitmap
   wxBitmap rendered = dc.GetSelectedBitmap();
   dc.SelectObject(wxNullBitmap);
@@ -159,7 +197,26 @@ static std::string make_blank() {
   return out;
 }
 
-static bool init_chart(const wxString& enc_path) {
+// Load one ENC cell into g_cells. Returns false (and skips, never aborts) for an unusable cell:
+// a region folder will contain cells of varying quality and we keep serving the good ones.
+static bool load_one_cell(const wxString& path) {
+  const char* p = (const char*)path.ToUTF8();
+  s57chart* ch = new s57chart();
+  ch->DisableBackgroundSENC();
+  if (ch->Init(path, FULL_INIT) != INIT_OK) { fprintf(stderr, "  skip (Init failed): %s\n", p); delete ch; return false; }
+  ch->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
+  Extent ext;
+  if (!ch->GetChartExtent(&ext)) { fprintf(stderr, "  skip (no extent): %s\n", p); delete ch; return false; }
+  // FAIL CLOSED per cell on an invalid native scale: scale <= 1 means SCAMIN / safety-contour
+  // selection would be wrong (SENC missing DSPM:CSCL). Skip it rather than serve it silently.
+  int ns = ch->GetNativeScale();
+  if (ns <= 1) { fprintf(stderr, "  skip (bad native scale %d): %s\n", ns, p); delete ch; return false; }
+  g_cells.push_back({ ch, ext, ns, std::string(p) });
+  return true;
+}
+
+// Load every ENC cell under `root` (a folder of *.000, recursively) — or a single *.000 file.
+static bool init_charts(const wxString& root) {
   setvbuf(stdout, nullptr, _IONBF, 0);
   wxImage::AddHandler(new wxPNGHandler);
   EnsureHeadlessGlobals();
@@ -172,27 +229,23 @@ static bool init_chart(const wxString& enc_path) {
 
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
 
-  g_chart = new s57chart();
-  g_chart->DisableBackgroundSENC();
-  if (g_chart->Init(enc_path, FULL_INIT) != INIT_OK) { printf("chart Init FAILED\n"); return false; }
-  g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
-  if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return false; }
+  wxArrayString files;
+  if (wxDirExists(root))        wxDir::GetAllFiles(root, &files, wxT("*.000"), wxDIR_FILES | wxDIR_DIRS);
+  else if (wxFileExists(root))  files.Add(root);
+  if (files.IsEmpty()) { printf("FATAL: no ENC (*.000) cells under '%s'\n", (const char*)root.ToUTF8()); return false; }
 
-  // FAIL CLOSED on an invalid native scale: scale <= 1 means SCAMIN / safety-
-  // contour filtering would be wrong (SENC missing DSPM:CSCL). Refuse to serve a
-  // chart whose safety features we cannot trust, rather than render it silently.
-  int ns = g_chart->GetNativeScale();
-  if (ns <= 1) {
-    printf("FATAL: chart native scale invalid (%d) -- SCAMIN/safety-contour "
-           "selection would be wrong; refusing to serve this cell.\n", ns);
-    return false;
-  }
+  printf("scanning %zu ENC file(s) under '%s' …\n", (size_t)files.GetCount(), (const char*)root.ToUTF8());
+  for (size_t i = 0; i < files.GetCount(); ++i) load_one_cell(files[i]);
+  if (g_cells.empty()) { printf("FATAL: no usable ENC cells loaded\n"); return false; }
+
+  // most-detailed (smallest native scale) first — tidy, and a deterministic tie-break base
+  std::sort(g_cells.begin(), g_cells.end(), [](const Cell& a, const Cell& b) { return a.scale < b.scale; });
 
   g_blank = make_blank();
   if (g_blank.empty()) { printf("FATAL: transparent no-coverage tile generation failed\n"); return false; }
 
-  printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d  blankPNG=%zuB\n",
-         g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns, g_blank.size());
+  printf("loaded %zu ENC cell(s); native scales 1:%d (finest) .. 1:%d (coarsest)\n",
+         g_cells.size(), g_cells.front().scale, g_cells.back().scale);
   return true;
 }
 
@@ -201,8 +254,12 @@ public:
   ix::HttpServer* server = nullptr;
   bool OnInit() override {
     SetAppName(wxT("opencpn"));
-    wxString enc = (argc >= 2) ? wxString(argv[1]) : wxString(wxT("/tmp/ENC_ROOT/US5FL96M/US5FL96M.000"));
-    if (!init_chart(enc)) return false;
+    // arg or $HELM_ENC_ROOT: a folder of ENC cells (multi-cell quilt) or a single .000 file.
+    wxString root;
+    if (argc >= 2) root = wxString(argv[1]);
+    else if (const wxChar* env = wxGetenv(wxT("HELM_ENC_ROOT"))) root = wxString(env);
+    else root = wxString(wxT("/tmp/ENC_ROOT"));
+    if (!init_charts(root)) return false;
 
     server = new ix::HttpServer(8082, "127.0.0.1");
     server->setOnConnectionCallback(
@@ -243,7 +300,8 @@ public:
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string());
       });
     if (!server->listenAndStart()) { printf("HTTP listen on 8082 FAILED\n"); return false; }
-    printf("S-52 tile server: http://127.0.0.1:8082/chart/{z}/{x}/{y}.png  (cell US5FL96M)\n");
+    printf("S-52 tile server: http://127.0.0.1:8082/chart/{z}/{x}/{y}.png  (%zu cells, zoom-quilted)\n",
+           g_cells.size());
     return false;  // no wx event loop; main() runs the render job loop
   }
 };

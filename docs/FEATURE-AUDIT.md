@@ -72,9 +72,13 @@ over a mostly-real *engine*, with key connecting wires unrun.
    arrival, off-course, depth alarms — the `collision.js` banner/audio channel is the reusable
    seam for them.
 
-5. **🟠 The S-52 tiler serves a single hard-coded cell.** `helm_tiles.cpp` loads one ENC
-   (`US5FL96M`) — no quilting, no chart groups, no multi-cell. Fine for the proof; a real
-   gap for "carries OpenCPN's full feature set forward."
+5. **◐ Multi-cell S-52 tiler — UPGRADED (2026-06-24); full quilting next.** *Was: one
+   hard-coded cell (`US5FL96M`).* `helm_tiles.cpp` now loads a **folder of ENC cells** and picks
+   the **zoom-appropriate** covering cell per tile (overview→harbour as you zoom) — the
+   tile-layer analogue of OpenCPN's quilt reference-chart pick, headless. Still to do: per-tile
+   *compositing* (finer-on-coarser, NODTA→transparent) for seamless cross-cell quilting, and
+   chart groups. See [CHART-QUILTING.md](CHART-QUILTING.md) — incl. where OpenCPN's quilt code
+   falls short vs ours.
 
 Everything else below is catalogued so we can decide build-vs-skip deliberately rather than
 discover a hole at sea.
@@ -130,8 +134,8 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 |---|---|---|---|
 | Raster basemap (satellite) | TS | ✅ | Sentinel-2 via MapLibre |
 | NOAA raster charts (RNC) | TS | ✅ | tile source |
-| True S-52 vector ENC (S-57) | TS | ◐ | engine renders **one hard-coded cell**; no multi-cell |
-| **Chart quilting** (seamless multi-cell) | TS | ⬜ | OCPN core; Phase 2. `helm_tiles` is single-cell |
+| True S-52 vector ENC (S-57) | TS | ✅ | **multi-cell**, zoom-aware cell selection (`helm_tiles.cpp`) |
+| **Chart quilting** (seamless multi-cell) | TS | ◐ | per-tile cell **selection** done; cross-cell **compositing** next ([CHART-QUILTING.md](CHART-QUILTING.md)) |
 | **Chart groups** (region sets) | TS | ⬜ | OCPN core; Phase 2 |
 | S-63 encrypted ENC | TS(offshore) | ✖ | OCPN via plugin; licensing-gated |
 | CM93 worldwide vector | Diff | ✖ | OCPN core; not planned v1 |
