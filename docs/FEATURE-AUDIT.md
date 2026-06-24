@@ -52,10 +52,11 @@ over a mostly-real *engine*, with key connecting wires unrun.
    min). The static sample still shows in sim mode (no engine). See `web/index.html`
    (`updateAisFromEngine` + `aisPopupHTML`).
 
-2. **🔴 No measure / range-bearing ("draw distance") tool exists.** Not in the UI, not on
-   the roadmap. Every competitor — OpenCPN, every MFD, every iOS app — has a ruler. The
-   great-circle math already exists in `nav-source.js` and engine-side
-   (`DistanceBearingMercator`); this is a UI-layer build.
+2. **✅ Measure / range-bearing ("draw distance") tool — BUILT (2026-06-24).** *Was: no
+   ruler anywhere.* Now `web/measure.js` adds a click-to-drop ruler (Mapbox-idiom mechanics
+   + Apple-idiom glass HUD): per-leg **range + bearing °T** labels, a live rubber-band to the
+   cursor, cumulative total in the HUD, ⌫ undo, double-click/Esc to finish. Toggled from the
+   left rail; great-circle math agrees with the engine's BRG/DTW.
 
 3. **🟠 The route line on the chart is static.** The magenta route is read from
    `data/route.geojson`; the engine's loaded GPX drives the *inspector* legs but not the
@@ -231,8 +232,8 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 
 | Feature | TS/Diff | Helm | Notes |
 |---|---|---|---|
-| **Measure / range-bearing ruler** | TS | ✖ | **the named "draw distance" feature — missing entirely** |
-| Multi-segment cumulative measure | TS | ✖ | — |
+| **Measure / range-bearing ruler** | TS | ✅ | `web/measure.js` — per-leg range + bearing °T, live HUD |
+| Multi-segment cumulative measure | TS | ✅ | cumulative total in the HUD |
 | Range rings (ownship / waypoint) | TS | ✖ | OCPN + every MFD |
 | EBL / VRM | TS(MFD) | ✖ | electronic bearing line / variable range marker |
 | Drop waypoint by lat/lon or range/bearing | TS | ✖ | — |
@@ -315,8 +316,9 @@ Grouped by "did we forget this?" — the answer for each should be *build*, *def
 1. ~~**Live AIS end-to-end**~~ — ✅ **DONE (2026-06-24).** Consumes `s.ais`, drives the `ais`
    GeoJSON source, rich tap popup (name/MMSI/class/range/brg/CPA/**TCPA**/SOG/COG/HDG) +
    close-approach flag. CPA color rule in `style.json` already applies. (named feature #2, real)
-2. **Measure / range-bearing tool** — click-to-drop ruler, running leg + cumulative range +
-   bearing; math already in `nav-source.js`. *(delivers named feature #1)*
+2. ~~**Measure / range-bearing tool**~~ — ✅ **DONE (2026-06-24).** `web/measure.js`:
+   click-to-drop ruler, per-leg range + bearing °T, live rubber-band, cumulative HUD,
+   undo/Esc. *(named feature #1, delivered)*
 3. **AIS CPA alarm + dangerous-target surfacing** — the engine already flags it; add a UI
    alarm channel (banner + optional sound) reused later for anchor/arrival/depth.
 4. **Live route line** — push route geometry in the nav frame; UI renders from the feed so

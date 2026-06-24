@@ -141,6 +141,17 @@
   .maplibregl-popup-anchor-left .maplibregl-popup-tip,
   .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-color:transparent;display:none}
   .maplibregl-popup-close-button{color:var(--cdim)}
+
+  /* ---- measure / ruler HUD (Apple-style glass card) ---- */
+  .measure-hud{position:absolute;top:62px;left:50%;transform:translateX(-50%);z-index:8;
+    border-radius:12px;padding:7px 8px 7px 13px;display:flex;align-items:center;gap:12px;
+    color:var(--ctext);min-width:148px}
+  .measure-hud[hidden]{display:none}
+  .measure-hud .mt{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.05}
+  .measure-hud .ms{font-size:10.5px;color:var(--cdim);margin-top:2px;font-variant-numeric:tabular-nums}
+  .measure-hud .mx{margin-left:auto;cursor:pointer;color:var(--cdim);font-size:13px;width:22px;height:22px;
+    border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none}
+  .measure-hud .mx:hover{background:var(--glass2);color:var(--ctext)}
 </style>
 </head>
 <body>
@@ -182,6 +193,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
   </div>
   <div class="sep"></div>
+  <div class="ri" data-rail="measure" title="Measure — range &amp; bearing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+  </div>
   <div class="ri" data-rail="download" title="Download charts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
   </div>
@@ -302,6 +316,7 @@
 <script src="radar.js"></script>
 <script src="isolines.js"></script>
 <script src="nav-source.js"></script>
+<script src="measure.js"></script>
 <script>
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
@@ -323,6 +338,8 @@
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
+  const measureBtn = document.querySelector('.ri[data-rail="measure"]');
+  const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
@@ -429,10 +446,11 @@
     setWeather('wind');
   });
 
-  // click popups
-  map.on('click', 'soundg-text', e => new maplibregl.Popup().setLngLat(e.lngLat)
-    .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
-  map.on('click', 'places-icon', e => { const p = e.features[0].properties;
+  // click popups (suppressed while the measure tool is active — a click then drops a ruler point)
+  const measuring = () => window.__helmMeasure && window.__helmMeasure.active();
+  map.on('click', 'soundg-text', e => { if (measuring()) return;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map); });
+  map.on('click', 'places-icon', e => { if (measuring()) return; const p = e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
   // ---- AIS: live engine-driven targets + rich tap inspector ----
   // The engine streams a per-fix `ais` array (range/brg/CPA/TCPA computed by OpenCPN's
@@ -479,8 +497,8 @@
   }
   map.on('mouseenter', 'ais-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'ais-vessels', () => { map.getCanvas().style.cursor = ''; });
-  map.on('click', 'ais-vessels', e =>
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map));
+  map.on('click', 'ais-vessels', e => { if (measuring()) return;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
 
   // ================= CHROME UI wiring =================
   (function () {
@@ -502,9 +520,14 @@
         const insp = document.querySelector('.insp');
         if (insp) insp.style.display = (insp.style.display === 'none' ? '' : 'none');
         btn.classList.toggle('on');
+      } else if (key === 'measure') {                  // range/bearing ruler mode
+        if (measure) measure.toggle();
       } else if (key === 'chart') {                    // home
         closeDrawers(); setActive(btn);
+        if (measure && measure.active()) measure.toggle();
       }
+      // keep the ruler's highlight truthful even when another rail button reshuffles 'on'
+      if (measureBtn) measureBtn.classList.toggle('on', !!(measure && measure.active()));
     }));
   })();
 
