@@ -143,7 +143,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Day / Dusk / Night palettes | TS | ◐ | UI reskins raster; **true S-52 night palette** not switched engine-side |
 | Depth-area fill + contours + soundings | TS | ✅ | `depare`/`depcnt`/`soundg` layers |
 | Depth shading bands (safety/shallow/deep) | TS | ◐ | static fill ramp; no user safety-depth control |
-| **Depth-on-satellite** (ENC over imagery) | **Diff★** | ◐ | NODTA now transparent → ENC composites over satellite; depth-only styling is a refinement |
+| **Depth-on-satellite** (ENC over imagery) | **Diff★** | ✅ | full S-52 composites over satellite (NODTA transparent) + depth-only vector overlay, shallow-emphasis soundings/contours |
 | S-52 display category (Base/Std/All/Mariner) | TS | ✖ | OCPN core; not yet |
 | SCAMIN / overzoom indication | TS | ◐ | engine honors SCAMIN; UI has no scale warning |
 | Chart-object query (tap any S-57 object) | TS | ✖ | OCPN core; only soundings tappable now |
@@ -280,7 +280,7 @@ Benchmarked against OpenCPN (OCPN), pro MFDs, and iOS apps. Status is **Helm's**
 | Feature | Helm | Notes |
 |---|---|---|
 | **One fused screen** (charts+sat+weather+AIS+route+instruments) | ✅ | the wedge — present and good |
-| **Depth-on-satellite** | ◐ | NODTA→transparent done → ENC composites over satellite; depth-only styling next — **the moat** |
+| **Depth-on-satellite** | ✅ | ENC over cloudless satellite (NODTA transparent) + shallow-emphasis depth overlay — **the moat, shipped** |
 | **On-demand multi-source chart download** | ⚠ | mockup UI; CLI pipeline exists |
 | **Own full weather stack, offline** | ✅ | Open-Meteo render, our own layers |
 | **True BYO / no subscription lock-in** | ⬜ | mbtiles import; Phase 1 |
