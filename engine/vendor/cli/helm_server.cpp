@@ -64,6 +64,14 @@
 #include "model/route_point.h"
 #include "model/own_ship.h"
 #include "model/georef.h"
+#include "model/ais_decoder.h"
+#include "model/ais_target_data.h"
+#include "model/ais_state_vars.h"
+#include "model/select.h"
+#include "model/base_platform.h"
+#include "pugixml.hpp"
+#include "rapidjson/document.h"
+#include <iterator>
 
 #include "ixwebsocket/IXHttpServer.h"
 #include "ixwebsocket/IXHttp.h"
@@ -247,14 +255,60 @@ static bool serve_static(const std::string& uri, std::string& body, std::string&
 // Nav (model/ Routeman) — from helm_engine.cpp. Runs on its own thread and
 // pushes snapshot/delta to the WS clients of the shared ix::HttpServer.
 // ===========================================================================
-struct WP { double lat, lon; const char* name; };
-static std::vector<WP> ROUTE = {            // inside US5FL96M (24.75–24.87N, -81.61 to -81.24W)
-  { 24.770, -81.580, "WP1 \xC2\xB7 start" },
-  { 24.792, -81.515, "WP2 \xC2\xB7 sea buoy" },
-  { 24.812, -81.448, "WP3 \xC2\xB7 channel" },
-  { 24.835, -81.375, "WP4 \xC2\xB7 pass" },
-  { 24.856, -81.302, "WP5 \xC2\xB7 marina" }
-};
+struct WP { double lat, lon; std::string name; };
+static std::vector<WP> ROUTE;                 // loaded from GPX at startup — no hardcoded route
+static std::string g_route_name = "Route";
+
+// Built-in sample (inside US5FL96M) used when no HELM_ROUTE is given, so the server still
+// runs out of the box. Real GPX data parsed by the same loader as a user file.
+static const char* SAMPLE_GPX = R"GPX(<?xml version="1.0" encoding="UTF-8"?>
+<gpx version="1.1" creator="Helm" xmlns="http://www.topografix.com/GPX/1/1">
+  <rte>
+    <name>Key West Approach</name>
+    <rtept lat="24.770" lon="-81.580"><name>WP1 · start</name></rtept>
+    <rtept lat="24.792" lon="-81.515"><name>WP2 · sea buoy</name></rtept>
+    <rtept lat="24.812" lon="-81.448"><name>WP3 · channel</name></rtept>
+    <rtept lat="24.835" lon="-81.375"><name>WP4 · pass</name></rtept>
+    <rtept lat="24.856" lon="-81.302"><name>WP5 · marina</name></rtept>
+  </rte>
+</gpx>)GPX";
+
+// Minimal JSON string escaper — route/waypoint/AIS names come from user data.
+static std::string json_escape(const std::string& s) {
+  std::string o; o.reserve(s.size() + 8);
+  for (unsigned char c : s) {
+    switch (c) {
+      case '"': o += "\\\""; break;  case '\\': o += "\\\\"; break;
+      case '\n': o += "\\n"; break;  case '\r': o += "\\r"; break;  case '\t': o += "\\t"; break;
+      default: if (c < 0x20) { char b[8]; std::snprintf(b, sizeof b, "\\u%04x", c); o += b; } else o += (char)c;
+    }
+  }
+  return o;
+}
+static bool read_file(const char* path, std::string& out) {
+  std::ifstream f(path, std::ios::binary);
+  if (!f) return false;
+  out.assign(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
+  return true;
+}
+// Parse the first <rte> of a GPX doc into ROUTE + the route name (pugixml, namespace-tolerant).
+static bool load_gpx_route(const std::string& xml, std::vector<WP>& out, std::string& routeName) {
+  pugi::xml_document doc;
+  if (!doc.load_buffer(xml.data(), xml.size())) { std::fprintf(stderr, "GPX parse error\n"); return false; }
+  pugi::xml_node gpx = doc.child("gpx"); if (!gpx) gpx = doc.first_child();
+  pugi::xml_node rte = gpx.child("rte"); if (!rte) { std::fprintf(stderr, "GPX has no <rte>\n"); return false; }
+  if (pugi::xml_node nm = rte.child("name")) routeName = nm.text().get();
+  out.clear();
+  for (pugi::xml_node pt = rte.child("rtept"); pt; pt = pt.next_sibling("rtept")) {
+    pugi::xml_attribute la = pt.attribute("lat"), lo = pt.attribute("lon");
+    if (!la || !lo) continue;
+    WP w; w.lat = la.as_double(); w.lon = lo.as_double();
+    if (pugi::xml_node nm = pt.child("name")) w.name = nm.text().get();
+    if (w.name.empty()) { char b[24]; std::snprintf(b, sizeof b, "WP%zu", out.size() + 1); w.name = b; }
+    out.push_back(w);
+  }
+  return out.size() >= 2;
+}
 static void bd(double lat1, double lon1, double lat0, double lon0, double* brg, double* nm) {
   DistanceBearingMercator(lat1, lon1, lat0, lon0, brg, nm);
 }
@@ -280,10 +334,19 @@ static std::string fmtDur(double hours) {
 // NMEA 0183 over TCP (real data overrides the sim per-field; source flags stay truthful)
 static const int kNmeaPort = 10110;
 static const double kStaleSec = 5.0;
-struct RField { double v = 0; std::time_t t = 0; };
-struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0;
+struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; };
+struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea";
                   RField sog, cog, hdg, depth, wspd, wdir; };
 static RealFeed g_real;
+
+// AIS — OpenCPN's real AisDecoder driven headless (decode + CPA/TCPA stay in its code). We
+// snapshot the decoded targets into our own set at decode time and age on our own clock.
+extern Select* pSelectAIS;                 // model global (ais_decoder.cpp), seeded in OnInit
+static AisDecoder* g_ais = nullptr;
+static std::mutex  g_ais_mtx;
+struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
+                bool cpaValid; int cls; std::string name; std::time_t seen; };
+static std::map<int, AisRow> g_ais_rows;
 static bool fresh(std::time_t t) { return t != 0 && std::difftime(std::time(nullptr), t) <= kStaleSec; }
 static std::vector<std::string> splitc(const std::string& s) {
   std::vector<std::string> out; std::string cur;
@@ -303,21 +366,80 @@ static double nmea_ll(const std::string& v, const std::string& hemi) {
   double dec = deg + mn / 60.0; if (hemi == "S" || hemi == "W") dec = -dec; return dec;
 }
 static void nmea_parse(const std::string& line) {
+  // AIS (!AIVDM/!AIVDO) -> OpenCPN's decoder (own checksum + multipart reassembly). Routed BEFORE
+  // the $-only checksum gate. Snapshot the decoded targets (range/brg/CPA/TCPA) into g_ais_rows.
+  if (g_ais && line.size() >= 6 && (line.compare(0, 6, "!AIVDM") == 0 || line.compare(0, 6, "!AIVDO") == 0)) {
+    std::lock_guard<std::mutex> lk(g_ais_mtx);
+    g_ais->DecodeN0183(wxString::FromUTF8(line.c_str()));
+    std::time_t snap = std::time(nullptr);
+    for (auto& kv : g_ais->GetTargetList()) {
+      auto& t = kv.second;
+      g_ais_rows[t->MMSI] = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
+        t->CPA, t->TCPA, t->bCPA_Valid, (int)t->Class, std::string(t->ShipName), snap };
+    }
+    return;
+  }
   if (!nmea_csum_ok(line)) { std::fprintf(stderr, "NMEA rejected (bad checksum): %s\n", line.c_str()); return; }
   std::vector<std::string> f = splitc(line.substr(0, line.rfind('*')));
   if (f.empty() || f[0].size() < 6) return;
   std::string type = f[0].substr(3); std::time_t now = std::time(nullptr);
   std::lock_guard<std::mutex> lk(g_real.m);
   if (type == "RMC" && f.size() >= 9 && f[2] == "A") {
-    g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now;
-    if (!f[7].empty()) { g_real.sog.v = std::atof(f[7].c_str()); g_real.sog.t = now; }
-    if (!f[8].empty()) { g_real.cog.v = std::atof(f[8].c_str()); g_real.cog.t = now; }
-  } else if (type == "DPT" && f.size() >= 2 && !f[1].empty()) { g_real.depth.v = std::atof(f[1].c_str()); g_real.depth.t = now; }
-  else if (type == "DBT" && f.size() >= 4 && !f[3].empty()) { g_real.depth.v = std::atof(f[3].c_str()); g_real.depth.t = now; }
+    g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now; g_real.pos_src = "nmea";
+    if (!f[7].empty()) { g_real.sog.v = std::atof(f[7].c_str()); g_real.sog.t = now; g_real.sog.src = "nmea"; }
+    if (!f[8].empty()) { g_real.cog.v = std::atof(f[8].c_str()); g_real.cog.t = now; g_real.cog.src = "nmea"; }
+  } else if (type == "DPT" && f.size() >= 2 && !f[1].empty()) { g_real.depth.v = std::atof(f[1].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea"; }
+  else if (type == "DBT" && f.size() >= 4 && !f[3].empty()) { g_real.depth.v = std::atof(f[3].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea"; }
   else if (type == "MWV" && f.size() >= 6 && f[5] == "A") {
-    if (!f[1].empty()) { g_real.wdir.v = std::atof(f[1].c_str()); g_real.wdir.t = now; }
-    if (!f[3].empty()) { double sp = std::atof(f[3].c_str()); if (f[4] == "K") sp *= 0.539957; else if (f[4] == "M") sp *= 1.943844; g_real.wspd.v = sp; g_real.wspd.t = now; }
-  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) { g_real.hdg.v = std::atof(f[1].c_str()); g_real.hdg.t = now; }
+    if (!f[1].empty()) { g_real.wdir.v = std::atof(f[1].c_str()); g_real.wdir.t = now; g_real.wdir.src = "nmea"; }
+    if (!f[3].empty()) { double sp = std::atof(f[3].c_str()); if (f[4] == "K") sp *= 0.539957; else if (f[4] == "M") sp *= 1.943844; g_real.wspd.v = sp; g_real.wspd.t = now; g_real.wspd.src = "nmea"; }
+  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) { g_real.hdg.v = std::atof(f[1].c_str()); g_real.hdg.t = now; g_real.hdg.src = "nmea"; }
+}
+// SignalK overlay — consume a SignalK server's WS delta stream as a CLIENT. Maps self-vessel
+// paths onto the SAME g_real per-field override, tagged "signalk". SI units -> kn/deg/m.
+static ix::WebSocket* g_sk = nullptr;
+static std::string g_sk_self;
+static void sk_apply(const std::string& path, const rapidjson::Value& v, std::time_t now) {
+  auto set = [&](RField& f, double val) { f.v = val; f.t = now; f.src = "signalk"; };
+  const double MS2KN = 1.943844, R2D = 180.0 / M_PI;
+  if (path == "navigation.position" && v.IsObject() && v.HasMember("latitude") && v.HasMember("longitude") &&
+      v["latitude"].IsNumber() && v["longitude"].IsNumber()) {
+    g_real.lat = v["latitude"].GetDouble(); g_real.lon = v["longitude"].GetDouble();
+    g_real.pos_t = now; g_real.pos_src = "signalk";
+  } else if (path == "navigation.speedOverGround" && v.IsNumber()) set(g_real.sog, v.GetDouble() * MS2KN);
+  else if (path == "navigation.courseOverGroundTrue" && v.IsNumber()) set(g_real.cog, v.GetDouble() * R2D);
+  else if (path == "navigation.headingTrue" && v.IsNumber()) set(g_real.hdg, v.GetDouble() * R2D);
+  else if (path == "environment.depth.belowTransducer" && v.IsNumber()) set(g_real.depth, v.GetDouble());
+  else if (path == "environment.wind.speedApparent" && v.IsNumber()) set(g_real.wspd, v.GetDouble() * MS2KN);
+  else if (path == "environment.wind.angleApparent" && v.IsNumber()) { double d = v.GetDouble() * R2D; if (d < 0) d += 360.0; set(g_real.wdir, d); }
+}
+static void sk_on_message(const std::string& msg) {
+  rapidjson::Document d;
+  if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject()) return;
+  if (d.HasMember("self") && d["self"].IsString()) { g_sk_self = d["self"].GetString(); return; }
+  if (!d.HasMember("updates") || !d["updates"].IsArray()) return;
+  if (d.HasMember("context") && d["context"].IsString()) {     // own-ship only; other vessels = AIS
+    std::string ctx = d["context"].GetString();
+    if (ctx != "vessels.self" && (g_sk_self.empty() || ctx != g_sk_self)) return;
+  }
+  std::time_t now = std::time(nullptr);
+  std::lock_guard<std::mutex> lk(g_real.m);
+  for (auto& u : d["updates"].GetArray()) {
+    if (!u.HasMember("values") || !u["values"].IsArray()) continue;
+    for (auto& val : u["values"].GetArray())
+      if (val.HasMember("path") && val["path"].IsString() && val.HasMember("value"))
+        sk_apply(val["path"].GetString(), val["value"], now);
+  }
+}
+static void sk_start(std::string url) {
+  if (url.find("://") == std::string::npos) url = "ws://" + url + "/signalk/v1/stream?subscribe=self";
+  g_sk = new ix::WebSocket(); g_sk->setUrl(url); g_sk->setPingInterval(20); g_sk->enableAutomaticReconnection();
+  g_sk->setOnMessageCallback([](const ix::WebSocketMessagePtr& m) {
+    if (m->type == ix::WebSocketMessageType::Message) sk_on_message(m->str);
+    else if (m->type == ix::WebSocketMessageType::Open) std::printf("SignalK: connected\n");
+  });
+  std::printf("SignalK input: %s (self-vessel nav overrides sim per-field)\n", url.c_str());
+  g_sk->start();
 }
 static void nmea_listener() {
   int srv = ::socket(AF_INET, SOCK_STREAM, 0);
@@ -349,8 +471,14 @@ static long g_seq = 0;
 static std::set<ix::WebSocket*> g_seen;   // clients already given a snapshot baseline (nav thread only)
 
 static void nav_loop(ix::HttpServer* server) {
+  // load the active route from GPX (no hardcoded route) — HELM_ROUTE | built-in sample, fail-loud
+  { const char* rp = std::getenv("HELM_ROUTE"); std::string gpx;
+    if (rp && *rp) { if (!read_file(rp, gpx)) { std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", rp); std::exit(3); } std::printf("route source: %s\n", rp); }
+    else { gpx = SAMPLE_GPX; std::printf("route source: built-in sample (override: HELM_ROUTE=<route.gpx>)\n"); }
+    if (!load_gpx_route(gpx, ROUTE, g_route_name)) { std::fprintf(stderr, "FATAL: GPX route unusable (need <rte> with >=2 <rtept>)\n"); std::exit(4); }
+    std::printf("loaded route \"%s\": %zu waypoints\n", g_route_name.c_str(), ROUTE.size()); }
   Route* r = new Route();
-  for (auto& w : ROUTE) r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name)));
+  for (auto& w : ROUTE) r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name.c_str())));
   r->UpdateSegmentDistances(6.0);
   g_pRouteMan = new Routeman(RoutePropDlgCtx(), RoutemanDlgCtx());
   gLat = ROUTE[0].lat; gLon = ROUTE[0].lon;
@@ -382,14 +510,15 @@ static void nav_loop(ix::HttpServer* server) {
     double sog, depth, wspd; int cog, hdg, wdir;
     const char *src_pos, *src_sog, *src_cog, *src_hdg, *src_depth, *src_wind;
     { std::lock_guard<std::mutex> lk(g_real.m);
-      if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = "nmea"; } else { gLat = sim_lat; gLon = sim_lon; src_pos = "simulated"; }
-      if (fresh(g_real.sog.t)) { sog = g_real.sog.v; src_sog = "nmea"; } else { sog = sim_sog; src_sog = "simulated"; }
-      if (fresh(g_real.cog.t)) { cog = (int)std::lround(g_real.cog.v); src_cog = "nmea"; } else { cog = sim_cog; src_cog = "simulated"; }
-      if (fresh(g_real.hdg.t)) { hdg = (int)std::lround(g_real.hdg.v); src_hdg = "nmea"; } else { hdg = sim_hdg; src_hdg = "simulated"; }
-      if (fresh(g_real.depth.t)) { depth = g_real.depth.v; src_depth = "nmea"; } else { depth = sim_depth; src_depth = "simulated"; }
-      if (fresh(g_real.wspd.t)) { wspd = g_real.wspd.v; src_wind = "nmea"; } else { wspd = sim_wspd; src_wind = "simulated"; }
+      if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = g_real.pos_src; } else { gLat = sim_lat; gLon = sim_lon; src_pos = "simulated"; }
+      if (fresh(g_real.sog.t)) { sog = g_real.sog.v; src_sog = g_real.sog.src; } else { sog = sim_sog; src_sog = "simulated"; }
+      if (fresh(g_real.cog.t)) { cog = (int)std::lround(g_real.cog.v); src_cog = g_real.cog.src; } else { cog = sim_cog; src_cog = "simulated"; }
+      if (fresh(g_real.hdg.t)) { hdg = (int)std::lround(g_real.hdg.v); src_hdg = g_real.hdg.src; } else { hdg = sim_hdg; src_hdg = "simulated"; }
+      if (fresh(g_real.depth.t)) { depth = g_real.depth.v; src_depth = g_real.depth.src; } else { depth = sim_depth; src_depth = "simulated"; }
+      if (fresh(g_real.wspd.t)) { wspd = g_real.wspd.v; src_wind = g_real.wspd.src; } else { wspd = sim_wspd; src_wind = "simulated"; }
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
     }
+    gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
     RoutePoint* act = g_pRouteMan->GetpActivePoint();
     double brgW = 0, dtw = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
     double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
@@ -408,7 +537,7 @@ static void nav_loop(ix::HttpServer* server) {
       double lb, ld; bd(ROUTE[k].lat, ROUTE[k].lon, from.lat, from.lon, &lb, &ld);
       char lbuf[160];
       std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
-                    k == li + 1 ? "" : ",", ROUTE[k].name, std::lround(lb), k == li + 1 ? "true" : "false");
+                    k == li + 1 ? "" : ",", json_escape(ROUTE[k].name).c_str(), std::lround(lb), k == li + 1 ? "true" : "false");
       legs += lbuf;
     }
     legs += "]";
@@ -421,13 +550,14 @@ static void nav_loop(ix::HttpServer* server) {
       "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
       "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
       "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},"
-      "\"active\":{\"name\":\"Route to Marina\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
+      "\"active\":{\"name\":\"%s\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\","
       "\"dtg\":\"%s\",\"xte\":\"%d m\",\"legs\":%s,\"nextWp\":\"%s \xC2\xB7 %s\"}}",
       seq, ts, src_pos, src_pos, src_sog, src_cog, src_hdg, src_depth, src_wind,
       gLat, gLon, fmtPos(gLat, gLon).c_str(), sog, cog, hdg, depth,
       wspd, wdir, std::lround(wspd - 4), std::lround(wspd + 8),
+      json_escape(g_route_name).c_str(),
       etabuf, ttg.c_str(), vmg, fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852),
-      legs.c_str(), nextShort.c_str(), fmtNM(dtw).c_str());
+      legs.c_str(), json_escape(nextShort).c_str(), fmtNM(dtw).c_str());
 
     std::string frame; bool truncated = (snlen < 0 || (size_t)snlen >= sizeof snap);
     if (keyframe) { frame = snap; }
@@ -441,7 +571,7 @@ static void nav_loop(ix::HttpServer* server) {
         "\"active\":{\"dtg\":\"%s\",\"xte\":\"%d m\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\",\"nextWp\":\"%s \xC2\xB7 %s\"}}",
         seq, ts, src_pos, src_pos, src_sog, src_cog, src_hdg, src_depth, src_wind,
         gLat, gLon, fmtPos(gLat, gLon).c_str(), sog, cog, hdg, depth,
-        fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852), etabuf, ttg.c_str(), vmg, nextShort.c_str(), fmtNM(dtw).c_str());
+        fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852), etabuf, ttg.c_str(), vmg, json_escape(nextShort).c_str(), fmtNM(dtw).c_str());
       truncated = truncated || dlen < 0 || (size_t)dlen >= sizeof dlt;
       frame = dlt;
       if (tick % 5 == 0) {
@@ -454,10 +584,35 @@ static void nav_loop(ix::HttpServer* server) {
     }
     if (truncated) { std::fprintf(stderr, "ERROR: nav frame seq %ld truncated; NOT sending.\n", seq); std::this_thread::sleep_for(std::chrono::seconds(1)); continue; }
 
+    // AIS targets (OpenCPN-computed range/brg/CPA/TCPA) — spliced into the DYNAMIC frame strings
+    // (not the fixed snprintf buffers) so a busy harbor can't truncate the nav frame.
+    std::string aisArr = "[";
+    { std::lock_guard<std::mutex> lk(g_ais_mtx);
+      std::time_t aisNow = std::time(nullptr); bool first = true;
+      for (auto it = g_ais_rows.begin(); it != g_ais_rows.end(); ) {
+        AisRow& t = it->second; long age = (long)(aisNow - t.seen);
+        if (age > 600) { it = g_ais_rows.erase(it); continue; }
+        char tb[440];
+        std::snprintf(tb, sizeof tb,
+          "%s{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
+          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
+          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld}",
+          first ? "" : ",", t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
+          t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
+          t.cls, json_escape(t.name).c_str(), age);
+        aisArr += tb; first = false; ++it;
+      }
+    }
+    aisArr += "]";
+    std::string snapOut(snap);
+    if (!snapOut.empty()) snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);   // top-level, before final }
+    if (keyframe) frame = snapOut;
+    else if (!frame.empty()) frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
+
     auto clients = server->getClients();
     std::set<ix::WebSocket*> live;
     for (auto& c : clients) live.insert(c.get());
-    for (auto& c : clients) c->send(g_seen.count(c.get()) ? frame : snap);
+    for (auto& c : clients) c->send(g_seen.count(c.get()) ? frame : snapOut);
     g_seen.swap(live);
     if (tick % 10 == 0)
       std::printf("  [%ld] seq %ld %-5s %s [%s]  SOG %.1f  DTG %s  -> %s  (clients: %zu)\n",
@@ -556,6 +711,18 @@ public:
     printf("Helm one-origin server: http://%s:%d/  (UI + /chart S-52 tiles + ws /nav)\n", bindHost, port);
     if (std::strcmp(bindHost, "127.0.0.1") != 0)
       printf("  serving the LAN — iPad/iPhone: open http://<this-host>:%d/  (no ?server= needed)\n", port);
+
+    // --- AIS: stand up OpenCPN's real AisDecoder headless (decode + CPA/TCPA stay in its code) ---
+    g_CPAMax_NM = 20.0; g_CPAWarn_NM = 2.0; g_TCPA_Max = 30.0;
+    g_ShowMoored_Kts = 0.2; g_AISShowTracks_Mins = 20.0;
+    g_bMarkLost = false; g_MarkLost_Mins = 10.0; g_bRemoveLost = false; g_RemoveLost_Mins = 20.0;
+    g_bInlandEcdis = false; g_benableAISNameCache = false;
+    bGPSValid = true; gCog = 0; gSog = 0;
+    if (!g_BasePlatform) g_BasePlatform = new BasePlatform();   // Select reads GetSelectRadiusPix() from it
+    pSelectAIS = new Select();
+    g_ais = new AisDecoder(AisDecoderCallbacks());
+    std::printf("AIS: OpenCPN AisDecoder live — feed !AIVDM on tcp://127.0.0.1:%d\n", kNmeaPort);
+    if (const char* sk = std::getenv("HELM_SIGNALK")) if (*sk) sk_start(sk);   // opt-in SignalK overlay
 
     std::thread(nav_loop, server).detach();
     std::thread(nmea_listener).detach();
