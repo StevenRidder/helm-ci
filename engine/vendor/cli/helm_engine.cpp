@@ -40,6 +40,7 @@
 #include "model/ais_state_vars.h"
 #include "model/select.h"
 #include "model/base_platform.h"
+#include "rapidjson/document.h"
 
 void* g_pi_manager = reinterpret_cast<void*>(1L);
 
@@ -165,10 +166,10 @@ static std::string fmtDur(double hours) {              // time-to-go as a human 
 static const int kNmeaPort = 10110;
 static const double kStaleSec = 5.0;
 
-struct RField { double v = 0; std::time_t t = 0; };     // t == 0 => never received
+struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; };  // t==0 => never received
 struct RealFeed {
   std::mutex m;
-  double lat = 0, lon = 0; std::time_t pos_t = 0;
+  double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea";
   RField sog, cog, hdg, depth, wspd, wdir;
 };
 static RealFeed g_real;
@@ -222,24 +223,97 @@ static void nmea_parse(const std::string& line) {
   std::time_t now = std::time(nullptr);
   std::lock_guard<std::mutex> lk(g_real.m);
   if (type == "RMC" && f.size() >= 9 && f[2] == "A") {     // valid GPS fix: pos + sog + cog
-    g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now;
-    if (!f[7].empty()) { g_real.sog.v = std::atof(f[7].c_str()); g_real.sog.t = now; }
-    if (!f[8].empty()) { g_real.cog.v = std::atof(f[8].c_str()); g_real.cog.t = now; }
+    g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now; g_real.pos_src = "nmea";
+    if (!f[7].empty()) { g_real.sog.v = std::atof(f[7].c_str()); g_real.sog.t = now; g_real.sog.src = "nmea"; }
+    if (!f[8].empty()) { g_real.cog.v = std::atof(f[8].c_str()); g_real.cog.t = now; g_real.cog.src = "nmea"; }
   } else if (type == "DPT" && f.size() >= 2 && !f[1].empty()) {       // depth, metres
-    g_real.depth.v = std::atof(f[1].c_str()); g_real.depth.t = now;
+    g_real.depth.v = std::atof(f[1].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea";
   } else if (type == "DBT" && f.size() >= 4 && !f[3].empty()) {       // depth below transducer (m in f[3])
-    g_real.depth.v = std::atof(f[3].c_str()); g_real.depth.t = now;
+    g_real.depth.v = std::atof(f[3].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea";
   } else if (type == "MWV" && f.size() >= 6 && f[5] == "A") {         // wind angle + speed
-    if (!f[1].empty()) { g_real.wdir.v = std::atof(f[1].c_str()); g_real.wdir.t = now; }
+    if (!f[1].empty()) { g_real.wdir.v = std::atof(f[1].c_str()); g_real.wdir.t = now; g_real.wdir.src = "nmea"; }
     if (!f[3].empty()) {
       double sp = std::atof(f[3].c_str());
       if (f[4] == "K") sp *= 0.539957;        // km/h -> kn
       else if (f[4] == "M") sp *= 1.943844;   // m/s  -> kn
-      g_real.wspd.v = sp; g_real.wspd.t = now;
+      g_real.wspd.v = sp; g_real.wspd.t = now; g_real.wspd.src = "nmea";
     }
   } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) {       // true heading
-    g_real.hdg.v = std::atof(f[1].c_str()); g_real.hdg.t = now;
+    g_real.hdg.v = std::atof(f[1].c_str()); g_real.hdg.t = now; g_real.hdg.src = "nmea";
   }
+}
+
+// ---------------------------------------------------------------------------
+// SignalK overlay — consume a SignalK server's WebSocket delta stream as a CLIENT.
+//
+// SignalK is just another truthful real-data source: we map its self-vessel paths onto
+// the SAME g_real per-field override the NMEA listener feeds, tagged source "signalk".
+// All units are SI (m/s, radians, metres) -> converted to the engine's kn/deg/m.
+// Opt-in via HELM_SIGNALK (full ws:// URL, or host[:port] which we expand). Other-vessel
+// contexts (AIS) are skipped for now — own-ship nav is this increment.
+// ---------------------------------------------------------------------------
+static ix::WebSocket* g_sk = nullptr;
+static std::string g_sk_self;            // self context learned from the server hello
+
+static void sk_apply(const std::string& path, const rapidjson::Value& v, std::time_t now) {
+  auto set = [&](RField& f, double val) { f.v = val; f.t = now; f.src = "signalk"; };
+  const double MS2KN = 1.943844, R2D = 180.0 / M_PI;
+  if (path == "navigation.position" && v.IsObject() &&
+      v.HasMember("latitude") && v.HasMember("longitude") &&
+      v["latitude"].IsNumber() && v["longitude"].IsNumber()) {
+    g_real.lat = v["latitude"].GetDouble(); g_real.lon = v["longitude"].GetDouble();
+    g_real.pos_t = now; g_real.pos_src = "signalk";
+  } else if (path == "navigation.speedOverGround" && v.IsNumber()) {
+    set(g_real.sog, v.GetDouble() * MS2KN);
+  } else if (path == "navigation.courseOverGroundTrue" && v.IsNumber()) {
+    set(g_real.cog, v.GetDouble() * R2D);
+  } else if (path == "navigation.headingTrue" && v.IsNumber()) {
+    set(g_real.hdg, v.GetDouble() * R2D);
+  } else if (path == "environment.depth.belowTransducer" && v.IsNumber()) {
+    set(g_real.depth, v.GetDouble());
+  } else if (path == "environment.wind.speedApparent" && v.IsNumber()) {
+    set(g_real.wspd, v.GetDouble() * MS2KN);
+  } else if (path == "environment.wind.angleApparent" && v.IsNumber()) {
+    double d = v.GetDouble() * R2D; if (d < 0) d += 360.0; set(g_real.wdir, d);
+  }
+}
+
+static void sk_on_message(const std::string& msg) {
+  rapidjson::Document d;
+  if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject()) return;
+  if (d.HasMember("self") && d["self"].IsString()) {        // server hello announces the self context
+    g_sk_self = d["self"].GetString(); return;
+  }
+  if (!d.HasMember("updates") || !d["updates"].IsArray()) return;
+  if (d.HasMember("context") && d["context"].IsString()) {  // own-ship only; other vessels = AIS (deferred)
+    std::string ctx = d["context"].GetString();
+    if (ctx != "vessels.self" && (g_sk_self.empty() || ctx != g_sk_self)) return;
+  }
+  std::time_t now = std::time(nullptr);
+  std::lock_guard<std::mutex> lk(g_real.m);
+  for (auto& u : d["updates"].GetArray()) {
+    if (!u.HasMember("values") || !u["values"].IsArray()) continue;
+    for (auto& val : u["values"].GetArray())
+      if (val.HasMember("path") && val["path"].IsString() && val.HasMember("value"))
+        sk_apply(val["path"].GetString(), val["value"], now);
+  }
+}
+
+static void sk_start(std::string url) {
+  if (url.find("://") == std::string::npos)               // bare host[:port] -> full stream URL
+    url = "ws://" + url + "/signalk/v1/stream?subscribe=self";
+  g_sk = new ix::WebSocket();
+  g_sk->setUrl(url);
+  g_sk->setPingInterval(20);
+  g_sk->enableAutomaticReconnection();                     // resilient: WiFi drops auto-recover
+  g_sk->setOnMessageCallback([](const ix::WebSocketMessagePtr& m) {
+    if (m->type == ix::WebSocketMessageType::Message) sk_on_message(m->str);
+    else if (m->type == ix::WebSocketMessageType::Open) std::printf("SignalK: connected\n");
+    else if (m->type == ix::WebSocketMessageType::Error)
+      std::fprintf(stderr, "SignalK error: %s\n", m->errorInfo.reason.c_str());
+  });
+  std::printf("SignalK input: %s  (self-vessel nav overrides sim per-field)\n", url.c_str());
+  g_sk->start();
 }
 static void nmea_listener() {
   int srv = ::socket(AF_INET, SOCK_STREAM, 0);
@@ -340,6 +414,8 @@ int main(int argc, char** argv) {
   std::printf("nav-state WebSocket: ws://127.0.0.1:8081  (streaming 1 Hz)\n");
 
   std::thread(nmea_listener).detach();   // real NMEA (port 10110) overrides the sim per-field
+  if (const char* sk = std::getenv("HELM_SIGNALK"))   // opt-in SignalK overlay (e.g. ws://pi.local:3000/signalk/v1/stream?subscribe=self)
+    if (*sk) sk_start(sk);
 
   double along = 0; size_t lastLeg = 0;
   for (long tick = 0;; ++tick) {
@@ -364,17 +440,17 @@ int main(int argc, char** argv) {
     int    sim_wdir = ((int)std::lround(95 + std::sin(tick / 13.0) * 10) + 360) % 360;
     double sim_depth = 6 + (1 - f) * 8 + std::sin(tick / 5.0) * 0.6;
 
-    // ---- merge: fresh real NMEA overrides sim; EACH field reports its true source ----
+    // ---- merge: fresh real data (NMEA or SignalK) overrides sim; EACH field reports its true source ----
     double sog, depth, wspd; int cog, hdg, wdir;
     const char *src_pos, *src_sog, *src_cog, *src_hdg, *src_depth, *src_wind;
     { std::lock_guard<std::mutex> lk(g_real.m);
-      if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = "nmea"; }
+      if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = g_real.pos_src; }
       else                     { gLat = sim_lat;    gLon = sim_lon;    src_pos = "simulated"; }
-      if (fresh(g_real.sog.t))   { sog = g_real.sog.v;                   src_sog = "nmea"; }   else { sog = sim_sog;     src_sog = "simulated"; }
-      if (fresh(g_real.cog.t))   { cog = (int)std::lround(g_real.cog.v); src_cog = "nmea"; }   else { cog = sim_cog;     src_cog = "simulated"; }
-      if (fresh(g_real.hdg.t))   { hdg = (int)std::lround(g_real.hdg.v); src_hdg = "nmea"; }   else { hdg = sim_hdg;     src_hdg = "simulated"; }
-      if (fresh(g_real.depth.t)) { depth = g_real.depth.v;              src_depth = "nmea"; }  else { depth = sim_depth; src_depth = "simulated"; }
-      if (fresh(g_real.wspd.t))  { wspd = g_real.wspd.v;                src_wind = "nmea"; }   else { wspd = sim_wspd;   src_wind = "simulated"; }
+      if (fresh(g_real.sog.t))   { sog = g_real.sog.v;                   src_sog = g_real.sog.src; }   else { sog = sim_sog;     src_sog = "simulated"; }
+      if (fresh(g_real.cog.t))   { cog = (int)std::lround(g_real.cog.v); src_cog = g_real.cog.src; }   else { cog = sim_cog;     src_cog = "simulated"; }
+      if (fresh(g_real.hdg.t))   { hdg = (int)std::lround(g_real.hdg.v); src_hdg = g_real.hdg.src; }   else { hdg = sim_hdg;     src_hdg = "simulated"; }
+      if (fresh(g_real.depth.t)) { depth = g_real.depth.v;              src_depth = g_real.depth.src; } else { depth = sim_depth; src_depth = "simulated"; }
+      if (fresh(g_real.wspd.t))  { wspd = g_real.wspd.v;                src_wind = g_real.wspd.src; }   else { wspd = sim_wspd;   src_wind = "simulated"; }
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
