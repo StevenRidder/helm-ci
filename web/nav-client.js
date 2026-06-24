@@ -68,6 +68,10 @@
     function onFrame(msg) {
       if (msg.t === 'ping') { lastFrameAt = Date.now(); return; }   // heartbeat keeps us LIVE
       if (msg.t === 'alarm') { status('alarm', { alarm: msg }); return; }
+      if (typeof msg.t === 'string' && msg.t.indexOf('conn.') === 0) {  // command-plane replies (conn.ack/conn.list)
+        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }
+        return;   // not nav state — do not merge or mark everEngine
+      }
       everEngine = true; attempt = 0; stopSim();
       lastFrameAt = Date.now();
       if (typeof msg.seq === 'number') lastSeq = msg.seq;
@@ -143,7 +147,13 @@
         if (watchdog) { clearInterval(watchdog); watchdog = null; }
         stopSim();
       },
-      endpoint() { return HelmEndpoint.describe(); }
+      endpoint() { return HelmEndpoint.describe(); },
+      // Send a command to the engine over the SAME nav socket (control-plane: conn.upsert/delete/list,
+      // and routes/waypoints next). Returns false if the socket isn't open. Replies arrive via opts.onCommand.
+      send(obj) {
+        if (ws && ws.readyState === 1) { try { ws.send(JSON.stringify(obj)); return true; } catch (e) { console.warn('HelmNavClient: send failed:', e && e.message); } }
+        return false;
+      }
     };
   };
 })();
