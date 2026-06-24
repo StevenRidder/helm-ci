@@ -43,6 +43,11 @@
       port = location.port ? +location.port : DEFAULT_PORT;
     } else {
       host = '127.0.0.1'; port = DEFAULT_PORT;        // file:// etc.
+      // Can't derive a server from the page and no override — say so, don't silently guess.
+      if (typeof console !== 'undefined')
+        console.warn('HelmEndpoint: could not derive the engine from the page (' + location.protocol +
+          ') and no ?server= / localStorage override — defaulting to ' + host + ':' + port +
+          '. Pass ?server=host:port if the engine is elsewhere.');
     }
     const secure = location.protocol === 'https:';     // mirror the page scheme
     return {

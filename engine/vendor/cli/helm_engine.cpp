@@ -222,7 +222,14 @@ int main(int, char**) {
   const char* bindHost = std::getenv("HELM_BIND");
   if (!bindHost || !*bindHost) bindHost = "127.0.0.1";
   int navPort = 8081;
-  if (const char* p = std::getenv("HELM_PORT")) { int v = std::atoi(p); if (v > 0) navPort = v; }
+  if (const char* p = std::getenv("HELM_PORT")) {       // invalid input fails loud — never silently default
+    char* end = nullptr; long v = std::strtol(p, &end, 10);
+    if (end == p || *end != '\0' || v < 1 || v > 65535) {
+      std::fprintf(stderr, "FATAL: HELM_PORT=\"%s\" is not a valid port (1-65535); refusing to fall back to a default.\n", p);
+      return 2;
+    }
+    navPort = (int)v;
+  }
 
   ix::WebSocketServer server(navPort, bindHost);
   server.setOnConnectionCallback(
@@ -322,7 +329,7 @@ int main(int, char**) {
     bool keyframe = (tick % 10 == 0);    // periodic full snapshot so any client resyncs
 
     char snap[1700];
-    std::snprintf(snap, sizeof snap,
+    int snlen = std::snprintf(snap, sizeof snap,
       "{\"t\":\"snapshot\",\"seq\":%ld,\"ts\":%.3f,"
       "\"type\":\"nav\",\"posSource\":\"%s\","
       "\"sources\":{\"pos\":\"%s\",\"sog\":\"%s\",\"cog\":\"%s\",\"hdg\":\"%s\",\"depth\":\"%s\",\"wind\":\"%s\"},"
@@ -342,28 +349,46 @@ int main(int, char**) {
       legs.c_str(), nextShort.c_str(), fmtNM(dtw).c_str());
 
     std::string frame;
+    bool truncated = (snlen < 0 || (size_t)snlen >= sizeof snap);
     if (keyframe) {
       frame = snap;
     } else {
-      // delta: position/instruments every tick; wind only every ~5th (it drifts slowly)
-      char dlt[1000];
-      std::snprintf(dlt, sizeof dlt,
-        "{\"t\":\"delta\",\"seq\":%ld,\"ts\":%.3f,"
+      // delta: position/instruments + the per-field `sources` (which flip as NMEA goes
+      // fresh/stale — so a feed dropping is never masked until the next keyframe); wind
+      // only every ~5th tick (it drifts slowly).
+      char dlt[1100];
+      int dlen = std::snprintf(dlt, sizeof dlt,
+        "{\"t\":\"delta\",\"seq\":%ld,\"ts\":%.3f,\"posSource\":\"%s\","
+        "\"sources\":{\"pos\":\"%s\",\"sog\":\"%s\",\"cog\":\"%s\",\"hdg\":\"%s\",\"depth\":\"%s\",\"wind\":\"%s\"},"
         "\"pos\":{\"lat\":%.5f,\"lon\":%.5f},\"posStr\":\"%s\","
         "\"sog\":%.1f,\"cog\":%d,\"hdg\":%d,\"depth\":%.1f,"
         "\"active\":{\"dtg\":\"%s\",\"xte\":\"%d m\",\"eta\":\"%s\",\"ttg\":\"%s\",\"vmg\":\"%.1f kn\",\"nextWp\":\"%s \xC2\xB7 %s\"}}",
-        seq, ts, gLat, gLon, fmtPos(gLat, gLon).c_str(),
+        seq, ts, src_pos,
+        src_pos, src_sog, src_cog, src_hdg, src_depth, src_wind,
+        gLat, gLon, fmtPos(gLat, gLon).c_str(),
         sog, cog, hdg, depth,
         fmtNM(dtg).c_str(), (int)std::lround(xteNM * 1852), etabuf, ttg.c_str(), vmg,
         nextShort.c_str(), fmtNM(dtw).c_str());
+      truncated = truncated || dlen < 0 || (size_t)dlen >= sizeof dlt;
       frame = dlt;
       if (tick % 5 == 0) {                       // splice the wind block in before "active"
         char wbuf[160];
-        std::snprintf(wbuf, sizeof wbuf,
+        int wlen = std::snprintf(wbuf, sizeof wbuf,
           "\"wind\":{\"spd\":%.0f,\"dir\":%d,\"range\":\"%ld\xE2\x80\x93%ld kt\"},",
           wspd, wdir, std::lround(wspd - 4), std::lround(wspd + 8));
+        truncated = truncated || wlen < 0 || (size_t)wlen >= sizeof wbuf;
         frame.insert(frame.find("\"active\""), wbuf);
       }
+    }
+
+    // FAIL CLOSED on a truncated frame: emitting clipped JSON would be invalid (the client
+    // drops it) or — worse — silently wrong. Surface it loudly and skip this tick rather
+    // than push a corrupt/placeholder frame. (A trip here means a buffer is undersized.)
+    if (truncated) {
+      std::fprintf(stderr, "ERROR: nav frame seq %ld truncated (snap=%d delta-path); NOT sending corrupt JSON. "
+                           "Buffer too small — fix before trusting output.\n", seq, snlen);
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      continue;
     }
 
     // Send each client its frame: a brand-new client gets the full snapshot as its

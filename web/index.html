@@ -309,7 +309,14 @@
   window.map = map;   // debug/automation hook
   // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
   // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
-  map.on('load', () => { try { const enc = map.getSource('enc'); if (enc && window.HelmEndpoint) enc.setTiles([HelmEndpoint.tileTemplate()]); } catch (e) {} });
+  map.on('load', () => {
+    // Surface wiring failures rather than silently leaving the style.json default in place.
+    if (!window.HelmEndpoint) { console.error('Helm: server-endpoint.js not loaded — ENC tiles fall back to the style.json default, not the resolved engine origin'); return; }
+    const enc = map.getSource('enc');
+    if (!enc) { console.error('Helm: no "enc" source in style.json — cannot point ENC tiles at the engine'); return; }
+    try { enc.setTiles([HelmEndpoint.tileTemplate()]); }
+    catch (e) { console.error('Helm: failed to set ENC tile origin:', e); }
+  });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
 

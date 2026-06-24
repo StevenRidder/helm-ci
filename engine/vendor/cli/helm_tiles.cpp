@@ -268,7 +268,14 @@ public:
     const char* bindHost = std::getenv("HELM_BIND");
     if (!bindHost || !*bindHost) bindHost = "127.0.0.1";
     int tilePort = 8082;
-    if (const char* p = std::getenv("HELM_TILE_PORT")) { int v = std::atoi(p); if (v > 0) tilePort = v; }
+    if (const char* p = std::getenv("HELM_TILE_PORT")) {   // invalid input fails loud — never silently default
+      char* end = nullptr; long v = std::strtol(p, &end, 10);
+      if (end == p || *end != '\0' || v < 1 || v > 65535) {
+        printf("FATAL: HELM_TILE_PORT=\"%s\" is not a valid port (1-65535); refusing to fall back to a default.\n", p);
+        return false;
+      }
+      tilePort = (int)v;
+    }
 
     server = new ix::HttpServer(tilePort, bindHost);
     server->setOnConnectionCallback(

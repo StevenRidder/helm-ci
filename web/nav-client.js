@@ -42,7 +42,11 @@
     opts = opts || {};
     const LIVE_MS = 3000, STALE_MS = 10000;        // age thresholds
     const BACKOFF_CAP = 8000, BACKOFF_BASE = 400;  // reconnect schedule
-    const status = (phase, extra) => { try { onStatus && onStatus(Object.assign({ phase, endpoint: HelmEndpoint.describe() }, extra)); } catch (e) {} };
+    const status = (phase, extra) => {
+      const ep = window.HelmEndpoint ? HelmEndpoint.describe() : '(unresolved)';
+      try { onStatus && onStatus(Object.assign({ phase, endpoint: ep }, extra)); }
+      catch (e) { console.error('HelmNavClient: onStatus handler threw:', e); }   // surface, don't swallow
+    };
 
     let state = null;          // last merged full state
     let lastSeq = 0;
@@ -69,24 +73,41 @@
       if (typeof msg.seq === 'number') lastSeq = msg.seq;
       // snapshot replaces; delta merges; a legacy full frame (no t) replaces.
       if (msg.t === 'delta') {
-        if (!state) { classify(); return; }   // no baseline yet — ignore the partial, await a snapshot
+        if (!state) {                          // no baseline yet — refuse the partial, surface it, await a snapshot
+          console.warn('HelmNavClient: delta seq ' + msg.seq + ' arrived before any snapshot — awaiting baseline (server should send snapshot first)');
+          classify(); return;
+        }
         state = mergeState(state, msg);
       } else {
         state = mergeState(msg.t === 'snapshot' ? {} : state, msg);
       }
-      try { onState(state); } catch (e) {}
+      try { onState(state); } catch (e) { console.error('HelmNavClient: onState handler threw:', e); }   // surface, don't swallow
       classify();
     }
 
     function connect() {
       if (closed) return;
+      if (!window.HelmEndpoint) {
+        // Hard wiring error: server-endpoint.js didn't load. Do NOT fabricate a localhost URL
+        // and pretend — surface it loudly and stop (reconnecting can't fix a missing module).
+        console.error('HelmNavClient: HelmEndpoint missing (server-endpoint.js not loaded). Cannot resolve the engine; not connecting.');
+        status('offline', { error: 'no-endpoint' });
+        return;
+      }
       status('connecting');
-      let url;
-      try { url = HelmEndpoint.navUrl(); } catch (e) { url = 'ws://127.0.0.1:8090/nav'; }
-      try { ws = new WebSocket(url); } catch (e) { scheduleReconnect(); return; }
+      const url = HelmEndpoint.navUrl();
+      try { ws = new WebSocket(url); }
+      catch (e) { console.error('HelmNavClient: WebSocket(' + url + ') failed to construct:', e && e.message); scheduleReconnect(); return; }
 
-      ws.onopen = () => { try { ws.send(JSON.stringify({ t: 'hello', lastSeq, subscribe: opts.subscribe || ['nav', 'route', 'alarms'] })); } catch (e) {} };
-      ws.onmessage = e => { let m; try { m = JSON.parse(e.data); } catch (x) { return; } onFrame(m); };
+      ws.onopen = () => {
+        try { ws.send(JSON.stringify({ t: 'hello', lastSeq, subscribe: opts.subscribe || ['nav', 'route', 'alarms'] })); }
+        catch (e) { console.warn('HelmNavClient: hello send failed:', e && e.message); }
+      };
+      ws.onmessage = e => {
+        let m; try { m = JSON.parse(e.data); }
+        catch (x) { console.error('HelmNavClient: dropping unparseable frame from engine:', x && x.message); return; }
+        onFrame(m);
+      };
       ws.onerror = () => { /* close handler drives reconnect / sim */ };
       ws.onclose = () => {
         ws = null;
