@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover">
 <title>Helm</title>
 <link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
 <style>
@@ -141,6 +141,43 @@
   .maplibregl-popup-anchor-left .maplibregl-popup-tip,
   .maplibregl-popup-anchor-right .maplibregl-popup-tip{border-color:transparent;display:none}
   .maplibregl-popup-close-button{color:var(--cdim)}
+
+  /* ===================== responsive + touch + safe-area (iPhone / iPad) ===================== */
+  /* safe-area insets (notch / home indicator) — these resolve to 0 on devices without them,
+     so desktop layout is unchanged. */
+  .tb{ top:calc(12px + env(safe-area-inset-top)); left:calc(12px + env(safe-area-inset-left)); right:calc(12px + env(safe-area-inset-right)); }
+  .rail{ top:calc(68px + env(safe-area-inset-top)); left:calc(12px + env(safe-area-inset-left)); }
+  .drawer{ top:calc(68px + env(safe-area-inset-top)); left:calc(72px + env(safe-area-inset-left)); }
+  .insp{ top:calc(68px + env(safe-area-inset-top)); right:calc(12px + env(safe-area-inset-right)); }
+  .ib{ bottom:calc(12px + env(safe-area-inset-bottom)); left:calc(12px + env(safe-area-inset-left)); right:calc(12px + env(safe-area-inset-right)); }
+  .maplibregl-ctrl-bottom-right{ bottom:calc(80px + env(safe-area-inset-bottom)); right:calc(12px + env(safe-area-inset-right)); }
+  .maplibregl-ctrl-bottom-left{ bottom:calc(80px + env(safe-area-inset-bottom)); left:calc(74px + env(safe-area-inset-left)); }
+
+  /* bigger hit targets on touch devices (≥44px, Apple HIG) */
+  @media (pointer:coarse){
+    .ri{ width:44px; height:44px; }
+    .seg span{ padding:8px 13px; }
+    .wx button{ padding:8px 12px; }
+    .row{ padding:7px 0; } .row input{ width:18px; height:18px; }
+    .maplibregl-ctrl-group button{ width:44px; height:44px; }
+    *{ -webkit-tap-highlight-color:transparent; }
+  }
+
+  /* phones — collapse chrome; make the instrument bar a swipeable strip */
+  @media (max-width:560px){
+    .tb{ gap:8px; padding:0 10px; }
+    .tb .wordmark, .tb .search{ display:none; }      /* identity carried by the source badge */
+    .seg span{ padding:6px 10px; }
+    .rail{ max-height:calc(100% - 150px); overflow-y:auto; }
+    .drawer{ left:calc(64px + env(safe-area-inset-left)); right:calc(10px + env(safe-area-inset-right)); width:auto; max-height:44vh; }
+    .insp{ width:min(54vw,204px); padding:10px; }
+    .insp .kpis .k .v{ font-size:14px; }
+    .ib{ height:54px; overflow-x:auto; overflow-y:hidden; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
+    .ib::-webkit-scrollbar{ display:none; }
+    .it{ flex:0 0 auto; min-width:86px; }
+    .it.wide{ flex:0 0 auto; min-width:158px; }
+    .it .v{ font-size:19px; }
+  }
 </style>
 </head>
 <body>
@@ -309,6 +346,8 @@
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
   window.map = map;   // debug/automation hook
+  if (map.setMaxPitch) map.setMaxPitch(0);          // a chart is flat — no accidental 3D tilt
+  if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
   // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
   // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
   map.on('load', () => {

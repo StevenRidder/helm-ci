@@ -27,20 +27,19 @@
     const marker = new maplibregl.Marker({ element: el, rotationAlignment: 'map' });
     let added = false;
 
-    // on-map controls (recenter/follow + north-up/course-up), styled to match the glass UI
-    const ctl = document.createElement('div');
-    ctl.style.cssText = 'position:absolute;right:10px;bottom:118px;display:flex;flex-direction:column;gap:6px;z-index:5;';
+    // controls as a maplibre control group (bottom-right) — stacks above the native zoom/compass
+    // and inherits the glass styling + safe-area offset, so the buttons never overlap them.
+    const group = document.createElement('div');
+    group.className = 'maplibregl-ctrl maplibregl-ctrl-group';
     const mk = (label, title) => {
-      const b = document.createElement('button'); b.textContent = label; b.title = title;
-      b.style.cssText = 'width:38px;height:38px;min-width:38px;border:0;border-radius:9px;background:rgba(18,24,33,.78);' +
-        'color:#cfe6ff;font:600 13px system-ui;-webkit-backdrop-filter:blur(8px);backdrop-filter:blur(8px);' +
-        'box-shadow:0 1px 6px rgba(0,0,0,.45);cursor:pointer;touch-action:manipulation;';
+      const b = document.createElement('button'); b.type = 'button'; b.title = title; b.textContent = label;
+      b.style.cssText = 'font:600 15px system-ui;color:#cfe6ff;touch-action:manipulation;';
       return b;
     };
     const followBtn = mk('⌖', 'Center on boat / follow');
     const modeBtn = mk('N', 'North-up / course-up');
-    ctl.appendChild(followBtn); ctl.appendChild(modeBtn);
-    map.getContainer().appendChild(ctl);
+    group.appendChild(followBtn); group.appendChild(modeBtn);
+    map.addControl({ onAdd() { return group; }, onRemove() { group.remove(); } }, 'bottom-right');
     const paint = () => {
       followBtn.style.color = follow ? 'var(--accent,#5bc0ff)' : '#cfe6ff';
       modeBtn.textContent = courseUp ? 'C' : 'N';
