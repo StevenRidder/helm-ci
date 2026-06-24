@@ -34,6 +34,11 @@ They share **one timeline**. Scrub it and *both* update: the en-route weather an
 arrival picture move together, because "what it's like there" depends on *when* you get
 there.
 
+> Both briefings are the **spacetime probe** ([SPACETIME-PROBE.md](SPACETIME-PROBE.md) ·
+> [ADR-0007](decisions/0007-spacetime-probe.md)) at different geometries: "along the way" is the
+> probe along your path `P(t)`; "once I get there" is the probe at a destination + ETA. Any
+> layer in the slice is fair game for either briefing.
+
 ---
 
 ## 2. "Along the Way" — the passage briefing

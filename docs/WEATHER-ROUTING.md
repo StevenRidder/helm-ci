@@ -35,6 +35,11 @@ along the worldline**:
 Other apps give you `W(·, t_fixed)` and leave `P(t)` in your head. Helm computes both and
 joins them. That join is the whole feature.
 
+> **Generalized:** weather is just one layer of this. *Every* layer (depth, places, reviews,
+> climate, NFL, …) is a function of where and when, and Helm fuses them all at a point into one
+> narratable **slice** — see [SPACETIME-PROBE.md](SPACETIME-PROBE.md) / [ADR-0007](decisions/0007-spacetime-probe.md).
+> This section is the weather instance of that primitive.
+
 ### Why this is close at hand (not a new subsystem)
 
 All three ingredients already exist in the repo:
