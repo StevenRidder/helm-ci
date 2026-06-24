@@ -46,6 +46,8 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 |-----|------------|
 | [PRD.md](PRD.md) | The product requirements — read this first |
 | [docs/VISION.md](docs/VISION.md) | The north-star UX study — what world-class & AI-native looks like |
+| [docs/WEATHER-ROUTING.md](docs/WEATHER-ROUTING.md) | Spacetime weather engine — forecast follows the boat; easy routing; LLM guardrails |
+| [docs/BUSINESS-MODEL.md](docs/BUSINESS-MODEL.md) | Software + Helm Cloud + the appliance bundle (the Home Assistant playbook) |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
