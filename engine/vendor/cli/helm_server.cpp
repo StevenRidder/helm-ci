@@ -38,6 +38,8 @@
 #include <ctime>
 #include <fstream>
 #include <sstream>
+#include <atomic>
+#include <algorithm>
 
 #include <wx/app.h>
 #include <wx/bitmap.h>
@@ -81,6 +83,12 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <netdb.h>
+#include <fcntl.h>
+#include <poll.h>
+#include <cerrno>
+#include <sys/stat.h>
+#include <sys/time.h>
 #include <unistd.h>
 #include <dns_sd.h>
 
@@ -441,30 +449,280 @@ static void sk_start(std::string url) {
   std::printf("SignalK input: %s (self-vessel nav overrides sim per-field)\n", url.c_str());
   g_sk->start();
 }
-static void nmea_listener() {
-  int srv = ::socket(AF_INET, SOCK_STREAM, 0);
-  if (srv < 0) { std::fprintf(stderr, "NMEA: socket() failed\n"); return; }
-  int yes = 1; ::setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
-  sockaddr_in a{}; a.sin_family = AF_INET; a.sin_port = htons(kNmeaPort); a.sin_addr.s_addr = inet_addr("127.0.0.1");
-  if (::bind(srv, (sockaddr*)&a, sizeof a) < 0 || ::listen(srv, 4) < 0) {
-    std::fprintf(stderr, "NMEA: bind/listen on %d failed\n", kNmeaPort); ::close(srv); return;
+// ===========================================================================
+// Connections — runtime-configurable, persisted, multi-source live-data input.
+// Each connection is an independent driver thread feeding the SAME nmea_parse →
+// g_real / AisDecoder pipeline, so per-field source tags stay truthful. The engine
+// does NOT pump a wxWidgets event loop, so we use plain BSD sockets with our own
+// reconnect/backoff — and crucially support TCP-CLIENT (connect-out), which marine
+// WiFi gateways require (Garmin Vesper Cortex :39150, PredictWind DataHub, …).
+// Config is owned by the ENGINE and persisted to ~/.helm/connections.json; clients
+// edit it over the nav-WS command-plane (conn.list / conn.upsert / conn.delete) and
+// read live status back in the nav frame. (SignalK input stays on HELM_SIGNALK for now.)
+// ===========================================================================
+enum class ConnStatus { Disabled, Connecting, Connected, NoData, Error };
+static const char* conn_status_str(ConnStatus s) {
+  switch (s) {
+    case ConnStatus::Disabled:   return "disabled";
+    case ConnStatus::Connecting: return "connecting";
+    case ConnStatus::Connected:  return "connected";
+    case ConnStatus::NoData:     return "nodata";
+    default:                     return "error";
   }
-  std::printf("NMEA 0183 input: tcp://127.0.0.1:%d (real data overrides sim per-field)\n", kNmeaPort);
-  std::string buf;
+}
+struct ConnConfig { std::string id, name, type, address, dataProtocol, comment; int port = 0; bool enabled = true; };
+struct ConnRuntime {
+  std::atomic<bool> want_stop{false};
+  std::atomic<int>  status{(int)ConnStatus::Connecting};
+  std::atomic<long> last_rx{0};
+  std::atomic<long> sentences{0};
+  std::string last_error;                          // guarded by g_conns_mtx
+};
+static std::mutex g_conns_mtx;
+static std::map<std::string, ConnConfig> g_conns;                       // id -> config
+static std::map<std::string, std::shared_ptr<ConnRuntime>> g_conn_rt;   // id -> runtime
+static std::string g_owner_token;                                       // optional write gate (HELM_OWNER_TOKEN)
+static long g_conn_counter = 0;
+
+static std::string conn_dir() {
+  if (const char* c = std::getenv("HELM_CONFIG")) if (*c) return c;
+  const char* home = std::getenv("HOME"); std::string d = (home && *home) ? home : ".";
+  return d + "/.helm";
+}
+static std::string conn_path() { return conn_dir() + "/connections.json"; }
+
+// Non-blocking TCP connect-out with a bounded timeout; resolves host (IP or name) via getaddrinfo.
+static int tcp_connect(const std::string& host, int port, int timeout_sec, std::string& err) {
+  addrinfo hints{}; hints.ai_family = AF_UNSPEC; hints.ai_socktype = SOCK_STREAM;
+  addrinfo* res = nullptr; char ports[16]; std::snprintf(ports, sizeof ports, "%d", port);
+  int g = ::getaddrinfo(host.c_str(), ports, &hints, &res);
+  if (g != 0 || !res) { err = std::string("resolve: ") + gai_strerror(g); return -1; }
+  int fd = -1;
+  for (addrinfo* p = res; p; p = p->ai_next) {
+    fd = ::socket(p->ai_family, p->ai_socktype, p->ai_protocol); if (fd < 0) continue;
+    int fl = ::fcntl(fd, F_GETFL, 0); ::fcntl(fd, F_SETFL, fl | O_NONBLOCK);
+    int rc = ::connect(fd, p->ai_addr, p->ai_addrlen);
+    if (rc == 0) { ::fcntl(fd, F_SETFL, fl); break; }
+    if (errno == EINPROGRESS) {
+      pollfd pfd{fd, POLLOUT, 0}; int pr = ::poll(&pfd, 1, timeout_sec * 1000);
+      if (pr > 0) { int se = 0; socklen_t sl = sizeof se; ::getsockopt(fd, SOL_SOCKET, SO_ERROR, &se, &sl);
+        if (se == 0) { ::fcntl(fd, F_SETFL, fl); break; } err = std::string("connect: ") + std::strerror(se); }
+      else err = (pr == 0) ? "connect: timeout" : "connect: poll error";
+    } else err = std::string("connect: ") + std::strerror(errno);
+    ::close(fd); fd = -1;
+  }
+  ::freeaddrinfo(res);
+  if (fd >= 0) { timeval tv{5, 0}; ::setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv); }
+  else if (err.empty()) err = "connect: failed";
+  return fd;
+}
+// TCP server: bind+listen, wait (interruptibly) for ONE client, return its fd. Re-binds per client.
+static int tcp_server_accept(const std::string& host, int port, const std::shared_ptr<ConnRuntime>& rt, std::string& err) {
+  int srv = ::socket(AF_INET, SOCK_STREAM, 0); if (srv < 0) { err = "socket"; return -1; }
+  int yes = 1; ::setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
+  sockaddr_in a{}; a.sin_family = AF_INET; a.sin_port = htons((uint16_t)port);
+  a.sin_addr.s_addr = (host == "0.0.0.0" || host.empty()) ? INADDR_ANY : inet_addr(host.c_str());
+  if (::bind(srv, (sockaddr*)&a, sizeof a) < 0 || ::listen(srv, 4) < 0) { err = "bind/listen :" + std::to_string(port); ::close(srv); return -1; }
   for (;;) {
-    int c = ::accept(srv, nullptr, nullptr); if (c < 0) continue;
-    buf.clear(); char rb[1024];
-    for (;;) {
-      ssize_t n = ::recv(c, rb, sizeof rb, 0); if (n <= 0) break;
+    if (rt->want_stop) { ::close(srv); err = "stopped"; return -1; }
+    pollfd pfd{srv, POLLIN, 0}; int pr = ::poll(&pfd, 1, 1000);
+    if (pr > 0) { int c = ::accept(srv, nullptr, nullptr); ::close(srv);
+      if (c < 0) { err = "accept"; return -1; }
+      timeval tv{5, 0}; ::setsockopt(c, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv); return c; }
+    if (pr < 0) { ::close(srv); err = "poll"; return -1; }
+  }
+}
+static int udp_bind(const std::string& host, int port, std::string& err) {
+  int fd = ::socket(AF_INET, SOCK_DGRAM, 0); if (fd < 0) { err = "socket"; return -1; }
+  int yes = 1; ::setsockopt(fd, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
+  sockaddr_in a{}; a.sin_family = AF_INET; a.sin_port = htons((uint16_t)port);
+  a.sin_addr.s_addr = (host.empty() || host == "0.0.0.0") ? INADDR_ANY : inet_addr(host.c_str());
+  if (::bind(fd, (sockaddr*)&a, sizeof a) < 0) { err = "bind :" + std::to_string(port); ::close(fd); return -1; }
+  timeval tv{5, 0}; ::setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv); return fd;
+}
+// Read NMEA lines off a connected fd until EOF/error/stop, feeding nmea_parse and updating status.
+static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt) {
+  std::string buf; char rb[2048];
+  for (;;) {
+    if (rt->want_stop) return;
+    ssize_t n = ::recv(fd, rb, sizeof rb, 0);
+    if (n > 0) {
+      rt->last_rx = (long)std::time(nullptr); rt->status = (int)ConnStatus::Connected;
       buf.append(rb, (size_t)n); size_t nl;
       while ((nl = buf.find('\n')) != std::string::npos) {
         std::string line = buf.substr(0, nl); buf.erase(0, nl + 1);
         while (!line.empty() && (line.back() == '\r' || line.back() == ' ')) line.pop_back();
-        if (!line.empty()) nmea_parse(line);
+        if (!line.empty()) { nmea_parse(line); rt->sentences++; }
       }
+      if (buf.size() > (1u << 16)) buf.clear();          // runaway guard (never a newline)
+    } else if (n == 0) { return; }                       // peer closed
+    else {
+      if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
+        if (rt->last_rx && (long)std::time(nullptr) - rt->last_rx > 10) rt->status = (int)ConnStatus::NoData;
+        continue;
+      }
+      return;                                            // real error
     }
-    ::close(c);
   }
+}
+static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
+  int backoff = 1;
+  for (;;) {
+    if (rt->want_stop) return;
+    ConnConfig cfg;
+    { std::lock_guard<std::mutex> lk(g_conns_mtx);
+      auto it = g_conns.find(id); if (it == g_conns.end()) return;          // deleted
+      cfg = it->second; if (!cfg.enabled) { rt->status = (int)ConnStatus::Disabled; return; } }
+    rt->status = (int)ConnStatus::Connecting;
+    std::string err; int fd = -1;
+    if (cfg.type == "tcp-client")      fd = tcp_connect(cfg.address, cfg.port, 6, err);
+    else if (cfg.type == "tcp-server") fd = tcp_server_accept(cfg.address.empty() ? "127.0.0.1" : cfg.address, cfg.port, rt, err);
+    else if (cfg.type == "udp")        fd = udp_bind(cfg.address, cfg.port, err);
+    else { { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = "unsupported type: " + cfg.type; } rt->status = (int)ConnStatus::Error; return; }
+    if (fd < 0) {
+      { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = err; }
+      rt->status = (int)ConnStatus::Error;
+      for (int i = 0; i < backoff * 10 && !rt->want_stop; ++i) std::this_thread::sleep_for(std::chrono::milliseconds(100));
+      backoff = std::min(backoff * 2, 15); continue;
+    }
+    backoff = 1; rt->status = (int)ConnStatus::Connected;
+    { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error.clear(); }
+    conn_feed_fd(fd, rt);
+    ::close(fd);
+    if (rt->want_stop) return;
+    rt->status = (int)ConnStatus::NoData;
+    for (int i = 0; i < 10 && !rt->want_stop; ++i) std::this_thread::sleep_for(std::chrono::milliseconds(100));
+  }
+}
+static void conn_kill_locked(const std::string& id) {                 // caller holds g_conns_mtx
+  auto it = g_conn_rt.find(id);
+  if (it != g_conn_rt.end()) { it->second->want_stop = true; g_conn_rt.erase(it); }
+}
+static void conn_spawn_locked(const std::string& id) {                 // caller holds g_conns_mtx
+  auto rt = std::make_shared<ConnRuntime>(); g_conn_rt[id] = rt;
+  std::thread(conn_thread, id, rt).detach();
+}
+static void conn_upsert(const ConnConfig& c) {
+  std::lock_guard<std::mutex> lk(g_conns_mtx);
+  g_conns[c.id] = c; conn_kill_locked(c.id);
+  if (c.enabled) conn_spawn_locked(c.id);
+}
+static void conn_delete(const std::string& id) {
+  std::lock_guard<std::mutex> lk(g_conns_mtx);
+  conn_kill_locked(id); g_conns.erase(id);
+}
+static std::string conn_status_array() {
+  std::string out = "["; std::lock_guard<std::mutex> lk(g_conns_mtx);
+  long now = (long)std::time(nullptr); bool first = true;
+  for (auto& kv : g_conns) {
+    const ConnConfig& c = kv.second; auto itr = g_conn_rt.find(c.id);
+    std::shared_ptr<ConnRuntime> rt = (itr != g_conn_rt.end()) ? itr->second : nullptr;
+    ConnStatus st = !c.enabled ? ConnStatus::Disabled : (rt ? (ConnStatus)rt->status.load() : ConnStatus::Connecting);
+    long lrx = rt ? rt->last_rx.load() : 0; long age = lrx ? now - lrx : -1;
+    long sent = rt ? rt->sentences.load() : 0; std::string lerr = rt ? rt->last_error : std::string();
+    out += std::string(first ? "" : ",") +
+      "{\"id\":\"" + json_escape(c.id) + "\",\"name\":\"" + json_escape(c.name) +
+      "\",\"type\":\"" + json_escape(c.type) + "\",\"address\":\"" + json_escape(c.address) +
+      "\",\"port\":" + std::to_string(c.port) + ",\"enabled\":" + (c.enabled ? "true" : "false") +
+      ",\"status\":\"" + conn_status_str(st) + "\",\"ageSec\":" + std::to_string(age) +
+      ",\"sentences\":" + std::to_string(sent) + (lerr.empty() ? "" : (",\"error\":\"" + json_escape(lerr) + "\"")) + "}";
+    first = false;
+  }
+  out += "]"; return out;
+}
+static std::string conn_list_msg() { return std::string("{\"t\":\"conn.list\",\"conns\":") + conn_status_array() + "}"; }
+static std::string conn_ack(bool ok, const std::string& id, const std::string& err) {
+  return std::string("{\"t\":\"conn.ack\",\"ok\":") + (ok ? "true" : "false") +
+         ",\"id\":\"" + json_escape(id) + "\"" + (err.empty() ? "" : (",\"error\":\"" + json_escape(err) + "\"")) + "}";
+}
+static std::string conn_slug(const std::string& s) {
+  std::string o; for (unsigned char c : s) { if (std::isalnum(c)) o += (char)std::tolower(c); else if (!o.empty() && o.back() != '-') o += '-'; }
+  while (!o.empty() && o.back() == '-') o.pop_back(); if (o.size() > 24) o.resize(24); return o;
+}
+static bool conn_from_json(const rapidjson::Value& v, ConnConfig& c, std::string& err) {
+  auto gs = [&](const char* k) -> std::string { return (v.HasMember(k) && v[k].IsString()) ? v[k].GetString() : std::string(); };
+  c.id = gs("id"); c.name = gs("name"); c.type = gs("type"); c.address = gs("address");
+  c.dataProtocol = gs("dataProtocol"); c.comment = gs("comment");
+  if (v.HasMember("port") && v["port"].IsInt()) c.port = v["port"].GetInt();
+  else if (v.HasMember("port") && v["port"].IsString()) c.port = std::atoi(v["port"].GetString());
+  c.enabled = !(v.HasMember("enabled") && v["enabled"].IsBool()) || v["enabled"].GetBool();
+  if (c.dataProtocol.empty()) c.dataProtocol = "nmea0183";
+  if (c.type != "tcp-client" && c.type != "tcp-server" && c.type != "udp") { err = "type must be tcp-client | tcp-server | udp (SignalK via HELM_SIGNALK for now)"; return false; }
+  if (c.port < 1 || c.port > 65535) { err = "port must be 1-65535"; return false; }
+  if (c.type == "tcp-client" && c.address.empty()) { err = "address required for tcp-client"; return false; }
+  if (c.id.empty()) { std::string b = conn_slug(c.name.empty() ? c.type : c.name); if (b.empty()) b = "conn"; c.id = b + "-" + std::to_string(++g_conn_counter); }
+  return true;
+}
+static void conn_save() {
+  std::string js = "[";
+  { std::lock_guard<std::mutex> lk(g_conns_mtx); bool first = true;
+    for (auto& kv : g_conns) { const ConnConfig& c = kv.second;
+      js += std::string(first ? "" : ",") +
+        "{\"id\":\"" + json_escape(c.id) + "\",\"name\":\"" + json_escape(c.name) +
+        "\",\"type\":\"" + json_escape(c.type) + "\",\"address\":\"" + json_escape(c.address) +
+        "\",\"port\":" + std::to_string(c.port) + ",\"dataProtocol\":\"" + json_escape(c.dataProtocol) +
+        "\",\"enabled\":" + (c.enabled ? "true" : "false") + ",\"comment\":\"" + json_escape(c.comment) + "\"}";
+      first = false; } }
+  js += "]";
+  std::string dir = conn_dir(); ::mkdir(dir.c_str(), 0700);
+  std::string path = conn_path(), tmp = path + ".tmp";
+  { std::ofstream f(tmp, std::ios::binary | std::ios::trunc); if (!f) { std::fprintf(stderr, "conn_save: cannot write %s\n", tmp.c_str()); return; } f << js; }
+  ::chmod(tmp.c_str(), 0600);
+  if (::rename(tmp.c_str(), path.c_str()) != 0) std::fprintf(stderr, "conn_save: rename %s failed\n", path.c_str());
+}
+static void conn_load() {
+  std::string body; if (!read_file(conn_path().c_str(), body)) return;       // none yet
+  rapidjson::Document d;
+  if (d.Parse(body.c_str()).HasParseError() || !d.IsArray()) { std::fprintf(stderr, "conn_load: %s corrupt — ignoring\n", conn_path().c_str()); return; }
+  std::lock_guard<std::mutex> lk(g_conns_mtx);
+  for (auto& e : d.GetArray()) {
+    if (!e.IsObject()) continue; ConnConfig c;
+    auto gs = [&](const char* k) -> std::string { return (e.HasMember(k) && e[k].IsString()) ? e[k].GetString() : std::string(); };
+    c.id = gs("id"); c.name = gs("name"); c.type = gs("type"); c.address = gs("address");
+    c.dataProtocol = gs("dataProtocol"); c.comment = gs("comment");
+    if (e.HasMember("port") && e["port"].IsInt()) c.port = e["port"].GetInt();
+    c.enabled = !(e.HasMember("enabled") && e["enabled"].IsBool()) || e["enabled"].GetBool();
+    if (c.id.empty() || c.type.empty()) continue;
+    g_conns[c.id] = c; if (c.enabled) conn_spawn_locked(c.id);
+  }
+  std::printf("connections: loaded %zu from %s\n", g_conns.size(), conn_path().c_str());
+}
+// Command-plane: inbound nav-WS messages from a client. (Replaces the old push-only lambda.)
+static void handle_command(const std::string& msg, const std::shared_ptr<ix::WebSocket>& ws) {
+  rapidjson::Document d;
+  if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject() || !d.HasMember("t") || !d["t"].IsString()) return;
+  std::string t = d["t"].GetString();
+  if (t == "hello") return;                                  // legacy nav-client handshake — ignore
+  if (!g_owner_token.empty()) {
+    std::string tok = (d.HasMember("token") && d["token"].IsString()) ? d["token"].GetString() : std::string();
+    if (tok != g_owner_token) { ws->send(conn_ack(false, "", "unauthorized")); return; }
+  }
+  if (t == "conn.list") { ws->send(conn_list_msg()); return; }
+  if (t == "conn.upsert" && d.HasMember("conn") && d["conn"].IsObject()) {
+    ConnConfig c; std::string err;
+    if (!conn_from_json(d["conn"], c, err)) { ws->send(conn_ack(false, "", err)); return; }
+    conn_upsert(c); conn_save();
+    std::printf("connections: upsert \"%s\" %s %s:%d (%s)\n", c.name.c_str(), c.type.c_str(), c.address.c_str(), c.port, c.enabled ? "enabled" : "disabled");
+    ws->send(conn_ack(true, c.id, "")); ws->send(conn_list_msg()); return;
+  }
+  if (t == "conn.delete" && d.HasMember("id") && d["id"].IsString()) {
+    std::string id = d["id"].GetString(); conn_delete(id); conn_save();
+    std::printf("connections: delete %s\n", id.c_str());
+    ws->send(conn_ack(true, id, "")); ws->send(conn_list_msg()); return;
+  }
+}
+static void conn_init() {
+  if (const char* tok = std::getenv("HELM_OWNER_TOKEN")) if (*tok) g_owner_token = tok;
+  conn_load();
+  { std::lock_guard<std::mutex> lk(g_conns_mtx);
+    if (g_conns.empty()) {                                    // first run: seed the legacy local relay (and a UI template)
+      ConnConfig c; c.id = "local-nmea"; c.name = "Local NMEA (relay)"; c.type = "tcp-server";
+      c.address = "127.0.0.1"; c.port = kNmeaPort; c.dataProtocol = "nmea0183"; c.enabled = true;
+      c.comment = "socat/multiplexer relay target";
+      g_conns[c.id] = c; conn_spawn_locked(c.id);
+      std::printf("connections: seeded default Local NMEA relay tcp://127.0.0.1:%d\n", kNmeaPort);
+    } }
+  if (!g_owner_token.empty()) std::printf("connections: writes gated by HELM_OWNER_TOKEN\n");
 }
 
 static long g_seq = 0;
@@ -604,10 +862,17 @@ static void nav_loop(ix::HttpServer* server) {
       }
     }
     aisArr += "]";
+    std::string connsArr = conn_status_array();   // live per-connection status, streamed to clients
     std::string snapOut(snap);
-    if (!snapOut.empty()) snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);   // top-level, before final }
+    if (!snapOut.empty()) {                                                // top-level, before final }
+      snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);
+      snapOut.insert(snapOut.size() - 1, ",\"conns\":" + connsArr);
+    }
     if (keyframe) frame = snapOut;
-    else if (!frame.empty()) frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
+    else if (!frame.empty()) {
+      frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
+      frame.insert(frame.size() - 1, ",\"conns\":" + connsArr);
+    }
 
     auto clients = server->getClients();
     std::set<ix::WebSocket*> live;
@@ -665,8 +930,13 @@ public:
     // WS side (/nav): set on the WebSocketServer base (HttpServer::handleUpgrade uses it).
     server->WebSocketServer::setOnConnectionCallback(
       [](std::weak_ptr<ix::WebSocket> wptr, std::shared_ptr<ix::ConnectionState> cs) {
-        if (auto ws = wptr.lock())
-          ws->setOnMessageCallback([](const ix::WebSocketMessagePtr&) {}); // push-only; baseline sent by nav_loop
+        if (auto ws = wptr.lock()) {
+          std::weak_ptr<ix::WebSocket> wk = ws;                  // capture weak to avoid a ref cycle
+          ws->setOnMessageCallback([wk](const ix::WebSocketMessagePtr& m) {
+            if (m->type == ix::WebSocketMessageType::Message)    // command-plane: conn.list/upsert/delete
+              if (auto s = wk.lock()) handle_command(m->str, s);
+          });
+        }
         std::printf("nav client connected: %s\n", cs->getId().c_str()); std::fflush(stdout);
       });
 
@@ -721,11 +991,11 @@ public:
     if (!g_BasePlatform) g_BasePlatform = new BasePlatform();   // Select reads GetSelectRadiusPix() from it
     pSelectAIS = new Select();
     g_ais = new AisDecoder(AisDecoderCallbacks());
-    std::printf("AIS: OpenCPN AisDecoder live — feed !AIVDM on tcp://127.0.0.1:%d\n", kNmeaPort);
+    std::printf("AIS: OpenCPN AisDecoder live — !AIVDM from any connection feeds CPA/TCPA\n");
     if (const char* sk = std::getenv("HELM_SIGNALK")) if (*sk) sk_start(sk);   // opt-in SignalK overlay
 
     std::thread(nav_loop, server).detach();
-    std::thread(nmea_listener).detach();
+    conn_init();   // load/seed persisted connections; each enabled one runs its own driver thread
     bonjour_advertise(port);
     return false;  // no wx event loop; main() runs the render job loop
   }
