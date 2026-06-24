@@ -40,7 +40,8 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
         weather = get_weather(lat, lon)                 # real (Open-Meteo) at runtime
         wx_at, wx_time = _valid_at(weather, t)
         L["weather"] = {"validAt": wx_time, "atTime": wx_at, "now": weather.get("now"),
-                        "sea": weather.get("sea"), "series": weather.get("next"),
+                        "sea": weather.get("sea"), "sst": weather.get("sst"),
+                        "current": weather.get("current"), "series": weather.get("next"),
                         "horizon": "good ~0-7d; beyond is climatology",
                         "error": weather.get("windError") or weather.get("seaError")}
         sources.append({"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"})
@@ -80,6 +81,18 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
                      "reason": "NoForeignLand read is experimental / partnership-gated"}
                     if not nfl_enabled else
                     {"available": True, "locked": False, "note": "NFL enrichment active"})
+
+    if on("depth"):
+        nd = store.nearest_charted_depth(lat, lon)
+        L["depth"] = {"nearestChartedM": round(nd[1], 1) if nd else None,
+                      "nearFeature": nd[2] if nd else None,
+                      "note": "Charted-depth proxy; read exact soundings on the S-52 chart.",
+                      "source": {"title": "NOAA ENC (S-52)", "kind": "open"}}
+
+    if on("ais"):
+        targets = store.ais_near(lat, lon)
+        L["ais"] = {"count": len(targets), "targets": targets, "source": "engine",
+                    "note": "sample AIS — the engine provides real decode + CPA/TCPA"}
 
     if on("chart"):
         L["chart"] = {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",

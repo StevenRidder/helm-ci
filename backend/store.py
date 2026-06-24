@@ -72,6 +72,37 @@ SEED_REVIEWS = [
 ]
 
 
+# seed AIS targets near Key West (the engine provides real decode + CPA/TCPA; this is sample)
+SEED_AIS = [
+    {"mmsi": 367001230, "name": "Conch Express", "lat": 24.553, "lon": -81.782, "sog": 7.2, "cog": 95, "kind": "ferry"},
+    {"mmsi": 338111222, "name": "SV Tradewind", "lat": 24.579, "lon": -81.808, "sog": 5.1, "cog": 300, "kind": "sailing"},
+    {"mmsi": 367554000, "name": "Tug Resolve", "lat": 24.501, "lon": -81.752, "sog": 3.4, "cog": 270, "kind": "tug"},
+]
+
+
+def ais_near(lat, lon, radius_nm=8):
+    out = []
+    for a in SEED_AIS:
+        d = haversine_nm(lat, lon, a["lat"], a["lon"])
+        if d <= radius_nm:
+            out.append({**{k: a[k] for k in ("mmsi", "name", "sog", "cog", "kind")}, "rangeNm": round(d, 1)})
+    out.sort(key=lambda x: x["rangeNm"])
+    return out
+
+
+def nearest_charted_depth(lat, lon):
+    """Nearest charted feature carrying a depth, as a proxy until the S-52 engine depth probe."""
+    best = None
+    for p in SEED_PLACES:
+        dep = (p.get("attrs") or {}).get("depth")
+        if dep is None:
+            continue
+        d = haversine_nm(lat, lon, p["lat"], p["lon"])
+        if best is None or d < best[0]:
+            best = (d, dep, p["name"])
+    return best
+
+
 def _load_owned():
     try:
         with open(OWNED_FILE) as f:

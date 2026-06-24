@@ -141,6 +141,22 @@
   .nc-foot{font-size:9.5px;color:var(--cdim2);margin-top:9px;line-height:1.45}
   .narrate-arm{outline:2px dashed var(--accent);outline-offset:-2px}
 
+  /* ---- route-weather ribbon (passage probe along P(t)) ---- */
+  .ribbon{position:absolute;left:12px;right:12px;bottom:76px;z-index:7;border-radius:14px;padding:10px 13px;box-sizing:border-box}
+  .ribbon[hidden]{display:none}
+  .rb-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .rb-head .ttl{font-size:12px;font-weight:600;color:var(--ctext)}
+  .rb-head .prov{font-size:8.5px;font-weight:700;letter-spacing:.05em;color:#b69cff;border:.5px solid #b69cff;border-radius:5px;padding:1px 5px}
+  .rb-head .x{margin-left:auto;color:var(--cdim2);cursor:pointer;font-size:15px;line-height:1}
+  .rb-text{font-size:11px;color:#dde6ee;line-height:1.45;max-height:46px;overflow:auto;margin-bottom:8px}
+  .rb-legs{display:flex;gap:6px;overflow-x:auto}
+  .rb-leg{flex:1;min-width:60px;text-align:center;background:var(--glass2);border-radius:9px;padding:7px 4px 6px}
+  .rb-leg .t{font-size:9px;color:var(--cdim);white-space:nowrap}
+  .rb-leg .wv{font-size:13px;font-weight:600;color:var(--ctext);font-variant-numeric:tabular-nums;margin-top:3px}
+  .rb-leg .wv .ar{display:inline-block;color:var(--accent);font-size:11px}
+  .rb-leg .se{font-size:9.5px;color:var(--cdim);margin-top:1px}
+  .rb-leg .bar{height:5px;border-radius:3px;margin-top:6px}
+
   /* ---- restyle MapLibre native controls into glass (zoom + compass, bottom-right) ---- */
   .maplibregl-ctrl-bottom-right{bottom:80px;right:12px}
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group{
@@ -327,6 +343,13 @@
   <hr>
   <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" id="nv-leg0nm" style="color:var(--ctext)">WP4 · marina</span><span class="br" id="nv-leg0br">315°</span></div>
   <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" id="nv-leg1nm" style="color:var(--cdim)">WP3 · channel</span><span class="br" id="nv-leg1br">331°</span></div>
+</div>
+
+<!-- ========================= ROUTE-WEATHER RIBBON (passage probe) ========================= -->
+<div class="ribbon glass" id="ribbon" hidden>
+  <div class="rb-head"><span class="ttl">✨ Passage briefing</span><span class="prov" id="rb-prov">AI</span><span class="x" id="rb-x">×</span></div>
+  <div class="rb-text" id="rb-text"></div>
+  <div class="rb-legs" id="rb-legs"></div>
 </div>
 
 <!-- ========================= SPACETIME NARRATE CARD ========================= -->
@@ -711,6 +734,8 @@
       if (window.__activeWx && window.__activeWx !== 'off') layers.push('weather');
       if (on('places')) layers.push('places');
       if (on('saved')) layers.push('saved');
+      if (on('soundg-text') || on('depare-fill')) layers.push('depth');
+      if (on('ais')) layers.push('ais');
       if (on('charts') || on('enc-chart') || on('depare-fill')) layers.push('chart');
       layers.push('climate');                              // contextual, always available
       return layers;
@@ -735,20 +760,31 @@
         pts.push({ lat: coords[i][1], lon: coords[i][0], t: t.toISOString().slice(0, 16) }); });
       return pts;
     }
+    // wind colour ramp (knots → rgb) — Windy-style, for the ribbon bars
+    const windCol = kt => { const S = [[0,[98,113,183]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]];
+      kt = kt || 0; let a = S[0], b = S[S.length-1];
+      for (let i=0;i<S.length-1;i++){ if (kt>=S[i][0] && kt<=S[i+1][0]){ a=S[i]; b=S[i+1]; break; } }
+      const f = b[0]===a[0]?0:(kt-a[0])/(b[0]-a[0]); const c=k=>Math.round(a[1][k]+(b[1][k]-a[1][k])*f);
+      return 'rgb(' + c(0) + ',' + c(1) + ',' + c(2) + ')'; };
+    const ribbon = document.getElementById('ribbon');
+    document.getElementById('rb-x').addEventListener('click', () => { ribbon.hidden = true; });
     document.getElementById('narrate-path').addEventListener('click', async () => {
-      card.hidden = false;
-      document.getElementById('nc-ttl').textContent = 'Passage briefing';
-      document.getElementById('nc-pos').textContent = '';
-      document.getElementById('nc-text').textContent = 'Narrating the passage…';
-      document.getElementById('nc-layers').innerHTML = ''; document.getElementById('nc-foot').textContent = '';
+      ribbon.hidden = false;
+      document.getElementById('rb-text').textContent = 'Narrating the passage…';
+      document.getElementById('rb-legs').innerHTML = '';
       const j = await comm.briefing({ points: await buildPath(), boat: { draft: 1.8 }, layers: enabledLayers() });
-      if (j.offline) { document.getElementById('nc-text').textContent = 'Backend offline — run backend/ to narrate the passage.'; return; }
-      document.getElementById('nc-prov').textContent = (j.provider || 'ai').toUpperCase();
-      document.getElementById('nc-text').textContent = j.narration || '—';
-      document.getElementById('nc-layers').innerHTML = (j.legs || []).map((lg, i) =>
-        '<span class="nc-chip">leg ' + (i + 1) + (lg.windKt != null ? ' · ' + lg.windKt + 'kt' : '') + '</span>').join('');
-      const srcs = (j.sources || []).map(s => s.title).filter((v, i, a) => a.indexOf(v) === i).slice(0, 6).join(' · ');
-      document.getElementById('nc-foot').textContent = (j.legs ? j.legs.length + ' legs · ' : '') + srcs + ' · verify on official charts';
+      if (j.offline) { document.getElementById('rb-text').textContent = 'Backend offline — run backend/ to narrate the passage.'; return; }
+      document.getElementById('rb-prov').textContent = (j.provider || 'ai').toUpperCase();
+      document.getElementById('rb-text').textContent = j.narration || '—';
+      document.getElementById('rb-legs').innerHTML = (j.legs || []).map(lg => {
+        const t = lg.t ? new Date(lg.t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit' }) : 'leg ' + lg.leg;
+        const kt = lg.windKt, dir = (lg.windFromDeg || 0) + 180;
+        const wind = kt == null ? '—' : '<span class="ar" style="transform:rotate(' + dir + 'deg)">↑</span> ' + Math.round(kt);
+        const sea = lg.waveM != null ? '〜' + lg.waveM + 'm' : (lg.rainMm ? '🌧' + lg.rainMm : '');
+        const h = kt == null ? 0 : Math.min(100, kt * 2.2);
+        return '<div class="rb-leg"><div class="t">' + t + '</div><div class="wv">' + wind + '</div>' +
+          '<div class="se">' + sea + '</div><div class="bar" style="background:' + windCol(kt) + ';width:' + Math.max(30, h) + '%;margin:6px auto 0"></div></div>';
+      }).join('');
     });
     const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open' }[s] || 't-open');
     function renderNarrate(j, ll) {
@@ -765,6 +801,11 @@
       if (L.weather && L.weather.error) chips.push(['🌬 wx n/a', 'open']);
       else if (w) chips.push(['🌬 ' + (w.windKt ?? '?') + 'kt @' + (w.windFromDeg ?? '?') + '°', 'open']);
       if (L.weather && L.weather.sea && L.weather.sea.waveM != null) chips.push(['〜 ' + L.weather.sea.waveM + 'm', 'open']);
+      if (w && w.rainMm) chips.push(['🌧 ' + w.rainMm + 'mm', 'open']);
+      if (w && w.pressureHpa != null) chips.push(['◔ ' + Math.round(w.pressureHpa) + 'hPa', 'open']);
+      if (L.weather && L.weather.current && L.weather.current.velKn != null) chips.push(['↝ ' + L.weather.current.velKn + 'kn cur', 'open']);
+      if (L.depth && L.depth.nearestChartedM != null) chips.push(['▾ ' + L.depth.nearestChartedM + 'm', 'open']);
+      if (L.ais && L.ais.count) chips.push(['⛴ ' + L.ais.count + ' AIS', 'engine']);
       if (L.places && L.places.length) chips.push(['⚓ ' + L.places[0].name + ' ' + L.places[0].distanceNm + 'NM', L.places[0].source]);
       if (L.climate) chips.push(['☀ climate', 'open']);
       if (L.nfl) chips.push([L.nfl.locked ? '🔒 NFL locked' : 'NFL on', 'nfl']);

@@ -28,31 +28,40 @@ UA = {"User-Agent": "Helm/0.1 (marine nav prototype; contact: steve@taikunai.com
 
 # ----------------------------- TOOLS (real data) -----------------------------
 def get_weather(lat: float, lon: float):
-    """Real forecast at a point via Open-Meteo (free, no key). Wind + gust + wave."""
+    """Real forecast at a point via Open-Meteo (free, no key). The full Windy-class catalog:
+    wind/gust + rain/pressure/cloud/temp/CAPE (atmosphere) + wave/swell/SST/current (marine)."""
     out = {"source": "Open-Meteo", "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ"),
            "lat": lat, "lon": lon}
+    ATMO = "wind_speed_10m,wind_direction_10m,wind_gusts_10m,precipitation,pressure_msl,cloud_cover,temperature_2m,cape"
     try:
         w = httpx.get("https://api.open-meteo.com/v1/forecast", params={
-            "latitude": lat, "longitude": lon, "wind_speed_unit": "kn", "forecast_days": 2,
-            "hourly": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
-            "current": "wind_speed_10m,wind_direction_10m,wind_gusts_10m",
+            "latitude": lat, "longitude": lon, "wind_speed_unit": "kn", "forecast_days": 3,
+            "hourly": ATMO, "current": ATMO,
         }, headers=UA, timeout=8).json()
         cur = w.get("current", {})
         out["now"] = {"windKt": cur.get("wind_speed_10m"), "windFromDeg": cur.get("wind_direction_10m"),
-                      "gustKt": cur.get("wind_gusts_10m")}
+                      "gustKt": cur.get("wind_gusts_10m"), "rainMm": cur.get("precipitation"),
+                      "pressureHpa": cur.get("pressure_msl"), "cloudPct": cur.get("cloud_cover"),
+                      "tempC": cur.get("temperature_2m"), "cape": cur.get("cape")}
         h = w.get("hourly", {})
         out["next"] = [{"t": h["time"][i], "windKt": h["wind_speed_10m"][i],
-                        "windFromDeg": h["wind_direction_10m"][i], "gustKt": h["wind_gusts_10m"][i]}
-                       for i in range(0, min(len(h.get("time", [])), 24), 6)]
+                        "windFromDeg": h["wind_direction_10m"][i], "gustKt": h["wind_gusts_10m"][i],
+                        "rainMm": h["precipitation"][i], "pressureHpa": h["pressure_msl"][i],
+                        "cloudPct": h["cloud_cover"][i], "tempC": h["temperature_2m"][i], "cape": h["cape"][i]}
+                       for i in range(0, min(len(h.get("time", [])), 36), 6)]
     except Exception as e:
         out["windError"] = str(e)
     try:
         m = httpx.get("https://marine-api.open-meteo.com/v1/marine", params={
-            "latitude": lat, "longitude": lon, "current": "wave_height,swell_wave_height,wave_period",
+            "latitude": lat, "longitude": lon,
+            "current": "wave_height,swell_wave_height,wave_period,wind_wave_height,"
+                       "sea_surface_temperature,ocean_current_velocity,ocean_current_direction",
         }, headers=UA, timeout=8).json()
         c = m.get("current", {})
         out["sea"] = {"waveM": c.get("wave_height"), "swellM": c.get("swell_wave_height"),
-                      "periodS": c.get("wave_period")}
+                      "periodS": c.get("wave_period"), "windWaveM": c.get("wind_wave_height")}
+        out["sst"] = {"sstC": c.get("sea_surface_temperature")}
+        out["current"] = {"velKn": c.get("ocean_current_velocity"), "dirDeg": c.get("ocean_current_direction")}
     except Exception as e:
         out["seaError"] = str(e)
     return out
@@ -153,7 +162,8 @@ class ResearchAgent:
         return {"leg": i + 1, "t": pt.get("weatherValidAt") or pt.get("t"),
                 "lat": round(pt.get("lat", 0), 3), "lon": round(pt.get("lon", 0), 3),
                 "windKt": w.get("windKt"), "windFromDeg": w.get("windFromDeg"), "gustKt": w.get("gustKt"),
-                "waveM": sea.get("waveM"),
+                "waveM": sea.get("waveM"), "swellM": sea.get("swellM"),
+                "rainMm": w.get("rainMm"), "pressureHpa": w.get("pressureHpa"), "cloudPct": w.get("cloudPct"),
                 "nearest": near[0].get("name") if near and near[0] else None,
                 "nearestNm": near[0].get("distanceNm") if near and near[0] else None,
                 "wxError": (L.get("weather") or {}).get("error")}
@@ -197,12 +207,22 @@ class ResearchAgent:
             if wx.get("error"):
                 parts.append("weather unavailable here — verify locally.")
             elif w:
-                parts.append(f"wind ~{w.get('windKt','?')} kt from {w.get('windFromDeg','?')}°,"
-                             f" gusts {w.get('gustKt','?')} kt; seas {sea.get('waveM','?')} m.")
+                s = (f"wind ~{w.get('windKt','?')} kt from {w.get('windFromDeg','?')}°,"
+                     f" gusts {w.get('gustKt','?')} kt; seas {sea.get('waveM','?')} m")
+                if w.get("rainMm"):
+                    s += f"; rain {w['rainMm']} mm"
+                if w.get("pressureHpa"):
+                    s += f"; {round(w['pressureHpa'])} hPa"
+                parts.append(s + ".")
         if L.get("places"):
             p = L["places"][0]
             rv = f" — \"{p['reviews'][0]['text']}\"" if p["reviews"] else ""
             parts.append(f"Nearest: {p['name']} ({p['distanceNm']} NM, {p['source']}){rv}.")
+        if L.get("depth") and L["depth"].get("nearestChartedM") is not None:
+            parts.append(f"Charted depth near here ~{L['depth']['nearestChartedM']} m (verify on chart).")
+        if L.get("ais") and L["ais"].get("count"):
+            tg = L["ais"]["targets"][0]
+            parts.append(f"{L['ais']['count']} AIS target(s) nearby; nearest {tg['name']} at {tg['rangeNm']} NM.")
         if L.get("climate"):
             parts.append(L["climate"]["note"])
         if L.get("nfl"):

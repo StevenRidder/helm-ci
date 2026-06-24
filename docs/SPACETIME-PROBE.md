@@ -158,9 +158,9 @@ The ReAct agent ([agents.py](../backend/agents.py) `narrate_context`) turns a sl
 1. ~~**Wire the probe into the chart** — tap a point (+ scrub time) → `/narrate` → a slice card.~~ **Done.**
 1a. ~~**Path geometry** — narrate along the route (`/briefing`) = the passage briefing.~~ **Done.**
 1b. ~~**Selectable layers drive the slice** — layer toggles filter what the probe fuses.~~ **Done** (`resolve_context(layers=…)`).
-2. **Promote more weather fields** into `get_weather` (swell/rain/pressure/current/SST/CAPE).
-3. **Depth-at-point** from the engine + **tides/currents** harmonics into the slice.
-4. **AIS + route-weather** layers join the slice (engine already computes CPA/TCPA).
+2. ~~**Promote more weather fields** into `get_weather` (swell/rain/pressure/current/SST/CAPE).~~ **Done** — full atmosphere + marine catalog.
+3. **Depth-at-point** ~~into the slice~~ **done** (charted-depth proxy; engine point-probe still TODO) + **tides/currents** harmonics.
+4. ~~**AIS** layer joins the slice~~ **done** (sample; engine CPA/TCPA TODO). ~~**Route-weather ribbon**~~ **done** — per-leg ribbon under the chart.
 5. **Real climatology/tropical tier** replaces the climate stub.
 6. **Plugin layer contract** — third-party layers implement `sample()` and become narratable.
 7. **NFL** unlocks the slot via experimental flag (personal) or partnership.
