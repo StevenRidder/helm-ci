@@ -122,6 +122,25 @@
   .it.wide .v2{font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;white-space:nowrap}
   .it.wide .r{text-align:right}
 
+  /* ---- spacetime "narrate a point" slice card ---- */
+  .narrate{position:absolute;left:50%;transform:translateX(-50%);bottom:80px;width:420px;max-width:calc(100% - 24px);
+    z-index:8;border-radius:14px;padding:13px 15px;box-sizing:border-box}
+  .narrate[hidden]{display:none}
+  .nc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .nc-head .ic{width:22px;height:22px;border-radius:7px;background:#b69cff;color:#1a1030;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .nc-head .ttl{font-size:12.5px;font-weight:600;color:var(--ctext)}
+  .nc-head .pos{font-size:10.5px;color:var(--cdim);font-variant-numeric:tabular-nums}
+  .nc-head .prov{margin-left:auto;font-size:8.5px;font-weight:700;letter-spacing:.05em;color:#b69cff;border:.5px solid #b69cff;border-radius:5px;padding:1px 5px}
+  .nc-head .x{color:var(--cdim2);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
+  .nc-text{font-size:12.5px;color:#dde6ee;line-height:1.5}
+  .nc-layers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .nc-chip{font-size:10px;border-radius:7px;padding:3px 8px;display:flex;align-items:center;gap:5px;background:var(--glass2);color:#cdd9e3}
+  .nc-chip .t{font-size:8px;font-weight:700;letter-spacing:.03em;padding:0 4px;border-radius:4px}
+  .t-open{color:var(--ok);background:rgba(70,224,160,.14)} .t-owned{color:#b69cff;background:rgba(182,156,255,.14)}
+  .t-rag{color:var(--accent);background:rgba(91,192,255,.14)} .t-locked{color:var(--cdim2);background:rgba(255,255,255,.06)}
+  .nc-foot{font-size:9.5px;color:var(--cdim2);margin-top:9px;line-height:1.45}
+  .narrate-arm{outline:2px dashed var(--accent);outline-offset:-2px}
+
   /* ---- restyle MapLibre native controls into glass (zoom + compass, bottom-right) ---- */
   .maplibregl-ctrl-bottom-right{bottom:80px;right:12px}
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group{
@@ -275,6 +294,10 @@
   <h2>Community</h2>
   <p class="sub" id="comm-status">Connecting to Helm backend…</p>
 
+  <div class="lbl">Narrate (spacetime probe)</div>
+  <div class="wx"><button id="narrate-arm" data-wx="narr">✨ Narrate a point</button></div>
+  <p class="sub" style="margin:7px 0 0;font-size:10.5px" id="narrate-hint">Tap the chart to fuse every layer at that point &amp; the current time.</p>
+
   <div class="lbl">Where to go</div>
   <div class="wx"><button id="wt-go" data-wx="go">Suggest for tonight</button><button id="wt-clear" data-wx="clear">Clear</button></div>
   <div id="wt-results" style="margin-top:9px;font-size:11.5px"></div>
@@ -304,6 +327,18 @@
   <hr>
   <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" id="nv-leg0nm" style="color:var(--ctext)">WP4 · marina</span><span class="br" id="nv-leg0br">315°</span></div>
   <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" id="nv-leg1nm" style="color:var(--cdim)">WP3 · channel</span><span class="br" id="nv-leg1br">331°</span></div>
+</div>
+
+<!-- ========================= SPACETIME NARRATE CARD ========================= -->
+<div class="narrate glass" id="narrate-card" hidden>
+  <div class="nc-head">
+    <span class="ic">✨</span><span class="ttl" id="nc-ttl">Here · now</span>
+    <span class="pos" id="nc-pos"></span><span class="prov" id="nc-prov">AI</span>
+    <span class="x" id="nc-x">×</span>
+  </div>
+  <div class="nc-text" id="nc-text">…</div>
+  <div class="nc-layers" id="nc-layers"></div>
+  <div class="nc-foot" id="nc-foot"></div>
 </div>
 
 <!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
@@ -409,6 +444,7 @@
     frame = Math.max(0, Math.min(forecast.hours - 1, i));
     document.getElementById('tslider').value = frame;
     const t = forecast.times && forecast.times[frame];
+    window.__helmTime = t || null;                       // shared with the spacetime probe
     document.getElementById('tlabel').textContent = t
       ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
       : ('+' + frame + 'h');
@@ -653,6 +689,53 @@
       const c = map.getCenter();
       const r = await comm.osmNote({ lat: c.lat, lon: c.lng, text: 'Helm: anchorage/POI note (review).' });
       say(r.offline ? 'Backend offline.' : 'OSM note: ' + r.status + ' (' + r.mode + ').');
+    });
+
+    // ---- spacetime probe: arm → tap a point → narrate the fused slice at (lat,lon,t) ----
+    let armed = false;
+    const armBtn = document.getElementById('narrate-arm'), card = document.getElementById('narrate-card');
+    const hint = document.getElementById('narrate-hint');
+    function setArmed(on) {
+      armed = on; armBtn.classList.toggle('on', on);
+      map.getCanvas().classList.toggle('narrate-arm', on);
+      map.getCanvas().style.cursor = on ? 'crosshair' : '';
+      hint.textContent = on ? 'Tap the chart now…' : 'Tap the chart to fuse every layer at that point & the current time.';
+    }
+    armBtn.addEventListener('click', () => setArmed(!armed));
+    document.getElementById('nc-x').addEventListener('click', () => { card.hidden = true; });
+    const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open' }[s] || 't-open');
+    function renderNarrate(j, ll) {
+      const txt = document.getElementById('nc-text'), lay = document.getElementById('nc-layers'), foot = document.getElementById('nc-foot');
+      if (j.offline) { card.hidden = false; txt.textContent = 'Backend offline — run backend/ (uvicorn main:app --port 8090) to narrate the slice.'; lay.innerHTML = ''; foot.textContent = ''; return; }
+      const L = j.layers || {}, pt = j.point || {};
+      txt.textContent = j.narration || '—';
+      document.getElementById('nc-prov').textContent = (j.provider || 'ai').toUpperCase();
+      document.getElementById('nc-pos').textContent = ll.lat.toFixed(3) + ', ' + ll.lng.toFixed(3);
+      const when = pt.weatherValidAt || pt.t;
+      document.getElementById('nc-ttl').textContent = when
+        ? 'Here · ' + new Date(when + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : 'Here · now';
+      const w = (L.weather && (L.weather.atTime || L.weather.now)) || null, chips = [];
+      if (L.weather && L.weather.error) chips.push(['🌬 wx n/a', 'open']);
+      else if (w) chips.push(['🌬 ' + (w.windKt ?? '?') + 'kt @' + (w.windFromDeg ?? '?') + '°', 'open']);
+      if (L.weather && L.weather.sea && L.weather.sea.waveM != null) chips.push(['〜 ' + L.weather.sea.waveM + 'm', 'open']);
+      if (L.places && L.places.length) chips.push(['⚓ ' + L.places[0].name + ' ' + L.places[0].distanceNm + 'NM', L.places[0].source]);
+      if (L.climate) chips.push(['☀ climate', 'open']);
+      if (L.nfl) chips.push([L.nfl.locked ? '🔒 NFL locked' : 'NFL on', 'nfl']);
+      if (L.chart) chips.push(['▦ chart', 'open']);
+      lay.innerHTML = chips.map(c => '<span class="nc-chip">' + c[0] + '<span class="t ' + tierClass(c[1]) + '">' + c[1] + '</span></span>').join('');
+      const srcs = (j.sources || []).map(s => s.title).filter((v, i, a) => a.indexOf(v) === i).slice(0, 6).join(' · ');
+      foot.textContent = (L ? 'Fused ' + Object.keys(L).length + ' layers · ' : '') + srcs + ' · verify on official charts';
+      card.hidden = false;
+    }
+    map.on('click', async (e) => {
+      if (!armed) return;
+      setArmed(false);
+      card.hidden = false;
+      document.getElementById('nc-text').textContent = 'Narrating the slice…';
+      document.getElementById('nc-layers').innerHTML = '';
+      document.getElementById('nc-foot').textContent = '';
+      renderNarrate(await comm.narrate({ lat: e.lngLat.lat, lon: e.lngLat.lng,
+        t: window.__helmTime || null, boat: { draft: 1.8 }, nflEnabled: false }), e.lngLat);
     });
 
     map.on('click', 'saved-icon', e => { const p = e.features[0].properties;

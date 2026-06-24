@@ -66,6 +66,16 @@ window.HelmCommunity = function (map, opts) {
 
   function clearWhereTo() { setData('whereto', { type: 'FeatureCollection', features: [] }); }
 
+  // Spacetime probe: narrate the fused slice (all layers) at a point + time.
+  async function narrate(body) {
+    if (!online) return { offline: true };
+    try {
+      return await (await fetch(API + '/narrate', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(body),
+      })).json();
+    } catch (e) { return { error: String(e) }; }
+  }
+
   // Give-back (sanctioned). Mock-first on the backend.
   async function nflPush(pos) {
     if (!online) return { offline: true };
@@ -95,5 +105,5 @@ window.HelmCommunity = function (map, opts) {
   }
 
   return { health, onStatus, isOnline: () => online, loadPlaces, loadSaved, whereTo,
-           clearWhereTo, nflPush, osmNote, savePin };
+           clearWhereTo, narrate, nflPush, osmNote, savePin };
 };
