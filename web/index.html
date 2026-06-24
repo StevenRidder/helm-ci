@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Helm</title>
-<link href="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.css" rel="stylesheet">
+<link href="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.css" rel="stylesheet">
 <style>
   :root{
     --glass:rgba(13,19,27,.74);--glass2:rgba(30,41,54,.62);
@@ -336,7 +336,7 @@
   </div>
 </div>
 
-<script src="https://unpkg.com/maplibre-gl@4.7.1/dist/maplibre-gl.js"></script>
+<script src="https://unpkg.com/maplibre-gl@5/dist/maplibre-gl.js"></script>
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -349,6 +349,11 @@
   window.map = map;   // debug/automation hook
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
+
+  // Google-Earth-style seamless zoom: a 3D globe at world scale (you see Earth's curvature)
+  // that smoothly flattens to web-mercator as you zoom to the chart — one continuous surface,
+  // no view/scale toggling. Needs MapLibre v5+; guarded so an older build just stays flat.
+  map.on('style.load', () => { try { if (map.setProjection) map.setProjection({ type: 'globe' }); } catch (e) {} });
 
   // chart layer toggles (data-layer matches a layer id, or a group prefix like places-/ais-)
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {

@@ -118,6 +118,41 @@ HELM_ENC_ROOT=/path/to/ENC_ROOT  "$HELM_OCPN_DIR/build/cli/helm-tiles"
 The MapLibre `enc` raster source (`web/style.json`, "S-52 charts (engine)" toggle) consumes it
 unchanged — now with real coverage as you pan and the right band as you zoom.
 
+---
+
+## 7. Why OpenCPN makes you toggle views/zooms/basemaps — and we don't
+
+This is the "Google Earth, curvature-of-the-earth to a beach, seamless" question. OpenCPN
+forces manual toggling because of *what it fundamentally is*, not bad UX:
+
+- **It's a stack of discrete charts, not a continuous pyramid.** Each ENC cell is a separate
+  object with a native scale. Quilting stitches *compatible-scale* charts for the current view,
+  but crossing a scale band isn't continuous — it pops, or you press the **chart up/down**
+  hotkeys / click the chart-bar "piano keys" to jump to the next chart. There is no single
+  zoomable surface. **We** serve a **slippy-tile pyramid**: every zoom is a level-of-detail the
+  renderer swaps automatically and continuously; the multi-cell quilter picks the band *by zoom*
+  (§2). Pinch and it just works — no chart hotkeys.
+
+- **It's flat Mercator on a desktop canvas, not a globe.** You can't pull back to see Earth's
+  curvature because the projection and engine aren't a globe (at most a "perspective" tilt). We
+  run MapLibre, which now does a **globe projection** — a real sphere at world scale that
+  flattens to Mercator as you zoom in. Enabled (2026-06-24): zoom all the way out → the globe;
+  all the way in → the beach; one continuous motion. *(Needs MapLibre v5; guarded so older
+  builds stay flat.)*
+
+- **No native, curated basemap — so you swap chart sets for clean imagery/color.** OpenCPN's
+  base *is* the chart; satellite is bolted on as separate mbtiles/plugin chart sets, so to get
+  good imagery (or dodge clouds, or change color) you toggle chart groups. **We** composite on
+  **one surface**: cloudless **Sentinel-2 (s2cloudless)** is the default base, ENC composites
+  over it (NODTA transparent, §3), weather layers on top — and **Day/Dusk/Night** is one
+  first-class toggle (auto-by-time is a small next step). Nothing to swap for clean color.
+
+**Net:** OpenCPN's toggling is a symptom of *discrete-charts + flat-Mercator + bolt-on imagery*.
+Helm is *continuous-pyramid + globe + one composited surface*, so the seamless Google-Earth feel
+is the **default behaviour**, not a feature to bolt on.
+
+---
+
 *Cross-references: [OPENCPN-REUSE.md](OPENCPN-REUSE.md) (quilting = "rebuild, high"),
 [CHART-PIPELINE.md](CHART-PIPELINE.md) (on-demand download + depth-on-satellite),
 [FEATURE-AUDIT.md](FEATURE-AUDIT.md) §4.1 (chart capability matrix).*
