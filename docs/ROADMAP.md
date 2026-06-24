@@ -34,6 +34,12 @@ A single macOS screen that proves the magic, end to end:
 - On-demand pipeline: NOAA NCDS raster + Sentinel-2, select-area → server-tiler (TMS
   Y-flip) → mbtiles → offline.
 - **BYO** "import my own `.mbtiles`" (the ChartLocker bridge).
+- **Pre-baked offline chart tile packs** — bake a region's S-52 tiles (zoom range + palette)
+  into a portable pack on the boat server, download to the phone, and display offline with **no
+  live renderer** ([ADR-0008](decisions/0008-prebaked-offline-tile-packs.md)). This is the
+  offline-on-the-phone path that **defers** the native S-52 renderer rewrite (ADR-0002 Option
+  B): limited (fixed style/zoom, snapshot not queryable, must stamp edition + warn on
+  staleness/out-of-coverage), but mostly wiring over the proven tiler + render path.
 - Connectivity: SignalK + NMEA0183-over-TCP/UDP + internal GPS.
 - AIS with CPA/TCPA + alarms.
 - Routes / marks / tracks via GPX.
