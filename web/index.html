@@ -523,6 +523,31 @@
         .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] }, properties: t })) });
     } catch (e) { /* style not ready this tick */ }
   }
+  // ---- live route line: drive the `route` source from the engine's route geometry (not the
+  // static file), and highlight the active leg. Sim mode keeps the static route.geojson. ----
+  let routeActiveAdded = false;
+  function ensureRouteActiveLayer() {
+    if (routeActiveAdded || !map.getLayer('route-line') || map.getLayer('route-active')) { routeActiveAdded = true; return; }
+    map.addLayer({
+      id: 'route-active', type: 'line', source: 'route',
+      filter: ['==', ['get', 'leg'], 'active'],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#ff8ad4', 'line-width': 5, 'line-opacity': 0.95 }
+    });
+    routeActiveAdded = true;
+  }
+  function updateRouteFromEngine(r) {
+    if (!r || !Array.isArray(r.coords) || r.coords.length < 2) return;
+    try {
+      const src = map.getSource('route'); if (!src) return;
+      const feats = [{ type: 'Feature', properties: { leg: 'all' }, geometry: { type: 'LineString', coordinates: r.coords } }];
+      const a = r.activeLeg;
+      if (a != null && a >= 0 && a + 1 < r.coords.length)
+        feats.push({ type: 'Feature', properties: { leg: 'active' }, geometry: { type: 'LineString', coordinates: [r.coords[a], r.coords[a + 1]] } });
+      src.setData({ type: 'FeatureCollection', features: feats });
+      ensureRouteActiveLayer();
+    } catch (e) { /* style not ready this tick */ }
+  }
   map.on('mouseenter', 'ais-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
   map.on('mouseleave', 'ais-vessels', () => { map.getCanvas().style.cursor = ''; });
   map.on('click', 'ais-vessels', e => { if (measuring()) return;
@@ -618,6 +643,7 @@
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
+      if (s.route) updateRouteFromEngine(s.route);    // live route line from OpenCPN's model route
       if (collision && s.ais && s.pos)                // CPA alarm + COLREGs avoidance guidance
         collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais);
       try {
