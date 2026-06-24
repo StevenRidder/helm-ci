@@ -90,15 +90,21 @@ the `top_frame::Get()` definition, and its instantiation** from `chart_stubs.cpp
 `chart-spike` (no `U`, no `T`, no vtable/typeinfo); both binaries link clean; and **all 91 z13/z15 content
 tiles render byte-identical** to the pre-change baseline (warm-vs-warm, same build). Removing the abort
 tripwire is net-safer here: re-enabling the `#else` arm would now be a loud *link* failure, not a runtime
-abort. *(Correction, established later: the S-52 renderer is **per-process non-deterministic** — across
-fresh processes ~30/112 z13/z15 tiles flip between stable "attractor" values (ASLR / address-ordered
-iteration in the s52plib render path), though each process is internally consistent. So this byte-identical
-evidence holds within a build but is attractor-dependent across relinks — it is corroboration, not the
-proof; the seam's correctness rests on the logical argument above (the removed code was never on the render
-path). An earlier note here proposed a "startup warmup render"; that was a **misdiagnosis** — a same-process
-warmup cannot touch cross-process variance and was measured equally non-deterministic on/off. The real fix
-is a stable render-path object order (`std::stable_sort` / a stable tiebreak key on display-priority +
-SENC index/RCID), tracked as separate render-determinism hardening.)*
+abort. *(Correction, established later — now **RESOLVED**: the S-52 renderer was **per-process
+non-deterministic** — across fresh processes ~30/112 z13/z15 tiles flipped between stable "attractor"
+values, though each process was internally consistent. So the byte-identical seam evidence held within a
+build but was attractor-dependent across relinks — corroboration, not proof; the seam's correctness rests on
+the logical argument above (the removed code was never on the render path). Two earlier guesses were both
+**misdiagnoses**: a "startup warmup render" (a same-process warmup cannot touch cross-process variance —
+measured equally non-deterministic on/off) and "address-ordered render iteration." The PROVEN root cause
+(soundings-toggle bisection + `MallocPreScribble` constant-fill → deterministic) is an **uninitialized
+member**: `s52plib::m_nSoundingFactor` was never set in the ctor (only `m_nTextFactor` was), and
+`PrepareForRender()` reads it as `m_SoundingsScaleFactor = m_nSoundingFactor*.1 + 1`, so the sounding-font
+point size — hence every sounding digit's pixel placement — varied per process. Fix: initialise
+`m_nSoundingFactor = 0` (the app default), shipped as
+[`patches/0004-s52plib-headless-sounding-determinism.patch`](patches/). Verified: 12/12 fresh processes
+byte-identical and 0/112 cross-process tile diffs — which also restores the cross-build byte-identical
+comparison this seam evidence relies on.)*
 
 **Next:** vendor OpenCPN as a maintained patch series (`patches/0001`, `0002`, …) rather than building
 against a mutable clone — the remaining Step-6 work.
