@@ -118,6 +118,16 @@ placeholders. Audited the tile server + engine + UI for silent masking and fixed
   broken chart render is never served as blank ocean.
 - **Invalid native scale is now fail-closed** — the tile server *refuses to serve* a cell whose
   SCAMIN/safety-contour filtering can't be trusted, instead of rendering it silently.
+- **Uninitialized GUI-config members in `s52plib` were read as per-process garbage during render.** The
+  full app sets these from its options dialog; a headless consumer never does, and the ctor left several
+  unset. This first surfaced as the sounding-render non-determinism (`m_nSoundingFactor`, patch 0004), so
+  an audit of every flag read by `ObjectRenderCheck()` (the per-object render gate) followed. Found and
+  fixed (patch 0005): `m_bUseSCAMIN`, **`m_bUseSUPER_SCAMIN`** (garbage-on culls DEPCNT/DEPARE/SOUNDG — the
+  **safety contour + dangerous soundings** — the exact hazard the native-scale fix above guards against),
+  `m_bShowMeta`, `m_chart_zoom_modifier_vector` — all defaulted to OpenCPN factory values (SUPER_SCAMIN
+  **off** = the safe choice). Detector + regression guard: a `MallocPreScribble=1` differential (uninit
+  heap → constant fill) over 866 tiles across z9–z16 — any tile whose bytes change vs a normal run is still
+  reading uninitialized memory; now **0/866**, and the renderer is byte-identical across fresh processes.
 - **A dropped live engine silently fell back to the simulator** (a plausible fake position). The UI now
   raises a red **"ENGINE LOST"** alarm and dims the readings stale; the browser sim is used *only* when
   no engine was ever present (honest prototype mode).
