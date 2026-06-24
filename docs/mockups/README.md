@@ -24,6 +24,12 @@ route, AIS with CPA highlight, and the source-attribution line.
 > ENC data. These files are a faithful hand-built representation of that output at one
 > moment, not the live renderer.
 
+## Feature wireframes
+
+| File | Screen |
+|---|---|
+| [destination-dossier.html](destination-dossier.html) | **Destination dossier + living timeline** — the "once I get there" briefing (arrival weather, formalities, anchorage, services, community reports, climate) beside the "along the way" briefing, on a two-axis timeline (valid-time scrubber + issue-time updates). Interactive: drag the timeline to move the boat and watch the arrival forecast firm up; Day/Dusk/Night. See [../BRIEFINGS.md](../BRIEFINGS.md). |
+
 ## Earlier explorations
 
 | File | Notes |
