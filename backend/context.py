@@ -20,8 +20,9 @@ def _valid_at(weather, t):
     series = weather.get("next") or []
     if not t or not series:
         return weather.get("now"), None
-    # series 't' are ISO strings; choose lexicographically-nearest (same TZ from Open-Meteo)
-    best = min(series, key=lambda h: abs((h["t"] > t) - (h["t"] < t)) if h.get("t") else 9)
+    # series 't' are ISO strings (same TZ from Open-Meteo): first hour at/after t, else the
+    # last available hour (clamped). We return that hour's REAL time so the slice card shows
+    # when the forecast is actually valid — never the requested time dressed up as a forecast.
     chosen = next((h for h in series if h.get("t") and h["t"] >= t), series[-1])
     return chosen, chosen.get("t")
 
@@ -91,7 +92,7 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
 
     if on("ais"):
         targets = store.ais_near(lat, lon)
-        L["ais"] = {"count": len(targets), "targets": targets, "source": "engine",
+        L["ais"] = {"count": len(targets), "targets": targets, "source": "sample",
                     "note": "sample AIS — the engine provides real decode + CPA/TCPA"}
 
     if on("chart"):

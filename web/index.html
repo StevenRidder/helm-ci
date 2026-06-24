@@ -143,6 +143,7 @@
   .nc-chip .t{font-size:8px;font-weight:700;letter-spacing:.03em;padding:0 4px;border-radius:4px}
   .t-open{color:var(--ok);background:rgba(70,224,160,.14)} .t-owned{color:#b69cff;background:rgba(182,156,255,.14)}
   .t-rag{color:var(--accent);background:rgba(91,192,255,.14)} .t-locked{color:var(--cdim2);background:rgba(255,255,255,.06)}
+  .t-sim{color:var(--warn);background:rgba(255,192,106,.14)}
   .nc-foot{font-size:9.5px;color:var(--cdim2);margin-top:9px;line-height:1.45}
   .narrate-arm{outline:2px dashed var(--accent);outline-offset:-2px}
 
@@ -855,7 +856,7 @@
           '<div class="se">' + sea + '</div><div class="bar" style="background:' + windCol(kt) + ';width:' + Math.max(30, h) + '%;margin:6px auto 0"></div></div>';
       }).join('');
     });
-    const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open' }[s] || 't-open');
+    const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open', sample: 't-sim', sim: 't-sim' }[s] || 't-open');
     function renderNarrate(j, ll) {
       const txt = document.getElementById('nc-text'), lay = document.getElementById('nc-layers'), foot = document.getElementById('nc-foot');
       if (j.offline) { card.hidden = false; txt.textContent = 'Backend offline — run backend/ (uvicorn main:app --port 8090) to narrate the slice.'; lay.innerHTML = ''; foot.textContent = ''; return; }
@@ -874,7 +875,7 @@
       if (w && w.pressureHpa != null) chips.push(['◔ ' + Math.round(w.pressureHpa) + 'hPa', 'open']);
       if (L.weather && L.weather.current && L.weather.current.velKn != null) chips.push(['↝ ' + L.weather.current.velKn + 'kn cur', 'open']);
       if (L.depth && L.depth.nearestChartedM != null) chips.push(['▾ ' + L.depth.nearestChartedM + 'm', 'open']);
-      if (L.ais && L.ais.count) chips.push(['⛴ ' + L.ais.count + ' AIS', 'engine']);
+      if (L.ais && L.ais.count) chips.push(['⛴ ' + L.ais.count + ' AIS', L.ais.source || 'sample']);
       if (L.places && L.places.length) chips.push(['⚓ ' + L.places[0].name + ' ' + L.places[0].distanceNm + 'NM', L.places[0].source]);
       if (L.climate) chips.push(['☀ climate', 'open']);
       if (L.nfl) chips.push([L.nfl.locked ? '🔒 NFL locked' : 'NFL on', 'nfl']);
