@@ -103,28 +103,21 @@
       "source": "depare",
       "paint": {
         "fill-color": [
-          "interpolate",
-          [
-            "linear"
-          ],
-          [
-            "coalesce",
-            [
-              "get",
-              "DRVAL1"
-            ],
-            0
-          ],
-          0,
-          "#a9d6ec",
-          5,
-          "#bfe2f0",
-          10,
-          "#d8eef8",
-          30,
-          "#eef7fc"
+          "interpolate", ["linear"],
+          ["coalesce", ["to-number", ["get", "DRVAL1"]], 0],
+          0, "#7fc7ff",
+          3, "#9ed3f0",
+          10, "#bfe2f0",
+          30, "#dceefb"
         ],
-        "fill-opacity": 0.45
+        "fill-opacity": [
+          "interpolate", ["linear"],
+          ["coalesce", ["to-number", ["get", "DRVAL1"]], 0],
+          0, 0.5,
+          5, 0.32,
+          15, 0.12,
+          40, 0.05
+        ]
       }
     },
     {
@@ -132,13 +125,18 @@
       "type": "line",
       "source": "depcnt",
       "paint": {
-        "line-color": "#2f6f8f",
-        "line-width": 0.8,
-        "line-dasharray": [
-          3,
-          3
+        "line-color": [
+          "step",
+          ["coalesce", ["to-number", ["get", "VALDCO"]], 99],
+          "#ff9a6b",
+          5, "#bfe6ff"
         ],
-        "line-opacity": 0.7
+        "line-width": [
+          "interpolate", ["linear"], ["zoom"],
+          10, 0.7,
+          15, 1.5
+        ],
+        "line-opacity": 0.85
       }
     },
     {
@@ -159,13 +157,20 @@
         "text-font": [
           "Open Sans Regular"
         ],
-        "text-size": 11,
+        "text-size": 11.5,
         "text-allow-overlap": false
       },
       "paint": {
-        "text-color": "#345",
-        "text-halo-color": "#fff",
-        "text-halo-width": 1
+        "text-color": [
+          "step",
+          ["coalesce", ["to-number", ["get", "DEPTH"]], 99],
+          "#ff7a6b",
+          3, "#ffc06a",
+          6, "#eef6fc"
+        ],
+        "text-halo-color": "#05080c",
+        "text-halo-width": 1.5,
+        "text-halo-blur": 0.4
       }
     },
     {

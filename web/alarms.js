@@ -170,18 +170,9 @@ window.HelmAlarms = function (map, opts) {
       const d = distM(s.pos, mob), b = Math.round(bearing(s.pos, mob));
       fire('mob', 'critical', 'MAN OVERBOARD — ' + (d < 1852 ? Math.round(d) + ' m' : (d / 1852).toFixed(2) + ' NM') + ', bearing ' + b + '°');
     }
-    // CPA/TCPA from the engine's LIVE AIS (real OpenCPN-computed values; never faked). Fire only on
-    // a genuine APPROACHING threat: cpaValid + future TCPA within 30 min + CPA under 2 NM. Pick the soonest.
-    if (Array.isArray(s.ais)) {
-      let worst = null;
-      for (const t of s.ais)
-        if (t.cpaValid && t.tcpa > 0 && t.tcpa <= 30 && t.cpa < 2.0 && (!worst || t.tcpa < worst.tcpa)) worst = t;
-      if (worst) {
-        const who = (worst.name && worst.name.trim()) ? worst.name.trim() : ('MMSI ' + worst.mmsi);
-        fire('cpa', (worst.cpa < 0.5 && worst.tcpa < 10) ? 'critical' : 'warning',
-          'Collision risk — CPA ' + (+worst.cpa).toFixed(2) + ' NM in ' + Math.round(worst.tcpa) + ' min · ' + who);
-      } else clear('cpa');
-    }
+    // CPA/TCPA is owned by collision.js (richer: COLREGs give-way/stand-on guidance, intercept line,
+    // audio) — wired in index.html via collision.update(). We intentionally do NOT also raise a CPA
+    // alarm here, to avoid a duplicate banner. (alarms.js stays the depth / anchor / MOB authority.)
   }
 
   return {

@@ -240,6 +240,43 @@
     .it.wide{ flex:0 0 auto; min-width:158px; }
     .it .v{ font-size:19px; }
   }
+
+  /* ---- measure / ruler HUD (Apple-style glass card) ---- */
+  .measure-hud{position:absolute;top:62px;left:50%;transform:translateX(-50%);z-index:8;
+    border-radius:12px;padding:7px 8px 7px 13px;display:flex;align-items:center;gap:12px;
+    color:var(--ctext);min-width:148px}
+  .measure-hud[hidden]{display:none}
+  .measure-hud .mt{font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;line-height:1.05}
+  .measure-hud .ms{font-size:10.5px;color:var(--cdim);margin-top:2px;font-variant-numeric:tabular-nums}
+  .measure-hud .mx{margin-left:auto;cursor:pointer;color:var(--cdim);font-size:13px;width:22px;height:22px;
+    border-radius:6px;display:flex;align-items:center;justify-content:center;flex:none}
+  .measure-hud .mx:hover{background:var(--glass2);color:var(--ctext)}
+
+  /* ---- CPA collision alarm (red glass card, top-center) ---- */
+  .cpa-alarm{position:absolute;top:60px;left:50%;transform:translateX(-50%);z-index:9;max-width:440px;
+    border-radius:13px;padding:11px 12px;display:flex;gap:11px;align-items:flex-start;
+    border:.5px solid rgba(255,90,82,.55);box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 1px rgba(255,90,82,.25);
+    animation:cpapulse 1.1s infinite}
+  @keyframes cpapulse{0%,100%{box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 1px rgba(255,90,82,.25)}
+    50%{box-shadow:0 18px 60px -20px rgba(0,0,0,.85),0 0 0 2px rgba(255,90,82,.6)}}
+  .cpa-alarm[hidden]{display:none}
+  .cpa-ic{color:var(--danger);font-size:20px;line-height:1.1;flex:none}
+  .cpa-body{flex:1;min-width:0}
+  .cpa-top{display:flex;align-items:center;gap:8px;margin-bottom:3px}
+  .cpa-ttl{font-size:12.5px;font-weight:600;color:#fff}
+  .cpa-role{font-size:9.5px;font-weight:700;letter-spacing:.04em;padding:2px 6px;border-radius:5px;flex:none}
+  .cpa-role.give{background:var(--danger);color:#1a0606}
+  .cpa-role.stand{background:var(--warn);color:#1f1402}
+  .cpa-role.mon{background:var(--glass2);color:var(--cdim)}
+  .cpa-tgt{font-size:11px;color:var(--cdim);font-variant-numeric:tabular-nums;margin-bottom:4px}
+  .cpa-act{font-size:12px;color:#ffd9d6;line-height:1.35}
+  .cpa-rule{font-size:9.5px;color:var(--cdim);border:.5px solid var(--line);border-radius:4px;padding:0 4px;margin-left:3px;white-space:nowrap}
+  .cpa-more{font-size:10.5px;color:var(--warn);margin-top:4px}
+  .cpa-disc{font-size:9.5px;color:var(--cdim2);margin-top:6px;line-height:1.3;border-top:.5px solid var(--line2);padding-top:5px}
+  .cpa-btns{display:flex;flex-direction:column;gap:5px;flex:none}
+  .cpa-btn{cursor:pointer;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;
+    background:var(--glass2);font-size:12px;color:var(--cdim)}
+  .cpa-btn:hover{color:var(--ctext)}
 </style>
 </head>
 <body>
@@ -284,6 +321,9 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.7-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M18.5 20c0-2-.9-3.6-2.3-4.5"/></svg>
   </div>
   <div class="sep"></div>
+  <div class="ri" data-rail="measure" title="Measure — range &amp; bearing">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M21.3 15.3a2.4 2.4 0 0 1 0 3.4l-2.6 2.6a2.4 2.4 0 0 1-3.4 0L2.7 8.7a2.41 2.41 0 0 1 0-3.4l2.6-2.6a2.41 2.41 0 0 1 3.4 0Z"/><path d="m14.5 12.5 2-2"/><path d="m11.5 9.5 2-2"/><path d="m8.5 6.5 2-2"/><path d="m17.5 15.5 2-2"/></svg>
+  </div>
   <div class="ri" data-rail="download" title="Download charts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
   </div>
@@ -302,8 +342,11 @@
   <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite</label>
   <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
   <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 charts<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
-  <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth areas</label>
-  <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
+  <div class="lbl">Depth on satellite</div>
+  <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
+  <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours</label>
+  <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
+  <div class="lbl">Overlays</div>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
   <label class="row"><input type="checkbox" data-layer="saved" checked> Saved places<span style="margin-left:auto;font-size:9.5px;color:#f5c451">owned</span></label>
@@ -486,6 +529,8 @@
 <script src="ownship.js"></script>
 <script src="alarms.js"></script>
 <script src="community.js"></script>
+<script src="measure.js"></script>
+<script src="collision.js"></script>
 <script>
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
@@ -507,6 +552,11 @@
   const ownship = HelmOwnship(map, { follow: !__initialHash });  window.__ownship = ownship;   // follow on unless a view was pinned in the URL
   const alarms = HelmAlarms(map);  window.__alarms = alarms;   // depth / anchor / MOB safety alarms + banner (alarms.js)
 
+  // Google-Earth-style seamless zoom: a 3D globe at world scale (you see Earth's curvature)
+  // that smoothly flattens to web-mercator as you zoom to the chart — one continuous surface,
+  // no view/scale toggling. Needs MapLibre v5+; guarded so an older build just stays flat.
+  map.on('style.load', () => { try { if (map.setProjection) map.setProjection({ type: 'globe' }); } catch (e) {} });
+
   // chart layer toggles (data-layer matches a layer id, or a group prefix like places-/ais-)
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {
     cb.addEventListener('change', () => {
@@ -522,6 +572,9 @@
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const iso = window.HelmIsolines ? HelmIsolines(map, { beforeId: 'route-line' }) : null;
+  const measureBtn = document.querySelector('.ri[data-rail="measure"]');
+  const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
+  const collision = window.HelmCollision ? HelmCollision(map) : null;
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
@@ -629,13 +682,84 @@
     setWeather('wind');
   });
 
-  // click popups
-  map.on('click', 'soundg-text', e => new maplibregl.Popup().setLngLat(e.lngLat)
-    .setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map));
-  map.on('click', 'places-icon', e => { const p = e.features[0].properties;
+  // click popups (suppressed while the measure tool is active — a click then drops a ruler point)
+  const measuring = () => window.__helmMeasure && window.__helmMeasure.active();
+  map.on('click', 'soundg-text', e => { if (measuring()) return;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map); });
+  map.on('click', 'places-icon', e => { if (measuring()) return; const p = e.features[0].properties;
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
-  map.on('click', 'ais-vessels', e => { const p = e.features[0].properties;
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || 'AIS target') + '</b><br>SOG ' + (p.sog ?? '?') + ' · COG ' + (p.cog ?? '?') + (p.cpa != null ? ' · CPA ' + p.cpa + ' NM' : '')).addTo(map); });
+  // ---- AIS: live engine-driven targets + rich tap inspector ----
+  // The engine streams a per-fix `ais` array (range/brg/CPA/TCPA computed by OpenCPN's
+  // AisDecoder). We drive the `ais` map source from it and render the full target detail
+  // on tap. In sim mode (no engine) the static sample in style.json stays.
+  const AIS_CLASS = { 0: 'Class A', 1: 'Class B', 2: 'AtoN', 3: 'Base station',
+                      5: 'DSC', 6: 'SART', 7: 'ARPA', 9: 'Meteo' };
+  const aisEsc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const aisNum = (v, d) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(d);
+  function aisPopupHTML(p) {
+    const cls = AIS_CLASS[p.class] != null ? AIS_CLASS[p.class] : (p.class != null ? 'Class ' + p.class : '');
+    const name = (p.name && String(p.name).trim()) ? p.name : ('MMSI ' + (p.mmsi ?? '?'));
+    const valid = p.cpaValid !== false && p.cpa != null;           // engine flags when CPA is meaningful
+    const cpa = valid ? aisNum(p.cpa, 2) + ' NM' : '—';
+    const tcpa = (valid && p.tcpa != null)
+      ? (+p.tcpa).toFixed(0) + ' min' + ((+p.tcpa) < 0 ? ' (opening)' : '') : '—';
+    const danger = valid && p.cpa < 2 && p.tcpa > 0 && p.tcpa < 30;  // close-approach heads-up
+    const rows = [
+      ['SOG', aisNum(p.sog, 1) + ' kn'],
+      ['COG', aisNum(p.cog, 0) + '°'],
+      (p.hdg != null && p.hdg < 360) ? ['HDG', aisNum(p.hdg, 0) + '°'] : null,
+      (p.range != null) ? ['Range', aisNum(p.range, 2) + ' NM'] : null,
+      (p.brg != null) ? ['Bearing', aisNum(p.brg, 0) + '°'] : null,
+      ['CPA', cpa],
+      ['TCPA', tcpa]
+    ].filter(Boolean);
+    return '<div style="min-width:152px">'
+      + '<div style="font-weight:600;font-size:13px">' + aisEsc(name) + '</div>'
+      + '<div style="font-size:10.5px;color:var(--cdim);margin-bottom:6px">' + (cls || '') + (cls && p.mmsi ? ' · ' : '') + (p.mmsi ? p.mmsi : '') + '</div>'
+      + (danger ? '<div style="font-size:10.5px;color:var(--danger);font-weight:600;margin-bottom:6px">⚠ Close approach</div>' : '')
+      + rows.map(r => '<div style="display:flex;justify-content:space-between;gap:16px;font-size:11.5px;padding:1px 0">'
+          + '<span style="color:var(--cdim)">' + r[0] + '</span>'
+          + '<span style="font-variant-numeric:tabular-nums">' + r[1] + '</span></div>').join('')
+      + '</div>';
+  }
+  function updateAisFromEngine(list) {
+    if (!Array.isArray(list)) return;
+    try {
+      const src = map.getSource('ais'); if (!src) return;
+      src.setData({ type: 'FeatureCollection', features: list
+        .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
+        .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] }, properties: t })) });
+    } catch (e) { /* style not ready this tick */ }
+  }
+  // ---- live route line: drive the `route` source from the engine's route geometry (not the
+  // static file), and highlight the active leg. Sim mode keeps the static route.geojson. ----
+  let routeActiveAdded = false;
+  function ensureRouteActiveLayer() {
+    if (routeActiveAdded || !map.getLayer('route-line') || map.getLayer('route-active')) { routeActiveAdded = true; return; }
+    map.addLayer({
+      id: 'route-active', type: 'line', source: 'route',
+      filter: ['==', ['get', 'leg'], 'active'],
+      layout: { 'line-cap': 'round', 'line-join': 'round' },
+      paint: { 'line-color': '#ff8ad4', 'line-width': 5, 'line-opacity': 0.95 }
+    });
+    routeActiveAdded = true;
+  }
+  function updateRouteFromEngine(r) {
+    if (!r || !Array.isArray(r.coords) || r.coords.length < 2) return;
+    try {
+      const src = map.getSource('route'); if (!src) return;
+      const feats = [{ type: 'Feature', properties: { leg: 'all' }, geometry: { type: 'LineString', coordinates: r.coords } }];
+      const a = r.activeLeg;
+      if (a != null && a >= 0 && a + 1 < r.coords.length)
+        feats.push({ type: 'Feature', properties: { leg: 'active' }, geometry: { type: 'LineString', coordinates: [r.coords[a], r.coords[a + 1]] } });
+      src.setData({ type: 'FeatureCollection', features: feats });
+      ensureRouteActiveLayer();
+    } catch (e) { /* style not ready this tick */ }
+  }
+  map.on('mouseenter', 'ais-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
+  map.on('mouseleave', 'ais-vessels', () => { map.getCanvas().style.cursor = ''; });
+  map.on('click', 'ais-vessels', e => { if (measuring()) return;
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
 
   // ================= CHROME UI wiring =================
   (function () {
@@ -657,9 +781,14 @@
         const insp = document.querySelector('.insp');
         if (insp) insp.style.display = (insp.style.display === 'none' ? '' : 'none');
         btn.classList.toggle('on');
+      } else if (key === 'measure') {                  // range/bearing ruler mode
+        if (measure) measure.toggle();
       } else if (key === 'chart') {                    // home
         closeDrawers(); setActive(btn);
+        if (measure && measure.active()) measure.toggle();
       }
+      // keep the ruler's highlight truthful even when another rail button reshuffles 'on'
+      if (measureBtn) measureBtn.classList.toggle('on', !!(measure && measure.active()));
     }));
   })();
 
@@ -727,23 +856,11 @@
       if (s.active.legs[0]) { set('nv-leg0nm', s.active.legs[0].name); set('nv-leg0br', s.active.legs[0].brg); }
       if (s.active.legs[1]) { set('nv-leg1nm', s.active.legs[1].name); set('nv-leg1br', s.active.legs[1].brg); }
       ownship.update(s);   // smooth glide + follow / course-up (ownship.js)
-      alarms.onNav(s);     // depth / anchor / MOB / CPA safety alarms (alarms.js)
-      if (Array.isArray(s.ais)) updateAis(s.ais);   // live AIS targets from the engine
-    }
-    // Replace the static AIS sample with the engine's LIVE targets. The existing 'ais' source +
-    // layers render them, and ais-vessels already colours by the `cpa` property — but we only pass
-    // a real cpa when it's an APPROACHING threat (cpaValid + future TCPA); a receding target gets
-    // cpa=99 so the style paints it neutral, never a false red.
-    function updateAis(ais) {
-      const src = map.getSource && map.getSource('ais'); if (!src) return;
-      src.setData({ type: 'FeatureCollection', features: ais.map(t => ({
-        type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
-        properties: {
-          name: (t.name && t.name.trim()) ? t.name.trim() : ('MMSI ' + t.mmsi),
-          mmsi: t.mmsi, sog: t.sog, cog: t.cog, type: 'vessel',
-          cpa: (t.cpaValid && t.tcpa > 0) ? t.cpa : 99
-        }
-      })) });
+      alarms.onNav(s);     // depth / anchor / MOB safety alarms (alarms.js) — CPA handled by collision.js
+      if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
+      if (s.route) updateRouteFromEngine(s.route);    // live route line from OpenCPN's model route
+      if (collision && s.ais && s.pos)                // CPA alarm + COLREGs avoidance guidance (collision.js)
+        collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais);
     }
     // Always show the truth about where nav data comes from. Critically: if the
     // live engine DROPS, do NOT silently fall back to the simulator presenting a

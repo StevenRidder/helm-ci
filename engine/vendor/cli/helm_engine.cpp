@@ -533,8 +533,21 @@ int main(int argc, char** argv) {
     }
     aisArr += "]";
 
+    // ---- active route geometry: drive the UI's route line from the model route, not a static
+    //      file. coords are the real waypoints we're navigating; activeLeg = the leg own-ship is
+    //      on (ROUTE[li]->ROUTE[li+1]) so the cockpit can highlight it. ----
+    std::string routeJson = "{\"name\":\"" + json_escape(g_route_name) +
+                            "\",\"activeLeg\":" + std::to_string((long)li) + ",\"coords\":[";
+    for (size_t i = 0; i < ROUTE.size(); ++i) {
+      char rb[48];
+      std::snprintf(rb, sizeof rb, "%s[%.6f,%.6f]", i ? "," : "", ROUTE[i].lon, ROUTE[i].lat);
+      routeJson += rb;
+    }
+    routeJson += "]}";
+
     std::string frame(json);
-    if (!frame.empty()) frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);   // additive: top-level key, before final }
+    if (!frame.empty()) frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);       // additive: top-level key, before final }
+    if (!frame.empty()) frame.insert(frame.size() - 1, ",\"route\":" + routeJson);  // additive: live route geometry
     for (auto& c : server.getClients()) c->send(frame);
     if (tick % 10 == 0)
       std::printf("  [%ld] %s [%s]  SOG %.1f  COG %d  DTG %s  -> %s  (clients: %zu)\n",

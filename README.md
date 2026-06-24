@@ -58,6 +58,9 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
 | [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md) | Read OpenCPN file-by-file: reuse its nav core; the new plan |
 | [docs/COMPETITIVE.md](docs/COMPETITIVE.md) | Market landscape + where Helm wins |
+| [docs/FEATURE-AUDIT.md](docs/FEATURE-AUDIT.md) | **Client feature audit** — what's wired vs missing, benchmarked feature-by-feature against OpenCPN, pro MFDs, and iOS apps |
+| [docs/CHART-QUILTING.md](docs/CHART-QUILTING.md) | Multi-cell S-52 tiler → quilting; where OpenCPN's quilt code falls short vs ours |
+| [docs/RUNBOOK.md](docs/RUNBOOK.md) | **Build & run on macOS** — bootstrap the engine, run the stack, feature-by-feature verification checklist |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
 | [TRACER-BULLET.md](TRACER-BULLET.md) | **The first code** — run the pipeline + prototype |
 | [pipeline/](pipeline/) | Reusable engine: tiler · depth · wind |
