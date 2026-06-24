@@ -99,6 +99,42 @@ Places overlay (toggle)
 - **Contribute:** add/edit a pin → writes to Helm's backend; optionally mirror the user's
   *track* to NFL via Option B.
 
+## Driving the LLM "where to go" + giving back (the two directions)
+
+The two flows are **not symmetric**: giving back is easy and sanctioned; reading in is walled
+and must be **gated as experimental**.
+
+### Reading in → the "where to go" recommender (NFL read = EXPERIMENTAL)
+
+The recommender runs over a **source-agnostic, provenance-tagged place graph** so it is
+strong on *allowed* data alone and only *enriched* by NFL where access exists:
+
+- **Load-bearing (shippable):** open (OSM/OpenSeaMap) + owned (Helm pins/reviews) + cited RAG
+  (Noonsite/blogs/forums). The LLM ranks candidates and **explains why, with citations and
+  confidence** — this works with **zero NFL dependency**.
+- **NFL as enrichment only:**
+  - **Partnership (Option A)** — the clean, shippable way to read NFL places/boats.
+  - **Personal-experimental pull (Option C)** — lives behind an **Experimental Features**
+    flag: `personal · unofficial · may break · not in shared/commercial builds`. Cached hard,
+    rate-limited, best-effort. Feeds *Steve's own* recommender; never ships.
+  - **NFL public-page RAG** is **partnership-preferred**, not a backdoor (NFL guards
+    redistribution); prefer Noonsite/blogs for RAG.
+- **Honesty:** every recommendation tags its sources; NFL-sourced enrichment is labelled, and
+  when NFL read is off the card shows a *locked* "+N NoForeignLand reviews — partnership /
+  experimental" affordance rather than silently omitting it.
+
+### Giving back → sanctioned now, and it's the leverage
+
+- **NFL push (Option B):** mirror the user's own track/position to NFL via their own boat key
+  (the signalk-to-nfl pattern). Stable, build now.
+- **Give back to the open commons:** let users push opted-in anchorage corrections/POIs back
+  to **OpenStreetMap / OpenSeaMap** — legal, universal, improves the data for everyone
+  (including NFL indirectly). A more durable contribution than feeding one walled garden.
+- **The leverage:** giving back is what earns reading in. Pitch NFL **reciprocity** — "Helm
+  sends you opted-in active-cruiser tracks (and contributions); in return, non-commercial
+  read access to render your places, attributed" — far more appealing to their non-commercial
+  ethos than a pure take.
+
 ## Legal / ToS posture
 
 - **NFL pull:** partnership (Option A) or personal-experimental (Option C) only —
@@ -115,3 +151,9 @@ Places overlay (toggle)
 Build Option D (open) as the Places overlay + Option B (NFL push) now; keep Option C behind
 a personal-use flag; pursue Option A (partnership) only if commercializing. Recorded in
 [ADR-0005](../decisions/0005-community-places-overlay.md).
+
+The **"where to go" recommender** runs on open + owned + RAG (no NFL dependency); **NFL read
+is enrichment only, gated under Experimental Features** (personal/unofficial/may-break) or a
+partnership. **Give-back** (NFL push + opt-in OSM/OpenSeaMap contribution) ships now and is
+the **reciprocity leverage** for a partnership. Wireframe:
+[../mockups/nfl-giveback-experimental.html](../mockups/nfl-giveback-experimental.html).

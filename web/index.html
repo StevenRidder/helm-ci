@@ -148,6 +148,42 @@
   .it.wide .v2{font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;white-space:nowrap}
   .it.wide .r{text-align:right}
 
+  /* ---- spacetime "narrate a point" slice card ---- */
+  .narrate{position:absolute;left:50%;transform:translateX(-50%);bottom:80px;width:420px;max-width:calc(100% - 24px);
+    z-index:8;border-radius:14px;padding:13px 15px;box-sizing:border-box}
+  .narrate[hidden]{display:none}
+  .nc-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+  .nc-head .ic{width:22px;height:22px;border-radius:7px;background:#b69cff;color:#1a1030;display:flex;align-items:center;justify-content:center;font-size:13px}
+  .nc-head .ttl{font-size:12.5px;font-weight:600;color:var(--ctext)}
+  .nc-head .pos{font-size:10.5px;color:var(--cdim);font-variant-numeric:tabular-nums}
+  .nc-head .prov{margin-left:auto;font-size:8.5px;font-weight:700;letter-spacing:.05em;color:#b69cff;border:.5px solid #b69cff;border-radius:5px;padding:1px 5px}
+  .nc-head .x{color:var(--cdim2);cursor:pointer;font-size:16px;line-height:1;padding:0 2px}
+  .nc-text{font-size:12.5px;color:#dde6ee;line-height:1.5}
+  .nc-layers{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+  .nc-chip{font-size:10px;border-radius:7px;padding:3px 8px;display:flex;align-items:center;gap:5px;background:var(--glass2);color:#cdd9e3}
+  .nc-chip .t{font-size:8px;font-weight:700;letter-spacing:.03em;padding:0 4px;border-radius:4px}
+  .t-open{color:var(--ok);background:rgba(70,224,160,.14)} .t-owned{color:#b69cff;background:rgba(182,156,255,.14)}
+  .t-rag{color:var(--accent);background:rgba(91,192,255,.14)} .t-locked{color:var(--cdim2);background:rgba(255,255,255,.06)}
+  .t-sim{color:var(--warn);background:rgba(255,192,106,.14)}
+  .nc-foot{font-size:9.5px;color:var(--cdim2);margin-top:9px;line-height:1.45}
+  .narrate-arm{outline:2px dashed var(--accent);outline-offset:-2px}
+
+  /* ---- route-weather ribbon (passage probe along P(t)) ---- */
+  .ribbon{position:absolute;left:12px;right:12px;bottom:76px;z-index:7;border-radius:14px;padding:10px 13px;box-sizing:border-box}
+  .ribbon[hidden]{display:none}
+  .rb-head{display:flex;align-items:center;gap:8px;margin-bottom:6px}
+  .rb-head .ttl{font-size:12px;font-weight:600;color:var(--ctext)}
+  .rb-head .prov{font-size:8.5px;font-weight:700;letter-spacing:.05em;color:#b69cff;border:.5px solid #b69cff;border-radius:5px;padding:1px 5px}
+  .rb-head .x{margin-left:auto;color:var(--cdim2);cursor:pointer;font-size:15px;line-height:1}
+  .rb-text{font-size:11px;color:#dde6ee;line-height:1.45;max-height:46px;overflow:auto;margin-bottom:8px}
+  .rb-legs{display:flex;gap:6px;overflow-x:auto}
+  .rb-leg{flex:1;min-width:60px;text-align:center;background:var(--glass2);border-radius:9px;padding:7px 4px 6px}
+  .rb-leg .t{font-size:9px;color:var(--cdim);white-space:nowrap}
+  .rb-leg .wv{font-size:13px;font-weight:600;color:var(--ctext);font-variant-numeric:tabular-nums;margin-top:3px}
+  .rb-leg .wv .ar{display:inline-block;color:var(--accent);font-size:11px}
+  .rb-leg .se{font-size:9.5px;color:var(--cdim);margin-top:1px}
+  .rb-leg .bar{height:5px;border-radius:3px;margin-top:6px}
+
   /* ---- restyle MapLibre native controls into glass (zoom + compass, bottom-right) ---- */
   .maplibregl-ctrl-bottom-right{bottom:80px;right:12px}
   .maplibregl-ctrl-bottom-right .maplibregl-ctrl-group{
@@ -244,6 +280,9 @@
   <div class="ri" data-rail="places" title="Places">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
   </div>
+  <div class="ri" data-rail="community" title="Community &amp; where to go">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="8" r="3"/><path d="M3.5 20c0-3 2.7-5 5.5-5s5.5 2 5.5 5"/><path d="M16 5.2a3 3 0 0 1 0 5.6"/><path d="M18.5 20c0-2-.9-3.6-2.3-4.5"/></svg>
+  </div>
   <div class="sep"></div>
   <div class="ri" data-rail="download" title="Download charts">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12"/><polyline points="7 11 12 16 17 11"/><path d="M5 20h14"/></svg>
@@ -267,6 +306,8 @@
   <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings</label>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
+  <label class="row"><input type="checkbox" data-layer="saved" checked> Saved places<span style="margin-left:auto;font-size:9.5px;color:#f5c451">owned</span></label>
+  <label class="row"><input type="checkbox" data-layer="whereto" checked> Where to go<span style="margin-left:auto;font-size:9.5px;color:#f5c451">AI</span></label>
   <label class="row"><input type="checkbox" data-layer="ais" checked> AIS</label>
 </div>
 
@@ -362,6 +403,28 @@
     (Martin tile server, mercator.blue) are documented in docs/decisions/0006 + docs/integrations/awesome-maplibre.md.</div>
 </div>
 
+<!-- ========================= COMMUNITY DRAWER (where-to-go + give-back, a selectable layer set) ========================= -->
+<div class="drawer glass" id="drawer-community" hidden>
+  <h2>Community</h2>
+  <p class="sub" id="comm-status">Connecting to Helm backend…</p>
+
+  <div class="lbl">Narrate (spacetime probe)</div>
+  <div class="wx"><button id="narrate-arm" data-wx="narr">✨ Narrate a point</button><button id="narrate-path" data-wx="path">Narrate the passage</button></div>
+  <p class="sub" style="margin:7px 0 0;font-size:10.5px" id="narrate-hint">Tap the chart to fuse the enabled layers at that point &amp; the current time. Only checked layers join the slice.</p>
+
+  <div class="lbl">Where to go</div>
+  <div class="wx"><button id="wt-go" data-wx="go">Suggest for tonight</button><button id="wt-clear" data-wx="clear">Clear</button></div>
+  <div id="wt-results" style="margin-top:9px;font-size:11.5px"></div>
+
+  <div class="lbl">Give back</div>
+  <label class="row"><input type="checkbox" id="gb-nfl"> Share my track → NoForeignLand<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">push</span></label>
+  <label class="row"><input type="checkbox" id="gb-osm"> Contribute to OpenSeaMap / OSM<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">notes</span></label>
+  <div id="gb-status" style="font-size:10.5px;color:var(--cdim);margin-top:7px;min-height:14px"></div>
+
+  <div class="hint">Runs on open + owned + RAG. NoForeignLand <i>read</i> is an experimental enrichment (off);
+    give-back (track→NFL, contribute→OSM) is sanctioned. See docs/BUILD-PLAN-COMMUNITY-LLM.md.</div>
+</div>
+
 <!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
 <div class="insp glass">
   <div class="ttl" id="insp-handle">
@@ -378,6 +441,25 @@
   <hr>
   <div class="leg"><span class="lgd" style="background:var(--mag)"></span><span class="nm" id="nv-leg0nm" style="color:var(--ctext)">WP4 · marina</span><span class="br" id="nv-leg0br">315°</span></div>
   <div class="leg"><span class="lgd" style="background:var(--mag);opacity:.5"></span><span class="nm" id="nv-leg1nm" style="color:var(--cdim)">WP3 · channel</span><span class="br" id="nv-leg1br">331°</span></div>
+</div>
+
+<!-- ========================= ROUTE-WEATHER RIBBON (passage probe) ========================= -->
+<div class="ribbon glass" id="ribbon" hidden>
+  <div class="rb-head"><span class="ttl">✨ Passage briefing</span><span class="prov" id="rb-prov">AI</span><span class="x" id="rb-x">×</span></div>
+  <div class="rb-text" id="rb-text"></div>
+  <div class="rb-legs" id="rb-legs"></div>
+</div>
+
+<!-- ========================= SPACETIME NARRATE CARD ========================= -->
+<div class="narrate glass" id="narrate-card" hidden>
+  <div class="nc-head">
+    <span class="ic">✨</span><span class="ttl" id="nc-ttl">Here · now</span>
+    <span class="pos" id="nc-pos"></span><span class="prov" id="nc-prov">AI</span>
+    <span class="x" id="nc-x">×</span>
+  </div>
+  <div class="nc-text" id="nc-text">…</div>
+  <div class="nc-layers" id="nc-layers"></div>
+  <div class="nc-foot" id="nc-foot"></div>
 </div>
 
 <!-- ========================= BOTTOM INSTRUMENT BAR (static) ========================= -->
@@ -403,6 +485,7 @@
 <script src="nav-client.js"></script>
 <script src="ownship.js"></script>
 <script src="alarms.js"></script>
+<script src="community.js"></script>
 <script>
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
@@ -478,7 +561,7 @@
 
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
-    activeWx = name;
+    activeWx = name; window.__activeWx = name;            // shared with the spacetime probe's layer filter
     if (iso) iso.setVisible(showIsobars(name));
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
@@ -501,6 +584,7 @@
     frame = Math.max(0, Math.min(forecast.hours - 1, i));
     document.getElementById('tslider').value = frame;
     const t = forecast.times && forecast.times[frame];
+    window.__helmTime = t || null;                       // shared with the spacetime probe
     document.getElementById('tlabel').textContent = t
       ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
       : ('+' + frame + 'h');
@@ -555,7 +639,7 @@
 
   // ================= CHROME UI wiring =================
   (function () {
-    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab' };
+    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab', community: 'drawer-community' };
     const rail = document.querySelectorAll('.ri[data-rail]');
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }
@@ -628,6 +712,7 @@
   (function () {
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
     function applyNav(s) {
+      if (s.pos) window.__helmPos = { lat: s.pos.lat, lon: s.pos.lon };   // shared with community.js
       set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
       set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
       set('nv-winddir', Math.round(s.wind.dir));
@@ -692,6 +777,190 @@
     window.__navClient = HelmNavClient(applyNav,
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
       { sim: window.HelmNav });
+  })();
+
+  // ============ COMMUNITY: where-to-go + give-back (selectable layers) ============
+  (function () {
+    if (!window.HelmCommunity) return;
+    const comm = HelmCommunity(map);
+    window.__helmCommunity = comm;
+    const statusEl = document.getElementById('comm-status');
+    function setStatus(online) {
+      if (!statusEl) return;
+      statusEl.textContent = online ? 'Helm backend connected · open + owned + RAG'
+        : 'Backend offline — local sample (run backend/: uvicorn main:app --port 8090)';
+      statusEl.style.color = online ? 'var(--ok)' : 'var(--warn)';
+    }
+    comm.onStatus(setStatus);
+    comm.health().then(h => { if (h && h.ok) { comm.loadPlaces(); comm.loadSaved(); } });
+
+    const resultsEl = document.getElementById('wt-results');
+    function renderResults(j) {
+      if (!resultsEl) return;
+      if (j.offline) { resultsEl.innerHTML = '<div style="color:var(--warn)">Start the backend for live suggestions.</div>'; return; }
+      const recs = j.recommendations || [];
+      if (!recs.length) { resultsEl.innerHTML = '<div style="color:var(--cdim)">No suggestions.</div>'; return; }
+      resultsEl.innerHTML = recs.map((r, i) => {
+        const c = r.confidence, col = c === 'good' ? 'var(--ok)' : c === 'fair' ? 'var(--warn)' : 'var(--cdim)';
+        const srcs = (r.sources || []).map(s => s.label).join(' · ');
+        return '<div class="wt-card" data-lat="' + r.place.lat + '" data-lon="' + r.place.lon + '" ' +
+          'style="border:.5px solid var(--line);border-radius:9px;padding:8px 9px;margin-bottom:7px;cursor:pointer">' +
+          '<div style="display:flex;align-items:center;gap:6px"><b style="color:#f5c451">#' + (i + 1) + '</b>' +
+          '<span style="font-weight:600;color:var(--ctext);flex:1">' + r.place.name + '</span>' +
+          '<span style="font-size:9px;color:' + col + ';border:.5px solid ' + col + ';border-radius:4px;padding:0 4px">' + c + '</span></div>' +
+          '<div style="color:#cdd9e3;margin-top:3px;line-height:1.4">' + ((r.reasons || [])[0] || '') + '</div>' +
+          '<div style="color:var(--cdim2);font-size:9.5px;margin-top:4px">' + srcs + (r.nfl ? ' · NFL' : '') + ' · ' + r.llm + '</div></div>';
+      }).join('');
+      resultsEl.querySelectorAll('.wt-card').forEach(el => el.addEventListener('click', () =>
+        map.flyTo({ center: [+el.dataset.lon, +el.dataset.lat], zoom: 13 })));
+    }
+    document.getElementById('wt-go').addEventListener('click', async () => {
+      const c = map.getCenter();
+      const wd = parseFloat((document.getElementById('nv-winddir') || {}).textContent) || 45;
+      const ws = parseFloat((document.getElementById('nv-wind') || {}).textContent) || 15;
+      resultsEl.innerHTML = '<div style="color:var(--cdim)">Researching…</div>';
+      renderResults(await comm.whereTo({ query: 'Safe spot for tonight near here',
+        position: { lat: c.lat, lon: c.lng }, boat: { draft: 1.8 },
+        forecast: { windFromDeg: wd, windKt: ws }, top: 3 }));
+    });
+    document.getElementById('wt-clear').addEventListener('click', () => { comm.clearWhereTo(); resultsEl.innerHTML = ''; });
+
+    const gbStatus = document.getElementById('gb-status'), say = t => { if (gbStatus) gbStatus.textContent = t; };
+    document.getElementById('gb-nfl').addEventListener('change', async e => {
+      if (!e.target.checked) return say('Track sharing off.');
+      const p = window.__helmPos || { lat: map.getCenter().lat, lon: map.getCenter().lng };
+      const r = await comm.nflPush({ lat: p.lat, lon: p.lon });
+      say(r.offline ? 'Backend offline — would push when connected.' : 'NFL push: ' + r.status + ' (' + r.mode + ').');
+    });
+    document.getElementById('gb-osm').addEventListener('change', async e => {
+      if (!e.target.checked) return say('OSM contribution off.');
+      const c = map.getCenter();
+      const r = await comm.osmNote({ lat: c.lat, lon: c.lng, text: 'Helm: anchorage/POI note (review).' });
+      say(r.offline ? 'Backend offline.' : 'OSM note: ' + r.status + ' (' + r.mode + ').');
+    });
+
+    // ---- spacetime probe: arm → tap a point → narrate the fused slice at (lat,lon,t) ----
+    let armed = false;
+    const armBtn = document.getElementById('narrate-arm'), card = document.getElementById('narrate-card');
+    const hint = document.getElementById('narrate-hint');
+    function setArmed(on) {
+      armed = on; armBtn.classList.toggle('on', on);
+      map.getCanvas().classList.toggle('narrate-arm', on);
+      map.getCanvas().style.cursor = on ? 'crosshair' : '';
+      hint.textContent = on ? 'Tap the chart now…' : 'Tap the chart to fuse every layer at that point & the current time.';
+    }
+    armBtn.addEventListener('click', () => setArmed(!armed));
+    document.getElementById('nc-x').addEventListener('click', () => { card.hidden = true; });
+
+    // selectable layers drive the slice (ADR-0007): only checked layers join the probe
+    function enabledLayers() {
+      const on = id => { const cb = document.querySelector('.row input[data-layer="' + id + '"]'); return cb ? cb.checked : false; };
+      const layers = [];
+      if (window.__activeWx && window.__activeWx !== 'off') layers.push('weather');
+      if (on('places')) layers.push('places');
+      if (on('saved')) layers.push('saved');
+      if (on('soundg-text') || on('depare-fill')) layers.push('depth');
+      if (on('ais')) layers.push('ais');
+      if (on('charts') || on('enc-chart') || on('depare-fill')) layers.push('chart');
+      layers.push('climate');                              // contextual, always available
+      return layers;
+    }
+
+    // probe along the route P(t): sample times by distance/speed, narrate the passage
+    function hav(a, b) { const R = 3440.065, r = x => x * Math.PI / 180;
+      const dLat = r(b[1] - a[1]), dLon = r(a[0] - b[0]);
+      const s = Math.sin(dLat / 2) ** 2 + Math.cos(r(a[1])) * Math.cos(r(b[1])) * Math.sin(dLon / 2) ** 2;
+      return R * 2 * Math.asin(Math.sqrt(s)); }
+    async function buildPath() {
+      let coords = [];
+      try { const r = await (await fetch('data/route.geojson')).json();
+        const f = r.features ? r.features[0] : r; coords = (f.geometry && f.geometry.coordinates) || []; } catch (e) {}
+      if (coords.length < 2) { const c = map.getCenter(); return [{ lat: c.lat, lon: c.lng, t: window.__helmTime || null }]; }
+      const N = coords.length, step = Math.max(1, Math.floor(N / 6)), idx = [];
+      for (let i = 0; i < N; i += step) idx.push(i); if (idx[idx.length - 1] !== N - 1) idx.push(N - 1);
+      const startT = window.__helmTime ? new Date(window.__helmTime + 'Z') : new Date();
+      const spd = 5; let cum = 0; const pts = [];
+      idx.forEach((i, k) => { if (k > 0) cum += hav(coords[idx[k - 1]], coords[i]);
+        const t = new Date(startT.getTime() + (cum / spd) * 3600 * 1000);
+        pts.push({ lat: coords[i][1], lon: coords[i][0], t: t.toISOString().slice(0, 16) }); });
+      return pts;
+    }
+    // wind colour ramp (knots → rgb) — Windy-style, for the ribbon bars
+    const windCol = kt => { const S = [[0,[98,113,183]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]];
+      kt = kt || 0; let a = S[0], b = S[S.length-1];
+      for (let i=0;i<S.length-1;i++){ if (kt>=S[i][0] && kt<=S[i+1][0]){ a=S[i]; b=S[i+1]; break; } }
+      const f = b[0]===a[0]?0:(kt-a[0])/(b[0]-a[0]); const c=k=>Math.round(a[1][k]+(b[1][k]-a[1][k])*f);
+      return 'rgb(' + c(0) + ',' + c(1) + ',' + c(2) + ')'; };
+    const ribbon = document.getElementById('ribbon');
+    document.getElementById('rb-x').addEventListener('click', () => { ribbon.hidden = true; });
+    document.getElementById('narrate-path').addEventListener('click', async () => {
+      ribbon.hidden = false;
+      document.getElementById('rb-text').textContent = 'Narrating the passage…';
+      document.getElementById('rb-legs').innerHTML = '';
+      const j = await comm.briefing({ points: await buildPath(), boat: { draft: 1.8 }, layers: enabledLayers() });
+      if (j.offline) { document.getElementById('rb-text').textContent = 'Backend offline — run backend/ to narrate the passage.'; return; }
+      document.getElementById('rb-prov').textContent = (j.provider || 'ai').toUpperCase();
+      document.getElementById('rb-text').textContent = j.narration || '—';
+      document.getElementById('rb-legs').innerHTML = (j.legs || []).map(lg => {
+        const t = lg.t ? new Date(lg.t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit' }) : 'leg ' + lg.leg;
+        const kt = lg.windKt, dir = (lg.windFromDeg || 0) + 180;
+        const wind = kt == null ? '—' : '<span class="ar" style="transform:rotate(' + dir + 'deg)">↑</span> ' + Math.round(kt);
+        const sea = lg.waveM != null ? '〜' + lg.waveM + 'm' : (lg.rainMm ? '🌧' + lg.rainMm : '');
+        const h = kt == null ? 0 : Math.min(100, kt * 2.2);
+        return '<div class="rb-leg"><div class="t">' + t + '</div><div class="wv">' + wind + '</div>' +
+          '<div class="se">' + sea + '</div><div class="bar" style="background:' + windCol(kt) + ';width:' + Math.max(30, h) + '%;margin:6px auto 0"></div></div>';
+      }).join('');
+    });
+    const tierClass = s => ({ open: 't-open', owned: 't-owned', rag: 't-rag', nfl: 't-locked', engine: 't-open', sample: 't-sim', sim: 't-sim' }[s] || 't-open');
+    function renderNarrate(j, ll) {
+      const txt = document.getElementById('nc-text'), lay = document.getElementById('nc-layers'), foot = document.getElementById('nc-foot');
+      if (j.offline) { card.hidden = false; txt.textContent = 'Backend offline — run backend/ (uvicorn main:app --port 8090) to narrate the slice.'; lay.innerHTML = ''; foot.textContent = ''; return; }
+      const L = j.layers || {}, pt = j.point || {};
+      txt.textContent = j.narration || '—';
+      document.getElementById('nc-prov').textContent = (j.provider || 'ai').toUpperCase();
+      document.getElementById('nc-pos').textContent = ll.lat.toFixed(3) + ', ' + ll.lng.toFixed(3);
+      const when = pt.weatherValidAt || pt.t;
+      document.getElementById('nc-ttl').textContent = when
+        ? 'Here · ' + new Date(when + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : 'Here · now';
+      const w = (L.weather && (L.weather.atTime || L.weather.now)) || null, chips = [];
+      if (L.weather && L.weather.error) chips.push(['🌬 wx n/a', 'open']);
+      else if (w) chips.push(['🌬 ' + (w.windKt ?? '?') + 'kt @' + (w.windFromDeg ?? '?') + '°', 'open']);
+      if (L.weather && L.weather.sea && L.weather.sea.waveM != null) chips.push(['〜 ' + L.weather.sea.waveM + 'm', 'open']);
+      if (w && w.rainMm) chips.push(['🌧 ' + w.rainMm + 'mm', 'open']);
+      if (w && w.pressureHpa != null) chips.push(['◔ ' + Math.round(w.pressureHpa) + 'hPa', 'open']);
+      if (L.weather && L.weather.current && L.weather.current.velKn != null) chips.push(['↝ ' + L.weather.current.velKn + 'kn cur', 'open']);
+      if (L.depth && L.depth.nearestChartedM != null) chips.push(['▾ ' + L.depth.nearestChartedM + 'm', 'open']);
+      if (L.ais && L.ais.count) chips.push(['⛴ ' + L.ais.count + ' AIS', L.ais.source || 'sample']);
+      if (L.places && L.places.length) chips.push(['⚓ ' + L.places[0].name + ' ' + L.places[0].distanceNm + 'NM', L.places[0].source]);
+      if (L.climate) chips.push(['☀ climate', 'open']);
+      if (L.nfl) chips.push([L.nfl.locked ? '🔒 NFL locked' : 'NFL on', 'nfl']);
+      if (L.chart) chips.push(['▦ chart', 'open']);
+      lay.innerHTML = chips.map(c => '<span class="nc-chip">' + c[0] + '<span class="t ' + tierClass(c[1]) + '">' + c[1] + '</span></span>').join('');
+      const srcs = (j.sources || []).map(s => s.title).filter((v, i, a) => a.indexOf(v) === i).slice(0, 6).join(' · ');
+      foot.textContent = (L ? 'Fused ' + Object.keys(L).length + ' layers · ' : '') + srcs + ' · verify on official charts';
+      card.hidden = false;
+    }
+    map.on('click', async (e) => {
+      if (!armed) return;
+      setArmed(false);
+      card.hidden = false;
+      document.getElementById('nc-text').textContent = 'Narrating the slice…';
+      document.getElementById('nc-layers').innerHTML = '';
+      document.getElementById('nc-foot').textContent = '';
+      renderNarrate(await comm.narrate({ lat: e.lngLat.lat, lon: e.lngLat.lng,
+        t: window.__helmTime || null, boat: { draft: 1.8 }, nflEnabled: false,
+        layers: enabledLayers() }), e.lngLat);
+    });
+
+    map.on('click', 'saved-icon', e => { const p = e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>★ ' + (p.name || 'Saved') + '</b><br>' + (p.note || p.kind) +
+        (p.sourceUrl ? '<br><a href="' + p.sourceUrl + '" target="_blank" style="color:#5bc0ff">source ↗</a>' : '')).addTo(map); });
+    map.on('click', 'whereto-rank', e => { const p = e.features[0].properties;
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>#' + p.rank + ' ' + (p.name || '') + '</b><br>confidence: ' + p.confidence).addTo(map); });
+    ['saved-icon', 'whereto-rank'].forEach(l => {
+      map.on('mouseenter', l, () => map.getCanvas().style.cursor = 'pointer');
+      map.on('mouseleave', l, () => map.getCanvas().style.cursor = '');
+    });
   })();
 </script>
 <!-- awesome-maplibre integration lab — loads after window.map exists; lazy-imports each library -->
