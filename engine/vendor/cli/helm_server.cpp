@@ -545,8 +545,8 @@ static std::string fmtDur(double hours) {
 // NMEA 0183 over TCP (real data overrides the sim per-field; source flags stay truthful)
 static const int kNmeaPort = 10110;
 static const double kStaleSec = 5.0;
-struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; };
-struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea";
+struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; int prio = 0; };
+struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea"; int pos_prio = 0;
                   RField sog, cog, hdg, depth, wspd, wdir; };
 static RealFeed g_real;
 
@@ -565,6 +565,12 @@ static std::string ais_trim(std::string s) {     // AIS text fields are right-pa
 }
 static std::map<int, AisRow> g_ais_rows;
 static bool fresh(std::time_t t) { return t != 0 && std::difftime(std::time(nullptr), t) <= kStaleSec; }
+// CONN-6 source-priority merge: a fresh, higher-or-equal-priority source wins; a lower-priority
+// source only fills a field in when the current holder has gone stale. Higher number = preferred,
+// so a backup feed takes over on failover and the primary reclaims when it returns. (caller holds g_real.m)
+static void setf(RField& f, double v, std::time_t now, const char* src, int prio) {
+  if (prio >= f.prio || !fresh(f.t)) { f.v = v; f.t = now; f.src = src; f.prio = prio; }
+}
 static std::vector<std::string> splitc(const std::string& s) {
   std::vector<std::string> out; std::string cur;
   for (char c : s) { if (c == ',') { out.push_back(cur); cur.clear(); } else cur += c; }
@@ -582,7 +588,7 @@ static double nmea_ll(const std::string& v, const std::string& hemi) {
   double raw = std::atof(v.c_str()); int deg = (int)(raw / 100); double mn = raw - deg * 100;
   double dec = deg + mn / 60.0; if (hemi == "S" || hemi == "W") dec = -dec; return dec;
 }
-static void nmea_parse(const std::string& line) {
+static void nmea_parse(const std::string& line, int prio) {
   // AIS (!AIVDM/!AIVDO) -> OpenCPN's decoder (own checksum + multipart reassembly). Routed BEFORE
   // the $-only checksum gate. Snapshot the decoded targets (range/brg/CPA/TCPA) into g_ais_rows.
   if (g_ais && line.size() >= 6 && (line.compare(0, 6, "!AIVDM") == 0 || line.compare(0, 6, "!AIVDO") == 0)) {
@@ -604,27 +610,31 @@ static void nmea_parse(const std::string& line) {
   std::string type = f[0].substr(3); std::time_t now = std::time(nullptr);
   std::lock_guard<std::mutex> lk(g_real.m);
   if (type == "RMC" && f.size() >= 9 && f[2] == "A") {
-    g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now; g_real.pos_src = "nmea";
-    if (!f[7].empty()) { g_real.sog.v = std::atof(f[7].c_str()); g_real.sog.t = now; g_real.sog.src = "nmea"; }
-    if (!f[8].empty()) { g_real.cog.v = std::atof(f[8].c_str()); g_real.cog.t = now; g_real.cog.src = "nmea"; }
-  } else if (type == "DPT" && f.size() >= 2 && !f[1].empty()) { g_real.depth.v = std::atof(f[1].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea"; }
-  else if (type == "DBT" && f.size() >= 4 && !f[3].empty()) { g_real.depth.v = std::atof(f[3].c_str()); g_real.depth.t = now; g_real.depth.src = "nmea"; }
+    if (prio >= g_real.pos_prio || !fresh(g_real.pos_t)) {
+      g_real.lat = nmea_ll(f[3], f[4]); g_real.lon = nmea_ll(f[5], f[6]); g_real.pos_t = now; g_real.pos_src = "nmea"; g_real.pos_prio = prio;
+    }
+    if (!f[7].empty()) setf(g_real.sog, std::atof(f[7].c_str()), now, "nmea", prio);
+    if (!f[8].empty()) setf(g_real.cog, std::atof(f[8].c_str()), now, "nmea", prio);
+  } else if (type == "DPT" && f.size() >= 2 && !f[1].empty()) setf(g_real.depth, std::atof(f[1].c_str()), now, "nmea", prio);
+  else if (type == "DBT" && f.size() >= 4 && !f[3].empty()) setf(g_real.depth, std::atof(f[3].c_str()), now, "nmea", prio);
   else if (type == "MWV" && f.size() >= 6 && f[5] == "A") {
-    if (!f[1].empty()) { g_real.wdir.v = std::atof(f[1].c_str()); g_real.wdir.t = now; g_real.wdir.src = "nmea"; }
-    if (!f[3].empty()) { double sp = std::atof(f[3].c_str()); if (f[4] == "K") sp *= 0.539957; else if (f[4] == "M") sp *= 1.943844; g_real.wspd.v = sp; g_real.wspd.t = now; g_real.wspd.src = "nmea"; }
-  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) { g_real.hdg.v = std::atof(f[1].c_str()); g_real.hdg.t = now; g_real.hdg.src = "nmea"; }
+    if (!f[1].empty()) setf(g_real.wdir, std::atof(f[1].c_str()), now, "nmea", prio);
+    if (!f[3].empty()) { double sp = std::atof(f[3].c_str()); if (f[4] == "K") sp *= 0.539957; else if (f[4] == "M") sp *= 1.943844; setf(g_real.wspd, sp, now, "nmea", prio); }
+  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) setf(g_real.hdg, std::atof(f[1].c_str()), now, "nmea", prio);
 }
 // SignalK overlay — consume a SignalK server's WS delta stream as a CLIENT. Maps self-vessel
 // paths onto the SAME g_real per-field override, tagged "signalk". SI units -> kn/deg/m.
 static ix::WebSocket* g_sk = nullptr;
 static std::string g_sk_self;
-static void sk_apply(const std::string& path, const rapidjson::Value& v, std::time_t now) {
-  auto set = [&](RField& f, double val) { f.v = val; f.t = now; f.src = "signalk"; };
+static void sk_apply(const std::string& path, const rapidjson::Value& v, std::time_t now, int prio) {
+  auto set = [&](RField& f, double val) { setf(f, val, now, "signalk", prio); };
   const double MS2KN = 1.943844, R2D = 180.0 / M_PI;
   if (path == "navigation.position" && v.IsObject() && v.HasMember("latitude") && v.HasMember("longitude") &&
       v["latitude"].IsNumber() && v["longitude"].IsNumber()) {
-    g_real.lat = v["latitude"].GetDouble(); g_real.lon = v["longitude"].GetDouble();
-    g_real.pos_t = now; g_real.pos_src = "signalk";
+    if (prio >= g_real.pos_prio || !fresh(g_real.pos_t)) {
+      g_real.lat = v["latitude"].GetDouble(); g_real.lon = v["longitude"].GetDouble();
+      g_real.pos_t = now; g_real.pos_src = "signalk"; g_real.pos_prio = prio;
+    }
   } else if (path == "navigation.speedOverGround" && v.IsNumber()) set(g_real.sog, v.GetDouble() * MS2KN);
   else if (path == "navigation.courseOverGroundTrue" && v.IsNumber()) set(g_real.cog, v.GetDouble() * R2D);
   else if (path == "navigation.headingTrue" && v.IsNumber()) set(g_real.hdg, v.GetDouble() * R2D);
@@ -632,7 +642,7 @@ static void sk_apply(const std::string& path, const rapidjson::Value& v, std::ti
   else if (path == "environment.wind.speedApparent" && v.IsNumber()) set(g_real.wspd, v.GetDouble() * MS2KN);
   else if (path == "environment.wind.angleApparent" && v.IsNumber()) { double d = v.GetDouble() * R2D; if (d < 0) d += 360.0; set(g_real.wdir, d); }
 }
-static void sk_on_message(const std::string& msg) {
+static void sk_on_message(const std::string& msg, int prio) {
   rapidjson::Document d;
   if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject()) return;
   if (d.HasMember("self") && d["self"].IsString()) { g_sk_self = d["self"].GetString(); return; }
@@ -647,14 +657,14 @@ static void sk_on_message(const std::string& msg) {
     if (!u.HasMember("values") || !u["values"].IsArray()) continue;
     for (auto& val : u["values"].GetArray())
       if (val.HasMember("path") && val["path"].IsString() && val.HasMember("value"))
-        sk_apply(val["path"].GetString(), val["value"], now);
+        sk_apply(val["path"].GetString(), val["value"], now, prio);
   }
 }
 static void sk_start(std::string url) {
   if (url.find("://") == std::string::npos) url = "ws://" + url + "/signalk/v1/stream?subscribe=self";
   g_sk = new ix::WebSocket(); g_sk->setUrl(url); g_sk->setPingInterval(20); g_sk->enableAutomaticReconnection();
   g_sk->setOnMessageCallback([](const ix::WebSocketMessagePtr& m) {
-    if (m->type == ix::WebSocketMessageType::Message) sk_on_message(m->str);
+    if (m->type == ix::WebSocketMessageType::Message) sk_on_message(m->str, 0);   // env HELM_SIGNALK = base priority
     else if (m->type == ix::WebSocketMessageType::Open) std::printf("SignalK: connected\n");
   });
   std::printf("SignalK input: %s (self-vessel nav overrides sim per-field)\n", url.c_str());
@@ -720,7 +730,7 @@ static const char* conn_status_str(ConnStatus s) {
     default:                     return "error";
   }
 }
-struct ConnConfig { std::string id, name, type, address, dataProtocol, comment; int port = 0; bool enabled = true; };
+struct ConnConfig { std::string id, name, type, address, dataProtocol, comment; int port = 0; bool enabled = true; int priority = 0; };
 struct ConnRuntime {
   std::atomic<bool> want_stop{false};
   std::atomic<int>  status{(int)ConnStatus::Connecting};
@@ -733,6 +743,19 @@ static std::map<std::string, ConnConfig> g_conns;                       // id ->
 static std::map<std::string, std::shared_ptr<ConnRuntime>> g_conn_rt;   // id -> runtime
 static std::string g_owner_token;                                       // optional write gate (HELM_OWNER_TOKEN)
 static long g_conn_counter = 0;
+
+// --- CONN-7: raw-NMEA monitor — capture incoming sentences + stream to subscribed clients ---
+struct RawLine { std::string conn, line; long ts; };
+static std::mutex g_raw_mtx;
+static std::vector<RawLine> g_raw_pending;                  // accumulated between nav ticks, flushed to monitors
+static std::atomic<bool> g_monitoring_any{false};           // capture gate — zero overhead when nobody is watching
+static std::mutex g_monitors_mtx;
+static std::set<ix::WebSocket*> g_monitors;                 // clients subscribed via nmea.monitor{on:true}
+static void raw_capture(const std::string& conn, const std::string& line) {
+  if (!g_monitoring_any.load()) return;                     // nobody monitoring → don't even buffer
+  std::lock_guard<std::mutex> lk(g_raw_mtx);
+  if (g_raw_pending.size() < 1000) g_raw_pending.push_back({conn, line, (long)std::time(nullptr)});
+}
 
 static std::string conn_dir() {
   if (const char* c = std::getenv("HELM_CONFIG")) if (*c) return c;
@@ -791,7 +814,7 @@ static int udp_bind(const std::string& host, int port, std::string& err) {
   timeval tv{5, 0}; ::setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv); return fd;
 }
 // Read NMEA lines off a connected fd until EOF/error/stop, feeding nmea_parse and updating status.
-static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt) {
+static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
   std::string buf; char rb[2048];
   for (;;) {
     if (rt->want_stop) return;
@@ -802,7 +825,7 @@ static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt) {
       while ((nl = buf.find('\n')) != std::string::npos) {
         std::string line = buf.substr(0, nl); buf.erase(0, nl + 1);
         while (!line.empty() && (line.back() == '\r' || line.back() == ' ')) line.pop_back();
-        if (!line.empty()) { nmea_parse(line); rt->sentences++; }
+        if (!line.empty()) { raw_capture(conn_id, line); nmea_parse(line, prio); rt->sentences++; }
       }
       if (buf.size() > (1u << 16)) buf.clear();          // runaway guard (never a newline)
     } else if (n == 0) { return; }                       // peer closed
@@ -827,9 +850,9 @@ static void conn_feed_signalk(const ConnConfig& cfg, const std::shared_ptr<ConnR
     url = "ws://" + host + "/signalk/v1/stream?subscribe=self";
   }
   ix::WebSocket ws; ws.setUrl(url); ws.setPingInterval(20); ws.enableAutomaticReconnection();
-  ws.setOnMessageCallback([rt](const ix::WebSocketMessagePtr& m) {
+  ws.setOnMessageCallback([rt, prio = cfg.priority](const ix::WebSocketMessagePtr& m) {
     if (m->type == ix::WebSocketMessageType::Message) {
-      sk_on_message(m->str);
+      sk_on_message(m->str, prio);
       rt->last_rx = (long)std::time(nullptr); rt->sentences++;
       rt->status = (int)ConnStatus::Connected;
     } else if (m->type == ix::WebSocketMessageType::Open) {
@@ -875,7 +898,7 @@ static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
     }
     backoff = 1; rt->status = (int)ConnStatus::Connected;
     { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error.clear(); }
-    conn_feed_fd(fd, rt);
+    conn_feed_fd(fd, rt, cfg.priority, id);
     ::close(fd);
     if (rt->want_stop) return;
     rt->status = (int)ConnStatus::NoData;
@@ -912,6 +935,7 @@ static std::string conn_status_array() {
       "{\"id\":\"" + json_escape(c.id) + "\",\"name\":\"" + json_escape(c.name) +
       "\",\"type\":\"" + json_escape(c.type) + "\",\"address\":\"" + json_escape(c.address) +
       "\",\"port\":" + std::to_string(c.port) + ",\"enabled\":" + (c.enabled ? "true" : "false") +
+      ",\"priority\":" + std::to_string(c.priority) +
       ",\"status\":\"" + conn_status_str(st) + "\",\"ageSec\":" + std::to_string(age) +
       ",\"sentences\":" + std::to_string(sent) + (lerr.empty() ? "" : (",\"error\":\"" + json_escape(lerr) + "\"")) + "}";
     first = false;
@@ -933,6 +957,8 @@ static bool conn_from_json(const rapidjson::Value& v, ConnConfig& c, std::string
   c.dataProtocol = gs("dataProtocol"); c.comment = gs("comment");
   if (v.HasMember("port") && v["port"].IsInt()) c.port = v["port"].GetInt();
   else if (v.HasMember("port") && v["port"].IsString()) c.port = std::atoi(v["port"].GetString());
+  if (v.HasMember("priority") && v["priority"].IsInt()) c.priority = v["priority"].GetInt();           // CONN-6
+  else if (v.HasMember("priority") && v["priority"].IsString()) c.priority = std::atoi(v["priority"].GetString());
   c.enabled = !(v.HasMember("enabled") && v["enabled"].IsBool()) || v["enabled"].GetBool();
   if (c.dataProtocol.empty()) c.dataProtocol = (c.type == "signalk") ? "signalk" : "nmea0183";
   if (c.type != "tcp-client" && c.type != "tcp-server" && c.type != "udp" && c.type != "signalk") { err = "type must be tcp-client | tcp-server | udp | signalk"; return false; }
@@ -949,7 +975,8 @@ static void conn_save() {
         "{\"id\":\"" + json_escape(c.id) + "\",\"name\":\"" + json_escape(c.name) +
         "\",\"type\":\"" + json_escape(c.type) + "\",\"address\":\"" + json_escape(c.address) +
         "\",\"port\":" + std::to_string(c.port) + ",\"dataProtocol\":\"" + json_escape(c.dataProtocol) +
-        "\",\"enabled\":" + (c.enabled ? "true" : "false") + ",\"comment\":\"" + json_escape(c.comment) + "\"}";
+        "\",\"enabled\":" + (c.enabled ? "true" : "false") + ",\"priority\":" + std::to_string(c.priority) +
+        ",\"comment\":\"" + json_escape(c.comment) + "\"}";
       first = false; } }
   js += "]";
   std::string dir = conn_dir(); ::mkdir(dir.c_str(), 0700);
@@ -969,6 +996,7 @@ static void conn_load() {
     c.id = gs("id"); c.name = gs("name"); c.type = gs("type"); c.address = gs("address");
     c.dataProtocol = gs("dataProtocol"); c.comment = gs("comment");
     if (e.HasMember("port") && e["port"].IsInt()) c.port = e["port"].GetInt();
+    if (e.HasMember("priority") && e["priority"].IsInt()) c.priority = e["priority"].GetInt();          // CONN-6
     c.enabled = !(e.HasMember("enabled") && e["enabled"].IsBool()) || e["enabled"].GetBool();
     if (c.id.empty() || c.type.empty()) continue;
     g_conns[c.id] = c; if (c.enabled) conn_spawn_locked(c.id);
@@ -997,6 +1025,15 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     std::string id = d["id"].GetString(); conn_delete(id); conn_save();
     std::printf("connections: delete %s\n", id.c_str());
     ws->send(conn_ack(true, id, "")); ws->send(conn_list_msg()); return;
+  }
+  if (t == "nmea.monitor" && d.HasMember("on") && d["on"].IsBool()) {     // CONN-7 raw-NMEA monitor subscribe
+    bool on = d["on"].GetBool();
+    { std::lock_guard<std::mutex> lk(g_monitors_mtx);
+      if (on) g_monitors.insert(ws.get()); else g_monitors.erase(ws.get());
+      g_monitoring_any.store(!g_monitors.empty());
+    }
+    ws->send(std::string("{\"t\":\"nmea.monitor.ack\",\"on\":") + (on ? "true" : "false") + "}");
+    return;
   }
   if (t == "track.arm" && d.HasMember("on") && d["on"].IsBool()) {          // arm/pause breadcrumb recording
     g_track_armed = d["on"].GetBool();
@@ -1311,6 +1348,28 @@ static void nav_loop(ix::HttpServer* server) {
     for (auto& c : clients) live.insert(c.get());
     for (auto& c : clients) c->send(g_seen.count(c.get()) ? frame : snapOut);
     g_seen.swap(live);
+
+    // CONN-7: reconcile raw-monitor subscribers against the current clients (self-heals on
+    // disconnect), then flush the sentences captured since the last tick to those still monitoring.
+    { std::set<ix::WebSocket*> cur; for (auto& c : clients) cur.insert(c.get());
+      std::lock_guard<std::mutex> lk(g_monitors_mtx);
+      for (auto it = g_monitors.begin(); it != g_monitors.end(); )
+        it = cur.count(*it) ? std::next(it) : g_monitors.erase(it);
+      g_monitoring_any.store(!g_monitors.empty());
+    }
+    if (g_monitoring_any.load()) {
+      std::vector<RawLine> batch;
+      { std::lock_guard<std::mutex> lk(g_raw_mtx); batch.swap(g_raw_pending); }
+      if (!batch.empty()) {
+        std::string rj = "{\"t\":\"nmea.raw\",\"lines\":[";
+        for (size_t i = 0; i < batch.size(); ++i)
+          rj += std::string(i ? "," : "") + "{\"conn\":\"" + json_escape(batch[i].conn) +
+                "\",\"ts\":" + std::to_string(batch[i].ts) + ",\"line\":\"" + json_escape(batch[i].line) + "\"}";
+        rj += "]}";
+        std::lock_guard<std::mutex> lk(g_monitors_mtx);
+        for (auto& c : clients) if (g_monitors.count(c.get())) c->send(rj);
+      }
+    }
     if (tick % 10 == 0)
       std::printf("  [%ld] seq %ld %-5s %s [%s]  SOG %.1f  DTG %s  -> %s  (clients: %zu)\n",
                   tick, seq, keyframe ? "snap" : "delta", fmtPos(gLat, gLon).c_str(), src_pos, sog,

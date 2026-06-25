@@ -102,7 +102,7 @@ let connCounter = 0;
 const connMap = new Map();   // id -> { cfg, rt:{ status, sentences, lastRx, since } }
 function seedConn(cfg) { connMap.set(cfg.id, { cfg, rt: { status: 'connecting', sentences: 0, lastRx: 0, since: Date.now() } }); }
 // mirror the engine's seeded default (helm_server.cpp) so the list isn't empty on first load
-seedConn({ id: 'local-nmea', name: 'Local NMEA (relay)', type: 'tcp-server', address: '127.0.0.1', port: 10110, enabled: true, dataProtocol: 'nmea0183', comment: '' });
+seedConn({ id: 'local-nmea', name: 'Local NMEA (relay)', type: 'tcp-server', address: '127.0.0.1', port: 10110, enabled: true, dataProtocol: 'nmea0183', comment: '', priority: 0 });
 
 const connSlug = s => { let o = ''; for (const ch of (s || '')) { if (/[a-z0-9]/i.test(ch)) o += ch.toLowerCase(); else if (o && o.slice(-1) !== '-') o += '-'; } return o.replace(/-+$/, '').slice(0, 24); };
 function connFromJson(v) {   // mirror conn_from_json validation; → { cfg } or { err }
@@ -110,6 +110,7 @@ function connFromJson(v) {   // mirror conn_from_json validation; → { cfg } or
   const cfg = { id: gs('id'), name: gs('name'), type: gs('type'), address: gs('address'),
     dataProtocol: gs('dataProtocol') || 'nmea0183', comment: gs('comment'),
     port: (typeof v.port === 'number' ? v.port : (parseInt(v.port, 10) || 0)),
+    priority: (typeof v.priority === 'number' ? v.priority : (parseInt(v.priority, 10) || 0)),   // CONN-6
     enabled: (typeof v.enabled === 'boolean' ? v.enabled : true) };
   if (!CONN_TYPES.includes(cfg.type)) return { err: 'type must be tcp-client | tcp-server | udp | signalk' };
   if (cfg.type !== 'signalk' && (cfg.port < 1 || cfg.port > 65535)) return { err: 'port must be 1-65535' };
@@ -122,7 +123,7 @@ function connStatusArray() {
   return [...connMap.values()].map(({ cfg, rt }) => {
     const status = !cfg.enabled ? 'disabled' : rt.status;
     const o = { id: cfg.id, name: cfg.name, type: cfg.type, address: cfg.address, port: cfg.port,
-      enabled: cfg.enabled, status, ageSec: rt.lastRx ? now - rt.lastRx : -1, sentences: rt.sentences };
+      enabled: cfg.enabled, priority: cfg.priority || 0, status, ageSec: rt.lastRx ? now - rt.lastRx : -1, sentences: rt.sentences };
     if (rt.error) o.error = rt.error;
     return o;
   });
@@ -155,6 +156,26 @@ function handleConnCmd(send, m) {
     connMap.delete(m.id); send({ t: 'conn.ack', ok: true, id: m.id }); send({ t: 'conn.list', conns: connStatusArray() }); return true;
   }
   return true;   // a conn.* verb with bad args — swallow, like the engine
+}
+
+// CONN-7 raw-NMEA monitor (mock): when a client subscribes via nmea.monitor{on:true}, stream
+// synthetic NMEA so the raw-data-monitor UI can be built + smoke-tested offline. Mirrors the engine
+// contract: nmea.monitor → {t:'nmea.monitor.ack', on} and {t:'nmea.raw', lines:[{conn,ts,line}]}.
+const mockMonitors = new Set();     // per-client send fns currently monitoring
+const nmeaCsum = body => { let c = 0; for (const ch of body) c ^= ch.charCodeAt(0); return '$' + body + '*' + c.toString(16).toUpperCase().padStart(2, '0'); };
+let rawTick = 0;
+setInterval(() => {
+  if (!mockMonitors.size) return;
+  const ts = Math.floor(Date.now() / 1000); rawTick++;
+  const lines = [
+    { conn: 'local-nmea', ts, line: nmeaCsum(`GPRMC,${String(120000 + rawTick).slice(-6)},A,2429.10,N,08148.00,W,5.${rawTick % 9},015.0,250625,,`) },
+    { conn: 'local-nmea', ts, line: nmeaCsum(`SDDBT,${(20 + rawTick % 5)}.0,f,${(6 + (rawTick % 5) * 0.3).toFixed(1)},M,${(3 + rawTick % 3)}.0,F`) },
+  ];
+  for (const s of mockMonitors) s({ t: 'nmea.raw', lines });
+}, 1000);
+function handleMonitor(send, m) {   // nmea.monitor {on:bool} → ack (+ the periodic stream above)
+  if (m.on) mockMonitors.add(send); else mockMonitors.delete(send);
+  send({ t: 'nmea.monitor.ack', on: !!m.on });
 }
 
 // ---------- WebSocket (server-side framing, dependency-free) ----------
@@ -210,8 +231,9 @@ function handleWs(req, socket) {
     if (m.t === 'hello') { console.log('[nav] #' + id + ' hello lastSeq=' + m.lastSeq + ' subscribe=' + (m.subscribe || []).join(',')); if (m.lastSeq) snapshot(); }
     else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);
     else if (typeof m.t === 'string' && m.t.indexOf('conn.') === 0) { handleConnCmd(send, m); console.log('[conn] #' + id + ' ' + m.t + (m.conn ? ' (' + (m.conn.type || '?') + ')' : (m.id ? ' ' + m.id : ''))); }
+    else if (m.t === 'nmea.monitor') { handleMonitor(send, m); console.log('[conn] #' + id + ' nmea.monitor ' + (m.on ? 'on' : 'off')); }
   }); });
-  const done = () => { clearInterval(tick); clearInterval(heart); console.log('[nav] client #' + id + ' gone'); };
+  const done = () => { clearInterval(tick); clearInterval(heart); mockMonitors.delete(send); console.log('[nav] client #' + id + ' gone'); };
   socket.on('close', done); socket.on('error', done);
 }
 
