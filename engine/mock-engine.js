@@ -92,12 +92,12 @@ function navState() {
 // and it embeds the same `conns` array in every snapshot/delta. Writes honor HELM_OWNER_TOKEN
 // if set (matching the engine's owner-token gate).
 //
-// Accepted types match the engine — tcp-client | tcp-server | udp — PLUS 'signalk', so the
-// CONN-5 SignalK affordance can be built/verified AGAINST THIS MOCK ahead of the engine wiring.
-// NOTE: the real helm-server still REJECTS "signalk" until CHART lands the driver (CONN-5);
-// this mock deliberately runs ahead so CONN isn't blocked. Keep that asymmetry in mind.
+// Accepted types match the engine — tcp-client | tcp-server | udp | signalk. The real
+// helm-server now also accepts 'signalk' (CONN-5 / PR #16), so the mock and the engine agree;
+// this lets web/connections.js (incl. the SignalK affordance) be built + smoke-tested offline
+// with no C++ build. (Earlier the mock ran ahead of the engine — that gap is now closed.)
 const OWNER_TOKEN = process.env.HELM_OWNER_TOKEN || '';
-const CONN_TYPES = ['tcp-client', 'tcp-server', 'udp', 'signalk'];   // 'signalk' = CONN-5 build-ahead
+const CONN_TYPES = ['tcp-client', 'tcp-server', 'udp', 'signalk'];   // signalk now accepted by the engine too (CONN-5)
 let connCounter = 0;
 const connMap = new Map();   // id -> { cfg, rt:{ status, sentences, lastRx, since } }
 function seedConn(cfg) { connMap.set(cfg.id, { cfg, rt: { status: 'connecting', sentences: 0, lastRx: 0, since: Date.now() } }); }
@@ -243,7 +243,7 @@ server.listen(PORT, HOST, () => {
   console.log('Helm mock engine — ONE origin on ' + HOST + ':' + PORT);
   console.log('  ws   /nav                     snapshot+delta @ 2 Hz (+ live conns[]), ping heartbeat');
   console.log('  ws   /nav  command-plane      conn.list / conn.upsert / conn.delete  (types: ' + CONN_TYPES.join(' | ') + ')');
-  console.log('                                signalk = CONN-5 build-ahead (real helm-server rejects it until CHART lands the driver)');
+  console.log('                                signalk is accepted by the real engine too (CONN-5)');
   console.log('  GET  /chart/{z}/{x}/{y}.png   immutable tile (ETag ' + TILE_ETAG + ')');
   console.log('  GET  /health  /catalog');
   console.log('Reach it the SAME way local or remote:  http://localhost:' + PORT + '   or   http://<lan-ip>:' + PORT);
