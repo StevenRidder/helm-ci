@@ -142,6 +142,32 @@ static void apply_palette(ColorScheme scheme) {               // main-thread onl
   g_color_scheme = scheme;
 }
 
+// CHART-9: S-52 display category (Base/Std/All/Mariner) selects WHICH feature classes render
+// (DISPLAYBASE = safety-critical only … OTHER = everything). Switched per tile on the serialized
+// render thread, only when it changes. Default = the renderer's own default (captured at init) so a
+// request without ?cat= is byte-identical to before.
+static DisCat g_default_cat = STANDARD;          // captured from ps52plib->GetDisplayCategory() at init
+static DisCat g_display_cat = STANDARD;          // currently-applied
+static const char* cat_name(DisCat c) {
+  return c == DISPLAYBASE ? "base" : (c == OTHER ? "all" : (c == MARINERS_STANDARD ? "mariner" : "std"));
+}
+static DisCat category_from_query(const std::string& uri) {   // ?cat=base|std|all|mariner (default = renderer default)
+  const auto q = uri.find("cat=");
+  if (q != std::string::npos) {
+    const std::string v = uri.substr(q + 4);
+    if (v.rfind("base", 0) == 0)    return DISPLAYBASE;
+    if (v.rfind("std", 0) == 0)     return STANDARD;
+    if (v.rfind("all", 0) == 0)     return OTHER;
+    if (v.rfind("mariner", 0) == 0) return MARINERS_STANDARD;
+  }
+  return g_default_cat;
+}
+static void apply_category(DisCat cat) {                      // main-thread only (from render_tile)
+  if (cat == g_display_cat) return;
+  ps52plib->SetDisplayCategory(cat);
+  g_display_cat = cat;
+}
+
 static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name) {
   std::string want(name);
   for (auto& c : want) c = (char)std::tolower((unsigned char)c);
@@ -154,7 +180,7 @@ static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name
 }
 
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -166,8 +192,12 @@ static double tile_lat(double y, int z) {
   double n = M_PI * (1.0 - 2.0 * y / std::pow(2.0, z));
   return std::atan(std::sinh(n)) * 180.0 / M_PI;
 }
+// CHART-9: Web-Mercator display-scale denominator (OGC 0.28 mm/px, 256-px tiles) — for the overzoom check.
+static double display_scale(int z, double lat) {
+  return 559082264.029 * std::cos(lat * M_PI / 180.0) / std::pow(2.0, z);
+}
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::string& out) {
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, std::string& out) {
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld\n", z, x, y);
     return TileStatus::BadRequest;
@@ -177,6 +207,7 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::s
   if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
     return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
+  apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
   if (span_m <= 0) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: span\n", z, x, y); return TileStatus::RenderFailed; }
@@ -237,7 +268,8 @@ static bool init_chart(const wxString& enc_path) {
   g_blank = make_blank();
   if (g_blank.empty()) { printf("FATAL: blank tile gen failed\n"); return false; }
   g_cell_name = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8());
-  g_native_scale = ns;   // CHART-8: ETag is built per-request as "<cell>.<palette>.s<scale>"
+  g_native_scale = ns;   // CHART-8: ETag is built per-request as "<cell>.<palette>.<cat>.s<scale>"
+  g_default_cat = g_display_cat = ps52plib->GetDisplayCategory();   // CHART-9: the renderer's default display category
   printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d\n",
          g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns);
   return true;
@@ -249,7 +281,7 @@ static void warmup_render() {
   long x = (long)((clon + 180.0) / 360.0 * n);
   double lr = clat * M_PI / 180.0;
   long y = (long)((1.0 - std::log(std::tan(lr) + 1.0 / std::cos(lr)) / M_PI) / 2.0 * n);
-  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, scratch);
+  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, g_default_cat, scratch);
   printf("warmup render z%d/%ld/%ld -> status=%d (%zuB)\n", z, x, y, (int)st, scratch.size());
 }
 
@@ -1274,17 +1306,23 @@ public:
         int z; long x, y;
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
-          char et[112]; std::snprintf(et, sizeof et, "\"%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), g_native_scale);
+          const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
+          char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), g_native_scale);
           const std::string etag(et);
           h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
           if (header_ci(req->headers, "If-None-Match") == etag)
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
-          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
           switch (job.status) {
             case TileStatus::Ok: h["Content-Type"] = "image/png";
+              // CHART-9: overzoom warning — viewing finer than the cell's survey scale (SCAMIN hides detail).
+              { double ds = display_scale(z, tile_lat(y + 0.5, z));
+                if (g_native_scale > 0 && ds > 0 && (double)g_native_scale / ds >= 2.0) {
+                  char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", (double)g_native_scale / ds);
+                  h["X-Helm-Overzoom"] = oz; } }
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
             case TileStatus::NoCoverage: h["Content-Type"] = "image/png";
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
@@ -1341,7 +1379,7 @@ int main(int argc, char** argv) {
     Job* j = nullptr;
     { std::unique_lock<std::mutex> lk(g_jobs_m); g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->palette, j->result);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; } j->cv.notify_one();
   }
   wxEntryCleanup();

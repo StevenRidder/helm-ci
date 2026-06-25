@@ -85,7 +85,7 @@ static bool g_nodtaOk = false;
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
 // be masked as an empty/transparent tile that the navigator reads as open water.
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; double overzoom = 0.0; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -199,7 +199,33 @@ static void apply_palette(ColorScheme scheme) {   // main-thread only (called fr
   g_color_scheme = scheme;
 }
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::string& out) {
+// CHART-9: S-52 display category (Base/Std/All/Mariner) selects WHICH feature classes render. Set on
+// the global s52plib (affects every cell), switched per tile on the serialized render thread only when
+// it changes. Default = the renderer's default (captured at init) so a request without ?cat= is unchanged.
+static DisCat g_default_cat = STANDARD;
+static DisCat g_display_cat = STANDARD;
+static const char* cat_name(DisCat c) {
+  return c == DISPLAYBASE ? "base" : (c == OTHER ? "all" : (c == MARINERS_STANDARD ? "mariner" : "std"));
+}
+static DisCat category_from_query(const std::string& uri) {   // ?cat=base|std|all|mariner (default = renderer default)
+  const auto q = uri.find("cat=");
+  if (q != std::string::npos) {
+    const std::string v = uri.substr(q + 4);
+    if (v.rfind("base", 0) == 0)    return DISPLAYBASE;
+    if (v.rfind("std", 0) == 0)     return STANDARD;
+    if (v.rfind("all", 0) == 0)     return OTHER;
+    if (v.rfind("mariner", 0) == 0) return MARINERS_STANDARD;
+  }
+  return g_default_cat;
+}
+static void apply_category(DisCat cat) {   // main-thread only (from render_tile)
+  if (cat == g_display_cat) return;
+  ps52plib->SetDisplayCategory(cat);
+  g_display_cat = cat;
+}
+
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, std::string& out, double& overzoom) {
+  overzoom = 0.0;
   // boundary validation: reject malformed tile coordinates loudly
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld (coords out of range)\n", z, x, y);
@@ -212,8 +238,12 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::s
   rank_cells(west, south, east, north, z, layers);
   if (layers.empty()) return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
+  apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
 
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
+  // CHART-9: overzoom warning — viewing finer than the finest covering cell's survey scale (SCAMIN hides detail).
+  { double ds = zoom_scale(z, clat); int finest = layers.back()->scale;
+    overzoom = (ds > 0 && finest > 0 && (double)finest / ds >= 2.0) ? (double)finest / ds : 0.0; }
   double span_m = (north - south) * 1852.0 * 60.0;
   if (span_m <= 0) {
     fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: non-positive latitude span\n", z, x, y);
@@ -298,6 +328,7 @@ static bool init_charts(const wxString& root) {
   ps52plib = new s52plib(kPLibRLE, false);
   if (!ps52plib || !ps52plib->m_bOK) { printf("s52plib load FAILED\n"); return false; }
   ps52plib->SetPLIBColorScheme(GLOBAL_COLOR_SCHEME_DAY, ChartCtx(false, 0));
+  g_default_cat = g_display_cat = ps52plib->GetDisplayCategory();   // CHART-9: the renderer's default display category
 
   // Capture the no-data colour so render_cell_to_image can key it to transparent.
   if (S52color* nd = ps52plib->getColor("NODTA")) {
@@ -368,7 +399,8 @@ public:
           // does, so a matching revalidation gets 304 WITHOUT rendering, and the browser may cache for
           // a year. Mirrors helm-server's immutable ETag+304 (which standalone helm-tiles lacked).
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
-          char et[96]; std::snprintf(et, sizeof et, "\"%s.%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), z, x, y);
+          const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
+          char et[112]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), cat_name(cat), z, x, y);
           const std::string etag(et);
           const auto inm = req->headers.find("If-None-Match");   // ix headers compare case-insensitively
           if (inm != req->headers.end() && inm->second == etag) {
@@ -376,7 +408,7 @@ public:
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
           }
           // hand the render to the main thread (CoreGraphics) and wait
-          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -384,6 +416,7 @@ public:
             case TileStatus::Ok:
               h["Content-Type"] = "image/png";
               h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+              if (job.overzoom >= 2.0) { char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", job.overzoom); h["X-Helm-Overzoom"] = oz; }   // CHART-9
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
             case TileStatus::NoCoverage:           // legitimately no chart here -> transparent (still immutable)
               h["Content-Type"] = "image/png";
@@ -427,7 +460,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m);
       g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->palette, j->result);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result, j->overzoom);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; }
     j->cv.notify_one();
   }
