@@ -1135,7 +1135,7 @@
       const bad = (state === 'stale' || state === 'lost' || state === 'offline');
       document.querySelectorAll('.ib').forEach(e => e.classList.toggle('stale', bad));  // route box stays solid
       if (window.__ownship) __ownship.setActive(!bad);   // freeze the boat when the feed isn't current
-      if (window.__alarms) __alarms.setActive(!bad);     // hold alarm evaluation when the feed isn't current
+      if (window.__alarms) __alarms.onSource(state, info);   // hold + AUDIBLE feed-loss/no-fix alarm (alarms.js, ALARM-9/10)
     }
     // The robust client (nav-client.js) resolves the boat-server address (server-endpoint.js),
     // merges snapshot/delta frames, runs the age watchdog (LIVE/LAGGING/STALE), reconnects over

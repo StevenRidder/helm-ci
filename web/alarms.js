@@ -4,10 +4,11 @@
 // off-course / arrival are evaluated here from the nav feed; the same banner also displays
 // engine `t:"alarm"` frames (via fromEngine) once the engine sends them.
 //
-// FAIL-FAST honesty: alarms are only (re)evaluated on FRESH nav data. When the feed goes
-// stale/offline (setActive(false)) we HOLD — we neither raise new alarms nor clear active
-// ones from data we can't trust. Nothing is fabricated; per-field source tags are respected
-// (e.g. depth is NOT alarmed while it reads simulated).
+// FAIL-FAST honesty: data alarms are only (re)evaluated on FRESH nav data. When the feed goes
+// stale/offline (onSource) we HOLD evaluation — we neither raise new data alarms nor clear active
+// ones from data we can't trust — with ONE deliberate exception: a lost feed is ITSELF the no-fix
+// alarm below. Nothing is fabricated; per-field source tags are respected (depth is NOT alarmed
+// while it reads simulated).
 //
 //   • Anchor — drop at the current fix, set a swing radius (−/+), live drift readout, and a
 //              DEBOUNCED critical alarm so a single GPS jitter fix can't false-trip it.
@@ -15,6 +16,10 @@
 //   • Off-course — XTE beyond a limit while a route is actively being navigated.
 //   • Arrival — within the arrival radius of the next waypoint.
 //   • MOB    — drops a man-overboard mark; critical alarm with live range/bearing.
+//   • No-fix — when a real nav feed goes STALE/OFFLINE (engine lost) the honesty badge stops
+//              being silent: a critical, ack-able feed-loss alarm sounds. Only ever after a real
+//              feed existed (never in honest no-engine mode) and only on a SUSTAINED loss (rides
+//              out a brief reconnect blip) — see onSource. [ALARM-9 / ALARM-10]
 //   • CPA/TCPA — from the engine's LIVE AIS via collision.js (not duplicated here).
 window.HelmAlarms = function (map, opts) {
   opts = opts || {};
@@ -30,6 +35,14 @@ window.HelmAlarms = function (map, opts) {
   const active = {};            // kind -> { kind, sev, msg, acked }
   let fresh = true;             // false when feed stale/offline → hold (don't evaluate)
   const num = v => { const m = String(v == null ? '' : v).match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
+
+  // ---- feed-loss / no-fix state (ALARM-9 / ALARM-10) ----
+  let hadFeed = false;          // true once a REAL feed has flowed — only then is losing it alarm-worthy
+  let feedState = null;         // current lost-state string ('stale'|'lost'|'offline') while armed, else null
+  let feedInfo = null;          // last source info ({ age, endpoint, … }) for an accurate readout
+  let feedLostSince = null;     // ms (Date.now) when the current loss began — our own debounce clock
+  const STALE_HOLD_MS = 10000;  // a real frame age past this is already a genuine no-fix (mirrors nav-client STALE_MS)
+  const NOFIX_DEBOUNCE_MS = 5000; // …or this much SUSTAINED loss on our own clock (rides out a reconnect blip)
 
   // ---- distance / bearing (metres, degrees) ----
   const R = 6371000, toR = d => d * Math.PI / 180, toD = r => r * 180 / Math.PI;
@@ -57,7 +70,16 @@ window.HelmAlarms = function (map, opts) {
       o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.24);
     } catch (e) { /* audio blocked until a gesture — banner still shows */ }
   }
-  setInterval(() => { if (fresh && Object.values(active).some(a => !a.acked && a.sev === 'critical')) beep(); }, 1600);
+  // Periodic alarm tick. Two jobs: (1) ARM the feed-loss alarm on a SUSTAINED outage even when no
+  // new source events arrive, and (2) beep any unacked critical alarm. Critically, beeping is gated
+  // on `fresh` so we don't blare stale-derived alarms — EXCEPT the no-fix alarm itself, which exists
+  // precisely because the feed is NOT fresh, so it (and anything still active alongside it) must
+  // still sound. That `|| active.nofix` is the whole point of ALARM-9/10: an audible feed loss.
+  function beepTick() {
+    evalFeedLoss();
+    if ((fresh || active.nofix) && Object.values(active).some(a => !a.acked && a.sev === 'critical')) beep();
+  }
+  setInterval(beepTick, 1600);
 
   // ---- banner ----
   const banner = document.createElement('div');
@@ -92,7 +114,7 @@ window.HelmAlarms = function (map, opts) {
     positionBanner();
     banner.style.background = crit ? 'rgba(200,30,40,.94)' : 'rgba(190,120,20,.94)';
     banner.style.animation = (crit && unacked) ? 'srcpulse 1s infinite' : 'none';
-    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : '⚠︎'));
+    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : (top.kind === 'nofix' ? '📡' : (top.kind === 'guard' ? '🛡' : (top.kind === 'contour' || top.kind === 'route-shoal' ? '🌊' : '⚠︎')))));
     banner.querySelector('#alarm-txt').textContent = top.msg + (list.length > 1 ? '   (+' + (list.length - 1) + ' more)' : '');
     const ack = banner.querySelector('#alarm-ack'); ack.style.display = unacked ? '' : 'none';
   }
@@ -102,6 +124,55 @@ window.HelmAlarms = function (map, opts) {
     render();
   }
   function clear(kind) { if (active[kind]) { delete active[kind]; render(); } }
+
+  // ---- feed-loss / no-fix alarm (ALARM-9 / ALARM-10) -------------------------------------------
+  // index.html's setSource() already classifies the live nav feed (live / simpos / lagging / stale /
+  // lost / offline) and drives the honesty badge. We consume that SAME truth here and make the
+  // STALE/OFFLINE/ENGINE-LOST states AUDIBLE — the one gap the badge had. Policy lives here (ALARM
+  // owns alarms.js); index.html just forwards the state it already computed.
+  //
+  //   • A loss is only alarm-worthy once a REAL feed has flowed (hadFeed) — honest no-engine /
+  //     prototype mode (sim) never alarms, because there was never a feed to lose.
+  //   • It must be SUSTAINED: a real frame age past STALE_HOLD_MS (a genuine 10s+ no-fix), OR our
+  //     own debounce clock past NOFIX_DEBOUNCE_MS (covers 'offline', which has no frame age) — so a
+  //     brief reconnect blip can't false-trip it.
+  //   • Reconnect flapping ('connecting' interleaved with 'stale'/'offline') must NOT reset the
+  //     loss timer or clear the alarm — only an actually-good feed does.
+  function onSource(state, info) {
+    const lost = (state === 'stale' || state === 'lost' || state === 'offline');
+    const good = (state === 'live' || state === 'simpos' || state === 'lagging');
+    if (good) {                          // real data is flowing again — resume + silence any loss alarm
+      hadFeed = true; fresh = true;
+      feedState = null; feedInfo = null; feedLostSince = null;
+      clear('nofix');
+      return;
+    }
+    if (lost) {                          // arm + hold ONLY once a real feed has existed to lose
+      if (hadFeed) {
+        fresh = false;                   // hold evaluation on a feed we can't trust
+        feedState = state; feedInfo = info || null;
+        if (!feedLostSince) feedLostSince = Date.now();
+        evalFeedLoss();                  // fire now if the loss is already sustained (e.g. stale = 10s+)
+      }
+      return;                            // pre-feed lost (e.g. no-endpoint before any feed): nothing to hold/alarm
+    }
+    // neutral ('connecting' / 'sim' / unknown): never disturb an in-progress loss; only un-hold when
+    // there is no loss underway (honest pre-feed / no-engine mode evaluates normally and stays quiet).
+    if (!feedLostSince) fresh = true;
+  }
+  function evalFeedLoss() {
+    if (!feedState || !feedLostSince) return;
+    const ageMs = feedInfo && feedInfo.age != null ? feedInfo.age : 0;
+    if (ageMs < STALE_HOLD_MS && Date.now() - feedLostSince < NOFIX_DEBOUNCE_MS) return;   // not sustained yet
+    // One honest message for every cause. We deliberately do NOT word this by feedState: nav-client's
+    // 500ms watchdog re-emits 'stale' (with a frame age) within half a second of a socket 'offline',
+    // so a cause-specific 'engine offline / reconnecting…' line would be effectively dead and imply
+    // behaviour that never reaches the banner. The honesty badge already shows STALE vs OFFLINE
+    // visually; the alarm's job is to make the loss AUDIBLE and say how long it has lasted.
+    const secs = feedInfo && feedInfo.age != null ? Math.round(feedInfo.age / 1000)
+                                                  : Math.round((Date.now() - feedLostSince) / 1000);
+    fire('nofix', 'critical', 'Nav feed lost — no position fix for ' + secs + 's');   // critical + ack-able; beepTick sounds it despite !fresh
+  }
 
   // ---- anchor watch (map circle + set-point + live drift readout + radius control) ----
   let anchor = null, dragSince = null;
@@ -156,34 +227,214 @@ window.HelmAlarms = function (map, opts) {
     pillTxt.innerHTML = '<b style="color:' + col + '">' + Math.round(d) + '</b> / ' + anchorRadius + ' m';
   }
 
-  // ---- MOB ----
-  let mob = null, mobMarker = null;
+  // ---- MOB (mark + go-to guidance + drift search-area estimate, ALARM-6) ----
+  let mob = null, mobMarker = null, mobTime = null;
+  // Search-area growth: an HONEST datum-uncertainty estimate. We have NO surface-current source and
+  // wind is not a real feed here, so we do NOT fabricate a drift DIRECTION (which would bias the
+  // search the wrong way). Instead the last-known position is the datum and the search RADIUS grows
+  // with elapsed time at an assumed total drift — the standard SAR datum expansion — clearly '(est.)'.
+  const MOB_SEARCH_BASE_M = 50, MOB_DRIFT_KT = 0.75, KT_TO_MS = 0.514444;
+  function mobSearchRadius(elapsedSec) { return MOB_SEARCH_BASE_M + MOB_DRIFT_KT * KT_TO_MS * Math.max(0, elapsedSec); }
+  function ensureMobLayers() {
+    if (map.getSource('helm-mob')) return;
+    map.addSource('helm-mob', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({ id: 'helm-mob-search-fill', type: 'fill', source: 'helm-mob', filter: ['==', '$type', 'Polygon'], paint: { 'fill-color': '#ff3b30', 'fill-opacity': 0.08 } });
+    map.addLayer({ id: 'helm-mob-search-line', type: 'line', source: 'helm-mob', filter: ['==', '$type', 'Polygon'], paint: { 'line-color': '#ff3b30', 'line-width': 1.2, 'line-dasharray': [2, 2] } });
+    map.addLayer({ id: 'helm-mob-steer', type: 'line', source: 'helm-mob', filter: ['==', '$type', 'LineString'], paint: { 'line-color': '#ff3b30', 'line-width': 2 } });
+  }
+  function redrawMOB(ownship) {   // steer-to line (go-to) + growing search-area circle around the datum
+    if (!mob) return;
+    try {
+      ensureMobLayers();
+      const elapsed = mobTime ? (Date.now() - mobTime) / 1000 : 0;
+      const feats = [anchorCircle(mob, mobSearchRadius(elapsed)).features[0]];   // search-area polygon
+      if (ownship) feats.push({ type: 'Feature', geometry: { type: 'LineString', coordinates: [[ownship.lon, ownship.lat], [mob.lon, mob.lat]] } });
+      map.getSource('helm-mob').setData({ type: 'FeatureCollection', features: feats });
+    } catch (e) {}
+  }
   function markMOB(pos) {
     if (!pos) return;
-    mob = { lat: pos.lat, lon: pos.lon };
+    mob = { lat: pos.lat, lon: pos.lon }; mobTime = Date.now();
     try {
       const el = document.createElement('div');
       el.style.cssText = 'width:16px;height:16px;border-radius:50%;background:#ff3b30;border:2px solid #fff;box-shadow:0 0 8px rgba(255,59,48,.9)';
       mobMarker = new maplibregl.Marker({ element: el }).setLngLat([mob.lon, mob.lat]).addTo(map);
     } catch (e) {}
     fire('mob', 'critical', 'MAN OVERBOARD');
+    redrawMOB(lastPos);          // initial steer-to + search-area circle (grows as onNav re-draws)
     paintCtl();
   }
-  function cancelMOB() { mob = null; if (mobMarker) { try { mobMarker.remove(); } catch (e) {} mobMarker = null; } clear('mob'); paintCtl(); }
+  function cancelMOB() {
+    mob = null; mobTime = null;
+    if (mobMarker) { try { mobMarker.remove(); } catch (e) {} mobMarker = null; }
+    try { if (map.getSource('helm-mob')) map.getSource('helm-mob').setData({ type: 'FeatureCollection', features: [] }); } catch (e) {}
+    clear('mob'); paintCtl();
+  }
+
+  // ---- generic geographic guard zone / boundary watchdog (ALARM-7) -----------------------------
+  // A user-placed circular zone with two modes: keep-IN (alarm when ownship LEAVES — e.g. a
+  // mooring/anchorage boundary) or keep-OUT (alarm when ownship ENTERS — e.g. a restricted/foul
+  // area). Distinct from the anchor watch (which is specifically the boat's own swing circle).
+  // DEBOUNCED like the anchor drag so a single GPS jitter fix can't false-trip the breach.
+  const GUARD_MIN_M = 100, GUARD_MAX_M = 20000, GUARD_DEBOUNCE_MS = 5000;
+  let guard = null, guardRadius = 500, guardMode = 'in', guardBreachSince = null, placing = false, guardClickHandler = null;
+  function ensureGuardLayers() {
+    if (map.getSource('helm-guard')) return;
+    map.addSource('helm-guard', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
+    map.addLayer({ id: 'helm-guard-fill', type: 'fill', source: 'helm-guard', filter: ['==', '$type', 'Polygon'], paint: { 'fill-color': '#3bd6c6', 'fill-opacity': 0.08 } });
+    map.addLayer({ id: 'helm-guard-line', type: 'line', source: 'helm-guard', filter: ['==', '$type', 'Polygon'], paint: { 'line-color': '#3bd6c6', 'line-width': 1.5, 'line-dasharray': [3, 2] } });
+    map.addLayer({ id: 'helm-guard-pt', type: 'circle', source: 'helm-guard', filter: ['==', '$type', 'Point'], paint: { 'circle-radius': 4, 'circle-color': '#3bd6c6', 'circle-stroke-color': '#fff', 'circle-stroke-width': 1.5 } });
+  }
+  function redrawGuard() { try { ensureGuardLayers(); map.getSource('helm-guard').setData(anchorCircle(guard, guardRadius)); } catch (e) {} }
+  function dropGuard(pos, mode) {
+    if (!pos) return;
+    guard = { lat: pos.lat, lon: pos.lon }; if (mode) guardMode = mode; guardBreachSince = null;
+    redrawGuard(); guardPill.style.display = 'flex'; updateGuardPill(0, true); paintCtl();
+  }
+  function clearGuard() {
+    guard = null; guardBreachSince = null; clear('guard'); guardPill.style.display = 'none';
+    try { if (map.getSource('helm-guard')) map.getSource('helm-guard').setData({ type: 'FeatureCollection', features: [] }); } catch (e) {}
+    paintCtl();
+  }
+  function setGuardRadius(delta) {
+    const step = guardRadius >= 2000 ? 250 : 50;
+    guardRadius = Math.max(GUARD_MIN_M, Math.min(GUARD_MAX_M, guardRadius + delta * step));
+    if (guard) { redrawGuard(); updateGuardPill(lastPos ? distM(lastPos, guard) : 0, lastPos ? distM(lastPos, guard) <= guardRadius : true); }
+  }
+  function setGuardMode(m) { guardMode = (m === 'out' ? 'out' : 'in'); guardBreachSince = null; if (guard) { clear('guard'); updateGuardPill(lastPos ? distM(lastPos, guard) : 0, lastPos ? distM(lastPos, guard) <= guardRadius : true); } paintCtl(); }
+  // arm placement: the next map tap drops the zone centre (falls back to the current fix if no map)
+  function endGuardPlacement() {                          // detach the pending placement click + reset chrome
+    placing = false;
+    if (guardClickHandler && map && map.off) { try { map.off('click', guardClickHandler); } catch (e) {} }
+    guardClickHandler = null;
+    try { map.getCanvas().style.cursor = ''; } catch (e) {}
+  }
+  function armGuardPlacement() {
+    if (guard) { clearGuard(); return; }
+    if (placing) { endGuardPlacement(); paintCtl(); return; }   // second tap ABORTS the armed placement
+    if (!map || !map.on) { dropGuard(lastPos); return; }
+    placing = true; paintCtl();
+    try { map.getCanvas().style.cursor = 'crosshair'; } catch (e) {}
+    guardClickHandler = e => { endGuardPlacement(); dropGuard({ lat: e.lngLat.lat, lon: e.lngLat.lng }); };
+    map.on('click', guardClickHandler);                  // explicit on+off (not once) so abort/clear can detach it
+  }
+
+  // guard status pill (mode toggle + live distance/radius + radius control), bottom-centre above anchor pill
+  const guardPill = document.createElement('div');
+  guardPill.id = 'guard-pill';
+  guardPill.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:140px;z-index:8;display:none;align-items:center;gap:8px;' +
+    'padding:5px 8px;border-radius:11px;font:600 12px -apple-system,system-ui;color:#eef4f9;background:rgba(13,19,27,.82);' +
+    '-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(255,255,255,.14);box-shadow:0 12px 40px -16px rgba(0,0,0,.8)';
+  const guardModeBtn = document.createElement('button'); guardModeBtn.type = 'button';
+  guardModeBtn.style.cssText = 'border:0;border-radius:6px;padding:3px 7px;font:700 11px system-ui;background:rgba(59,214,198,.18);color:#7ff0e2;cursor:pointer;touch-action:manipulation';
+  const guardMinus = mkPillBtn('−'), guardTxt = document.createElement('span'), guardPlus = mkPillBtn('+'), guardClear = mkPillBtn('✕');
+  guardTxt.style.cssText = 'min-width:110px;text-align:center;font-variant-numeric:tabular-nums';
+  guardPill.appendChild(document.createTextNode('▣')); guardPill.appendChild(guardModeBtn);
+  guardPill.appendChild(guardMinus); guardPill.appendChild(guardTxt); guardPill.appendChild(guardPlus); guardPill.appendChild(guardClear);
+  document.body.appendChild(guardPill);
+  guardModeBtn.addEventListener('click', () => setGuardMode(guardMode === 'in' ? 'out' : 'in'));
+  guardMinus.addEventListener('click', () => setGuardRadius(-1));
+  guardPlus.addEventListener('click', () => setGuardRadius(+1));
+  guardClear.addEventListener('click', clearGuard);
+  function updateGuardPill(d, inside) {
+    guardModeBtn.textContent = guardMode === 'in' ? 'KEEP IN' : 'KEEP OUT';
+    const breach = guardMode === 'in' ? !inside : inside;
+    const col = breach ? '#ff6b6b' : '#46e0a0';
+    const r = guardRadius >= 1852 ? (guardRadius / 1852).toFixed(2) + ' NM' : guardRadius + ' m';
+    guardTxt.innerHTML = '<b style="color:' + col + '">' + Math.round(d) + ' m</b> / ' + r;
+  }
+
+  // ---- safety-contour check (ALARM-8) ----------------------------------------------------------
+  // Warn when the active ROUTE crosses, or the boat's POSITION nears, a CHARTED depth contour
+  // shallower than the safety depth — read from the real S-57 DEPCNT data (data/depcnt.geojson,
+  // VALDCO = contour depth in metres) the chart already ships. Distinct from the sounder depth
+  // alarm (ALARM-2, live echo-sounder): this is "standing into charted shoal water".
+  //
+  // REAL-SOURCE honesty: the POSITION proximity warning only fires on a real position fix (never a
+  // simulated one). The ROUTE-crossing check runs on the route geometry itself (real regardless of
+  // live position). If the contour file isn't present (offline / outside coverage), the check is
+  // silently unavailable — never faked.
+  const safetyDepth = opts.safetyDepth != null ? opts.safetyDepth : 5.0;     // m — charted contour ≤ this is unsafe
+  const CONTOUR_PROXIMITY_M = 60, CONTOUR_THROTTLE_MS = 2000;
+  let shallowSegs = null, contourAt = 0;
+  function ingestContours(geojson) {
+    try {
+      const segs = [];
+      (geojson && geojson.features || []).forEach(f => {
+        const p = f.properties || {}, depth = p.VALDCO != null ? p.VALDCO : p.depth;
+        if (depth == null || depth > safetyDepth) return;
+        const g = f.geometry; if (!g) return;
+        const lines = g.type === 'LineString' ? [g.coordinates] : (g.type === 'MultiLineString' ? g.coordinates : []);
+        lines.forEach(c => { for (let i = 0; i < c.length - 1; i++) segs.push({ a: c[i], b: c[i + 1], depth }); });
+      });
+      shallowSegs = segs;
+    } catch (e) { shallowSegs = null; }
+  }
+  (function loadContours() { try { fetch('data/depcnt.geojson').then(r => r.ok ? r.json() : null).then(j => { if (j) ingestContours(j); }).catch(() => {}); } catch (e) {} })();
+  // local-metres geometry (equirectangular about the query point — exact enough at chart scales)
+  function pointSegM(p, a, b) {
+    const mx = 111320 * Math.cos(toR(p[1])), my = 110540;
+    const ax = (a[0] - p[0]) * mx, ay = (a[1] - p[1]) * my, bx = (b[0] - p[0]) * mx, by = (b[1] - p[1]) * my;
+    const dx = bx - ax, dy = by - ay, len2 = dx * dx + dy * dy;
+    let t = len2 ? ((-ax) * dx + (-ay) * dy) / len2 : 0; t = Math.max(0, Math.min(1, t));
+    return Math.hypot(ax + t * dx, ay + t * dy);
+  }
+  // proper (strict) segment intersection. KNOWN LIMITATION: a route vertex landing EXACTLY on a
+  // contour (collinear / T-junction touch) is not counted — but exact float coincidence with real
+  // S-57 coordinates is unreachable, and any route that genuinely PASSES THROUGH the shoal is caught.
+  function segsIntersect(p1, p2, p3, p4) {
+    const o = (a, b, c) => (b[0] - a[0]) * (c[1] - a[1]) - (b[1] - a[1]) * (c[0] - a[0]);
+    const d1 = o(p3, p4, p1), d2 = o(p3, p4, p2), d3 = o(p1, p2, p3), d4 = o(p1, p2, p4);
+    return ((d1 > 0 && d2 < 0) || (d1 < 0 && d2 > 0)) && ((d3 > 0 && d4 < 0) || (d3 < 0 && d4 > 0));
+  }
+  const bboxFarPt = (p, sg, d) => Math.min(sg.a[0], sg.b[0]) > p[0] + d || Math.max(sg.a[0], sg.b[0]) < p[0] - d || Math.min(sg.a[1], sg.b[1]) > p[1] + d || Math.max(sg.a[1], sg.b[1]) < p[1] - d;
+  const bboxFarSeg = (r1, r2, sg) => Math.min(r1[0], r2[0]) > Math.max(sg.a[0], sg.b[0]) || Math.max(r1[0], r2[0]) < Math.min(sg.a[0], sg.b[0]) || Math.min(r1[1], r2[1]) > Math.max(sg.a[1], sg.b[1]) || Math.max(r1[1], r2[1]) < Math.min(sg.a[1], sg.b[1]);
+  function routeCrossesShallow(coords) {
+    for (let i = 0; i < coords.length - 1; i++)
+      for (let j = 0; j < shallowSegs.length; j++) {
+        const sg = shallowSegs[j];
+        if (bboxFarSeg(coords[i], coords[i + 1], sg)) continue;
+        if (segsIntersect(coords[i], coords[i + 1], sg.a, sg.b)) return sg.depth;
+      }
+    return null;
+  }
+  function evalContour(s) {
+    if (!shallowSegs || !shallowSegs.length || !s.pos) return;
+    const now = Date.now(); if (now - contourAt < CONTOUR_THROTTLE_MS) return; contourAt = now;
+    // ROUTE crossing — recomputed EVERY throttled tick (bbox-rejected; negligible even vs ~1900
+    // segments), so an interior-waypoint edit can never leave a stale verdict. A SEPARATE alarm from
+    // the position warning below, so neither one masks the other.
+    let routeDepth = null;
+    if (s.route && Array.isArray(s.route.coords) && s.route.coords.length >= 2) routeDepth = routeCrossesShallow(s.route.coords);
+    if (routeDepth != null) fire('route-shoal', 'warning', 'Route crosses charted ' + routeDepth + ' m contour (safety ' + safetyDepth + ' m)');
+    else clear('route-shoal');
+    // POSITION proximity — independent live alarm, only on a REAL fix (never "near shoal" off a sim position)
+    const src = s.sources || {}, realPos = src.pos && src.pos !== 'simulated' && src.pos !== 'sim';
+    if (realPos) {
+      const p = [s.pos.lon, s.pos.lat];
+      let nearest = Infinity, nd = null;
+      for (let i = 0; i < shallowSegs.length; i++) { const sg = shallowSegs[i]; if (bboxFarPt(p, sg, 0.02)) continue; const dd = pointSegM(p, sg.a, sg.b); if (dd < nearest) { nearest = dd; nd = sg.depth; } }
+      if (nearest <= CONTOUR_PROXIMITY_M) fire('contour', 'warning', 'Near charted ' + nd + ' m contour — ' + Math.round(nearest) + ' m (safety ' + safetyDepth + ' m)');
+      else clear('contour');
+    } else { clear('contour'); }
+  }
 
   // ---- controls (maplibre group, bottom-left, away from zoom/ownship) ----
   const group = document.createElement('div');
   group.className = 'maplibregl-ctrl maplibregl-ctrl-group';
   const mkBtn = (label, title, color) => { const b = document.createElement('button'); b.type = 'button'; b.title = title; b.textContent = label; b.style.cssText = 'font:700 12px system-ui;color:' + (color || '#cfe6ff') + ';touch-action:manipulation'; return b; };
   const anchorBtn = mkBtn('⚓', 'Drop / weigh anchor watch');
+  const guardBtn = mkBtn('▣', 'Guard zone — tap to place a keep-in / keep-out boundary');
   const mobBtn = mkBtn('MOB', 'Man overboard', '#ff6b6b');
-  group.appendChild(anchorBtn); group.appendChild(mobBtn);
+  group.appendChild(anchorBtn); group.appendChild(guardBtn); group.appendChild(mobBtn);
   map.addControl({ onAdd() { return group; }, onRemove() { group.remove(); } }, 'bottom-left');
   let lastPos = null;
   anchorBtn.addEventListener('click', () => { anchor ? weighAnchor() : dropAnchor(lastPos); });
+  guardBtn.addEventListener('click', armGuardPlacement);
   mobBtn.addEventListener('click', () => { mob ? cancelMOB() : markMOB(lastPos); });
   function paintCtl() {
     anchorBtn.style.color = anchor ? '#ff6b6b' : '#cfe6ff';
+    guardBtn.style.color = placing ? '#ffd166' : (guard ? '#3bd6c6' : '#cfe6ff');
     mobBtn.textContent = mob ? '✕MOB' : 'MOB';
   }
 
@@ -214,6 +465,22 @@ window.HelmAlarms = function (map, opts) {
       } else { dragSince = null; clear('anchor'); }
     }
 
+    // guard zone / watchdog — keep-in (alarm on leaving) or keep-out (alarm on entering), debounced
+    if (guard) {
+      const d = distM(s.pos, guard), inside = d <= guardRadius;
+      updateGuardPill(d, inside);
+      const breach = guardMode === 'in' ? !inside : inside;
+      if (breach) {
+        if (!guardBreachSince) guardBreachSince = Date.now();
+        if (Date.now() - guardBreachSince >= GUARD_DEBOUNCE_MS) {
+          const b = Math.round(bearing(guard, s.pos));
+          fire('guard', 'critical', guardMode === 'in'
+            ? 'Guard zone — left the keep-in zone (' + Math.round(d) + ' m from centre, limit ' + guardRadius + ' m), bearing ' + b + '°'
+            : 'Guard zone — entered the keep-out zone (' + Math.round(d) + ' m inside, radius ' + guardRadius + ' m)');
+        }
+      } else { guardBreachSince = null; clear('guard'); }
+    }
+
     // off-course (XTE) + arrival — only while plausibly navigating a real route (guards a stale demo route)
     if (s.active && s.active.nextWp) {
       const dtgNM = num(s.active.dtg), xteM = num(s.active.xte);
@@ -225,19 +492,33 @@ window.HelmAlarms = function (map, opts) {
       } else { clear('arrival'); clear('xte'); }
     }
 
-    // MOB range/bearing (alarm stays critical until cancelled)
+    // MOB — live go-to range/bearing + elapsed + growing search-area estimate (alarm holds until cancelled)
     if (mob) {
       const d = distM(s.pos, mob), b = Math.round(bearing(s.pos, mob));
-      fire('mob', 'critical', 'MAN OVERBOARD — ' + (d < 1852 ? Math.round(d) + ' m' : (d / 1852).toFixed(2) + ' NM') + ', bearing ' + b + '°');
+      const elapsed = mobTime ? (Date.now() - mobTime) / 1000 : 0;
+      const mmss = Math.floor(elapsed / 60) + ':' + String(Math.floor(elapsed % 60)).padStart(2, '0');
+      const sr = Math.round(mobSearchRadius(elapsed));
+      const fmt = m => m < 1852 ? Math.round(m) + ' m' : (m / 1852).toFixed(2) + ' NM';
+      redrawMOB(s.pos);          // steer-to line to the datum + search-area circle that grows with time
+      fire('mob', 'critical', 'MAN OVERBOARD — ' + mmss + ' ago · steer ' + fmt(d) + ', brg ' + b + '° · search ~' + fmt(sr) + ' (est.)');
     }
+
+    // safety-contour check — route crosses / position nears a charted shoal contour (throttled, real-pos guarded)
+    evalContour(s);
     // CPA/TCPA is owned by collision.js (richer COLREGs guidance + audio); not duplicated here.
   }
 
   return {
     onNav,
-    setActive(f) { fresh = !!f; },                       // false → hold (stale/offline)
+    onSource,                                            // feed state in → hold + audible no-fix/feed-loss alarm (ALARM-9/10)
+    setActive(f) { fresh = !!f; },                       // legacy hold/resume w/o source detail — superseded by onSource
     fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames
     dropAnchor: p => dropAnchor(p || lastPos), markMOB: () => markMOB(lastPos), setRadius,
-    _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob })   // for tests
+    dropGuard: (p, mode) => dropGuard(p || lastPos, mode), clearGuard, setGuardMode, setGuardRadius,   // guard zone (ALARM-7)
+    _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob, fresh, feedState, hadFeed,
+                     guard: !!guard, guardMode, guardRadius, contourSegs: shallowSegs ? shallowSegs.length : 0 }),  // for tests
+    _loadContours: ingestContours,                       // inject charted-contour geojson (tests)
+    _msg: k => active[k] && active[k].msg,               // current message for an active alarm (tests)
+    _tick: beepTick                                      // drive one alarm tick deterministically (tests)
   };
 };
