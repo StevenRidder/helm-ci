@@ -125,32 +125,49 @@ cmake -S "$OCPN_DIR" -B "$OCPN_DIR/build" \
   -DOCPN_BUILD_TEST=OFF >/dev/null
 
 say "build helm targets (-j$JOBS)"
-# ⚠️ TRAP (ENGINE-12): this target list OMITS `helm-server` — the one-origin binary
-# (nav WS + S-52 tiles + /health + /catalog + static UI on one port, default 8080) that
-# helm_server.cpp implements and that .claude/run-helm-server.sh + .claude/launch.json exec.
-# helm_server.cpp is complete and its target exists (patches/0003); it is just not built here,
-# so a clean bootstrap does NOT produce build/cli/helm-server and one-origin launchers fail.
-# Until ENGINE-12 folds it in (+ a smoke check), build it explicitly:
-#   cmake --build "$OCPN_DIR/build" --target helm-server -j"$JOBS"
-cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tiles helm-engine -j"$JOBS"
+# `helm-server` is the one-origin binary (nav WS + S-52 tiles + /health + /catalog + static UI
+# on ONE port, default 8080) that helm_server.cpp implements and that .claude/run-helm-server.sh
+# + .claude/launch.json exec. It is built by default here (ENGINE-12) so the reproducible build
+# produces build/cli/helm-server and one-origin launchers work with no manual extra step.
+cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tiles helm-engine helm-server -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
-ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike} 2>/dev/null | sed 's/^/  /'
-[ -x "$BIN/helm-server" ] || echo "  note: helm-server (one-origin :8080) NOT built — see ENGINE-12 / CLAUDE.md"
+ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-server} 2>/dev/null | sed 's/^/  /'
+[ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
 # assert the Step-6 seam invariant survived the reproducible build
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)
 echo "  seam check: top_frame::Get symbols in libhelm-chartrender.a = ${syms:-?} (want 0)"
 
 if [ "$DO_SMOKE" = 1 ]; then
-  say "smoke: render one tile"
+  # One-origin smoke (ENGINE-12): prove the reproducible build produced a WORKING
+  # helm-server, not just a binary on disk. /health (+ /catalog) need no chart data
+  # and confirm the one-origin server boots and serves; the S-52 tile render is
+  # exercised too when an ENC cell is present. Runs on a private port so it never
+  # collides with a dev server on :8080.
+  say "smoke: helm-server one-origin (/health + S-52 tile)"
   ENC="${HELM_ENC:-/tmp/ENC_ROOT/US5FL96M/US5FL96M.000}"
-  [ -f "$ENC" ] || { echo "  (no ENC at $ENC; skipping smoke render)"; exit 0; }
-  "$BIN/helm-tiles" >/tmp/helm-bootstrap-smoke.log 2>&1 &
+  export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+  SMOKE_TMP="$(mktemp -d)"
+  HELM_BIND=127.0.0.1 HELM_PORT=8088 HELM_TILES_NO_WARMUP=1 \
+    HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$SMOKE_TMP" HELM_ENC="$ENC" \
+    "$BIN/helm-server" >/tmp/helm-server-smoke.log 2>&1 &
   pid=$!; sleep 3
-  code=$(curl -s -o /tmp/helm-smoke.png -w '%{http_code}' "http://127.0.0.1:8082/chart/12/1120/1756.png" || echo ERR)
-  sz=$(wc -c < /tmp/helm-smoke.png 2>/dev/null | tr -d ' ')
+  fail() { kill "$pid" 2>/dev/null || true; rm -rf "$SMOKE_TMP"; sed 's/^/    /' /tmp/helm-server-smoke.log; die "$1"; }
+  hcode=$(curl -s -o /tmp/helm-health.json -w '%{http_code}' "http://127.0.0.1:8088/health"  || echo ERR)
+  ccode=$(curl -s -o /dev/null            -w '%{http_code}' "http://127.0.0.1:8088/catalog" || echo ERR)
+  echo "  /health -> http=$hcode   /catalog -> http=$ccode"
+  [ "$hcode" = 200 ] || fail "helm-server /health did not return 200 — the one-origin binary is not serving"
+  if [ -f "$ENC" ]; then
+    tcode=$(curl -s -o /tmp/helm-server-tile.png -w '%{http_code}' "http://127.0.0.1:8088/chart/12/1120/1756.png" || echo ERR)
+    tsz=$(wc -c < /tmp/helm-server-tile.png 2>/dev/null | tr -d ' ')
+    echo "  /chart/12/1120/1756.png -> http=$tcode bytes=$tsz"
+    [ "${tsz:-0}" -gt 1000 ] || fail "helm-server S-52 tile render produced no chart content"
+    echo "  ✓ one-origin server rendered S-52 chart content"
+  else
+    echo "  (no ENC at $ENC; skipped tile render — /health proves the binary serves)"
+  fi
   kill "$pid" 2>/dev/null || true
-  echo "  tile 12/1120/1756 -> http=$code bytes=$sz"
-  [ "${sz:-0}" -gt 1000 ] && echo "  ✓ rendered chart content" || die "smoke render produced no chart content"
+  rm -rf "$SMOKE_TMP"
+  echo "  ✓ helm-server one-origin smoke passed"
 fi
