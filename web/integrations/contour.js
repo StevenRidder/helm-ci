@@ -25,7 +25,7 @@ export async function enable(map, ctx) {
   }
   if (!demSource) {
     demSource = new mlcontour.DemSource({
-      url: 'https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png',
+      url: 'data/dem/{z}/{x}/{y}.png',   // LOCAL terrarium DEM (pipeline/fetch_dem.py) — offline-first, no CDN
       encoding: 'terrarium',
       maxzoom: 13,
       worker: true,
@@ -60,7 +60,7 @@ export async function enable(map, ctx) {
     layout: {
       'symbol-placement': 'line',
       'text-field': ['concat', ['number-format', ['abs', ['get', 'ele']], {}], ' m'],
-      'text-font': ['Open Sans Regular'],
+      'text-font': ['Noto Sans Regular'],
       'text-size': 10,
     },
     paint: { 'text-color': '#1e5066', 'text-halo-color': '#fff', 'text-halo-width': 1.1 },

@@ -18,7 +18,7 @@ export function enable(map) {
     lang: { areaMeasurementButtonTitle: 'Measure area', lengthMeasurementButtonTitle: 'Measure distance', clearMeasurementsButtonTitle: 'Clear' },
     units: 'imperial',
     style: {
-      text: { radialOffset: 0.9, justify: 'auto', color: '#eef4f9', font: ['Open Sans Regular'], haloColor: '#0d131b', haloWidth: 1.4 },
+      text: { radialOffset: 0.9, justify: 'auto', color: '#eef4f9', font: ['Noto Sans Regular'], haloColor: '#0d131b', haloWidth: 1.4 },
       common: { midPointColor: '#5bc0ff', vertexColor: '#d6219a' },
       areaMeasurement: { fillColor: '#5bc0ff', fillOutlineColor: '#5bc0ff', fillOpacity: 0.1 },
       lengthMeasurement: { color: '#d6219a' },

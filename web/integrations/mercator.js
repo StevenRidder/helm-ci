@@ -22,11 +22,14 @@ export async function enable(map, ctx) {
   if (!map.getSource(DEM)) {
     map.addSource(DEM, {
       type: 'raster-dem',
-      tiles: ['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],
+      // LOCAL value-encoded raster (terrarium DEM baked by pipeline/fetch_dem.py) —
+      // decoded client-side into hillshade. Offline-first; the SAME contract a hosted
+      // mercator.blue weather tile would use, just served from the app's own origin.
+      tiles: ['data/dem/{z}/{x}/{y}.png'],
       encoding: 'terrarium',
       tileSize: 256,
       maxzoom: 13,
-      attribution: 'Terrarium DEM (AWS open data) · pattern stands in for mercator.blue tiles',
+      attribution: 'Terrarium DEM (local) · pattern stands in for mercator.blue tiles',
     });
   }
 

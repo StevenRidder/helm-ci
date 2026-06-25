@@ -1,7 +1,7 @@
 {
   "version": 8,
   "name": "Helm — tracer bullet",
-  "glyphs": "https://demotiles.maplibre.org/font/{fontstack}/{range}.pbf",
+  "glyphs": "fonts/{fontstack}/{range}.pbf",
   "sources": {
     "sat": {
       "type": "raster",
@@ -155,7 +155,7 @@
           }
         ],
         "text-font": [
-          "Open Sans Regular"
+          "Noto Sans Regular"
         ],
         "text-size": 11.5,
         "text-allow-overlap": false
@@ -193,7 +193,7 @@
       "layout": {
         "text-field": "↑",
         "text-font": [
-          "Open Sans Regular"
+          "Noto Sans Regular"
         ],
         "text-size": 18,
         "text-rotate": [

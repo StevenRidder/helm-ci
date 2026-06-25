@@ -10,16 +10,18 @@
  * value-encoded single-band COG client-side (the Mercator-style idea, applied
  * to a file instead of a tile pyramid).
  *
- * DEMO_COG points at geomatico's public demo GeoTIFF; swap it for any COG
- * (e.g. a GFS field exported with `gdal_translate -of COG`). If it 404s the
- * layer simply doesn't draw — non-fatal.
+ * OFFLINE-FIRST: DEMO_COG points at a LOCAL value-encoded GeoTIFF baked by
+ * pipeline/make_demo_cog.py (a Helm SST field, EPSG:4326) — colourised
+ * client-side by the #color fragment, no CDN. Swap it for any COG (e.g. a GFS
+ * field exported with `gdal_translate -of COG`, served from the boat-server).
+ * If the file is missing the layer simply doesn't draw — non-fatal.
  *
  * https://github.com/geomatico/maplibre-cog-protocol
  */
 import { cogProtocol } from '@geomatico/maplibre-cog-protocol';
 
 const SRC = 'helm-cog', LYR = 'helm-cog';
-const DEMO_COG = 'cog://https://geomatico.github.io/maplibre-cog-protocol/sample/dem.tif#color:BrewerSpectral9,0,4000';
+const DEMO_COG = 'cog://data/demo-sst-cog.tif#color:BrewerYlOrRd9,28,33';
 let protocolReady = false;
 
 export async function enable(map, ctx) {

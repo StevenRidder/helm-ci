@@ -22,8 +22,11 @@ production UI intact, and record the keep/replace verdict for each. See
 
 **Adopt / strong candidates to replace our code**
 
-- **maplibre-contour** → replaces `isolines.js` (worker-side contours; depth contours
-  from Terrarium bathymetry today, isobars from a pressure DEM tomorrow).
+- **maplibre-contour** → **ADOPTED in production** (2026-06-25): off-thread DEM depth
+  contours in the Layers drawer (`web/depth-contours.js`), fed by a LOCAL terrain-RGB DEM
+  (`pipeline/fetch_dem.py` → `web/data/dem/`). The hand-rolled `isolines.js` is **deleted**.
+  Note: the open Terrarium DEM is flat over the immediate Key West shoal, so contours show
+  over the deeper approaches; a higher-res local bathymetry can feed the same path later.
 - **PMTiles** → the offline-charts container, replacing `.mbtiles` (single file, no
   server, no TMS Y-flip). Pipeline step added (`make_pmtiles.sh`).
 - **maplibre-cog-protocol** → GRIB→COG and depth/imagery stream with no tiler; simplifies

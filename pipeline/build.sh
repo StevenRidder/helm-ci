@@ -31,6 +31,24 @@ step "places  (OpenStreetMap / Overpass)"
 python3 "$SCRIPT_DIR/fetch_places.py" \
   || echo "  ! places step failed (Overpass busy?) — continuing"
 
+# --- offline-first RUNTIME data: baked once here, served locally at runtime (no CDN on the boat) ---
+step "DEM  (Terrarium terrain-RGB tiles -> web/data/dem, feeds depth contours + hillshade)"
+python3 "$SCRIPT_DIR/fetch_dem.py" \
+  || echo "  ! DEM step failed (network?) — continuing"
+
+step "glyphs  (Noto Sans label ranges -> web/fonts, so map labels work offline)"
+python3 "$SCRIPT_DIR/fetch_glyphs.py" \
+  || echo "  ! glyphs step failed — continuing"
+
+step "demo COG  (local SST GeoTIFF for the cog:// Lab toggle)"
+if python3 -c "import tifffile" 2>/dev/null || PYTHONPATH=/tmp/helm-pylibs python3 -c "import tifffile" 2>/dev/null; then
+  python3 "$SCRIPT_DIR/make_demo_cog.py" || echo "  ! demo COG step failed — continuing"
+else
+  python3 -m pip install --quiet --target=/tmp/helm-pylibs tifffile 2>/dev/null \
+    && PYTHONPATH=/tmp/helm-pylibs python3 "$SCRIPT_DIR/make_demo_cog.py" \
+    || echo "  - tifffile unavailable; skipping demo COG (the .tif ships in the repo)"
+fi
+
 # --- ENC depth (optional; needs GDAL + a downloaded cell) ---
 step "depth  (NOAA ENC -> GeoJSON)"
 if [ -n "$ENC" ] && [ -f "$ENC" ]; then

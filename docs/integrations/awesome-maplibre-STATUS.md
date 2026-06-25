@@ -2,6 +2,27 @@
 
 _Last updated: 2026-06-24 · Branch: `claude/awesome-maplibre-exploration-acctbi` · Commit: `1ec6c01`_
 
+> **Offline-first + production update (2026-06-25).** Made the whole thing offline-first (CDN is
+> nice-to-have, never required) and promoted contours to production:
+>
+> - **Contours → production.** maplibre-contour now drives a real **DEM depth-contour** layer in the
+>   Layers drawer (`web/depth-contours.js`, lazy-loaded), computed off-thread from a **local** terrain-RGB
+>   DEM. The hand-rolled `web/isolines.js` (marching squares, disabled in prod) is **deleted**. Verified:
+>   maplibre-contour generates real contours from the local DEM (500 polylines / 20 depth levels off one
+>   tile). Caveat: the open Terrarium DEM has no detail over the immediate Key West reef flat (flat 0 m);
+>   contours show over the deeper approaches/shelf. A higher-res local bathymetry (e.g. from the engine's
+>   ENC soundings) can feed the same pipeline later for full coverage.
+> - **No more runtime CDN.** Every Lab toggle's data is now local, baked once at build time:
+>   `pipeline/fetch_dem.py` → `web/data/dem/` (contours + the mercator hillshade), local rain-forecast
+>   frames for the temporal control, `pipeline/make_demo_cog.py` → `web/data/demo-sst-cog.tif` for cog://,
+>   and deck.gl AIS now seeds from the real `data/ais-sample.geojson`. Verified zero esm.sh/unpkg/remote-DEM/
+>   RainViewer/geomatico requests at runtime.
+> - **Labels work offline.** Vendored the Noto Sans glyph ranges (`pipeline/fetch_glyphs.py` → `web/fonts/`,
+>   `style.json` glyphs now local) and fixed a latent bug — `Open Sans Regular` (which 404s on demotiles)
+>   was unified to `Noto Sans Regular` across the style + contour/measure modules.
+> - **Still online-by-design (graceful):** the satellite/NOAA basemap tiles (offline via the chart-download
+>   pipeline) and `radar.js`'s live RainViewer nowcast (degrades to no-op offline).
+>
 > **Integration update (2026-06-24, branch `integrate/awesome-maplibre-v5`).** The handoff
 > items below are now **done** — merged onto current `main` and verified locally with real internet:
 >

@@ -79,7 +79,7 @@
         id: 'measure-labels', type: 'symbol', source: 'measure',
         filter: ['==', ['get', 'kind'], 'label'],
         layout: {
-          'text-field': ['get', 'label'], 'text-font': ['Open Sans Regular'],
+          'text-field': ['get', 'label'], 'text-font': ['Noto Sans Regular'],
           'text-size': 11, 'text-offset': [0, -0.9], 'text-allow-overlap': true
         },
         paint: { 'text-color': '#eef4f9', 'text-halo-color': 'rgba(5,8,12,0.9)', 'text-halo-width': 1.4 }
