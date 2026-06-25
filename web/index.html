@@ -563,6 +563,7 @@
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
+<script src="isobars.js"></script>
 <script src="nav-source.js"></script>
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>
@@ -626,6 +627,7 @@
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
+  const iso = window.HelmIsobars ? HelmIsobars(map, { beforeId: 'route-line' }) : null;  // smooth pressure isobars
   const measureBtn = document.querySelector('.ri[data-rail="measure"]');
   const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
   const collision = window.HelmCollision ? HelmCollision(map) : null;
@@ -668,6 +670,7 @@
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
     activeWx = name; window.__activeWx = name;            // shared with the spacetime probe's layer filter
+    if (iso) { if (name === 'pressure') iso.load(fieldUrl('pressure')); else iso.setVisible(false); }   // smooth isobars on the pressure layer
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
       if (radar) radar.load(); return;
@@ -694,6 +697,7 @@
       : ('+' + frame + 'h');
     if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
       if (field) field.load(fieldUrl(activeWx), fieldOpts(activeWx)).then(buildLegend).catch(() => wxNotice(activeWx));
+      if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'));   // re-contour isobars for the new frame
       if (wind && VECTOR[activeWx] && document.getElementById('particles').checked) wind.load(velUrl(activeWx));
     }
   }

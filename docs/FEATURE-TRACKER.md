@@ -86,7 +86,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 ### Weather
 - 🟢 Full scalar stack (wind/gust/rain/temp/SST/cloud/pressure/CAPE/waves/swell/current), offline (Open-Meteo)
 - 🟢 Animated wind particles · 🟢 Forecast scrubber + play · 🟢 Radar overlay · 🟢 Weather-along-route ribbon
-- 🟡 Isobars (isolines.js removed in `c092955` — needs finer grid to re-enable) · ⚪ GRIB/PredictWind import (Phase 2) · ⚪ Windy tab (Phase 3, conditional)
+- 🟢 **Isobars** — re-enabled smooth & Windy-style (`isobars.js`): bilinear-UPSAMPLE + blur the coarse field → marching-squares → Chaikin curves, adaptive hPa interval, re-contoured per scrubber frame; shows on the Pressure layer · ⚪ GRIB/PredictWind import (Phase 2) · ⚪ Windy tab (Phase 3, conditional)
 
 ### Routing (weather/passage)
 - ⚪ Isochrone router + polars editor (Phase 2) · ⚪ Routing on free NOAA GRIB · 🔴 Laylines · 🔴 True-wind (TWA/TWD)
