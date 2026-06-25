@@ -648,6 +648,8 @@
 <script src="measure.js"></script>
 <script src="collision.js"></script>
 <script src="ais-meta.js"></script>
+<script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
+<script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <!-- SHELL demo (worked example — safe to delete with web/shell-demo.js): proves a feature module
      can add a panel + ⌘K command + style fragment via HelmShell with NO edit to this file's body. -->
 <script src="shell-demo.js"></script>
@@ -1097,6 +1099,7 @@
       if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
       if (window.HelmConnections && s.conns) HelmConnections.onState(s.conns);   // live connection status
       if (window.HelmTrack) HelmTrack.onState(s);                                 // ownship breadcrumb trail
+      if (window.HelmTrueWindUI) HelmTrueWindUI.onNav(s);                          // WX-13: live true-wind readout (TWS/TWD/TWA)
       if (s.route) updateRouteFromEngine(s.route);    // live route line from OpenCPN's model route
       if (collision && s.pos) {                        // CPA alarm + COLREGs avoidance guidance (collision.js)
         // AIS feed health: at least one connection actually receiving — else "monitoring offline"
