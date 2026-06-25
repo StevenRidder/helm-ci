@@ -105,10 +105,17 @@ engine/bootstrap.sh --clean         # nuke the clone and start fresh
 ```
 Outputs (default `HELM_OCPN_DIR=/tmp/helm-opencpn`):
 ```
-/tmp/helm-opencpn/build/cli/helm-engine     # nav-state WebSocket server
-/tmp/helm-opencpn/build/cli/helm-tiles      # S-52 chart-tile HTTP server
+/tmp/helm-opencpn/build/cli/helm-engine     # nav-state WebSocket server (:8081)
+/tmp/helm-opencpn/build/cli/helm-tiles      # S-52 chart-tile HTTP server (:8082)
 ```
 First build clones + builds OpenCPN's libs — **10–20 min**. Rebuilds are incremental.
+
+> **⚠️ `helm-server` is NOT built by bootstrap (ENGINE-12).** The one-origin binary — nav WS + tiles +
+> `/health` + `/catalog` + static UI on **one port (:8080)**, which `.claude/run-helm-server.sh` and
+> `.claude/launch.json` exec — is complete in `helm_server.cpp` but missing from the bootstrap target
+> list. A clean bootstrap produces **no** `helm-server`. Build it explicitly:
+> `cmake --build /tmp/helm-opencpn/build --target helm-server -j`. Otherwise use the two separate
+> binaries (helm-engine + helm-tiles) below. See [../CLAUDE.md](../CLAUDE.md).
 
 ### 3b. Optional — open it in Xcode
 CMake can emit an Xcode project instead of the default build:

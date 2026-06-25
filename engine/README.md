@@ -50,6 +50,15 @@ frame. Full design: [../docs/STREAMING-API.md](../docs/STREAMING-API.md).
 
 ## Build & run
 
+> **⚠️ Build trap (ENGINE-12):** `bootstrap.sh` builds `helm-chartrender chart-spike helm-tiles
+> helm-engine` — it does **not** build **`helm-server`**, the one-origin binary (`helm_server.cpp`:
+> nav WS + S-52 tiles + `/health` + `/catalog` + static UI on **one port, default 8080**) that
+> `.claude/run-helm-server.sh` and `.claude/launch.json` actually exec. `helm_server.cpp` is complete
+> and its target exists (`patches/0003`); it's just missing from the build line, so a clean
+> `bootstrap.sh` produces **no** `build/cli/helm-server`. Build it explicitly with
+> `cmake --build "$OCPN_DIR/build" --target helm-server -j`, or run the two separate binaries below.
+> See [../CLAUDE.md](../CLAUDE.md).
+
 The build is reproducible from a pinned OpenCPN + maintained patch series — see
 [VENDORING.md](VENDORING.md). `helm_engine.cpp` lives in [`vendor/cli/`](vendor/cli/) and
 its target is added by `patches/0003`; do not hand-edit a clone.
@@ -106,8 +115,13 @@ raster source (`enc` in `web/style.json`, the "S-52 charts (engine)" toggle). Ve
 - **Immutable tile caching** (ETag + 304) on `helm-tiles`.
 
 ## Next increment
-- **One TLS origin + Bonjour + pairing**: merge nav WS + chart HTTP onto one port, add TLS (the in-tree
-  `mdns` lib + OpenSSL are already linked), advertise `_helm._tcp`, TOFU pairing. See STREAMING-API.md §5–8.
+> Status note (2026-06-25 code audit): the "merge to one port" below is **already done in code** —
+> `helm_server.cpp` is the merged one-origin server (`helm-server`, default :8080), and it already
+> advertises `_helm._tcp` (Bonjour). Remaining on that line: TLS + TOFU pairing, and **wiring
+> `helm-server` into the bootstrap build** (ENGINE-12) — see the Build trap above.
+- **One TLS origin + Bonjour + pairing**: merged nav WS + chart HTTP onto one port (✅ `helm-server`);
+  Bonjour `_helm._tcp` advertised (✅, TXT payload still empty); **still to do:** TLS, TOFU pairing,
+  tokens. The in-tree `mdns` lib + OpenSSL are already linked. See STREAMING-API.md §5–8.
 - **NODTA → transparent**: make the S-52 no-data grey transparent so charts composite *over* satellite.
 - **Real position in** (SignalK / NMEA) instead of the demo own-ship advance.
 - **lastSeq resume**: use the client's `hello` lastSeq to send only the delta-since, not a full snapshot.

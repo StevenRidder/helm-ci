@@ -125,11 +125,19 @@ cmake -S "$OCPN_DIR" -B "$OCPN_DIR/build" \
   -DOCPN_BUILD_TEST=OFF >/dev/null
 
 say "build helm targets (-j$JOBS)"
+# ⚠️ TRAP (ENGINE-12): this target list OMITS `helm-server` — the one-origin binary
+# (nav WS + S-52 tiles + /health + /catalog + static UI on one port, default 8080) that
+# helm_server.cpp implements and that .claude/run-helm-server.sh + .claude/launch.json exec.
+# helm_server.cpp is complete and its target exists (patches/0003); it is just not built here,
+# so a clean bootstrap does NOT produce build/cli/helm-server and one-origin launchers fail.
+# Until ENGINE-12 folds it in (+ a smoke check), build it explicitly:
+#   cmake --build "$OCPN_DIR/build" --target helm-server -j"$JOBS"
 cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tiles helm-engine -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
 ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike} 2>/dev/null | sed 's/^/  /'
+[ -x "$BIN/helm-server" ] || echo "  note: helm-server (one-origin :8080) NOT built — see ENGINE-12 / CLAUDE.md"
 # assert the Step-6 seam invariant survived the reproducible build
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)
 echo "  seam check: top_frame::Get symbols in libhelm-chartrender.a = ${syms:-?} (want 0)"
