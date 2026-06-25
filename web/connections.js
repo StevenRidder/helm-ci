@@ -16,6 +16,7 @@
     { v: 'tcp-client', label: 'TCP — connect to device' },
     { v: 'tcp-server', label: 'TCP — listen (relay in)' },
     { v: 'udp',        label: 'UDP — listen' },
+    { v: 'signalk',    label: 'SignalK — WebSocket' },
   ];
   let client = null, listEl, formEl, msgEl, conns = [], editingId = null, msgTimer = null;
 
@@ -71,17 +72,21 @@
 
   function onSubmit(e) {
     e.preventDefault();
+    const type = formEl.querySelector('#conn-f-type').value;
     const conn = {
       name: formEl.querySelector('#conn-f-name').value.trim(),
-      type: formEl.querySelector('#conn-f-type').value,
+      type,
       address: formEl.querySelector('#conn-f-addr').value.trim(),
       port: parseInt(formEl.querySelector('#conn-f-port').value, 10),
-      dataProtocol: 'nmea0183',
+      dataProtocol: type === 'signalk' ? 'signalk' : 'nmea0183',
       enabled: formEl.querySelector('#conn-f-en').checked,
     };
     if (editingId) conn.id = editingId;
     if (!conn.port || conn.port < 1 || conn.port > 65535) { flash('Enter a valid port (1–65535).', true); return; }
-    if (conn.type === 'tcp-client' && !conn.address) { flash('Enter the device address (IP or hostname).', true); return; }
+    // tcp-client and signalk both need a target address (engine rejects either without one)
+    if ((type === 'tcp-client' || type === 'signalk') && !conn.address) {
+      flash(type === 'signalk' ? 'Enter the SignalK host (or ws:// URL).' : 'Enter the device address (IP or hostname).', true); return;
+    }
     send({ t: 'conn.upsert', conn });
     hideForm();
   }
@@ -103,7 +108,7 @@
     document.getElementById('conn-cancel').addEventListener('click', hideForm);
     formEl.querySelector('#conn-f-type').addEventListener('change', e => {
       const p = formEl.querySelector('#conn-f-port');
-      p.placeholder = e.target.value === 'tcp-client' ? '39150' : '10110';
+      p.placeholder = e.target.value === 'tcp-client' ? '39150' : e.target.value === 'signalk' ? '3000' : '10110';
     });
     formEl.addEventListener('submit', onSubmit);
     send({ t: 'conn.list' });   // prime the list (status also rides in every nav frame)
