@@ -74,6 +74,11 @@
   },
   "layers": [
     {
+      "id": "ocean",
+      "type": "background",
+      "paint": { "background-color": "#0a1622" }
+    },
+    {
       "id": "satellite",
       "type": "raster",
       "source": "sat"

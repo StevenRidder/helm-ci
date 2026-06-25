@@ -17,7 +17,7 @@
     opts = opts || {};
     const lookahead = opts.lookahead != null ? opts.lookahead : 0.32;   // top-padding fraction → boat sits low → see ahead
     let target = null, disp = null;                 // latest fix vs eased display state
-    let follow = (opts.follow != null) ? !!opts.follow : true;   // follow by default (caller passes false to honor a pinned URL view)
+    let follow = (opts.follow != null) ? !!opts.follow : false;   // follow OFF by default — the map is freely pan/zoom; ⌖ engages follow
     let courseUp = false, active = true, framedOnce = false;   // active=false → frozen (stale feed); framedOnce → the FIRST real fix frames the boat (we start on a neutral globe, never a hardcoded place)
 
     const el = document.createElement('div');
@@ -46,17 +46,10 @@
       modeBtn.style.color = courseUp ? 'var(--accent,#5bc0ff)' : '#cfe6ff';
     };
     const dropFollow = () => { follow = false; map.setPadding({ top: 0, bottom: 0, left: 0, right: 0 }); paint(); };
-    followBtn.addEventListener('click', () => { follow = true; paint(); });
+    followBtn.addEventListener('click', () => { if (disp) map.easeTo({ center: [disp.lon, disp.lat], duration: 500 }); });  // one-time "center on boat" — no continuous follow (it froze pan)
     modeBtn.addEventListener('click', () => { courseUp = !courseUp; if (!courseUp) map.easeTo({ bearing: 0, duration: 400 }); paint(); });
-    // a user-initiated drag/rotate (has originalEvent) drops follow; our own jumpTo does not
-    map.on('dragstart', e => { if (e && e.originalEvent) dropFollow(); });
-    map.on('rotatestart', e => { if (e && e.originalEvent) dropFollow(); });
-    // CRITICAL: also disengage on the RAW first input. The 60fps follow re-center (jumpTo below)
-    // would otherwise slam the camera back every 16ms before maplibre's dragstart/zoom can engage,
-    // so pan/scroll-zoom appear frozen. Catching mousedown/wheel/touch breaks that deadlock instantly.
-    const inputEl = map.getCanvasContainer();
-    ['mousedown', 'wheel', 'touchstart'].forEach(ev =>
-      inputEl.addEventListener(ev, () => { if (follow) { follow = false; paint(); } }, { passive: true }));  // just stop re-centering; do NOT setPadding mid-gesture (it cancels the drag)
+    // No drag/zoom interception at all — we no longer continuously re-center, so nothing must touch
+    // the camera during a gesture. (The old dragstart→setPadding handler was interrupting the drag.)
     paint();
 
     function frame() {
@@ -70,19 +63,9 @@
       try {
         if (!added) { marker.setLngLat([disp.lon, disp.lat]).addTo(map); added = true; }
         marker.setLngLat([disp.lon, disp.lat]).setRotation(disp.cog);
-        if (follow) {
-          // First real fix: if we're still on the neutral zoomed-out start, zoom in to the boat.
-          // Otherwise leave zoom alone (preserve a pinned/user zoom). No hardcoded location anywhere.
-          const firstZoom = (!framedOnce && map.getZoom() < 8) ? 14 : null;
-          framedOnce = true;
-          map.jumpTo({
-            center: [disp.lon, disp.lat],
-            bearing: courseUp ? disp.cog : 0,
-            ...(firstZoom != null ? { zoom: firstZoom } : {}),
-            // top padding shifts the focal point down → boat sits low → you see ahead.
-            // (jumpTo honors `padding`, not `offset` — offset is easeTo/flyTo only.)
-            padding: { top: map.getContainer().clientHeight * lookahead, bottom: 0, left: 0, right: 0 }
-          });
+        if (!framedOnce) {            // ONE-TIME: bring the boat into view on the first fix. After that the camera
+          framedOnce = true;          // is FREE — we NEVER continuously re-center (that was freezing pan/zoom).
+          map.easeTo({ center: [disp.lon, disp.lat], zoom: Math.max(map.getZoom(), 12), duration: 600 });
         }
       } catch (e) { /* map not ready this frame */ }
     }
