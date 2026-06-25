@@ -51,6 +51,12 @@
     // a user-initiated drag/rotate (has originalEvent) drops follow; our own jumpTo does not
     map.on('dragstart', e => { if (e && e.originalEvent) dropFollow(); });
     map.on('rotatestart', e => { if (e && e.originalEvent) dropFollow(); });
+    // CRITICAL: also disengage on the RAW first input. The 60fps follow re-center (jumpTo below)
+    // would otherwise slam the camera back every 16ms before maplibre's dragstart/zoom can engage,
+    // so pan/scroll-zoom appear frozen. Catching mousedown/wheel/touch breaks that deadlock instantly.
+    const inputEl = map.getCanvasContainer();
+    ['mousedown', 'wheel', 'touchstart'].forEach(ev =>
+      inputEl.addEventListener(ev, () => { if (follow) { follow = false; paint(); } }, { passive: true }));  // just stop re-centering; do NOT setPadding mid-gesture (it cancels the drag)
     paint();
 
     function frame() {
