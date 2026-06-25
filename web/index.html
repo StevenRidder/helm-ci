@@ -632,6 +632,7 @@
      so they can registerPanel / registerCommand / registerStyleFragment from their OWN files
      instead of editing this monolith. See web/SHELL.md for the three conventions. -->
 <script src="shell.js"></script>
+<script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -1059,12 +1060,18 @@
       ['satellite', 'charts', 'enc-chart'].forEach(id => { if (map.getLayer(id)) Object.keys(p).forEach(k => map.setPaintProperty(id, k, p[k])); });
       film.style.background = FILM[t] || 'transparent';
     }
+    // TOOLS-7: theme survives reload via HelmStore (defaults to 'day' if unset / storage unavailable).
     const seg = document.querySelectorAll('#theme-seg span');
-    seg.forEach(s => s.addEventListener('click', () => {
-      seg.forEach(o => o.classList.toggle('on', o === s));
-      applyTheme(s.dataset.theme);
-    }));
-    if (map.isStyleLoaded()) applyTheme('day'); else map.on('load', () => applyTheme('day'));
+    function selectTheme(t, persist) {
+      if (!THEMES[t]) t = 'day';
+      seg.forEach(o => o.classList.toggle('on', o.dataset.theme === t));
+      applyTheme(t);
+      if (persist && window.HelmStore) HelmStore.set('ui.theme', t);
+    }
+    seg.forEach(s => s.addEventListener('click', () => selectTheme(s.dataset.theme, true)));
+    const restore = () => selectTheme(window.HelmStore ? HelmStore.get('ui.theme', 'day') : 'day', false);
+    restore();                                  // set the segment + film NOW (don't depend on the load-event race)
+    if (!map.isStyleLoaded()) map.once('load', restore);   // re-apply the raster paint once the layers exist
   })();
 
   // make the route box draggable by its title bar
