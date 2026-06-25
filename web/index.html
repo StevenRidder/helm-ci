@@ -750,9 +750,13 @@
                       5: 'DSC', 6: 'SART', 7: 'ARPA', 9: 'Meteo' };
   const aisEsc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
   const aisNum = (v, d) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(d);
+  // AIS text fields are fixed-width, right-padded with '@' (6-bit value 0) and/or spaces.
+  // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
+  const aisName = s => String(s == null ? '' : s).replace(/@+/g, '').trim();
+  const aisAge = sec => sec == null ? null : (sec < 90 ? Math.round(sec) + ' s' : Math.round(sec / 60) + ' min') + ' ago';
   function aisPopupHTML(p) {
     const cls = AIS_CLASS[p.class] != null ? AIS_CLASS[p.class] : (p.class != null ? 'Class ' + p.class : '');
-    const name = (p.name && String(p.name).trim()) ? p.name : ('MMSI ' + (p.mmsi ?? '?'));
+    const name = aisName(p.name) || ('MMSI ' + (p.mmsi ?? '?'));
     const valid = p.cpaValid !== false && p.cpa != null;           // engine flags when CPA is meaningful
     const cpa = valid ? aisNum(p.cpa, 2) + ' NM' : '—';
     const tcpa = (valid && p.tcpa != null)
@@ -765,7 +769,8 @@
       (p.range != null) ? ['Range', aisNum(p.range, 2) + ' NM'] : null,
       (p.brg != null) ? ['Bearing', aisNum(p.brg, 0) + '°'] : null,
       ['CPA', cpa],
-      ['TCPA', tcpa]
+      ['TCPA', tcpa],
+      (aisAge(p.ageSec) != null) ? ['Last heard', aisAge(p.ageSec)] : null
     ].filter(Boolean);
     return '<div style="min-width:152px">'
       + '<div style="font-weight:600;font-size:13px">' + aisEsc(name) + '</div>'
@@ -782,7 +787,8 @@
       const src = map.getSource('ais'); if (!src) return;
       src.setData({ type: 'FeatureCollection', features: list
         .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
-        .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] }, properties: t })) });
+        .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
+                     properties: { ...t, name: aisName(t.name) } })) });   // strip '@' padding for the map label too
     } catch (e) { /* style not ready this tick */ }
   }
   // ---- live route line: drive the `route` source from the engine's route geometry (not the
