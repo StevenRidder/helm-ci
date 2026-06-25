@@ -139,6 +139,11 @@ ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-server} 2>/dev/null | sed 
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)
 echo "  seam check: top_frame::Get symbols in libhelm-chartrender.a = ${syms:-?} (want 0)"
 
+# assert the arm's-length GPL containment invariant (ENGINE-11): the GPL engine is
+# executable-only (no redistributable shared lib) and the client surface is protocol-only.
+# Fails the build on a breach. See docs/decisions/0009-arms-length-gpl-containment.md.
+"$HERE/containment-check.sh" "$BIN"
+
 if [ "$DO_SMOKE" = 1 ]; then
   # One-origin smoke (ENGINE-12): prove the reproducible build produced a WORKING
   # helm-server, not just a binary on disk. /health (+ /catalog) need no chart data
