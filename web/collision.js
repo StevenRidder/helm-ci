@@ -50,6 +50,7 @@
   window.HelmCollision = function (map, opts) {
     opts = opts || {};
     let muted = false, ackMmsi = null, lastAlarmMmsi = null, pulse = null, actx = null;
+    let lastUpdateAt = Date.now(), everLive = false, lastOwn = null, watchWarned = false;   // AIS-feed health
 
     // ---- alarm banner ----
     const el = document.createElement('div');
@@ -132,8 +133,26 @@
       el.hidden = false;
     }
 
-    function update(own, list) {
-      const threats = (Array.isArray(list) ? list : []).filter(dangerous)
+    // An empty target list must NOT silently read as "all clear" when the AIS feed is actually
+    // dead. Show an explicit amber "monitoring offline" notice instead.
+    function warnFeed(own) {
+      el.innerHTML =
+        '<div class="cpa-ic" style="color:#f5c451">⚠</div>' +
+        '<div class="cpa-body">' +
+          '<div class="cpa-top"><span class="cpa-ttl" style="color:#f5c451">AIS monitoring offline</span></div>' +
+          '<div class="cpa-tgt">No live AIS feed — CPA / collision monitoring is paused.</div>' +
+          '<div class="cpa-act">▸ Keep a sharp visual lookout; check the AIS source connection.</div>' +
+          '<div class="cpa-disc">This is NOT "all clear" — targets may be present but unseen.</div>' +
+        '</div>';
+      el.hidden = false; highlight(own || {}, null); stopPulse();
+    }
+
+    function update(own, list, feedAlive) {
+      lastUpdateAt = Date.now(); lastOwn = own; watchWarned = false;
+      const arr = Array.isArray(list) ? list : [];
+      if (feedAlive === true || arr.length) everLive = true;            // we've seen the feed live at least once
+      if (everLive && feedAlive === false) { warnFeed(own); return; }   // source link down -> not "all clear"
+      const threats = arr.filter(dangerous)
         .sort((a, b) => (a.tcpa - b.tcpa) || (a.cpa - b.cpa));   // most imminent first
       if (!threats.length) { el.hidden = true; highlight(own, null); ackMmsi = null; lastAlarmMmsi = null; return; }
       const worst = threats[0];
@@ -142,6 +161,11 @@
       highlight(own, worst);
       render(own, worst, threats.length - 1);
     }
+
+    // Watchdog: the engine going fully silent (no nav frames at all) also means no monitoring.
+    setInterval(() => {
+      if (everLive && !watchWarned && Date.now() - lastUpdateAt > 12000) { watchWarned = true; warnFeed(lastOwn); }
+    }, 5000);
 
     return { update, setMuted: m => { muted = !!m; } };
   };

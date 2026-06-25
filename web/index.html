@@ -1016,8 +1016,11 @@
       if (window.HelmConnections && s.conns) HelmConnections.onState(s.conns);   // live connection status
       if (window.HelmTrack) HelmTrack.onState(s);                                 // ownship breadcrumb trail
       if (s.route) updateRouteFromEngine(s.route);    // live route line from OpenCPN's model route
-      if (collision && s.ais && s.pos)                // CPA alarm + COLREGs avoidance guidance (collision.js)
-        collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais);
+      if (collision && s.pos) {                        // CPA alarm + COLREGs avoidance guidance (collision.js)
+        // AIS feed health: at least one connection actually receiving — else "monitoring offline"
+        const aisAlive = Array.isArray(s.conns) && s.conns.some(c => c && c.status === 'connected');
+        collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais || [], aisAlive);
+      }
     }
     // Always show the truth about where nav data comes from. Critically: if the
     // live engine DROPS, do NOT silently fall back to the simulator presenting a
