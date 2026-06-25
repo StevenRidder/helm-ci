@@ -13,13 +13,76 @@
 //     LIVE(<3s) / LAGGING(3–10s) / STALE(>10s) purely on frame age. This is the safety rule.
 //   • reconnect+resume   — exponential backoff with jitter; on reconnect we send lastSeq so
 //     the server can snapshot us immediately.
+//   • latest-wins coalescing (CONTRACT-9) — under backpressure (a WiFi stall releasing a
+//     burst of queued frames) we merge every nav frame but render onState at most once per
+//     animation frame, so the UI never thrashes through stale intermediate fixes. Only
+//     snapshot/delta are coalescable; alarms, command replies and ping bypass it verbatim.
+//   • reliable alarms (CONTRACT-10) — see the FROZEN ALARM WIRE SCHEMA below.
 //   • never fakes position — if a real feed drops we go STALE/OFFLINE and say so; we never
 //     silently swap in the simulator presenting a plausible fake fix. The sim is used ONLY
 //     when no engine was ever reached (honest prototype mode).
 //
-// onState(flatState)   — called with the merged, UI-shaped state on every frame.
+// onState(flatState)   — called with the merged, UI-shaped state (coalesced, latest-wins).
 // onStatus({phase,...})— called whenever the connection phase changes. phase ∈
 //     connecting | live | simpos | lagging | stale | offline | sim
+//   (NOTE: alarms NO LONGER ride onStatus phase:'alarm'; they have their own reliable path —
+//    see opts.onAlarm / opts.onAlarmClear and the legacy fallback below.)
+//
+// ===========================================================================================
+// CONTRACT-10 — FROZEN ALARM WIRE SCHEMA (v1).  CONTRACT is the SINGLE owner of this contract;
+// the full spec + examples + engine-side handoff live in docs/CONTRACT-ALARM-SCHEMA.md. This
+// client (nav-client.js) is the singly-owned DECODE + reliability point. Consumers subscribe to
+// typed events and never parse alarm frames themselves.
+//
+// FRAME TYPES (all share the "alarm" prefix → a single cheap coalescer/router test):
+//   t="alarm"        server→client  one ACTIVE alarm record (op="raise"|"update"). One per frame.
+//   t="alarm.clear"  server→client  one alarm REMOVED (condition resolved/expired/superseded).
+//   t="alarm.ack"    client→server  transport-ACK and/or user-ACK; batchable.
+//
+// t="alarm" REQUIRED: { t, op, id, rev, kind, sev, msg }
+//   op    "raise"|"update"   (unknown op ⇒ treat as update; update on an unseen id ⇒ a raise)
+//   id    string             STABLE server-minted identity; "<kind>" or "<kind>:<scope>".
+//                            THE dedup + ACK + banner key.
+//   rev   integer ≥ 1        monotonic per (id,gen); FULL-STATE revision (not a diff).
+//   kind  string             legacy alarm class (depth|anchor|xte|arrival|mob|guardzone|sart|
+//                            dsc|boundary|tile|…). Back-compat with alarms.js fromEngine.
+//   sev   "critical"|"warning"|"info"
+//   msg   string             server-rendered banner text.
+//  OPTIONAL/ADDITIVE: gen(int≥0, default 0 — generation/epoch; (gen,rev) lexicographic ordering),
+//   seq(advisory, NOT written to lastSeq), prio, raisedTs, ts, lat, lon, silenceable(default true),
+//   expiresTs, apns, replay(bool), data{flat well-known keys; unknown keys MUST be ignored}.
+// t="alarm.clear" REQUIRED: { t, id }   OPTIONAL: reason, rev, gen, kind, msg, seq, ts.
+// t="alarm.ack"   REQUIRED: { t, acks:[{id, rev, gen?, user?}] }   OPTIONAL: ts, alarm(single-entry shim).
+//
+// CLIENT RELIABILITY (this file). State: Map<id,{gen,rev,sev,acked}>. Ordering cmp := (gen,rev) lex.
+//  On EVERY alarm / alarm.clear frame:
+//   1. ALWAYS enqueue a transport-ack for (id,gen,rev) — duplicates, replays AND clears included
+//      (batched ≤250ms; one ack per id at the highest seen (gen,rev)).  → a re-sent alarm is re-ACKed.
+//   2. alarm.clear → delete map[id]; remove banner. Server-authoritative removal (≠ user-ACK).
+//   3. alarm with (gen,rev) ≤ seen → dup/resend/reorder: do NOT re-render, re-beep, or touch acked.
+//   4. alarm, id UNSEEN (or update on unseen) → NEW: fire banner; map[id]={gen,rev,acked:false}.
+//   5. alarm, (gen,rev) > seen → UPDATE: re-render; PRESERVE acked when sev unchanged, RESET acked
+//      on escalation to "critical" (the alarms.js beep is a poll over !acked && critical).
+//  THREE INDEPENDENT SIGNALS: receive (transport-ACK, automatic) ≠ silence (user-ACK, manual,
+//  never stops resends) ≠ resolve (server alarm.clear).
+//  SAFETY INVARIANT: alarm handling returns BEFORE the everEngine/lastFrameAt/lastSeq nav block and
+//  never calls onState/classify — an alarm burst can NEVER make a dead nav feed read LIVE.
+//
+// COALESCING EXEMPTION (CONTRACT-9): only nav-state frames (snapshot/delta + legacy full frames)
+//  reach emitState() and are coalesced latest-wins; alarms/commands/ping return earlier in onFrame
+//  and pass through verbatim. The egress-coalescer wire predicate — isCoalescable(f) := f.t ∈
+//  {"snapshot","delta"} — is documented in docs/CONTRACT-ALARM-SCHEMA.md §6.
+//
+// FAIL-FAST: nav-client is the decode boundary, so a non-conformant alarm frame is logged LOUDLY
+// (which REQUIRED field is missing/invalid) the moment it arrives — never silently coerced behind a
+// default. A renderable alarm is still processed (a safety client must not DROP an alarm), but the
+// weak link is surfaced immediately so the producer can be fixed.
+// BACK-COMPAT: a minimal {t:"alarm",kind,sev,msg} frame still renders (id defaults to "<kind>"),
+// flagged non-conformant. If a richer consumer wires opts.onAlarm/opts.onAlarmClear (SHELL/ALARM
+// tasks) it gets the full id-keyed lifecycle; otherwise this client falls back to the legacy onStatus
+// phase:'alarm' path (deduped), so today's index.html → __alarms.fromEngine() keeps working with ZERO
+// change to those files.
+// ===========================================================================================
 (function () {
   function mergeState(base, patch) {
     const out = base ? JSON.parse(JSON.stringify(base)) : {};
@@ -37,11 +100,22 @@
     const p = (s && s.sources && s.sources.pos) || (s && s.posSource);
     return !!p && p !== 'simulated' && p !== 'sim';
   };
-
   window.HelmNavClient = function (onState, onStatus, opts) {
     opts = opts || {};
     const LIVE_MS = 3000, STALE_MS = 10000;        // age thresholds
     const BACKOFF_CAP = 8000, BACKOFF_BASE = 400;  // reconnect schedule
+    const ACK_DEBOUNCE_MS = 250;                   // batch transport-acks into one frame (CONTRACT-10)
+    // latest-wins render coalescing (CONTRACT-9). Default on; one render per animation frame.
+    // Overridable: opts.coalesce===false restores synchronous onState; opts.scheduleFrame for tests.
+    const coalesce = opts.coalesce !== false;
+    // rAF gives smooth foreground rendering, but rAF is SUSPENDED in a hidden tab — fall back to a
+    // timer there so coalesced nav state (and the client-side alarm/CPA evaluation applyNav drives
+    // off it) keeps flushing while backgrounded. The 500ms watchdog is a second safety net for the
+    // visible→hidden transition. Override via opts.scheduleFrame (tests pass a manual flusher).
+    const scheduleFrame = opts.scheduleFrame || (cb => {
+      if (typeof requestAnimationFrame === 'function' && (typeof document === 'undefined' || document.visibilityState !== 'hidden')) requestAnimationFrame(cb);
+      else setTimeout(cb, 16);
+    });
     const status = (phase, extra) => {
       const ep = window.HelmEndpoint ? HelmEndpoint.describe() : '(unresolved)';
       try { onStatus && onStatus(Object.assign({ phase, endpoint: ep }, extra)); }
@@ -54,8 +128,101 @@
     let everEngine = false;    // did we ever receive an engine frame?
     let ws = null, attempt = 0, reconnectTimer = null, watchdog = null, closed = false;
     let sim = null;            // sim interval id, if running
+    let emitPending = false;   // a coalesced onState flush is scheduled
+    let stateDirty = false;    // state merged but not yet delivered to onState (drives the watchdog safety-flush)
+
+    // ---- reliable-alarm state (CONTRACT-10) ----
+    const alarmState = new Map();   // id -> { gen, rev, sev, acked }
+    const ackQ = new Map();         // id -> { gen, rev, user }  (highest-seen, flushed ≤ACK_DEBOUNCE_MS)
+    let ackTimer = null;
+    let warnedNoClear = false;      // one-shot warn: alarm.clear arrived but no onAlarmClear wired
+    const alarmCmp = (g1, r1, g2, r2) => (g1 !== g2 ? g1 - g2 : r1 - r2);
+
     const startSim = () => { if (opts.sim && !sim && !everEngine) { sim = opts.sim(onState); status('sim'); } };
     const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
+
+    // Low-level send over the nav socket. Returns false if not open (the server's resend loop will
+    // redeliver any alarm, and we re-ack on the next receipt — so a dropped ack self-heals).
+    function sendRaw(obj) {
+      if (ws && ws.readyState === 1) {
+        try { ws.send(JSON.stringify(obj)); return true; }
+        catch (e) { console.warn('HelmNavClient: send failed:', e && e.message); }
+      }
+      return false;
+    }
+
+    // ---- transport/user ACK batcher: one alarm.ack per window, highest (gen,rev) per id ----
+    function flushAcks() {
+      ackTimer = null;
+      if (!ackQ.size) return;
+      const acks = [];
+      ackQ.forEach((v, id) => { const e = { id, rev: v.rev }; if (v.gen) e.gen = v.gen; if (v.user) e.user = true; acks.push(e); });
+      ackQ.clear();
+      const frame = { t: 'alarm.ack', acks };
+      if (acks.length === 1) frame.alarm = acks[0].id;   // back-compat shim for single-entry ack
+      sendRaw(frame);
+    }
+    function enqueueAck(id, gen, rev, user) {
+      const cur = ackQ.get(id);
+      if (!cur || alarmCmp(gen, rev, cur.gen, cur.rev) > 0) ackQ.set(id, { gen, rev, user: !!user || (cur && cur.user) || false });
+      else if (user && cur) cur.user = true;             // newer rev already queued; just mark user-silenced
+      if (!ackTimer && !closed) ackTimer = setTimeout(flushAcks, ACK_DEBOUNCE_MS);
+    }
+
+    // ---- the single alarm decode + reliability point (frozen schema above) ----
+    function handleAlarm(msg) {
+      // FAIL-FAST at the decode boundary (nav-client is the singly-owned alarm decoder): surface a
+      // non-conformant producer LOUDLY the moment it appears instead of silently coercing it behind a
+      // default. A safety client still PROCESSES a renderable alarm — dropping one is worse than
+      // rendering it — but the weak link is logged immediately so it can be fixed, never masked.
+      const id = msg.id != null ? msg.id : msg.kind;   // singleton convention: id defaults to "<kind>"
+      if (id == null) { console.warn('HelmNavClient: alarm frame has neither id nor kind — unrenderable, dropping:', msg); return; }
+      const bad = [];
+      if (msg.id == null) bad.push('id REQUIRED (defaulted to kind "' + id + '")');
+      if (msg.t === 'alarm') {                                  // required set for an active record (§2)
+        if (msg.op !== 'raise' && msg.op !== 'update') bad.push('op="' + msg.op + '" (expect raise|update)');
+        if (typeof msg.rev !== 'number' || msg.rev < 1 || (msg.rev | 0) !== msg.rev) bad.push('rev=' + msg.rev + ' (expect integer 1..2^31-1)');
+        if (typeof msg.kind !== 'string' || !msg.kind) bad.push('kind REQUIRED');
+        if (msg.sev !== 'critical' && msg.sev !== 'warning' && msg.sev !== 'info') bad.push('sev="' + msg.sev + '" (expect critical|warning|info)');
+        if (typeof msg.msg !== 'string') bad.push('msg REQUIRED');
+      }
+      if (bad.length) console.warn('HelmNavClient: NON-CONFORMANT alarm frame (id=' + id + ') — ' + bad.join('; ') + '. See docs/CONTRACT-ALARM-SCHEMA.md §2.', msg);
+      const gen = msg.gen | 0, rev = msg.rev | 0;
+      enqueueAck(id, gen, rev, false);                          // STEP 1: ALWAYS transport-ack
+      if (msg.t === 'alarm.clear') {                            // STEP 2: server-authoritative removal
+        alarmState.delete(id);
+        if (opts.onAlarmClear) { try { opts.onAlarmClear(id, msg); } catch (e) { console.error('HelmNavClient: onAlarmClear handler threw:', e); } }
+        else if (!warnedNoClear) { warnedNoClear = true; console.warn('HelmNavClient: alarm.clear for "' + id + '" dropped — no opts.onAlarmClear wired, so the legacy banner cannot be auto-removed. Wire onAlarm/onAlarmClear per docs/CONTRACT-ALARM-SCHEMA.md §9.'); }
+        return;
+      }
+      const seen = alarmState.get(id);
+      if (seen && alarmCmp(gen, rev, seen.gen, seen.rev) <= 0) return;   // STEP 3: dup/resend/reorder — no re-fire
+      const escalated = !!(seen && msg.sev === 'critical' && seen.sev !== 'critical');
+      alarmState.set(id, { gen, rev, sev: msg.sev, acked: (seen && !escalated) ? seen.acked : false });
+      const meta = { isNew: !seen, escalated };                 // STEP 4 (new) / STEP 5 (update)
+      if (opts.onAlarm) {
+        try { opts.onAlarm(msg, meta); } catch (e) { console.error('HelmNavClient: onAlarm handler threw:', e); }
+      } else {
+        // Legacy fallback (deduped): today's index.html routes phase:'alarm' → __alarms.fromEngine(msg),
+        // which reads {kind,sev,msg}. We only reach here on a raise/true-update, so re-sends never re-fire.
+        status('alarm', { alarm: msg, meta: meta });
+      }
+    }
+
+    // ---- coalesced render (CONTRACT-9): merge every frame, emit onState at most once per frame ----
+    function deliverState() {
+      if (closed || !state) return;
+      stateDirty = false;
+      try { onState(state); } catch (e) { console.error('HelmNavClient: onState handler threw:', e); }
+    }
+    function flushState() { emitPending = false; if (stateDirty) deliverState(); }
+    function emitState() {
+      if (!coalesce) { deliverState(); return; }
+      stateDirty = true;
+      if (emitPending) return;                       // a flush is already scheduled — latest-wins
+      emitPending = true;
+      scheduleFrame(flushState);
+    }
 
     function classify() {
       if (!everEngine) return;                     // sim/connecting phases are driven elsewhere
@@ -66,8 +233,16 @@
     }
 
     function onFrame(msg) {
+      if (closed) return;                                          // stop() quiesces every inbound path
       if (msg.t === 'ping') { lastFrameAt = Date.now(); return; }   // heartbeat keeps us LIVE
-      if (msg.t === 'alarm') { status('alarm', { alarm: msg }); return; }
+      // Alarm class — reliable, coalescing-exempt, and MUST stay above the nav block so it never
+      // touches lastFrameAt/everEngine/lastSeq (the age-based staleness safety rule). PREFIX-CONSUMING:
+      // the WHOLE alarm.* family returns here, so a stray or future alarm.* subtype can never fall
+      // through to the nav block and fake LIVE.
+      if (msg.t === 'alarm' || (typeof msg.t === 'string' && msg.t.indexOf('alarm.') === 0)) {
+        if (msg.t === 'alarm' || msg.t === 'alarm.clear') handleAlarm(msg);
+        return;
+      }
       if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0)) {
         try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }   // command-plane replies
         return;   // not nav state — do not merge or reset the staleness watchdog
@@ -85,7 +260,7 @@
       } else {
         state = mergeState(msg.t === 'snapshot' ? {} : state, msg);
       }
-      try { onState(state); } catch (e) { console.error('HelmNavClient: onState handler threw:', e); }   // surface, don't swallow
+      emitState();   // latest-wins coalesced onState (CONTRACT-9)
       classify();
     }
 
@@ -104,7 +279,11 @@
       catch (e) { console.error('HelmNavClient: WebSocket(' + url + ') failed to construct:', e && e.message); scheduleReconnect(); return; }
 
       ws.onopen = () => {
-        try { ws.send(JSON.stringify({ t: 'hello', lastSeq, subscribe: opts.subscribe || ['nav', 'route', 'alarms'] })); }
+        // Resume hint: lastSeq for nav delta-since; lastAlarmAck (additive/optional) lets the server
+        // skip re-asserting alarms we already hold (omitting it ⇒ full re-assert, the safe default).
+        const hello = { t: 'hello', lastSeq, subscribe: opts.subscribe || ['nav', 'route', 'alarms'] };
+        if (alarmState.size) { const la = []; alarmState.forEach((v, id) => la.push({ id, gen: v.gen, rev: v.rev })); hello.lastAlarmAck = la; }
+        try { ws.send(JSON.stringify(hello)); }
         catch (e) { console.warn('HelmNavClient: hello send failed:', e && e.message); }
       };
       ws.onmessage = e => {
@@ -136,7 +315,13 @@
     const graceMs = opts.simGraceMs != null ? opts.simGraceMs : 1500;
     setTimeout(() => { if (!everEngine) startSim(); }, graceMs);
 
-    watchdog = setInterval(classify, 500);
+    watchdog = setInterval(() => {
+      classify();
+      // Safety net: if a coalesced flush is owed but the frame scheduler is starved (hidden tab → rAF
+      // suspended), force-deliver so client-side alarm/CPA evaluation (applyNav → alarms.onNav /
+      // collision.update) never silently stops while the badge still reads LIVE.
+      if (coalesce && stateDirty && !closed) deliverState();
+    }, 500);
     connect();
 
     return {
@@ -145,15 +330,22 @@
         if (ws) { try { ws.close(); } catch (e) {} ws = null; }
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
         if (watchdog) { clearInterval(watchdog); watchdog = null; }
+        if (ackTimer) { clearTimeout(ackTimer); ackTimer = null; }
+        ackQ.clear(); alarmState.clear();
         stopSim();
       },
       endpoint() { return HelmEndpoint.describe(); },
       // Send a command to the engine over the SAME nav socket (control-plane: conn.upsert/delete/list,
       // and routes/waypoints next). Returns false if the socket isn't open. Replies arrive via opts.onCommand.
-      send(obj) {
-        if (ws && ws.readyState === 1) { try { ws.send(JSON.stringify(obj)); return true; } catch (e) { console.warn('HelmNavClient: send failed:', e && e.message); } }
-        return false;
-      }
+      send(obj) { return sendRaw(obj); },
+      // USER-ACK (CONTRACT-10): the skipper silenced these alarm ids. Marks them user-acked on the wire
+      // (user:true) so the helm + remote phones stop beeping; never stops the server resend loop and
+      // never removes the alarm (only a server alarm.clear does). No-op for unknown ids.
+      ackAlarms(ids) {
+        (ids || []).forEach(id => { const s = alarmState.get(id); if (s) { s.acked = true; enqueueAck(id, s.gen, s.rev, true); } });
+      },
+      // Read-only view of the live alarm set (for consumers/tests). Never the source of truth for the banner.
+      alarms() { const o = {}; alarmState.forEach((v, id) => { o[id] = { gen: v.gen, rev: v.rev, sev: v.sev, acked: v.acked }; }); return o; }
     };
   };
 })();
