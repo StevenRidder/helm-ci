@@ -88,5 +88,63 @@
     if (Math.abs(n) < 1) return 'steady';
     return (n > 0 ? '↻ ' : '↺ ') + Math.abs(Math.round(n)) + '°/min';
   }
-  global.HelmAisMeta = { flag: flag, midOf: midOf, navStatus: navStatus, navStyle: navStyle, shipType: shipType, rot: rot };
+
+  // ---- AIS symbology classification (AIS-2) ----
+  // Each target carries a `class` code (mirrors index.html's AIS_CLASS: 0 Class A, 1 Class B,
+  // 2 AtoN, 3 Base station, 5 DSC, 6 SART, 7 ARPA, 9 Meteo). symbolKind() picks ONE symbol kind
+  // per target so the map draws it exactly once; a target unheard past LOST_SEC is "lost" (the
+  // OpenCPN cross-out) regardless of class — except a SART/MOB, where distress trumps lost.
+  var LOST_SEC = 360;                          // 6 min unheard -> lost cross-out (OpenCPN default)
+
+  // Returns 'classA' | 'classB' | 'aton' | 'base' | 'sart' | 'lost'. class is authoritative;
+  // shipType is only used to guess A vs B when the engine hasn't sent a class field yet.
+  function symbolKind(t) {
+    if (!t) return 'classB';
+    var cls = t.class == null ? null : +t.class;
+    var mmsi = String(t.mmsi == null ? '' : t.mmsi);
+    var pfx3 = mmsi.substr(0, 3);
+    // SART / MOB / EPIRB — class 6, nav status 14, or the 970/972/974 MMSI prefix. Highest priority.
+    if (cls === 6 || +t.navStatus === 14 || pfx3 === '970' || pfx3 === '972' || pfx3 === '974') return 'sart';
+    if (cls === 2 || mmsi.substr(0, 2) === '99') return 'aton';     // AtoN (also 99xxxxxxx MMSI)
+    if (cls === 3 || mmsi.substr(0, 2) === '00') return 'base';     // base station (00xxxxxxx MMSI)
+    if (isLost(t)) return 'lost';
+    if (cls === 1) return 'classB';
+    if (cls === 0) return 'classA';
+    var st = +t.shipType || +t.type;                                // no class yet -> infer from type
+    if (st === 36 || st === 37) return 'classB';                    // sailing / pleasure -> usually Class B
+    return 'classA';
+  }
+  function isLost(t) { return !!(t && t.ageSec != null && +t.ageSec > LOST_SEC); }
+
+  // Glyph + short label per kind. Plain Unicode so they render in the bundled Noto Sans font
+  // (no sprite assets needed). `rot` = whether the glyph rotates with the target's COG.
+  var SYMBOL = {
+    classA: { glyph: '▲', label: 'Class A',  rot: true  },
+    classB: { glyph: '▲', label: 'Class B',  rot: true  },
+    aton:   { glyph: '◆', label: 'AtoN',     rot: false },
+    base:   { glyph: '◉', label: 'Base stn', rot: false },
+    sart:   { glyph: '✚', label: 'SART/MOB', rot: false },
+    lost:   { glyph: '▲', label: 'Lost',     rot: true  }
+  };
+  function symbol(kind) { return SYMBOL[kind] || SYMBOL.classB; }
+
+  // ---- moored / slow-target suppression (AIS-6, mirrors OpenCPN g_ShowMoored_Kts) ----
+  // A target is suppressible when it's essentially stationary: SOG at/below the threshold AND
+  // either moored/at-anchor by nav status, or no nav status at all (the common sim/Class-B case).
+  // SAFETY: never suppress a SART/MOB or anything actively dangerous — callers must OR-guard that.
+  function isMooredSlow(t, kts) {
+    if (!t) return false;
+    var thr = (kts == null ? 0.5 : +kts);
+    var sog = +t.sog;
+    if (!isFinite(sog) || sog > thr) return false;             // moving -> always shown
+    var ns = t.navStatus == null ? null : +t.navStatus;
+    return ns == null || ns === 1 || ns === 5;                 // at-anchor (1) / moored (5) / unknown
+  }
+
+  global.HelmAisMeta = {
+    flag: flag, midOf: midOf, navStatus: navStatus, navStyle: navStyle,
+    shipType: shipType, rot: rot,
+    symbolKind: symbolKind, symbol: symbol, isLost: isLost, LOST_SEC: LOST_SEC,
+    isMooredSlow: isMooredSlow
+  };
 })(typeof window !== 'undefined' ? window : this);
