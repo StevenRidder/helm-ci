@@ -341,6 +341,54 @@ def gen_soundg():
         json.dump(fc, f)
     print(f'  soundings: {len(feats)} spot depths -> soundg.geojson')
 
+def gen_depare():
+    """S-57 DEPARE (depth areas): filled depth-band polygons keyed on DRVAL1
+    (shallow depth of the band) — the chart's blue depth gradient. Classifies a
+    grid into bands and run-length-merges each row into rectangles (seamless,
+    no gaps, far fewer polygons than per-cell)."""
+    minlon, minlat, maxlon, maxlat = (-81.97, 24.40, -81.56, 24.66)
+    nx, ny = 170, 115
+    dx, dy = (maxlon - minlon) / nx, (maxlat - minlat) / ny
+    edges = [0, 2, 5, 10, 15, 20, 30, 40, 60, 80, 120, 1e9]
+
+    def band(depth):
+        for k in range(len(edges) - 1):
+            if edges[k] <= depth < edges[k + 1]:
+                return edges[k]
+        return edges[-2]
+
+    feats = []
+    for j in range(ny):
+        latT, latB = maxlat - j * dy, maxlat - (j + 1) * dy
+        run_start, run_band = None, None
+        def flush(i_end):
+            nonlocal run_start, run_band
+            if run_start is None:
+                return
+            lonL = round(minlon + run_start * dx, 5)
+            lonR = round(minlon + i_end * dx, 5)
+            feats.append({'type': 'Feature',
+                'geometry': {'type': 'Polygon', 'coordinates': [[
+                    [lonL, round(latT, 5)], [lonR, round(latT, 5)],
+                    [lonR, round(latB, 5)], [lonL, round(latB, 5)], [lonL, round(latT, 5)]]]},
+                'properties': {'DRVAL1': run_band}})
+            run_start, run_band = None, None
+        for i in range(nx):
+            e = elevation(minlon + (i + 0.5) * dx, (latT + latB) / 2)
+            b = None if e >= -0.2 else band(-e)
+            if b != run_band:
+                flush(i)
+                if b is not None:
+                    run_start, run_band = i, b
+        flush(nx)
+    fc = {'type': 'FeatureCollection',
+          'metadata': {'note': 'Synthetic depth areas — NOT FOR NAVIGATION'},
+          'features': feats}
+    with open(os.path.join(ROOT, 'depare.geojson'), 'w') as f:
+        json.dump(fc, f)
+    print(f'  depare: {len(feats)} depth-area polygons -> depare.geojson')
+
+
 def gen_places():
     """S-57-ish points of interest the base chart's places layer expects
     (kind + name): marinas, anchorages, fuel, etc. around Key West."""
@@ -391,6 +439,7 @@ if __name__ == '__main__':
     gen_radar()
     gen_contours()
     gen_soundg()
+    gen_depare()
     gen_places()
     gen_wind()
     # derived binary packs (pure-stdlib, no GDAL/tippecanoe)

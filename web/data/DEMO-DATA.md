@@ -24,7 +24,7 @@ python3 pipeline/gen_demo_data.py        # writes DEM, relief, contours, soundin
 | `radar/` + `manifest.json` | 6 precip frames | Lab · Temporal |
 | `places.geojson` | marina/anchorage/fuel POIs (`kind`,`name`) | base chart `places-*` |
 | `wind_points.geojson` | wind field (`dir_deg`,`speed_kt`) | base chart `wind-arrows` |
-| `depare.geojson` | depth-area fill (`DRVAL1`) — empty stub (needs a polygonizer) | base chart `depare-fill` |
+| `depare.geojson` | depth-area fill bands (`DRVAL1`) — run-length-merged grid | base chart `depare-fill` |
 
 Why committed (vs. the `.gitignore` here that excludes pipeline output): this is
 small, synthetic, and *not* license-bound, and the point is an instantly-runnable
