@@ -6,26 +6,24 @@ The C++ engine is the safety core (on the boat); everything web-native orbits it
 
 ---
 
-## ⚠️ Build gotcha — read this BEFORE you build or run (do not rediscover it)
+## Build & run — the one-origin server (read before you build)
 
-**`helm-server` is the real one-origin binary, but `engine/bootstrap.sh` does not build it.**
+**`helm-server` is the real one-origin binary, and `engine/bootstrap.sh` builds it by default.**
 
 - `engine/vendor/cli/helm_server.cpp` is a complete **one-origin server**: nav WebSocket (`/nav`) +
   S-52 tiles (`/chart/{z}/{x}/{y}.png`) + `/health` + `/catalog` + the static UI, all on **one port
   (default 8080)**. Its `helm-server` target is defined in `engine/patches/0003`, and it's what
-  `.claude/run-helm-server.sh` and the `helm-engine` entry in `.claude/launch.json` actually exec.
-- **The trap:** `engine/bootstrap.sh` builds only `helm-chartrender chart-spike helm-tiles
-  helm-engine` (see the `cmake --build … --target` line). It **omits `helm-server`**. So after a
-  clean `bootstrap.sh`, `…/build/cli/helm-server` **does not exist**, and any one-origin launcher
-  fails with "no such binary." This is **not** a sign the merge is unbuilt — the code is complete; the
-  build target is just missing from the script.
-- **Tracked as `ENGINE-12`** on the plan board. Until it lands, to get the one-origin binary:
-  ```bash
-  engine/bootstrap.sh                                            # clone @ pin → patch → build the rest
-  cmake --build /tmp/helm-opencpn/build --target helm-server -j  # then build helm-server explicitly
-  ```
-  Or run the two separate binaries instead — `helm-engine` (nav WS :8081) + `helm-tiles` (tiles
-  :8082) — per [docs/RUNBOOK.md](docs/RUNBOOK.md). Both are built by bootstrap.
+  `.claude/run-helm-server.sh` and the `helm-engine` entry in `.claude/launch.json` exec.
+- `engine/bootstrap.sh` builds `helm-chartrender chart-spike helm-tiles helm-engine **helm-server**`
+  (the `cmake --build … --target` line), then runs the headless seam check **and** the GPL containment
+  guard (`engine/containment-check.sh`). After a clean `bootstrap.sh`, `…/build/cli/helm-server`
+  exists — no manual extra step. *(History: before `ENGINE-12` landed, the target was omitted and you
+  had to `cmake --build … --target helm-server` by hand. That trap is gone; if an old checkout's
+  bootstrap omits it, that's the tell you're behind `main`.)*
+- **Prove it end-to-end after a build:** `engine/test-engine.sh` — one-origin server (framing /
+  health / S-52 tiles / caching) + nav core (per-fix math + arrival auto-advance) + GPL containment,
+  ~17 checks. Or run the nav-only `helm-engine` (WS :8081) + `helm-tiles` (:8082) separately per
+  [docs/RUNBOOK.md](docs/RUNBOOK.md).
 
 Other build prerequisites (wxWidgets **3.2** pin, GNU `patch`/`gpatch`, Xcode CLT) are checked by
 `bootstrap.sh`, which fails loud with the exact fix — don't guess those either; read its output.
