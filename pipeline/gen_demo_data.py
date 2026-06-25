@@ -106,14 +106,16 @@ def elevation(lon, lat):
         return (land - 0.5) / 0.5 * 5.0 + 0.3 + 0.4 * _fbm(lon * 2, lat * 2)
 
     n = _fbm(lon, lat)
-    if dn >= 0:  # north — shallow Florida Bay flats, gentle to ~ -4 m, organic
-        base = -4.0 * (1 - math.exp(-dn / 0.05))
-        return min(-0.2, base + 0.7 * n)
-    # south — reef crest, then a steep drop into the Straits of Florida
+    if dn >= 0:  # north — shallow Florida Bay flats: -2 m at the keys -> ~-4 m
+        base = -2.0 - 2.0 * (1 - math.exp(-dn / 0.05))
+        return min(-0.3, base + 0.7 * n)
+    # south — reef crest then a steep drop into the Straits. Both branches meet
+    # at -2 m at dn=0 (continuous) so contours don't pile into a seam line.
     d = -dn
-    reef = -3.0 - 9.0 * (1 - math.exp(-d / 0.012))
-    shelf = -120.0 * (1 / (1 + math.exp(-(d - 0.06) / 0.02)))
-    return reef + shelf + 1.6 * n * math.exp(-d / 0.05)
+    s0 = 1 / (1 + math.exp(0.06 / 0.02))                       # shelf value at d=0
+    shelf = 118.0 * (1 / (1 + math.exp(-(d - 0.06) / 0.02)) - s0)
+    base = -2.0 - 6.0 * (1 - math.exp(-d / 0.012)) - shelf
+    return base + 1.6 * n * math.exp(-d / 0.05)
 
 # ---------------------------------------------------------------- encoders
 def terrarium_rgb(e):
@@ -295,7 +297,10 @@ def gen_contours():
                 round(p1[1] + (p2[1] - p1[1]) * t, 5))
 
     feats = []
-    levels = list(range(-120, 1, 5))
+    # Variable interval: fine detail in the navigable shallows, calmer deep lines
+    # (a uniform 5 m interval bunches into scan-lines down the shelf).
+    levels = list(range(-30, 1, 5)) + [-40, -50, -70, -90, -120]
+    majors = {0, 10, 20, 30, 50, 70, 90, 120}   # depth values drawn as index lines
     for L in levels:
         segs = []
         for j in range(ny - 1):
@@ -328,7 +333,7 @@ def gen_contours():
         if segs:
             feats.append({'type': 'Feature',
                 'geometry': {'type': 'MultiLineString', 'coordinates': segs},
-                'properties': {'ele': L, 'depth_m': -L, 'level': 1 if L % 25 == 0 else 0}})
+                'properties': {'ele': L, 'depth_m': -L, 'level': 1 if -L in majors else 0}})
     fc = {'type': 'FeatureCollection',
           'metadata': {'note': 'Synthetic depth contours — NOT FOR NAVIGATION',
                        'interval_m': 5, 'levels': len(feats)},
