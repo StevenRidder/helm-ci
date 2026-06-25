@@ -77,6 +77,7 @@
 
     // ---- chart highlight (intercept line own→target + pulsing ring) ----
     function ensureLayers() {
+      if (!map.getStyle()) return;   // startup-race guard: addSource/addLayer throw "Style is not done loading" before the style SPEC loads; re-runs next nav frame. (Guard on getStyle()/_loaded, NOT isStyleLoaded() — the latter also waits on every source, which can stay false indefinitely and would suppress the overlay.)
       if (map.getSource('collision')) return;
       map.addSource('collision', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
       map.addLayer({

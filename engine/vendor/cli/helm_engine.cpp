@@ -327,14 +327,23 @@ static void sk_start(std::string url) {
   g_sk->start();
 }
 static void nmea_listener() {
-  int srv = ::socket(AF_INET, SOCK_STREAM, 0);
-  if (srv < 0) { std::fprintf(stderr, "NMEA: socket() failed; real-data override disabled\n"); return; }
-  int yes = 1; ::setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
-  sockaddr_in a{}; a.sin_family = AF_INET; a.sin_port = htons(kNmeaPort);
-  a.sin_addr.s_addr = inet_addr("127.0.0.1");
-  if (::bind(srv, (sockaddr*)&a, sizeof a) < 0 || ::listen(srv, 4) < 0) {
-    std::fprintf(stderr, "NMEA: bind/listen on %d failed; real-data override disabled\n", kNmeaPort);
-    ::close(srv); return;
+  int srv = -1;
+  // Retry the bind with capped backoff instead of giving up after one shot. A transiently held
+  // :10110 (another helm-server/instance) would otherwise PERMANENTLY disable real-data override
+  // until restart, with only a single stderr line — a broken feed that never recovers and never
+  // surfaces. (fail-and-fix-early hardening; the frame-level feed-health signal is a separate
+  // CONTRACT-10/ALARM-9 item, not this change.)
+  for (int backoff = 1; ; backoff = std::min(backoff * 2, 30)) {
+    srv = ::socket(AF_INET, SOCK_STREAM, 0);
+    if (srv >= 0) {
+      int yes = 1; ::setsockopt(srv, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof yes);
+      sockaddr_in a{}; a.sin_family = AF_INET; a.sin_port = htons(kNmeaPort);
+      a.sin_addr.s_addr = inet_addr("127.0.0.1");
+      if (::bind(srv, (sockaddr*)&a, sizeof a) == 0 && ::listen(srv, 4) == 0) break;   // bound
+      ::close(srv); srv = -1;
+    }
+    std::fprintf(stderr, "NMEA: bind/listen on %d failed; real-data override paused, retrying in %ds\n", kNmeaPort, backoff);
+    std::this_thread::sleep_for(std::chrono::seconds(backoff));
   }
   std::printf("NMEA 0183 input: tcp://127.0.0.1:%d  (real data overrides sim per-field)\n", kNmeaPort);
   std::fflush(stdout);

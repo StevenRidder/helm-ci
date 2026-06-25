@@ -312,11 +312,24 @@ static const char* mime_for(const std::string& path) {
   return "text/plain; charset=utf-8";
 }
 // returns false if the path escapes the root or the file is missing
+// Percent-decode a request path so files with spaces/UTF-8 resolve (e.g. the glyph dir
+// "fonts/Noto Sans Regular/" arrives as fonts/Noto%20Sans%20Regular/ — without this it 404s
+// and the map renders with no labels).
+static std::string url_decode(const std::string& s) {
+  auto hex = [](char c) -> int { if (c>='0'&&c<='9') return c-'0'; if (c>='a'&&c<='f') return c-'a'+10; if (c>='A'&&c<='F') return c-'A'+10; return -1; };
+  std::string o; o.reserve(s.size());
+  for (size_t i = 0; i < s.size(); ++i) {
+    if (s[i] == '%' && i + 2 < s.size()) { int h = hex(s[i+1]), l = hex(s[i+2]); if (h >= 0 && l >= 0) { o += (char)(h*16 + l); i += 2; continue; } }
+    o += s[i];
+  }
+  return o;
+}
 static bool serve_static(const std::string& uri, std::string& body, std::string& mime) {
   std::string p = uri;
   size_t q = p.find('?'); if (q != std::string::npos) p = p.substr(0, q);
+  p = url_decode(p);                                             // %20 etc. so 'fonts/Noto Sans Regular/' resolves
   if (p == "/" || p.empty()) p = "/index.html";
-  if (p.find("..") != std::string::npos) return false;           // no path traversal
+  if (p.find("..") != std::string::npos) return false;           // no path traversal (checked AFTER decode)
   std::string full = g_webroot + p;
   std::ifstream f(full, std::ios::binary);
   if (!f) return false;
