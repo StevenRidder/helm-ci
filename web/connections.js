@@ -42,6 +42,7 @@
         '<div class="conn-main">' +
           '<div class="conn-name">' + esc(c.name || c.id) + '</div>' +
           '<div class="conn-meta">' + esc(c.type) + ' · ' + esc(c.address || '*') + ':' + c.port +
+            ' · prio ' + (c.priority || 0) +
             ' · <span style="color:' + st.color + '">' + st.label + '</span>' +
             (live ? ' · ' + c.sentences + ' msg · ' + fmtAge(c.ageSec) : '') +
             (c.error && c.status === 'error' ? ' · <span style="color:var(--danger)">' + esc(c.error) + '</span>' : '') +
@@ -65,6 +66,7 @@
     formEl.querySelector('#conn-f-type').value = c ? c.type : 'tcp-client';
     formEl.querySelector('#conn-f-addr').value = c ? (c.address || '') : '';
     formEl.querySelector('#conn-f-port').value = c ? c.port : '';
+    const prioEl = formEl.querySelector('#conn-f-prio'); if (prioEl) prioEl.value = c ? (c.priority || 0) : '';
     formEl.querySelector('#conn-f-en').checked = c ? c.enabled !== false : true;
     formEl.querySelector('#conn-f-name').focus();
   }
@@ -79,6 +81,7 @@
       address: formEl.querySelector('#conn-f-addr').value.trim(),
       port: parseInt(formEl.querySelector('#conn-f-port').value, 10),
       dataProtocol: type === 'signalk' ? 'signalk' : 'nmea0183',
+      priority: parseInt((formEl.querySelector('#conn-f-prio') || {}).value, 10) || 0,   // CONN-6: higher wins; lower fills in on failover
       enabled: formEl.querySelector('#conn-f-en').checked,
     };
     if (editingId) conn.id = editingId;
@@ -104,6 +107,20 @@
     msgEl  = document.getElementById('conn-msg');
     if (!listEl || !formEl) return;
     formEl.querySelector('#conn-f-type').innerHTML = TYPES.map(t => '<option value="' + t.v + '">' + t.label + '</option>').join('');
+    // CONN-6: inject a Priority field into the form (kept in connections.js — CONN's lane, no shell edit).
+    // Engine merge (helm_server.cpp): a fresh higher-priority source wins; a lower-priority one fills a
+    // field only when the current holder goes stale (failover), and the primary reclaims when it returns.
+    (function () {
+      const portEl = formEl.querySelector('#conn-f-port');
+      const portFld = portEl && portEl.closest('.conn-fld');
+      if (portFld && !formEl.querySelector('#conn-f-prio')) {
+        const lab = document.createElement('label');
+        lab.className = 'conn-fld';
+        lab.innerHTML = 'Priority <span style="color:var(--cdim);font-size:11px">(higher wins; lower fills in on failover)</span>' +
+                        '<input id="conn-f-prio" type="number" min="0" max="100" step="1" placeholder="0">';
+        portFld.insertAdjacentElement('afterend', lab);
+      }
+    })();
     document.getElementById('conn-add-btn').addEventListener('click', () => showForm(null));
     document.getElementById('conn-cancel').addEventListener('click', hideForm);
     formEl.querySelector('#conn-f-type').addEventListener('change', e => {
