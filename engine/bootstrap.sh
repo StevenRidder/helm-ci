@@ -86,8 +86,16 @@ echo "  pinned:    $OPENCPN_REMOTE @ $OPENCPN_SHA"
 say "fetch OpenCPN @ $OPENCPN_SHA -> $OCPN_DIR"
 [ "$DO_CLEAN" = 1 ] && rm -rf "$OCPN_DIR"
 if [ -d "$OCPN_DIR/.git" ]; then
-  echo "  reusing clone; hard-resetting to pinned SHA"
-  git -C "$OCPN_DIR" fetch --depth 1 origin "$OPENCPN_SHA"
+  # The pinned SHA is immutable — if it's already in the clone, DON'T re-fetch.
+  # (fail-and-fix-early robustness: a redundant network fetch was failing the whole
+  # incremental rebuild on a transient blip — "git-remote-https died of signal 15" —
+  # when no network was needed at all.)
+  if git -C "$OCPN_DIR" cat-file -e "${OPENCPN_SHA}^{commit}" 2>/dev/null; then
+    echo "  reusing clone; pinned SHA already present — skipping fetch (offline-safe)"
+  else
+    echo "  reusing clone; fetching pinned SHA"
+    git -C "$OCPN_DIR" fetch --depth 1 origin "$OPENCPN_SHA"
+  fi
   git -C "$OCPN_DIR" checkout -q --detach "$OPENCPN_SHA"
   git -C "$OCPN_DIR" reset --hard -q "$OPENCPN_SHA"
   git -C "$OCPN_DIR" clean -fdq -e build   # keep the build dir for incremental rebuilds

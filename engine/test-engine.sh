@@ -24,7 +24,12 @@ REPO="$(cd "$HERE/.." && pwd)"
 BIN="${HELM_OCPN_DIR:-/tmp/helm-opencpn}/build/cli"
 export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
 SPORT="${HELM_TEST_PORT:-8077}"   # one-origin helm-server test port
-EPORT=8081                        # helm-engine nav WS port
+# Hermetic engine ports: default to FREE ephemeral ports so a concurrent helm-server/
+# helm-engine on a shared box can't steal :8081/:10110 and turn Section B's real-data
+# checks into misleading nav-core FAILs. Override with HELM_ENGINE_PORT / HELM_NMEA_PORT.
+free_port(){ python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));p=s.getsockname()[1];s.close();print(p)'; }
+EPORT="${HELM_ENGINE_PORT:-$(free_port)}"   # helm-engine nav WS port
+NPORT="${HELM_NMEA_PORT:-$(free_port)}"     # helm-engine NMEA 0183 / AIS ingest port
 
 pass=0; fail=0
 P(){ printf '\033[32m  PASS\033[0m  %s\n' "$*"; pass=$((pass+1)); }
@@ -34,15 +39,15 @@ jget(){ python3 -c 'import json,sys;exec("o=json.load(sys.stdin)\nfor k in sys.a
 
 [ -x "$BIN/helm-server" ] || { echo "no helm-server at $BIN — run engine/bootstrap.sh first"; exit 2; }
 
-inject_rmc(){ # lat lon  → send one valid GPRMC fix to the engine's NMEA port (10110)
-python3 - "$1" "$2" <<'PY'
+inject_rmc(){ # lat lon  → send one valid GPRMC fix to the engine's NMEA port ($NPORT)
+python3 - "$1" "$2" "$NPORT" <<'PY'
 import socket,sys
-lat=float(sys.argv[1]); lon=float(sys.argv[2]); la=abs(lat); lo=abs(lon)
+lat=float(sys.argv[1]); lon=float(sys.argv[2]); port=int(sys.argv[3]); la=abs(lat); lo=abs(lon)
 lats=f"{int(la):02d}{(la-int(la))*60:07.4f}"; lons=f"{int(lo):03d}{(lo-int(lo))*60:07.4f}"
 b=f"GPRMC,120000,A,{lats},{'N' if lat>=0 else 'S'},{lons},{'E' if lon>=0 else 'W'},5.0,015.0,250625,,"
 cs=0
 for c in b: cs^=ord(c)
-s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1',10110)); s.sendall(f"${b}*{cs:02X}\r\n".encode()); s.close()
+s=socket.socket(); s.settimeout(2); s.connect(('127.0.0.1',port)); s.sendall(f"${b}*{cs:02X}\r\n".encode()); s.close()
 PY
 }
 
@@ -86,31 +91,40 @@ kill $SPID 2>/dev/null; wait $SPID 2>/dev/null; rm -rf "$ST"
 
 # ---------- B) nav core: relocated UpdateProgress + auto-advance ----------
 hdr "B. Nav core: model UpdateProgress + auto-advance  (ENGINE-3 · ENGINE-7 · ENGINE-10)"
-pkill -f 'cli/helm-engine' 2>/dev/null; sleep 1
-"$BIN/helm-engine" >/tmp/te-engine.log 2>&1 &
+# Start the engine on its OWN (ephemeral) ports — no global `pkill helm-engine`,
+# which would also kill other agents' engines on a shared host.
+HELM_ENGINE_PORT=$EPORT HELM_NMEA_PORT=$NPORT "$BIN/helm-engine" >/tmp/te-engine.log 2>&1 &
 NPID=$!; sleep 1.5
-snap="$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 /)"
-shape=$(printf '%s' "$snap" | python3 -c 'import json,sys;a=json.load(sys.stdin).get("active",{});print(int(all(k in a for k in("eta","ttg","vmg","dtg","xte","nextWp")) and "legs" in a))' 2>/dev/null || echo 0)
-[ "$shape" = 1 ] && P "nav snapshot carries the full per-fix math (dtg/xte/eta/ttg/vmg/legs/nextWp)" || F "snapshot missing nav-math fields"
-psrc=$(printf '%s' "$snap" | jget sources.pos 2>/dev/null || echo "?")
-[ "$psrc" = simulated ] && P "honest source tag: pos=\"simulated\" before any real fix (ENGINE-7)" || F "pos source not honestly tagged ($psrc)"
-nw0=$(printf '%s' "$snap" | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
-echo "    active waypoint before any fix: $nw0"
+# FAIL-LOUD preflight: every check below depends on the NMEA listener binding. If it
+# didn't (port stolen, etc.), ABORT Section B with the REAL cause instead of emitting
+# misleading "no override / no advance" FAILs that masquerade as nav-core regressions.
+if grep -q "bind/listen on .* failed" /tmp/te-engine.log; then
+  F "Section B aborted: helm-engine could NOT bind NMEA :$NPORT — port contention/environment, not a nav-core bug:"
+  sed 's/^/        /' /tmp/te-engine.log
+else
+  snap="$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 /)"
+  shape=$(printf '%s' "$snap" | python3 -c 'import json,sys;a=json.load(sys.stdin).get("active",{});print(int(all(k in a for k in("eta","ttg","vmg","dtg","xte","nextWp")) and "legs" in a))' 2>/dev/null || echo 0)
+  [ "$shape" = 1 ] && P "nav snapshot carries the full per-fix math (dtg/xte/eta/ttg/vmg/legs/nextWp)" || F "snapshot missing nav-math fields"
+  psrc=$(printf '%s' "$snap" | jget sources.pos 2>/dev/null || echo "?")
+  [ "$psrc" = simulated ] && P "honest source tag: pos=\"simulated\" before any real fix (ENGINE-7)" || F "pos source not honestly tagged ($psrc)"
+  nw0=$(printf '%s' "$snap" | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
+  echo "    active waypoint before any fix: $nw0"
 
-inject_rmc 24.485 -81.800; sleep 2
-f2="$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 /)"
-src2=$(printf '%s' "$f2" | jget sources.pos 2>/dev/null || echo "?")
-nw2=$(printf '%s' "$f2" | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
-[ "$src2" = nmea ] && P "real NMEA fix overrides position: pos source → nmea (CONN-2 / ENGINE-7)" || F "pos source stayed \"$src2\" after RMC inject"
-[ "$nw2" != "$nw0" ] && [ "$nw2" != "?" ] && P "arrival auto-advance: $nw0 → $nw2 (model UpdateProgress, ENGINE-10)" || F "no waypoint advance after reaching WP ($nw0 → $nw2)"
+  inject_rmc 24.485 -81.800; sleep 2
+  f2="$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 /)"
+  src2=$(printf '%s' "$f2" | jget sources.pos 2>/dev/null || echo "?")
+  nw2=$(printf '%s' "$f2" | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
+  [ "$src2" = nmea ] && P "real NMEA fix overrides position: pos source → nmea (CONN-2 / ENGINE-7)" || F "pos source stayed \"$src2\" after RMC inject"
+  [ "$nw2" != "$nw0" ] && [ "$nw2" != "?" ] && P "arrival auto-advance: $nw0 → $nw2 (model UpdateProgress, ENGINE-10)" || F "no waypoint advance after reaching WP ($nw0 → $nw2)"
 
-inject_rmc 24.515 -81.793; sleep 2
-nw3=$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 / | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
-inject_rmc 24.540 -81.786; sleep 2
-nw4=$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 / | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
-{ [ "$nw3" != "$nw2" ] && [ "$nw4" != "$nw3" ] && [ "$nw4" != "?" ]; } \
-  && P "monotonic advance through the route: $nw2 → $nw3 → $nw4" \
-  || F "advance not monotonic ($nw2 → $nw3 → $nw4)"
+  inject_rmc 24.515 -81.793; sleep 2
+  nw3=$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 / | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
+  inject_rmc 24.540 -81.786; sleep 2
+  nw4=$(node "$HERE/nav-capture.js" 127.0.0.1 $EPORT 1 / | python3 -c 'import json,sys;print(json.load(sys.stdin)["active"]["nextWp"].split()[0])' 2>/dev/null || echo "?")
+  { [ "$nw3" != "$nw2" ] && [ "$nw4" != "$nw3" ] && [ "$nw4" != "?" ]; } \
+    && P "monotonic advance through the route: $nw2 → $nw3 → $nw4" \
+    || F "advance not monotonic ($nw2 → $nw3 → $nw4)"
+fi
 kill $NPID 2>/dev/null; wait $NPID 2>/dev/null
 
 # ---------- C) GPL containment ----------

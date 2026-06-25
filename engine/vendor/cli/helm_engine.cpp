@@ -164,7 +164,17 @@ static std::string fmtDur(double hours) {              // time-to-go as a human 
 // (Production should route this through OpenCPN's NavMsgBus / model-comms for
 // full sentence coverage; this minimal listener proves the override path.)
 // ---------------------------------------------------------------------------
-static const int kNmeaPort = 10110;
+// Port resolver: env override with a sane default. Lets multiple engines coexist on
+// one host and makes the test harness hermetic. (fail-and-fix-early: a hardcoded
+// :10110 silently lost to another process turned real NMEA ingest off with only a
+// stderr line — see nmea_listener's bind-failure path.)
+static int helm_env_port(const char* name, int def) {
+  if (const char* s = std::getenv(name)) {
+    if (*s) { int p = std::atoi(s); if (p > 0 && p < 65536) return p; }
+  }
+  return def;
+}
+static const int kNmeaPort = helm_env_port("HELM_NMEA_PORT", 10110);
 static const double kStaleSec = 5.0;
 
 struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; };  // t==0 => never received
@@ -411,7 +421,8 @@ int main(int argc, char** argv) {
   }
 
   // --- WebSocket server: push nav state to all clients ---
-  ix::WebSocketServer server(8081, "127.0.0.1");
+  const int kEnginePort = helm_env_port("HELM_ENGINE_PORT", 8081);
+  ix::WebSocketServer server(kEnginePort, "127.0.0.1");
   server.setOnConnectionCallback(
     [](std::weak_ptr<ix::WebSocket> wptr, std::shared_ptr<ix::ConnectionState> cs) {
       if (auto ws = wptr.lock())
@@ -419,8 +430,8 @@ int main(int argc, char** argv) {
       std::printf("client connected: %s\n", cs->getId().c_str());
       std::fflush(stdout);
     });
-  if (!server.listenAndStart()) { std::printf("WS listen on 8081 FAILED\n"); return 2; }
-  std::printf("nav-state WebSocket: ws://127.0.0.1:8081  (streaming 1 Hz)\n");
+  if (!server.listenAndStart()) { std::printf("WS listen on %d FAILED\n", kEnginePort); return 2; }
+  std::printf("nav-state WebSocket: ws://127.0.0.1:%d  (streaming 1 Hz)\n", kEnginePort);
 
   std::thread(nmea_listener).detach();   // real NMEA (port 10110) overrides the sim per-field
   if (const char* sk = std::getenv("HELM_SIGNALK"))   // opt-in SignalK overlay (e.g. ws://pi.local:3000/signalk/v1/stream?subscribe=self)
