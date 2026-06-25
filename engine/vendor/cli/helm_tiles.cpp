@@ -70,6 +70,12 @@ static std::vector<Cell> g_cells;    // all loaded cells, sorted most-detailed (
 static std::string g_blank;          // transparent TS×TS PNG for no-coverage tiles
 static const int TS = 256;           // tile size px
 
+// Immutable-cache stamp for ETags (CHART-14). A tile's bytes are a pure function of the loaded
+// cell set + scale selection + palette, so we fold those into one stable hash at startup; the
+// per-tile ETag is then "<stamp>.<z>.<x>.<y>". Same granularity as helm-server's cell.palette.scale
+// ETag, but per-tile-unique — so a 304 revalidation is correct AND can skip the S-52 render.
+static std::string g_charts_version;
+
 // S-52 no-data (NODTA) colour, captured from the active colour table at init. Pixels matching it
 // are made transparent so cells composite over each other AND over satellite (depth-on-satellite).
 static unsigned char g_nodtaR = 0, g_nodtaG = 0, g_nodtaB = 0;
@@ -300,6 +306,19 @@ static bool init_charts(const wxString& root) {
   return true;
 }
 
+// Fold the loaded cell set (path + native scale) and palette into a stable 64-bit stamp (FNV-1a).
+// Changes iff the chart inputs that determine a tile's bytes change, so it's a sound immutable-cache key.
+static std::string charts_version_stamp() {
+  unsigned long long hsh = 1469598103934665603ULL;            // FNV-1a 64-bit offset basis
+  auto fold = [&](const std::string& s) {
+    for (unsigned char c : s) { hsh ^= c; hsh *= 1099511628211ULL; }
+  };
+  fold("day|");                                               // palette (helm-tiles renders Day)
+  for (const Cell& c : g_cells) { fold(c.path); fold("@"); fold(std::to_string(c.scale)); fold(";"); }
+  char buf[17]; std::snprintf(buf, sizeof buf, "%016llx", hsh);
+  return std::string(buf);
+}
+
 class TileApp : public wxApp {
 public:
   ix::HttpServer* server = nullptr;
@@ -311,15 +330,26 @@ public:
     else if (const wxChar* env = wxGetenv(wxT("HELM_ENC_ROOT"))) root = wxString(env);
     else root = wxString(wxT("/tmp/ENC_ROOT"));
     if (!init_charts(root)) return false;
+    g_charts_version = charts_version_stamp();   // CHART-14: stamp the loaded chart set for immutable ETags
 
     server = new ix::HttpServer(8082, "127.0.0.1");
     server->setOnConnectionCallback(
       [](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
         ix::WebSocketHttpHeaders h;
         h["Access-Control-Allow-Origin"] = "*";
-        h["Cache-Control"] = "no-cache";
+        h["Cache-Control"] = "no-cache";          // default for /, /health, 404, and error bodies
         int z; long x, y;
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
+          // Immutable per-tile ETag (CHART-14): a tile's bytes don't change unless g_charts_version
+          // does, so a matching revalidation gets 304 WITHOUT rendering, and the browser may cache for
+          // a year. Mirrors helm-server's immutable ETag+304 (which standalone helm-tiles lacked).
+          char et[80]; std::snprintf(et, sizeof et, "\"%s.%d.%ld.%ld\"", g_charts_version.c_str(), z, x, y);
+          const std::string etag(et);
+          const auto inm = req->headers.find("If-None-Match");   // ix headers compare case-insensitively
+          if (inm != req->headers.end() && inm->second == etag) {
+            h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+            return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
+          }
           // hand the render to the main thread (CoreGraphics) and wait
           Job job; job.z = z; job.x = x; job.y = y;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
@@ -328,17 +358,19 @@ public:
           switch (job.status) {
             case TileStatus::Ok:
               h["Content-Type"] = "image/png";
+              h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
-            case TileStatus::NoCoverage:           // legitimately no chart here -> transparent
+            case TileStatus::NoCoverage:           // legitimately no chart here -> transparent (still immutable)
               h["Content-Type"] = "image/png";
+              h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
             case TileStatus::BadRequest:
-              h["Content-Type"] = "text/plain";
+              h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store";   // never cache an error
               return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h,
                 std::string("invalid tile coordinates\n"));
             case TileStatus::RenderFailed:
             default:                               // surface it; do NOT mask a broken render as open water
-              h["Content-Type"] = "text/plain";
+              h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store";
               return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h,
                 std::string("S-52 tile render failed; see server log\n"));
           }
