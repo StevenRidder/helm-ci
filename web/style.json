@@ -1,4 +1,5 @@
 {
+  "_SHELL_NOTE": "FALLBACK MIRROR — do not hand-edit to add layers. As of SHELL-2 the live style is assembled by HelmShell.buildStyle() from the per-domain fragments in web/style/ (helm-base + helm-chart-*/helm-route-*/helm-wx-*/helm-place-*/helm-ais-* per web/style/manifest.json). This monolithic file is only the zero-risk fallback used when that manifest can't be fetched, and is kept byte-equivalent to the merged result. To add map layers for your epic, create a web/style/helm-<epic>-*.json fragment and list it in the manifest (see web/SHELL.md) — never edit this file.",
   "version": 8,
   "name": "Helm — tracer bullet",
   "glyphs": "fonts/{fontstack}/{range}.pbf",

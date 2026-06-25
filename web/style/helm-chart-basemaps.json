@@ -1,0 +1,118 @@
+{
+  "_epic": "CHART",
+  "_note": "Basemaps + S-52 ENC raster. Owned by CHART. Legacy layer ids (navionics/googlesat/bingsat/arcgis/satellite/charts/enc-chart) are grandfathered — index.html references them by name (basemap picker, day/night reskin, ENC tile-origin rewrite). New CHART layers should be namespaced helm-chart-*.",
+  "sources": {
+    "sat": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "data/sat/{z}/{x}/{y}.jpg"
+      ],
+      "minzoom": 8,
+      "maxzoom": 13,
+      "bounds": [176.9, -18.2, 177.9, -17.2],
+      "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0) — baked offline"
+    },
+    "navionics": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "http://localhost:8091/navionics/{z}/{x}/{y}.png"
+      ],
+      "minzoom": 7,
+      "maxzoom": 17,
+      "bounds": [175.0, -22.5, 180.5, -11.0],
+      "attribution": "Navionics — owned chart pack (Fiji TCL2407)"
+    },
+    "googlesat": {
+      "type": "raster", "tileSize": 256,
+      "tiles": ["http://localhost:8091/googlesat/{z}/{x}/{y}.jpg"],
+      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
+      "attribution": "Google satellite — owned (Fiji TCL2407)"
+    },
+    "bingsat": {
+      "type": "raster", "tileSize": 256,
+      "tiles": ["http://localhost:8091/bingsat/{z}/{x}/{y}.jpg"],
+      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
+      "attribution": "Bing satellite — owned (Fiji TCL2407)"
+    },
+    "arcgis": {
+      "type": "raster", "tileSize": 256,
+      "tiles": ["http://localhost:8091/arcgis/{z}/{x}/{y}.jpg"],
+      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
+      "attribution": "ArcGIS satellite — owned (Fiji TCL2407)"
+    },
+    "charts": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png"
+      ],
+      "attribution": "NOAA ENC (public domain)"
+    },
+    "enc": {
+      "type": "raster",
+      "tileSize": 256,
+      "minzoom": 10,
+      "maxzoom": 17,
+      "tiles": [
+        "http://127.0.0.1:8090/chart/{z}/{x}/{y}.png"
+      ],
+      "attribution": "S-52 via OpenCPN (Helm Engine)",
+      "_note": "default origin only — index.html rewrites this to the resolved boat-server origin (server-endpoint.js) at load, so it is address-agnostic (localhost / helm.local / LAN IP)"
+    }
+  },
+  "layers": [
+    {
+      "id": "navionics",
+      "type": "raster",
+      "source": "navionics"
+    },
+    {
+      "id": "googlesat",
+      "type": "raster",
+      "source": "googlesat",
+      "layout": { "visibility": "none" }
+    },
+    {
+      "id": "bingsat",
+      "type": "raster",
+      "source": "bingsat",
+      "layout": { "visibility": "none" }
+    },
+    {
+      "id": "arcgis",
+      "type": "raster",
+      "source": "arcgis",
+      "layout": { "visibility": "none" }
+    },
+    {
+      "id": "satellite",
+      "type": "raster",
+      "source": "sat",
+      "layout": { "visibility": "none" }
+    },
+    {
+      "id": "charts",
+      "type": "raster",
+      "source": "charts",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 0.85
+      }
+    },
+    {
+      "id": "enc-chart",
+      "type": "raster",
+      "source": "enc",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 1.0
+      }
+    }
+  ]
+}

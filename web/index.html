@@ -342,6 +342,24 @@
   .cpa-btn{cursor:pointer;width:24px;height:24px;border-radius:7px;display:flex;align-items:center;justify-content:center;
     background:var(--glass2);font-size:12px;color:var(--cdim)}
   .cpa-btn:hover{color:var(--ctext)}
+
+  /* ---- ⌘K command palette (SHELL-3) ---- */
+  #cmdk{position:fixed;inset:0;z-index:30}
+  #cmdk[hidden]{display:none}
+  .cmdk-backdrop{position:absolute;inset:0;background:rgba(3,6,10,.5);backdrop-filter:blur(2px)}
+  .cmdk-box{position:absolute;left:50%;top:18%;transform:translateX(-50%);width:min(560px,calc(100% - 32px));
+    border-radius:14px;padding:8px;box-sizing:border-box;overflow:hidden}
+  #cmdk-input{width:100%;box-sizing:border-box;background:var(--glass2);border:.5px solid var(--line);
+    border-radius:10px;padding:11px 13px;color:var(--ctext);font:15px -apple-system,sans-serif;outline:none}
+  #cmdk-input:focus{border-color:var(--accent)}
+  .cmdk-list{margin-top:7px;max-height:46vh;overflow-y:auto}
+  .cmdk-item{display:flex;align-items:baseline;gap:9px;padding:9px 11px;border-radius:9px;cursor:pointer}
+  .cmdk-item.on,.cmdk-item:hover{background:var(--glass2)}
+  .cmdk-item .cmdk-t{font-size:13px;color:var(--ctext);font-weight:500}
+  .cmdk-item .cmdk-s{font-size:11px;color:var(--cdim)}
+  .cmdk-item .cmdk-g{margin-left:auto;font-size:9.5px;color:var(--cdim2);letter-spacing:.04em;
+    border:.5px solid var(--line);border-radius:5px;padding:1px 6px;white-space:nowrap}
+  .cmdk-empty{padding:14px 11px;font-size:12.5px;color:var(--cdim)}
 </style>
 </head>
 <body>
@@ -610,6 +628,10 @@
 </div>
 
 <script src="vendor/maplibre-gl/maplibre-gl.js"></script>
+<!-- SHELL: the shared-shell registration seam (HelmShell). MUST load before the feature modules
+     so they can registerPanel / registerCommand / registerStyleFragment from their OWN files
+     instead of editing this monolith. See web/SHELL.md for the three conventions. -->
+<script src="shell.js"></script>
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -626,10 +648,25 @@
 <script src="measure.js"></script>
 <script src="collision.js"></script>
 <script src="ais-meta.js"></script>
+<!-- SHELL demo (worked example — safe to delete with web/shell-demo.js): proves a feature module
+     can add a panel + ⌘K command + style fragment via HelmShell with NO edit to this file's body. -->
+<script src="shell-demo.js"></script>
 <script>
+// The shell body runs inside an async bootstrap so the per-domain style fragments
+// (web/style/*.json) can be fetched + merged (SHELL-2) BEFORE the map is constructed.
+// HelmShell.buildStyle() falls back to the monolithic style.json if the split manifest is
+// absent, so this is zero-risk. `map` and the cockpit setup live inside main(); window.map is
+// assigned the moment the map exists, and lab.js is loaded only AFTER that (it reads window.map
+// at top level), so its contract is preserved.
+(async function main() {
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
+  // Assemble the merged style from the per-domain fragments (SHELL-2). If shell.js somehow didn't
+  // load, fall back to the monolithic style.json so the map still draws (degraded, no registration API).
+  const style = window.HelmShell
+    ? await HelmShell.buildStyle({ styleDir: 'style', fallback: 'style.json' })
+    : await (await fetch('style.json')).json();
   const map = new maplibregl.Map({
-    container: 'map', style: 'style.json', hash: true,
+    container: 'map', style: style, hash: true,
     // Owned mbtiles basemaps ship a localhost:8091 placeholder in style.json. Rewrite the HOST of every
     // :8091 tile request to the page host (so the iPad/phone on the boat WiFi loads charts from THIS Mac)
     // BEFORE the request goes out — including the FIRST tile. A setTiles-in-'load' rewrite loses that race:
@@ -951,13 +988,22 @@
     new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
 
   // ================= CHROME UI wiring =================
+  // The shell's BUILT-IN drawers (the panels that shipped before the SHELL registration API).
+  // New epics should NOT add to this map — they call HelmShell.registerPanel({...}) from their own
+  // module instead (see web/SHELL.md), which appends a rail button + drawer with no edit here.
+  // The two systems are kept mutually exclusive: opening a built-in drawer closes any registered
+  // panel (HelmShell.closeAllPanels), and opening a registered panel closes these (setLegacyCloser).
   (function () {
     const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab', community: 'drawer-community', routes: 'drawer-routes' };
-    const rail = document.querySelectorAll('.ri[data-rail]');
+    // only the built-in rail buttons — registered panels wire their OWN click handler in shell.js
+    const builtinKeys = new Set(Object.keys(drawers).concat(['ais', 'places', 'measure', 'chart']));
+    const rail = Array.from(document.querySelectorAll('.ri[data-rail]')).filter(b => builtinKeys.has(b.dataset.rail));
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
+    if (window.HelmShell) HelmShell.setLegacyCloser(() => { closeDrawers(); rail.forEach(r => r.classList.remove('on')); });
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }
     rail.forEach(btn => btn.addEventListener('click', () => {
       const key = btn.dataset.rail;
+      if (window.HelmShell) HelmShell.closeAllPanels();   // opening a built-in drawer closes any registered panel
       if (drawers[key]) {                              // panels: layers / weather / download / settings
         const d = document.getElementById(drawers[key]), wasOpen = !d.hidden;
         closeDrawers(); d.hidden = wasOpen;
@@ -1278,8 +1324,80 @@
       map.on('mouseleave', l, () => map.getCanvas().style.cursor = '');
     });
   })();
+
+  // ================= SHELL: boot the registration seam =================
+  // Now that `map` and the left rail exist, drain every queued registerPanel/registerCommand
+  // (feature modules called these from their own files during load) and wire them live. From
+  // here on, registrations apply immediately. This is the moment the SHELL API goes "hot".
+  if (window.HelmShell) HelmShell.boot({ map: map, railEl: document.querySelector('.rail') });
+
+  // ================= SHELL-3: ⌘K command palette =================
+  // A stable palette that lists EVERY HelmShell.registerCommand({...}) entry. Epics append one
+  // command from their own module — no edit here. TOOLS-3/AI-6 own richer fuzzy-go-to + NL; this
+  // is the baseline chrome + the hook they build on (HelmShell.commands / runCommand / onCommandsChanged).
+  if (window.HelmShell) (function () {
+    const palette = document.createElement('div');
+    palette.id = 'cmdk'; palette.hidden = true;
+    palette.innerHTML =
+      '<div class="cmdk-backdrop"></div>' +
+      '<div class="cmdk-box glass" role="dialog" aria-label="Command palette">' +
+        '<input id="cmdk-input" type="text" placeholder="Type a command…" autocomplete="off" spellcheck="false">' +
+        '<div id="cmdk-list" class="cmdk-list"></div>' +
+      '</div>';
+    document.body.appendChild(palette);
+    const input = palette.querySelector('#cmdk-input');
+    const list = palette.querySelector('#cmdk-list');
+    let all = [], shown = [], sel = 0;
+
+    HelmShell.onCommandsChanged(cmds => { all = cmds; if (!palette.hidden) refilter(); });
+
+    function score(c, q) {                          // simple subsequence fuzzy match
+      const hay = (c.title + ' ' + c.subtitle + ' ' + c.group + ' ' + (c.keywords || []).join(' ')).toLowerCase();
+      if (!q) return 0;
+      let i = 0; for (const ch of q) { i = hay.indexOf(ch, i); if (i < 0) return -1; i++; }
+      return 1;
+    }
+    function refilter() {
+      const q = input.value.trim().toLowerCase();
+      shown = all.filter(c => score(c, q) >= 0);
+      sel = 0; renderList();
+    }
+    function renderList() {
+      if (!shown.length) { list.innerHTML = '<div class="cmdk-empty">' + (all.length ? 'No matching command' : 'No commands registered yet') + '</div>'; return; }
+      list.innerHTML = shown.map((c, i) =>
+        '<div class="cmdk-item' + (i === sel ? ' on' : '') + '" data-i="' + i + '">' +
+          '<span class="cmdk-t">' + esc(c.title) + '</span>' +
+          (c.subtitle ? '<span class="cmdk-s">' + esc(c.subtitle) + '</span>' : '') +
+          (c.group ? '<span class="cmdk-g">' + esc(c.group) + '</span>' : '') +
+        '</div>').join('');
+      list.querySelectorAll('.cmdk-item').forEach(el =>
+        el.addEventListener('click', () => run(+el.dataset.i)));
+    }
+    function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c])); }
+    function open() { palette.hidden = false; input.value = ''; refilter(); setTimeout(() => input.focus(), 0); }
+    function close() { palette.hidden = true; }
+    function run(i) { const c = shown[i]; if (!c) return; close(); HelmShell.runCommand(c.id); }
+
+    input.addEventListener('input', refilter);
+    input.addEventListener('keydown', e => {
+      if (e.key === 'ArrowDown') { sel = Math.min(sel + 1, shown.length - 1); renderList(); e.preventDefault(); }
+      else if (e.key === 'ArrowUp') { sel = Math.max(sel - 1, 0); renderList(); e.preventDefault(); }
+      else if (e.key === 'Enter') { run(sel); e.preventDefault(); }
+      else if (e.key === 'Escape') { close(); }
+    });
+    palette.querySelector('.cmdk-backdrop').addEventListener('click', close);
+    window.addEventListener('keydown', e => {
+      if ((e.metaKey || e.ctrlKey) && (e.key === 'k' || e.key === 'K')) { e.preventDefault(); palette.hidden ? open() : close(); }
+    });
+    // make the always-present toolbar search box open the palette too
+    const tbSearch = document.querySelector('.tb .search'); if (tbSearch) { tbSearch.style.cursor = 'pointer'; tbSearch.addEventListener('click', open); }
+    window.HelmCmdK = { open, close };   // so a command/toolbar entry can open it programmatically
+  })();
+
+  // awesome-maplibre integration lab — load AFTER window.map exists (lab.js reads it at top level)
+  // and after boot, so its Lab drawer wiring sees the fully-built shell. Replaces the old static tag.
+  { const s = document.createElement('script'); s.src = 'integrations/lab.js'; document.body.appendChild(s); }
+})();   // end async main()
 </script>
-<!-- awesome-maplibre integration lab — loads after window.map exists; lazy-imports each library -->
-<script src="integrations/lab.js"></script>
 </body>
 </html>
