@@ -229,7 +229,19 @@ function handleWs(req, socket) {
 
   socket.on('data', d => { buf = readClientFrames(Buffer.concat([buf, d]), txt => {
     let m; try { m = JSON.parse(txt); } catch (e) { return; }
-    if (m.t === 'hello') { console.log('[nav] #' + id + ' hello lastSeq=' + m.lastSeq + ' subscribe=' + (m.subscribe || []).join(',')); if (m.lastSeq) snapshot(); }
+    if (m.t === 'hello' || m.t === 'sub.update') {            // CONTRACT-7: ack the subscription with the EFFECTIVE {subscribe, rate}
+      const KNOWN = ['nav', 'route', 'alarms', 'ais', 'track', 'conns'];
+      const NAV_SOURCE_HZ = 1;                                // mirror helm_server.cpp: never stream faster than the ~1 Hz nav source
+      let chans = Array.isArray(m.subscribe) && m.subscribe.length
+        ? m.subscribe.filter(c => KNOWN.includes(c)) : KNOWN.slice();   // absent ⇒ all known channels (like the real server)
+      if (!chans.includes('nav')) chans.push('nav');         // safety core is never droppable
+      chans = [...new Set(chans)].sort();                    // canonical (sorted) order, like the server's std::set
+      const reqRate = Math.max(1, Math.min(4, Math.round(+m.rate) || 1));   // clamp the request to the 1–4 Hz band
+      const rate = Math.min(reqRate, NAV_SOURCE_HZ);         // effective = min(requested, source Hz) = 1 today
+      send({ t: 'sub.ack', subscribe: chans, rate });
+      console.log('[nav] #' + id + ' ' + m.t + ' subscribe=' + chans.join(',') + ' rate=' + rate + (m.t === 'hello' ? ' lastSeq=' + m.lastSeq : ''));
+      if (m.t === 'hello' && m.lastSeq) snapshot();          // resume hint → re-send a fresh snapshot
+    }
     else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);
     else if (typeof m.t === 'string' && m.t.indexOf('conn.') === 0) { handleConnCmd(send, m); console.log('[conn] #' + id + ' ' + m.t + (m.conn ? ' (' + (m.conn.type || '?') + ')' : (m.id ? ' ' + m.id : ''))); }
     else if (m.t === 'nmea.monitor') { handleMonitor(send, m); console.log('[conn] #' + id + ' nmea.monitor ' + (m.on ? 'on' : 'off')); }

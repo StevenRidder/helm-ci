@@ -22,6 +22,7 @@ function checkWs() {
       ok(res.statusCode === 101, 'WS: handshake (HTTP ' + res.statusCode + ')');
       let buf = Buffer.isBuffer(head) ? head : Buffer.alloc(0);
       const frames = [];
+      let subAck = null;                       // CONTRACT-7 sub.ack — captured here, asserted after the framing block
       function parse() {
         while (buf.length >= 2) {
           let len = buf[1] & 0x7f, off = 2;
@@ -30,10 +31,18 @@ function checkWs() {
           if (buf.length < off + len) return;
           const p = buf.slice(off, off + len).toString('utf8'); buf = buf.slice(off + len);
           let o; try { o = JSON.parse(p); } catch (e) { continue; }
-          if (o.t === 'ping' || o.t === 'sub.ack') continue;   // control frames, not nav state (sub.ack = CONTRACT-7 subscription ack, sent before the snapshot)
+          if (o.t === 'ping') continue;                        // heartbeat — not nav state
+          if (o.t === 'sub.ack') { subAck = o; continue; }     // CONTRACT-7 control frame — capture for the assertions below, never nav state
           frames.push(o);
           if (frames.filter(f => f.t === 'delta').length >= 3) {
             clearTimeout(timer);
+            // CONTRACT-7: the hello/subscribe must be answered with a sub.ack carrying the EFFECTIVE {subscribe, rate}.
+            // It races the snapshot on a separate thread, so assert presence (not strict ordering); by 3 deltas it has long arrived.
+            ok(subAck && subAck.t === 'sub.ack', 'WS: sub.ack answers the hello (CONTRACT-7 subscription)');
+            ok(subAck && Array.isArray(subAck.subscribe) && subAck.subscribe.includes('nav'),
+               'WS: sub.ack.subscribe is the effective channel set, always incl nav' + (subAck ? ' (' + JSON.stringify(subAck.subscribe) + ')' : ''));
+            ok(subAck && Number.isInteger(subAck.rate) && subAck.rate >= 1 && subAck.rate <= 4,
+               'WS: sub.ack.rate is an integer in the negotiated 1–4 Hz band' + (subAck && Number.isInteger(subAck.rate) ? ' (' + subAck.rate + ')' : ''));
             const snap = frames[0];
             ok(snap && snap.t === 'snapshot', 'WS: first frame is a snapshot');
             ok(snap && snap.pos && typeof snap.sog === 'number' && snap.active, 'WS: snapshot has full UI shape (pos/sog/active)');
