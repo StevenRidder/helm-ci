@@ -60,6 +60,7 @@
 #include "chartsymbols.h"
 #include "s57registrar_mgr.h"
 #include "o_senc.h"
+#include "s63_decode.h"   // CHART-12: headless S-63 encrypted-ENC decrypt
 
 #include "model/routeman.h"
 #include "model/route.h"
@@ -266,9 +267,23 @@ static bool init_chart(const wxString& enc_path) {
   if (!ps52plib || !ps52plib->m_bOK) { printf("s52plib load FAILED\n"); return false; }
   ps52plib->SetPLIBColorScheme(GLOBAL_COLOR_SCHEME_DAY, ChartCtx(false, 0));
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
+  // CHART-12: if the cell is S-63 encrypted, decrypt it to a plain S-57 temp and load THAT (the
+  // catalog id below still uses the original cell name). A plain S-57 cell passes through unchanged.
+  wxString load_path = enc_path;
+  std::string s63_src = std::string((const char*)enc_path.ToUTF8());
+  if (s63::is_encrypted(s63_src)) {
+    static s63::Decoder s63dec = s63::Decoder::from_env();
+    std::string cn = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8()), err;
+    if (!s63dec.enabled()) { printf("S-63 encrypted cell %s but no permit/HW_ID (set HELM_S63_PERMIT + HELM_S63_HWID)\n", cn.c_str()); return false; }
+    ::wxFileName::Mkdir(wxT("/tmp/helm-s63"), 0755, wxPATH_MKDIR_FULL);
+    std::string tmp = "/tmp/helm-s63/" + cn + ".000";
+    if (!s63dec.decrypt_to_file(s63_src, cn, tmp, err)) { printf("S-63 decrypt FAILED for %s: %s\n", cn.c_str(), err.c_str()); return false; }
+    printf("S-63: decrypted %s -> plain S-57\n", cn.c_str());
+    load_path = wxString::FromUTF8(tmp.c_str());
+  }
   g_chart = new s57chart();
   g_chart->DisableBackgroundSENC();
-  if (g_chart->Init(enc_path, FULL_INIT) != INIT_OK) { printf("chart Init FAILED\n"); return false; }
+  if (g_chart->Init(load_path, FULL_INIT) != INIT_OK) { printf("chart Init FAILED\n"); return false; }
   g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
   if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return false; }
   int ns = g_chart->GetNativeScale();

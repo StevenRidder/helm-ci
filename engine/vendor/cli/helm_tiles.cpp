@@ -45,6 +45,7 @@
 #include "chartsymbols.h"
 #include "s57registrar_mgr.h"
 #include "o_senc.h"
+#include "s63_decode.h"   // CHART-12: headless S-63 encrypted-ENC decrypt
 
 #include "ixwebsocket/IXHttpServer.h"
 #include "ixwebsocket/IXHttp.h"
@@ -309,9 +310,22 @@ static std::string make_blank() {
 // a region folder will contain cells of varying quality and we keep serving the good ones.
 static bool load_one_cell(const wxString& path) {
   const char* p = (const char*)path.ToUTF8();
+  // CHART-12: decrypt an S-63 encrypted cell to a plain S-57 temp and load THAT (the id/path below stay
+  // the ORIGINAL cell). A plain S-57 cell loads directly. Skip (never abort the quilt) on failure.
+  wxString load_path = path;
+  if (s63::is_encrypted(std::string(p))) {
+    static s63::Decoder s63dec = s63::Decoder::from_env();
+    std::string cn = std::string((const char*)wxFileName(path).GetName().ToUTF8()), err;
+    if (!s63dec.enabled()) { fprintf(stderr, "  skip (S-63 encrypted, set HELM_S63_PERMIT + HELM_S63_HWID): %s\n", p); return false; }
+    ::wxFileName::Mkdir(wxT("/tmp/helm-s63"), 0755, wxPATH_MKDIR_FULL);
+    std::string tmp = "/tmp/helm-s63/" + cn + ".000";
+    if (!s63dec.decrypt_to_file(std::string(p), cn, tmp, err)) { fprintf(stderr, "  skip (S-63 decrypt %s: %s)\n", cn.c_str(), err.c_str()); return false; }
+    fprintf(stderr, "  S-63 decrypted %s\n", cn.c_str());
+    load_path = wxString::FromUTF8(tmp.c_str());
+  }
   s57chart* ch = new s57chart();
   ch->DisableBackgroundSENC();
-  if (ch->Init(path, FULL_INIT) != INIT_OK) { fprintf(stderr, "  skip (Init failed): %s\n", p); delete ch; return false; }
+  if (ch->Init(load_path, FULL_INIT) != INIT_OK) { fprintf(stderr, "  skip (Init failed): %s\n", p); delete ch; return false; }
   ch->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
   Extent ext;
   if (!ch->GetChartExtent(&ext)) { fprintf(stderr, "  skip (no extent): %s\n", p); delete ch; return false; }
