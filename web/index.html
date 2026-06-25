@@ -641,6 +641,7 @@
 <script src="nav-client.js"></script>
 <script src="connections.js"></script>
 <script src="routes.js"></script>
+<script src="route-edit.js"></script>
 <script src="track.js"></script>
 <script src="ownship.js"></script>
 <script src="alarms.js"></script>
@@ -1138,7 +1139,7 @@
     // the boat — so this single line behaves identically local or remote.
     window.__navClient = HelmNavClient(applyNav,
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
-      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
+      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); if (window.HelmRouteEdit) HelmRouteEdit.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
     if (window.HelmRoutes) HelmRoutes.init({ client: window.__navClient });             // saved-route management UI
     if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)
