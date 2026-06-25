@@ -34,10 +34,23 @@ function ensure(map, ctx) {
   });
   draw.start();
 
-  // When a rectangle is finished, derive its bbox and publish it to the app.
   draw.on('finish', (id) => {
     const f = draw.getSnapshot().find(s => s.id === id);
-    if (!f || f.geometry.type !== 'Polygon') return;
+    if (!f) return;
+    // A drawn ROUTE (linestring) → send to the engine to persist (navobj.db) + activate. The engine
+    // streams the active route geometry back, so we clear the sketch and let the route-line render it.
+    if (f.geometry.type === 'LineString') {
+      const coords = f.geometry.coordinates || [];
+      if (coords.length < 2) return;
+      const points = coords.map(p => [p[1], p[0]]);   // [lon,lat] -> [lat,lon]
+      const sent = !!(window.__navClient && window.__navClient.send({ t: 'route.create', name: 'Route', points }));
+      ctx.notify(sent ? `Route saved — ${points.length} waypoints` : 'Engine not connected — route not saved', sent ? 'ok' : 'warn');
+      try { draw.clear(); } catch (e) {}
+      try { draw.setMode('select'); } catch (e) {}
+      return;
+    }
+    // A finished rectangle → derive its bbox and publish it to the Download drawer.
+    if (f.geometry.type !== 'Polygon') return;
     const ring = f.geometry.coordinates[0];
     const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]);
     const bbox = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]

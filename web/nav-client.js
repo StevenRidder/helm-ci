@@ -68,9 +68,9 @@
     function onFrame(msg) {
       if (msg.t === 'ping') { lastFrameAt = Date.now(); return; }   // heartbeat keeps us LIVE
       if (msg.t === 'alarm') { status('alarm', { alarm: msg }); return; }
-      if (typeof msg.t === 'string' && msg.t.indexOf('conn.') === 0) {  // command-plane replies (conn.ack/conn.list)
-        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }
-        return;   // not nav state — do not merge or mark everEngine
+      if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0)) {
+        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }   // command-plane replies
+        return;   // not nav state — do not merge or reset the staleness watchdog
       }
       everEngine = true; attempt = 0; stopSim();
       lastFrameAt = Date.now();

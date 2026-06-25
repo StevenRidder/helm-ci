@@ -22,7 +22,8 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 | 1 | **WS command-plane** (conn.* router + ack + owner-token gate) | 🟢 **done** — `c092955` |
 | 2 | **Runtime connections + Connections UI** (TCP-client/server/UDP, persisted, live status) — boat-verified vs Vesper Cortex | 🟢 **done** — `c092955`/`4779073` |
 | 3 | **Track recording** — *always-on automatic* (no on-screen control), distance-gated (records the anchor swing like OpenCPN); engine-owned trail + map line | 🟢 **done** — `4623f78`+ |
-| 4 | **Route/waypoint create-edit-delete in UI** over the same router (direct-manipulation routing) | 🔴 **next (interactive)** |
+| 4 | **Route create/save/activate** — draw a route → persisted to navobj.db (OpenCPN's SQLite store, reused) → active + survives restart | 🟢 **done** — `route.create` |
+| 4a | **Route/waypoint *edit*/delete + multi-route list** in UI over the same router | 🔴 **next (interactive)** |
 | 4b | **Anchor watch + drag alarm** (separate watch-circle, not the track blob) — Steve flagged as next safety item | 🔴 **next (safety)** |
 | 5 | Follow-mode / center-on-ownship + course-up / head-up orientation | 🔴 later |
 | 6 | Cursor lat/lon + coord-format, range rings, EBL/VRM, drop-waypoint-by-range/bearing (tool cluster) | 🔴 later |
@@ -60,7 +61,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 
 ### Routes / waypoints / marks
 - 🟢 Active route nav + auto-advance + per-field math (BRG/DTW/DTG/XTE/ETA/TTG/VMG), drawn + highlighted
-- 🟡 **Create/edit/delete routes & marks in UI — read-only today; the command-plane is the rail to wire this NEXT (step 4)**
+- 🟡 **Create routes in UI — DONE**: draw (Terra Draw) → `route.create` → engine persists via OpenCPN's `NavObj_dB::InsertRoute` (reused, in-core) to **navobj.db** (SQLite, not XML — Gemini's critique was outdated), swaps the active route, streams the geometry back, survives restart (startup reads the same navobj schema directly). *Next:* waypoint edit/move/delete, a multi-route list, activate-by-pick. Storage decision logged: reuse OpenCPN's navobj SQLite (writes via `InsertRoute`; startup read is a direct SELECT to avoid `pWayPointMan` headless).
 - 🟡 GPX import/export UI round-trip (engine loads GPX; no UI round-trip) · 🟡 Great-circle vs rhumb toggle
 - 🔴 Waypoint properties (arrival radius/icon/notes) · 🔴 Drop waypoint by lat/lon or range/bearing · 🔴 Auto-routing / dock-to-dock
 

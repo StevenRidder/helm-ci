@@ -71,6 +71,8 @@
 #include "model/ais_state_vars.h"
 #include "model/select.h"
 #include "model/base_platform.h"
+#include "model/navobj_db.h"
+#include <sqlite3.h>
 #include "pugixml.hpp"
 #include "rapidjson/document.h"
 #include <iterator>
@@ -264,8 +266,10 @@ static bool serve_static(const std::string& uri, std::string& body, std::string&
 // pushes snapshot/delta to the WS clients of the shared ix::HttpServer.
 // ===========================================================================
 struct WP { double lat, lon; std::string name; };
-static std::vector<WP> ROUTE;                 // loaded from GPX at startup — no hardcoded route
+static std::vector<WP> ROUTE;                 // the ACTIVE route the sim follows — guarded by g_route_mtx
 static std::string g_route_name = "Route";
+static std::mutex g_route_mtx;                 // guards ROUTE + g_route_name (swapped at runtime by route.create)
+static std::atomic<long> g_route_version{0};   // bumped on swap so nav_loop rebuilds the active route
 
 // Built-in sample (inside US5FL96M) used when no HELM_ROUTE is given, so the server still
 // runs out of the box. Real GPX data parsed by the same loader as a user file.
@@ -315,6 +319,48 @@ static bool load_gpx_route(const std::string& xml, std::vector<WP>& out, std::st
     if (w.name.empty()) { char b[24]; std::snprintf(b, sizeof b, "WP%zu", out.size() + 1); w.name = b; }
     out.push_back(w);
   }
+  return out.size() >= 2;
+}
+// Build an OpenCPN Route from waypoints (named WP1..n) — used for navobj persistence + active-nav.
+static Route* build_route(const std::vector<WP>& pts, const std::string& name) {
+  Route* r = new Route();
+  for (auto& w : pts) r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name.c_str())));
+  r->m_RouteNameString = wxString::FromUTF8(name.c_str());
+  r->UpdateSegmentDistances(6.0);
+  return r;
+}
+// Read the most-recently-created route + its ordered points straight from navobj.db (the SAME SQLite
+// schema OpenCPN's NavObj_dB writes). Read directly rather than via LoadAllRoutes() so we don't need
+// pWayPointMan headless. Returns false (→ fall back to GPX) if the db/route isn't there yet.
+static bool load_latest_route_from_db(std::vector<WP>& out, std::string& name) {
+  if (!g_BasePlatform) return false;
+  std::string dbpath = std::string(g_BasePlatform->GetPrivateDataDir().ToUTF8()) + "/navobj.db";
+  sqlite3* db = nullptr;
+  if (sqlite3_open_v2(dbpath.c_str(), &db, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK) { if (db) sqlite3_close(db); return false; }
+  std::string guid; sqlite3_stmt* st = nullptr;
+  if (sqlite3_prepare_v2(db, "SELECT guid, name FROM routes ORDER BY created_at DESC, rowid DESC LIMIT 1", -1, &st, nullptr) == SQLITE_OK) {
+    if (sqlite3_step(st) == SQLITE_ROW) {
+      const unsigned char* g = sqlite3_column_text(st, 0); guid = g ? reinterpret_cast<const char*>(g) : "";
+      const unsigned char* nm = sqlite3_column_text(st, 1); name = nm ? reinterpret_cast<const char*>(nm) : "Route";
+    }
+    sqlite3_finalize(st);
+  }
+  if (!guid.empty()) {
+    out.clear();
+    const char* q = "SELECT rp.lat, rp.lon, rp.Name FROM routepoints rp "
+                    "JOIN routepoints_link l ON rp.guid = l.point_guid "
+                    "WHERE l.route_guid = ? ORDER BY l.point_order";
+    if (sqlite3_prepare_v2(db, q, -1, &st, nullptr) == SQLITE_OK) {
+      sqlite3_bind_text(st, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+      while (sqlite3_step(st) == SQLITE_ROW) {
+        WP w; w.lat = sqlite3_column_double(st, 0); w.lon = sqlite3_column_double(st, 1);
+        const unsigned char* nm = sqlite3_column_text(st, 2); w.name = nm ? reinterpret_cast<const char*>(nm) : "";
+        out.push_back(w);
+      }
+      sqlite3_finalize(st);
+    }
+  }
+  sqlite3_close(db);
   return out.size() >= 2;
 }
 static void bd(double lat1, double lon1, double lat0, double lon0, double* brg, double* nm) {
@@ -759,6 +805,21 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     std::printf("track: cleared\n");
     ws->send("{\"t\":\"track.ack\",\"cleared\":true}"); return;
   }
+  if (t == "route.create" && d.HasMember("points") && d["points"].IsArray()) {   // create/replace the active route
+    std::vector<WP> pts;
+    for (auto& p : d["points"].GetArray())
+      if (p.IsArray() && p.Size() >= 2 && p[0].IsNumber() && p[1].IsNumber())
+        pts.push_back({ p[0].GetDouble(), p[1].GetDouble(), "" });               // [lat, lon]
+    if (pts.size() < 2) { ws->send("{\"t\":\"route.ack\",\"ok\":false,\"error\":\"need >=2 points\"}"); return; }
+    std::string name = (d.HasMember("name") && d["name"].IsString() && *d["name"].GetString()) ? d["name"].GetString() : "Route";
+    for (size_t i = 0; i < pts.size(); ++i) { char b[16]; std::snprintf(b, sizeof b, "WP%zu", i + 1); pts[i].name = b; }
+    Route* nr = build_route(pts, name);
+    NavObj_dB::GetInstance().InsertRoute(nr);   // persist to navobj.db (route + points + links). nr then leaked (rare; see rebuild_route)
+    { std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = pts; g_route_name = name; }
+    g_route_version++;                          // nav_loop swaps to it on the next tick
+    std::printf("route: created \"%s\" (%zu wp) — persisted to navobj.db + activated\n", name.c_str(), pts.size());
+    ws->send(std::string("{\"t\":\"route.ack\",\"ok\":true,\"name\":\"") + json_escape(name) + "\"}"); return;
+  }
 }
 static void conn_init() {
   if (const char* tok = std::getenv("HELM_OWNER_TOKEN")) if (*tok) g_owner_token = tok;
@@ -778,33 +839,47 @@ static long g_seq = 0;
 static std::set<ix::WebSocket*> g_seen;   // clients already given a snapshot baseline (nav thread only)
 
 static void nav_loop(ix::HttpServer* server) {
-  // load the active route from GPX (no hardcoded route) — HELM_ROUTE | built-in sample, fail-loud
-  { const char* rp = std::getenv("HELM_ROUTE"); std::string gpx;
-    if (rp && *rp) { if (!read_file(rp, gpx)) { std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", rp); std::exit(3); } std::printf("route source: %s\n", rp); }
-    else { gpx = SAMPLE_GPX; std::printf("route source: built-in sample (override: HELM_ROUTE=<route.gpx>)\n"); }
-    if (!load_gpx_route(gpx, ROUTE, g_route_name)) { std::fprintf(stderr, "FATAL: GPX route unusable (need <rte> with >=2 <rtept>)\n"); std::exit(4); }
-    std::printf("loaded route \"%s\": %zu waypoints\n", g_route_name.c_str(), ROUTE.size()); }
-  Route* r = new Route();
-  for (auto& w : ROUTE) r->AddPoint(new RoutePoint(w.lat, w.lon, wxT("circle"), wxString::FromUTF8(w.name.c_str())));
-  r->UpdateSegmentDistances(6.0);
   g_pRouteMan = new Routeman(RoutePropDlgCtx(), RoutemanDlgCtx());
-  gLat = ROUTE[0].lat; gLon = ROUTE[0].lon;
-  g_pRouteMan->ActivateRoute(r);
-  g_pRouteMan->ActivateNextPoint(r, false);
-  std::printf("route activated: %d waypoints; Routeman live (no GUI).\n", r->GetnPoints());
+  // Active route: a saved route from navobj.db (survives restart) wins; else HELM_ROUTE GPX; else the
+  // built-in sample. Populates the shared ROUTE/g_route_name that route.create can swap live.
+  { std::vector<WP> saved; std::string sname;
+    if (load_latest_route_from_db(saved, sname)) {
+      std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = saved; g_route_name = sname;
+      std::printf("route source: navobj.db \"%s\" (%zu wp)\n", sname.c_str(), saved.size());
+    } else {
+      const char* rp = std::getenv("HELM_ROUTE"); std::string gpx;
+      if (rp && *rp) { if (!read_file(rp, gpx)) { std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", rp); std::exit(3); } std::printf("route source: %s\n", rp); }
+      else { gpx = SAMPLE_GPX; std::printf("route source: built-in sample (no saved route; override: HELM_ROUTE=<route.gpx>)\n"); }
+      std::vector<WP> g; std::string gn;
+      if (!load_gpx_route(gpx, g, gn)) { std::fprintf(stderr, "FATAL: GPX route unusable (need <rte> with >=2 <rtept>)\n"); std::exit(4); }
+      std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = g; g_route_name = gn;
+    } }
 
-  std::vector<double> legLen; double total = 0, b, d;
-  for (size_t i = 0; i + 1 < ROUTE.size(); ++i) { bd(ROUTE[i + 1].lat, ROUTE[i + 1].lon, ROUTE[i].lat, ROUTE[i].lon, &b, &d); legLen.push_back(d); total += d; }
+  // Local working snapshot of the active route + its Route object, rebuilt whenever it's swapped.
+  std::vector<WP> route; std::string rname; Route* r = nullptr;
+  std::vector<double> legLen; double total = 0;
+  double along = 0; size_t lastLeg = 0; long seenVer = -1;
+  auto rebuild_route = [&]() {
+    { std::lock_guard<std::mutex> lk(g_route_mtx); route = ROUTE; rname = g_route_name; }
+    r = build_route(route, rname);   // prior r intentionally leaked (rare swap; deleting while Routeman-active is unsafe)
+    gLat = route[0].lat; gLon = route[0].lon;
+    g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false);
+    legLen.clear(); total = 0; double b, d;
+    for (size_t i = 0; i + 1 < route.size(); ++i) { bd(route[i + 1].lat, route[i + 1].lon, route[i].lat, route[i].lon, &b, &d); legLen.push_back(d); total += d; }
+    along = 0; lastLeg = 0;
+    std::printf("route activated: \"%s\" %zu waypoints; Routeman live (no GUI).\n", rname.c_str(), route.size());
+  };
 
-  double along = 0; size_t lastLeg = 0;
   for (long tick = 0;; ++tick) {
+    long ver = g_route_version.load();
+    if (ver != seenVer) { seenVer = ver; rebuild_route(); }
     double sim_sog = 5.6 + std::sin(tick / 9.0) * 0.9;
     along += sim_sog / 3600.0;
     if (along >= total) { along = 0; lastLeg = 0; g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false); }
     size_t li = 0; double acc = 0;
     while (li + 1 < legLen.size() && acc + legLen[li] < along) { acc += legLen[li]; ++li; }
     double f = legLen[li] ? (along - acc) / legLen[li] : 0;
-    const WP& A = ROUTE[li]; const WP& B = ROUTE[li + 1];
+    const WP& A = route[li]; const WP& B = route[li + 1];
     while (lastLeg < li) { g_pRouteMan->ActivateNextPoint(r, false); ++lastLeg; }
     double sim_lat = A.lat + (B.lat - A.lat) * f, sim_lon = A.lon + (B.lon - A.lon) * f;
     double legBrg, segNM; bd(B.lat, B.lon, A.lat, A.lon, &legBrg, &segNM);
@@ -840,12 +915,12 @@ static void nav_loop(ix::HttpServer* server) {
     std::string actName = act ? std::string(act->GetName().ToUTF8()) : "—";
     std::string nextShort = actName.substr(0, actName.find(" \xC2\xB7 "));
     std::string legs = "[";
-    for (size_t k = li + 1; k < ROUTE.size() && k <= li + 2; ++k) {
-      const WP& from = (k == li + 1) ? WP{gLat, gLon, ""} : ROUTE[k - 1];
-      double lb, ld; bd(ROUTE[k].lat, ROUTE[k].lon, from.lat, from.lon, &lb, &ld);
+    for (size_t k = li + 1; k < route.size() && k <= li + 2; ++k) {
+      const WP& from = (k == li + 1) ? WP{gLat, gLon, ""} : route[k - 1];
+      double lb, ld; bd(route[k].lat, route[k].lon, from.lat, from.lon, &lb, &ld);
       char lbuf[160];
       std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
-                    k == li + 1 ? "" : ",", json_escape(ROUTE[k].name).c_str(), std::lround(lb), k == li + 1 ? "true" : "false");
+                    k == li + 1 ? "" : ",", json_escape(route[k].name).c_str(), std::lround(lb), k == li + 1 ? "true" : "false");
       legs += lbuf;
     }
     legs += "]";
@@ -924,17 +999,25 @@ static void nav_loop(ix::HttpServer* server) {
       g_track_emitted = g_track.size();
     }
     trackFull += "]"; trackAdd += "]";
+    // Active route geometry (full line + active-leg index) so the client redraws the line on change.
+    // Routes are small (a handful of waypoints), so it rides every frame — coords are [lon,lat].
+    std::string routeArr = "[";
+    for (size_t i = 0; i < route.size(); ++i) { char rb[40]; std::snprintf(rb, sizeof rb, "%s[%.5f,%.5f]", i ? "," : "", route[i].lon, route[i].lat); routeArr += rb; }
+    routeArr += "]";
+    std::string routeJson = "{\"coords\":" + routeArr + ",\"activeLeg\":" + std::to_string((long)li) + ",\"name\":\"" + json_escape(rname) + "\"}";
     std::string snapOut(snap);
     if (!snapOut.empty()) {                                                // top-level, before final }
       snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);
       snapOut.insert(snapOut.size() - 1, ",\"conns\":" + connsArr);
       snapOut.insert(snapOut.size() - 1, ",\"track\":" + trackFull + ",\"trackArmed\":" + armedJson);
+      snapOut.insert(snapOut.size() - 1, ",\"route\":" + routeJson);
     }
     if (keyframe) frame = snapOut;
     else if (!frame.empty()) {
       frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
       frame.insert(frame.size() - 1, ",\"conns\":" + connsArr);
       frame.insert(frame.size() - 1, ",\"trackAdd\":" + trackAdd + ",\"trackArmed\":" + armedJson);
+      frame.insert(frame.size() - 1, ",\"route\":" + routeJson);
     }
 
     auto clients = server->getClients();
