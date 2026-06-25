@@ -15,6 +15,7 @@
 #include "model/route_point.h"
 #include "model/own_ship.h"
 #include "model/georef.h"
+#include "model/config_vars.h"
 #include "ixwebsocket/IXWebSocketServer.h"
 #include "ixwebsocket/IXWebSocket.h"
 #include <thread>
@@ -369,6 +370,14 @@ int main(int argc, char** argv) {
   }
   std::printf("loaded route \"%s\": %zu waypoints\n", g_route_name.c_str(), ROUTE.size());
 
+  // Headless default for the arrival-circle radius. OpenCPN's g_n_arrival_circle_radius
+  // global defaults to 0 (normally set from the GUI options dialog, which never runs
+  // here); at 0 the model's Routeman::UpdateProgress arrival test is disabled and the
+  // active waypoint never auto-advances. Seed OpenCPN's usual default so the relocated
+  // UpdateProgress (ENGINE-10) advances when own-ship reaches a waypoint's arrival
+  // circle. Must precede RoutePoint construction — each waypoint inherits this value.
+  if (g_n_arrival_circle_radius <= 0) g_n_arrival_circle_radius = 0.05;  // NM (~93 m)
+
   // --- real model/ route + route manager, headless ---
   Route* r = new Route();
   for (auto& w : ROUTE)
@@ -417,18 +426,24 @@ int main(int argc, char** argv) {
   if (const char* sk = std::getenv("HELM_SIGNALK"))   // opt-in SignalK overlay (e.g. ws://pi.local:3000/signalk/v1/stream?subscribe=self)
     if (*sk) sk_start(sk);
 
-  double along = 0; size_t lastLeg = 0;
+  double along = 0;
   for (long tick = 0;; ++tick) {
     double sim_sog = 5.6 + std::sin(tick / 9.0) * 0.9;    // gentle 4.7-6.5 kn (scaffolding)
     along += sim_sog / 3600.0;                            // sim own-ship advances along the route
-    if (along >= total) { along = 0; lastLeg = 0;                  // loop the demo
-      g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false); }
+    // Loop the demo at end-of-route, OR re-activate if Routeman::UpdateProgress
+    // deactivated the route on arrival at the final waypoint. Waypoint advance is now
+    // the model's job (ENGINE-10) — there is no sim leg-index force-sync to reset.
+    if (along >= total || !g_pRouteMan->IsAnyRouteActive()) {
+      along = 0;
+      g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false);
+    }
 
+    // sim own-ship position interpolates along the route polyline; it is the fallback
+    // shown only when there is no fresh real fix (the active leg + advance is the model's).
     size_t li = 0; double acc = 0;
     while (li + 1 < legLen.size() && acc + legLen[li] < along) { acc += legLen[li]; ++li; }
     double f = legLen[li] ? (along - acc) / legLen[li] : 0;
     const WP& A = ROUTE[li]; const WP& B = ROUTE[li + 1];
-    while (lastLeg < li) { g_pRouteMan->ActivateNextPoint(r, false); ++lastLeg; }
 
     // ---- sim values (fallback scaffolding only) ----
     double sim_lat = A.lat + (B.lat - A.lat) * f;
@@ -455,16 +470,23 @@ int main(int argc, char** argv) {
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
 
-    // BRG/DTW to the model's active waypoint, computed from the (real-or-sim) position
-    RoutePoint* act = g_pRouteMan->GetpActivePoint();
-    double brgW = 0, dtw = 0;
-    if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
-    double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
+    // ENGINE-10: the per-fix active-route geometry + arrival/auto-advance is now the
+    // model's job. Routeman::UpdateProgress() (relocated headless from RoutemanGui)
+    // recomputes BRG/RNG/XTE off the canonical active route/leg from own-ship gLat/gLon
+    // and advances the active waypoint on arrival-circle crossing. We consume its result
+    // here instead of recomputing the geometry app-side.
+    g_pRouteMan->UpdateProgress();
 
-    // cross-track off the A->B leg
-    double brgAP, dAP; bd(gLat, gLon, A.lat, A.lon, &brgAP, &dAP);
-    double xteNM = std::fabs(std::asin(std::sin(dAP / 3440.065) *
-                   std::sin((brgAP - legBrg) * M_PI / 180.0)) * 3440.065);
+    RoutePoint* act = g_pRouteMan->GetpActivePoint();
+    double brgW  = g_pRouteMan->GetCurrentBrgToActivePoint();            // bearing to active WP (Mercator sailing)
+    double dtw   = g_pRouteMan->GetCurrentRngToActivePoint();            // great-circle range to active WP (NM)
+    double xteNM = std::fabs(g_pRouteMan->GetCurrentXTEToActivePoint()); // cross-track magnitude (NM); side via GetXTEDir()
+
+    // total distance-to-go = range to the active WP + the remaining whole legs, indexed
+    // by the model's active leg so DTG tracks the model's (real-position-correct) advance.
+    int actIdx = act ? r->GetIndexOf(act) : (int)(li + 1);
+    size_t mli = actIdx > 0 ? (size_t)(actIdx - 1) : li;                 // current leg index from the model
+    double dtg = dtw; for (size_t k = mli + 1; k < legLen.size(); ++k) dtg += legLen[k];
 
     double hoursToGo = dtg / std::max(0.1, sog);
     std::time_t now = std::time(nullptr);
@@ -478,13 +500,13 @@ int main(int argc, char** argv) {
 
     // legs: active waypoint then the one after
     std::string legs = "[";
-    for (size_t k = li + 1; k < ROUTE.size() && k <= li + 2; ++k) {
-      const WP& from = (k == li + 1) ? WP{gLat, gLon, ""} : ROUTE[k - 1];
+    for (size_t k = mli + 1; k < ROUTE.size() && k <= mli + 2; ++k) {
+      const WP& from = (k == mli + 1) ? WP{gLat, gLon, ""} : ROUTE[k - 1];
       double lb, ld; bd(ROUTE[k].lat, ROUTE[k].lon, from.lat, from.lon, &lb, &ld);
       char lbuf[160];
       std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
-                    k == li + 1 ? "" : ",", json_escape(ROUTE[k].name).c_str(), std::lround(lb),
-                    k == li + 1 ? "true" : "false");
+                    k == mli + 1 ? "" : ",", json_escape(ROUTE[k].name).c_str(), std::lround(lb),
+                    k == mli + 1 ? "true" : "false");
       legs += lbuf;
     }
     legs += "]";
@@ -537,7 +559,7 @@ int main(int argc, char** argv) {
     //      file. coords are the real waypoints we're navigating; activeLeg = the leg own-ship is
     //      on (ROUTE[li]->ROUTE[li+1]) so the cockpit can highlight it. ----
     std::string routeJson = "{\"name\":\"" + json_escape(g_route_name) +
-                            "\",\"activeLeg\":" + std::to_string((long)li) + ",\"coords\":[";
+                            "\",\"activeLeg\":" + std::to_string((long)mli) + ",\"coords\":[";
     for (size_t i = 0; i < ROUTE.size(); ++i) {
       char rb[48];
       std::snprintf(rb, sizeof rb, "%s[%.6f,%.6f]", i ? "," : "", ROUTE[i].lon, ROUTE[i].lat);
