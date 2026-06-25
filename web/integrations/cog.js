@@ -51,7 +51,9 @@ export async function enable(map, ctx) {
   } catch (e) { url = DEMO_COG; }
 
   map.addSource(SRC, { type: 'raster', url, tileSize: 256 });
-  map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': 0.8 } }, ctx.beforeId);
+  map.addLayer({ id: LYR, type: 'raster', source: SRC,
+    paint: { 'raster-opacity': 0, 'raster-opacity-transition': { duration: 500 } } }, ctx.beforeId);
+  requestAnimationFrame(() => { if (map.getLayer(LYR)) map.setPaintProperty(LYR, 'raster-opacity', 0.8); });
   ctx.notify('COG depth overlay via cog:// protocol (no tiler)', 'ok');
 }
 

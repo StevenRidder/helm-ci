@@ -84,9 +84,10 @@
   /* ---- drawers (hold the existing controls) ---- */
   .drawer{position:absolute;left:72px;top:68px;width:230px;z-index:6;border-radius:14px;
     padding:13px 14px;box-sizing:border-box;color:var(--ctext);max-height:calc(100% - 160px);overflow-y:auto;
-    transition:opacity .18s ease, transform .18s ease}
+    transform-origin:left center;
+    transition:opacity .26s ease, transform .42s cubic-bezier(.22,1.1,.36,1)}
   /* keep it in layout so it can fade/slide instead of popping (display:none can't transition) */
-  .drawer[hidden]{display:block;opacity:0;transform:translateX(-10px) scale(.985);pointer-events:none}
+  .drawer[hidden]{display:block;opacity:0;transform:translateX(-12px) scale(.96);pointer-events:none}
   .drawer h2{font-size:12px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
   .drawer .sub{font-size:10.5px;color:var(--cdim);margin:0 0 10px}
   .lbl{font-size:10px;color:var(--cdim2);margin:12px 0 6px;letter-spacing:.08em;text-transform:uppercase}
@@ -145,17 +146,27 @@
     transition:background .14s,color .14s}
   .ltools button:hover{background:rgba(255,255,255,.1);color:#fff}
 
+  /* ---- entrance motion ---- */
+  @keyframes rise{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+  @keyframes settle{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .insp,.ib{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+  .ib{animation-name:settle;animation-delay:.06s}
+  @media (prefers-reduced-motion:reduce){
+    .insp,.ib{animation:none}
+    .drawer{transition:opacity .15s ease}
+  }
+
   /* ---- right route inspector ---- */
   .insp{position:absolute;right:12px;top:68px;width:204px;z-index:6;border-radius:14px;padding:12px}
   .insp .ttl{display:flex;align-items:center;gap:7px;margin-bottom:9px;cursor:move;user-select:none}
   .insp .ttl svg{width:15px;height:15px;color:var(--mag)}
-  .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext)}
-  .insp .eta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
-  .insp .eta .l{font-size:10px;color:var(--cdim);letter-spacing:.04em}
-  .insp .eta .v{font-size:12.5px;color:var(--ctext);font-variant-numeric:tabular-nums}
-  .insp .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:9px}
-  .insp .kpis .k .l{font-size:10px;color:var(--cdim)}
-  .insp .kpis .k .v{font-size:15px;color:var(--ctext);font-variant-numeric:tabular-nums}
+  .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext);letter-spacing:-.01em}
+  .insp .eta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
+  .insp .eta .l{font-size:9px;color:var(--cdim2);letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+  .insp .eta .v{font-size:13px;color:var(--ctext);font-variant-numeric:tabular-nums;font-weight:500}
+  .insp .kpis{display:grid;grid-template-columns:1fr 1fr;gap:11px 14px;margin-bottom:10px}
+  .insp .kpis .k .l{font-size:9px;color:var(--cdim2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .insp .kpis .k .v{font-size:16px;color:var(--ctext);font-variant-numeric:tabular-nums;font-weight:500;letter-spacing:-.012em;margin-top:1px}
   .insp hr{border:0;height:.5px;background:var(--line);margin:8px 0}
   .leg{display:flex;align-items:center;gap:8px;padding:5px 0}
   .lgd{width:7px;height:7px;border-radius:50%;flex:none}
@@ -167,14 +178,17 @@
   .windbar .v{font-size:10.5px;color:var(--ctext)}
 
   /* ---- bottom instrument bar ---- */
-  .ib{position:absolute;left:12px;right:12px;bottom:12px;height:56px;z-index:6;border-radius:14px;
+  .ib{position:absolute;left:12px;right:12px;bottom:12px;height:60px;z-index:6;border-radius:16px;
     display:flex;align-items:center;box-sizing:border-box}
-  .it{flex:1;padding:0 15px;border-right:.5px solid var(--line)}
-  .it .l{font-size:10.5px;color:var(--cdim)}
-  .it .v{font-size:22px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;line-height:1.15}
-  .it .u{font-size:11px;color:var(--cdim);font-weight:400}
-  .it.wide{flex:1.8;display:flex;align-items:center;justify-content:space-between;border-right:0}
-  .it.wide .v2{font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .it{flex:1;padding:0 16px;position:relative}
+  .it:not(:first-child)::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:.5px;background:var(--line)}
+  .it .l{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--cdim2)}
+  .it .v{font-size:23px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;
+    line-height:1.12;letter-spacing:-.018em;margin-top:2px}
+  .it .u{font-size:11px;color:var(--cdim);font-weight:400;letter-spacing:0}
+  .it.wide{flex:1.85;display:flex;align-items:center;justify-content:space-between}
+  .it.wide .v2{font-size:13px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;
+    white-space:nowrap;letter-spacing:-.01em;margin-top:2px}
   .it.wide .r{text-align:right}
 
   /* ---- spacetime "narrate a point" slice card ---- */

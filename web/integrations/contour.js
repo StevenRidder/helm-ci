@@ -43,9 +43,11 @@ export async function enable(map, ctx) {
       'line-width': ['interpolate', ['linear'], ['zoom'],
         9, ['match', ['get', 'level'], 1, 0.9, 0.4],
         14, ['match', ['get', 'level'], 1, 2.0, 0.9]],
-      'line-opacity': 0.7,
+      'line-opacity': 0,
+      'line-opacity-transition': { duration: 500 },
     },
   }, ctx.beforeId);
+  requestAnimationFrame(() => { if (map.getLayer(LINE)) map.setPaintProperty(LINE, 'line-opacity', 0.7); });
 
   map.addLayer({
     id: LBL, type: 'symbol', source: SRC,
