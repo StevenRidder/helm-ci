@@ -17,6 +17,9 @@
     { v: 'tcp-server', label: 'TCP — listen (relay in)' },
     { v: 'udp',        label: 'UDP — listen' },
     { v: 'signalk',    label: 'SignalK — WebSocket' },
+    { v: 'serial',       label: 'Serial — USB/NMEA (macOS)' },     // CONN-9: address=device, port=baud
+    { v: 'nmea2000',     label: 'NMEA 2000 — N2K-over-IP' },        // CONN-8: TCP/UDP gateway
+    { v: 'internet-ais', label: 'Internet AIS — feed/provider' },  // CONN-10: ws:// provider or raw AIVDM
   ];
   let client = null, listEl, formEl, msgEl, conns = [], editingId = null, msgTimer = null;
   // CONN-7 raw-NMEA monitor: subscribe nmea.monitor{on} → engine streams nmea.raw{lines:[{conn,ts,line}]}.
@@ -54,6 +57,16 @@
     if (monitorOn) renderMon();
   }
   function toggleMonitor() { monitorOn = !monitorOn; monUi(); if (monitorOn) renderMon(); send({ t: 'nmea.monitor', on: monitorOn }); }
+
+  // ---- CONN-8/9/10: per-type form fields (N2K transport, internet-AIS API key, serial baud hint) ----
+  function applyTypeUi(type) {
+    if (!formEl) return;
+    const PH = { 'tcp-client': '39150', 'tcp-server': '10110', 'udp': '10110', 'signalk': '3000', 'serial': '4800', 'nmea2000': '2000', 'internet-ais': '4001' };
+    const p = formEl.querySelector('#conn-f-port'); if (p) p.placeholder = PH[type] || '10110';
+    const ph = formEl.querySelector('#conn-port-hint'); if (ph) ph.textContent = (type === 'serial') ? ' (baud)' : '';
+    const protoFld = formEl.querySelector('#conn-fld-proto'); if (protoFld) protoFld.hidden = (type !== 'nmea2000');
+    const akFld = formEl.querySelector('#conn-fld-apikey'); if (akFld) akFld.hidden = (type !== 'internet-ais');
+  }
 
   function render() {
     if (!listEl) return;
@@ -93,7 +106,10 @@
     formEl.querySelector('#conn-f-addr').value = c ? (c.address || '') : '';
     formEl.querySelector('#conn-f-port').value = c ? c.port : '';
     const prioEl = formEl.querySelector('#conn-f-prio'); if (prioEl) prioEl.value = c ? (c.priority || 0) : '';
+    const protoEl = formEl.querySelector('#conn-f-proto'); if (protoEl) protoEl.value = (c && c.type === 'nmea2000' && c.dataProtocol === 'udp') ? 'udp' : 'tcp';
+    const akEl = formEl.querySelector('#conn-f-apikey'); if (akEl) akEl.value = (c && c.type === 'internet-ais') ? (c.comment || '') : '';
     formEl.querySelector('#conn-f-en').checked = c ? c.enabled !== false : true;
+    applyTypeUi(c ? c.type : 'tcp-client');   // CONN-8/9/10: show/hide per-type fields + set placeholders
     formEl.querySelector('#conn-f-name').focus();
   }
   function hideForm() { formEl.hidden = true; editingId = null; }
@@ -101,20 +117,31 @@
   function onSubmit(e) {
     e.preventDefault();
     const type = formEl.querySelector('#conn-f-type').value;
+    const address = formEl.querySelector('#conn-f-addr').value.trim();
+    const wsAis = (type === 'internet-ais' && /^wss?:\/\//i.test(address));   // ws:// provider — port lives in the URL
+    const proto = (formEl.querySelector('#conn-f-proto') || {}).value;
     const conn = {
       name: formEl.querySelector('#conn-f-name').value.trim(),
-      type,
-      address: formEl.querySelector('#conn-f-addr').value.trim(),
-      port: parseInt(formEl.querySelector('#conn-f-port').value, 10),
-      dataProtocol: type === 'signalk' ? 'signalk' : 'nmea0183',
+      type, address,
+      port: parseInt(formEl.querySelector('#conn-f-port').value, 10) || 0,
+      // signalk → signalk; nmea2000 → tcp|udp transport; everything else carries nmea0183
+      dataProtocol: type === 'signalk' ? 'signalk' : type === 'nmea2000' ? (proto === 'udp' ? 'udp' : 'tcp') : 'nmea0183',
       priority: parseInt((formEl.querySelector('#conn-f-prio') || {}).value, 10) || 0,   // CONN-6: higher wins; lower fills in on failover
       enabled: formEl.querySelector('#conn-f-en').checked,
     };
+    if (type === 'internet-ais') conn.comment = ((formEl.querySelector('#conn-f-apikey') || {}).value || '').trim();  // CONN-10: aisstream API key rides in comment
     if (editingId) conn.id = editingId;
-    if (!conn.port || conn.port < 1 || conn.port > 65535) { flash('Enter a valid port (1–65535).', true); return; }
-    // tcp-client and signalk both need a target address (engine rejects either without one)
-    if ((type === 'tcp-client' || type === 'signalk') && !conn.address) {
-      flash(type === 'signalk' ? 'Enter the SignalK host (or ws:// URL).' : 'Enter the device address (IP or hostname).', true); return;
+    // address required for every device/outbound type (engine rejects without one); tcp-server/udp bind+listen
+    if (type !== 'tcp-server' && type !== 'udp' && !address) {
+      flash(type === 'serial' ? 'Enter the serial device (e.g. /dev/cu.usbserial-1410).'
+          : type === 'internet-ais' ? 'Enter the provider URL (ws://…) or AIS host.'
+          : type === 'signalk' ? 'Enter the SignalK host (or ws:// URL).'
+          : 'Enter the device address (IP or hostname).', true);
+      return;
+    }
+    // port 1–65535 required (for serial it IS the baud rate); skipped only for a ws:// internet-AIS provider
+    if (!wsAis && (!conn.port || conn.port < 1 || conn.port > 65535)) {
+      flash(type === 'serial' ? 'Enter a baud rate (e.g. 4800).' : 'Enter a valid port (1–65535).', true); return;
     }
     send({ t: 'conn.upsert', conn });
     hideForm();
@@ -149,12 +176,36 @@
         portFld.insertAdjacentElement('afterend', lab);
       }
     })();
+    // CONN-8/9/10: inject per-type fields — N2K transport (TCP/UDP), internet-AIS API key (→comment),
+    // and a "(baud)" hint on the port field for serial. Kept in connections.js (CONN's lane, no shell edit).
+    (function () {
+      const portEl = formEl.querySelector('#conn-f-port');
+      const portFld = portEl && portEl.closest('.conn-fld');
+      if (portEl && !formEl.querySelector('#conn-port-hint')) {
+        const hint = document.createElement('span');
+        hint.id = 'conn-port-hint'; hint.style.cssText = 'color:var(--cdim);font-size:11px';
+        portEl.insertAdjacentElement('beforebegin', hint);     // renders as "Port <hint> [input]"
+      }
+      const prioFld = formEl.querySelector('#conn-f-prio') && formEl.querySelector('#conn-f-prio').closest('.conn-fld');
+      const anchor = prioFld || portFld;
+      if (anchor && !formEl.querySelector('#conn-f-proto')) {
+        const proto = document.createElement('label');
+        proto.className = 'conn-fld'; proto.id = 'conn-fld-proto'; proto.hidden = true;
+        proto.innerHTML = 'Transport <span style="color:var(--cdim);font-size:11px">(NMEA 2000 gateway)</span>' +
+          '<select id="conn-f-proto"><option value="tcp">TCP — connect out</option><option value="udp">UDP — listen</option></select>';
+        anchor.insertAdjacentElement('afterend', proto);
+      }
+      if (anchor && !formEl.querySelector('#conn-f-apikey')) {
+        const ak = document.createElement('label');
+        ak.className = 'conn-fld'; ak.id = 'conn-fld-apikey'; ak.hidden = true;
+        ak.innerHTML = 'API key <span style="color:var(--cdim);font-size:11px">(aisstream.io, for ws:// feeds)</span>' +
+          '<input id="conn-f-apikey" autocomplete="off" placeholder="aisstream API key">';
+        (formEl.querySelector('#conn-fld-proto') || anchor).insertAdjacentElement('afterend', ak);
+      }
+    })();
     document.getElementById('conn-add-btn').addEventListener('click', () => showForm(null));
     document.getElementById('conn-cancel').addEventListener('click', hideForm);
-    formEl.querySelector('#conn-f-type').addEventListener('change', e => {
-      const p = formEl.querySelector('#conn-f-port');
-      p.placeholder = e.target.value === 'tcp-client' ? '39150' : e.target.value === 'signalk' ? '3000' : '10110';
-    });
+    formEl.querySelector('#conn-f-type').addEventListener('change', e => applyTypeUi(e.target.value));   // CONN-8/9/10: per-type fields + placeholder
     formEl.addEventListener('submit', onSubmit);
     // CONN-7: inject a raw-NMEA monitor below the connection list (kept in connections.js — CONN's
     // lane, no shell edit). Toggling it sends nmea.monitor{on}; engine streams nmea.raw while on.
