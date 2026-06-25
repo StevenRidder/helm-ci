@@ -36,6 +36,10 @@ step "DEM  (Terrarium terrain-RGB tiles -> web/data/dem, feeds depth contours + 
 python3 "$SCRIPT_DIR/fetch_dem.py" \
   || echo "  ! DEM step failed (network?) — continuing"
 
+step "satellite basemap  (Sentinel-2 cloudless -> web/data/sat — the OFFLINE-by-default basemap, no CDN at runtime)"
+python3 "$SCRIPT_DIR/fetch_sat_tiles.py" 8 13 \
+  || echo "  ! sat-tiles step failed (network?) — continuing"
+
 step "depth contours  (smooth, Windy-style: DEM -> gaussian -> marching-squares -> Chaikin -> geojson)"
 python3 "$SCRIPT_DIR/make_depth_contours.py" \
   || echo "  ! depth-contour step failed (matplotlib/numpy missing?) — continuing"

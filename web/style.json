@@ -7,9 +7,12 @@
       "type": "raster",
       "tileSize": 256,
       "tiles": [
-        "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg"
+        "data/sat/{z}/{x}/{y}.jpg"
       ],
-      "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0)"
+      "minzoom": 8,
+      "maxzoom": 13,
+      "bounds": [176.9, -18.2, 177.9, -17.2],
+      "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0) — baked offline"
     },
     "charts": {
       "type": "raster",
