@@ -85,7 +85,7 @@ static bool g_nodtaOk = false;
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
 // be masked as an empty/transparent tile that the navigator reads as open water.
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -176,7 +176,30 @@ static void composite_over(wxImage& acc, const wxImage& top) {
 // ---- render one tile (MAIN THREAD ONLY) -> status, PNG bytes in `out` --------
 // Every failure path is surfaced with its stage; the caller turns RenderFailed
 // into an HTTP 5xx + log, never a silent transparent tile.
-static TileStatus render_tile(int z, long x, long y, std::string& out) {
+// CHART-8: true engine-side S-52 colour palette (Day/Dusk/Night), NOT a raster reskin. Rendering is
+// serialized on the main thread (the job loop), so we switch the global s52plib + every cell's colour
+// scheme per tile and pay the switch cost only when the requested palette actually changes.
+static ColorScheme g_color_scheme = GLOBAL_COLOR_SCHEME_DAY;
+static const char* palette_name(ColorScheme s) {
+  return s == GLOBAL_COLOR_SCHEME_DUSK ? "dusk" : (s == GLOBAL_COLOR_SCHEME_NIGHT ? "night" : "day");
+}
+static ColorScheme palette_from_query(const std::string& uri) {   // ?p=day|dusk|night (default day)
+  const auto q = uri.find("p=");
+  if (q != std::string::npos) {
+    const std::string v = uri.substr(q + 2);
+    if (v.rfind("dusk", 0) == 0)  return GLOBAL_COLOR_SCHEME_DUSK;
+    if (v.rfind("night", 0) == 0) return GLOBAL_COLOR_SCHEME_NIGHT;
+  }
+  return GLOBAL_COLOR_SCHEME_DAY;
+}
+static void apply_palette(ColorScheme scheme) {   // main-thread only (called from render_tile)
+  if (scheme == g_color_scheme) return;
+  ps52plib->SetPLIBColorScheme(scheme, ChartCtx(false, 0));
+  for (Cell& c : g_cells) c.chart->SetColorScheme(scheme);
+  g_color_scheme = scheme;
+}
+
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::string& out) {
   // boundary validation: reject malformed tile coordinates loudly
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld (coords out of range)\n", z, x, y);
@@ -188,6 +211,7 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   std::vector<Cell*> layers;
   rank_cells(west, south, east, north, z, layers);
   if (layers.empty()) return TileStatus::NoCoverage;
+  apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
 
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
@@ -313,7 +337,7 @@ static std::string charts_version_stamp() {
   auto fold = [&](const std::string& s) {
     for (unsigned char c : s) { hsh ^= c; hsh *= 1099511628211ULL; }
   };
-  fold("day|");                                               // palette (helm-tiles renders Day)
+  fold("s52|");                                               // renderer tag (palette is a separate ETag segment, CHART-8)
   for (const Cell& c : g_cells) { fold(c.path); fold("@"); fold(std::to_string(c.scale)); fold(";"); }
   char buf[17]; std::snprintf(buf, sizeof buf, "%016llx", hsh);
   return std::string(buf);
@@ -343,7 +367,8 @@ public:
           // Immutable per-tile ETag (CHART-14): a tile's bytes don't change unless g_charts_version
           // does, so a matching revalidation gets 304 WITHOUT rendering, and the browser may cache for
           // a year. Mirrors helm-server's immutable ETag+304 (which standalone helm-tiles lacked).
-          char et[80]; std::snprintf(et, sizeof et, "\"%s.%d.%ld.%ld\"", g_charts_version.c_str(), z, x, y);
+          const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
+          char et[96]; std::snprintf(et, sizeof et, "\"%s.%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), z, x, y);
           const std::string etag(et);
           const auto inm = req->headers.find("If-None-Match");   // ix headers compare case-insensitively
           if (inm != req->headers.end() && inm->second == etag) {
@@ -351,7 +376,7 @@ public:
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
           }
           // hand the render to the main thread (CoreGraphics) and wait
-          Job job; job.z = z; job.x = x; job.y = y;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -402,7 +427,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m);
       g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->result);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; }
     j->cv.notify_one();
   }

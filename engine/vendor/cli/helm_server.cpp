@@ -115,8 +115,32 @@ static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
 static s57chart* g_chart = nullptr;
 static Extent    g_ext;
 static std::string g_blank;
-static std::string g_etag;
 static const int TS = 256;
+
+// CHART-8: true engine-side S-52 colour palette (Day/Dusk/Night), NOT a raster reskin. Rendering is
+// serialized on the main thread (the job loop), so we switch the global s52plib + chart colour scheme
+// per tile and pay the switch cost only when the requested palette actually changes.
+static std::string g_cell_name;                               // components of the per-palette ETag
+static int g_native_scale = 0;
+static ColorScheme g_color_scheme = GLOBAL_COLOR_SCHEME_DAY;  // currently-applied scheme
+static const char* palette_name(ColorScheme s) {
+  return s == GLOBAL_COLOR_SCHEME_DUSK ? "dusk" : (s == GLOBAL_COLOR_SCHEME_NIGHT ? "night" : "day");
+}
+static ColorScheme palette_from_query(const std::string& uri) {   // ?p=day|dusk|night (default day)
+  const auto q = uri.find("p=");
+  if (q != std::string::npos) {
+    const std::string v = uri.substr(q + 2);
+    if (v.rfind("dusk", 0) == 0)  return GLOBAL_COLOR_SCHEME_DUSK;
+    if (v.rfind("night", 0) == 0) return GLOBAL_COLOR_SCHEME_NIGHT;
+  }
+  return GLOBAL_COLOR_SCHEME_DAY;
+}
+static void apply_palette(ColorScheme scheme) {               // main-thread only (called from render_tile)
+  if (scheme == g_color_scheme) return;
+  ps52plib->SetPLIBColorScheme(scheme, ChartCtx(false, 0));
+  g_chart->SetColorScheme(scheme);
+  g_color_scheme = scheme;
+}
 
 static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name) {
   std::string want(name);
@@ -130,7 +154,7 @@ static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name
 }
 
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -143,7 +167,7 @@ static double tile_lat(double y, int z) {
   return std::atan(std::sinh(n)) * 180.0 / M_PI;
 }
 
-static TileStatus render_tile(int z, long x, long y, std::string& out) {
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, std::string& out) {
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld\n", z, x, y);
     return TileStatus::BadRequest;
@@ -152,6 +176,7 @@ static TileStatus render_tile(int z, long x, long y, std::string& out) {
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
   if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
     return TileStatus::NoCoverage;
+  apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
   if (span_m <= 0) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: span\n", z, x, y); return TileStatus::RenderFailed; }
@@ -211,9 +236,8 @@ static bool init_chart(const wxString& enc_path) {
   if (ns <= 1) { printf("FATAL: chart native scale invalid (%d)\n", ns); return false; }
   g_blank = make_blank();
   if (g_blank.empty()) { printf("FATAL: blank tile gen failed\n"); return false; }
-  wxString cell = wxFileName(enc_path).GetName();
-  char etag[96]; std::snprintf(etag, sizeof etag, "\"%s.day.s%d\"", (const char*)cell.ToUTF8(), ns);
-  g_etag = etag;
+  g_cell_name = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8());
+  g_native_scale = ns;   // CHART-8: ETag is built per-request as "<cell>.<palette>.s<scale>"
   printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d\n",
          g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns);
   return true;
@@ -225,7 +249,7 @@ static void warmup_render() {
   long x = (long)((clon + 180.0) / 360.0 * n);
   double lr = clat * M_PI / 180.0;
   long y = (long)((1.0 - std::log(std::tan(lr) + 1.0 / std::cos(lr)) / M_PI) / 2.0 * n);
-  std::string scratch; TileStatus st = render_tile(z, x, y, scratch);
+  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, scratch);
   printf("warmup render z%d/%ld/%ld -> status=%d (%zuB)\n", z, x, y, (int)st, scratch.size());
 }
 
@@ -1211,10 +1235,13 @@ public:
         ix::WebSocketHttpHeaders h; h["Access-Control-Allow-Origin"] = "*";
         int z; long x, y;
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
-          h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = g_etag;
-          if (header_ci(req->headers, "If-None-Match") == g_etag)
+          const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
+          char et[112]; std::snprintf(et, sizeof et, "\"%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), g_native_scale);
+          const std::string etag(et);
+          h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+          if (header_ci(req->headers, "If-None-Match") == etag)
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
-          Job job; job.z = z; job.x = x; job.y = y;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -1276,7 +1303,7 @@ int main(int argc, char** argv) {
     Job* j = nullptr;
     { std::unique_lock<std::mutex> lk(g_jobs_m); g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->result);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; } j->cv.notify_one();
   }
   wxEntryCleanup();
