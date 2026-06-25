@@ -26,18 +26,26 @@
   function showLegacy(visible) {
     var map = S.map; if (!map) return;
     if (map.getLayer('helm-wxfield')) map.setLayoutProperty('helm-wxfield', 'visibility', visible ? 'visible' : 'none');
-    var pc = document.getElementById('particles');
-    // particle canvas is driven by the legacy code; just hide its layer if present
-    if (map.getLayer('wind-particles')) map.setLayoutProperty('wind-particles', 'visibility', visible ? 'visible' : 'none');
+    if (!visible && window.__helmWindLayer) window.__helmWindLayer.setVisible(false);
+    if (visible && window.__helmSetWeather) window.__helmSetWeather(activeLayer());
+  }
+
+  var STANDARD_PARTICLES = { wind: true, waves: true, swell: true, current: true };
+  function syncParticleControl(available) {
+    var pc = document.getElementById('particles'); if (!pc) return;
+    pc.disabled = !available;
+    pc.parentElement.style.opacity = available ? '1' : '.48';
+    pc.parentElement.title = available ? '' : 'Animated particles are available for Live wind only in this mode.';
   }
 
   async function apply() {
     var map = S.map, layer = activeLayer(), m = await cog();
     if (window.HelmWxLive) window.HelmWxLive.disable(map);
     m.disableEnsemble(map); m.disableWxTiles(map);
-    if (layer === 'off') { showLegacy(false); setProbe(''); return; }
+    if (layer === 'off') { syncParticleControl(false); showLegacy(false); setProbe(''); return; }
 
     if (S.model === 'ensemble') {
+      syncParticleControl(false);
       showLegacy(false);
       // GFS-vs-ECMWF spread. Live two-model needs a connection; offline we show the committed demo
       // pack (Key West), clearly labelled — bake your area for a local ensemble.
@@ -54,9 +62,19 @@
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
       showLegacy(false);
-      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) window.HelmWxLive.enable(map, { layer: layer, notify: notify });
-      else notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');
+      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        syncParticleControl(layer === 'wind');
+        window.HelmWxLive.enable(map, {
+          layer: layer, particles: !!document.getElementById('particles').checked, notify: notify
+        });
+      }
+      else {
+        syncParticleControl(!!STANDARD_PARTICLES[layer]);
+        showLegacy(true);
+        notify(layer + ' is not wired for Live yet — showing Standard.', 'warn');
+      }
     } else {
+      syncParticleControl(!!STANDARD_PARTICLES[layer]);
       showLegacy(true);                                   // Standard + Single → the legacy field handles it
       notify('');
       var nn = document.getElementById('wx-notice'); if (nn) nn.style.display = 'none';

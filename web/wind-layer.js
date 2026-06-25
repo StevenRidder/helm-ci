@@ -486,6 +486,26 @@
   };
 
   // ---- Public API ---------------------------------------------------------
+  HelmWindLayer.prototype.setData = function (json) {
+    var ok = this.field.build(json);
+    if (!ok) {
+      this.clearData();
+      return false;
+    }
+    this._initParticles();
+    if (this._visible) {
+      this._clear();
+      this._start();
+    }
+    return true;
+  };
+
+  HelmWindLayer.prototype.clearData = function () {
+    this.field.valid = false;
+    this._particles = [];
+    this._clear();
+  };
+
   HelmWindLayer.prototype.load = function (url) {
     var self = this;
     return fetch(url, { cache: 'no-cache' })
@@ -494,26 +514,17 @@
         return r.json();
       })
       .then(function (json) {
-        var ok = self.field.build(json);
+        var ok = self.setData(json);
         if (!ok) {
           console.warn('[HelmWind] wind.json present but not a valid VELOCITY grid; layer stays empty.');
-          self.field.valid = false;
           return false;
-        }
-        self._initParticles();
-        if (self._visible) {
-          // Data arrived after the layer was switched on: clear stale frame
-          // and make sure the rAF loop is running.
-          self._clear();
-          self._start();
         }
         return true;
       })
       .catch(function (err) {
         // Missing / empty / malformed: degrade gracefully, never crash.
         console.warn('[HelmWind] could not load wind data:', err && err.message ? err.message : err);
-        self.field.valid = false;
-        self._particles = [];
+        self.clearData();
         return false;
       });
   };
@@ -538,6 +549,10 @@
   };
 
   HelmWindLayer.prototype.isVisible = function () { return this._visible; };
+  HelmWindLayer.prototype.status = function () {
+    return { visible: this._visible, running: this._running, valid: !!this.field.valid,
+             particles: this._particles ? this._particles.length : 0 };
+  };
   HelmWindLayer.prototype.setNeutral = function (v) { this._neutral = !!v; };
   HelmWindLayer.prototype.setOpacity = function (a) { this._neutralAlpha = Math.max(0.03, Math.min(0.95, a)); };
 

@@ -16,7 +16,7 @@
   // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers (waves/swell/sst/current)
   // use a different endpoint and stay on Standard for now.
   var LAYERS = {
-    wind:     { v: 'wind_speed_10m', unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
+    wind:     { v: 'wind_speed_10m', dir: 'wind_direction_10m', unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
     gust:     { v: 'wind_gusts_10m', unit: 'kn', stops: [[0,[56,189,248]],[10,[45,212,191]],[20,[250,204,21]],[30,[249,115,22]],[42,[239,68,68]],[60,[217,33,154]]] },
     rain:     { v: 'precipitation', unit: 'mm', stops: [[0,[80,160,220,0]],[0.2,[90,180,255,0.55]],[2,[40,120,235,0.8]],[6,[120,90,235,0.85]],[15,[175,60,200,0.9]]] },
     temp:     { v: 'temperature_2m', unit: '°C', stops: [[-10,[70,90,200]],[0,[80,180,235]],[10,[70,200,130]],[20,[245,205,60]],[30,[240,120,40]],[42,[210,40,40]]] },
@@ -26,8 +26,8 @@
   };
   function supports(layer) { return !!LAYERS[layer]; }
 
-  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {},
-             handler: null, debounce: null, abort: null, lastKey: '' };
+  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, velocity: null,
+             particles: true, notify: function () {}, handler: null, debounce: null, abort: null, lastKey: '' };
 
   function codec() { return window.HelmWxCodec; }
 
@@ -77,7 +77,8 @@
 
   function url(g, layer, model) {
     var L = LAYERS[layer];
-    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + L.v;
+    var vars = L.dir ? (L.v + ',' + L.dir) : L.v;
+    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + vars;
     if (layer === 'wind' || layer === 'gust') p += '&wind_speed_unit=kn';
     if (model && model !== 'gfs_seamless') p += '&models=' + model;
     return FORECAST + '?' + p;
@@ -96,6 +97,44 @@
              west: g.lons[0], east: g.lons[g.lons.length - 1], north: g.lats[0], south: g.lats[g.lats.length - 1],
              vmin: valid.length ? Math.min.apply(null, valid) : 0, vmax: valid.length ? Math.max.apply(null, valid) : 1,
              stops: L.stops, values: vals };
+  }
+
+  function metToUv(speed, directionFromDeg) {
+    var r = directionFromDeg * Math.PI / 180;
+    return [-speed * Math.sin(r), -speed * Math.cos(r)];
+  }
+
+  function toVelocity(nodes, g, layer) {
+    var L = LAYERS[layer]; if (!L || !L.dir) return null;
+    var u = [], v = [];
+    for (var k = 0; k < g.qlat.length; k++) {
+      var node = Array.isArray(nodes) ? nodes[k] : nodes;
+      var cur = node && node.current, spd = cur && cur[L.v], dir = cur && cur[L.dir];
+      var uv = (typeof spd === 'number' && typeof dir === 'number') ? metToUv(spd, dir) : [NaN, NaN];
+      u.push(uv[0]); v.push(uv[1]);
+    }
+    var header = { nx: g.nx, ny: g.ny, lo1: g.lons[0], la1: g.lats[0],
+      lo2: g.lons[g.lons.length - 1], la2: g.lats[g.lats.length - 1],
+      dx: (g.lons[g.lons.length - 1] - g.lons[0]) / (g.nx - 1),
+      dy: (g.lats[0] - g.lats[g.lats.length - 1]) / (g.ny - 1) };
+    return [
+      { header: Object.assign({ parameterCategory: 2, parameterNumber: 2 }, header), data: u },
+      { header: Object.assign({ parameterCategory: 2, parameterNumber: 3 }, header), data: v }
+    ];
+  }
+
+  function applyParticles(velocity) {
+    var wind = window.__helmWindLayer;
+    st.velocity = velocity || null;
+    if (!wind) return false;
+    if (!st.on || !st.particles || st.layer !== 'wind' || !velocity) {
+      wind.setVisible(false);
+      if (!velocity) wind.clearData();
+      return false;
+    }
+    var ok = wind.setData(velocity);
+    wind.setVisible(ok);
+    return ok;
   }
 
   // PUBLIC (also used by tests): colourise a field full-bleed over its bbox as a MapLibre image source.
@@ -137,7 +176,8 @@
     if (!map) return;
     if (map.getLayer(LYR)) map.removeLayer(LYR);
     if (map.getSource(SRC)) map.removeSource(SRC);
-    st.field = null;
+    st.field = null; st.velocity = null;
+    applyParticles(null);
   }
 
   async function refresh() {
@@ -163,8 +203,11 @@
         st.notify('No live data for this area', 'warn'); return;
       }
       renderField(st.map, field);
+      var velocity = toVelocity(nodes, g, st.layer);
+      var particleOk = applyParticles(velocity);
       st.abort = null;
-      st.notify('Live ' + st.layer + ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
+      st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
+        ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
     } catch (e) {
       if (e && e.name === 'AbortError') return;
       if (my !== st.token || !st.on) return;
@@ -179,6 +222,7 @@
   function enable(map, opts) {
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
+    st.particles = opts.particles !== false;
     st.notify = opts.notify || st.notify; st.on = true; st.lastKey = '';
     if (!st.handler) { st.handler = onMove; map.on('moveend', st.handler); }
     refresh();
@@ -192,6 +236,8 @@
   }
   function setLayer(layer) { st.layer = layer; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
   function setModel(model) { st.model = model; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
+  function setParticles(on) { st.particles = !!on; applyParticles(st.velocity); }
+  function isEnabled() { return st.on; }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;
     lon += Math.round(((f.west + f.east) / 2 - lon) / 360) * 360;
@@ -202,6 +248,7 @@
   }
 
   window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel,
-    sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField,
+    setParticles: setParticles, isEnabled: isEnabled, sampleAt: sampleAt, renderField: renderField,
+    supports: supports, _toField: toField, _toVelocity: toVelocity, _metToUv: metToUv,
     _viewBbox: viewBbox, _grid: grid, _covers: covers, _clearOverlay: clearOverlay };
 })();
