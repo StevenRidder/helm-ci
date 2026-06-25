@@ -110,7 +110,8 @@
       const c = classify(own, t);
       const roleClass = c.role === 'give-way' ? 'give' : c.role === 'stand-on' ? 'stand' : 'mon';
       const roleLabel = c.role === 'give-way' ? 'GIVE-WAY' : c.role === 'stand-on' ? 'STAND-ON' : 'MONITOR';
-      const name = (t.name && String(t.name).trim()) ? t.name : ('MMSI ' + (t.mmsi ?? '?'));
+      // AIS names are fixed-width, right-padded with '@' (6-bit value 0) — strip it (e.g. "LISTRAC@@@@@@" -> "LISTRAC").
+      const name = String(t.name == null ? '' : t.name).replace(/@+/g, '').trim() || ('MMSI ' + (t.mmsi ?? '?'));
       el.innerHTML =
         '<div class="cpa-ic">⚠</div>' +
         '<div class="cpa-body">' +
