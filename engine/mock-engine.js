@@ -7,7 +7,9 @@
 // the client reaches it identically whether you address it as localhost or a LAN IP.
 //
 //   ONE ORIGIN (default 0.0.0.0:8090):
-//     WS  /nav                         snapshot + delta @ 2 Hz, seq, ping heartbeat
+//     WS  /nav                         snapshot + delta @ 2 Hz (each carries live conns[]), seq, ping;
+//                                       command-plane in: conn.list / conn.upsert / conn.delete
+//                                       → conn.ack + conn.list  (the Connections-UI contract)
 //     GET /chart/{z}/{x}/{y}.png       S-52 stand-in tile, immutable cache + ETag
 //     GET /health                      liveness/version (unauthenticated)
 //     GET /catalog                     chart cells available (stub)
@@ -79,6 +81,82 @@ function navState() {
   };
 }
 
+// ---------- connections command-plane (mirrors helm_server.cpp conn.* — for the CONN UI) ----------
+// The real engine OWNS + persists ~/.helm/connections.json and streams live per-connection
+// status in EVERY nav frame (s.conns). This in-memory stand-in speaks the identical wire shapes
+// so web/connections.js can be built + smoke-tested with NO C++ build:
+//   conn.list                 -> {t:'conn.list', conns:[ {id,name,type,address,port,enabled,
+//                                  status,ageSec,sentences,error?} … ]}
+//   conn.upsert {conn:{…}}     -> {t:'conn.ack', ok, id, error?}  then a fresh conn.list
+//   conn.delete {id}           -> {t:'conn.ack', ok, id}          then a fresh conn.list
+// and it embeds the same `conns` array in every snapshot/delta. Writes honor HELM_OWNER_TOKEN
+// if set (matching the engine's owner-token gate).
+//
+// Accepted types match the engine — tcp-client | tcp-server | udp — PLUS 'signalk', so the
+// CONN-5 SignalK affordance can be built/verified AGAINST THIS MOCK ahead of the engine wiring.
+// NOTE: the real helm-server still REJECTS "signalk" until CHART lands the driver (CONN-5);
+// this mock deliberately runs ahead so CONN isn't blocked. Keep that asymmetry in mind.
+const OWNER_TOKEN = process.env.HELM_OWNER_TOKEN || '';
+const CONN_TYPES = ['tcp-client', 'tcp-server', 'udp', 'signalk'];   // 'signalk' = CONN-5 build-ahead
+let connCounter = 0;
+const connMap = new Map();   // id -> { cfg, rt:{ status, sentences, lastRx, since } }
+function seedConn(cfg) { connMap.set(cfg.id, { cfg, rt: { status: 'connecting', sentences: 0, lastRx: 0, since: Date.now() } }); }
+// mirror the engine's seeded default (helm_server.cpp) so the list isn't empty on first load
+seedConn({ id: 'local-nmea', name: 'Local NMEA (relay)', type: 'tcp-server', address: '127.0.0.1', port: 10110, enabled: true, dataProtocol: 'nmea0183', comment: '' });
+
+const connSlug = s => { let o = ''; for (const ch of (s || '')) { if (/[a-z0-9]/i.test(ch)) o += ch.toLowerCase(); else if (o && o.slice(-1) !== '-') o += '-'; } return o.replace(/-+$/, '').slice(0, 24); };
+function connFromJson(v) {   // mirror conn_from_json validation; → { cfg } or { err }
+  const gs = k => (typeof v[k] === 'string' ? v[k] : '');
+  const cfg = { id: gs('id'), name: gs('name'), type: gs('type'), address: gs('address'),
+    dataProtocol: gs('dataProtocol') || 'nmea0183', comment: gs('comment'),
+    port: (typeof v.port === 'number' ? v.port : (parseInt(v.port, 10) || 0)),
+    enabled: (typeof v.enabled === 'boolean' ? v.enabled : true) };
+  if (!CONN_TYPES.includes(cfg.type)) return { err: 'type must be tcp-client | tcp-server | udp | signalk' };
+  if (cfg.type !== 'signalk' && (cfg.port < 1 || cfg.port > 65535)) return { err: 'port must be 1-65535' };
+  if ((cfg.type === 'tcp-client' || cfg.type === 'signalk') && !cfg.address) return { err: 'address required for ' + cfg.type };
+  if (!cfg.id) { const b = connSlug(cfg.name || cfg.type) || 'conn'; cfg.id = b + '-' + (++connCounter); }
+  return { cfg };
+}
+function connStatusArray() {
+  const now = Math.floor(Date.now() / 1000);
+  return [...connMap.values()].map(({ cfg, rt }) => {
+    const status = !cfg.enabled ? 'disabled' : rt.status;
+    const o = { id: cfg.id, name: cfg.name, type: cfg.type, address: cfg.address, port: cfg.port,
+      enabled: cfg.enabled, status, ageSec: rt.lastRx ? now - rt.lastRx : -1, sentences: rt.sentences };
+    if (rt.error) o.error = rt.error;
+    return o;
+  });
+}
+// simulate each connection's lifecycle so the UI shows live status: enabled → connecting →
+// (after ~1.5 s) connected, then sentence counts tick up and age stays fresh; disabled → disabled.
+setInterval(() => {
+  const now = Math.floor(Date.now() / 1000);
+  for (const { cfg, rt } of connMap.values()) {
+    if (!cfg.enabled) { rt.status = 'disabled'; continue; }
+    if (rt.status === 'disabled') { rt.status = 'connecting'; rt.since = Date.now(); }
+    if (rt.status === 'connecting' && Date.now() - rt.since > 1500) rt.status = 'connected';
+    if (rt.status === 'connected') { rt.sentences += 3 + Math.floor(Math.random() * 4); rt.lastRx = now; }
+  }
+}, 1000);
+// handle one conn.* command from a client; returns true if it was a conn.* verb. `send` is the
+// per-client sender. Replies match the engine: conn.ack (+ a fresh conn.list) for writes.
+function handleConnCmd(send, m) {
+  if (typeof m.t !== 'string' || !m.t.startsWith('conn.')) return false;
+  if (OWNER_TOKEN && m.token !== OWNER_TOKEN) { send({ t: 'conn.ack', ok: false, id: '', error: 'unauthorized' }); return true; }
+  if (m.t === 'conn.list') { send({ t: 'conn.list', conns: connStatusArray() }); return true; }
+  if (m.t === 'conn.upsert' && m.conn && typeof m.conn === 'object') {
+    const r = connFromJson(m.conn);
+    if (r.err) { send({ t: 'conn.ack', ok: false, id: '', error: r.err }); return true; }
+    const prev = connMap.get(r.cfg.id);
+    connMap.set(r.cfg.id, { cfg: r.cfg, rt: prev ? prev.rt : { status: 'connecting', sentences: 0, lastRx: 0, since: Date.now() } });
+    send({ t: 'conn.ack', ok: true, id: r.cfg.id }); send({ t: 'conn.list', conns: connStatusArray() }); return true;
+  }
+  if (m.t === 'conn.delete' && typeof m.id === 'string') {
+    connMap.delete(m.id); send({ t: 'conn.ack', ok: true, id: m.id }); send({ t: 'conn.list', conns: connStatusArray() }); return true;
+  }
+  return true;   // a conn.* verb with bad args — swallow, like the engine
+}
+
 // ---------- WebSocket (server-side framing, dependency-free) ----------
 const GUID = '258EAFA5-E914-47DA-95CA-C5AB0DC85B11';
 function accept(key) { return crypto.createHash('sha1').update(key + GUID).digest('base64'); }
@@ -112,14 +190,15 @@ function handleWs(req, socket) {
   console.log('[nav] client #' + id + ' connected (' + req.socket.remoteAddress + ')');
 
   const send = o => { try { socket.write(frame(JSON.stringify(o))); } catch (e) {} };
-  const snapshot = () => send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, navState()));
+  const snapshot = () => send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, navState(), { conns: connStatusArray() }));
   snapshot();                                           // full state on connect
 
   const tick = setInterval(() => {
     const s = navState(); frames++;
-    if (frames % 30 === 0) { send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, s)); return; } // keyframe
-    // delta: only the fields that move each tick (wind every ~5th tick)
+    if (frames % 30 === 0) { send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, s, { conns: connStatusArray() })); return; } // keyframe
+    // delta: only the fields that move each tick (wind every ~5th tick). conns ride every frame, like the engine.
     const d = { t: 'delta', seq: ++seq, ts: Date.now() / 1000, pos: s.pos, posStr: s.posStr, sog: s.sog, cog: s.cog, hdg: s.hdg, depth: s.depth,
+      conns: connStatusArray(),
       active: { dtg: s.active.dtg, xte: s.active.xte, eta: s.active.eta, ttg: s.active.ttg, vmg: s.active.vmg, nextWp: s.active.nextWp } };
     if (frames % 5 === 0) d.wind = s.wind;
     send(d);
@@ -130,6 +209,7 @@ function handleWs(req, socket) {
     let m; try { m = JSON.parse(txt); } catch (e) { return; }
     if (m.t === 'hello') { console.log('[nav] #' + id + ' hello lastSeq=' + m.lastSeq + ' subscribe=' + (m.subscribe || []).join(',')); if (m.lastSeq) snapshot(); }
     else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);
+    else if (typeof m.t === 'string' && m.t.indexOf('conn.') === 0) { handleConnCmd(send, m); console.log('[conn] #' + id + ' ' + m.t + (m.conn ? ' (' + (m.conn.type || '?') + ')' : (m.id ? ' ' + m.id : ''))); }
   }); });
   const done = () => { clearInterval(tick); clearInterval(heart); console.log('[nav] client #' + id + ' gone'); };
   socket.on('close', done); socket.on('error', done);
@@ -161,7 +241,9 @@ const server = http.createServer((req, res) => {
 server.on('upgrade', (req, socket) => { if (req.url === '/nav') handleWs(req, socket); else socket.destroy(); });
 server.listen(PORT, HOST, () => {
   console.log('Helm mock engine — ONE origin on ' + HOST + ':' + PORT);
-  console.log('  ws   /nav                     snapshot+delta @ 2 Hz, ping heartbeat');
+  console.log('  ws   /nav                     snapshot+delta @ 2 Hz (+ live conns[]), ping heartbeat');
+  console.log('  ws   /nav  command-plane      conn.list / conn.upsert / conn.delete  (types: ' + CONN_TYPES.join(' | ') + ')');
+  console.log('                                signalk = CONN-5 build-ahead (real helm-server rejects it until CHART lands the driver)');
   console.log('  GET  /chart/{z}/{x}/{y}.png   immutable tile (ETag ' + TILE_ETAG + ')');
   console.log('  GET  /health  /catalog');
   console.log('Reach it the SAME way local or remote:  http://localhost:' + PORT + '   or   http://<lan-ip>:' + PORT);
