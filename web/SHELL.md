@@ -8,8 +8,42 @@ file, with zero edits to `index.html`'s body or `style.json`**.
 > **The one rule:** edit only your epic's files. Add UI through `HelmShell`. Namespace every id
 > you introduce `helm-<epic>-*`. That's the whole collision boundary.
 
-`web/shell-demo.js` is a complete worked example (panel + command + style fragment). Copy its
-shape, swap `helm-demo-*` for `helm-<yourepic>-*`, and delete the demo when you no longer need it.
+**A complete worked example** — a feature module that adds a panel + a ⌘K command + a map style
+fragment from its OWN file, with zero edits to `index.html`'s body or `style.json`. Copy this shape
+into `web/<yourthing>.js`, load it with a `<script>` tag, and swap every `helm-demo-*` id for
+`helm-<yourepic>-*`:
+
+```js
+// web/<yourepic>.js — self-registers via HelmShell; no edit to index.html's body.
+(function () {
+  'use strict';
+  if (!window.HelmShell) { console.warn('[<yourepic>] HelmShell missing'); return; }
+
+  // 1) PANEL — a left-rail icon + drawer. render() runs once, lazily, on first open.
+  HelmShell.registerPanel({
+    id: 'helm-demo-panel', epic: 'DEMO', title: 'Shell demo', icon: 'D',
+    render: function (body, ctx) {
+      var p = document.createElement('p'); p.className = 'sub';
+      p.textContent = 'Added via HelmShell with zero edits to index.html.';
+      body.appendChild(p);
+    }
+  });
+
+  // 2) ⌘K COMMAND — one line, appended to the palette from your own file.
+  HelmShell.registerCommand({
+    id: 'helm-demo-open-panel', epic: 'DEMO', title: 'Open the shell demo panel',
+    run: function () { var h = HelmShell.panel('helm-demo-panel'); if (h) h.open(); }
+  });
+
+  // 3) STYLE FRAGMENT — per-domain map layers, merged before the map builds. Namespace every
+  //    source/layer id helm-<epic>-* so two epics never touch the same JSON object.
+  HelmShell.registerStyleFragment('DEMO', {
+    sources: { 'helm-demo-src': { type: 'geojson', data: { type: 'FeatureCollection', features: [] } } },
+    layers:  [ { id: 'helm-demo-layer', type: 'circle', source: 'helm-demo-src',
+                 layout: { visibility: 'none' }, paint: { 'circle-radius': 4, 'circle-color': '#5bc0ff' } } ]
+  });
+})();
+```
 
 ---
 
@@ -101,6 +135,34 @@ clobber another epic's layer.
 > modules reference them by name. Don't rename them. The `helm-<epic>-*` rule applies to **new**
 > layers you add.
 
+## 4. Per-frame nav — `HelmShell.onNav(fn)`  (SHELL-5)
+
+Every nav frame from the engine flows through `index.html`'s `applyNav(s)`. Historically each new
+consumer (instruments, alarms, track, true-wind …) had to hand-add a line there — the last residual
+shared-file contention the seam exists to remove. `onNav` lets a nav consumer subscribe **from its
+own module file** instead.
+
+```js
+// in your feature module's .js — no edit to index.html.
+HelmShell.onNav(function (s) {
+  // s is the same nav-frame object applyNav() receives: s.pos, s.sog, s.cog, s.hdg, s.depth,
+  // s.wind, s.active, s.ais, s.route, s.conns, s.sources, … Read what you need; don't mutate it.
+  myReadout.update(s);
+});
+```
+
+Returns `{ remove() }` to unsubscribe. Listeners fire in registration order; a throwing listener is
+isolated (logged via `[HelmShell]`) so it can't break the others or the rest of `applyNav`.
+Registration is order-independent — subscribe before or after `boot()`; frames only start flowing
+once nav is live.
+
+`applyNav(s)` calls `HelmShell.dispatchNav(s)` once to fan the frame to all registered listeners.
+`dispatchNav` is the shell's own plumbing — feature modules subscribe with `onNav` and never call it.
+
+> The existing explicit `applyNav` calls (`alarms.onNav`, `HelmTrack.onState`, `ownship.update`,
+> `collision.update`, `HelmTrueWindUI.onNav`) are untouched — this registry is additive, for NEW
+> consumers. Migrating the legacy calls onto `onNav` is a separate, optional follow-up per module.
+
 ---
 
 ## How the shell consumes it (for reference)
@@ -116,8 +178,8 @@ Registration is **order-independent**: register before or after `shell.js` loads
 
 ## File ownership
 
-SHELL owns `web/index.html`, `web/style.json`, `web/serve.py`, `web/shell.js`, `web/shell-demo.js`,
-and `web/style/` (the base + manifest + the split layout). You own only the fragment file you add
+SHELL owns `web/index.html`, `web/style.json`, `web/serve.py`, `web/shell.js`, and `web/style/`
+(the base + manifest + the split layout). You own only the fragment file you add
 and your own feature module. If you need a change to the shell itself (a new CSS primitive, a new
 lifecycle hook), leave a comment on the relevant task with `project="helm"` and flag it — don't edit
 the shell body.

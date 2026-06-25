@@ -229,6 +229,29 @@
   }
 
   // ============================================================================================
+  //  4. NAV LISTENERS  — per-frame nav hook so a consumer subscribes from its OWN file (SHELL-5)
+  // ============================================================================================
+  // Before this, every new nav consumer (e.g. WX-13 true-wind) had to hand-add a line to
+  // index.html's applyNav() — the last residual shared-file contention the seam was meant to kill.
+  //   HelmShell.onNav(fn)      ← register a nav-frame listener; returns { remove() }.
+  //   HelmShell.dispatchNav(s) ← fan one nav frame to every registered listener (called once from
+  //                              applyNav). A throwing listener is isolated so it can't break the
+  //                              others or the rest of applyNav.
+  // Registration is order-independent (subscribe before or after boot); listeners only start firing
+  // once applyNav begins dispatching frames.
+  var navListeners = [];
+  function onNav(fn) {
+    if (typeof fn !== 'function') { warn('onNav needs a function'); return { remove: function () {} }; }
+    navListeners.push(fn);
+    return { remove: function () { var i = navListeners.indexOf(fn); if (i >= 0) navListeners.splice(i, 1); } };
+  }
+  function dispatchNav(s) {
+    for (var i = 0; i < navListeners.length; i++) {
+      try { navListeners[i](s); } catch (e) { warn('onNav listener failed: ' + e); }
+    }
+  }
+
+  // ============================================================================================
   //  BOOT  — index.html calls this once `map` exists. Drains queued registrations.
   // ============================================================================================
   function boot(opts) {
@@ -258,6 +281,9 @@
     closeAllPanels: closeAllPanels,
     // bridge so the shell's built-in (legacy) drawers and registered panels stay mutually exclusive
     setLegacyCloser: function (fn) { legacyCloser = (typeof fn === 'function') ? fn : null; },
+    // nav listeners (subscribe to per-frame nav from your own module; applyNav fans frames here)
+    onNav: onNav,
+    dispatchNav: dispatchNav,
     // style assembly (called by the shell before the map is built; pure mergeStyle exposed for tests)
     buildStyle: buildStyle,
     mergeStyle: mergeStyle,
