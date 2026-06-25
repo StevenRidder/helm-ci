@@ -10,11 +10,12 @@
 (function () {
   'use strict';
   var FORECAST = 'https://api.open-meteo.com/v1/forecast';
+  var MARINE = 'https://marine-api.open-meteo.com/v1/marine';
   var SRC = 'helm-wx-live', LYR = 'helm-wx-live';
 
   // layer -> Open-Meteo current variable + display unit + colour ramp (knots/°C/hPa/… ). Mirrors
-  // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers (waves/swell/sst/current)
-  // use a different endpoint and stay on Standard for now.
+  // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers use Open-Meteo's
+  // dedicated marine endpoint; sea cells can honestly remain NODATA near land.
   var LAYERS = {
     wind:     { v: 'wind_speed_10m', dir: 'wind_direction_10m', unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
     gust:     { v: 'wind_gusts_10m', unit: 'kn', stops: [[0,[56,189,248]],[10,[45,212,191]],[20,[250,204,21]],[30,[249,115,22]],[42,[239,68,68]],[60,[217,33,154]]] },
@@ -23,11 +24,16 @@
     clouds:   { v: 'cloud_cover', unit: '%', stops: [[0,[150,170,190,0]],[40,[200,210,222,0.4]],[80,[235,240,246,0.75]],[100,[250,252,255,0.9]]] },
     pressure: { v: 'pressure_msl', unit: 'hPa', stops: [[980,[120,80,200]],[1000,[80,160,230]],[1013,[120,205,140]],[1025,[240,200,80]],[1040,[230,110,55]]] },
     cape:     { v: 'cape', unit: 'J/kg', stops: [[0,[56,160,200,0]],[300,[120,200,120,0.5]],[1000,[245,205,60,0.8]],[2500,[240,120,40,0.9]],[4000,[220,40,40,0.95]]] },
+    waves:    { endpoint: MARINE, v: 'wave_height', unit: 'm', stops: [[0,[56,120,190]],[0.5,[45,170,190]],[1.5,[65,195,135]],[3,[230,205,70]],[5,[235,125,55]],[8,[195,45,75]]] },
+    swell:    { endpoint: MARINE, v: 'swell_wave_height', unit: 'm', stops: [[0,[65,105,175]],[0.5,[55,155,195]],[1.5,[70,190,145]],[3,[225,195,70]],[5,[225,110,60]],[8,[175,50,120]]] },
+    sst:      { endpoint: MARINE, v: 'sea_surface_temperature', unit: '°C', stops: [[0,[70,95,190]],[10,[60,165,210]],[20,[65,195,135]],[26,[235,205,70]],[31,[230,100,45]],[36,[185,35,65]]] },
+    current:  { endpoint: MARINE, v: 'ocean_current_velocity', dir: 'ocean_current_direction', direction: 'to', unit: 'kn', stops: [[0,[60,105,175]],[0.25,[45,155,195]],[0.75,[55,190,145]],[1.5,[225,205,70]],[2.5,[230,120,55]],[4,[190,45,80]]] },
   };
   function supports(layer) { return !!LAYERS[layer]; }
 
   var st = { map: null, on: false, layer: 'wind', token: 0, field: null, velocity: null,
-             particles: true, notify: function () {}, handler: null, debounce: null, abort: null, lastKey: '' };
+             particles: true, notify: function () {}, moveHandler: null, endHandler: null,
+             debounce: null, abort: null, lastKey: '', requestCount: 0, phase: 'off', opacity: 0.72 };
 
   function codec() { return window.HelmWxCodec; }
 
@@ -55,6 +61,15 @@
             cx + paddedWidth / 2, Math.min(85, cy + paddedHeight / 2)];
   }
 
+  function gridSize(map) {
+    var c = map && map.getCanvas ? map.getCanvas() : null;
+    var w = c ? c.clientWidth || c.width : 1280, h = c ? c.clientHeight || c.height : 720;
+    return {
+      nx: Math.max(12, Math.min(22, Math.ceil(w / 95) + 2)),
+      ny: Math.max(10, Math.min(18, Math.ceil(h / 95) + 2))
+    };
+  }
+
   function covers(field, map) {
     if (!field) return false;
     var v = viewport(map), w = v[0], e = v[2], mid = (w + e) / 2;
@@ -79,9 +94,10 @@
     var L = LAYERS[layer];
     var vars = L.dir ? (L.v + ',' + L.dir) : L.v;
     var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + vars;
-    if (layer === 'wind' || layer === 'gust') p += '&wind_speed_unit=kn';
-    if (model && model !== 'gfs_seamless') p += '&models=' + model;
-    return FORECAST + '?' + p;
+    if (layer === 'wind' || layer === 'gust' || layer === 'current') p += '&wind_speed_unit=kn';
+    if (L.endpoint === MARINE) p += '&cell_selection=sea';
+    else if (model && model !== 'gfs_seamless') p += '&models=' + model;
+    return (L.endpoint || FORECAST) + '?' + p;
   }
 
   // turn Open-Meteo's per-point response into a field-<layer> grid (row-major N->S).
@@ -104,13 +120,19 @@
     return [-speed * Math.sin(r), -speed * Math.cos(r)];
   }
 
+  function directionToUv(speed, directionDeg, convention) {
+    if (convention !== 'to') return metToUv(speed, directionDeg);
+    var r = directionDeg * Math.PI / 180;
+    return [speed * Math.sin(r), speed * Math.cos(r)];
+  }
+
   function toVelocity(nodes, g, layer) {
     var L = LAYERS[layer]; if (!L || !L.dir) return null;
     var u = [], v = [];
     for (var k = 0; k < g.qlat.length; k++) {
       var node = Array.isArray(nodes) ? nodes[k] : nodes;
       var cur = node && node.current, spd = cur && cur[L.v], dir = cur && cur[L.dir];
-      var uv = (typeof spd === 'number' && typeof dir === 'number') ? metToUv(spd, dir) : [NaN, NaN];
+      var uv = (typeof spd === 'number' && typeof dir === 'number') ? directionToUv(spd, dir, L.direction) : [NaN, NaN];
       u.push(uv[0]); v.push(uv[1]);
     }
     var header = { nx: g.nx, ny: g.ny, lo1: g.lons[0], la1: g.lats[0],
@@ -127,7 +149,7 @@
     var wind = window.__helmWindLayer;
     st.velocity = velocity || null;
     if (!wind) return false;
-    if (!st.on || !st.particles || st.layer !== 'wind' || !velocity) {
+    if (!st.on || !st.particles || (st.layer !== 'wind' && st.layer !== 'current') || !velocity) {
       wind.setVisible(false);
       if (!velocity) wind.clearData();
       return false;
@@ -161,9 +183,10 @@
     if (map.getSource(SRC)) map.getSource(SRC).updateImage({ url: urlData, coordinates: coords });
     else {
       map.addSource(SRC, { type: 'image', url: urlData, coordinates: coords });
-      map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': 0.72, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
+      map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': st.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
         map.getLayer('route-line') ? 'route-line' : undefined);
     }
+    publishStatus('ready');
   }
 
   async function fetchPoints(u, signal) {
@@ -178,6 +201,32 @@
     if (map.getSource(SRC)) map.removeSource(SRC);
     st.field = null; st.velocity = null;
     applyParticles(null);
+    publishStatus(st.on ? 'empty' : 'off');
+  }
+
+  function status() {
+    var view = st.map ? viewport(st.map) : null;
+    return {
+      on: st.on, phase: st.phase, layer: st.layer, model: st.model,
+      field: st.field ? [st.field.west, st.field.south, st.field.east, st.field.north] : null,
+      viewport: view, covers: !!(st.field && st.map && covers(st.field, st.map)),
+      requests: st.requestCount, opacity: st.opacity
+    };
+  }
+
+  function publishStatus(phase) {
+    st.phase = phase || st.phase;
+    var el = st.map && st.map.getContainer ? st.map.getContainer() : document.getElementById('map');
+    if (!el) return;
+    var s = status();
+    el.dataset.wxLive = s.on ? '1' : '0';
+    el.dataset.wxPhase = s.phase;
+    el.dataset.wxCovers = s.covers ? '1' : '0';
+    el.dataset.wxLayer = s.layer || '';
+    el.dataset.wxRequests = String(s.requests);
+    el.dataset.wxOpacity = String(s.opacity);
+    el.dataset.wxField = s.field ? s.field.map(function (x) { return x.toFixed(3); }).join(',') : '';
+    el.dataset.wxViewport = s.viewport ? s.viewport.map(function (x) { return x.toFixed(3); }).join(',') : '';
   }
 
   async function refresh() {
@@ -190,9 +239,11 @@
     // Never leave weather from a different part of the world on-screen while the replacement loads.
     if (st.field && !covers(st.field, st.map)) clearOverlay(st.map);
 
-    var g = grid(bbox, 12, 12), my = ++st.token;
+    var size = gridSize(st.map), g = grid(bbox, size.nx, size.ny), my = ++st.token;
     if (st.abort) st.abort.abort();
     var ac = new AbortController(); st.abort = ac;
+    st.requestCount++;
+    publishStatus('loading');
     st.notify('Fetching live ' + st.layer + ' for this view …', 'info');
     try {
       var nodes = await fetchPoints(url(g, st.layer, st.model === 'gfs_seamless' ? null : st.model), ac.signal);
@@ -202,6 +253,11 @@
         clearOverlay(st.map); st.lastKey = ''; st.abort = null;
         st.notify('No live data for this area', 'warn'); return;
       }
+      if (!covers(field, st.map)) {
+        st.lastKey = ''; st.abort = null; publishStatus('stale');
+        scheduleRefresh(0);
+        return;
+      }
       renderField(st.map, field);
       var velocity = toVelocity(nodes, g, st.layer);
       var particleOk = applyParticles(velocity);
@@ -209,7 +265,12 @@
       st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
         ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
     } catch (e) {
-      if (e && e.name === 'AbortError') return;
+      if (e && e.name === 'AbortError') {
+        if (st.abort === ac) st.abort = null;
+        if (st.lastKey === key) st.lastKey = '';
+        publishStatus(st.field && covers(st.field, st.map) ? 'ready' : 'empty');
+        return;
+      }
       if (my !== st.token || !st.on) return;
       // honest offline behaviour — never fabricate a field
       clearOverlay(st.map); st.lastKey = ''; st.abort = null;
@@ -217,26 +278,54 @@
     }
   }
 
-  function onMove() { clearTimeout(st.debounce); st.debounce = setTimeout(refresh, 450); }
+  function scheduleRefresh(delay) {
+    clearTimeout(st.debounce);
+    st.debounce = setTimeout(refresh, delay);
+  }
+
+  function onMove() {
+    // A response for the pre-pan viewport must never land after the map has moved. Abort it as soon
+    // as movement begins, not 450 ms later when the old implementation finally scheduled refresh.
+    if (st.abort) { st.token++; st.abort.abort(); st.abort = null; st.lastKey = ''; }
+    if (st.field && !covers(st.field, st.map)) clearOverlay(st.map);
+    else publishStatus(st.field ? 'ready' : 'moving');
+    scheduleRefresh(180);
+  }
+
+  function onMoveEnd() { scheduleRefresh(0); }
 
   function enable(map, opts) {
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
     st.particles = opts.particles !== false;
+    st.opacity = Math.max(0, Math.min(1, opts.opacity == null ? st.opacity : opts.opacity));
     st.notify = opts.notify || st.notify; st.on = true; st.lastKey = '';
-    if (!st.handler) { st.handler = onMove; map.on('moveend', st.handler); }
+    if (!st.moveHandler) {
+      st.moveHandler = onMove; st.endHandler = onMoveEnd;
+      map.on('move', st.moveHandler); map.on('moveend', st.endHandler);
+    }
+    publishStatus('loading');
     refresh();
   }
   function disable(map) {
     st.on = false; st.token++;
     clearTimeout(st.debounce); st.debounce = null;
     if (st.abort) { st.abort.abort(); st.abort = null; }
-    if (st.handler) { (map || st.map).off('moveend', st.handler); st.handler = null; }
+    if (st.moveHandler) {
+      (map || st.map).off('move', st.moveHandler);
+      (map || st.map).off('moveend', st.endHandler);
+      st.moveHandler = null; st.endHandler = null;
+    }
     clearOverlay(map || st.map); st.lastKey = '';
   }
   function setLayer(layer) { st.layer = layer; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
   function setModel(model) { st.model = model; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
   function setParticles(on) { st.particles = !!on; applyParticles(st.velocity); }
+  function setOpacity(opacity) {
+    st.opacity = Math.max(0, Math.min(1, opacity));
+    if (st.map && st.map.getLayer(LYR)) st.map.setPaintProperty(LYR, 'raster-opacity', st.opacity);
+    publishStatus(st.phase);
+  }
   function isEnabled() { return st.on; }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;
@@ -248,7 +337,9 @@
   }
 
   window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel,
-    setParticles: setParticles, isEnabled: isEnabled, sampleAt: sampleAt, renderField: renderField,
-    supports: supports, _toField: toField, _toVelocity: toVelocity, _metToUv: metToUv,
-    _viewBbox: viewBbox, _grid: grid, _covers: covers, _clearOverlay: clearOverlay };
+    setParticles: setParticles, setOpacity: setOpacity, isEnabled: isEnabled,
+    sampleAt: sampleAt, renderField: renderField,
+    supports: supports, status: status, _toField: toField, _toVelocity: toVelocity,
+    _metToUv: metToUv, _directionToUv: directionToUv, _viewBbox: viewBbox,
+    _gridSize: gridSize, _grid: grid, _covers: covers, _clearOverlay: clearOverlay };
 })();
