@@ -450,6 +450,37 @@ static void sk_start(std::string url) {
   g_sk->start();
 }
 // ===========================================================================
+// Track recording (ownship breadcrumb) — the ENGINE owns the trail; thin clients
+// just display it (single source of truth, native inherits it). Records the displayed
+// fix when armed (default on), thinned by distance/time so an overnight swing at anchor
+// stays compact. In-memory + capped here; GPX export is a later step.
+// ===========================================================================
+struct TrackPt { double lat, lon; std::time_t t; };
+static std::mutex g_track_mtx;
+static std::vector<TrackPt> g_track;            // recorded points (rolling, capped) — guard: g_track_mtx
+static size_t g_track_emitted = 0;              // points already streamed (for trackAdd deltas) — g_track_mtx
+static std::atomic<bool> g_track_armed{true};   // recording on by default
+static const size_t kTrackCap = 2000;
+static const double kTrackMinNM = 0.0016;       // ~3 m — record once the boat has moved this far
+static const double kTrackMinSec = 20.0;        // ...or at least this often while armed
+static void track_record(double lat, double lon) {
+  if (!g_track_armed.load()) return;
+  std::time_t now = std::time(nullptr);
+  std::lock_guard<std::mutex> lk(g_track_mtx);
+  if (!g_track.empty()) {
+    const TrackPt& last = g_track.back();
+    double brg, nm; bd(lat, lon, last.lat, last.lon, &brg, &nm);
+    if (nm < kTrackMinNM && std::difftime(now, last.t) < kTrackMinSec) return;
+  }
+  g_track.push_back({lat, lon, now});
+  if (g_track.size() > kTrackCap) {
+    size_t drop = g_track.size() - kTrackCap;
+    g_track.erase(g_track.begin(), g_track.begin() + drop);
+    g_track_emitted = (g_track_emitted > drop) ? (g_track_emitted - drop) : 0;
+  }
+}
+
+// ===========================================================================
 // Connections — runtime-configurable, persisted, multi-source live-data input.
 // Each connection is an independent driver thread feeding the SAME nmea_parse →
 // g_real / AisDecoder pipeline, so per-field source tags stay truthful. The engine
@@ -710,6 +741,16 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     std::printf("connections: delete %s\n", id.c_str());
     ws->send(conn_ack(true, id, "")); ws->send(conn_list_msg()); return;
   }
+  if (t == "track.arm" && d.HasMember("on") && d["on"].IsBool()) {          // arm/pause breadcrumb recording
+    g_track_armed = d["on"].GetBool();
+    std::printf("track: recording %s\n", g_track_armed.load() ? "ON" : "paused");
+    ws->send(std::string("{\"t\":\"track.ack\",\"armed\":") + (g_track_armed.load() ? "true" : "false") + "}"); return;
+  }
+  if (t == "track.clear") {                                                 // wipe the recorded trail
+    { std::lock_guard<std::mutex> lk(g_track_mtx); g_track.clear(); g_track_emitted = 0; }
+    std::printf("track: cleared\n");
+    ws->send("{\"t\":\"track.ack\",\"cleared\":true}"); return;
+  }
 }
 static void conn_init() {
   if (const char* tok = std::getenv("HELM_OWNER_TOKEN")) if (*tok) g_owner_token = tok;
@@ -777,6 +818,7 @@ static void nav_loop(ix::HttpServer* server) {
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
+    track_record(gLat, gLon);         // ownship breadcrumb trail (records the displayed fix when armed)
     RoutePoint* act = g_pRouteMan->GetpActivePoint();
     double brgW = 0, dtw = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
     double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
@@ -863,15 +905,28 @@ static void nav_loop(ix::HttpServer* server) {
     }
     aisArr += "]";
     std::string connsArr = conn_status_array();   // live per-connection status, streamed to clients
+    // Track (ownship breadcrumb): full trail into snapshots (new/reloaded clients get the whole line),
+    // only the newly-added points into deltas (tiny). g_track_emitted advances once per tick.
+    std::string trackFull = "[", trackAdd = "[";
+    std::string armedJson = g_track_armed.load() ? "true" : "false";
+    { std::lock_guard<std::mutex> lk(g_track_mtx);
+      for (size_t i = 0; i < g_track.size(); ++i) { char tb[48]; std::snprintf(tb, sizeof tb, "%s[%.5f,%.5f]", i ? "," : "", g_track[i].lat, g_track[i].lon); trackFull += tb; }
+      size_t from = std::min(g_track_emitted, g_track.size());
+      for (size_t i = from; i < g_track.size(); ++i) { char tb[48]; std::snprintf(tb, sizeof tb, "%s[%.5f,%.5f]", (i == from) ? "" : ",", g_track[i].lat, g_track[i].lon); trackAdd += tb; }
+      g_track_emitted = g_track.size();
+    }
+    trackFull += "]"; trackAdd += "]";
     std::string snapOut(snap);
     if (!snapOut.empty()) {                                                // top-level, before final }
       snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);
       snapOut.insert(snapOut.size() - 1, ",\"conns\":" + connsArr);
+      snapOut.insert(snapOut.size() - 1, ",\"track\":" + trackFull + ",\"trackArmed\":" + armedJson);
     }
     if (keyframe) frame = snapOut;
     else if (!frame.empty()) {
       frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
       frame.insert(frame.size() - 1, ",\"conns\":" + connsArr);
+      frame.insert(frame.size() - 1, ",\"trackAdd\":" + trackAdd + ",\"trackArmed\":" + armedJson);
     }
 
     auto clients = server->getClients();

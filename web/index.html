@@ -114,6 +114,12 @@
   .conn-actions{display:flex;gap:8px}
   .conn-actions .conn-btn{margin-top:2px;flex:1;text-align:center}
   .conn-msg{font-size:11.5px;margin-top:8px;min-height:14px}
+  /* ---- Track recording control (on-map) ---- */
+  .helm-track-ctl{position:absolute;left:50%;transform:translateX(-50%);bottom:150px;z-index:6;display:flex;gap:6px;padding:5px;border-radius:11px;align-items:center}
+  .helm-track-rec{display:flex;align-items:center;gap:6px;padding:6px 11px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:var(--cdim);font:inherit;font-size:11.5px;font-weight:600;letter-spacing:.04em;cursor:pointer}
+  .helm-track-rec.rec{color:#fff;background:var(--danger)}
+  .helm-track-clear{padding:6px 10px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:var(--cdim);font:inherit;font-size:11.5px;cursor:pointer}
+  .helm-track-clear:hover{background:rgba(255,255,255,.14);color:var(--ctext)}
 
   /* weather switcher */
   .wx{display:flex;flex-wrap:wrap;gap:6px}
@@ -501,12 +507,12 @@
   <div id="wt-results" style="margin-top:9px;font-size:11.5px"></div>
 
   <div class="lbl">Give back</div>
-  <label class="row"><input type="checkbox" id="gb-nfl"> Share my track → NoForeignLand<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">push</span></label>
+  <label class="row"><input type="checkbox" id="gb-nfl"> Share my position → NoForeignLand<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">push</span></label>
   <label class="row"><input type="checkbox" id="gb-osm"> Contribute to OpenSeaMap / OSM<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">notes</span></label>
   <div id="gb-status" style="font-size:10.5px;color:var(--cdim);margin-top:7px;min-height:14px"></div>
 
   <div class="hint">Runs on open + owned + RAG. NoForeignLand <i>read</i> is an experimental enrichment (off);
-    give-back (track→NFL, contribute→OSM) is sanctioned. See docs/BUILD-PLAN-COMMUNITY-LLM.md.</div>
+    give-back (position→NFL, contribute→OSM) is sanctioned. See docs/BUILD-PLAN-COMMUNITY-LLM.md.</div>
 </div>
 
 <!-- ========================= RIGHT ROUTE INSPECTOR (static) ========================= -->
@@ -567,6 +573,7 @@
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>
 <script src="connections.js"></script>
+<script src="track.js"></script>
 <script src="ownship.js"></script>
 <script src="alarms.js"></script>
 <script src="community.js"></script>
@@ -908,6 +915,7 @@
       alarms.onNav(s);     // depth / anchor / MOB safety alarms (alarms.js) — CPA handled by collision.js
       if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
       if (window.HelmConnections && s.conns) HelmConnections.onState(s.conns);   // live connection status
+      if (window.HelmTrack) HelmTrack.onState(s);                                 // ownship breadcrumb trail
       if (s.route) updateRouteFromEngine(s.route);    // live route line from OpenCPN's model route
       if (collision && s.ais && s.pos)                // CPA alarm + COLREGs avoidance guidance (collision.js)
         collision.update({ cog: +s.cog, sog: +s.sog, lon: s.pos.lon, lat: s.pos.lat }, s.ais);
@@ -945,6 +953,7 @@
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
       { sim: window.HelmNav, onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); } });
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
+    if (window.HelmTrack) HelmTrack.init({ client: window.__navClient, map: window.map });   // track record/clear + line
   })();
 
   // ============ COMMUNITY: where-to-go + give-back (selectable layers) ============
@@ -995,7 +1004,7 @@
 
     const gbStatus = document.getElementById('gb-status'), say = t => { if (gbStatus) gbStatus.textContent = t; };
     document.getElementById('gb-nfl').addEventListener('change', async e => {
-      if (!e.target.checked) return say('Track sharing off.');
+      if (!e.target.checked) return say('Position sharing off.');
       const p = window.__helmPos || { lat: map.getCenter().lat, lon: map.getCenter().lng };
       const r = await comm.nflPush({ lat: p.lat, lon: p.lon });
       say(r.offline ? 'Backend offline — would push when connected.' : 'NFL push: ' + r.status + ' (' + r.mode + ').');
