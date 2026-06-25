@@ -18,7 +18,7 @@
     const lookahead = opts.lookahead != null ? opts.lookahead : 0.32;   // top-padding fraction → boat sits low → see ahead
     let target = null, disp = null;                 // latest fix vs eased display state
     let follow = (opts.follow != null) ? !!opts.follow : true;   // follow by default (caller passes false to honor a pinned URL view)
-    let courseUp = false, active = true;            // active=false → frozen (stale feed)
+    let courseUp = false, active = true, framedOnce = false;   // active=false → frozen (stale feed); framedOnce → the FIRST real fix frames the boat (we start on a neutral globe, never a hardcoded place)
 
     const el = document.createElement('div');
     el.className = 'ownship';
@@ -65,9 +65,14 @@
         if (!added) { marker.setLngLat([disp.lon, disp.lat]).addTo(map); added = true; }
         marker.setLngLat([disp.lon, disp.lat]).setRotation(disp.cog);
         if (follow) {
+          // First real fix: if we're still on the neutral zoomed-out start, zoom in to the boat.
+          // Otherwise leave zoom alone (preserve a pinned/user zoom). No hardcoded location anywhere.
+          const firstZoom = (!framedOnce && map.getZoom() < 8) ? 14 : null;
+          framedOnce = true;
           map.jumpTo({
             center: [disp.lon, disp.lat],
             bearing: courseUp ? disp.cog : 0,
+            ...(firstZoom != null ? { zoom: firstZoom } : {}),
             // top padding shifts the focal point down → boat sits low → you see ahead.
             // (jumpTo honors `padding`, not `offset` — offset is easeTo/flyTo only.)
             padding: { top: map.getContainer().clientHeight * lookahead, bottom: 0, left: 0, right: 0 }
