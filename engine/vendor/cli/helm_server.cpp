@@ -983,6 +983,7 @@ static void nav_loop(ix::HttpServer* server) {
       for (auto it = g_ais_rows.begin(); it != g_ais_rows.end(); ) {
         AisRow& t = it->second; long age = (long)(aisNow - t.seen);
         if (age > 600) { it = g_ais_rows.erase(it); continue; }
+        if ((t.lat == 0.0 && t.lon == 0.0) || t.lat < -90 || t.lat > 90) { ++it; continue; }  // no real position yet (static-only target) — don't emit a ghost at (0,0)
         char eta[16] = "";                            // MM-DD HH:MM when the voyage ETA is set
         if (t.etaMo >= 1 && t.etaMo <= 12 && t.etaDay >= 1 && t.etaDay <= 31)
           std::snprintf(eta, sizeof eta, "%02d-%02d %02d:%02d", t.etaMo, t.etaDay, t.etaHr, t.etaMin);
