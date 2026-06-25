@@ -164,4 +164,132 @@
   window.__helmWxSample = function (lat, lon, t, opts) {
     return cog().then(function (m) { return m.sampleWx(lat, lon, t, opts); });
   };
+
+  // ============================================================================================
+  //  WX-11 — Ensemble (GFS vs ECMWF) spread / confidence panel
+  // ============================================================================================
+  var ENS_INDEX = 'data/wxtiles/ensemble.json';
+  var es = { map: null, pairs: null, layer: null, frame: 0, on: false, models: null, els: {} };
+
+  function esNotify(msg, level) {
+    var s = es.els.status; if (!s) return;
+    s.textContent = msg; s.style.color = level === 'warn' ? 'var(--warn,#e8a13a)' : 'var(--cdim,#8aa)';
+  }
+  function esLoadIndex() {
+    return fetch(ENS_INDEX).then(function (r) { return r.ok ? r.json() : null; }).then(function (idx) {
+      es.pairs = (idx && idx.pairs) || {};
+      var sel = es.els.layerSel; sel.innerHTML = '';
+      var names = Object.keys(es.pairs);
+      if (!names.length) { esNotify('No ensemble pack — run: pipeline/make_value_tiles.py --demo-ensemble', 'warn'); es.els.toggle.disabled = true; return; }
+      names.forEach(function (n) {
+        var mem = Object.keys(es.pairs[n].members);
+        var o = document.createElement('option'); o.value = n;
+        o.textContent = n + ' · ' + mem.join(' vs ').toUpperCase();
+        sel.appendChild(o);
+      });
+      es.layer = names[0]; sel.value = es.layer; es.els.toggle.disabled = false;
+    }).catch(function () { esNotify('ensemble index unavailable (offline?)', 'warn'); });
+  }
+  function esEnable() {
+    var pair = es.pairs[es.layer]; if (!pair) return;
+    var mem = Object.keys(pair.members);   // e.g. ['gfs','ecmwf']
+    es.models = mem;
+    return cog().then(function (m) {
+      return m.enableEnsemble(es.map, {
+        maplibregl: window.maplibregl,
+        manifestA: 'data/wxtiles/' + pair.members[mem[0]].manifest,
+        manifestB: 'data/wxtiles/' + pair.members[mem[1]].manifest,
+        labelA: mem[0].toUpperCase(), labelB: mem[1].toUpperCase(),
+        layer: es.layer, beforeId: es.map.getLayer('route-line') ? 'route-line' : undefined,
+        opacity: (+es.els.op.value) / 100, frame: es.frame, notify: esNotify,
+      });
+    }).then(function (state) {
+      if (!state) { es.on = false; es.els.toggle.checked = false; return; }
+      es.on = true;
+      var n = pair.frames || (state.times ? state.times.length : 1);
+      es.els.frameWrap.style.display = n > 1 ? 'block' : 'none';
+      es.els.frame.max = n - 1; es.els.frame.value = Math.min(es.frame, n - 1); es.frame = +es.els.frame.value;
+      esFrameLabel(state); esSampleCenter();
+    });
+  }
+  function esDisable() {
+    if (!cogMod) return; es.on = false;
+    cogMod.disableEnsemble(es.map); es.els.frameWrap.style.display = 'none';
+    es.els.readout.textContent = ''; esNotify('ensemble off');
+  }
+  function esFrameLabel(state) {
+    var t = state && state.times ? state.times[es.frame] : null;
+    es.els.frameLbl.textContent = t ? fmtTime(t) : ('+' + es.frame + 'h');
+  }
+  var AGREE_COLOR = { agree: '#5fd08a', marginal: '#e8c34a', diverge: '#e85a4a', 'no-data': '#8aa' };
+  function esSampleCenter() {
+    if (!es.on || !cogMod) { es.els.readout.textContent = ''; return; }
+    var c = es.map.getCenter();
+    var state = cogMod.activeEnsemble();
+    var t = state && state.times ? state.times[es.frame] : null;
+    cogMod.sampleEnsemble(c.lat, c.lng, t).then(function (s) {
+      if (!s) { es.els.readout.textContent = ''; return; }
+      if (s.value == null) { es.els.readout.innerHTML = '<span style="color:var(--cdim,#8aa)">' + (s.note || 'no data') + '</span>'; return; }
+      var mk = Object.keys(s.models);
+      es.els.readout.innerHTML =
+        '<div>' + mk.map(function (k) { return '<b>' + k + '</b> ' + s.models[k] + ' ' + s.unit; }).join(' &nbsp;·&nbsp; ') + '</div>' +
+        '<div style="margin-top:3px">spread <b>' + s.spread + ' ' + s.unit + '</b> · ' +
+        '<span style="color:' + (AGREE_COLOR[s.agreement] || '#8aa') + '">' + s.agreement + '</span> · confidence ' + s.confidence + '</div>';
+    });
+  }
+
+  HelmShell.registerPanel({
+    id: 'helm-wx-ensemble', epic: 'WX', title: 'Ensemble spread (GFS vs ECMWF)', icon: 'E',
+    render: function (body, ctx) {
+      es.map = ctx.map;
+      body.innerHTML =
+        '<p class="sub" style="margin:.2em 0 1em">Two models, one map. Each pixel is the <b>spread</b> ' +
+        '|GFS − ECMWF| — transparent where they agree, red where they disagree. Disagreement is itself ' +
+        'decision-relevant: it usually grows with forecast horizon. <b>Forecast — not for navigation.</b></p>';
+      function row(label, el) {
+        var r = document.createElement('div'); r.style.cssText = 'display:flex;align-items:center;gap:8px;margin:7px 0';
+        var s = document.createElement('span'); s.textContent = label; s.style.cssText = 'font-size:12px;color:var(--cdim,#8aa);min-width:72px';
+        r.appendChild(s); r.appendChild(el); body.appendChild(r); return r;
+      }
+      var sel = document.createElement('select'); sel.style.cssText = 'flex:1;background:rgba(255,255,255,.06);color:#cdd9e3;border:.5px solid var(--line,#345);border-radius:7px;padding:5px';
+      var tog = document.createElement('input'); tog.type = 'checkbox';
+      var op = document.createElement('input'); op.type = 'range'; op.min = 0; op.max = 100; op.value = 85; op.style.flex = '1';
+      var frame = document.createElement('input'); frame.type = 'range'; frame.min = 0; frame.max = 0; frame.value = 0; frame.style.flex = '1';
+      es.els = { layerSel: sel, toggle: tog, op: op, frame: frame };
+      row('Layer', sel); row('Show spread', tog);
+      es.els.status = document.createElement('div'); es.els.status.style.cssText = 'font-size:11px;color:var(--cdim,#8aa);margin:2px 0 6px;min-height:14px';
+      body.appendChild(es.els.status);
+      row('Opacity', op);
+      var fw = document.createElement('div'); fw.style.display = 'none';
+      var fl = document.createElement('div'); fl.style.cssText = 'font-size:11px;color:var(--cdim,#8aa);text-align:center;margin-top:2px';
+      fw.appendChild(frame); fw.appendChild(fl); body.appendChild(fw);
+      es.els.frameWrap = fw; es.els.frameLbl = fl;
+      var ro = document.createElement('div'); ro.style.cssText = 'font-size:12px;margin-top:10px;padding:7px 9px;border:.5px solid var(--line,#345);border-radius:8px;background:rgba(255,255,255,.03);min-height:16px';
+      body.appendChild(ro); es.els.readout = ro;
+      var hint = document.createElement('div'); hint.className = 'sub'; hint.style.cssText = 'font-size:10px;color:var(--cdim,#8aa);margin-top:5px';
+      hint.textContent = 'Both models sampled under map centre — pan to probe. window.__helmWxEnsemble(lat,lon,t).';
+      body.appendChild(hint);
+
+      sel.addEventListener('change', function () { es.layer = sel.value; es.frame = 0; if (es.on) esEnable(); });
+      tog.addEventListener('change', function () { tog.checked ? esEnable() : esDisable(); });
+      op.addEventListener('input', function () { if (cogMod) cogMod.setEnsembleOpacity(es.map, (+op.value) / 100); });
+      frame.addEventListener('input', function () {
+        es.frame = +frame.value; if (cogMod) cogMod.setEnsembleFrame(es.map, es.frame);
+        esFrameLabel(cogMod && cogMod.activeEnsemble()); esSampleCenter();
+      });
+      es.map.on('moveend', esSampleCenter);
+      esLoadIndex();
+    },
+  });
+  HelmShell.registerCommand({
+    id: 'helm-wx-ensemble-open', epic: 'WX', title: 'Weather: ensemble spread (GFS vs ECMWF)',
+    subtitle: 'Multi-model confidence', keywords: ['ensemble', 'spread', 'gfs', 'ecmwf', 'confidence', 'uncertainty'], group: 'Weather',
+    run: function () { var h = HelmShell.panel('helm-wx-ensemble'); if (h) h.open(); },
+  });
+
+  // Ensemble probe face: window.__helmWxEnsemble(lat,lon,t) -> { value/mean, spread, agreement,
+  // confidence, models:{GFS,ECMWF}, ... } for ROUTING/AI multi-model honesty.
+  window.__helmWxEnsemble = function (lat, lon, t) {
+    return cog().then(function (m) { return m.sampleEnsemble(lat, lon, t); });
+  };
 })();

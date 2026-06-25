@@ -1,0 +1,1 @@
+{"encoding": "helm-wxv1", "pairs": {"wind": {"unit": "kn", "members": {"gfs": {"manifest": "wind-gfs/manifest.json", "model": "GFS demo (synthetic, NOT FOR NAVIGATION)", "vmin": 10.02, "vmax": 24.18}, "ecmwf": {"manifest": "wind-ecmwf/manifest.json", "model": "ECMWF demo (synthetic, NOT FOR NAVIGATION)", "vmin": 9.64, "vmax": 26.69}}, "frames": 12}}}

@@ -256,15 +256,28 @@ DEMO_STOPS = {
                  [1025, [240, 200, 80]], [1040, [230, 110, 55]]],
 }
 
-def demo_frames(layer):
+# Two synthetic ensemble members (WX-11). They AGREE at the analysis hour and DIVERGE as the
+# forecast horizon grows — ECMWF places the low a little further ESE and deepens it more — so the
+# GFS-vs-ECMWF spread is small now and large later, which is exactly the decision-relevant honesty
+# the multi-model display exists to show. Pure offline synthetic — NOT FOR NAVIGATION.
+DEMO_MEMBERS = {
+    "gfs":   dict(lon=0.0,  lat=0.0,  amp=1.0),
+    "ecmwf": dict(lon=0.045, lat=-0.03, amp=1.30),
+}
+
+def demo_frames(layer, member=None):
     w, s, e, n = DEMO_BBOX
     nx = ny = 24
     unit = "kn" if layer == "wind" else "hPa"
+    bias = DEMO_MEMBERS.get(member, DEMO_MEMBERS["gfs"])
     frames, times = [], []
     for h in range(DEMO_HOURS):
-        # a low-pressure centre drifts ENE across the region over the 12 hours
-        clon = w + (e - w) * (0.15 + 0.6 * h / (DEMO_HOURS - 1))
-        clat = s + (n - s) * (0.35 + 0.25 * h / (DEMO_HOURS - 1))
+        frac = h / (DEMO_HOURS - 1)                       # 0 at analysis -> 1 at the far horizon
+        # a low-pressure centre drifts ENE across the region over the 12 hours; the member-specific
+        # deviation is scaled by `frac`, so members start identical and spread apart with horizon.
+        clon = w + (e - w) * (0.15 + 0.6 * h / (DEMO_HOURS - 1)) + bias["lon"] * frac
+        clat = s + (n - s) * (0.35 + 0.25 * h / (DEMO_HOURS - 1)) + bias["lat"] * frac
+        amp = 1.0 + (bias["amp"] - 1.0) * frac
         vals = []
         for j in range(ny):
             lat = n - (n - s) * j / (ny - 1)
@@ -272,11 +285,11 @@ def demo_frames(layer):
                 lon = w + (e - w) * i / (nx - 1)
                 d = math.hypot((lon - clon) / 0.18, (lat - clat) / 0.14)
                 if layer == "pressure":
-                    # gentle high with the drifting low dimple
-                    v = 1016.0 + 3.0 * math.sin((lon + 81.8) / 0.5) - 6.0 * math.exp(-d * d)
+                    # gentle high with the drifting low dimple (ECMWF deepens it more -> amp)
+                    v = 1016.0 + 3.0 * math.sin((lon + 81.8) / 0.5) - 6.0 * amp * math.exp(-d * d)
                 else:  # wind: prevailing SE breeze, freshening around the low
                     base = 11.0 + 3.0 * math.sin((lon + 81.7) / 0.22) + 2.0 * math.cos((lat - 24.5) / 0.2)
-                    v = base + 9.0 * math.exp(-((d - 1.0) ** 2))   # a band of stronger wind around the low
+                    v = base + 9.0 * amp * math.exp(-((d - 1.0) ** 2))   # a band of stronger wind around the low
                 vals.append(round(v, 2))
         frames.append(Grid({"layer": layer, "unit": unit, "kind": "scalar", "nx": nx, "ny": ny,
                             "west": w, "north": n, "east": e, "south": s,
@@ -290,6 +303,8 @@ def main():
     ap.add_argument("--layers", default="wind,pressure", help="comma list of field-<layer> names")
     ap.add_argument("--demo", action="store_true",
                     help="bake from a deterministic offline synthetic field (Key West) — regenerable demo")
+    ap.add_argument("--demo-ensemble", action="store_true",
+                    help="bake TWO synthetic members (gfs+ecmwf) per layer + ensemble.json (WX-11 spread demo)")
     ap.add_argument("--data", default="../web/data", help="dir holding field-<layer>.json")
     ap.add_argument("--out", default=None, help="output root (default: <data>/wxtiles)")
     ap.add_argument("--zmin", type=int, default=4)
@@ -304,11 +319,37 @@ def main():
     a = ap.parse_args()
     out_root = a.out or os.path.join(a.data, "wxtiles")
     os.makedirs(out_root, exist_ok=True)
+    layers = [x.strip() for x in a.layers.split(",") if x.strip()]
+
+    if a.demo_ensemble:
+        # WX-11: two synthetic members per layer (gfs + ecmwf) into <layer>-<member>/, paired in
+        # ensemble.json so the spread display can decode GFS vs ECMWF and show where they disagree.
+        MODEL_NAME = {"gfs": "GFS demo (synthetic, NOT FOR NAVIGATION)",
+                      "ecmwf": "ECMWF demo (synthetic, NOT FOR NAVIGATION)"}
+        print(f"Baking ENSEMBLE value tiles (gfs+ecmwf) -> {out_root}  [--demo-ensemble synthetic]")
+        pairs = {}
+        for layer in layers:
+            members = {}
+            for mem in ("gfs", "ecmwf"):
+                frames, times = demo_frames(layer, mem)
+                setid = f"{layer}-{mem}"
+                m = bake_frames(out_root, setid, frames, times, a.zmin, a.zmax,
+                                a.mask_below, a.mask_above, "demo-synthetic", MODEL_NAME[mem], a.pad, a.bits)
+                if m:
+                    members[mem] = {"manifest": f"{setid}/manifest.json", "model": MODEL_NAME[mem],
+                                    "vmin": m["vmin"], "vmax": m["vmax"]}
+            if len(members) == 2:
+                pairs[layer] = {"unit": "kn" if layer == "wind" else "hPa", "members": members,
+                                "frames": DEMO_HOURS}
+        json.dump({"encoding": ENCODING, "pairs": pairs}, open(os.path.join(out_root, "ensemble.json"), "w"))
+        print(f"done — {len(pairs)} ensemble pair(s); ensemble.json lists them for the spread display.")
+        return 0
+
     src = "demo-synthetic" if a.demo else a.source
     model = "Helm synthetic demo (NOT FOR NAVIGATION)" if a.demo else a.model
     print(f"Baking value-encoded weather tiles -> {out_root}" + ("  [--demo synthetic]" if a.demo else ""))
     index = {}
-    for layer in [x.strip() for x in a.layers.split(",") if x.strip()]:
+    for layer in layers:
         if a.demo:
             frames, times = demo_frames(layer)
             m = bake_frames(out_root, layer, frames, times, a.zmin, a.zmax,

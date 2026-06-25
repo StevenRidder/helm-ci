@@ -124,5 +124,15 @@ try:
 except (FileNotFoundError, subprocess.TimeoutExpired):
     print("  note   skipped cross-language check (node unavailable)")
 
+# 7) WX-11 ensemble members: GFS & ECMWF agree at the analysis hour and diverge with horizon.
+def member_center(member, h):
+    fr = M.demo_frames("wind", member)[0][h]          # Grid for that frame
+    return fr.sample(-81.66, 24.60, None, None)        # a point on the wind band near the low
+spread0 = abs(member_center("gfs", 0) - member_center("ecmwf", 0))
+spread_mid = abs(member_center("gfs", 6) - member_center("ecmwf", 6))
+spread_late = abs(member_center("gfs", M.DEMO_HOURS - 1) - member_center("ecmwf", M.DEMO_HOURS - 1))
+check(spread0 < 1e-9, f"ensemble: GFS==ECMWF at analysis hour (spread {spread0:.3f})")
+check(spread0 < spread_mid < spread_late, f"ensemble: spread grows with horizon ({spread0:.2f}→{spread_mid:.2f}→{spread_late:.2f} kn)")
+
 print(("\nVALUE-TILE TESTS: %d FAILED" % fails) if fails else "\nVALUE-TILE TESTS: all passed")
 sys.exit(1 if fails else 0)

@@ -165,6 +165,27 @@ share pixels. No tiler, no server-side colourising, fully offline.
 
 ---
 
+## Ensemble spread (WX-11) — GFS vs ECMWF
+
+Multi-model honesty (`docs/VISION.md`: *"when we show GFS vs ECMWF, say which and show
+spread/agreement — disagreement between models is itself decision-relevant"*). Two value-tile sets
+of the same layer (one per model) are decoded together and the per-pixel **spread `|GFS − ECMWF|`**
+is painted through a ramp that is **transparent where the models agree and reddens where they
+diverge** — the map literally highlights "the forecast is uncertain here" (which typically grows with
+forecast horizon).
+
+- **Bake:** `make_value_tiles.py --demo-ensemble --layers wind` → `wxtiles/wind-gfs/`,
+  `wxtiles/wind-ecmwf/`, and `wxtiles/ensemble.json` pairing them. (Production: bake each member from
+  its model via `fetch_grib.py --source gfs|ecmwf` then `make_value_tiles.py`.)
+- **Render:** `cog.js` `enableEnsemble(map, {manifestA, manifestB, labelA, labelB, …})` via a
+  `helmwxspread://` protocol; `setEnsembleFrame/Opacity`, `disableEnsemble`.
+- **Probe:** `sampleEnsemble(lat, lon, t)` / `window.__helmWxEnsemble(lat,lon,t)` →
+  `{ layer, unit, value/mean, spread, agreement: 'agree'|'marginal'|'diverge', confidence:
+  'good'|'fair'|'low', models: { GFS, ECMWF }, validTime, notForNavigation, note? }`. Agreement is
+  classified on `spread / (combined value range)` (`<0.08` agree, `<0.2` marginal, else diverge); the
+  ensemble confidence **overrides** the single-model confidence (disagreement = lower confidence).
+- A pixel is assessed only where **both** members have data; otherwise transparent / `null`.
+
 ## Notes / known edges
 
 - **NODATA mask is always on.** Value tiles are always baked RGBA; out-of-coverage pixels (a tile

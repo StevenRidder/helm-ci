@@ -292,3 +292,138 @@ export async function sampleWx(lat, lon, t, opts) {
 
 // Active set introspection (for the panel readout / legend).
 export function activeWx() { const s = wxSets[wxActiveKey]; return s ? s.cfg : null; }
+
+
+/* ============================================================================================
+ * WX-11 — ENSEMBLE GFS-vs-ECMWF confidence / spread.
+ * --------------------------------------------------------------------------------------------
+ * Multi-model honesty (docs/VISION.md): "when we show GFS vs ECMWF, say which and show
+ * spread/agreement — disagreement between models is itself decision-relevant." This decodes TWO
+ * value-tile sets (the same layer from two models) and renders the per-pixel SPREAD |A−B| through a
+ * ramp that is transparent where the models agree and reddens where they diverge — so the map
+ * literally highlights "the forecast is uncertain here". sampleEnsemble(lat,lon,t) returns both
+ * model values + the spread + an agreement/confidence label. Reuses the WX-10 decode + cache.
+ * ============================================================================================ */
+
+const ENSP = 'helmwxspread';
+const ENS_SRC = 'helm-wx-spread', ENS_LYR = 'helm-wx-spread';
+let ensProtoReady = false;
+let ensState = null;   // { layer, unit, setA, setB, labelA, labelB, range, spreadStops, times, bbox, minzoom, maxzoom, notForNav }
+
+function makeSet(cfg, manifestUrl) {
+  return { cfg, baseDir: manifestUrl.replace(/manifest\.json$/, ''), rawCache: new Map(), inflight: new Map(), order: [] };
+}
+// spread ramp (in the layer's own units) — transparent where models agree, amber→red as they diverge.
+function spreadStops(range) {
+  const u = Math.max(1e-6, range);
+  return [[0, [0, 0, 0, 0]], [0.06 * u, [90, 200, 120, 0.30]], [0.16 * u, [240, 200, 70, 0.62]],
+          [0.32 * u, [232, 90, 55, 0.85]], [0.5 * u, [200, 30, 60, 0.95]]];
+}
+async function ensFetchPair(st, frame, z, x, y, signal) {   // `st` captured by the caller so a mid-flight disable can't null it
+  return Promise.all([wxFetchRaw(st.setA, frame, z, x, y, signal),
+                      wxFetchRaw(st.setB, frame, z, x, y, signal)]);
+}
+async function ensProtocol(params, abortController) {
+  const m = /^helmwxspread:\/\/e\/(\d+)\/(\d+)\/(\d+)\/(\d+)/.exec(params.url);
+  const st = ensState;                                       // snapshot — survives a disable during the await below
+  if (!m || !st) return { data: await transparentTile() };
+  let ta, tb;
+  try { [ta, tb] = await ensFetchPair(st, +m[1], +m[2], +m[3], +m[4], abortController && abortController.signal); }
+  catch (e) { if (e && e.name === 'AbortError') throw e; return { data: await transparentTile() }; }
+  if (!ta || !tb) return { data: await transparentTile() };   // need BOTH members to assess spread
+  const C = codec(), stops = st.spreadStops, w = ta.w, h = ta.h, va = ta.values, vb = tb.values;
+  const cv = makeCanvas(w, h), cx = cv.getContext('2d');
+  const img = cx.createImageData(w, h), d = img.data;
+  for (let i = 0; i < va.length; i++) {
+    const a = va[i], b = vb[i];
+    if (a == null || !isFinite(a) || b == null || !isFinite(b)) { d[i * 4 + 3] = 0; continue; }
+    const c = C.rampColor(stops, Math.abs(a - b));
+    d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = c[3];
+  }
+  cx.putImageData(img, 0, 0);
+  return { data: await createImageBitmap(cv) };
+}
+
+// PUBLIC — enable the ensemble spread layer. ctx: { maplibregl, manifestA, manifestB, labelA?,
+// labelB?, layer?, beforeId?, opacity?, frame?, notify? }. Returns ensState (or null on failure).
+export async function enableEnsemble(map, ctx) {
+  const C = codec();
+  if (!C) { ctx.notify && ctx.notify('weather codec not loaded', 'warn'); return null; }
+  if (!ensProtoReady) { ctx.maplibregl.addProtocol(ENSP, ensProtocol); ensProtoReady = true; }
+  let mA, mB;
+  try {
+    [mA, mB] = await Promise.all([fetch(ctx.manifestA).then(r => { if (!r.ok) throw new Error('A ' + r.status); return r.json(); }),
+                                  fetch(ctx.manifestB).then(r => { if (!r.ok) throw new Error('B ' + r.status); return r.json(); })]);
+  } catch (e) { ctx.notify && ctx.notify('ensemble tiles unavailable: ' + (e.message || e), 'warn'); return null; }
+  if (mA.encoding !== C.ENCODING || mB.encoding !== C.ENCODING) { ctx.notify && ctx.notify('unsupported ensemble encoding', 'warn'); return null; }
+  // The two members are compared frame-by-INDEX, so their valid-times must line up or the spread
+  // would compare different forecast hours. Surface a mismatch rather than silently comparing apples.
+  if (JSON.stringify(mA.times || null) !== JSON.stringify(mB.times || null))
+    ctx.notify && ctx.notify('ensemble members have different valid-times — spread may be misaligned', 'warn');
+  const bbox = [Math.max(mA.bbox[0], mB.bbox[0]), Math.max(mA.bbox[1], mB.bbox[1]),   // coverage intersection
+                Math.min(mA.bbox[2], mB.bbox[2]), Math.min(mA.bbox[3], mB.bbox[3])];
+  const range = Math.max(mA.vmax, mB.vmax) - Math.min(mA.vmin, mB.vmin);
+  ensState = {
+    layer: ctx.layer || mA.layer, unit: mA.unit,
+    setA: makeSet(mA, ctx.manifestA), setB: makeSet(mB, ctx.manifestB),
+    labelA: ctx.labelA || mA.model || mA.source, labelB: ctx.labelB || mB.model || mB.source,
+    range, spreadStops: spreadStops(range), times: mA.times,
+    minzoom: Math.max(mA.minzoom || 0, mB.minzoom || 0), maxzoom: Math.min(mA.maxzoom || 7, mB.maxzoom || 7), bbox,
+    notForNav: [mA, mB].some(m => m.source === 'demo-synthetic' || NFN.test(m.model || '') || NFN.test(m.disclaimer || '')),
+  };
+  const frame = ctx.frame | 0;
+  const opacity = Math.max(0, Math.min(1, ctx.opacity == null ? 0.85 : ctx.opacity));
+  disableEnsemble(map, true);
+  map.addSource(ENS_SRC, {
+    type: 'raster', tiles: ['helmwxspread://e/' + frame + '/{z}/{x}/{y}'], tileSize: 256,
+    minzoom: ensState.minzoom, maxzoom: ensState.maxzoom, bounds: bbox,
+    attribution: 'Helm ensemble spread · ' + ensState.labelA + ' vs ' + ensState.labelB,
+  });
+  map.addLayer({
+    id: ENS_LYR, type: 'raster', source: ENS_SRC,
+    paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 },
+  }, (ctx.beforeId && map.getLayer(ctx.beforeId)) ? ctx.beforeId : undefined);
+  ctx.notify && ctx.notify('Ensemble spread (' + ensState.labelA + ' vs ' + ensState.labelB + ') — red = models disagree', 'ok');
+  return ensState;
+}
+
+export function disableEnsemble(map, keep) {
+  if (map.getLayer(ENS_LYR)) map.removeLayer(ENS_LYR);
+  if (map.getSource(ENS_SRC)) map.removeSource(ENS_SRC);
+  if (!keep) ensState = null;
+}
+export function setEnsembleOpacity(map, o) {
+  if (map.getLayer(ENS_LYR)) map.setPaintProperty(ENS_LYR, 'raster-opacity', Math.max(0, Math.min(1, o)));
+}
+export function setEnsembleFrame(map, frame) {
+  if (!ensState) return;
+  const f = effFrame(ensState.setA.cfg, frame) ?? 0;
+  const src = map.getSource(ENS_SRC);
+  if (src && src.setTiles) src.setTiles(['helmwxspread://e/' + f + '/{z}/{x}/{y}']);
+}
+
+// PUBLIC PROBE — the ensemble sample face. Returns both model values + spread + agreement/confidence
+// (the multi-model honesty payload): { layer, unit, mean (value), spread, agreement, confidence,
+// models:{<labelA>,<labelB>}, validTime, notForNavigation, note? }. Decoded, never invented.
+export async function sampleEnsemble(lat, lon, t) {
+  const C = codec(); const st = ensState; if (!C || !st) return null;   // snapshot so a mid-call disable is safe
+  const b = st.bbox, frame = st.times ? C.pickFrame(st.times, t) : 0;
+  const validTime = st.times ? st.times[Math.max(0, Math.min(st.times.length - 1, frame))] : null;
+  const base = { layer: st.layer, unit: st.unit, models: {}, validTime: validTime, notForNavigation: st.notForNav };
+  const inLon = b[0] <= b[2] ? (lon >= b[0] && lon <= b[2]) : (lon >= b[0] || lon <= b[2]);
+  if (!inLon || lat < b[1] || lat > b[3])
+    return { ...base, value: null, mean: null, spread: null, agreement: 'no-data', confidence: 'low', note: 'outside coverage — verify locally' };
+  const z = C.sampleZoom(st, st.maxzoom), p = C.lonLatToPixel(lon, lat, z, st.setA.cfg.tileSize || 256);
+  const [ta, tb] = await ensFetchPair(st, frame, z, p.x, p.y);
+  const va = ta ? C.bilinear(ta.values, ta.w, ta.h, p.px, p.py) : null;
+  const vb = tb ? C.bilinear(tb.values, tb.w, tb.h, p.px, p.py) : null;
+  if (va == null || !isFinite(va) || vb == null || !isFinite(vb))
+    return { ...base, value: null, mean: null, spread: null, agreement: 'no-data', confidence: 'low', note: 'no data here — verify locally' };
+  const spread = Math.abs(va - vb), frac = spread / Math.max(1e-6, st.range);
+  const agreement = frac < 0.08 ? 'agree' : (frac < 0.2 ? 'marginal' : 'diverge');
+  const confidence = agreement === 'agree' ? 'good' : (agreement === 'marginal' ? 'fair' : 'low');
+  const r2 = x => Math.round(x * 100) / 100;
+  base.models[st.labelA] = r2(va); base.models[st.labelB] = r2(vb);
+  return { ...base, value: r2((va + vb) / 2), mean: r2((va + vb) / 2), spread: r2(spread), agreement, confidence };
+}
+export function activeEnsemble() { return ensState; }
