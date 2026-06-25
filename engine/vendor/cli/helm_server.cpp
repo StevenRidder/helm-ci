@@ -363,6 +363,34 @@ static bool load_latest_route_from_db(std::vector<WP>& out, std::string& name) {
   sqlite3_close(db);
   return out.size() >= 2;
 }
+// Load a SPECIFIC saved route (by guid) + its name from navobj.db. Mirrors load_latest_route_from_db.
+static bool load_route_by_guid(const std::string& guid, std::vector<WP>& out, std::string& name) {
+  if (!g_BasePlatform || guid.empty()) return false;
+  std::string dbpath = std::string(g_BasePlatform->GetPrivateDataDir().ToUTF8()) + "/navobj.db";
+  sqlite3* db = nullptr;
+  if (sqlite3_open_v2(dbpath.c_str(), &db, SQLITE_OPEN_READONLY, nullptr) != SQLITE_OK) { if (db) sqlite3_close(db); return false; }
+  sqlite3_stmt* st = nullptr;
+  if (sqlite3_prepare_v2(db, "SELECT name FROM routes WHERE guid = ?", -1, &st, nullptr) == SQLITE_OK) {
+    sqlite3_bind_text(st, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+    if (sqlite3_step(st) == SQLITE_ROW) { const unsigned char* nm = sqlite3_column_text(st, 0); name = nm ? reinterpret_cast<const char*>(nm) : "Route"; }
+    sqlite3_finalize(st);
+  }
+  out.clear();
+  const char* q = "SELECT rp.lat, rp.lon, rp.Name FROM routepoints rp "
+                  "JOIN routepoints_link l ON rp.guid = l.point_guid "
+                  "WHERE l.route_guid = ? ORDER BY l.point_order";
+  if (sqlite3_prepare_v2(db, q, -1, &st, nullptr) == SQLITE_OK) {
+    sqlite3_bind_text(st, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+    while (sqlite3_step(st) == SQLITE_ROW) {
+      WP w; w.lat = sqlite3_column_double(st, 0); w.lon = sqlite3_column_double(st, 1);
+      const unsigned char* nm = sqlite3_column_text(st, 2); w.name = nm ? reinterpret_cast<const char*>(nm) : "";
+      out.push_back(w);
+    }
+    sqlite3_finalize(st);
+  }
+  sqlite3_close(db);
+  return out.size() >= 2;
+}
 static void bd(double lat1, double lon1, double lat0, double lon0, double* brg, double* nm) {
   DistanceBearingMercator(lat1, lon1, lat0, lon0, brg, nm);
 }
@@ -827,6 +855,75 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     g_route_version++;                          // nav_loop swaps to it on the next tick
     std::printf("route: created \"%s\" (%zu wp) — persisted to navobj.db + activated\n", name.c_str(), pts.size());
     ws->send(std::string("{\"t\":\"route.ack\",\"ok\":true,\"name\":\"") + json_escape(name) + "\"}"); return;
+  }
+  if (t == "route.list") {                                                    // list saved routes from navobj.db
+    std::string rn; { std::lock_guard<std::mutex> lk(g_route_mtx); rn = g_route_name; }
+    std::string arr = "[";
+    if (g_BasePlatform) {
+      std::string dbpath = std::string(g_BasePlatform->GetPrivateDataDir().ToUTF8()) + "/navobj.db";
+      sqlite3* db = nullptr;
+      if (sqlite3_open_v2(dbpath.c_str(), &db, SQLITE_OPEN_READONLY, nullptr) == SQLITE_OK) {
+        sqlite3_stmt* st = nullptr;
+        const char* q = "SELECT r.guid, r.name, COUNT(l.point_guid) FROM routes r "
+                        "LEFT JOIN routepoints_link l ON r.guid = l.route_guid "
+                        "GROUP BY r.guid, r.name ORDER BY r.created_at DESC, r.rowid DESC";
+        if (sqlite3_prepare_v2(db, q, -1, &st, nullptr) == SQLITE_OK) {
+          bool first = true;
+          while (sqlite3_step(st) == SQLITE_ROW) {
+            const unsigned char* g = sqlite3_column_text(st, 0);
+            const unsigned char* nm = sqlite3_column_text(st, 1);
+            std::string guid = g ? reinterpret_cast<const char*>(g) : "";
+            std::string nme = nm ? reinterpret_cast<const char*>(nm) : "Route";
+            char tail[48]; std::snprintf(tail, sizeof tail, ",\"points\":%d,\"active\":%s}",
+              sqlite3_column_int(st, 2), (nme == rn) ? "true" : "false");
+            arr += (first ? "" : ",");
+            arr += "{\"guid\":\"" + json_escape(guid) + "\",\"name\":\"" + json_escape(nme) + "\"" + tail;
+            first = false;
+          }
+          sqlite3_finalize(st);
+        }
+        sqlite3_close(db);
+      }
+    }
+    arr += "]";
+    ws->send(std::string("{\"t\":\"route.list\",\"routes\":") + arr + "}"); return;
+  }
+  if (t == "route.activate" && d.HasMember("guid") && d["guid"].IsString()) {  // switch the active route
+    std::vector<WP> pts; std::string name = "Route";
+    if (load_route_by_guid(d["guid"].GetString(), pts, name)) {
+      { std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = pts; g_route_name = name; }
+      g_route_version++;
+      std::printf("route: activated \"%s\" (%zu wp)\n", name.c_str(), pts.size());
+      ws->send(std::string("{\"t\":\"route.ack\",\"ok\":true,\"name\":\"") + json_escape(name) + "\"}");
+    } else ws->send("{\"t\":\"route.ack\",\"ok\":false,\"error\":\"route not found\"}");
+    return;
+  }
+  if (t == "route.delete" && d.HasMember("guid") && d["guid"].IsString()) {    // remove a saved route + its points
+    std::string guid = d["guid"].GetString(); bool ok = false;
+    if (g_BasePlatform) {
+      std::string dbpath = std::string(g_BasePlatform->GetPrivateDataDir().ToUTF8()) + "/navobj.db";
+      sqlite3* db = nullptr;
+      if (sqlite3_open_v2(dbpath.c_str(), &db, SQLITE_OPEN_READWRITE, nullptr) == SQLITE_OK) {
+        const char* stmts[] = {
+          "DELETE FROM routepoints WHERE guid IN (SELECT point_guid FROM routepoints_link WHERE route_guid=?1) "
+          "AND guid NOT IN (SELECT point_guid FROM routepoints_link WHERE route_guid<>?1)",  // points exclusive to this route
+          "DELETE FROM routepoints_link WHERE route_guid=?1",
+          "DELETE FROM routes WHERE guid=?1" };
+        ok = true;
+        for (const char* s : stmts) {
+          sqlite3_stmt* st = nullptr;
+          if (sqlite3_prepare_v2(db, s, -1, &st, nullptr) == SQLITE_OK) {
+            sqlite3_bind_text(st, 1, guid.c_str(), -1, SQLITE_TRANSIENT);
+            if (sqlite3_step(st) != SQLITE_DONE) ok = false;
+            sqlite3_finalize(st);
+          } else ok = false;
+        }
+        sqlite3_close(db);
+      }
+    }
+    std::printf("route: delete %s -> %s\n", guid.c_str(), ok ? "ok" : "failed");
+    ws->send(std::string("{\"t\":\"route.ack\",\"ok\":") + (ok ? "true" : "false") + ",\"deleted\":\"" + json_escape(guid) + "\"}");
+    return;
   }
 }
 static void conn_init() {
