@@ -26,22 +26,52 @@
   };
   function supports(layer) { return !!LAYERS[layer]; }
 
-  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {}, handler: null, debounce: null, lastKey: '' };
+  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {},
+             handler: null, debounce: null, abort: null, lastKey: '' };
 
   function codec() { return window.HelmWxCodec; }
 
-  // viewport bbox, clamped so a zoomed-out world view doesn't request a giant grid.
-  function viewBbox(map, maxDeg) {
+  function normalizeLon(lon) {
+    var wrapped = ((lon + 180) % 360 + 360) % 360 - 180;
+    return wrapped === -180 && lon > 0 ? 180 : wrapped;
+  }
+
+  function viewport(map) {
     var b = map.getBounds(), w = b.getWest(), s = b.getSouth(), e = b.getEast(), n = b.getNorth();
-    var cx = (w + e) / 2, cy = (s + n) / 2, hw = Math.min((e - w) / 2, maxDeg / 2), hh = Math.min((n - s) / 2, maxDeg / 2);
-    return [cx - hw, Math.max(-85, cy - hh), cx + hw, Math.min(85, cy + hh)];
+    if (e < w) e += 360;
+    return [w, Math.max(-85, s), e, Math.min(85, n)];
+  }
+
+  // Cover the viewport plus 50% margin on every side. Longitude stays unwrapped for MapLibre
+  // image coordinates (so Fiji views can cross 180°); API query longitudes are wrapped in grid().
+  // At world scale the request is capped to one 360° revolution, never to an arbitrary local box.
+  function viewBbox(map) {
+    var v = viewport(map), w = v[0], s = v[1], e = v[2], n = v[3];
+    var width = Math.min(360, Math.max(0.01, e - w));
+    var height = Math.min(170, Math.max(0.01, n - s));
+    var cx = (w + e) / 2, cy = (s + n) / 2;
+    var paddedWidth = Math.min(360, width * 2), paddedHeight = Math.min(170, height * 2);
+    return [cx - paddedWidth / 2, Math.max(-85, cy - paddedHeight / 2),
+            cx + paddedWidth / 2, Math.min(85, cy + paddedHeight / 2)];
+  }
+
+  function covers(field, map) {
+    if (!field) return false;
+    var v = viewport(map), w = v[0], e = v[2], mid = (w + e) / 2;
+    var fieldMid = (field.west + field.east) / 2;
+    var shift = Math.round((fieldMid - mid) / 360) * 360;
+    w += shift; e += shift;
+    if (e - w >= 360 && field.east - field.west >= 360) return field.south <= v[1] && field.north >= v[3];
+    return field.west <= w && field.east >= e && field.south <= v[1] && field.north >= v[3];
   }
 
   function grid(bbox, nx, ny) {
     var lats = [], lons = [], qlat = [], qlon = [];
     for (var j = 0; j < ny; j++) lats.push(bbox[3] - (bbox[3] - bbox[1]) * j / (ny - 1));
     for (var i = 0; i < nx; i++) lons.push(bbox[0] + (bbox[2] - bbox[0]) * i / (nx - 1));
-    for (var a = 0; a < lats.length; a++) for (var c = 0; c < lons.length; c++) { qlat.push(+lats[a].toFixed(4)); qlon.push(+lons[c].toFixed(4)); }
+    for (var a = 0; a < lats.length; a++) for (var c = 0; c < lons.length; c++) {
+      qlat.push(+lats[a].toFixed(4)); qlon.push(+normalizeLon(lons[c]).toFixed(4));
+    }
     return { nx: nx, ny: ny, lats: lats, lons: lons, qlat: qlat, qlon: qlon };
   }
 
@@ -103,25 +133,43 @@
     return r.json();
   }
 
+  function clearOverlay(map) {
+    if (!map) return;
+    if (map.getLayer(LYR)) map.removeLayer(LYR);
+    if (map.getSource(SRC)) map.removeSource(SRC);
+    st.field = null;
+  }
+
   async function refresh() {
     if (!st.on || !supports(st.layer)) return;
-    var bbox = viewBbox(st.map, 14);
-    var key = st.layer + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
+    var bbox = viewBbox(st.map);
+    var key = st.layer + ':' + st.model + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
     if (key === st.lastKey) return;                       // same view+layer -> skip
     st.lastKey = key;
+
+    // Never leave weather from a different part of the world on-screen while the replacement loads.
+    if (st.field && !covers(st.field, st.map)) clearOverlay(st.map);
+
     var g = grid(bbox, 12, 12), my = ++st.token;
-    var ac = new AbortController();
+    if (st.abort) st.abort.abort();
+    var ac = new AbortController(); st.abort = ac;
     st.notify('Fetching live ' + st.layer + ' for this view …', 'info');
     try {
       var nodes = await fetchPoints(url(g, st.layer, st.model === 'gfs_seamless' ? null : st.model), ac.signal);
       if (my !== st.token || !st.on) return;              // a newer pan superseded this one
       var field = toField(nodes, g, st.layer);
-      if (!field.values.some(function (v) { return isFinite(v); })) { st.notify('No live data for this area', 'warn'); return; }
+      if (!field.values.some(function (v) { return isFinite(v); })) {
+        clearOverlay(st.map); st.lastKey = ''; st.abort = null;
+        st.notify('No live data for this area', 'warn'); return;
+      }
       renderField(st.map, field);
+      st.abort = null;
       st.notify('Live ' + st.layer + ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
     } catch (e) {
       if (e && e.name === 'AbortError') return;
+      if (my !== st.token || !st.on) return;
       // honest offline behaviour — never fabricate a field
+      clearOverlay(st.map); st.lastKey = ''; st.abort = null;
       st.notify('Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)', 'warn');
     }
   }
@@ -136,20 +184,24 @@
     refresh();
   }
   function disable(map) {
-    st.on = false;
+    st.on = false; st.token++;
+    clearTimeout(st.debounce); st.debounce = null;
+    if (st.abort) { st.abort.abort(); st.abort = null; }
     if (st.handler) { (map || st.map).off('moveend', st.handler); st.handler = null; }
-    var m = map || st.map; if (m) { if (m.getLayer(LYR)) m.removeLayer(LYR); if (m.getSource(SRC)) m.removeSource(SRC); }
-    st.field = null; st.lastKey = '';
+    clearOverlay(map || st.map); st.lastKey = '';
   }
-  function setLayer(layer) { st.layer = layer; st.lastKey = ''; if (st.on) refresh(); }
-  function setModel(model) { st.model = model; st.lastKey = ''; if (st.on) refresh(); }
+  function setLayer(layer) { st.layer = layer; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
+  function setModel(model) { st.model = model; st.lastKey = ''; clearOverlay(st.map); if (st.on) refresh(); }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;
+    lon += Math.round(((f.west + f.east) / 2 - lon) / 360) * 360;
     if (lon < f.west || lon > f.east || lat < f.south || lat > f.north) return { value: null, source: 'open', note: 'outside live view' };
     var fx = (lon - f.west) / ((f.east - f.west) || 1) * (f.nx - 1), fy = (f.north - lat) / ((f.north - f.south) || 1) * (f.ny - 1);
     var v = C.bilinear(f.values, f.nx, f.ny, fx, fy);
     return { layer: f.layer, value: (v == null || !isFinite(v)) ? null : Math.round(v * 100) / 100, unit: f.unit, source: 'open', sourceRef: { title: 'Open-Meteo (live)' } };
   }
 
-  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel, sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField, _viewBbox: viewBbox, _grid: grid };
+  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel,
+    sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField,
+    _viewBbox: viewBbox, _grid: grid, _covers: covers, _clearOverlay: clearOverlay };
 })();

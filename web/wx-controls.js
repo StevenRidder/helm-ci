@@ -134,7 +134,7 @@
   function boot() {
     var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);
     var drawer = document.getElementById('drawer-weather');
-    if (!window.map || !drawer) return setTimeout(boot, 300);
+    if (!window.map || typeof window.map.on !== 'function' || !drawer) return setTimeout(boot, 300);
     if (document.getElementById('wx-plus')) return;        // already built
     build(drawer, window.map);
   }
