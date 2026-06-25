@@ -44,6 +44,10 @@ step "depth contours  (smooth, Windy-style: DEM -> gaussian -> marching-squares 
 python3 "$SCRIPT_DIR/make_depth_contours.py" \
   || echo "  ! depth-contour step failed (matplotlib/numpy missing?) — continuing"
 
+step "depth layers  (DEM -> S-52 depth-area fill + contours + soundings, for regions with NO ENC cell)"
+python3 "$SCRIPT_DIR/make_depth_layers.py" \
+  || echo "  ! depth-layers step failed — continuing"
+
 step "glyphs  (Noto Sans label ranges -> web/fonts, so map labels work offline)"
 python3 "$SCRIPT_DIR/fetch_glyphs.py" \
   || echo "  ! glyphs step failed — continuing"
