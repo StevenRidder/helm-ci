@@ -399,7 +399,13 @@ extern Select* pSelectAIS;                 // model global (ais_decoder.cpp), se
 static AisDecoder* g_ais = nullptr;
 static std::mutex  g_ais_mtx;
 struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
-                bool cpaValid; int cls; std::string name; std::time_t seen; };
+                bool cpaValid; int cls; std::string name; std::time_t seen;
+                // forwarded from OpenCPN's already-decoded AisTargetData for the rich target card
+                int navStatus, shipType, rot, imo, length, beam, etaMo, etaDay, etaHr, etaMin;
+                std::string callsign, destination; double draft; };
+static std::string ais_trim(std::string s) {     // AIS text fields are right-padded with '@' (6-bit 0) / spaces
+  size_t e = s.find_last_not_of("@ "); return e == std::string::npos ? std::string() : s.substr(0, e + 1);
+}
 static std::map<int, AisRow> g_ais_rows;
 static bool fresh(std::time_t t) { return t != 0 && std::difftime(std::time(nullptr), t) <= kStaleSec; }
 static std::vector<std::string> splitc(const std::string& s) {
@@ -429,7 +435,9 @@ static void nmea_parse(const std::string& line) {
     for (auto& kv : g_ais->GetTargetList()) {
       auto& t = kv.second;
       g_ais_rows[t->MMSI] = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
-        t->CPA, t->TCPA, t->bCPA_Valid, (int)t->Class, std::string(t->ShipName), snap };
+        t->CPA, t->TCPA, t->bCPA_Valid, (int)t->Class, ais_trim(t->ShipName), snap,
+        t->NavStatus, (int)t->ShipType, t->ROTAIS, t->IMO, t->DimA + t->DimB, t->DimC + t->DimD,
+        t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft };
     }
     return;
   }
@@ -975,14 +983,27 @@ static void nav_loop(ix::HttpServer* server) {
       for (auto it = g_ais_rows.begin(); it != g_ais_rows.end(); ) {
         AisRow& t = it->second; long age = (long)(aisNow - t.seen);
         if (age > 600) { it = g_ais_rows.erase(it); continue; }
-        char tb[440];
+        char eta[16] = "";                            // MM-DD HH:MM when the voyage ETA is set
+        if (t.etaMo >= 1 && t.etaMo <= 12 && t.etaDay >= 1 && t.etaDay <= 31)
+          std::snprintf(eta, sizeof eta, "%02d-%02d %02d:%02d", t.etaMo, t.etaDay, t.etaHr, t.etaMin);
+        char rotj[16] = "null";                       // AIS ROT units -> deg/min; -128/128 = not available
+        if (t.rot != -128 && t.rot != 128) {
+          double a = std::fabs((double)t.rot) / 4.733, dm = (t.rot < 0 ? -1.0 : 1.0) * a * a;
+          if (dm > 720) dm = 720; if (dm < -720) dm = -720;
+          std::snprintf(rotj, sizeof rotj, "%.0f", dm);
+        }
+        char tb[800];
         std::snprintf(tb, sizeof tb,
           "%s{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
           "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
-          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld}",
+          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,"
+          "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
+          "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
           first ? "" : ",", t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
           t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
-          t.cls, json_escape(t.name).c_str(), age);
+          t.cls, json_escape(t.name).c_str(), age,
+          t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
+          eta, t.length, t.beam, t.draft, rotj, t.imo);
         aisArr += tb; first = false; ++it;
       }
     }

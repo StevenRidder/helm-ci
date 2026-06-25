@@ -75,7 +75,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - 🟡 Command palette ⌘K (chrome only, unwired) · 🟡 Units selection UI (fixed NM/kn) · 🔴 Split-screen
 
 ### Safety & alarms
-- 🟢 AIS targets + **OpenCPN-class tap card** (`ais-meta.js` + `aisPopupHTML`): @-stripped name, flag-from-MMSI, ship type, nav-status badge, 3-tier CPA/TCPA risk block, voyage (dest/ETA), size, ROT, "last heard / LOST" — all read defensively. **Engine-forward contract** (OpenCPN's decoder already has these — just copy into `AisRow`): `shipType, navStatus, callsign, destination, eta, length, beam, draught, rot, imo`. Flag/risk/age live now; the rest light up when the engine sends them.
+- 🟢 AIS targets + **OpenCPN-class tap card** (`ais-meta.js` + `aisPopupHTML`): @-stripped name, flag-from-MMSI, ship type, nav-status badge, 3-tier CPA/TCPA risk block, voyage (dest/ETA), size, ROT, "last heard / LOST". **Engine end DONE** — `helm_server.cpp` `AisRow` now forwards `navStatus/shipType/callsign/destination/eta/length/beam/draught/rot/imo` straight out of OpenCPN's already-decoded `AisTargetData` (+ `ais_trim` strips `@`-padding at source). Boat-verified live: e.g. *TWICE 🇩🇪 Class B · Sailing · Call DF7159 · 15×5 m*. Class-A-only fields (navStatus/dest/ETA/draught) correctly empty in a Class-B anchorage.
 - 🟢 CPA/TCPA + collision alarm + COLREGs maneuver (boat-verified, real alarm fired)
 - 🟢 Depth/shallow (REAL-source guarded — never alarms on the simulated fill) / off-course (XTE) / arrival alarms — wired off the nav frame · 🔴 AIS guard zone still to do
 - 🟢 Anchor watch + drag alarm (on-screen, debounced, settable radius — `alarms.js`) · ⚪ remote/off-boat drag alert — Phase 2 core
