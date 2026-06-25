@@ -1,41 +1,33 @@
 # Helm — Epic Plan (the board)
 
-> **The single source of truth for _what to build, in what order, by which parallel stream._** Generated 2026-06-25 from a full read of every project `.md` (688 capabilities inventoried → deduped → decomposed → adversarially critique-refined). Companion to [FEATURE-TRACKER.md](FEATURE-TRACKER.md) (per-feature status) and the ADRs in [decisions/](decisions/).
+> **The single source of truth for _what to build, in what order, by which parallel stream._** Generated 2026-06-25 from a full read of every project `.md`, then **reconciled against the actual code by a multi-agent audit (2026-06-25)** — 13 task statuses corrected and 5 wiring tasks added (`ENGINE-12`, `CHART-14`, `ALARM-10`, `AI-16`, `AI-17`). Mirrored live on **plan.taikunai.com** (`project=helm` via the `taikun-plan` MCP). If this doc and the live board disagree, the **board is canonical**. Companion to [FEATURE-TRACKER.md](FEATURE-TRACKER.md) and the ADRs in [decisions/](decisions/).
 
 ## The one rule
 
-**Each epic owns its own files.** That `owns` list is a _collision boundary_: an agent working an epic edits only those files, so two streams never fight over the same module. The two shared files that every UI epic used to collide on — `web/index.html` (85KB shell) and `web/style.json` — are de-fanged by the **SHELL** epic, which must land first and gives every other epic a registration hook + its own style fragment. Lock **SHELL** and **CONTRACT**, and the wave-2 streams fan out almost collision-free.
+**Each epic owns its own files.** That `owns` list is a _collision boundary_: an agent working an epic edits only those files, so two streams never fight over the same module. The two shared files every UI epic used to collide on — `web/index.html` (the shell) and `web/style.json` — are de-fanged by the **SHELL** epic, which must land first and gives every other epic a registration hook + its own style fragment. Lock **SHELL** and **CONTRACT**, and the wave-2 streams fan out almost collision-free.
 
 ## Board at a glance
 
-- **19 epics** · **186 tasks** — 🟢 57 done · 🟡 20 in-progress · 🔴 0 blocked · ⚪ 109 to-do
+- **19 epics** · **191 tasks** — 🟢 60 done · 🟡 23 in-progress · 🔴 0 blocked · ⚪ 108 to-do
 
 | Wave | Theme | Epics | Tasks done |
 |---|---|---|---|
-| **1** | Foundations & unblockers | BACKEND, CHART, CONTRACT, ENGINE, SHELL | 25/49 |
-| **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 28/77 |
-| **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 4/45 |
+| **1** | Foundations & unblockers | BACKEND, CHART, CONTRACT, ENGINE, SHELL | 25/51 |
+| **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 29/78 |
+| **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 6/47 |
 | **4** | Native + commercial (last) | NATIVE | 0/15 |
 
 ## How to run it (parallel streams)
 
 - **Status legend:** 🟢 done & wired · 🟡 in progress / one side built · 🔴 blocked · ⚪ to-do. ⛔ = **blocking** (gates other work). `↳` = task dependencies (may cross epics).
 
-- **`parallelSafe`** on an epic = it lives entirely in its own files and can run concurrently with other same-wave epics. `parallelSafe=False` epics still register through SHELL, so they serialize on shell edits — run them one-at-a-time _within_ a wave, or after SHELL ships its API.
+- **`parallelSafe`** epics live entirely in their own files and can run concurrently. `parallelSafe=False` epics register through SHELL, so they serialize on shell edits — run them one at a time within a wave, or after SHELL ships its API.
 
-- **Waves are dependency order, not a calendar.** Wave 1 = unblocked now; higher waves wait on deps. Pick any unblocked epic in the current wave and point an agent at it.
+- **Waves are dependency order, not a calendar.** Wave 1 = unblocked now; higher waves wait on deps.
 
-## ▶ Start here (the first three streams)
+## ▶ Start here
 
-Given how much foundation is already 🟢 done, the highest-leverage opening moves:
-
-1. **SHELL (do this first, solo).** `SHELL-1/2/3` — the panel-registration API + `style.json` fragment split. Tiny (3 tasks) but **it unblocks ~10 wave-2 UI epics**. Until it lands, the UI streams can't safely run in parallel.
-
-2. **In parallel with SHELL (zero collision — different files): CONTRACT + ENGINE hardening.** `CONTRACT-6/7/9` (resume · channels · backpressure) and `ENGINE-9/10` (merge to one binary · finish the `UpdateProgress` relocation — the math already ships, do **not** rebuild it). These touch `engine/` + contract files only, never the shell.
-
-3. **The moment SHELL lands, fan out wave 2.** Highest value first: **ROUTE-3** (direct-manipulation route editing — the single biggest functional gap), **OWNSHIP-5/6** (follow-mode + course-up — basic chartplotter UX still missing), and **TOOLS-7** (persistence — it gates `BOAT-1`, units, and Smart Board). Then **AIS**, **CONN** (SignalK into the UI), **WX** Tier-2 — each in its own module, truly concurrent.
-
-> **Critical-path watch:** `TOOLS-7` (persistence) → `BOAT-1` (boat profile) → `ROUTING-1` (polars) → the whole weather-routing epic. If weather routing matters for the season, start the `TOOLS-7 → BOAT-1` chain early in wave 2.
+1. **SHELL first, solo** (`SHELL-1/2/3`) — unblocks ~10 wave-2 UI epics. 2. **In parallel (own files, no shell): CONTRACT + ENGINE hardening** (incl. `ENGINE-12` — add `helm-server` to the build so the one-origin binary actually ships). 3. **After SHELL lands, fan out wave 2** — highest value: `ROUTE-3`, `OWNSHIP-5/6`, `TOOLS-7` (persistence, gates BOAT-1 → ROUTING), then `AIS`, `CONN`, `WX`.
 
 
 ---
@@ -62,7 +54,7 @@ _Foundations that are largely DONE plus the two load-bearing un-blockers. ENGINE
 
 ## 🟡 `CHART` — S-52 ENC tile engine + quilting + hardening
 
-**Wave 1 · mixed · 7/13 done · ⚡ parallel-safe**
+**Wave 1 · mixed · 7/14 done · ⚡ parallel-safe**
 
 > True S-52 vector ENC rendered headless to PNG tiles over HTTP, multi-cell quilted, composited under live nav — fail-loud, deterministic, byte-identical cross-process — extending to encrypted/composite formats and the clean-room relicensing path.
 
@@ -78,10 +70,11 @@ _Foundations that are largely DONE plus the two load-bearing un-blockers. ENGINE
 - [x] 🟢 **CHART-7** — Depth-on-satellite compositing + depare/depcnt/soundg extraction  ↳ CHART-4
 - [ ] ⚪ **CHART-8** — Engine-side S-52 Day/Dusk/Night palette switch (not raster reskin)  ↳ CHART-3
 - [ ] ⚪ **CHART-9** — S-52 display-category selector (Base/Std/All/Mariner) + overzoom/SCAMIN warning  ↳ CHART-3
-- [ ] 🟡 **CHART-10** — Chart-object query face (tap any S-57 object → attributes) + plain-language card _(in-progress)_  ↳ CHART-3
+- [ ] ⚪ **CHART-10** — Chart-object query face (tap any S-57 object → attributes) + plain-language card  ↳ CHART-3
 - [ ] ⚪ **CHART-11** — Chart groups / region sets management  ↳ CHART-3
 - [ ] ⚪ **CHART-12** — S-63 / oeSENC / CM93 encrypted+composite chart formats  ↳ CHART-4
 - [ ] ⚪ **CHART-13** — Clean-room S-52 rebuild on permissive GDAL/OGR/PROJ + MVT vector-tile path (relicensing insurance, gated on IP counsel)  ↳ CHART-5, ENGINE-11
+- [ ] ⚪ **CHART-14** — Align standalone helm-tiles caching with helm-server (immutable ETag+304, currently no-cache)  ↳ CHART-3
 
 ## 🟡 `CONTRACT` — Streaming contract + secure transport — nav frame, command-plane, channels, TLS, pairing, tokens, APNs
 
@@ -106,14 +99,14 @@ _Foundations that are largely DONE plus the two load-bearing un-blockers. ENGINE
 - [ ] ⚪ **CONTRACT-10** — Alarm-reliability tier + alarm wire schema (persist + re-send until ACK, exempt from coalescing) — singly-owned alarm frame contract ⛔  ↳ CONTRACT-2, ALARM-1
 - [ ] ⚪ **CONTRACT-11** — HTTP/2 (or HTTP/3) tile multiplexing  ↳ CHART-3
 - [ ] ⚪ **CONTRACT-12** — One TLS origin collapsing nav WS + chart HTTP + catalog/health/pair ⛔  ↳ CONTRACT-4, CHART-3, ENGINE-9
-- [ ] ⚪ **CONTRACT-13** — Bonjour/mDNS discovery (_helm._tcp, TXT v/name/tls/fingerprint)  ↳ CONTRACT-12
+- [ ] 🟡 **CONTRACT-13** — Bonjour/mDNS discovery (_helm._tcp, TXT v/name/tls/fingerprint) _(in-progress)_  ↳ CONTRACT-12
 - [ ] ⚪ **CONTRACT-14** — TOFU pairing (QR/PIN → token + cert pin, no CA, offline) ⛔  ↳ CONTRACT-12
 - [ ] ⚪ **CONTRACT-15** — Bearer tokens + view-only/owner roles on /nav,/chart,/catalog  ↳ CONTRACT-14
 - [ ] ⚪ **CONTRACT-16** — APNs critical alerts + remote/off-boat anchor-drag alert (local fallback)  ↳ CONTRACT-15, CONTRACT-10, ALARM-1
 
 ## 🟡 `ENGINE` — Headless nav core (OpenCPN model/ + patch series)
 
-**Wave 1 · mixed · 8/11 done · ⚡ parallel-safe**
+**Wave 1 · mixed · 8/12 done · ⚡ parallel-safe**
 
 > One cohesive C++ safety core links OpenCPN model/ headless, runs Routeman/AIS/tracks/persistence, and stays the single source of truth for live nav — the foundation every other stream consumes.
 
@@ -128,9 +121,10 @@ _Foundations that are largely DONE plus the two load-bearing un-blockers. ENGINE
 - [x] 🟢 **ENGINE-6** — GPX + SQLite navobj persistence (InsertRoute, survives restart)  ↳ ENGINE-2
 - [x] 🟢 **ENGINE-7** — Per-field source tagging primitive (never fakes position) ⛔  ↳ ENGINE-2
 - [x] 🟢 **ENGINE-8** — Mock-engine + stream-smoke harnesses (localhost==LAN)  ↳ ENGINE-2
-- [ ] ⚪ **ENGINE-9** — Merge helm-engine + helm-tiles into one binary  ↳ ENGINE-3, CHART-3
+- [ ] 🟡 **ENGINE-9** — Merge helm-engine + helm-tiles into one binary _(in-progress)_  ↳ ENGINE-3, CHART-3
 - [ ] 🟡 **ENGINE-10** — Finish UpdateProgress code relocation into model Routeman (math already shipped via app-side reuse — do NOT rebuild the math) _(in-progress)_  ↳ ENGINE-3
 - [ ] ⚪ **ENGINE-11** — Arm's-length GPL containment interface (S-52 engine never statically linked into a distributed binary; boat-server↔thin-client boundary)  ↳ ENGINE-2, CHART-2
+- [ ] ⚪ **ENGINE-12** — Add helm-server to bootstrap.sh default build targets + smoke  ↳ ENGINE-9, CHART-3
 
 ## ⚪ `SHELL` — Shared-shell extraction — index.html partial API + style.json fragment split
 
@@ -174,7 +168,7 @@ _Reference-client capabilities that consume the locked contract, live in their O
 
 ## 🟡 `ALARM` — Safety alarms — anchor/depth/XTE/arrival/MOB/guard + reliability
 
-**Wave 2 · mixed · 5/9 done · ⚡ parallel-safe**
+**Wave 2 · mixed · 5/10 done · ⚡ parallel-safe**
 
 > The deterministic alarm core: anchor-drag, depth/shallow, off-course XTE, arrival, CPA collision + COLREGs, plus MOB, generic guard zone, safety-contour check, audible no-fix — all real-source-guarded and reliably delivered.
 
@@ -187,10 +181,11 @@ _Reference-client capabilities that consume the locked contract, live in their O
 - [x] 🟢 **ALARM-3** — Off-course (XTE) alarm (real-source guarded)  ↳ ENGINE-3, CONTRACT-2
 - [x] 🟢 **ALARM-4** — Arrival alarm (DTW math)  ↳ ENGINE-3, CONTRACT-2
 - [x] 🟢 **ALARM-5** — CPA/TCPA collision alarm + COLREGs maneuver suggestion  ↳ ENGINE-4, CONTRACT-2
-- [ ] ⚪ **ALARM-6** — MOB mark + go-to + set/drift search-area estimate  ↳ ALARM-1, CONTRACT-10
+- [ ] 🟡 **ALARM-6** — MOB mark + go-to + set/drift search-area estimate _(in-progress)_  ↳ ALARM-1, CONTRACT-10
 - [ ] ⚪ **ALARM-7** — Generic geographic guard-zone / boundary alarm (Watchdog)  ↳ ALARM-1, CONTRACT-10
 - [ ] ⚪ **ALARM-8** — Safety-contour check (route/position crosses contour)  ↳ ALARM-1, CHART-5
 - [ ] ⚪ **ALARM-9** — Audible no-fix / data-lost alarm (make ENGINE-LOST badge audible)  ↳ ALARM-1, OWNSHIP-3
+- [ ] ⚪ **ALARM-10** — Wire audible feed-loss alarm to the existing STALE/OFFLINE badge (groundwork in setSource + alarms beep loop)  ↳ ALARM-1, OWNSHIP-3
 
 ## 🟡 `CONN` — Connectivity — drivers, connections UI, source-priority, serial/internet sources
 
@@ -247,8 +242,8 @@ _Reference-client capabilities that consume the locked contract, live in their O
 - [x] 🟢 **OWNSHIP-2** — Always-on track trail display (engine-owned)  ↳ ENGINE-5, CONTRACT-2
 - [x] 🟢 **OWNSHIP-3** — Honesty badge (LIVE/SIM/ENGINE·SIM POS/ENGINE LOST)  ↳ ENGINE-7, CONTRACT-3
 - [x] 🟢 **OWNSHIP-4** — Neutral-globe start + frame-on-first-fix (no hardcoded location)  ↳ OWNSHIP-1
-- [ ] ⚪ **OWNSHIP-5** — Follow-mode / center-on-ownship  ↳ OWNSHIP-1, SHELL-1, SHELL-2
-- [ ] ⚪ **OWNSHIP-6** — Course-up / head-up / north-up chart orientation  ↳ OWNSHIP-1
+- [ ] 🟡 **OWNSHIP-5** — Follow-mode / center-on-ownship _(in-progress)_  ↳ OWNSHIP-1, SHELL-1, SHELL-2
+- [ ] 🟡 **OWNSHIP-6** — Course-up / head-up / north-up chart orientation _(in-progress)_  ↳ OWNSHIP-1
 - [ ] ⚪ **OWNSHIP-7** — Look-ahead offset + auto-zoom-to-speed  ↳ OWNSHIP-5
 - [ ] ⚪ **OWNSHIP-8** — Range rings + speed-scaled predictor vector + predicted-position ghost  ↳ OWNSHIP-1
 - [ ] ⚪ **OWNSHIP-9** — EBL / VRM electronic bearing line + variable range marker  ↳ OWNSHIP-1
@@ -266,7 +261,7 @@ _Reference-client capabilities that consume the locked contract, live in their O
 - [x] 🟢 **ROUTE-1** — Create/save/activate route in UI → navobj.db (Terra Draw → route.create)  ↳ ENGINE-6, CONTRACT-1
 - [x] 🟢 **ROUTE-2** — Live route line + active-leg highlight from streamed geometry  ↳ CONTRACT-2
 - [ ] ⚪ **ROUTE-3** — Route/waypoint edit/move/delete/reverse/split over command router (web/route-edit.js, via CONTRACT dispatch seam) ⛔  ↳ ROUTE-1, CONTRACT-1, SHELL-1
-- [ ] ⚪ **ROUTE-4** — Multi-route list management + activate-by-pick  ↳ ROUTE-3
+- [ ] 🟡 **ROUTE-4** — Multi-route list management + activate-by-pick _(in-progress)_  ↳ ROUTE-3
 - [ ] ⚪ **ROUTE-5** — Drop waypoint by lat/lon or range/bearing  ↳ ROUTE-3
 - [ ] ⚪ **ROUTE-6** — Waypoint properties (arrival radius / icon / notes)  ↳ ROUTE-3
 - [ ] 🟡 **ROUTE-7** — GPX import/export UI round-trip (load file, export route/track) _(in-progress)_  ↳ ENGINE-6
@@ -275,7 +270,7 @@ _Reference-client capabilities that consume the locked contract, live in their O
 
 ## 🟡 `TOOLS` — Chart tools, persistence, units, command palette, boat profile, attribution
 
-**Wave 2 · mixed · 1/9 done · ⛓ serializes on SHELL**
+**Wave 2 · mixed · 2/9 done · ⛓ serializes on SHELL**
 
 > The chartplotter utility belt + state: measure ruler/scale bar, cursor lat/lon format, units UI, ⌘K palette chrome, settings/layer/theme/units/board persistence, boat profile, design tokens, and the legal-load-bearing attribution rendering.
 
@@ -288,7 +283,7 @@ _Reference-client capabilities that consume the locked contract, live in their O
 - [ ] ⚪ **TOOLS-2** — Cursor lat/lon coordinate-format readout (DMS/DM.m/decimal)
 - [ ] 🟡 **TOOLS-3** — ⌘K command palette chrome + fuzzy go-to (port/waypoint/chart/layer) _(in-progress)_  ↳ SHELL-3
 - [ ] ⚪ **TOOLS-4** — Units selection UI (NM/kn/m/ft/fathom)  ↳ TOOLS-7
-- [ ] 🟡 **TOOLS-5** — Day/Dusk/Night UI palette toggle + night-vision red-on-black _(in-progress)_
+- [x] 🟢 **TOOLS-5** — Day/Dusk/Night UI palette toggle + night-vision red-on-black
 - [ ] 🟡 **TOOLS-6** — Satellite supplemental disclaimer + per-source attribution RENDERING (Copernicus/OpenSeaMap ODbL/Windy logo/NOAA) + Overpass mirror obligation _(in-progress)_
 - [ ] ⚪ **TOOLS-7** — Persistence layer (settings/layers/theme/units/boards survive reload) ⛔
 - [ ] ⚪ **TOOLS-8** — Design-token file (tokens.css → HelmTheme)
@@ -326,7 +321,7 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 
 ## 🟡 `AI` — AI copilot — spacetime probe, dossiers, briefings, NL ⌘K
 
-**Wave 3 · mixed · 2/15 done · ⚡ parallel-safe**
+**Wave 3 · mixed · 4/17 done · ⚡ parallel-safe**
 
 > Deterministic-cored, LLM-narrated copilot: spacetime probe resolver + uniform sample() faces (with a probe-contract enforcement bar for all new layers/plugins), place dossiers, living passage/destination briefings with dual-axis timeline, NL ⌘K, explain-this, watchkeeper, smart logbook — advise, never act.
 
@@ -334,11 +329,11 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - **Touches shared (coordinate):** `web/index.html`, `backend/main.py`
 - **Done =** resolve_context + /context + /narrate + provider-pluggable LLMClient + ReAct research agents + where-to-go recommender all done; finish probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) AND establish the enforceable 'a layer is not done until it can be sampled' probe contract as a discrete bar for new layers/plugins; wire real NL ⌘K + fuzzy go-to; living passage/destination dossiers + dual-axis timeline + background diff-narration; explain-this; watchkeeper; smart logbook; advise-don't-act + cite-source/freshness guardrails enforced; offline-aware LLM mode. NOTE: AI-4 (where-to-go) shipped against a STUBBED boat profile; promoting to the real BOAT-1 model is a wave-2/3 enrichment, not a rebuild.
 
-- [ ] 🟡 **AI-1** — resolve_context + /context + /narrate backend (source-tagged Slice) _(in-progress)_ ⛔  ↳ BACKEND-1, WX-1
-- [ ] 🟡 **AI-2** — Provider-pluggable LLMClient abstraction (env-only keys) _(in-progress)_ ⛔  ↳ BACKEND-1
+- [x] 🟢 **AI-1** — resolve_context + /context + /narrate backend (source-tagged Slice) ⛔  ↳ BACKEND-1, WX-1
+- [x] 🟢 **AI-2** — Provider-pluggable LLMClient abstraction (env-only keys) ⛔  ↳ BACKEND-1
 - [x] 🟢 **AI-3** — ReAct research agents + dossier cards (get_weather/fetch_page/search_web)  ↳ AI-2
 - [x] 🟢 **AI-4** — Where-to-go recommender (deterministic pre-filter + LLM rank + schema) — shipped against a STUBBED boat profile; BOAT-1 is a later enrichment  ↳ AI-3, PLACES-2
-- [ ] ⚪ **AI-5** — Probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) + enforceable probe-contract bar for new layers/plugins ⛔  ↳ AI-1, CHART-10, TIDES-2, ENGINE-4
+- [ ] 🟡 **AI-5** — Probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) + enforceable probe-contract bar for new layers/plugins _(in-progress)_ ⛔  ↳ AI-1, CHART-10, TIDES-2, ENGINE-4
 - [ ] ⚪ **AI-6** — Real NL command + fuzzy go-to ⌘K wired to actions  ↳ AI-2, TOOLS-3, SHELL-3
 - [ ] ⚪ **AI-7** — Living passage + destination dossiers + dual-axis (valid/issue-time) timeline + quick-notes-vs-deep-read tiers  ↳ AI-1, ROUTING-3, AI-3
 - [ ] 🟡 **AI-8** — Cited RAG pipeline over cruiser web (Noonsite/blogs/forums) _(in-progress)_  ↳ AI-3
@@ -349,6 +344,8 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - [ ] 🟡 **AI-13** — Advise-don't-act + cite-source/freshness/horizon guardrails (enforced) _(in-progress)_ ⛔  ↳ AI-1
 - [ ] ⚪ **AI-14** — Offline-aware LLM mode (cloud dockside, on-device + cached offshore)  ↳ AI-2, OFFLINE-2
 - [ ] ⚪ **AI-15** — Real climatology / tropical-cyclone tier (NOAA/COGOW/NHC/JTWC) + horizon/confidence honesty labeling  ↳ AI-1, WX-10
+- [ ] ⚪ **AI-16** — Wire the /dossier ReAct card to a place/point tap in the web UI  ↳ AI-3, PLACES-3
+- [ ] ⚪ **AI-17** — Implement an enforceable probe-contract (sample()) bar — base class/registry/test  ↳ AI-5
 
 ## ⚪ `BOARD` — Smart Board — composable dashboard, tiles, automations
 
@@ -383,15 +380,15 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - [ ] 🟡 **PLACES-3** — Rich anchorage/marina detail cards + navigate-here _(in-progress)_  ↳ PLACES-1
 - [ ] ⚪ **PLACES-4** — Saved-place collections / shareable lists  ↳ PLACES-2
 - [ ] ⚪ **PLACES-5** — Anchorage intelligence (computed shelter-by-wind + holding + boats-here-now)  ↳ PLACES-3, WX-1
-- [ ] ⚪ **PLACES-6** — NFL track push publisher + cadence/offline-queue + opt-in settings tile (BYO key)  ↳ PLACES-2, CONTRACT-2
+- [ ] 🟡 **PLACES-6** — NFL track push publisher + cadence/offline-queue + opt-in settings tile (BYO key) _(in-progress)_  ↳ PLACES-2, CONTRACT-2
 - [ ] 🟡 **PLACES-7** — OSM Notes give-back (Tier 1) + contribution record/queue _(in-progress)_  ↳ PLACES-2
 - [ ] ⚪ **PLACES-8** — OSM node edits give-back (Tier 2, OAuth2 + review queue)  ↳ PLACES-7
 - [ ] ⚪ **PLACES-9** — Helm fleet opt-in position sharing + voyage-recap sharing  ↳ PLACES-2, NATIVE-10
 - [ ] ⚪ **PLACES-10** — NFL reciprocity outreach + personal-experimental NFL bbox pull (experimental flag, never shipped)  ↳ PLACES-6
 
-## ⚪ `ROUTING` — Weather routing — isochrone engine, polars, laylines, advisors
+## 🟡 `ROUTING` — Weather routing — isochrone engine, polars, laylines, advisors
 
-**Wave 3 · not-started · 0/9 done · ⛓ serializes on SHELL**
+**Wave 3 · mixed · 0/9 done · ⛓ serializes on SHELL**
 
 > Helm's own isochrone weather router on free GRIB + boat polars: polar editor, laylines, departure-time what-if, scrub-the-boat-forward ghost, virtual-buoy point forecast, depth-aware dock-to-dock — assumptions shown, confidence honest.
 
@@ -437,11 +434,11 @@ _The user's explicit rule: native comes LAST, after the web contract is locked a
 
 > After the web contract is locked and boat-tested: compile the shared C++ core for Apple targets, ship a WKWebView first-proof, then native macOS/iPad/iPhone/Watch clients + CarPlay/widgets over the documented protocol — and the commercial layer riding on top (cloud sync, hosting, three-tier packaging, notarized DMG, license posture, appliance).
 
-- **Owns (collision boundary):** _(coordination epic — no files)_
+- **Owns (collision boundary):** _(coordination epic)_
 - **Touches shared (coordinate):** `backend/main.py`
 - **Done =** Shared C++ nav core compiles for macOS/iPadOS/iOS (needs the protocol — not necessarily channels); WKWebView-wrapped web UI proves an iPad over Bonjour; native macOS SwiftUI/AppKit (+ serial NMEA via CONN-9), iPad SwiftUI+Metal, one-handed iPhone clients; Apple Watch anchor-watch/MOB + CarPlay/widgets/Live Activity; NWPathMonitor + iOS background anchor-watch; internal/BLE GPS input; onboarding/first-run flow; iOS companion deep-read tier; cloud route/mark + fleet sync; hosted tiling + GRIB delivery + remote watch; three-tier Free/Cloud/Appliance packaging; notarized non-App-Store DMG; BSL-1.1→Apache-2.0 license posture + GPL/GDAL boundary + attribution register; certified reference-hardware list + DC-DC UPS appliance + parallel sea-trial. Speaks only the documented JSON/WS + PNG/HTTP protocol (App-Store-clean).
 
-- [ ] 🟡 **NATIVE-1** — Shared C++ nav core compiles for Apple targets (needs the core protocol/contract, NOT channels) _(in-progress)_ ⛔  ↳ ENGINE-2, CONTRACT-2, CONTRACT-14
+- [ ] ⚪ **NATIVE-1** — Shared C++ nav core compiles for Apple targets (needs the core protocol/contract, NOT channels) ⛔  ↳ ENGINE-2, CONTRACT-2, CONTRACT-14
 - [ ] ⚪ **NATIVE-2** — WKWebView-wrapped web UI as first iOS proof (zero new code)  ↳ CONTRACT-13, CONTRACT-3
 - [ ] ⚪ **NATIVE-3** — Tauri desktop shell + packaging  ↳ CONTRACT-12
 - [ ] ⚪ **NATIVE-4** — Native macOS SwiftUI/AppKit client (+ serial NMEA via CONN-9)  ↳ NATIVE-1, CONN-9
@@ -461,8 +458,6 @@ _The user's explicit rule: native comes LAST, after the web contract is locked a
 
 # Collision map (resolved)
 
-The places two epics could have fought over a file, and how the boundary was drawn so they don't:
-
 - web/index.html (85KB shared shell) is the #1 hazard — RESOLVED by making SHELL a wave-1 BLOCKING epic that owns index.html outright and ships a panel-registration / <!-- EPIC:XXX --> partial API (SHELL-1) + ⌘K registration hook (SHELL-3). Every wave-2/3 epic that adds UI (OWNSHIP-5, ROUTE-3, AIS-2, CONN-3, OFFLINE-3/4, TOOLS-3, AI-6) now DEPENDS on SHELL-1/SHELL-3 in its task deps, so the 12-epic shell collision is serialized through one owner and one API rather than concurrent edits to the monolith body.
 - web/style.json (shared map layers) — RESOLVED by SHELL-2 (wave-1 BLOCKING): style.json is split into per-domain layer fragments (helm-wx-*, helm-ais-*, helm-place-*, helm-chart-*, helm-ownship-*) merged at build. CHART/WX/AIS/OWNSHIP/PLACES/OFFLINE each own their fragment; layer-namespace convention prevents two epics editing the same JSON object. AIS-2 and OWNSHIP-5 carry explicit deps on SHELL-2.
 - web/server-endpoint.js is owned by CONTRACT; ROUTE touchesShared it for route.* commands. MITIGATION: CONTRACT lands a stable command-dispatch + auth-header seam (CONTRACT-1/CONTRACT-12); ROUTE-3 consumes it via web/route-edit.js without editing the resolver core. (SECURE merged into CONTRACT, so the former CONTRACT/SECURE fight over this file is gone — one owner now.)
@@ -477,7 +472,7 @@ The places two epics could have fought over a file, and how the boundary was dra
 
 ---
 
-# Porting to a tracked board
+# Porting / tracking
 
-This mirrors the taikun-plan model 1:1 — **epics = workstreams**, **tasks = `{EPIC}-{N}`** with status + `⛔ blocking` + `↳ deps`. It can be loaded into a plan instance (like plan.taikunai.com) for live tracking without restructuring. Status here is the snapshot at generation; update task boxes as streams land, or promote to a board for multi-stream burndown.
+Mirrors the taikun-plan model 1:1 (epics = workstreams, tasks = `{EPIC}-{N}` with `⛔ blocking` + `↳ deps`). Live on **plan.taikunai.com**; agents read/update via the `taikun-plan` MCP with **`project="helm"`** (`board_summary`/`get_task`/`search_tasks` to read, `update_task`/`add_comment` to write; `ask_plan` for board-grounded Q&A). Omitting `project` targets a different customer's board — never do that.
 
