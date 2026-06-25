@@ -1434,9 +1434,12 @@ public:
         }
         if (req->uri == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
-        if (req->uri == "/catalog") { h["Content-Type"] = "application/json";
-          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h,
-            std::string("{\"cells\":[{\"id\":\"US5FL96M\",\"name\":\"Key West\"}]}")); }
+        if (req->uri == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11: real loaded-cell inventory
+          int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
+          char cb[300]; std::snprintf(cb, sizeof cb,
+            "{\"cells\":[{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"bbox\":[%.6f,%.6f,%.6f,%.6f]}],\"count\":1}",
+            g_cell_name.c_str(), g_native_scale, band, g_ext.WLON, g_ext.SLAT, g_ext.ELON, g_ext.NLAT);
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string(cb)); }
         // static UI (the page is served from the engine → same origin → no ?server=)
         std::string body, mime;
         if (serve_static(req->uri, body, mime)) { h["Content-Type"] = mime;

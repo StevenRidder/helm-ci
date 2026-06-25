@@ -65,7 +65,7 @@ static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
 // One loaded ENC cell. The tiler is multi-cell: it loads a whole folder of cells (a region's
 // worth, across usage bands / scales) and picks the best one per tile by zoom — the tile-layer
 // analogue of OpenCPN's quilt reference-chart selection, minus the GUI/viewport coupling.
-struct Cell { s57chart* chart; Extent ext; int scale; std::string path; };
+struct Cell { s57chart* chart; Extent ext; int scale; std::string path; std::string id; };  // id = cell name, CHART-11
 static std::vector<Cell> g_cells;    // all loaded cells, sorted most-detailed (smallest scale) first
 static std::string g_blank;          // transparent TS×TS PNG for no-coverage tiles
 static const int TS = 256;           // tile size px
@@ -85,7 +85,7 @@ static bool g_nodtaOk = false;
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
 // be masked as an empty/transparent tile that the navigator reads as open water.
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; double overzoom = 0.0; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string cells; double overzoom = 0.0; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -115,11 +115,17 @@ static const size_t MAX_LAYERS = 4;    // …and at most this many per tile (the
 // of the zoom's display scale (so we never draw a harbour chart at ocean zoom or vice-versa),
 // sorted COARSEST-first so finer cells draw on top. Falls back to the single nearest-scale covering
 // cell so we never blank water some chart covers. `out` left empty => no coverage.
-static void rank_cells(double w, double s, double e, double n, int z, std::vector<Cell*>& out) {
+// CHART-11: comma-separated cell-id allow-list (a "region set" / chart group). Empty => all cells.
+// Comma-bounded match so "US5FL96M" can never match a longer id by prefix.
+static bool cell_in_set(const std::string& id, const std::string& set) {
+  if (set.empty()) return true;
+  return ("," + set + ",").find("," + id + ",") != std::string::npos;
+}
+static void rank_cells(double w, double s, double e, double n, int z, const std::string& only, std::vector<Cell*>& out) {
   out.clear();
   const double ideal = zoom_scale(z, (n + s) / 2.0);
   std::vector<Cell*> cov;
-  for (auto& c : g_cells) if (extent_hits(c.ext, w, s, e, n)) cov.push_back(&c);
+  for (auto& c : g_cells) if (extent_hits(c.ext, w, s, e, n) && cell_in_set(c.id, only)) cov.push_back(&c);
   if (cov.empty()) return;
   for (Cell* c : cov) { double r = c->scale / ideal; if (r < 1.0) r = 1.0 / r; if (r <= SCALE_WIN) out.push_back(c); }
   if (out.empty()) {                                   // nothing in-band: keep the single nearest
@@ -224,7 +230,7 @@ static void apply_category(DisCat cat) {   // main-thread only (from render_tile
   g_display_cat = cat;
 }
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, std::string& out, double& overzoom) {
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, const std::string& cells, std::string& out, double& overzoom) {
   overzoom = 0.0;
   // boundary validation: reject malformed tile coordinates loudly
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
@@ -235,7 +241,7 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
   // rank the zoom-appropriate cells covering this tile; none -> legitimately empty (NOT a failure)
   std::vector<Cell*> layers;
-  rank_cells(west, south, east, north, z, layers);
+  rank_cells(west, south, east, north, z, cells, layers);   // CHART-11: scope to the requested region set
   if (layers.empty()) return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
   apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
@@ -313,7 +319,8 @@ static bool load_one_cell(const wxString& path) {
   // selection would be wrong (SENC missing DSPM:CSCL). Skip it rather than serve it silently.
   int ns = ch->GetNativeScale();
   if (ns <= 1) { fprintf(stderr, "  skip (bad native scale %d): %s\n", ns, p); delete ch; return false; }
-  g_cells.push_back({ ch, ext, ns, std::string(p) });
+  std::string cid = std::string(wxFileName(path).GetName().ToUTF8());   // CHART-11: cell id (e.g. US5FL96M)
+  g_cells.push_back({ ch, ext, ns, std::string(p), cid });
   return true;
 }
 
@@ -400,7 +407,11 @@ public:
           // a year. Mirrors helm-server's immutable ETag+304 (which standalone helm-tiles lacked).
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
           const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
-          char et[112]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), cat_name(cat), z, x, y);
+          std::string cells;                                      // CHART-11: ?cells=ID,ID region set (empty => all)
+          { auto cp = req->uri.find("cells="); if (cp != std::string::npos) { cells = req->uri.substr(cp + 6); auto a = cells.find('&'); if (a != std::string::npos) cells.erase(a); } }
+          std::string cseg;                                       // region-set segment, only when filtering (no-filter ETag stays byte-identical to CHART-9)
+          if (!cells.empty()) { unsigned long long hc = 1469598103934665603ULL; for (unsigned char cc : cells) { hc ^= cc; hc *= 1099511628211ULL; } char b[20]; std::snprintf(b, sizeof b, ".g%06llx", (unsigned long long)(hc & 0xffffff)); cseg = b; }
+          char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), cat_name(cat), cseg.c_str(), z, x, y);
           const std::string etag(et);
           const auto inm = req->headers.find("If-None-Match");   // ix headers compare case-insensitively
           if (inm != req->headers.end() && inm->second == etag) {
@@ -408,7 +419,7 @@ public:
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
           }
           // hand the render to the main thread (CoreGraphics) and wait
-          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat; job.cells = cells;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -433,10 +444,24 @@ public:
                 std::string("S-52 tile render failed; see server log\n"));
           }
         }
+        if (req->uri == "/catalog") {   // CHART-11: loaded-cell inventory for chart-group / region-set UIs
+          h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
+          std::string js = "{\"cells\":["; bool first = true;
+          for (const Cell& c : g_cells) {
+            if (!first) js += ","; first = false;
+            int band = (c.id.size() >= 3 && c.id[2] >= '0' && c.id[2] <= '9') ? c.id[2] - '0' : -1;   // S-57 usage band = 3rd char
+            char bb[200]; std::snprintf(bb, sizeof bb,
+              "{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"bbox\":[%.6f,%.6f,%.6f,%.6f]}",
+              c.id.c_str(), c.scale, band, c.ext.WLON, c.ext.SLAT, c.ext.ELON, c.ext.NLAT);
+            js += bb;
+          }
+          js += "],\"count\":" + std::to_string(g_cells.size()) + "}";
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, js);
+        }
         if (req->uri == "/" || req->uri == "/health") {
           h["Content-Type"] = "text/plain";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h,
-            std::string("helm-tiles: S-52 ENC tile server. GET /chart/{z}/{x}/{y}.png\n"));
+            std::string("helm-tiles: S-52 ENC tile server. GET /chart/{z}/{x}/{y}.png · /catalog\n"));
         }
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string());
       });
@@ -460,7 +485,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m);
       g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result, j->overzoom);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->cells, j->result, j->overzoom);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; }
     j->cv.notify_one();
   }
