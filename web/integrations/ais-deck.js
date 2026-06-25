@@ -6,9 +6,8 @@
  * density) is deck.gl's home turf. We composite a MapboxOverlay over MapLibre
  * and draw the fleet as a ScatterplotLayer + an optional HeatmapLayer.
  *
- * Seed from Helm's REAL AIS sample (data/ais-sample.geojson) and, to make the
- * "at scale" point feel real, synthesize a dense fleet AROUND those real targets
- * (~2,000) — all offline, no live feed required. Swap in a live AIS stream and
+ * To make the "at scale" point feel real we jitter the sample into ~2,000
+ * synthetic targets around the region. Swap the data for a live AIS feed and
  * the layers are unchanged.
  *
  * https://deck.gl  ·  https://deck.gl/docs/api-reference/mapbox/mapbox-overlay
@@ -18,34 +17,43 @@ import { ScatterplotLayer } from '@deck.gl/layers';
 import { HeatmapLayer } from '@deck.gl/aggregation-layers';
 
 let overlay = null;
-const TARGET = 2000;
 
-async function fleet(ctx) {
-  let real = [];
-  try {
-    const fc = await fetch('data/ais-sample.geojson').then(r => r.ok ? r.json() : null);
-    if (fc && fc.features) real = fc.features
-      .filter(f => f.geometry && f.geometry.type === 'Point')
-      .map(f => ({ position: f.geometry.coordinates.slice(0, 2), cpa: f.properties.cpa ?? 5, sog: f.properties.sog ?? 0, real: true }));
-  } catch (e) { /* offline fallback below */ }
-
-  const out = real.slice();
-  const seeds = real.length ? real.map(r => r.position) : [ctx.region.center];
-  for (let i = out.length; i < TARGET; i++) {
-    const s = seeds[i % seeds.length], r = Math.random();
+function fleet(center) {
+  const [lon, lat] = center, out = [];
+  for (let i = 0; i < 2000; i++) {
+    const r = Math.random();
     out.push({
-      position: [s[0] + (Math.random() - 0.5) * 0.8, s[1] + (Math.random() - 0.5) * 0.6],
+      position: [lon + (Math.random() - 0.5) * 0.9, lat + (Math.random() - 0.5) * 0.7],
       cpa: r < 0.04 ? Math.random() * 0.2 : r < 0.12 ? 0.2 + Math.random() * 0.3 : 1 + Math.random() * 5,
       sog: +(Math.random() * 18).toFixed(1),
     });
   }
-  return { data: out, realCount: real.length };
+  return out;
 }
 
 const colorByCpa = d => d.cpa < 0.2 ? [228, 86, 79] : d.cpa < 0.5 ? [242, 180, 65] : [91, 192, 255];
 
+// Load the real-format AIS fleet pack (pipeline/gen_demo_data.py). Each feature
+// carries mmsi/name/sog/cog/cpa_nm — the same shape a decoded NMEA/AIS feed
+// produces — so swapping in a live feed leaves the layers untouched. Falls back
+// to a synthetic jitter if the pack isn't present.
+async function loadFleet(ctx) {
+  try {
+    const fc = await fetch(ctx.aisUrl || 'data/ais-fleet.geojson').then(r => {
+      if (!r.ok) throw new Error(String(r.status)); return r.json();
+    });
+    return fc.features.map(f => ({
+      position: f.geometry.coordinates,
+      cpa: f.properties.cpa_nm, sog: f.properties.sog, name: f.properties.name,
+    }));
+  } catch (e) {
+    return fleet(ctx.region.center);  // offline fallback
+  }
+}
+
 export async function enable(map, ctx) {
-  const { data, realCount } = await fleet(ctx);
+  const data = await loadFleet(ctx);
+  const synthetic = !data[0] || data[0].name === undefined;
   const layers = [
     new HeatmapLayer({
       id: 'helm-ais-heat', data, getPosition: d => d.position, getWeight: 1,
@@ -59,7 +67,7 @@ export async function enable(map, ctx) {
   ];
   if (!overlay) { overlay = new MapboxOverlay({ interleaved: true, layers }); map.addControl(overlay); }
   else overlay.setProps({ layers });
-  ctx.notify(`deck.gl: ${realCount} real + ${data.length - realCount} synthetic AIS targets at scale`, 'ok');
+  ctx.notify(`deck.gl: ${data.length} AIS targets${synthetic ? ' (synthetic)' : ''} — scatter + heatmap`, 'ok');
 }
 
 export function disable(map) {

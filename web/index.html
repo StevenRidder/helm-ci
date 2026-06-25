@@ -84,9 +84,10 @@
   /* ---- drawers (hold the existing controls) ---- */
   .drawer{position:absolute;left:72px;top:68px;width:230px;z-index:6;border-radius:14px;
     padding:13px 14px;box-sizing:border-box;color:var(--ctext);max-height:calc(100% - 160px);overflow-y:auto;
-    transition:opacity .18s ease, transform .18s ease}
+    transform-origin:left center;
+    transition:opacity .26s ease, transform .42s cubic-bezier(.22,1.1,.36,1)}
   /* keep it in layout so it can fade/slide instead of popping (display:none can't transition) */
-  .drawer[hidden]{display:block;opacity:0;transform:translateX(-10px) scale(.985);pointer-events:none}
+  .drawer[hidden]{display:block;opacity:0;transform:translateX(-12px) scale(.96);pointer-events:none}
   .drawer h2{font-size:12px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
   .drawer .sub{font-size:10.5px;color:var(--cdim);margin:0 0 10px}
   .lbl{font-size:10px;color:var(--cdim2);margin:12px 0 6px;letter-spacing:.08em;text-transform:uppercase}
@@ -138,17 +139,56 @@
   .hint{font-size:11px;color:var(--cdim);margin-top:14px;line-height:1.45;
     padding-top:12px;border-top:.5px solid var(--line)}
 
+  /* ---- Overlays panel: refined two-line rows + iOS-style switches ---- */
+  #drawer-lab{width:248px}
+  #drawer-lab h2{font-size:15px;font-weight:600;letter-spacing:-.012em;margin:0 0 1px}
+  #drawer-lab .sub{margin-bottom:4px}
+  .lsec{font-size:9.5px;color:var(--cdim2);letter-spacing:.11em;text-transform:uppercase;
+    font-weight:600;margin:15px 0 3px}
+  .lrow{display:flex;align-items:center;justify-content:space-between;gap:12px;
+    padding:8px;margin:0 -8px;border-radius:11px;cursor:pointer;transition:background .15s ease}
+  .lrow:hover{background:rgba(255,255,255,.05)}
+  .lrow:active{background:rgba(255,255,255,.08)}
+  .ltx{display:flex;flex-direction:column;gap:1px;min-width:0}
+  .ltx b{font-size:13px;font-weight:560;color:var(--ctext);letter-spacing:-.006em;line-height:1.25}
+  .ltx i{font-size:10.5px;font-style:normal;color:var(--cdim2);line-height:1.3}
+  .sw{position:relative;flex:0 0 auto;width:38px;height:23px}
+  .sw input{position:absolute;inset:0;opacity:0;margin:0;width:100%;height:100%;cursor:pointer;z-index:2}
+  .swt{position:absolute;inset:0;border-radius:99px;background:rgba(255,255,255,.14);
+    transition:background .22s ease;box-shadow:inset 0 0 0 .5px rgba(255,255,255,.07)}
+  .swt::after{content:"";position:absolute;top:2.5px;left:2.5px;width:18px;height:18px;border-radius:50%;
+    background:#fff;box-shadow:0 2px 6px rgba(0,0,0,.5);
+    transition:transform .24s cubic-bezier(.32,1.25,.5,1)}
+  .sw input:checked + .swt{background:var(--accent);
+    box-shadow:inset 0 0 0 .5px rgba(255,255,255,.1),0 0 16px -3px var(--accent)}
+  .sw input:checked + .swt::after{transform:translateX(15px)}
+  .ltools{display:flex;gap:7px;margin-top:11px}
+  .ltools button{flex:1;font-size:11.5px;color:#cdd9e3;background:rgba(255,255,255,.05);
+    border:.5px solid var(--line);border-radius:9px;padding:9px 8px;cursor:pointer;
+    transition:background .14s,color .14s}
+  .ltools button:hover{background:rgba(255,255,255,.1);color:#fff}
+
+  /* ---- entrance motion ---- */
+  @keyframes rise{from{opacity:0;transform:translateY(10px) scale(.99)}to{opacity:1;transform:none}}
+  @keyframes settle{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+  .insp,.ib{animation:rise .55s cubic-bezier(.22,1,.36,1) both}
+  .ib{animation-name:settle;animation-delay:.06s}
+  @media (prefers-reduced-motion:reduce){
+    .insp,.ib{animation:none}
+    .drawer{transition:opacity .15s ease}
+  }
+
   /* ---- right route inspector ---- */
   .insp{position:absolute;right:12px;top:68px;width:204px;z-index:6;border-radius:14px;padding:12px}
   .insp .ttl{display:flex;align-items:center;gap:7px;margin-bottom:9px;cursor:move;user-select:none}
   .insp .ttl svg{width:15px;height:15px;color:var(--mag)}
-  .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext)}
-  .insp .eta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:9px}
-  .insp .eta .l{font-size:10px;color:var(--cdim);letter-spacing:.04em}
-  .insp .eta .v{font-size:12.5px;color:var(--ctext);font-variant-numeric:tabular-nums}
-  .insp .kpis{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-bottom:9px}
-  .insp .kpis .k .l{font-size:10px;color:var(--cdim)}
-  .insp .kpis .k .v{font-size:15px;color:var(--ctext);font-variant-numeric:tabular-nums}
+  .insp .ttl span{font-size:13px;font-weight:600;color:var(--ctext);letter-spacing:-.01em}
+  .insp .eta{display:flex;justify-content:space-between;align-items:baseline;margin-bottom:11px}
+  .insp .eta .l{font-size:9px;color:var(--cdim2);letter-spacing:.09em;text-transform:uppercase;font-weight:600}
+  .insp .eta .v{font-size:13px;color:var(--ctext);font-variant-numeric:tabular-nums;font-weight:500}
+  .insp .kpis{display:grid;grid-template-columns:1fr 1fr;gap:11px 14px;margin-bottom:10px}
+  .insp .kpis .k .l{font-size:9px;color:var(--cdim2);letter-spacing:.08em;text-transform:uppercase;font-weight:600}
+  .insp .kpis .k .v{font-size:16px;color:var(--ctext);font-variant-numeric:tabular-nums;font-weight:500;letter-spacing:-.012em;margin-top:1px}
   .insp hr{border:0;height:.5px;background:var(--line);margin:8px 0}
   .leg{display:flex;align-items:center;gap:8px;padding:5px 0}
   .lgd{width:7px;height:7px;border-radius:50%;flex:none}
@@ -160,14 +200,17 @@
   .windbar .v{font-size:10.5px;color:var(--ctext)}
 
   /* ---- bottom instrument bar ---- */
-  .ib{position:absolute;left:12px;right:12px;bottom:12px;height:56px;z-index:6;border-radius:14px;
+  .ib{position:absolute;left:12px;right:12px;bottom:12px;height:60px;z-index:6;border-radius:16px;
     display:flex;align-items:center;box-sizing:border-box}
-  .it{flex:1;padding:0 15px;border-right:.5px solid var(--line)}
-  .it .l{font-size:10.5px;color:var(--cdim)}
-  .it .v{font-size:22px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;line-height:1.15}
-  .it .u{font-size:11px;color:var(--cdim);font-weight:400}
-  .it.wide{flex:1.8;display:flex;align-items:center;justify-content:space-between;border-right:0}
-  .it.wide .v2{font-size:13.5px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;white-space:nowrap}
+  .it{flex:1;padding:0 16px;position:relative}
+  .it:not(:first-child)::before{content:"";position:absolute;left:0;top:16px;bottom:16px;width:.5px;background:var(--line)}
+  .it .l{font-size:9px;font-weight:600;letter-spacing:.09em;text-transform:uppercase;color:var(--cdim2)}
+  .it .v{font-size:23px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;
+    line-height:1.12;letter-spacing:-.018em;margin-top:2px}
+  .it .u{font-size:11px;color:var(--cdim);font-weight:400;letter-spacing:0}
+  .it.wide{flex:1.85;display:flex;align-items:center;justify-content:space-between}
+  .it.wide .v2{font-size:13px;font-weight:500;color:var(--ctext);font-variant-numeric:tabular-nums;
+    white-space:nowrap;letter-spacing:-.01em;margin-top:2px}
   .it.wide .r{text-align:right}
 
   /* ---- spacetime "narrate a point" slice card ---- */
@@ -458,33 +501,30 @@
 
 <!-- ========================= LAB DRAWER (awesome-maplibre integrations) ========================= -->
 <div class="drawer glass" id="drawer-lab" hidden>
-  <h2>Lab</h2>
-  <p class="sub">awesome-maplibre integrations · live</p>
+  <h2>Overlays</h2>
+  <p class="sub">Show on the chart</p>
 
-  <div class="lbl">Projection</div>
-  <label class="row"><input type="checkbox" data-lab="globe"> Globe projection<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">v5</span></label>
+  <div class="lsec">Map</div>
+  <label class="lrow"><span class="ltx"><b>Globe</b><i>Great-circle view</i></span><span class="sw"><input type="checkbox" data-lab="globe"><span class="swt"></span></span></label>
+  <label class="lrow"><span class="ltx"><b>Offline charts</b><i>One file · no signal needed</i></span><span class="sw"><input type="checkbox" data-lab="pmtiles"><span class="swt"></span></span></label>
 
-  <div class="lbl">Charts &amp; offline</div>
-  <label class="row"><input type="checkbox" data-lab="pmtiles"> PMTiles offline raster</label>
-  <label class="row"><input type="checkbox" data-lab="cog"> COG overlay (cog://)</label>
+  <div class="lsec">Depth</div>
+  <label class="lrow"><span class="ltx"><b>Depth contours</b><i>Isolines every 5&nbsp;m</i></span><span class="sw"><input type="checkbox" data-lab="contour"><span class="swt"></span></span></label>
+  <label class="lrow"><span class="ltx"><b>Depth shading</b><i>Shaded relief</i></span><span class="sw"><input type="checkbox" data-lab="mercator"><span class="swt"></span></span></label>
+  <label class="lrow"><span class="ltx"><b>Depth imagery</b><i>Streamed · no tiler</i></span><span class="sw"><input type="checkbox" data-lab="cog"><span class="swt"></span></span></label>
 
-  <div class="lbl">Weather / terrain</div>
-  <label class="row"><input type="checkbox" data-lab="mercator"> Value-encoded tiles (Mercator)</label>
-  <label class="row"><input type="checkbox" data-lab="contour"> Contours from DEM</label>
-  <label class="row"><input type="checkbox" data-lab="temporal"> Temporal control (radar)</label>
+  <div class="lsec">Weather</div>
+  <label class="lrow"><span class="ltx"><b>Rain radar</b><i>Animated · past + nowcast</i></span><span class="sw"><input type="checkbox" data-lab="temporal"><span class="swt"></span></span></label>
 
-  <div class="lbl">Vessels</div>
-  <label class="row"><input type="checkbox" data-lab="ais"> AIS at scale (deck.gl)</label>
+  <div class="lsec">Vessels</div>
+  <label class="lrow"><span class="ltx"><b>Vessel traffic</b><i>AIS at scale</i></span><span class="sw"><input type="checkbox" data-lab="ais"><span class="swt"></span></span></label>
 
-  <div class="lbl">Tools</div>
-  <label class="row"><input type="checkbox" data-lab="measures"> Measure distance/bearing</label>
-  <div class="wx" style="margin-top:6px">
+  <div class="lsec">Tools</div>
+  <label class="lrow"><span class="ltx"><b>Measure</b><i>Distance &amp; bearing</i></span><span class="sw"><input type="checkbox" data-lab="measures"><span class="swt"></span></span></label>
+  <div class="ltools">
     <button data-lab-action="draw-route">Draw route</button>
-    <button data-lab-action="draw-lasso">Lasso area</button>
+    <button data-lab-action="draw-lasso">Select area</button>
   </div>
-
-  <div class="hint">Each toggle lazy-loads its library from a CDN the first time. Server-side pieces
-    (Martin tile server, mercator.blue) are documented in docs/decisions/0006 + docs/integrations/awesome-maplibre.md.</div>
 </div>
 
 <!-- ========================= COMMUNITY DRAWER (where-to-go + give-back, a selectable layer set) ========================= -->

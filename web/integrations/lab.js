@@ -35,11 +35,12 @@
     const el = document.createElement('div');
     el.textContent = msg;
     el.style.cssText = 'font:12px/1.3 -apple-system,sans-serif;color:#eef4f9;background:rgba(13,19,27,.86);' +
-      'backdrop-filter:blur(18px);border:.5px solid ' + (colors[kind] || colors.info) + ';' +
-      'border-radius:9px;padding:7px 13px;box-shadow:0 18px 60px -24px rgba(0,0,0,.85);opacity:0;transition:opacity .2s';
+      'backdrop-filter:blur(18px);-webkit-backdrop-filter:blur(18px);border:.5px solid ' + (colors[kind] || colors.info) + ';' +
+      'border-radius:10px;padding:7px 13px;box-shadow:0 18px 60px -24px rgba(0,0,0,.85);opacity:0;' +
+      'transform:translateY(8px);transition:opacity .28s ease,transform .34s cubic-bezier(.22,1.1,.36,1)';
     host.appendChild(el);
-    requestAnimationFrame(() => { el.style.opacity = '1'; });
-    setTimeout(() => { el.style.opacity = '0'; setTimeout(() => el.remove(), 250); }, 4200);
+    requestAnimationFrame(() => { el.style.opacity = '1'; el.style.transform = 'translateY(0)'; });
+    setTimeout(() => { el.style.opacity = '0'; el.style.transform = 'translateY(4px)'; setTimeout(() => el.remove(), 300); }, 4200);
   }
 
   function ctx() {

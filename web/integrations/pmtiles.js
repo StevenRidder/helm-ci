@@ -37,7 +37,9 @@ export async function enable(map, ctx) {
   }
 
   map.addSource(SRC, { type: 'raster', url: `pmtiles://${new URL(file, location.href).href}`, tileSize: 256 });
-  map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': 0.85 } }, ctx.beforeId);
+  map.addLayer({ id: LYR, type: 'raster', source: SRC,
+    paint: { 'raster-opacity': 0, 'raster-opacity-transition': { duration: 500 } } }, ctx.beforeId);
+  requestAnimationFrame(() => { if (map.getLayer(LYR)) map.setPaintProperty(LYR, 'raster-opacity', 0.85); });
   ctx.notify('PMTiles offline raster loaded (single-file, no server)', 'ok');
 }
 
