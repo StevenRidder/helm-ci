@@ -960,7 +960,7 @@
     // the boat — so this single line behaves identically local or remote.
     window.__navClient = HelmNavClient(applyNav,
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
-      { sim: window.HelmNav, onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); } });
+      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
     if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)
   })();
