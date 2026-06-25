@@ -152,7 +152,7 @@
     }
     if (S.els.help) {
       S.els.help.textContent = locked ? 'Model spread uses two baked Tier-2 packs.'
-        : (S.source === 'live' ? 'Default: fetches the visible map and refreshes while you pan.'
+        : (S.source === 'live' ? 'Default: live sampled coverage for the visible map; cached while you pan/zoom.'
           : (S.detail === 'hires' ? 'Baked value tiles: smooth pan/zoom inside downloaded coverage.'
             : 'Bounded local field: works offline, but only inside its downloaded area.'));
     }

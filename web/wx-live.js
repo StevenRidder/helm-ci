@@ -1,8 +1,12 @@
-// wx-live.js — fetch-on-pan LIVE weather (the Windy-style full-bleed mode).  WX epic · weather-ux.
+// wx-live.js — fetch-on-pan LIVE weather (screen-filling sampled mode).  WX epic · weather-ux.
 // ----------------------------------------------------------------------------------------------
 // The legacy weather overlay paints one fixed-bbox image around your start point, so zooming out
 // shows a tiny rectangle. This mode instead fetches Open-Meteo for WHATEVER IS IN VIEW and repaints
-// (debounced) as you pan — so weather fills the screen everywhere you look, the way Windy does.
+// when the view escapes the fetched field — so weather fills the screen everywhere you look.
+//
+// IMPORTANT: this is not Windy's global GRIB tile backend. It is real live Open-Meteo data sampled
+// over the visible bbox, colour-ramped/interpolated into one georeferenced image, and cached. The
+// baked Tier-2 value tiles are the structural path for true tile-pyramid pan/zoom.
 //
 // HONESTY: weather is fetched live; if the network is unreachable (offshore / no link) it surfaces
 // a clear notice and renders NOTHING — it never fabricates a field to fill the gap (docs/VISION.md).
@@ -12,6 +16,10 @@
   var FORECAST = 'https://api.open-meteo.com/v1/forecast';
   var MARINE = 'https://marine-api.open-meteo.com/v1/marine';
   var SRC = 'helm-wx-live', LYR = 'helm-wx-live';
+  var CACHE_KEY = 'helm.wx.live.cache.v1';
+  var CACHE_TTL_MS = 30 * 60 * 1000;
+  var RATE_LIMIT_BACKOFF_MS = 15 * 60 * 1000;
+  var MAX_CACHE = 8;
 
   // layer -> Open-Meteo current variable + display unit + colour ramp (knots/°C/hPa/… ). Mirrors
   // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers use Open-Meteo's
@@ -33,9 +41,81 @@
 
   var st = { map: null, on: false, layer: 'wind', token: 0, field: null, velocity: null,
              particles: true, notify: function () {}, moveHandler: null, endHandler: null,
-             debounce: null, abort: null, lastKey: '', requestCount: 0, phase: 'off', opacity: 0.72 };
+             debounce: null, abort: null, lastKey: '', requestCount: 0, phase: 'off', opacity: 0.72,
+             cache: Object.create(null), cacheOrder: [], cacheLoaded: false, cacheHits: 0,
+             lastError: '', backoffUntil: 0 };
 
   function codec() { return window.HelmWxCodec; }
+
+  function now() { return Date.now ? Date.now() : +new Date(); }
+
+  function cacheStorage() {
+    try { return window.localStorage || null; } catch (_) { return null; }
+  }
+
+  function loadCache() {
+    if (st.cacheLoaded) return;
+    st.cacheLoaded = true;
+    var ls = cacheStorage(); if (!ls) return;
+    try {
+      var raw = ls.getItem(CACHE_KEY); if (!raw) return;
+      var saved = JSON.parse(raw), t = now();
+      (saved.entries || []).forEach(function (entry) {
+        if (!entry || !entry.key || !entry.field || !entry.savedAt) return;
+        if (t - entry.savedAt > CACHE_TTL_MS) return;
+        st.cache[entry.key] = entry;
+        st.cacheOrder.push(entry.key);
+      });
+    } catch (_) {
+      try { ls.removeItem(CACHE_KEY); } catch (__) {}
+    }
+  }
+
+  function saveCache() {
+    var ls = cacheStorage(); if (!ls) return;
+    try {
+      var entries = st.cacheOrder.map(function (key) { return st.cache[key]; }).filter(Boolean);
+      ls.setItem(CACHE_KEY, JSON.stringify({ version: 1, entries: entries }));
+    } catch (_) {}
+  }
+
+  function pruneCache() {
+    var t = now();
+    st.cacheOrder = st.cacheOrder.filter(function (key) {
+      var entry = st.cache[key];
+      if (!entry || t - entry.savedAt > CACHE_TTL_MS) { delete st.cache[key]; return false; }
+      return true;
+    });
+    while (st.cacheOrder.length > MAX_CACHE) delete st.cache[st.cacheOrder.shift()];
+  }
+
+  function remember(key, field, velocity) {
+    if (!field) return;
+    loadCache();
+    field.savedAt = now();
+    var entry = { key: key, layer: st.layer, model: st.model, savedAt: field.savedAt,
+                  field: field, velocity: velocity || null };
+    if (!st.cache[key]) st.cacheOrder.push(key);
+    st.cache[key] = entry;
+    pruneCache();
+    saveCache();
+  }
+
+  function findCached(map) {
+    loadCache(); pruneCache();
+    for (var i = st.cacheOrder.length - 1; i >= 0; i--) {
+      var entry = st.cache[st.cacheOrder[i]];
+      if (!entry || entry.layer !== st.layer || entry.model !== st.model) continue;
+      if (entry.field && covers(entry.field, map)) return entry;
+    }
+    return null;
+  }
+
+  function cacheAge(entry) {
+    if (!entry || !entry.savedAt) return '';
+    var mins = Math.max(0, Math.round((now() - entry.savedAt) / 60000));
+    return mins < 1 ? 'just now' : (mins + ' min ago');
+  }
 
   function normalizeLon(lon) {
     var wrapped = ((lon + 180) % 360 + 360) % 360 - 180;
@@ -190,8 +270,18 @@
   }
 
   async function fetchPoints(u, signal) {
+    // Test seam for Playwright/localhost automation. Production uses Open-Meteo fetch below.
+    if (typeof window.__helmWxLiveFetch === 'function') return window.__helmWxLiveFetch(u, signal);
     var r = await fetch(u, { signal: signal });
-    if (!r.ok) throw new Error('HTTP ' + r.status);
+    if (!r.ok) {
+      var e = new Error('HTTP ' + r.status);
+      e.status = r.status;
+      try {
+        var body = await r.json();
+        if (body && body.reason) e.reason = body.reason;
+      } catch (_) {}
+      throw e;
+    }
     return r.json();
   }
 
@@ -210,7 +300,8 @@
       on: st.on, phase: st.phase, layer: st.layer, model: st.model,
       field: st.field ? [st.field.west, st.field.south, st.field.east, st.field.north] : null,
       viewport: view, covers: !!(st.field && st.map && covers(st.field, st.map)),
-      requests: st.requestCount, opacity: st.opacity
+      requests: st.requestCount, opacity: st.opacity, cacheHits: st.cacheHits,
+      lastError: st.lastError, backoffUntil: st.backoffUntil
     };
   }
 
@@ -225,12 +316,41 @@
     el.dataset.wxLayer = s.layer || '';
     el.dataset.wxRequests = String(s.requests);
     el.dataset.wxOpacity = String(s.opacity);
+    el.dataset.wxCacheHits = String(s.cacheHits);
+    el.dataset.wxError = s.lastError || '';
+    el.dataset.wxBackoff = s.backoffUntil ? String(s.backoffUntil) : '';
     el.dataset.wxField = s.field ? s.field.map(function (x) { return x.toFixed(3); }).join(',') : '';
     el.dataset.wxViewport = s.viewport ? s.viewport.map(function (x) { return x.toFixed(3); }).join(',') : '';
   }
 
+  function renderCached(entry, why) {
+    if (!entry || !entry.field) return false;
+    st.cacheHits++;
+    renderField(st.map, entry.field);
+    var particleOk = applyParticles(entry.velocity || null);
+    st.lastError = '';
+    st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
+      ' · cached Open-Meteo field (' + (why || cacheAge(entry)) + ')', 'ok');
+    return true;
+  }
+
   async function refresh() {
     if (!st.on || !supports(st.layer)) return;
+    if (st.field && covers(st.field, st.map)) {
+      st.lastError = '';
+      publishStatus('ready');
+      return;
+    }
+    var cached = findCached(st.map);
+    if (cached && renderCached(cached)) return;
+    if (st.backoffUntil && now() < st.backoffUntil) {
+      clearOverlay(st.map);
+      st.lastKey = ''; st.abort = null;
+      st.lastError = 'rate_limited';
+      publishStatus('empty');
+      st.notify('Live weather is rate-limited right now — retrying later. Cached fields will be reused when they cover the view.', 'warn');
+      return;
+    }
     var bbox = viewBbox(st.map);
     var key = st.layer + ':' + st.model + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
     if (key === st.lastKey) return;                       // same view+layer -> skip
@@ -261,7 +381,9 @@
       renderField(st.map, field);
       var velocity = toVelocity(nodes, g, st.layer);
       var particleOk = applyParticles(velocity);
+      remember(key, field, velocity);
       st.abort = null;
+      st.lastError = '';
       st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
         ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
     } catch (e) {
@@ -272,9 +394,25 @@
         return;
       }
       if (my !== st.token || !st.on) return;
-      // honest offline behaviour — never fabricate a field
+      st.lastError = e && e.status === 429 ? 'rate_limited' : (e && e.message ? e.message : 'fetch_failed');
+      if (e && e.status === 429) st.backoffUntil = now() + RATE_LIMIT_BACKOFF_MS;
+      var fallback = findCached(st.map);
+      if (fallback && renderCached(fallback, e && e.status === 429 ? 'rate-limited fallback' : 'offline fallback')) {
+        st.lastError = e && e.status === 429 ? 'rate_limited' : (e && e.message ? e.message : 'fetch_failed');
+        st.lastKey = ''; st.abort = null; publishStatus('ready');
+        st.notify('Live weather provider is unavailable — showing cached Open-Meteo field for this view.', 'warn');
+        return;
+      }
+      if (st.field && covers(st.field, st.map)) {
+        st.abort = null; st.lastKey = ''; publishStatus('ready');
+        st.notify('Live weather provider is unavailable — keeping the current field because it still covers the view.', 'warn');
+        return;
+      }
+      // honest offline behaviour — never fabricate a field or keep a wrong-location overlay
       clearOverlay(st.map); st.lastKey = ''; st.abort = null;
-      st.notify('Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)', 'warn');
+      st.notify(e && e.status === 429
+        ? 'Live weather is rate-limited right now — retrying later. (Bake Tier-2 tiles for true offline/global coverage.)'
+        : 'Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)', 'warn');
     }
   }
 
@@ -287,12 +425,20 @@
     // A response for the pre-pan viewport must never land after the map has moved. Abort it as soon
     // as movement begins, not 450 ms later when the old implementation finally scheduled refresh.
     if (st.abort) { st.token++; st.abort.abort(); st.abort = null; st.lastKey = ''; }
-    if (st.field && !covers(st.field, st.map)) clearOverlay(st.map);
-    else publishStatus(st.field ? 'ready' : 'moving');
-    scheduleRefresh(180);
+    if (st.field && covers(st.field, st.map)) {
+      clearTimeout(st.debounce);
+      publishStatus('ready');
+      return;
+    }
+    if (st.field) clearOverlay(st.map);
+    else publishStatus('moving');
+    scheduleRefresh(220);
   }
 
-  function onMoveEnd() { scheduleRefresh(0); }
+  function onMoveEnd() {
+    if (st.field && covers(st.field, st.map)) { publishStatus('ready'); return; }
+    scheduleRefresh(0);
+  }
 
   function enable(map, opts) {
     opts = opts || {};
@@ -300,6 +446,7 @@
     st.particles = opts.particles !== false;
     st.opacity = Math.max(0, Math.min(1, opts.opacity == null ? st.opacity : opts.opacity));
     st.notify = opts.notify || st.notify; st.on = true; st.lastKey = '';
+    loadCache();
     if (!st.moveHandler) {
       st.moveHandler = onMove; st.endHandler = onMoveEnd;
       map.on('move', st.moveHandler); map.on('moveend', st.endHandler);
