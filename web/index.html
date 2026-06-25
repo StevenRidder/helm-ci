@@ -471,6 +471,13 @@
 </div>
 
 <!-- ========================= SETTINGS DRAWER ========================= -->
+<div class="drawer glass" id="drawer-routes" hidden>
+  <h2>Routes</h2>
+  <p class="sub">Saved routes — tap ▸ to navigate, ✕ to delete (stored on the boat)</p>
+  <div id="route-list" class="conn-list"><div class="hint" style="margin:6px 0">Connecting to engine…</div></div>
+  <div id="route-msg" class="conn-msg"></div>
+</div>
+
 <div class="drawer glass" id="drawer-settings" hidden>
   <h2>Settings</h2>
   <p class="sub">Helm preferences &amp; live-data connections</p>
@@ -608,6 +615,7 @@
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>
 <script src="connections.js"></script>
+<script src="routes.js"></script>
 <script src="track.js"></script>
 <script src="ownship.js"></script>
 <script src="alarms.js"></script>
@@ -917,7 +925,7 @@
 
   // ================= CHROME UI wiring =================
   (function () {
-    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab', community: 'drawer-community' };
+    const drawers = { layers: 'drawer-layers', weather: 'drawer-weather', download: 'drawer-download', settings: 'drawer-settings', lab: 'drawer-lab', community: 'drawer-community', routes: 'drawer-routes' };
     const rail = document.querySelectorAll('.ri[data-rail]');
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }
@@ -927,13 +935,10 @@
         const d = document.getElementById(drawers[key]), wasOpen = !d.hidden;
         closeDrawers(); d.hidden = wasOpen;
         rail.forEach(r => r.classList.toggle('on', !wasOpen && r === btn));
+        if (!wasOpen && key === 'routes' && window.HelmRoutes) window.HelmRoutes.refresh();   // reload saved routes on open
       } else if (key === 'ais' || key === 'places') { // toggle that chart layer group via its checkbox
         const cb = document.querySelector('.row input[data-layer="' + key + '"]');
         if (cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
-        btn.classList.toggle('on');
-      } else if (key === 'routes') {                   // toggle the route inspector card
-        const insp = document.querySelector('.insp');
-        if (insp) insp.style.display = (insp.style.display === 'none' ? '' : 'none');
         btn.classList.toggle('on');
       } else if (key === 'measure') {                  // range/bearing ruler mode
         if (measure) measure.toggle();
@@ -1057,8 +1062,9 @@
     // the boat — so this single line behaves identically local or remote.
     window.__navClient = HelmNavClient(applyNav,
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
-      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
+      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
+    if (window.HelmRoutes) HelmRoutes.init({ client: window.__navClient });             // saved-route management UI
     if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)
   })();
 
