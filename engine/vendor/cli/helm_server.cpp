@@ -180,7 +180,13 @@ static std::string header_ci(const ix::WebSocketHttpHeaders& h, const char* name
 }
 
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string result;
+// CHART-10: the single main-thread job consumer runs either a tile render or an S-57 object query —
+// both touch the non-thread-safe g_chart/ps52plib, so a query is marshalled through the SAME queue.
+enum class JobKind { Render, Query };
+struct Job { JobKind kind = JobKind::Render;
+             int z = 0; long x = 0, y = 0;                       // render inputs (z reused as the query zoom hint)
+             double qlat = 0, qlon = 0; int qradius_px = 5;      // query inputs
+             ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -353,6 +359,73 @@ static std::string json_escape(const std::string& s) {
   }
   return o;
 }
+
+// CHART-10: S-57 object query at a tapped point. Runs ONLY from the main-thread job loop (it touches
+// g_chart/ps52plib, exactly like render_tile), so it is invoked via a Job{kind=Query}, never directly
+// from an HTTP worker thread. Returns a JSON array of the picked features (acronym / class / geometry /
+// decoded attributes / plain-language lines), built from the structured S57 attribute walk — NOT the
+// GUI HTML report (which merges LIGHTS and needs private chart members).
+static const char* geo_str(GeoPrim_t t) { return t == GEO_POINT ? "point" : (t == GEO_LINE ? "line" : (t == GEO_AREA ? "area" : "")); }
+static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
+                            ColorScheme palette, DisCat cat, std::string& out) {
+  if (!g_chart) return TileStatus::BadRequest;
+  if (lon < g_ext.WLON || lon > g_ext.ELON || lat < g_ext.SLAT || lat > g_ext.NLAT) { out = "[]"; return TileStatus::Ok; }
+  apply_palette(palette); apply_category(cat);              // visibility parity with the tiles (main-thread only)
+  double ppm;                                               // pixels/metre — from the zoom hint if given, else the cell span
+  if (zhint > 0) {
+    double n = std::pow(2.0, zhint);
+    double yt = std::floor((1.0 - std::log(std::tan(lat * M_PI / 180.0) + 1.0 / std::cos(lat * M_PI / 180.0)) / M_PI) / 2.0 * n);
+    double span_m = (tile_lat(yt, zhint) - tile_lat(yt + 1, zhint)) * 1852.0 * 60.0;
+    ppm = span_m > 0 ? (double)TS / span_m : 1.0;
+  } else {
+    double span_m = (g_ext.NLAT - g_ext.SLAT) * 1852.0 * 60.0;
+    ppm = span_m > 0 ? (double)TS / span_m : 1.0;
+  }
+  ViewPort vp;
+  vp.clat = lat; vp.clon = lon; vp.view_scale_ppm = ppm;
+  vp.pix_width = TS; vp.pix_height = TS; vp.rotation = 0; vp.skew = 0; vp.tilt = 0;
+  vp.m_projection_type = PROJECTION_MERCATOR;
+  vp.chart_scale = g_chart->GetNativeScale(); vp.ref_scale = vp.chart_scale;
+  vp.b_quilt = false; vp.rv_rect = wxRect(0, 0, TS, TS); vp.SetBoxes(); vp.Validate();
+  float sel_deg = (float)(radius_px / (vp.view_scale_ppm * 1852.0 * 60.0));
+  ListOfObjRazRules* rl = g_chart->GetObjRuleListAtLatLon((float)lat, (float)lon, sel_deg, &vp, MASK_ALL);
+  std::string arr = "[";
+  if (rl) {
+    const std::string ocPath = std::string(g_csv_locn.mb_str()) + "/s57objectclasses.csv";
+    bool first = true; int emitted = 0;
+    for (ListOfObjRazRules::Node* node = rl->GetLast(); node && emitted < 100; node = node->GetPrevious()) {
+      ObjRazRules* cur = node->GetData(); if (!cur || !cur->obj) continue;
+      S57Obj* o = cur->obj;
+      if (o->Primitive_type == GEO_META || o->Primitive_type == GEO_PRIM) continue;       // not real features
+      if (cur->LUP && std::strncmp(cur->LUP->OBCL, "SOUND", 5) == 0) continue;             // soundings: separate path
+      std::string acr(o->FeatureName);
+      const char* cd = MyCSVGetField(ocPath.c_str(), "Acronym", acr.c_str(), CC_ExactString, "ObjectClass");
+      const char* cc = MyCSVGetField(ocPath.c_str(), "Acronym", acr.c_str(), CC_ExactString, "Code");
+      std::string class_desc = (cd && *cd) ? cd : acr;
+      int objl = (cc && *cc) ? std::atoi(cc) : -1;
+      if (!first) arr += ","; first = false; ++emitted;
+      arr += "{\"objl_code\":" + std::to_string(objl) + ",\"acronym\":\"" + json_escape(acr) +
+             "\",\"class_desc\":\"" + json_escape(class_desc) + "\",\"geometry\":\"" + geo_str(o->Primitive_type) + "\"";
+      std::string attrs = ",\"attributes\":{";
+      std::string plain = ",\"plain_language\":[\"" + json_escape(class_desc + " (" + acr + ")") + "\"";
+      bool af = true; char* ca = o->att_array;
+      for (int i = 0; o->att_array && i < o->n_attr; ++i, ca += 6) {
+        wxString an = wxString(ca, wxConvUTF8, 6); an.Trim();
+        std::string ak = std::string(an.ToUTF8());
+        std::string av = std::string(g_chart->GetObjectAttributeValueAsString(o, i, an).ToUTF8());
+        if (!af) attrs += ","; af = false;
+        attrs += "\"" + json_escape(ak) + "\":{\"decoded\":\"" + json_escape(av) + "\"}";
+        plain += ",\"" + json_escape(ak + ": " + av) + "\"";
+      }
+      arr += attrs + "}" + plain + "]}";
+    }
+    rl->Clear(); delete rl;
+  }
+  arr += "]";
+  out.swap(arr);
+  return TileStatus::Ok;
+}
+
 static bool read_file(const char* path, std::string& out) {
   std::ifstream f(path, std::ios::binary);
   if (!f) return false;
@@ -1332,6 +1405,33 @@ public:
               return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h, std::string("S-52 tile render failed; see server log\n"));
           }
         }
+        if (req->uri.rfind("/query", 0) == 0) {   // CHART-10: GET /query?lat=&lon=[&z=][&radius=][&p=][&cat=] (worker thread: parse + marshal ONLY)
+          const std::string& u = req->uri;
+          auto getd = [&](const char* k, double& v) -> bool {   // key must follow '?' or '&' — no substring collisions
+            const std::string key = k;
+            for (size_t p = u.find(key); p != std::string::npos; p = u.find(key, p + 1))
+              if (p > 0 && (u[p - 1] == '?' || u[p - 1] == '&'))
+                return std::sscanf(u.c_str() + p + key.size(), "%lf", &v) == 1;
+            return false;
+          };
+          double qlat, qlon, tmp;
+          h["Cache-Control"] = "no-store";   // dynamic, unlike the immutable tiles
+          if (!getd("lat=", qlat) || !getd("lon=", qlon)) { h["Content-Type"] = "text/plain";
+            return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("bad query params (need lat,lon)\n")); }
+          Job job; job.kind = JobKind::Query; job.qlat = qlat; job.qlon = qlon;
+          if (getd("z=", tmp)) job.z = (int)tmp;
+          if (getd("radius=", tmp)) job.qradius_px = (int)tmp;
+          job.palette = palette_from_query(u); job.cat = category_from_query(u);
+          { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }   // marshal onto the main thread, like /chart
+          g_jobs_cv.notify_one();
+          { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
+          if (job.status == TileStatus::Ok) { h["Content-Type"] = "application/json";
+            return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result); }
+          h["Content-Type"] = "text/plain";
+          return std::make_shared<ix::HttpResponse>(job.status == TileStatus::BadRequest ? 400 : 500,
+            job.status == TileStatus::BadRequest ? "Bad Request" : "Query Failed", ix::HttpErrorCode::Ok, h,
+            std::string(job.status == TileStatus::BadRequest ? "no chart loaded\n" : "S-57 query failed; see server log\n"));
+        }
         if (req->uri == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
         if (req->uri == "/catalog") { h["Content-Type"] = "application/json";
@@ -1379,7 +1479,8 @@ int main(int argc, char** argv) {
     Job* j = nullptr;
     { std::unique_lock<std::mutex> lk(g_jobs_m); g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result);
+    if (j->kind == JobKind::Query) j->status = run_query(j->qlat, j->qlon, j->z, j->qradius_px, j->palette, j->cat, j->result);
+    else                           j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; } j->cv.notify_one();
   }
   wxEntryCleanup();
