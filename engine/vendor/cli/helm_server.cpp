@@ -87,6 +87,8 @@
 #include <arpa/inet.h>
 #include <netdb.h>
 #include <fcntl.h>
+#include <termios.h>
+#include <functional>
 #include <poll.h>
 #include <cerrno>
 #include <sys/stat.h>
@@ -814,29 +816,32 @@ static int udp_bind(const std::string& host, int port, std::string& err) {
   timeval tv{5, 0}; ::setsockopt(fd, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof tv); return fd;
 }
 // Read NMEA lines off a connected fd until EOF/error/stop, feeding nmea_parse and updating status.
-static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
+// Generic line reader: poll+read an fd (works for sockets AND serial ttys), split on '\n', and
+// hand each trimmed line to on_line. Interruptible via want_stop; marks NoData after 10 s idle.
+static void conn_read_lines(int fd, const std::shared_ptr<ConnRuntime>& rt,
+                            const std::function<void(const std::string&)>& on_line) {
   std::string buf; char rb[2048];
   for (;;) {
     if (rt->want_stop) return;
-    ssize_t n = ::recv(fd, rb, sizeof rb, 0);
+    pollfd pfd{fd, POLLIN, 0}; int pr = ::poll(&pfd, 1, 1000);
+    if (pr == 0) { if (rt->last_rx && (long)std::time(nullptr) - rt->last_rx > 10) rt->status = (int)ConnStatus::NoData; continue; }
+    if (pr < 0) { if (errno == EINTR) continue; return; }
+    ssize_t n = ::read(fd, rb, sizeof rb);
     if (n > 0) {
       rt->last_rx = (long)std::time(nullptr); rt->status = (int)ConnStatus::Connected;
       buf.append(rb, (size_t)n); size_t nl;
       while ((nl = buf.find('\n')) != std::string::npos) {
         std::string line = buf.substr(0, nl); buf.erase(0, nl + 1);
         while (!line.empty() && (line.back() == '\r' || line.back() == ' ')) line.pop_back();
-        if (!line.empty()) { raw_capture(conn_id, line); nmea_parse(line, prio); rt->sentences++; }
+        if (!line.empty()) on_line(line);
       }
       if (buf.size() > (1u << 16)) buf.clear();          // runaway guard (never a newline)
-    } else if (n == 0) { return; }                       // peer closed
-    else {
-      if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) {
-        if (rt->last_rx && (long)std::time(nullptr) - rt->last_rx > 10) rt->status = (int)ConnStatus::NoData;
-        continue;
-      }
-      return;                                            // real error
-    }
+    } else if (n == 0) { return; }                       // peer closed / device gone
+    else { if (errno == EAGAIN || errno == EWOULDBLOCK || errno == EINTR) continue; return; }
   }
+}
+static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
+  conn_read_lines(fd, rt, [&](const std::string& line) { raw_capture(conn_id, line); nmea_parse(line, prio); rt->sentences++; });
 }
 // SignalK driver as a managed connection (CONN-5): a per-connection WebSocket that feeds the SAME
 // sk_on_message → g_real per-field overrides as the HELM_SIGNALK path, but lifecycle-bound to the
@@ -875,6 +880,116 @@ static void conn_feed_signalk(const ConnConfig& cfg, const std::shared_ptr<ConnR
   }
   ws.stop();
 }
+
+// ---- CONN-9: serial NMEA (macOS boat-server; iOS has no serial path) ----
+static speed_t baud_const(int b) {
+  switch (b) { case 4800: return B4800; case 9600: return B9600; case 19200: return B19200;
+    case 38400: return B38400; case 57600: return B57600; case 115200: return B115200; default: return B4800; }
+}
+static int serial_open(const std::string& dev, int baud, std::string& err) {        // address=device, port=baud
+  int fd = ::open(dev.c_str(), O_RDWR | O_NOCTTY | O_NONBLOCK);
+  if (fd < 0) { err = std::string("open ") + dev + ": " + std::strerror(errno); return -1; }
+  termios t{};
+  if (::tcgetattr(fd, &t) != 0) { err = "tcgetattr (not a serial device?)"; ::close(fd); return -1; }
+  cfmakeraw(&t);
+  speed_t sp = baud_const(baud > 0 ? baud : 4800);                                   // NMEA-0183 = 4800; AIS = 38400
+  cfsetispeed(&t, sp); cfsetospeed(&t, sp);
+  t.c_cflag |= (CLOCAL | CREAD); t.c_cflag &= ~CRTSCTS;
+  t.c_cc[VMIN] = 0; t.c_cc[VTIME] = 0;
+  if (::tcsetattr(fd, TCSANOW, &t) != 0) { err = "tcsetattr"; ::close(fd); return -1; }
+  return fd;
+}
+
+// ---- CONN-8: NMEA 2000 over IP — decode the common single-frame PGNs from a YDWG/Actisense RAW
+//      stream (one CAN frame per line: "<time> <dir> <canid-hex> <b0..b7>") into the priority-aware
+//      g_real fields. Fast-packet PGNs + native CAN (socketcan/Actisense USB) are a separate task. ----
+static void n2k_decode_line(const std::string& line, int prio) {
+  std::vector<std::string> tok; { std::string c; for (char ch : line) { if (ch==' '||ch=='\t') { if(!c.empty()){tok.push_back(c);c.clear();} } else c+=ch; } if(!c.empty()) tok.push_back(c); }
+  auto ishex = [](const std::string& s){ return !s.empty() && s.find_first_not_of("0123456789abcdefABCDEF")==std::string::npos; };
+  int idIdx = -1; for (size_t i=0;i<tok.size();++i) if (tok[i].size()==8 && ishex(tok[i])) { idIdx=(int)i; break; }
+  if (idIdx < 0) return;
+  unsigned long canid = std::strtoul(tok[idIdx].c_str(), nullptr, 16);
+  std::vector<uint8_t> b; for (size_t i=idIdx+1; i<tok.size() && b.size()<8; ++i) if (tok[i].size()<=2 && ishex(tok[i])) b.push_back((uint8_t)std::strtoul(tok[i].c_str(),nullptr,16));
+  if (b.size() < 8) return;
+  uint8_t dp = (canid>>24)&1, pf = (canid>>16)&0xFF, ps = (canid>>8)&0xFF;     // J1939/N2K id: DP|PF|PS|SA
+  unsigned pgn = ((unsigned)dp<<16) | ((unsigned)pf<<8) | ((pf < 240) ? 0u : (unsigned)ps);
+  auto u16 = [&](int i){ return (uint16_t)(b[i] | (b[i+1]<<8)); };
+  auto i32 = [&](int i){ return (int32_t)((uint32_t)b[i]|((uint32_t)b[i+1]<<8)|((uint32_t)b[i+2]<<16)|((uint32_t)b[i+3]<<24)); };
+  auto u32 = [&](int i){ return (uint32_t)b[i]|((uint32_t)b[i+1]<<8)|((uint32_t)b[i+2]<<16)|((uint32_t)b[i+3]<<24); };
+  const double R2D = 180.0/M_PI, MS2KN = 1.943844; std::time_t now = std::time(nullptr);
+  std::lock_guard<std::mutex> lk(g_real.m);
+  if (pgn == 129025) {                                                  // Position, Rapid Update
+    if (i32(0) == 0x7FFFFFFF || i32(4) == 0x7FFFFFFF) return;           // not-available sentinel
+    double lat = i32(0)*1e-7, lon = i32(4)*1e-7;
+    if (lat>=-90&&lat<=90&&lon>=-180&&lon<=180 && (prio>=g_real.pos_prio||!fresh(g_real.pos_t)))
+      { g_real.lat=lat; g_real.lon=lon; g_real.pos_t=now; g_real.pos_src="nmea2000"; g_real.pos_prio=prio; }
+  } else if (pgn == 129026) {                                           // COG & SOG, Rapid Update
+    uint16_t cog=u16(2), sog=u16(4);
+    if (cog!=0xFFFF) setf(g_real.cog, cog*1e-4*R2D, now, "nmea2000", prio);
+    if (sog!=0xFFFF) setf(g_real.sog, sog*1e-2*MS2KN, now, "nmea2000", prio);
+  } else if (pgn == 127250) {                                           // Vessel Heading
+    uint16_t h=u16(1); if (h!=0xFFFF) setf(g_real.hdg, h*1e-4*R2D, now, "nmea2000", prio);
+  } else if (pgn == 128267) {                                           // Water Depth
+    uint32_t d=u32(1); if (d!=0xFFFFFFFF) setf(g_real.depth, d*1e-2, now, "nmea2000", prio);
+  } else if (pgn == 130306) {                                           // Wind Data
+    uint16_t ws=u16(1), wa=u16(3);
+    if (ws!=0xFFFF) setf(g_real.wspd, ws*1e-2*MS2KN, now, "nmea2000", prio);
+    if (wa!=0xFFFF) setf(g_real.wdir, wa*1e-4*R2D, now, "nmea2000", prio);          // 0..2π → 0..360°
+  }
+}
+static void conn_feed_n2k(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
+  conn_read_lines(fd, rt, [&](const std::string& line){ raw_capture(conn_id, line); n2k_decode_line(line, prio); rt->sentences++; });
+}
+
+// ---- CONN-10: internet AIS. Raw !AIVDM over TCP already works via tcp-client (→ AisDecoder); this
+//      adds JSON/WS providers (aisstream.io): translate each JSON PositionReport into a Type-1 AIVDM
+//      sentence and feed it through OpenCPN's AisDecoder, so CPA/TCPA + the full target card stay
+//      OpenCPN's — we never reimplement collision math. ----
+static std::string ais_aivdm_type1(int mmsi, double lat, double lon, double sog_kn, double cog_deg, double hdg_deg) {
+  std::vector<int> bits;
+  auto put = [&](long v, int n){ for (int i=n-1;i>=0;--i) bits.push_back((v>>i)&1); };
+  auto puts = [&](long v, int n){ put(v & ((1L<<n)-1), n); };                       // two's-complement fit
+  put(1,6); put(0,2); put(mmsi,30); put(0,4); puts(-128,8);                          // type, repeat, mmsi, navstat, rot=n/a
+  // clamp the untrusted feed values to each field's valid range so garbage can't collide with the
+  // not-available sentinels (sog 1023 / cog 3600 / hdg 511) or trigger UB in llround on huge inputs.
+  put((sog_kn>=0 && sog_kn<=102.2) ? std::min((long)llround(sog_kn*10), 1022L) : 1023, 10); put(0,1);   // sog, accuracy
+  puts((long)llround(lon*600000.0), 28); puts((long)llround(lat*600000.0), 27);      // lon, lat (1/600000 deg; bounds-checked by caller)
+  put((cog_deg>=0 && cog_deg<=360) ? std::min((long)llround(std::fmod(cog_deg,360.0)*10), 3599L) : 3600, 12);   // cog
+  put((hdg_deg>=0 && hdg_deg<=360) ? std::min((long)llround(std::fmod(hdg_deg,360.0)), 359L) : 511, 9);          // true heading
+  put(60,6); put(0,2); put(0,3); put(0,1); put(0,19);                               // timestamp, maneuver, spare, raim, radio
+  while (bits.size() % 6) bits.push_back(0);
+  std::string payload; for (size_t i=0;i<bits.size();i+=6){ int v=0; for(int j=0;j<6;++j) v=(v<<1)|bits[i+j]; payload += (char)(v<40 ? v+48 : v+56); }
+  std::string body = "AIVDM,1,1,,A," + payload + ",0";
+  int cs=0; for (char c : body) cs ^= (unsigned char)c; char hx[4]; std::snprintf(hx,sizeof hx,"%02X",cs);
+  return "!" + body + "*" + hx;
+}
+static void ais_on_message(const std::string& msg, int prio) {
+  rapidjson::Document d; if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject()) return;
+  if (!d.HasMember("MessageType") || !d["MessageType"].IsString() || std::string(d["MessageType"].GetString()) != "PositionReport") return;
+  if (!d.HasMember("Message") || !d["Message"].IsObject() || !d["Message"].HasMember("PositionReport") || !d["Message"]["PositionReport"].IsObject()) return;
+  const rapidjson::Value& p = d["Message"]["PositionReport"];
+  auto num = [&](const char* k)->double{ return (p.HasMember(k) && p[k].IsNumber()) ? p[k].GetDouble() : -1; };
+  long mmsi = (p.HasMember("UserID") && p["UserID"].IsInt()) ? p["UserID"].GetInt() : 0; if (!mmsi) return;
+  double lat = (p.HasMember("Latitude")&&p["Latitude"].IsNumber())?p["Latitude"].GetDouble():91;
+  double lon = (p.HasMember("Longitude")&&p["Longitude"].IsNumber())?p["Longitude"].GetDouble():181;
+  if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return;   // full bounds — untrusted feed; also rejects the 91/181 missing-field sentinels
+  nmea_parse(ais_aivdm_type1((int)mmsi, lat, lon, num("Sog"), num("Cog"), num("TrueHeading")), prio);
+}
+static void conn_feed_aisws(const ConnConfig& cfg, const std::shared_ptr<ConnRuntime>& rt) {     // aisstream.io JSON/WS
+  std::string sub = std::string("{\"APIKey\":\"") + json_escape(cfg.comment) + "\",\"BoundingBoxes\":[[[-90,-180],[90,180]]]}";
+  int prio = cfg.priority;
+  ix::WebSocket ws; ws.setUrl(cfg.address); ws.setPingInterval(20); ws.enableAutomaticReconnection();
+  ws.setOnMessageCallback([rt, prio, sub, &ws](const ix::WebSocketMessagePtr& m) {
+    if (m->type == ix::WebSocketMessageType::Message) { ais_on_message(m->str, prio); rt->last_rx = (long)std::time(nullptr); rt->sentences++; rt->status = (int)ConnStatus::Connected; }
+    else if (m->type == ix::WebSocketMessageType::Open) { ws.send(sub); rt->status = (int)ConnStatus::Connected; { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error.clear(); } }
+    else if (m->type == ix::WebSocketMessageType::Error) { rt->status = (int)ConnStatus::Error; { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = m->errorInfo.reason; } }
+    else if (m->type == ix::WebSocketMessageType::Close) { if (!rt->want_stop) rt->status = (int)ConnStatus::NoData; }
+  });
+  ws.start();
+  for (;;) { if (rt->want_stop) break; std::this_thread::sleep_for(std::chrono::milliseconds(200)); }
+  ws.stop();   // LOAD-BEARING: the OnMessage lambda captures &ws (ws.send on Open); ws.stop() joins the
+               // ws thread before ws is destroyed, so the &ws capture can never dangle. Keep no early return above.
+}
 static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
   int backoff = 1;
   for (;;) {
@@ -885,10 +1000,13 @@ static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
       cfg = it->second; if (!cfg.enabled) { rt->status = (int)ConnStatus::Disabled; return; } }
     rt->status = (int)ConnStatus::Connecting;
     if (cfg.type == "signalk") { conn_feed_signalk(cfg, rt); return; }   // SignalK WS driver — self-managed lifecycle + reconnect
+    if (cfg.type == "internet-ais" && (cfg.address.rfind("ws://",0)==0 || cfg.address.rfind("wss://",0)==0)) { conn_feed_aisws(cfg, rt); return; }  // CONN-10 JSON/WS provider (aisstream)
     std::string err; int fd = -1;
-    if (cfg.type == "tcp-client")      fd = tcp_connect(cfg.address, cfg.port, 6, err);
+    if (cfg.type == "tcp-client" || cfg.type == "internet-ais") fd = tcp_connect(cfg.address, cfg.port, 6, err);  // internet-ais over TCP = raw !AIVDM → AisDecoder
     else if (cfg.type == "tcp-server") fd = tcp_server_accept(cfg.address.empty() ? "127.0.0.1" : cfg.address, cfg.port, rt, err);
     else if (cfg.type == "udp")        fd = udp_bind(cfg.address, cfg.port, err);
+    else if (cfg.type == "serial")     fd = serial_open(cfg.address, cfg.port, err);                    // CONN-9 (port field = baud)
+    else if (cfg.type == "nmea2000")   fd = (cfg.dataProtocol == "udp") ? udp_bind(cfg.address, cfg.port, err) : tcp_connect(cfg.address, cfg.port, 6, err);  // CONN-8 N2K-over-IP
     else { { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = "unsupported type: " + cfg.type; } rt->status = (int)ConnStatus::Error; return; }
     if (fd < 0) {
       { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = err; }
@@ -898,7 +1016,8 @@ static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
     }
     backoff = 1; rt->status = (int)ConnStatus::Connected;
     { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error.clear(); }
-    conn_feed_fd(fd, rt, cfg.priority, id);
+    if (cfg.type == "nmea2000") conn_feed_n2k(fd, rt, cfg.priority, id);
+    else                        conn_feed_fd(fd, rt, cfg.priority, id);
     ::close(fd);
     if (rt->want_stop) return;
     rt->status = (int)ConnStatus::NoData;
@@ -961,9 +1080,11 @@ static bool conn_from_json(const rapidjson::Value& v, ConnConfig& c, std::string
   else if (v.HasMember("priority") && v["priority"].IsString()) c.priority = std::atoi(v["priority"].GetString());
   c.enabled = !(v.HasMember("enabled") && v["enabled"].IsBool()) || v["enabled"].GetBool();
   if (c.dataProtocol.empty()) c.dataProtocol = (c.type == "signalk") ? "signalk" : "nmea0183";
-  if (c.type != "tcp-client" && c.type != "tcp-server" && c.type != "udp" && c.type != "signalk") { err = "type must be tcp-client | tcp-server | udp | signalk"; return false; }
-  if (c.port < 1 || c.port > 65535) { err = "port must be 1-65535"; return false; }
-  if ((c.type == "tcp-client" || c.type == "signalk") && c.address.empty()) { err = "address required for " + c.type; return false; }
+  static const std::set<std::string> kConnTypes = {"tcp-client","tcp-server","udp","signalk","serial","nmea2000","internet-ais"};
+  if (!kConnTypes.count(c.type)) { err = "type must be one of: tcp-client | tcp-server | udp | signalk | serial | nmea2000 | internet-ais"; return false; }
+  bool urlAddr = (c.address.rfind("ws://",0)==0 || c.address.rfind("wss://",0)==0);   // WS providers carry the port in the URL
+  if (!urlAddr && (c.port < 1 || c.port > 65535)) { err = std::string("port must be 1-65535") + (c.type=="serial" ? " (serial: this is the baud rate)" : ""); return false; }
+  if ((c.type=="tcp-client"||c.type=="signalk"||c.type=="serial"||c.type=="nmea2000"||c.type=="internet-ais") && c.address.empty()) { err = "address required for " + c.type; return false; }
   if (c.id.empty()) { std::string b = conn_slug(c.name.empty() ? c.type : c.name); if (b.empty()) b = "conn"; c.id = b + "-" + std::to_string(++g_conn_counter); }
   return true;
 }

@@ -97,7 +97,7 @@ function navState() {
 // this lets web/connections.js (incl. the SignalK affordance) be built + smoke-tested offline
 // with no C++ build. (Earlier the mock ran ahead of the engine — that gap is now closed.)
 const OWNER_TOKEN = process.env.HELM_OWNER_TOKEN || '';
-const CONN_TYPES = ['tcp-client', 'tcp-server', 'udp', 'signalk'];   // signalk now accepted by the engine too (CONN-5)
+const CONN_TYPES = ['tcp-client', 'tcp-server', 'udp', 'signalk', 'serial', 'nmea2000', 'internet-ais'];   // CONN-5/8/9/10 — all accepted by the engine
 let connCounter = 0;
 const connMap = new Map();   // id -> { cfg, rt:{ status, sentences, lastRx, since } }
 function seedConn(cfg) { connMap.set(cfg.id, { cfg, rt: { status: 'connecting', sentences: 0, lastRx: 0, since: Date.now() } }); }
@@ -112,9 +112,10 @@ function connFromJson(v) {   // mirror conn_from_json validation; → { cfg } or
     port: (typeof v.port === 'number' ? v.port : (parseInt(v.port, 10) || 0)),
     priority: (typeof v.priority === 'number' ? v.priority : (parseInt(v.priority, 10) || 0)),   // CONN-6
     enabled: (typeof v.enabled === 'boolean' ? v.enabled : true) };
-  if (!CONN_TYPES.includes(cfg.type)) return { err: 'type must be tcp-client | tcp-server | udp | signalk' };
-  if (cfg.type !== 'signalk' && (cfg.port < 1 || cfg.port > 65535)) return { err: 'port must be 1-65535' };
-  if ((cfg.type === 'tcp-client' || cfg.type === 'signalk') && !cfg.address) return { err: 'address required for ' + cfg.type };
+  if (!CONN_TYPES.includes(cfg.type)) return { err: 'type must be one of: ' + CONN_TYPES.join(' | ') };
+  const urlAddr = /^wss?:\/\//.test(cfg.address);                                              // ws providers carry the port in the URL
+  if (!urlAddr && (cfg.port < 1 || cfg.port > 65535)) return { err: 'port must be 1-65535' + (cfg.type === 'serial' ? ' (serial: this is the baud rate)' : '') };
+  if (['tcp-client', 'signalk', 'serial', 'nmea2000', 'internet-ais'].includes(cfg.type) && !cfg.address) return { err: 'address required for ' + cfg.type };
   if (!cfg.id) { const b = connSlug(cfg.name || cfg.type) || 'conn'; cfg.id = b + '-' + (++connCounter); }
   return { cfg };
 }
