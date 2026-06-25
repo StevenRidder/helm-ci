@@ -1,28 +1,35 @@
 // HelmAlarms — safety alarms + banner, computed client-side off the live nav stream.
 //
-// The OpenCPN backend doesn't emit alarm frames yet, so depth / anchor-watch / MOB are
-// evaluated here from the nav feed; the same banner also displays engine `t:"alarm"`
-// frames (via fromEngine) once the engine sends them.
+// The OpenCPN backend doesn't emit alarm frames yet, so depth / anchor-watch / MOB /
+// off-course / arrival are evaluated here from the nav feed; the same banner also displays
+// engine `t:"alarm"` frames (via fromEngine) once the engine sends them.
 //
 // FAIL-FAST honesty: alarms are only (re)evaluated on FRESH nav data. When the feed goes
 // stale/offline (setActive(false)) we HOLD — we neither raise new alarms nor clear active
-// ones from data we can't trust. Nothing is fabricated.
+// ones from data we can't trust. Nothing is fabricated; per-field source tags are respected
+// (e.g. depth is NOT alarmed while it reads simulated).
 //
-//   • Depth  — warns when depth < threshold (default 3.0 m), with hysteresis.
-//   • Anchor — drop at current position (default 30 m radius); critical alarm on drift.
+//   • Anchor — drop at the current fix, set a swing radius (−/+), live drift readout, and a
+//              DEBOUNCED critical alarm so a single GPS jitter fix can't false-trip it.
+//   • Depth  — warns when REAL depth < threshold (default 3.0 m), with hysteresis.
+//   • Off-course — XTE beyond a limit while a route is actively being navigated.
+//   • Arrival — within the arrival radius of the next waypoint.
 //   • MOB    — drops a man-overboard mark; critical alarm with live range/bearing.
-//   • CPA/TCPA — from the engine's LIVE AIS: OpenCPN-computed CPA/TCPA arrive in the nav
-//                stream's "ais" array; fires only on a real approaching threat (cpaValid +
-//                future TCPA), never faked.
+//   • CPA/TCPA — from the engine's LIVE AIS via collision.js (not duplicated here).
 window.HelmAlarms = function (map, opts) {
   opts = opts || {};
   const depthLimit = opts.depthLimit != null ? opts.depthLimit : 3.0;   // metres
   const depthClear = depthLimit + 0.3;                                   // hysteresis
-  const anchorRadius = opts.anchorRadius != null ? opts.anchorRadius : 30; // metres
+  let anchorRadius = opts.anchorRadius != null ? opts.anchorRadius : 40; // metres (settable)
+  const xteLimit = opts.xteLimit != null ? opts.xteLimit : 100;          // metres off track
+  const arrivalNM = opts.arrivalNM != null ? opts.arrivalNM : 0.10;      // NM to next wp
+  const ONROUTE_NM = 60;        // only judge XTE/arrival when plausibly ON the route (guards a stale demo route)
+  const DRAG_DEBOUNCE_MS = 8000; // must stay outside the circle this long before the drag alarm trips
 
   // ---- alarm state ----
   const active = {};            // kind -> { kind, sev, msg, acked }
   let fresh = true;             // false when feed stale/offline → hold (don't evaluate)
+  const num = v => { const m = String(v == null ? '' : v).match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
 
   // ---- distance / bearing (metres, degrees) ----
   const R = 6371000, toR = d => d * Math.PI / 180, toD = r => r * 180 / Math.PI;
@@ -77,7 +84,7 @@ window.HelmAlarms = function (map, opts) {
     banner.style.display = 'flex';
     banner.style.background = crit ? 'rgba(200,30,40,.94)' : 'rgba(190,120,20,.94)';
     banner.style.animation = (crit && unacked) ? 'srcpulse 1s infinite' : 'none';
-    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : '⚠︎');
+    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : '⚠︎'));
     banner.querySelector('#alarm-txt').textContent = top.msg + (list.length > 1 ? '   (+' + (list.length - 1) + ' more)' : '');
     const ack = banner.querySelector('#alarm-ack'); ack.style.display = unacked ? '' : 'none';
   }
@@ -88,8 +95,8 @@ window.HelmAlarms = function (map, opts) {
   }
   function clear(kind) { if (active[kind]) { delete active[kind]; render(); } }
 
-  // ---- anchor watch (map circle + set-point) ----
-  let anchor = null;
+  // ---- anchor watch (map circle + set-point + live drift readout + radius control) ----
+  let anchor = null, dragSince = null;
   function ensureAnchorLayers() {
     if (map.getSource('helm-anchor')) return;
     map.addSource('helm-anchor', { type: 'geojson', data: { type: 'FeatureCollection', features: [] } });
@@ -105,16 +112,40 @@ window.HelmAlarms = function (map, opts) {
       { type: 'Feature', geometry: { type: 'Point', coordinates: [c.lon, c.lat] } }
     ] };
   }
+  function redrawAnchor() { try { ensureAnchorLayers(); map.getSource('helm-anchor').setData(anchorCircle(anchor, anchorRadius)); } catch (e) {} }
   function dropAnchor(pos) {
     if (!pos) return;
-    anchor = { lat: pos.lat, lon: pos.lon, radius: anchorRadius };
-    try { ensureAnchorLayers(); map.getSource('helm-anchor').setData(anchorCircle(anchor, anchor.radius)); } catch (e) {}
-    paintCtl();
+    anchor = { lat: pos.lat, lon: pos.lon }; dragSince = null;
+    redrawAnchor(); pill.style.display = 'flex'; updatePill(0); paintCtl();
   }
   function weighAnchor() {
-    anchor = null; clear('anchor');
+    anchor = null; dragSince = null; clear('anchor'); pill.style.display = 'none';
     try { if (map.getSource('helm-anchor')) map.getSource('helm-anchor').setData({ type: 'FeatureCollection', features: [] }); } catch (e) {}
     paintCtl();
+  }
+  function setRadius(delta) {
+    anchorRadius = Math.max(10, Math.min(300, anchorRadius + delta));
+    if (anchor) { redrawAnchor(); updatePill(lastPos ? distM(lastPos, anchor) : 0); }
+  }
+
+  // anchor status pill (live drift / radius + radius control), bottom-centre, only while anchored
+  const pill = document.createElement('div');
+  pill.id = 'anchor-pill';
+  pill.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:96px;z-index:8;display:none;align-items:center;gap:8px;' +
+    'padding:5px 8px;border-radius:11px;font:600 12px -apple-system,system-ui;color:#eef4f9;background:rgba(13,19,27,.82);' +
+    '-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(255,255,255,.14);box-shadow:0 12px 40px -16px rgba(0,0,0,.8)';
+  const mkPillBtn = t => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t;
+    b.style.cssText = 'width:22px;height:22px;border:0;border-radius:7px;background:rgba(255,255,255,.12);color:#eef4f9;font:700 14px system-ui;cursor:pointer;touch-action:manipulation'; return b; };
+  const pillMinus = mkPillBtn('−'), pillTxt = document.createElement('span'), pillPlus = mkPillBtn('+');
+  pillTxt.style.cssText = 'min-width:118px;text-align:center;font-variant-numeric:tabular-nums';
+  pill.appendChild(document.createTextNode('⚓')); pill.appendChild(pillMinus); pill.appendChild(pillTxt); pill.appendChild(pillPlus);
+  document.body.appendChild(pill);
+  pillMinus.addEventListener('click', () => setRadius(-5));
+  pillPlus.addEventListener('click', () => setRadius(+5));
+  function updatePill(d) {
+    const ratio = d / anchorRadius;
+    const col = !anchor ? '#eef4f9' : (ratio > 1 ? '#ff6b6b' : ratio > 0.85 ? '#ffc06a' : '#46e0a0');
+    pillTxt.innerHTML = '<b style="color:' + col + '">' + Math.round(d) + '</b> / ' + anchorRadius + ' m';
   }
 
   // ---- MOB ----
@@ -153,33 +184,51 @@ window.HelmAlarms = function (map, opts) {
     if (!s || !s.pos) return;
     lastPos = s.pos;
     if (!fresh) return;                  // hold on stale feed — never (re)evaluate from data we can't trust
+    const src = s.sources || {};
 
-    // depth (hysteresis to avoid flapping at the threshold)
-    if (typeof s.depth === 'number') {
+    // depth (only on a REAL depth feed — never alarm on the simulated fill; hysteresis avoids flapping)
+    if (typeof s.depth === 'number' && src.depth && src.depth !== 'simulated' && src.depth !== 'sim') {
       if (s.depth < depthLimit) fire('depth', 'warning', 'Shallow water — ' + s.depth.toFixed(1) + ' m (limit ' + depthLimit.toFixed(1) + ' m)');
       else if (s.depth >= depthClear) clear('depth');
-    }
-    // anchor drag
+    } else { clear('depth'); }
+
+    // anchor watch — live drift readout + DEBOUNCED drag alarm (a single jitter fix can't trip it)
     if (anchor) {
       const d = distM(s.pos, anchor);
-      if (d > anchor.radius) fire('anchor', 'critical', 'Anchor dragging — ' + Math.round(d) + ' m from set point (limit ' + anchor.radius + ' m)');
-      else clear('anchor');
+      updatePill(d);
+      if (d > anchorRadius) {
+        if (!dragSince) dragSince = Date.now();
+        if (Date.now() - dragSince >= DRAG_DEBOUNCE_MS) {
+          const b = Math.round(bearing(anchor, s.pos));
+          fire('anchor', 'critical', 'Anchor dragging — ' + Math.round(d) + ' m from set point (limit ' + anchorRadius + ' m), bearing ' + b + '°');
+        }
+      } else { dragSince = null; clear('anchor'); }
     }
+
+    // off-course (XTE) + arrival — only while plausibly navigating a real route (guards a stale demo route)
+    if (s.active && s.active.nextWp) {
+      const dtgNM = num(s.active.dtg), xteM = num(s.active.xte);
+      if (isFinite(dtgNM) && dtgNM < ONROUTE_NM) {
+        if (isFinite(dtgNM) && dtgNM <= arrivalNM) fire('arrival', 'warning', 'Arriving — ' + s.active.nextWp);
+        else clear('arrival');
+        if (isFinite(xteM) && xteM > xteLimit) fire('xte', 'warning', 'Off course — ' + Math.round(xteM) + ' m cross-track (limit ' + xteLimit + ' m)');
+        else clear('xte');
+      } else { clear('arrival'); clear('xte'); }
+    }
+
     // MOB range/bearing (alarm stays critical until cancelled)
     if (mob) {
       const d = distM(s.pos, mob), b = Math.round(bearing(s.pos, mob));
       fire('mob', 'critical', 'MAN OVERBOARD — ' + (d < 1852 ? Math.round(d) + ' m' : (d / 1852).toFixed(2) + ' NM') + ', bearing ' + b + '°');
     }
-    // CPA/TCPA is owned by collision.js (richer: COLREGs give-way/stand-on guidance, intercept line,
-    // audio) — wired in index.html via collision.update(). We intentionally do NOT also raise a CPA
-    // alarm here, to avoid a duplicate banner. (alarms.js stays the depth / anchor / MOB authority.)
+    // CPA/TCPA is owned by collision.js (richer COLREGs guidance + audio); not duplicated here.
   }
 
   return {
     onNav,
     setActive(f) { fresh = !!f; },                       // false → hold (stale/offline)
     fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames
-    dropAnchor: () => dropAnchor(lastPos), markMOB: () => markMOB(lastPos),
-    _state: () => ({ active: Object.keys(active), anchor: !!anchor, mob: !!mob })   // for tests
+    dropAnchor: p => dropAnchor(p || lastPos), markMOB: () => markMOB(lastPos), setRadius,
+    _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob })   // for tests
   };
 };

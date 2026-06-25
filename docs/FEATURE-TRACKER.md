@@ -24,7 +24,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 | 3 | **Track recording** — *always-on automatic* (no on-screen control), distance-gated (records the anchor swing like OpenCPN); engine-owned trail + map line | 🟢 **done** — `4623f78`+ |
 | 4 | **Route create/save/activate** — draw a route → persisted to navobj.db (OpenCPN's SQLite store, reused) → active + survives restart | 🟢 **done** — `route.create` |
 | 4a | **Route/waypoint *edit*/delete + multi-route list** in UI over the same router | 🔴 **next (interactive)** |
-| 4b | **Anchor watch + drag alarm** (separate watch-circle, not the track blob) — Steve flagged as next safety item | 🔴 **next (safety)** |
+| 4b | **Anchor watch + drag alarm** — drop at fix, settable swing radius (−/+), live drift readout, **debounced** critical alarm (a single GPS jitter can't trip it) — boat-verified on the live Fiji fix | 🟢 **done** (on-screen; remote/off-boat alert still Phase 2) |
 | 5 | Follow-mode / center-on-ownship + course-up / head-up orientation | 🔴 later |
 | 6 | Cursor lat/lon + coord-format, range rings, EBL/VRM, drop-waypoint-by-range/bearing (tool cluster) | 🔴 later |
 | 7 | Cheap alarms now the math exists: arrival, off-course (XTE), depth/shallow, audible no-fix, AIS guard zone | 🔴 later |
@@ -77,8 +77,8 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 ### Safety & alarms
 - 🟢 AIS targets + tap details (name/class/MMSI/SOG/COG/HDG/range/brg/CPA/TCPA)
 - 🟢 CPA/TCPA + collision alarm + COLREGs maneuver (boat-verified, real alarm fired)
-- 🔴 Arrival / off-course (XTE) / depth / shallow alarms — **trivial: the math exists, just wire thresholds (step 7)**
-- ⚪ Anchor watch + drag alarm (+ remote alert) — category's most-used safety feature; Phase 2 core
+- 🟢 Depth/shallow (REAL-source guarded — never alarms on the simulated fill) / off-course (XTE) / arrival alarms — wired off the nav frame · 🔴 AIS guard zone still to do
+- 🟢 Anchor watch + drag alarm (on-screen, debounced, settable radius — `alarms.js`) · ⚪ remote/off-boat drag alert — Phase 2 core
 - ⚪ MOB mark + go-to + drift estimate · 🔴 AIS guard zone (PRD Phase 1) · 🔴 AIS target list (table)
 - 🔴 AIS symbology set (Class A/B, ATON, base station, SART/MOB, lost-target) · 🟡 SART/DSC reception (decoded, not surfaced)
 - 🟡 Suppress moored/slow (engine flag, no UI) · 🟡 No-fix alarm (badge, not audible) · ⚪ Safety-contour check · 🔴 Internet AIS
