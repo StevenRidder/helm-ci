@@ -19,16 +19,32 @@
 import { cogProtocol } from '@geomatico/maplibre-cog-protocol';
 
 const SRC = 'helm-cog', LYR = 'helm-cog';
+// Public geomatico demo COG — used only if no local file is available.
 const DEMO_COG = 'cog://https://geomatico.github.io/maplibre-cog-protocol/sample/dem.tif#color:BrewerSpectral9,0,4000';
 let protocolReady = false;
+
+// Local depth GeoTIFF (pipeline/make_geotiff.py), single-band float32, colorized
+// client-side by the #color: fragment — the value-encoded-file pattern, offline.
+// Production: a true COG (gdal_translate -of COG) streamed via HTTP range reads.
+function localCog() {
+  return 'cog://' + new URL('data/key-west-depth.tif', location.href).href +
+    '#color:BrewerSpectral9,-120,5';
+}
 
 export async function enable(map, ctx) {
   if (!protocolReady) { ctx.maplibregl.addProtocol('cog', cogProtocol); protocolReady = true; }
   if (map.getLayer(LYR)) { map.setLayoutProperty(LYR, 'visibility', 'visible'); return; }
 
-  map.addSource(SRC, { type: 'raster', url: ctx.cogUrl || DEMO_COG, tileSize: 256 });
+  // Prefer the local depth COG; fall back to the public demo if it's missing.
+  let url = ctx.cogUrl || localCog();
+  try {
+    const probe = await fetch('data/key-west-depth.tif', { method: 'GET', headers: { Range: 'bytes=0-3' } });
+    if (!probe.ok) throw new Error(String(probe.status));
+  } catch (e) { url = DEMO_COG; }
+
+  map.addSource(SRC, { type: 'raster', url, tileSize: 256 });
   map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': 0.8 } }, ctx.beforeId);
-  ctx.notify('COG overlay loaded via cog:// protocol (no tiler)', 'ok');
+  ctx.notify('COG depth overlay via cog:// protocol (no tiler)', 'ok');
 }
 
 export function disable(map) {

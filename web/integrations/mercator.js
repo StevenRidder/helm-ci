@@ -22,11 +22,15 @@ export async function enable(map, ctx) {
   if (!map.getSource(DEM)) {
     map.addSource(DEM, {
       type: 'raster-dem',
-      tiles: ['https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png'],
+      // Local value-encoded raster pack (pipeline/gen_demo_data.py) — each pixel's
+      // RGB encodes a real measurement (here: depth/elevation), decoded on the GPU.
+      // Same contract as a mercator.blue weather tile; swap source + ramp for
+      // wind/SST/pressure in production.
+      tiles: [new URL('data/dem/', location.href).href + '{z}/{x}/{y}.png'],
       encoding: 'terrarium',
       tileSize: 256,
-      maxzoom: 13,
-      attribution: 'Terrarium DEM (AWS open data) · pattern stands in for mercator.blue tiles',
+      maxzoom: 12,
+      attribution: 'Helm offline DEM pack · value-encoded (Mercator pattern)',
     });
   }
 

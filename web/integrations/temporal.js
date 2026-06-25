@@ -21,26 +21,42 @@ let layerIds = [];
 
 export async function enable(map, ctx) {
   if (control) return;
-  let index;
-  try {
-    index = await fetch('https://api.rainviewer.com/public/weather-maps.json').then(r => r.json());
-  } catch (e) {
-    ctx.notify('Temporal demo needs RainViewer (network) — offline?', 'warn');
-    return;
-  }
-  const host = index.host;
-  const frames = [...(index.radar.past || []), ...(index.radar.nowcast || [])];
-  if (!frames.length) { ctx.notify('No radar frames available right now', 'warn'); return; }
 
-  const temporalFrames = frames.map(f => {
-    const id = `helm-temporal-${f.time}`;
+  // Prefer the LOCAL offline radar pack (pipeline/gen_demo_data.py); fall back to
+  // the live RainViewer nowcast when online. Both yield the same frame shape, so
+  // the layer/control code below is source-agnostic.
+  let frames = [];
+  try {
+    const m = await fetch('data/radar/manifest.json').then(r => { if (!r.ok) throw 0; return r.json(); });
+    const base = new URL('data/radar/', location.href).href;
+    frames = m.frames.map(fr => ({
+      title: (fr.minutes <= 0 ? '' : '+') + fr.minutes + ' min',
+      tiles: [`${base}${fr.id}/{z}/{x}/{y}.png`],
+      minzoom: m.minzoom, maxzoom: m.maxzoom, attribution: 'Helm offline radar pack',
+    }));
+  } catch (e) {
+    try {
+      const index = await fetch('https://api.rainviewer.com/public/weather-maps.json').then(r => r.json());
+      const radar = [...(index.radar.past || []), ...(index.radar.nowcast || [])];
+      frames = radar.map(f => ({
+        title: new Date(f.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        tiles: [`${index.host}${f.path}/256/{z}/{x}/{y}/4/1_1.png`], attribution: 'RainViewer',
+      }));
+    } catch (e2) {
+      ctx.notify('Temporal: no local radar pack and RainViewer unreachable', 'warn');
+      return;
+    }
+  }
+  if (!frames.length) { ctx.notify('No radar frames available', 'warn'); return; }
+
+  const temporalFrames = frames.map((fr, i) => {
+    const id = `helm-temporal-${i}`;
     const srcId = `${id}-src`;
     if (!map.getSource(srcId)) {
       map.addSource(srcId, {
-        type: 'raster',
-        tiles: [`${host}${f.path}/256/{z}/{x}/{y}/4/1_1.png`],
-        tileSize: 256,
-        attribution: 'RainViewer',
+        type: 'raster', tiles: fr.tiles, tileSize: 256,
+        ...(fr.minzoom != null ? { minzoom: fr.minzoom, maxzoom: fr.maxzoom } : {}),
+        bounds: ctx.region.bbox, attribution: fr.attribution,
       });
     }
     if (!map.getLayer(id)) {
@@ -48,13 +64,12 @@ export async function enable(map, ctx) {
       map.addLayer({ id, type: 'raster', source: srcId, paint: { 'raster-opacity': 0 } }, ctx.beforeId);
     }
     layerIds.push(id);
-    return { title: new Date(f.time * 1000).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-             layers: [{ id, type: 'raster', paint: { 'raster-opacity': 0.7 } }] };
+    return { title: fr.title, layers: [{ id, type: 'raster', paint: { 'raster-opacity': 0.75 } }] };
   });
 
-  control = new TemporalControl(temporalFrames, { interval: 500, position: 'top-right' });
+  control = new TemporalControl(temporalFrames, { interval: 600, position: 'top-right' });
   map.addControl(control);
-  ctx.notify('Temporal control wired to RainViewer nowcast — press play', 'ok');
+  ctx.notify('Temporal control wired to radar frames — press play', 'ok');
 }
 
 export function disable(map) {

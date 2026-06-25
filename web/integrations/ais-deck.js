@@ -33,8 +33,27 @@ function fleet(center) {
 
 const colorByCpa = d => d.cpa < 0.2 ? [228, 86, 79] : d.cpa < 0.5 ? [242, 180, 65] : [91, 192, 255];
 
-export function enable(map, ctx) {
-  const data = fleet(ctx.region.center);
+// Load the real-format AIS fleet pack (pipeline/gen_demo_data.py). Each feature
+// carries mmsi/name/sog/cog/cpa_nm — the same shape a decoded NMEA/AIS feed
+// produces — so swapping in a live feed leaves the layers untouched. Falls back
+// to a synthetic jitter if the pack isn't present.
+async function loadFleet(ctx) {
+  try {
+    const fc = await fetch(ctx.aisUrl || 'data/ais-fleet.geojson').then(r => {
+      if (!r.ok) throw new Error(String(r.status)); return r.json();
+    });
+    return fc.features.map(f => ({
+      position: f.geometry.coordinates,
+      cpa: f.properties.cpa_nm, sog: f.properties.sog, name: f.properties.name,
+    }));
+  } catch (e) {
+    return fleet(ctx.region.center);  // offline fallback
+  }
+}
+
+export async function enable(map, ctx) {
+  const data = await loadFleet(ctx);
+  const synthetic = !data[0] || data[0].name === undefined;
   const layers = [
     new HeatmapLayer({
       id: 'helm-ais-heat', data, getPosition: d => d.position, getWeight: 1,
@@ -48,7 +67,7 @@ export function enable(map, ctx) {
   ];
   if (!overlay) { overlay = new MapboxOverlay({ interleaved: true, layers }); map.addControl(overlay); }
   else overlay.setProps({ layers });
-  ctx.notify(`deck.gl: ${data.length} synthetic AIS targets (scatter + heatmap)`, 'ok');
+  ctx.notify(`deck.gl: ${data.length} AIS targets${synthetic ? ' (synthetic)' : ''} — scatter + heatmap`, 'ok');
 }
 
 export function disable(map) {
