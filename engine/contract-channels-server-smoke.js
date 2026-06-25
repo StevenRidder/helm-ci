@@ -89,8 +89,21 @@ async function run() {
   ok(fb && typeof fb.ais !== 'undefined' && typeof fb.conns !== 'undefined' && typeof fb.route !== 'undefined', 'B: a no-hello client defaults to ALL channels (ais+conns+route present)');
   try { bSock.end(); } catch (e) {}
 
+  // ---- Client C: bbox-culled AIS (CONTRACT-8) — a far bbox yields zero targets; widening streams them ----
+  const c = { navs: [] }; let cSock = null;
+  open({ t: 'hello', subscribe: ['nav', 'ais'], bbox: [0, 0, 1, 1] }, (o, sock) => { cSock = sock; if (isNav(o)) c.navs.push(o); }, e => { console.error('C err', e.message); process.exit(1); });
+  await sleep(2400);
+  const fc = c.navs[c.navs.length - 1];
+  ok(fc && Array.isArray(fc.ais) && fc.ais.length === 0, 'C: a bbox far from any target yields an EMPTY ais array (culled)');
+  c.navs.length = 0; sendText(cSock, JSON.stringify({ t: 'sub.update', subscribe: ['nav', 'ais'], bbox: [170, -20, 179, -15] }));
+  await sleep(2400);
+  const fc2 = c.navs[c.navs.length - 1];
+  ok(fc2 && Array.isArray(fc2.ais) && fc2.ais.length > 0, 'C: widening the bbox to cover the live targets streams them again');
+  ok(fc2 && fc2.ais.every(t => t.lon >= 170 && t.lon <= 179 && t.lat >= -20 && t.lat <= -15), 'C: every streamed target is inside the bbox');
+  try { cSock.end(); } catch (e) {}
+
   console.log('\n' + (fail ? '❌ ' : '✅ ') + pass + ' passed, ' + fail + ' failed');
   process.exit(fail ? 1 : 0);
 }
 run();
-setTimeout(() => { console.log('timeout (20s)'); process.exit(2); }, 20000);
+setTimeout(() => { console.log('timeout (30s)'); process.exit(2); }, 30000);

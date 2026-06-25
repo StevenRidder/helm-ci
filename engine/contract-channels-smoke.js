@@ -163,6 +163,29 @@ async function run() {
     } finally { console.warn = realWarn; }
   }
 
+  console.log('\n[8] CONTRACT-8 bbox: hello carries opts.bbox; setBbox throttles a sub.update; sub.ack bbox → effective');
+  {
+    const h = makeClient({ subscribe: ['nav', 'ais'], bbox: [177, -18, 178, -17] });
+    h.ws()._open();
+    const hi = hello(h.ws());
+    ok(Array.isArray(hi.bbox) && hi.bbox.length === 4 && hi.bbox[0] === 177, 'opts.bbox is declared in the hello');
+    h.client.setBbox([170, -20, 175, -15]);
+    ok(h.client.subscriptions().desired.bbox[0] === 170, 'setBbox updates desired bbox immediately');
+    ok(!lastSubUpdate(h.ws()), 'setBbox is throttled — no sub.update sent synchronously');
+    await sleep(380);
+    const su = lastSubUpdate(h.ws());
+    ok(su && Array.isArray(su.bbox) && su.bbox[0] === 170, 'after the throttle window a sub.update with the new bbox is sent');
+    h.ws()._msg({ t: 'sub.ack', subscribe: ['nav', 'ais'], rate: 1, bbox: [170, -20, 175, -15] });
+    ok(h.client.subscriptions().effective.bbox && h.client.subscriptions().effective.bbox[2] === 175, 'sub.ack bbox → subscriptions().effective.bbox');
+    h.client.setBbox(null);
+    const suc = lastSubUpdate(h.ws());
+    ok(suc && suc.bbox === null, 'setBbox(null) sends an explicit bbox:null to clear the viewport');
+    ok(h.client.subscriptions().desired.bbox === null, 'desired bbox cleared');
+    const warns = []; const realWarn = console.warn; console.warn = (...a) => warns.push(a.join(' '));
+    try { h.client.setBbox([1, 2, 3]); ok(warns.some(w => /bbox must be/.test(w)), 'an invalid bbox is surfaced (fail-fast) and ignored'); } finally { console.warn = realWarn; }
+    h.client.stop();
+  }
+
   console.log('\n' + (failures ? '❌ ' : '✅ ') + passes + ' passed, ' + failures + ' failed');
   process.exit(failures ? 1 : 0);
 }

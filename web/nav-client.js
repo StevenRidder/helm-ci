@@ -171,10 +171,28 @@
     let subChannels = normChannels(opts.subscribe || KNOWN_CHANNELS);
     if (subChannels.indexOf('nav') < 0) subChannels.unshift('nav');
     let navRate = opts.rate != null ? clampRate(opts.rate) : null;   // null ⇒ accept the server default
-    let effSub = null;   // server-echoed effective {subscribe, rate} (from sub.ack); null until acked
-    function sendSubUpdate() {
-      const f = { t: 'sub.update', subscribe: subChannels.slice() };
+    let effSub = null;   // server-echoed effective {subscribe, rate, bbox} (from sub.ack); null until acked
+    // CONTRACT-8: optional AIS viewport. [w,s,e,n] culls the 'ais' channel to that lat/lon box server-side;
+    // null streams all targets. The caller (map-move handler) sets it via setBbox(); rapid moves coalesce
+    // into one sub.update per BBOX_THROTTLE_MS so panning never floods the socket.
+    const BBOX_THROTTLE_MS = 300;
+    const normBbox = b => {
+      if (!Array.isArray(b) || b.length !== 4 || !b.every(n => typeof n === 'number' && isFinite(n))) {
+        console.warn('HelmNavClient: bbox must be [w,s,e,n] of 4 finite numbers — ignoring', b); return undefined;
+      }
+      return [b[0], b[1], b[2], b[3]];
+    };
+    let navBbox = opts.bbox != null ? (normBbox(opts.bbox) || null) : null;   // invalid ⇒ null (no viewport)
+    let bboxTimer = null;
+    function withCfg(f) {                              // attach desired channels/rate/bbox to a hello/sub.update
+      f.subscribe = subChannels.slice();
       if (navRate != null) f.rate = navRate;
+      if (navBbox) f.bbox = navBbox.slice();
+      return f;
+    }
+    function sendSubUpdate(extra) {
+      const f = withCfg({ t: 'sub.update' });
+      if (extra) Object.assign(f, extra);             // e.g. { bbox: null } to explicitly clear the viewport
       return sendRaw(f);   // false if not open — the next hello re-sends current state, so it converges
     }
 
@@ -283,8 +301,8 @@
         if (msg.t === 'alarm' || msg.t === 'alarm.clear') handleAlarm(msg);
         return;
       }
-      if (msg.t === 'sub.ack') {   // CONTRACT-7: server's EFFECTIVE channel/rate config (possibly clamped)
-        effSub = { subscribe: Array.isArray(msg.subscribe) ? msg.subscribe.slice() : subChannels.slice(), rate: msg.rate != null ? msg.rate : navRate };
+      if (msg.t === 'sub.ack') {   // CONTRACT-7/8: server's EFFECTIVE channel/rate/bbox config (possibly clamped)
+        effSub = { subscribe: Array.isArray(msg.subscribe) ? msg.subscribe.slice() : subChannels.slice(), rate: msg.rate != null ? msg.rate : navRate, bbox: Array.isArray(msg.bbox) ? msg.bbox.slice() : null };
         try { opts.onSub && opts.onSub(effSub); } catch (e) { console.error('HelmNavClient: onSub handler threw:', e); }
         try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }
         return;
@@ -327,8 +345,7 @@
       ws.onopen = () => {
         // Resume hint: lastSeq for nav delta-since; lastAlarmAck (additive/optional) lets the server
         // skip re-asserting alarms we already hold (omitting it ⇒ full re-assert, the safe default).
-        const hello = { t: 'hello', lastSeq, subscribe: subChannels };   // CONTRACT-7: declare channels + rate
-        if (navRate != null) hello.rate = navRate;
+        const hello = withCfg({ t: 'hello', lastSeq });   // CONTRACT-7/8: declare channels + rate + bbox
         if (alarmState.size) { const la = []; alarmState.forEach((v, id) => la.push({ id, gen: v.gen, rev: v.rev })); hello.lastAlarmAck = la; }
         try { ws.send(JSON.stringify(hello)); }
         catch (e) { console.warn('HelmNavClient: hello send failed:', e && e.message); }
@@ -378,6 +395,7 @@
         if (reconnectTimer) { clearTimeout(reconnectTimer); reconnectTimer = null; }
         if (watchdog) { clearInterval(watchdog); watchdog = null; }
         if (ackTimer) { clearTimeout(ackTimer); ackTimer = null; }
+        if (bboxTimer) { clearTimeout(bboxTimer); bboxTimer = null; }
         ackQ.clear(); alarmState.clear();
         stopSim();
       },
@@ -406,7 +424,16 @@
         });
         sendSubUpdate(); return subChannels.slice();
       },
-      subscriptions() { return { desired: { subscribe: subChannels.slice(), rate: navRate }, effective: effSub ? { subscribe: effSub.subscribe.slice(), rate: effSub.rate } : null }; }
+      // CONTRACT-8: set/clear the AIS viewport bbox [w,s,e,n] (null clears → all targets). Rapid map-moves
+      // are throttled into one sub.update; persists across reconnect (re-sent in the hello). Returns desired bbox.
+      setBbox(b) {
+        if (b === null) { navBbox = null; if (bboxTimer) { clearTimeout(bboxTimer); bboxTimer = null; } sendSubUpdate({ bbox: null }); return null; }
+        const nb = normBbox(b); if (nb === undefined) return navBbox ? navBbox.slice() : null;   // invalid → unchanged (surfaced)
+        navBbox = nb;
+        if (!bboxTimer) bboxTimer = setTimeout(() => { bboxTimer = null; sendSubUpdate(); }, BBOX_THROTTLE_MS);
+        return navBbox.slice();
+      },
+      subscriptions() { return { desired: { subscribe: subChannels.slice(), rate: navRate, bbox: navBbox ? navBbox.slice() : null }, effective: effSub ? { subscribe: effSub.subscribe.slice(), rate: effSub.rate, bbox: effSub.bbox ? effSub.bbox.slice() : null } : null }; }
     };
   };
 })();

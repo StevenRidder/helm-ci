@@ -38,6 +38,17 @@ the alarm/command planes are independent and **not** rate-paced — alarms are a
 client clamps out-of-range/non-numeric values and **surfaces** the coercion (fail-fast). **Absent
 `rate` ⇒ the server default** (~1 Hz).
 
+## AIS viewport bbox (CONTRACT-8)
+
+An optional `bbox: [w, s, e, n]` (lat/lon degrees) narrows **only the `ais` channel** to that box: the
+server omits AIS targets outside it. nav core, alarms, route, track and conns are **never**
+bbox-filtered. This lets deck.gl render a busy harbour at scale by streaming only in-view targets
+(AIS-8). The client typically sends the map's `getBounds()` expanded by a small margin so panning
+shows targets just outside view; the server filters to exactly the box (and wraps the antimeridian if
+`w > e`). **Absent `bbox` ⇒ all targets** (back-compat). `bbox: null` on a `sub.update` clears the
+viewport. Rapid map-moves coalesce into one `sub.update` (~300 ms throttle). Invalid bbox (not 4
+finite numbers) is surfaced and ignored (fail-fast).
+
 ## Wire contract
 
 **`hello`** (client → server, on connect/reconnect) — unchanged shape, two additive fields:
@@ -69,12 +80,14 @@ command plane (`opts.onCommand`). It is **not** a nav frame — it never touches
 const c = HelmNavClient(applyNav, setSource, {
   subscribe: ['nav','ais','alarms'],   // optional; default = all known channels
   rate: 2,                              // optional; 1–4 Hz; default = server default
-  onSub: eff => { /* eff = { subscribe:[...], rate } the server actually applied */ },
+  bbox: [w,s,e,n],                      // optional; AIS viewport (CONTRACT-8); default = all targets
+  onSub: eff => { /* eff = { subscribe:[...], rate, bbox } the server actually applied */ },
 });
 c.setRate(4);                 // → sends sub.update; returns the clamped desired rate
 c.subscribe(['track']);       // add channels → sub.update; returns desired subscribe[]
 c.unsubscribe(['ais']);       // remove channels ('nav' is refused) → sub.update
-c.subscriptions();            // { desired:{subscribe,rate}, effective:{subscribe,rate}|null }
+c.setBbox([w,s,e,n]);         // CONTRACT-8: AIS viewport (throttled); setBbox(null) clears it
+c.subscriptions();            // { desired:{subscribe,rate,bbox}, effective:{subscribe,rate,bbox}|null }
 ```
 
 Desired state persists across reconnects (re-sent in `hello`). All sends are false-tolerant.
@@ -96,10 +109,11 @@ Implemented onto the frozen contract (per-connection `ClientCfg` in `helm_server
    client requesting 4 Hz honestly gets `sub.ack rate:1` today; wire a faster source/loop and higher
    effective rates follow with **no contract change**. (Snapshots/keyframes and the alarm/command
    planes are never rate-paced.)
-4. **Reply `sub.ack`** with the effective `{subscribe, rate}` on `hello` and every `sub.update`.
+4. **Reply `sub.ack`** with the effective `{subscribe, rate, bbox}` on `hello` and every `sub.update`.
+5. **CONTRACT-8 bbox cull** (shipped): `ClientCfg.inBbox()` filters the per-target AIS vector to the
+   client's `bbox` (antimeridian-aware); echoed in `sub.ack`. AIS is built once as a `{lat,lon,json}`
+   vector per tick, then each client gets the full set or only the in-box targets.
 
 **Remaining (additive):**
-- **CONTRACT-8** narrows the `ais` channel to a client-supplied bbox (a `sub.update`/`hello` `bbox`
-  field is the natural additive extension — the per-client `ClientCfg` is the place to hang it).
 - A higher `NAV_SOURCE_HZ` (faster loop, time-based sim cadence) would make 2–4 Hz effective — only
   worth it with a sub-second-rate position source.

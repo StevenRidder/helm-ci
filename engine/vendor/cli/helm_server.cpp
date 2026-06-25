@@ -1166,6 +1166,14 @@ struct ClientCfg {
   std::set<std::string> channels{ "nav", "route", "alarms", "ais", "track", "conns" };  // default: ALL
   int rate = 1;                                  // effective Hz (1..NAV_SOURCE_HZ)
   long lastSentTick = -1000;                     // last nav tick sent to this client (rate pacing)
+  bool hasBbox = false;                          // CONTRACT-8: cull the 'ais' channel to a viewport bbox
+  double bw = 0, bs = 0, be = 0, bn = 0;         // west, south, east, north (deg)
+  // 'ais'-channel viewport test ONLY — nav core / alarms / route / track / conns are never bbox-filtered.
+  bool inBbox(double lat, double lon) const {
+    if (!hasBbox) return true;
+    if (lat < bs || lat > bn) return false;
+    return (bw <= be) ? (lon >= bw && lon <= be) : (lon >= bw || lon <= be);  // bw>be ⇒ wraps the antimeridian
+  }
 };
 static std::map<ix::WebSocket*, ClientCfg> g_client_cfg;
 static std::mutex g_client_cfg_mtx;
@@ -1181,12 +1189,23 @@ static void parse_sub(const rapidjson::Document& d, ClientCfg& cfg) {
     if (d["rate"].IsInt()) cfg.rate = effective_rate(d["rate"].GetInt());
     else if (d["rate"].IsNumber()) cfg.rate = effective_rate((int)std::lround(d["rate"].GetDouble()));
   }
+  if (d.HasMember("bbox")) {                      // CONTRACT-8: [w,s,e,n] sets the AIS viewport; null/[] clears it
+    const auto& b = d["bbox"];
+    if (b.IsArray() && b.Size() == 4 && b[0].IsNumber() && b[1].IsNumber() && b[2].IsNumber() && b[3].IsNumber()) {
+      double w = b[0].GetDouble(), s = b[1].GetDouble(), e = b[2].GetDouble(), n = b[3].GetDouble();
+      if (std::isfinite(w) && std::isfinite(s) && std::isfinite(e) && std::isfinite(n) && s <= n && s >= -90 && n <= 90)
+        { cfg.hasBbox = true; cfg.bw = w; cfg.bs = s; cfg.be = e; cfg.bn = n; }
+      else { cfg.hasBbox = false; std::fprintf(stderr, "CONTRACT-8: ignoring malformed bbox [%g,%g,%g,%g]\n", w, s, e, n); }
+    } else { cfg.hasBbox = false; }              // null / [] / wrong shape ⇒ clear the viewport (stream all targets)
+  }
 }
 static std::string sub_ack_msg(const ClientCfg& c) {
   std::string s = "{\"t\":\"sub.ack\",\"subscribe\":[";
   bool first = true;
   for (auto& ch : c.channels) { s += std::string(first ? "" : ",") + "\"" + json_escape(ch) + "\""; first = false; }
-  s += "],\"rate\":" + std::to_string(c.rate) + "}";
+  s += "],\"rate\":" + std::to_string(c.rate);
+  if (c.hasBbox) { char bb[96]; std::snprintf(bb, sizeof bb, ",\"bbox\":[%.5f,%.5f,%.5f,%.5f]", c.bw, c.bs, c.be, c.bn); s += bb; }
+  s += "}";
   return s;
 }
 
@@ -1472,11 +1491,13 @@ static void nav_loop(ix::HttpServer* server) {
     }
     if (truncated) { std::fprintf(stderr, "ERROR: nav frame seq %ld truncated; NOT sending.\n", seq); std::this_thread::sleep_for(std::chrono::seconds(1)); continue; }
 
-    // AIS targets (OpenCPN-computed range/brg/CPA/TCPA) — spliced into the DYNAMIC frame strings
-    // (not the fixed snprintf buffers) so a busy harbor can't truncate the nav frame.
-    std::string aisArr = "[";
+    // AIS targets (OpenCPN-computed range/brg/CPA/TCPA). CONTRACT-8: build a per-target {lat,lon,json}
+    // vector ONCE, then each client gets either the full set or only the targets inside its viewport
+    // bbox. (Dynamic strings, not fixed buffers, so a busy harbour can't truncate the nav frame.)
+    struct AisJ { double lat, lon; std::string j; };
+    std::vector<AisJ> aisTargets;
     { std::lock_guard<std::mutex> lk(g_ais_mtx);
-      std::time_t aisNow = std::time(nullptr); bool first = true;
+      std::time_t aisNow = std::time(nullptr);
       for (auto it = g_ais_rows.begin(); it != g_ais_rows.end(); ) {
         AisRow& t = it->second; long age = (long)(aisNow - t.seen);
         if (age > 600) { it = g_ais_rows.erase(it); continue; }
@@ -1492,20 +1513,19 @@ static void nav_loop(ix::HttpServer* server) {
         }
         char tb[800];
         std::snprintf(tb, sizeof tb,
-          "%s{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
+          "{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
           "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
           "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,"
           "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
           "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
-          first ? "" : ",", t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
+          t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
           t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
           t.cls, json_escape(t.name).c_str(), age,
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
           eta, t.length, t.beam, t.draft, rotj, t.imo);
-        aisArr += tb; first = false; ++it;
+        aisTargets.push_back({ t.lat, t.lon, tb }); ++it;
       }
     }
-    aisArr += "]";
     std::string connsArr = conn_status_array();   // live per-connection status, streamed to clients
     // Track (ownship breadcrumb): full trail into snapshots (new/reloaded clients get the whole line),
     // only the newly-added points into deltas (tiny). g_track_emitted advances once per tick.
@@ -1529,8 +1549,7 @@ static void nav_loop(ix::HttpServer* server) {
     // paced to its effective rate. A new client always gets its first snapshot immediately.
     const std::string coreSnap(snap);                       // nav core (the 'nav' channel) — snapshot form
     const std::string coreDelta = keyframe ? std::string() : frame;   // 'frame' here is the nav-core delta (+wind)
-    const std::string fAis    = ",\"ais\":" + aisArr;
-    const std::string fConns  = ",\"conns\":" + connsArr;
+    const std::string fConns  = ",\"conns\":" + connsArr;   // ('ais' is built per-client below — CONTRACT-8 bbox cull)
     const std::string fTrackS = ",\"track\":" + trackFull + ",\"trackArmed\":" + armedJson;
     const std::string fTrackD = ",\"trackAdd\":" + trackAdd + ",\"trackArmed\":" + armedJson;
     const std::string fRoute  = ",\"route\":" + routeJson;
@@ -1551,7 +1570,13 @@ static void nav_loop(ix::HttpServer* server) {
         std::string out = (isNew || coreDelta.empty()) ? coreSnap : coreDelta;   // new client / keyframe → snapshot
         const bool snapVariant = isNew || keyframe;
         if (cfg.channels.count("route")) out.insert(out.size() - 1, fRoute);
-        if (cfg.channels.count("ais"))   out.insert(out.size() - 1, fAis);
+        if (cfg.channels.count("ais")) {                 // CONTRACT-8: bbox-cull the AIS array per client
+          std::string ais = "[";
+          for (size_t i = 0, n = 0; i < aisTargets.size(); ++i)
+            if (cfg.inBbox(aisTargets[i].lat, aisTargets[i].lon)) ais += std::string(n++ ? "," : "") + aisTargets[i].j;
+          ais += "]";
+          out.insert(out.size() - 1, ",\"ais\":" + ais);
+        }
         if (cfg.channels.count("conns")) out.insert(out.size() - 1, fConns);
         if (cfg.channels.count("track")) out.insert(out.size() - 1, snapVariant ? fTrackS : fTrackD);
         outbox.emplace_back(c, std::move(out));
