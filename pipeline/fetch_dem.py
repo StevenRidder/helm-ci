@@ -28,7 +28,9 @@ def _bbox_from_region():
     return -82.00, 24.35, -81.50, 24.70
 
 WEST, SOUTH, EAST, NORTH = _bbox_from_region()
-ZMIN, ZMAX = 9, 12        # z12 is plenty for depth contours — maplibre-contour over-zooms past it
+# z6 (regional) .. z12 (close). Low zooms are a handful of tiles but let contours render
+# when zoomed out; maplibre-contour over-zooms past z12 for close-in views.
+ZMIN, ZMAX = 6, 12
 SRC = "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"
 OUT = os.path.join(os.path.dirname(__file__), "..", "web", "data", "dem")
 

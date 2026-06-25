@@ -52,35 +52,49 @@ export async function enable(map, ctx = {}) {
   map.addSource(CONT, {
     type: 'vector',
     tiles: [demSource.contourProtocolUrl({
-      // metres. Thin line every 5 m, bold index line every 25 m — tuned for the
-      // shallow Key West shelf; deepen the steps for open-ocean DEMs.
-      thresholds: { 9: [20, 100], 10: [10, 50], 11: [10, 50], 12: [5, 25], 13: [5, 25] },
+      // metres, per display zoom — coarse contours when zoomed out (regional, only the
+      // big bathymetric steps) through fine ones near the anchorage. [minor, index].
+      thresholds: {
+        6: [500, 2000], 7: [200, 1000], 8: [100, 500],
+        9: [50, 250], 10: [50, 250], 11: [20, 100], 12: [5, 25],
+      },
+      subsampleBelow: 13,     // bilinearly upsample the DEM before contouring -> smooth curves, not stair-steps
       elevationKey: 'ele',
       levelKey: 'level',
       contourLayer: 'contours',
     })],
-    maxzoom: 15,
+    // Generate at the DEM's native zooms (z6-12) only — maplibre-contour's DEM over-zoom
+    // returns empty past ~1 level. For closer display zooms MapLibre over-zooms the z12
+    // contour VECTOR tiles natively, so lines stay present (and crisp — vector geometry,
+    // not pixels) at ANY zoom.
+    maxzoom: 12,
   });
 
   map.addLayer({
     id: LINE, type: 'line', source: CONT, 'source-layer': 'contours',
+    layout: { 'line-join': 'round', 'line-cap': 'round' },   // smooth the corners
     paint: {
-      'line-color': '#2f6f8f',
-      'line-width': ['match', ['get', 'level'], 1, 1.2, 0.5],   // index lines heavier
-      'line-opacity': 0.6,
+      'line-color': '#46a0c4',                               // brighter teal — reads on dark-water satellite
+      'line-width': ['interpolate', ['linear'], ['zoom'],    // thinner zoomed out, heavier zoomed in; index lines bolder
+        8,  ['match', ['get', 'level'], 1, 0.8, 0.4],
+        14, ['match', ['get', 'level'], 1, 1.7, 0.8]],
+      'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.4, 11, 0.7, 14, 0.85],
+      'line-blur': 0.4,                                       // soften residual marching-squares stair-steps
     },
   }, beforeId);
 
   map.addLayer({
     id: LBL, type: 'symbol', source: CONT, 'source-layer': 'contours',
+    minzoom: 11,                                   // labels only once they're readable
     filter: ['>', ['get', 'level'], 0],            // label index lines only
     layout: {
       'symbol-placement': 'line',
+      'symbol-spacing': 220,
       'text-field': ['concat', ['number-format', ['abs', ['get', 'ele']], {}], ' m'],
       'text-font': ['Noto Sans Regular'],
       'text-size': 10,
     },
-    paint: { 'text-color': '#1e5066', 'text-halo-color': '#fff', 'text-halo-width': 1.1 },
+    paint: { 'text-color': '#bfe2f0', 'text-halo-color': 'rgba(13,19,27,0.85)', 'text-halo-width': 1.1 },
   }, beforeId);
 }
 

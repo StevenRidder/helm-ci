@@ -39,21 +39,28 @@ export async function enable(map, ctx) {
   map.addSource(CONT, {
     type: 'vector',
     tiles: [demSource.contourProtocolUrl({
-      // metres. Thin lines every 10 m, bold (an index line) every 50 m.
-      thresholds: { 10: [10, 50], 11: [10, 50], 12: [5, 25], 13: [5, 25], 14: [5, 25] },
+      // metres, per display zoom — coarse (regional) through fine (close-in). [minor, index].
+      thresholds: {
+        6: [500, 2000], 7: [200, 1000], 8: [100, 500],
+        9: [50, 250], 10: [50, 250], 11: [20, 100], 12: [5, 25],
+      },
+      subsampleBelow: 13,     // upsample DEM before contouring -> smoother lines
       elevationKey: 'ele',
       levelKey: 'level',
       contourLayer: 'contours',
     })],
-    maxzoom: 15,
+    maxzoom: 12,              // generate at native DEM zooms; MapLibre vector-over-zooms for closer display (any zoom)
   });
 
   map.addLayer({
     id: LINE, type: 'line', source: CONT, 'source-layer': 'contours',
+    layout: { 'line-join': 'round', 'line-cap': 'round' },
     paint: {
-      'line-color': '#2f6f8f',
-      'line-width': ['match', ['get', 'level'], 1, 1.1, 0.5],
-      'line-opacity': 0.65,
+      'line-color': '#46a0c4',
+      'line-width': ['interpolate', ['linear'], ['zoom'],
+        8, ['match', ['get', 'level'], 1, 0.8, 0.4], 14, ['match', ['get', 'level'], 1, 1.7, 0.8]],
+      'line-opacity': ['interpolate', ['linear'], ['zoom'], 6, 0.4, 11, 0.7, 14, 0.85],
+      'line-blur': 0.4,
     },
   }, ctx.beforeId);
 
