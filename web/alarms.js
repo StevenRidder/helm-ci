@@ -43,6 +43,7 @@ window.HelmAlarms = function (map, opts) {
   let feedLostSince = null;     // ms (Date.now) when the current loss began — our own debounce clock
   const STALE_HOLD_MS = 10000;  // a real frame age past this is already a genuine no-fix (mirrors nav-client STALE_MS)
   const NOFIX_DEBOUNCE_MS = 5000; // …or this much SUSTAINED loss on our own clock (rides out a reconnect blip)
+  const warnedStates = new Set(); // dedupe the fail-loud warning for unrecognised nav-source states
 
   // ---- distance / bearing (metres, degrees) ----
   const R = 6371000, toR = d => d * Math.PI / 180, toD = r => r * 180 / Math.PI;
@@ -58,7 +59,7 @@ window.HelmAlarms = function (map, opts) {
   }
 
   // ---- audible alert (WebAudio); browsers need a user gesture to start audio ----
-  let ac = null;
+  let ac = null, audioWarned = false;
   document.addEventListener('pointerdown', () => { try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); if (ac.state === 'suspended') ac.resume(); } catch (e) {} }, { once: false });
   function beep() {
     try {
@@ -68,7 +69,12 @@ window.HelmAlarms = function (map, opts) {
       o.type = 'square'; o.frequency.value = 920;
       g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(0.22, t + 0.02); g.gain.exponentialRampToValueAtTime(0.0001, t + 0.22);
       o.connect(g); g.connect(ac.destination); o.start(t); o.stop(t + 0.24);
-    } catch (e) { /* audio blocked until a gesture — banner still shows */ }
+      audioWarned = false;          // audio is sounding again
+    } catch (e) {
+      // FAIL LOUD: a critical alarm you can't HEAR is the weakest link. Surface once per failure
+      // streak (re-armed on the next successful beep). Actionable: a tap unlocks gesture-blocked audio.
+      if (!audioWarned) { audioWarned = true; console.warn('HelmAlarms: alarm audio is NOT sounding (the visual banner still shows) — tap the screen once to enable audio, or check the output device:', e && e.message); }
+    }
   }
   // Periodic alarm tick. Two jobs: (1) ARM the feed-loss alarm on a SUSTAINED outage even when no
   // new source events arrive, and (2) beep any unacked critical alarm. Critically, beeping is gated
@@ -156,8 +162,13 @@ window.HelmAlarms = function (map, opts) {
       }
       return;                            // pre-feed lost (e.g. no-endpoint before any feed): nothing to hold/alarm
     }
-    // neutral ('connecting' / 'sim' / unknown): never disturb an in-progress loss; only un-hold when
-    // there is no loss underway (honest pre-feed / no-engine mode evaluates normally and stays quiet).
+    // neutral ('connecting' / 'sim'): never disturb an in-progress loss; only un-hold when there is
+    // no loss underway (honest pre-feed / no-engine mode evaluates normally and stays quiet).
+    // FAIL LOUD on a phase the contract doesn't define — likely producer/contract drift — once each.
+    if (state && state !== 'connecting' && state !== 'sim' && !warnedStates.has(state)) {
+      warnedStates.add(state);
+      console.warn('HelmAlarms.onSource: unrecognised nav-source state "' + state + '" — treating as neutral. If this is a new contract phase, classify it in the good/lost sets (alarms.js).');
+    }
     if (!feedLostSince) fresh = true;
   }
   function evalFeedLoss() {
@@ -368,9 +379,22 @@ window.HelmAlarms = function (map, opts) {
         lines.forEach(c => { for (let i = 0; i < c.length - 1; i++) segs.push({ a: c[i], b: c[i + 1], depth }); });
       });
       shallowSegs = segs;
-    } catch (e) { shallowSegs = null; }
+    } catch (e) {
+      shallowSegs = null;
+      console.warn('HelmAlarms: safety-contour data (depcnt) is malformed — the safety-contour alarm (ALARM-8) is INACTIVE:', e && e.message);
+    }
   }
-  (function loadContours() { try { fetch('data/depcnt.geojson').then(r => r.ok ? r.json() : null).then(j => { if (j) ingestContours(j); }).catch(() => {}); } catch (e) {} })();
+  // FAIL LOUD: if the charted contours can't load, ALARM-8 is silently absent. Say so rather than let
+  // the operator assume shoal-warning coverage they don't have. Behaviour is unchanged (the check is
+  // simply unavailable without data) — only the silence is removed.
+  (function loadContours() {
+    try {
+      fetch('data/depcnt.geojson')
+        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+        .then(j => ingestContours(j))
+        .catch(e => console.warn('HelmAlarms: safety-contour data (data/depcnt.geojson) failed to load — the safety-contour alarm (ALARM-8) is INACTIVE until it loads:', e && e.message));
+    } catch (e) { console.warn('HelmAlarms: could not start the safety-contour data load — ALARM-8 INACTIVE:', e && e.message); }
+  })();
   // local-metres geometry (equirectangular about the query point — exact enough at chart scales)
   function pointSegM(p, a, b) {
     const mx = 111320 * Math.cos(toR(p[1])), my = 110540;
@@ -500,7 +524,7 @@ window.HelmAlarms = function (map, opts) {
       const sr = Math.round(mobSearchRadius(elapsed));
       const fmt = m => m < 1852 ? Math.round(m) + ' m' : (m / 1852).toFixed(2) + ' NM';
       redrawMOB(s.pos);          // steer-to line to the datum + search-area circle that grows with time
-      fire('mob', 'critical', 'MAN OVERBOARD — ' + mmss + ' ago · steer ' + fmt(d) + ', brg ' + b + '° · search ~' + fmt(sr) + ' (est.)');
+      fire('mob', 'critical', 'MAN OVERBOARD — ' + mmss + ' ago · steer ' + fmt(d) + ', brg ' + b + '° · search ~' + fmt(sr) + ' (drift est., no current feed)');
     }
 
     // safety-contour check — route crosses / position nears a charted shoal contour (throttled, real-pos guarded)

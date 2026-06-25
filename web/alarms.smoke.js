@@ -57,11 +57,13 @@ const mapStub = {
 };
 
 // ---- sandbox + load alarms.js ----
+const warnings = [];                        // capture the fail-loud console.warn() surfacing
+const capturingConsole = Object.assign(Object.create(console), { warn: (...a) => { warnings.push(a.join(' ')); } });
 const sandbox = {
   window: windowStub, document: documentStub, maplibregl: { Marker: function () { return { setLngLat() { return this; }, addTo() { return this; }, remove() {} }; } },
   setInterval: () => 0,                     // tests drive ticks via _tick(), not the wall clock
   clearInterval: () => {},
-  console, Math,
+  console: capturingConsole, Math,
   Date: Object.assign(function () {}, { now: clock }),   // Date.now() → our clock
 };
 sandbox.globalThis = sandbox;
@@ -195,7 +197,7 @@ const C = { lat: 0, lon: 0 };           // ~1.11 km per 0.01° lon at the equato
   const m = a._msg('mob') || '';
   ok(/MAN OVERBOARD/.test(m) && /2:05 ago/.test(m), '13b. message shows elapsed time (2:05 ago)');
   ok(/steer/.test(m) && /brg/.test(m), '13c. message shows go-to steer range + bearing');
-  ok(/search ~\d+ m \(est\.\)/.test(m), '13d. message shows growing search-area estimate, labelled (est.)');
+  ok(/search ~\d+ m \(drift est\., no current feed\)/.test(m), '13d. search-area surfaces the MISSING current data (drift est., no current feed)');
 }
 
 // 14. search radius grows with elapsed time (datum-uncertainty expansion)
@@ -262,6 +264,35 @@ const REAL = { pos: 'gps' }, SIM = { pos: 'simulated' };
   const a = mk();   // no _loadContours
   advance(3000); a.onNav({ pos: { lat: 0.0003, lon: 0 }, sources: REAL });
   ok(!has(a, 'contour') && a._state().contourSegs === 0, '18. no contour data → silently unavailable');
+}
+
+// ---- FAIL-LOUD: a failed safety check must be SURFACED, never silently swallowed ----
+// 19. malformed safety-contour data → check stays INACTIVE (no fabricated segments) AND is surfaced
+{
+  warnings.length = 0;
+  const a = mk();
+  a._loadContours({ features: 'not-an-array' });   // forEach throws → caught
+  ok(a._state().contourSegs === 0, '19a. malformed contour data → ALARM-8 inactive (no fabricated segments)');
+  ok(warnings.some(w => /malformed.*INACTIVE/i.test(w)), '19b. malformed contour data is SURFACED (console.warn), not swallowed');
+}
+
+// 20. an unrecognised nav-source phase is surfaced once (contract-drift early warning), then deduped
+{
+  warnings.length = 0;
+  const a = mk();
+  a.onSource('teleporting', {});                   // not a defined phase
+  ok(warnings.some(w => /unrecognised nav-source state.*teleporting/i.test(w)), '20a. unknown nav-source state is SURFACED');
+  const n = warnings.length;
+  a.onSource('teleporting', {});
+  ok(warnings.length === n, '20b. surfaced once per unknown state (deduped, not spammed)');
+}
+
+// 21. the KNOWN neutral phases must stay quiet (no false fail-loud noise)
+{
+  warnings.length = 0;
+  const a = mk();
+  a.onSource('connecting', {}); a.onSource('sim', {});
+  ok(!warnings.some(w => /unrecognised/i.test(w)), '21. known neutral phases (connecting/sim) do NOT warn');
 }
 
 console.log('\n' + (fail ? '\x1b[31m' : '\x1b[32m') + pass + ' passed, ' + fail + ' failed\x1b[0m');
