@@ -32,6 +32,7 @@
   var HYST_NM = 0.1;          // exit hysteresis (clear at radius+HYST) so a target on the boundary can't flap
   var MOVING_KTS = 0.5;       // "moving only" filter threshold
   var WATCHDOG_MS = 12000;    // armed but no nav frame this long → surface (engine/feed went silent)
+  var NOSRC_GRACE_MS = 8000;  // armed + never any AIS evidence this long → surface "no AIS source"
 
   // ---- persisted prefs ----
   var PREF = {
@@ -82,7 +83,11 @@
     var ackedMmsi = {};          // mmsi -> 1 once the user has silenced it (cleared when it leaves)
     var everLive = false;        // have we ever seen the AIS feed live (connected, or targets present)?
     var pulse = null, actx = null;
-    var lastUpdateAt = 0, watchWarned = false, lastOwn = null;
+    // Seed the timers to NOW (like collision.js) so a guard armed from persisted prefs on page load
+    // gets a full grace window before the watchdog / no-source notice fire — and so an armed-but-never-
+    // fed guard still surfaces after the grace rather than firing instantly (lastUpdateAt=0) or never.
+    // lastFeedOkAt = the last frame the AIS feed was confirmed working (the grace anchor for "no data").
+    var lastUpdateAt = Date.now(), lastFeedOkAt = Date.now(), watchWarned = false, lastOwn = null;
 
     // ---- banner (matches the CPA alarm's glass aesthetic; injected scoped CSS) ----
     var css = document.createElement('style');
@@ -182,23 +187,35 @@
       lastUpdateAt = Date.now(); watchWarned = false; lastOwn = own;
       if (!PREF.on) { hideAll(); breaching = {}; lastSig = {}; ackedMmsi = {}; return; }
       ensureLayers();
-      // everLive latches once we've seen the feed connected OR seen targets — so a connection-status
-      // blip (feedAlive is conn status, not data presence) with live targets can't suppress detection.
-      if (feedAlive === true || (Array.isArray(list) && list.length)) everLive = true;
+      var arr = Array.isArray(list) ? list : [];
+      // Is the AIS feed CONFIRMED working THIS frame? connected source, or at least one target arriving.
+      // (feedAlive is connection status, not data presence — so targets-present also counts.) We only
+      // trust the list (detect + clear-departed) when this is true; otherwise an empty list is "no data",
+      // NOT "zone clear", and we must not wipe an active breach.
+      var feedOk = (feedAlive === true) || (arr.length > 0);
+      if (feedOk) { everLive = true; lastFeedOkAt = Date.now(); }
 
       // FAIL-LOUD: no position fix → can't measure proximity at all. Clear (positions untrustworthy).
       if (!own || own.lon == null || own.lat == null || !isFinite(+own.lon) || !isFinite(+own.lat)) {
         clearChart(); breaching = {}; lastSig = {}; ackedMmsi = {};
         notice('Guard zone — no position fix', 'Cannot measure proximity without ownship position.'); return;
       }
-      // FAIL-LOUD: confirmed AIS feed offline (only after it was ever live) → freeze the last-known
-      // breach set (what the operator must still watch), keep the ring on the boat, do NOT wipe/re-beep.
-      if (everLive && feedAlive === false) {
-        drawRing(own); notice('Guard zone — AIS feed offline', 'Proximity monitoring is paused; the AIS source link is down.'); return;
+
+      drawRing(own);   // we have a fix → always show the armed ring on the boat
+
+      // FAIL-LOUD: feed not confirmed working. FREEZE the last-known breach set (never wiped) and the
+      // ring; do NOT run detection (an empty/partial list here is missing data, not a clear zone). Past
+      // the grace window, surface an explicit notice so an empty ring can never read as "all clear" —
+      // "offline" if the feed worked earlier this session, "no AIS source" if it never has. Within the
+      // grace window we stay quiet (startup / a one-frame blip) without flapping the banner or beep.
+      if (!feedOk) {
+        if (Date.now() - lastFeedOkAt > NOSRC_GRACE_MS) {
+          if (everLive) notice('Guard zone — AIS feed offline', 'Proximity monitoring is paused; no AIS data is arriving from the source.');
+          else notice('Guard zone — no AIS targets', 'Armed, but no AIS source is providing targets. Check that an AIS feed is connected.');
+        }
+        return;
       }
 
-      drawRing(own);
-      var arr = Array.isArray(list) ? list : [];
       var seen = {}, newUnacked = false, breachFeats = [];
       var R = +PREF.radius;
       for (var i = 0; i < arr.length; i++) {
@@ -260,7 +277,7 @@
       }
     }, 5000);
 
-    function syncPanel() { try { var h = window.HelmShell && HelmShell.panel('helm-ais-guard'); if (h && h.isOpen && h.isOpen() && h.el()._grdSync) h.el()._grdSync(); } catch (e) {} }
+    function syncPanel() { try { var h = window.HelmShell && HelmShell.panel('helm-ais-guard'); if (h && h.isOpen && h.isOpen() && h.el()._grdSync) h.el()._grdSync(); } catch (e) { console.warn('HelmAisGuard: panel re-sync failed:', e && e.message); } }
 
     return {
       // public per-frame entry (also called directly by tests). The live wiring is HelmShell.onNav below.
@@ -271,7 +288,7 @@
         var aisAlive = Array.isArray(s.conns) ? s.conns.some(function (c) { return c && c.status === 'connected'; }) : undefined;
         update(own, Array.isArray(s.ais) ? s.ais : [], aisAlive);
       },
-      setOn: function (v) { PREF.on = !!v; persist(); if (!PREF.on) { hideAll(); breaching = {}; lastSig = {}; ackedMmsi = {}; } else { lastUpdateAt = Date.now(); watchWarned = false; if (lastOwn) update(lastOwn, [], true); } syncPanel(); },
+      setOn: function (v) { PREF.on = !!v; persist(); if (!PREF.on) { hideAll(); breaching = {}; lastSig = {}; ackedMmsi = {}; } else { lastFeedOkAt = lastUpdateAt = Date.now(); watchWarned = false; if (lastOwn) update(lastOwn, []); } syncPanel(); },
       setRadius: function (v) { PREF.radius = Math.max(0.1, +v); persist(); if (PREF.on && lastOwn) drawRing(lastOwn); syncPanel(); },
       setMoving: function (v) { PREF.moving = !!v; persist(); syncPanel(); },
       prefs: function () { return { on: PREF.on, radius: PREF.radius, moving: PREF.moving }; },
