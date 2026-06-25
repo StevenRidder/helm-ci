@@ -42,8 +42,10 @@
     return { type: 'Crossing', role: 'stand-on', rule: 'Rule 17', action: 'She is on your PORT — you are stand-on. Hold course & speed, but be ready to act if she does not give way.' };
   }
 
-  const dangerous = t => t && t.cpaValid !== false && t.cpa != null &&
-    t.cpa < CPA_WARN && t.tcpa != null && t.tcpa > 0 && t.tcpa < TCPA_MAX;
+  // The alarm trigger == HelmAisRisk danger tier (single source of truth); falls back to the
+  // identical inline predicate if ais-risk.js somehow didn't load.
+  const dangerous = t => window.HelmAisRisk ? HelmAisRisk.isDanger(t)
+    : (t && t.cpaValid !== false && t.cpa != null && t.cpa < CPA_WARN && t.tcpa != null && t.tcpa > 0 && t.tcpa < TCPA_MAX);
   const fmtNM = nm => (nm < 1 ? Math.round(nm * 100) / 100 : Math.round(nm * 10) / 10) + ' NM';
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -182,7 +184,10 @@
     // raw class/navStatus/mmsi/ageSec props, so it stays in lane.
     const symbology = (function () {
       const SRC = 'ais';
-      const danger = '#e4564f', caution = '#f2b441', normal = '#5bc0ff', lost = '#7d8a98', sart = '#ff3b8b';
+      // Canonical palette + risk colour come from HelmAisRisk (single source of truth) with an
+      // inline fallback if it didn't load.
+      const C = (window.HelmAisRisk && HelmAisRisk.COL) || { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff', lost: '#7d8a98', sart: '#ff3b8b' };
+      const lost = C.lost, sart = C.sart;
       // string prefix helpers as MapLibre expressions (slice on the stringified mmsi)
       const mmsiStr = ['to-string', ['coalesce', ['get', 'mmsi'], '']];
       const pfx2 = ['slice', mmsiStr, 0, 2];
@@ -199,10 +204,9 @@
       const rotates = ['all', ['!', isSart], ['!', isAton], ['!', isBase]];
       // glyph per kind
       const glyph = ['case', isSart, '✚', isAton, '◆', isBase, '◉', '▲'];
-      // colour: SART distress pink → CPA tiers → lost grey → normal.
-      const cpaCol = ['case',
-        ['<', ['coalesce', ['get', 'cpa'], 99], 0.2], danger,
-        ['<', ['coalesce', ['get', 'cpa'], 99], 0.5], caution, normal];
+      // colour: SART distress pink → lost grey → risk-tier colour (HelmAisRisk, == the alarm).
+      const cpaCol = (window.HelmAisRisk && HelmAisRisk.riskColorExpr) ? HelmAisRisk.riskColorExpr()
+        : ['case', ['<', ['coalesce', ['get', 'cpa'], 99], 0.5], C.caution, C.normal];
       const color = ['case', isSart, sart, isLost, lost, cpaCol];
 
       // AIS-6 — moored/slow suppression (OpenCPN g_ShowMoored_Kts). State lives here; the panel
@@ -215,8 +219,10 @@
           ['<=', ['coalesce', ['get', 'sog'], 99], suppressKts],
           ['any', ['!', ['has', 'navStatus']], ['==', ['get', 'navStatus'], 1], ['==', ['get', 'navStatus'], 5]]];
       }
-      const isDanger = ['all', ['<', ['coalesce', ['get', 'cpa'], 99], 0.5],
-        ['>', ['coalesce', ['get', 'tcpa'], -1], 0], ['<', ['coalesce', ['get', 'tcpa'], 99], 20]];
+      // never suppress a target the CPA alarm fires on — same danger band as the alarm (HelmAisRisk).
+      const isDanger = (window.HelmAisRisk && HelmAisRisk.dangerExpr) ? HelmAisRisk.dangerExpr()
+        : ['all', ['<', ['coalesce', ['get', 'cpa'], 99], 2.0],
+          ['>', ['coalesce', ['get', 'tcpa'], -1], 0], ['<', ['coalesce', ['get', 'tcpa'], 99], 30]];
       // The layer filter that decides VISIBILITY: show unless suppressing AND moored/slow AND
       // not (SART or dangerous). When suppression is off, this collapses to "show all".
       function visibleFilter() {
@@ -290,8 +296,9 @@
         if (!(meta().isMooredSlow && meta().isMooredSlow(t, suppressKts))) return false;
         const m = meta();
         if (m.symbolKind && m.symbolKind(t) === 'sart') return false;          // never hide distress
-        const danger = t.cpaValid !== false && t.cpa != null && +t.cpa < 0.5 && t.tcpa > 0 && t.tcpa < 20;
-        return !danger;                                                        // never hide an imminent threat
+        const danger = window.HelmAisRisk ? HelmAisRisk.isDanger(t)
+          : (t.cpaValid !== false && t.cpa != null && +t.cpa < 2.0 && t.tcpa > 0 && t.tcpa < 30);
+        return !danger;                                                        // never hide an imminent threat (== the alarm)
       }
       // Push the current suppression state to the map symbology so the chart matches the list.
       function syncMap() { try { symbology.setMooredSuppress(suppressOn, suppressKts); } catch (e) {} }
@@ -385,9 +392,11 @@
           const kind = meta().symbolKind ? meta().symbolKind(t) : 'classB';
           const sym = meta().symbol ? meta().symbol(kind) : { glyph: '▲', label: '' };
           const fl = meta().flag ? meta().flag(t.mmsi) : '';
-          const danger = t.cpaValid !== false && t.cpa != null && +t.cpa < 0.5 && t.tcpa > 0 && t.tcpa < 20;
-          const warn = !danger && t.cpaValid !== false && t.cpa != null && +t.cpa < 1.5 && t.tcpa > 0 && t.tcpa < 40;
-          const col = kind === 'sart' ? '#ff3b8b' : danger ? '#e4564f' : warn ? '#f2b441' : kind === 'lost' ? '#7d8a98' : '#5bc0ff';
+          // risk colour from HelmAisRisk (== the alarm/chart/popup); SART + lost override the tier.
+          const C2 = (window.HelmAisRisk && HelmAisRisk.COL) || { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff', lost: '#7d8a98', sart: '#ff3b8b' };
+          const rt = window.HelmAisRisk ? HelmAisRisk.tier(t) : 'normal';
+          const col = kind === 'sart' ? C2.sart : kind === 'lost' ? C2.lost
+            : rt === 'danger' ? C2.danger : rt === 'caution' ? C2.caution : C2.normal;
           const lost = kind === 'lost';
           return '<tr class="ais-row' + (lost ? ' lost' : '') + '" data-lon="' + t.lon + '" data-lat="' + t.lat +
             '" data-mmsi="' + esc(t.mmsi) + '">' +

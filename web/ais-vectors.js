@@ -21,20 +21,18 @@
 (function () {
   'use strict';
 
-  // ---- constants (mirror the engine / collision.js so colour & gating agree across the app) ----
+  // ---- geometry constants ----
   var M_PER_NM = 1852, M_PER_DEG_LAT = 111320, DEG = Math.PI / 180;
   var MIN_COS_LAT = 0.01;        // clamp |cos(lat)| (~89.4°) so dLon can't blow up near the poles
   var MIN_SOG_KN = 0.5;          // below this a target is "moored" — no predictor, no cone
-  var CPA_WARN = 2.0;            // NM  (== collision.js CPA_WARN / engine g_CPAWarn_NM) — alarm band
-  var TCPA_MAX = 30.0;           // min (== collision.js TCPA_MAX / engine g_TCPA_Max) — alarm band
-  var CPA_CAUTION = 4.0;         // NM  — pre-alarm "watch" band (closing, not yet alarm-worthy)
-  var TCPA_CAUTION = 60.0;       // min — pre-alarm "watch" band
   var STALE_SEC = 120;           // unheard longer than this → grey + dim, drop cone
 
-  // tier → colour. Reuses the established palette (collision.js #ff5a52, existing AIS #f5c451/#5bc0ff);
-  // STALE neutralises to grey so a dimmed line can't be misread as a live red threat (matches the
-  // popup's LOST treatment).
-  var COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff' };
+  // Risk tier + palette come from HelmAisRisk (single source of truth — the SAME bands the CPA alarm,
+  // the chart symbol, the tap card and the AIS list use). STALE neutralises to grey so a dimmed line
+  // can't be misread as a live red threat. Fallback palette only if ais-risk.js didn't load.
+  var FALLBACK_COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff' };
+  function COL() { return (window.HelmAisRisk && HelmAisRisk.COL) || FALLBACK_COL; }
+  function tierOf(t) { return window.HelmAisRisk ? HelmAisRisk.tier(t) : 'normal'; }
   var STALE_COL = '#7d8a98';
 
   // ---- persisted user prefs (module-level so the SHELL panel + the map instance share them) ----
@@ -61,20 +59,6 @@
   }
   function num(v) { return (v == null || v === '') ? null : (isFinite(+v) ? +v : null); }
   var fmtNM = function (nm) { return (nm < 1 ? Math.round(nm * 100) / 100 : Math.round(nm * 10) / 10) + ' NM'; };
-
-  // Risk tier from the engine's AUTHORITATIVE cpa/tcpa only (never from our projected geometry).
-  // DANGER (red) deliberately equals collision.js's dangerous() predicate exactly, so EVERY target
-  // the CPA alarm fires on is drawn red here — the overlay and the alarm must never disagree.
-  function tierOf(t) {
-    if (t.cpaValid === false || t.cpa == null) return 'normal';      // engine: no valid CPA solution
-    // No TCPA (static sample / malformed frame): we can't assert the target is CLOSING, so this is a
-    // visibility hint only, never a danger assertion — cap at 'caution' for a near CPA, else normal.
-    if (t.tcpa == null) return t.cpa < CPA_WARN ? 'caution' : 'normal';
-    if (t.tcpa <= 0) return 'normal';                                // opening / past CPA — not a threat
-    if (t.cpa < CPA_WARN && t.tcpa < TCPA_MAX) return 'danger';      // == collision.js dangerous()
-    if (t.cpa < CPA_CAUTION && t.tcpa < TCPA_CAUTION) return 'caution';  // closing, pre-alarm watch
-    return 'normal';
-  }
 
   var feat = function (geom, props) { return { type: 'Feature', properties: props, geometry: geom }; };
   var ptG = function (c) { return { type: 'Point', coordinates: c }; };
@@ -159,7 +143,7 @@
         if (t.cog == null || t.sog == null || t.sog < MIN_SOG_KN) continue;   // moored / no course → no vector
         var tier = tierOf(t);
         var stale = t.ageSec != null && t.ageSec > STALE_SEC;
-        var color = stale ? STALE_COL : COL[tier];   // stale → grey, never a live tier colour
+        var color = stale ? STALE_COL : (COL()[tier] || COL().normal);   // stale → grey, never a live tier colour
         var opacity = stale ? 0.35 : 0.9;
         var apex = [t.lon, t.lat];
 
