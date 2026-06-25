@@ -404,9 +404,12 @@
 <div class="drawer glass" id="drawer-layers" hidden>
   <h2>Layers</h2>
   <p class="sub">Chart &amp; data overlays</p>
-  <label class="row"><input type="checkbox" data-layer="satellite" checked> Satellite</label>
-  <label class="row"><input type="checkbox" data-layer="charts"> NOAA chart</label>
-  <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 charts<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
+  <div class="lbl">Basemap</div>
+  <label class="row"><input type="radio" name="basemap" data-base="navionics" checked> Navionics chart<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
+  <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
   <div class="lbl">Depth on satellite</div>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
   <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
@@ -655,6 +658,16 @@
       const id = cb.dataset.layer, vis = cb.checked ? 'visible' : 'none';
       map.getStyle().layers.filter(l => l.id === id || l.id.startsWith(id + '-'))
         .forEach(l => map.setLayoutProperty(l.id, 'visibility', vis));
+    });
+  });
+
+  // Basemap picker (radios): show the chosen base (your charts vs your satellite), hide the others.
+  const BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis'];
+  document.querySelectorAll('input[name="basemap"]').forEach(rb => {
+    rb.addEventListener('change', () => {
+      if (!rb.checked) return;
+      const pick = rb.dataset.base;
+      BASEMAPS.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', id === pick ? 'visible' : 'none'); });
     });
   });
 
