@@ -710,6 +710,43 @@ static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt) {
     }
   }
 }
+// SignalK driver as a managed connection (CONN-5): a per-connection WebSocket that feeds the SAME
+// sk_on_message → g_real per-field overrides as the HELM_SIGNALK path, but lifecycle-bound to the
+// ConnRuntime so conn.upsert/disable/delete start+stop it, with live status in the nav frame.
+// SignalK is JSON-over-WS, not line NMEA, so it does NOT use conn_feed_fd.
+static void conn_feed_signalk(const ConnConfig& cfg, const std::shared_ptr<ConnRuntime>& rt) {
+  std::string url = cfg.address;
+  if (url.find("://") == std::string::npos) {            // bare host[:port] → SignalK stream URL
+    std::string host = cfg.address;
+    if (cfg.port > 0 && host.find(':') == std::string::npos) host += ":" + std::to_string(cfg.port);
+    url = "ws://" + host + "/signalk/v1/stream?subscribe=self";
+  }
+  ix::WebSocket ws; ws.setUrl(url); ws.setPingInterval(20); ws.enableAutomaticReconnection();
+  ws.setOnMessageCallback([rt](const ix::WebSocketMessagePtr& m) {
+    if (m->type == ix::WebSocketMessageType::Message) {
+      sk_on_message(m->str);
+      rt->last_rx = (long)std::time(nullptr); rt->sentences++;
+      rt->status = (int)ConnStatus::Connected;
+    } else if (m->type == ix::WebSocketMessageType::Open) {
+      rt->status = (int)ConnStatus::Connected;
+      { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error.clear(); }
+    } else if (m->type == ix::WebSocketMessageType::Error) {
+      rt->status = (int)ConnStatus::Error;
+      { std::lock_guard<std::mutex> lk(g_conns_mtx); rt->last_error = m->errorInfo.reason; }
+    } else if (m->type == ix::WebSocketMessageType::Close) {
+      if (!rt->want_stop) rt->status = (int)ConnStatus::NoData;
+    }
+  });
+  ws.start();
+  for (;;) {                                             // hold the thread until asked to stop
+    if (rt->want_stop) break;
+    std::this_thread::sleep_for(std::chrono::milliseconds(200));
+    if (rt->last_rx && (long)std::time(nullptr) - rt->last_rx > 10 &&
+        rt->status == (int)ConnStatus::Connected)
+      rt->status = (int)ConnStatus::NoData;              // connected but deltas stalled
+  }
+  ws.stop();
+}
 static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
   int backoff = 1;
   for (;;) {
@@ -719,6 +756,7 @@ static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
       auto it = g_conns.find(id); if (it == g_conns.end()) return;          // deleted
       cfg = it->second; if (!cfg.enabled) { rt->status = (int)ConnStatus::Disabled; return; } }
     rt->status = (int)ConnStatus::Connecting;
+    if (cfg.type == "signalk") { conn_feed_signalk(cfg, rt); return; }   // SignalK WS driver — self-managed lifecycle + reconnect
     std::string err; int fd = -1;
     if (cfg.type == "tcp-client")      fd = tcp_connect(cfg.address, cfg.port, 6, err);
     else if (cfg.type == "tcp-server") fd = tcp_server_accept(cfg.address.empty() ? "127.0.0.1" : cfg.address, cfg.port, rt, err);
@@ -791,10 +829,10 @@ static bool conn_from_json(const rapidjson::Value& v, ConnConfig& c, std::string
   if (v.HasMember("port") && v["port"].IsInt()) c.port = v["port"].GetInt();
   else if (v.HasMember("port") && v["port"].IsString()) c.port = std::atoi(v["port"].GetString());
   c.enabled = !(v.HasMember("enabled") && v["enabled"].IsBool()) || v["enabled"].GetBool();
-  if (c.dataProtocol.empty()) c.dataProtocol = "nmea0183";
-  if (c.type != "tcp-client" && c.type != "tcp-server" && c.type != "udp") { err = "type must be tcp-client | tcp-server | udp (SignalK via HELM_SIGNALK for now)"; return false; }
+  if (c.dataProtocol.empty()) c.dataProtocol = (c.type == "signalk") ? "signalk" : "nmea0183";
+  if (c.type != "tcp-client" && c.type != "tcp-server" && c.type != "udp" && c.type != "signalk") { err = "type must be tcp-client | tcp-server | udp | signalk"; return false; }
   if (c.port < 1 || c.port > 65535) { err = "port must be 1-65535"; return false; }
-  if (c.type == "tcp-client" && c.address.empty()) { err = "address required for tcp-client"; return false; }
+  if ((c.type == "tcp-client" || c.type == "signalk") && c.address.empty()) { err = "address required for " + c.type; return false; }
   if (c.id.empty()) { std::string b = conn_slug(c.name.empty() ? c.type : c.name); if (b.empty()) b = "conn"; c.id = b + "-" + std::to_string(++g_conn_counter); }
   return true;
 }
