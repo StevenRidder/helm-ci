@@ -628,12 +628,26 @@
 <script src="ais-meta.js"></script>
 <script>
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
-  const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
+  const map = new maplibregl.Map({
+    container: 'map', style: 'style.json', hash: true,
+    // Owned mbtiles basemaps ship a localhost:8091 placeholder in style.json. Rewrite the HOST of every
+    // :8091 tile request to the page host (so the iPad/phone on the boat WiFi loads charts from THIS Mac)
+    // BEFORE the request goes out — including the FIRST tile. A setTiles-in-'load' rewrite loses that race:
+    // the initial batch fires against the placeholder, fatal on a remote device (localhost = the phone).
+    // Port stays 8091 — a ?server= override only relocates the host. Everything else passes through.
+    transformRequest: (url) => {
+      if (window.HelmEndpoint && url.indexOf(':8091/') !== -1)
+        return { url: url.replace(/\/\/[^/]+:8091\//, '//' + HelmEndpoint.host() + ':8091/') };
+      return { url };
+    }
+  });
   window.map = map;   // debug/automation hook
   if (map.setMaxPitch) map.setMaxPitch(0);          // a chart is flat — no accidental 3D tilt
   if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
   // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
   // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
+  // (The owned mbtiles basemaps on :8091 are rewritten by transformRequest in the Map
+  // constructor above, which catches the FIRST tile too — setTiles here would lose that race.)
   map.on('load', () => {
     // Surface wiring failures rather than silently leaving the style.json default in place.
     if (!window.HelmEndpoint) { console.error('Helm: server-endpoint.js not loaded — ENC tiles fall back to the style.json default, not the resolved engine origin'); return; }
