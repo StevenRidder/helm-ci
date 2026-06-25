@@ -683,12 +683,12 @@
   const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
 
   let wxNoticeTimer = null;
-  function wxNotice(layer) {            // surface a failed weather load instead of silently showing nothing
+  function wxNotice(layer, msg) {       // surface a failed weather load instead of silently showing nothing
     const n = document.getElementById('wx-notice'); if (!n) return;
-    n.textContent = '⚠ ' + layer + ' data unavailable — not fetched (run the pipeline)';
+    n.textContent = msg || ('⚠ ' + layer + ' data unavailable — not fetched (run the pipeline)');
     n.style.display = 'block';
     if (wxNoticeTimer) clearTimeout(wxNoticeTimer);
-    wxNoticeTimer = setTimeout(() => { n.style.display = 'none'; }, 6000);
+    wxNoticeTimer = setTimeout(() => { n.style.display = 'none'; }, 7000);
   }
   function wxNoticeClear() { const n = document.getElementById('wx-notice'); if (n) n.style.display = 'none'; }
 
@@ -714,7 +714,11 @@
     if (iso) { if (name === 'pressure') iso.load(fieldUrl('pressure')); else iso.setVisible(false); }   // smooth isobars on the pressure layer
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
-      if (radar) radar.load(); return;
+      // Radar is a LIVE online nowcast (RainViewer) — the one weather layer that needs internet.
+      // If the fetch fails (offline on the boat), say so plainly instead of showing nothing.
+      if (radar) radar.load().then(n => n ? wxNoticeClear()
+        : wxNotice('radar', '⚠ Radar needs an internet connection — the live precipitation nowcast is unavailable offline.'));
+      return;
     }
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
@@ -793,7 +797,7 @@
   const aisNum = (v, d) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(d);
   // AIS text fields are fixed-width, right-padded with '@' (6-bit value 0) and/or spaces.
   // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
-  const aisName = s => String(s == null ? '' : s).replace(/@+/g, '').trim();
+  const aisName = s => { const n = String(s == null ? '' : s).replace(/@+/g, '').trim(); return /^unknown$/i.test(n) ? '' : n; };
   const aisAge = sec => sec == null ? null : (sec < 90 ? Math.round(sec) + ' s' : Math.round(sec / 60) + ' min') + ' ago';
   // Redesigned AIS target card (OpenCPN-class). Every static/voyage field is read
   // DEFENSIVELY (?? hide-row) so the card works today on the engine's 13-field payload

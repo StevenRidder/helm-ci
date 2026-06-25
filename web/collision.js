@@ -111,8 +111,10 @@
       const c = classify(own, t);
       const roleClass = c.role === 'give-way' ? 'give' : c.role === 'stand-on' ? 'stand' : 'mon';
       const roleLabel = c.role === 'give-way' ? 'GIVE-WAY' : c.role === 'stand-on' ? 'STAND-ON' : 'MONITOR';
-      // AIS names are fixed-width, right-padded with '@' (6-bit value 0) — strip it (e.g. "LISTRAC@@@@@@" -> "LISTRAC").
-      const name = String(t.name == null ? '' : t.name).replace(/@+/g, '').trim() || ('MMSI ' + (t.mmsi ?? '?'));
+      // AIS names are fixed-width, right-padded with '@' (6-bit 0); "Unknown" is OpenCPN's pre-Msg5
+      // placeholder. Strip the padding and fall back to MMSI for either (e.g. "LISTRAC@@@@@@" -> "LISTRAC").
+      const raw = String(t.name == null ? '' : t.name).replace(/@+/g, '').trim();
+      const name = (raw && !/^unknown$/i.test(raw)) ? raw : ('MMSI ' + (t.mmsi ?? '?'));
       el.innerHTML =
         '<div class="cpa-ic">⚠</div>' +
         '<div class="cpa-body">' +
