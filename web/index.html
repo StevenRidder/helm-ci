@@ -898,6 +898,11 @@
       set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
       set('nv-eta', s.active.eta); set('nv-ttg', s.active.ttg); set('nv-vmg', s.active.vmg);
       set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
+      // Suppress the route inspector when the active route clearly isn't being navigated here
+      // (e.g. the engine still has the Key West demo route active while you're elsewhere — DTG
+      // of hundreds/thousands of NM). Reappears the moment a real, nearby route is active.
+      { const dtgNM = parseFloat(String(s.active.dtg).replace(/[^\d.]/g, '')), insp = document.querySelector('.insp');
+        if (insp) insp.style.display = (s.active.nextWp && isFinite(dtgNM) && dtgNM <= 500) ? '' : 'none'; }
       // per-field source kept truthful, but as an unobtrusive tooltip (no on-screen dots)
       const src = s.sources;
       const mark = (id, key) => { const e = document.getElementById(id); if (e && src) e.title = key.toUpperCase() + ' source: ' + src[key]; };

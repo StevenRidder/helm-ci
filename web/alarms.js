@@ -76,12 +76,20 @@ window.HelmAlarms = function (map, opts) {
     try { ac = ac || new (window.AudioContext || window.webkitAudioContext)(); ac.resume(); } catch (e) {}
     render();
   });
+  // keep out from under collision.js's CPA banner (both are top-centre) — stack below it when shown
+  function positionBanner() {
+    if (banner.style.display === 'none') return;
+    const cpa = document.querySelector('.cpa-alarm');
+    const vis = cpa && !cpa.hasAttribute('hidden') && cpa.offsetParent !== null;
+    banner.style.top = vis ? (Math.round(cpa.getBoundingClientRect().bottom) + 8) + 'px' : 'calc(64px + env(safe-area-inset-top))';
+  }
   function render() {
     const list = Object.values(active);
     if (!list.length) { banner.style.display = 'none'; return; }
     list.sort((a, b) => (a.sev === 'critical' ? -1 : 1) - (b.sev === 'critical' ? -1 : 1));
     const top = list[0], crit = top.sev === 'critical', unacked = list.some(a => !a.acked);
     banner.style.display = 'flex';
+    positionBanner();
     banner.style.background = crit ? 'rgba(200,30,40,.94)' : 'rgba(190,120,20,.94)';
     banner.style.animation = (crit && unacked) ? 'srcpulse 1s infinite' : 'none';
     banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : '⚠︎'));
@@ -184,6 +192,7 @@ window.HelmAlarms = function (map, opts) {
     if (!s || !s.pos) return;
     lastPos = s.pos;
     if (!fresh) return;                  // hold on stale feed — never (re)evaluate from data we can't trust
+    positionBanner();                    // track collision.js's CPA banner so the two never overlap
     const src = s.sources || {};
 
     // depth (only on a REAL depth feed — never alarm on the simulated fill; hysteresis avoids flapping)
