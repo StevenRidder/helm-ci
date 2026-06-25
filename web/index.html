@@ -636,13 +636,15 @@
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
-<!-- WX-10: value-encoded (Mercator) weather tiles — codec (global) + HelmShell panel.
-     Panel/command/probe self-register from wx-grib.js; render lives in WX-owned integrations/cog.js. -->
+<!-- WX weather — codec + GRIB2 reader (globals) + probe faces + engines. The UI (hi-res tiles,
+     ensemble spread, PredictWind import) is consolidated INTO the Weather drawer by wx-controls.js,
+     so there are no longer standalone G/E/I rail icons. -->
 <script src="wx-value-codec.js"></script>
 <script src="wx-grib.js"></script>
-<!-- WX-12: device-local PredictWind GPX/GRIB import — GRIB2 reader (global) + HelmShell panel. -->
 <script src="wx-grib2.js"></script>
 <script src="wx-import.js"></script>
+<script src="wx-live.js"></script>
+<script src="wx-controls.js"></script>
 <script src="nav-source.js"></script>
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>

@@ -13,19 +13,14 @@
 // not for navigation" label.
 (function () {
   'use strict';
-  if (!window.HelmShell) { console.warn('[wx-import] HelmShell missing'); return; }
-
   var GPX_SRC = 'helm-wx-import-gpx', GRIB_SRC = 'helm-wx-import-grib';
-  var st = { map: null, items: [], gribField: null, els: {} };
+  var st = { map: null, items: [], gribField: null, notifyFn: null };
 
   // wind ramp in m/s (GRIB wind is m/s) — Windy-style calm→storm.
   var WIND_MS = [[0, [98, 113, 183]], [3, [57, 131, 168]], [6, [52, 171, 151]], [9, [123, 183, 80]],
                  [12, [225, 200, 60]], [16, [232, 130, 50]], [21, [214, 70, 74]], [28, [150, 60, 150]]];
 
-  function notify(msg, level) {
-    var s = st.els.status; if (!s) return;
-    s.textContent = msg; s.style.color = level === 'warn' ? 'var(--warn,#e8a13a)' : (level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--cdim,#8aa)');
-  }
+  function notify(msg, level) { if (st.notifyFn) st.notifyFn(msg, level); }
 
   // ---- GPX ------------------------------------------------------------------------------------
   function tags(node, name) { return Array.prototype.slice.call(node.getElementsByTagNameNS('*', name)); }
@@ -128,70 +123,39 @@
   }
 
   // ---- import dispatch (device-local; the file never leaves the page) -------------------------
-  function importFile(file) {
+  // PUBLIC — importFile(file, map, notifyFn). Called by the unified Weather panel (wx-controls.js).
+  function importFile(file, map, notifyFn) {
+    st.map = map || window.map; st.notifyFn = notifyFn || st.notifyFn;
     notify('reading ' + file.name + ' …');
     var lower = (file.name || '').toLowerCase();
     var reader = new FileReader();
     reader.onerror = function () { notify('could not read file', 'warn'); };
     if (/\.gpx$/.test(lower)) {
-      reader.onload = function () { try { var fc = parseGpx(reader.result); st.items.push({ name: file.name, kind: 'gpx' }); renderItems(); renderGpx(fc, file.name); } catch (e) { notify('GPX error: ' + e.message, 'warn'); } };
+      reader.onload = function () { try { var fc = parseGpx(reader.result); st.items.push({ name: file.name, kind: 'gpx' }); renderGpx(fc, file.name); } catch (e) { notify('GPX error: ' + e.message, 'warn'); } };
       reader.readAsText(file);
     } else {
       // GRIB (or unknown binary): sniff the "GRIB" magic, else try GPX-as-text fallback.
       reader.onload = function () {
         var bytes = new Uint8Array(reader.result);
         if (bytes[0] === 0x47 && bytes[1] === 0x52 && bytes[2] === 0x49 && bytes[3] === 0x42) {
-          try { st.items.push({ name: file.name, kind: 'grib' }); renderItems(); renderGrib(reader.result, file.name); } catch (e) { notify('GRIB error: ' + e.message, 'warn'); }
+          try { st.items.push({ name: file.name, kind: 'grib' }); renderGrib(reader.result, file.name); } catch (e) { notify('GRIB error: ' + e.message, 'warn'); }
         } else if (bytes[0] === 0x3C) { // '<' -> XML/GPX
-          try { var fc = parseGpx(new TextDecoder().decode(bytes)); st.items.push({ name: file.name, kind: 'gpx' }); renderItems(); renderGpx(fc, file.name); } catch (e) { notify('GPX error: ' + e.message, 'warn'); }
+          try { var fc = parseGpx(new TextDecoder().decode(bytes)); st.items.push({ name: file.name, kind: 'gpx' }); renderGpx(fc, file.name); } catch (e) { notify('GPX error: ' + e.message, 'warn'); }
         } else { notify('unrecognised file — expected a PredictWind .gpx or .grib', 'warn'); }
       };
       reader.readAsArrayBuffer(file);
     }
   }
 
-  function removeAll() {
-    var map = st.map;
-    [GPX_SRC + '-line', GPX_SRC + '-pt', GPX_SRC + '-label', GRIB_SRC].forEach(function (id) { if (map.getLayer(id)) map.removeLayer(id); });
-    [GPX_SRC, GRIB_SRC].forEach(function (id) { if (map.getSource(id)) map.removeSource(id); });
-    st.items = []; st.gribField = null; renderItems(); notify('imports cleared');
-  }
-  function renderItems() {
-    var el = st.els.list; if (!el) return;
-    el.innerHTML = st.items.length ? st.items.map(function (it) { return '<div style="font-size:11px;color:#cdd9e3">• ' + it.kind.toUpperCase() + ' — ' + it.name + '</div>'; }).join('') : '<div style="font-size:11px;color:var(--cdim,#8aa)">No imports yet.</div>';
-    st.els.clearBtn.style.display = st.items.length ? 'inline-block' : 'none';
+  function removeAll(map) {
+    var m = map || st.map; if (!m) return;
+    [GPX_SRC + '-line', GPX_SRC + '-pt', GPX_SRC + '-label', GRIB_SRC].forEach(function (id) { if (m.getLayer(id)) m.removeLayer(id); });
+    [GPX_SRC, GRIB_SRC].forEach(function (id) { if (m.getSource(id)) m.removeSource(id); });
+    st.items = []; st.gribField = null; notify('imports cleared');
   }
 
-  HelmShell.registerPanel({
-    id: 'helm-wx-import', epic: 'WX', title: 'Import (PredictWind)', icon: 'I',
-    render: function (body, ctx) {
-      st.map = ctx.map;
-      body.innerHTML =
-        '<p class="sub" style="margin:.2em 0 .8em">Import a <b>GPX route</b> or <b>GRIB</b> you exported from ' +
-        'your own PredictWind app. Parsed <b>on this device</b> — never uploaded, never synced. ' +
-        '<b>Imported · not for navigation.</b></p>' +
-        '<div style="font-size:11px;color:var(--cdim,#8aa);border:.5px solid var(--line,#345);border-left:3px solid #c678dd;border-radius:6px;padding:6px 9px;margin-bottom:10px">' +
-        '🔒 Device-local · excluded from cloud sync · no PredictWind login required or stored (ECMWF/AROME/UKMO license-bound).</div>';
-      var pick = document.createElement('input');
-      pick.type = 'file'; pick.accept = '.gpx,.grb,.grb2,.grib,.grib2';
-      pick.style.cssText = 'font-size:12px;color:#cdd9e3;width:100%';
-      pick.addEventListener('change', function () { if (pick.files && pick.files[0]) importFile(pick.files[0]); pick.value = ''; });
-      body.appendChild(pick);
-      st.els.status = document.createElement('div'); st.els.status.style.cssText = 'font-size:11px;color:var(--cdim,#8aa);margin:9px 0;min-height:14px';
-      body.appendChild(st.els.status);
-      st.els.list = document.createElement('div'); st.els.list.style.cssText = 'margin:6px 0'; body.appendChild(st.els.list);
-      st.els.clearBtn = document.createElement('button'); st.els.clearBtn.textContent = 'Remove imports';
-      st.els.clearBtn.style.cssText = 'font-size:11px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid var(--line,#345);border-radius:7px;padding:5px 9px;display:none;cursor:pointer';
-      st.els.clearBtn.addEventListener('click', removeAll);
-      body.appendChild(st.els.clearBtn);
-      renderItems();
-    },
-  });
-  HelmShell.registerCommand({
-    id: 'helm-wx-import-open', epic: 'WX', title: 'Import PredictWind GPX / GRIB (device-local)',
-    subtitle: 'File picker · not synced', keywords: ['import', 'predictwind', 'gpx', 'grib', 'route', 'device-local'], group: 'Weather',
-    run: function () { var h = HelmShell.panel('helm-wx-import'); if (h) h.open(); },
-  });
+  // PUBLIC engine for wx-controls.js (no rail icon / panel of its own anymore).
+  window.HelmImport = { importFile: importFile, removeAll: removeAll, items: function () { return st.items.slice(); } };
 
   // Sample the imported GRIB at a point (device-local probe). Honest provenance: source 'imported',
   // deviceLocal + notForNavigation true; null outside coverage.
