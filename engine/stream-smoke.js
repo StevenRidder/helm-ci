@@ -30,7 +30,7 @@ function checkWs() {
           if (buf.length < off + len) return;
           const p = buf.slice(off, off + len).toString('utf8'); buf = buf.slice(off + len);
           let o; try { o = JSON.parse(p); } catch (e) { continue; }
-          if (o.t === 'ping') continue;
+          if (o.t === 'ping' || o.t === 'sub.ack') continue;   // control frames, not nav state (sub.ack = CONTRACT-7 subscription ack, sent before the snapshot)
           frames.push(o);
           if (frames.filter(f => f.t === 'delta').length >= 3) {
             clearTimeout(timer);
