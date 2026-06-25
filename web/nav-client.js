@@ -289,8 +289,8 @@
         try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }
         return;
       }
-      if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0 || msg.t.indexOf('sub.') === 0)) {
-        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }   // command-plane replies
+      if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0 || msg.t.indexOf('sub.') === 0 || msg.t.indexOf('nmea.') === 0)) {
+        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }   // command-plane replies (incl. CONN-7 nmea.monitor.ack / nmea.raw)
         return;   // not nav state — do not merge or reset the staleness watchdog
       }
       everEngine = true; attempt = 0; stopSim();
