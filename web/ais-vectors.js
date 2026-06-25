@@ -21,18 +21,21 @@
 (function () {
   'use strict';
 
+  // HARD dependency: HelmAisRisk (ais-risk.js) is the single source of truth for risk tier + palette
+  // (the SAME bands the alarm, chart symbol, tap card and list use). No silent fallback to a duplicate
+  // palette or a "normal" default — a missing dependency is surfaced loudly and the direct calls below
+  // throw, so we never quietly mis-classify a target as safe.
+  if (!window.HelmAisRisk) console.error('[AIS] ais-vectors.js requires ais-risk.js (HelmAisRisk) — it must load FIRST. Risk colours are unavailable; this is a real failure, not a soft default.');
+
   // ---- geometry constants ----
   var M_PER_NM = 1852, M_PER_DEG_LAT = 111320, DEG = Math.PI / 180;
   var MIN_COS_LAT = 0.01;        // clamp |cos(lat)| (~89.4°) so dLon can't blow up near the poles
   var MIN_SOG_KN = 0.5;          // below this a target is "moored" — no predictor, no cone
   var STALE_SEC = 120;           // unheard longer than this → grey + dim, drop cone
 
-  // Risk tier + palette come from HelmAisRisk (single source of truth — the SAME bands the CPA alarm,
-  // the chart symbol, the tap card and the AIS list use). STALE neutralises to grey so a dimmed line
-  // can't be misread as a live red threat. Fallback palette only if ais-risk.js didn't load.
-  var FALLBACK_COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff' };
-  function COL() { return (window.HelmAisRisk && HelmAisRisk.COL) || FALLBACK_COL; }
-  function tierOf(t) { return window.HelmAisRisk ? HelmAisRisk.tier(t) : 'normal'; }
+  // STALE neutralises to grey so a dimmed line can't be misread as a live red threat.
+  function COL() { return HelmAisRisk.COL; }
+  function tierOf(t) { return HelmAisRisk.tier(t); }
   var STALE_COL = '#7d8a98';
 
   // ---- persisted user prefs (module-level so the SHELL panel + the map instance share them) ----
@@ -119,7 +122,8 @@
       var box = document.querySelector('[data-layer="ais"]');
       if (box && !box.checked) return [];
       var feats;
-      try { feats = map.querySourceFeatures('ais'); } catch (e) { return []; }
+      try { feats = map.querySourceFeatures('ais'); }
+      catch (e) { console.warn('HelmAisVectors: querySourceFeatures("ais") failed — overlay drawing nothing this frame:', e && e.message); return []; }
       var seen = {}, out = [];
       for (var i = 0; i < feats.length; i++) {
         var f = feats[i], p = f.properties || {}, c = f.geometry && f.geometry.coordinates;

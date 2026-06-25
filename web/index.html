@@ -896,8 +896,8 @@
     const dest = aisName(p.destination ?? p.dest);
 
     const valid = p.cpaValid !== false && p.cpa != null;
-    let tone = 'ok', riskLabel = '';                                 // 3-tier collision risk (HelmAisRisk — single source of truth)
-    const _rt = window.HelmAisRisk ? HelmAisRisk.tier(p) : 'normal';
+    let tone = 'ok', riskLabel = '';                                 // 3-tier collision risk (HelmAisRisk — single source of truth, no silent default)
+    const _rt = HelmAisRisk.tier(p);
     if (_rt === 'danger') { tone = 'bad'; riskLabel = '⚠ DANGER · collision risk'; }
     else if (_rt === 'caution') { tone = 'warn'; riskLabel = '⚠ Caution'; }
     const toneCol = { bad: 'var(--danger)', warn: '#f5c451', ok: 'var(--line)' }[tone];

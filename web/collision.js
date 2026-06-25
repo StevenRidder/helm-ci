@@ -10,8 +10,11 @@
 // (Rule 19), or local rules. The skipper is responsible for collision avoidance and must keep a
 // proper lookout (Rule 5) and verify visually. The banner says so, permanently.
 (function () {
-  const CPA_WARN = 2.0;     // NM   — matches the engine's g_CPAWarn_NM
-  const TCPA_MAX = 30.0;    // min  — matches the engine's g_TCPA_Max
+  // HARD dependency: HelmAisRisk (ais-risk.js) is the single source of truth for collision-risk
+  // tiers. It is loaded by a <script> before this file. If it is missing we DO NOT silently fall
+  // back to a duplicate predicate (that would mask the load failure and could drift from the alarm)
+  // — we surface it loudly and let the direct calls below throw, so the failure can't hide.
+  if (!window.HelmAisRisk) console.error('[AIS] collision.js requires ais-risk.js (HelmAisRisk) — it must load FIRST. Collision-risk classification is unavailable; this is a real failure, not a soft default.');
   const norm = d => { d %= 360; return d < 0 ? d + 360 : d; };
 
   // Classify the encounter from own course/speed + the target's bearing/course/speed.
@@ -42,10 +45,8 @@
     return { type: 'Crossing', role: 'stand-on', rule: 'Rule 17', action: 'She is on your PORT — you are stand-on. Hold course & speed, but be ready to act if she does not give way.' };
   }
 
-  // The alarm trigger == HelmAisRisk danger tier (single source of truth); falls back to the
-  // identical inline predicate if ais-risk.js somehow didn't load.
-  const dangerous = t => window.HelmAisRisk ? HelmAisRisk.isDanger(t)
-    : (t && t.cpaValid !== false && t.cpa != null && t.cpa < CPA_WARN && t.tcpa != null && t.tcpa > 0 && t.tcpa < TCPA_MAX);
+  // The alarm trigger IS the HelmAisRisk danger tier — one source of truth, no duplicate fallback.
+  const dangerous = t => HelmAisRisk.isDanger(t);
   const fmtNM = nm => (nm < 1 ? Math.round(nm * 100) / 100 : Math.round(nm * 10) / 10) + ' NM';
   const esc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
 
@@ -184,9 +185,10 @@
     // raw class/navStatus/mmsi/ageSec props, so it stays in lane.
     const symbology = (function () {
       const SRC = 'ais';
-      // Canonical palette + risk colour come from HelmAisRisk (single source of truth) with an
-      // inline fallback if it didn't load.
-      const C = (window.HelmAisRisk && HelmAisRisk.COL) || { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff', lost: '#7d8a98', sart: '#ff3b8b' };
+      // Canonical palette + risk colour come from HelmAisRisk — the single source of truth. No
+      // fallback palette: a missing dependency must surface (see the loud guard at top), not silently
+      // paint with a duplicate that could drift from the alarm.
+      const C = HelmAisRisk.COL;
       const lost = C.lost, sart = C.sart;
       // string prefix helpers as MapLibre expressions (slice on the stringified mmsi)
       const mmsiStr = ['to-string', ['coalesce', ['get', 'mmsi'], '']];
@@ -205,8 +207,7 @@
       // glyph per kind
       const glyph = ['case', isSart, '✚', isAton, '◆', isBase, '◉', '▲'];
       // colour: SART distress pink → lost grey → risk-tier colour (HelmAisRisk, == the alarm).
-      const cpaCol = (window.HelmAisRisk && HelmAisRisk.riskColorExpr) ? HelmAisRisk.riskColorExpr()
-        : ['case', ['<', ['coalesce', ['get', 'cpa'], 99], 0.5], C.caution, C.normal];
+      const cpaCol = HelmAisRisk.riskColorExpr();
       const color = ['case', isSart, sart, isLost, lost, cpaCol];
 
       // AIS-6 — moored/slow suppression (OpenCPN g_ShowMoored_Kts). State lives here; the panel
@@ -220,9 +221,7 @@
           ['any', ['!', ['has', 'navStatus']], ['==', ['get', 'navStatus'], 1], ['==', ['get', 'navStatus'], 5]]];
       }
       // never suppress a target the CPA alarm fires on — same danger band as the alarm (HelmAisRisk).
-      const isDanger = (window.HelmAisRisk && HelmAisRisk.dangerExpr) ? HelmAisRisk.dangerExpr()
-        : ['all', ['<', ['coalesce', ['get', 'cpa'], 99], 2.0],
-          ['>', ['coalesce', ['get', 'tcpa'], -1], 0], ['<', ['coalesce', ['get', 'tcpa'], 99], 30]];
+      const isDanger = HelmAisRisk.dangerExpr();
       // The layer filter that decides VISIBILITY: show unless suppressing AND moored/slow AND
       // not (SART or dangerous). When suppression is off, this collapses to "show all".
       function visibleFilter() {
@@ -231,9 +230,9 @@
       }
       function applyFilters() {
         const v = visibleFilter();
-        try { if (map.getLayer('helm-ais-symbol')) map.setFilter('helm-ais-symbol', v); } catch (e) {}
+        try { if (map.getLayer('helm-ais-symbol')) map.setFilter('helm-ais-symbol', v); } catch (e) { console.error('[AIS] suppression filter (symbol) failed:', e && e.message); }
         // lost layer already filters on isLost — AND it with visibility so suppressed lost targets vanish too.
-        try { if (map.getLayer('helm-ais-lost')) map.setFilter('helm-ais-lost', v ? ['all', isLost, v] : isLost); } catch (e) {}
+        try { if (map.getLayer('helm-ais-lost')) map.setFilter('helm-ais-lost', v ? ['all', isLost, v] : isLost); } catch (e) { console.error('[AIS] suppression filter (lost) failed:', e && e.message); }
       }
 
       function add() {
@@ -267,7 +266,9 @@
       }
       // The map may already be loaded when HelmCollision() is constructed, or not yet — handle both,
       // and re-add after any style reload (basemap switch fires 'styledata').
-      function ensure() { try { add(); } catch (e) {} }
+      // Surface a real failure to build the symbology layers (e.g. a missing dependency or a bad
+      // expression) instead of silently leaving the chart with no AIS symbols.
+      function ensure() { try { add(); } catch (e) { console.error('[AIS] symbology layer build failed — targets may be unsymbolised:', e && e.message); } }
       if (map.isStyleLoaded && map.isStyleLoaded()) ensure(); else map.on('load', ensure);
       map.on('styledata', ensure);
       return {
@@ -296,9 +297,7 @@
         if (!(meta().isMooredSlow && meta().isMooredSlow(t, suppressKts))) return false;
         const m = meta();
         if (m.symbolKind && m.symbolKind(t) === 'sart') return false;          // never hide distress
-        const danger = window.HelmAisRisk ? HelmAisRisk.isDanger(t)
-          : (t.cpaValid !== false && t.cpa != null && +t.cpa < 2.0 && t.tcpa > 0 && t.tcpa < 30);
-        return !danger;                                                        // never hide an imminent threat (== the alarm)
+        return !HelmAisRisk.isDanger(t);                                        // never hide an imminent threat (== the alarm)
       }
       // Push the current suppression state to the map symbology so the chart matches the list.
       function syncMap() { try { symbology.setMooredSuppress(suppressOn, suppressKts); } catch (e) {} }
@@ -393,8 +392,7 @@
           const sym = meta().symbol ? meta().symbol(kind) : { glyph: '▲', label: '' };
           const fl = meta().flag ? meta().flag(t.mmsi) : '';
           // risk colour from HelmAisRisk (== the alarm/chart/popup); SART + lost override the tier.
-          const C2 = (window.HelmAisRisk && HelmAisRisk.COL) || { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff', lost: '#7d8a98', sart: '#ff3b8b' };
-          const rt = window.HelmAisRisk ? HelmAisRisk.tier(t) : 'normal';
+          const C2 = HelmAisRisk.COL, rt = HelmAisRisk.tier(t);
           const col = kind === 'sart' ? C2.sart : kind === 'lost' ? C2.lost
             : rt === 'danger' ? C2.danger : rt === 'caution' ? C2.caution : C2.normal;
           const lost = kind === 'lost';
