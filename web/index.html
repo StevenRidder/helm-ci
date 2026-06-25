@@ -114,12 +114,6 @@
   .conn-actions{display:flex;gap:8px}
   .conn-actions .conn-btn{margin-top:2px;flex:1;text-align:center}
   .conn-msg{font-size:11.5px;margin-top:8px;min-height:14px}
-  /* ---- Track recording control (on-map) ---- */
-  .helm-track-ctl{position:absolute;left:50%;transform:translateX(-50%);bottom:150px;z-index:6;display:flex;gap:6px;padding:5px;border-radius:11px;align-items:center}
-  .helm-track-rec{display:flex;align-items:center;gap:6px;padding:6px 11px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:var(--cdim);font:inherit;font-size:11.5px;font-weight:600;letter-spacing:.04em;cursor:pointer}
-  .helm-track-rec.rec{color:#fff;background:var(--danger)}
-  .helm-track-clear{padding:6px 10px;border:none;border-radius:8px;background:rgba(255,255,255,.06);color:var(--cdim);font:inherit;font-size:11.5px;cursor:pointer}
-  .helm-track-clear:hover{background:rgba(255,255,255,.14);color:var(--ctext)}
 
   /* weather switcher */
   .wx{display:flex;flex-wrap:wrap;gap:6px}
@@ -953,7 +947,7 @@
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
       { sim: window.HelmNav, onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); } });
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
-    if (window.HelmTrack) HelmTrack.init({ client: window.__navClient, map: window.map });   // track record/clear + line
+    if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)
   })();
 
   // ============ COMMUNITY: where-to-go + give-back (selectable layers) ============

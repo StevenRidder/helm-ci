@@ -460,17 +460,25 @@ static std::mutex g_track_mtx;
 static std::vector<TrackPt> g_track;            // recorded points (rolling, capped) — guard: g_track_mtx
 static size_t g_track_emitted = 0;              // points already streamed (for trackAdd deltas) — g_track_mtx
 static std::atomic<bool> g_track_armed{true};   // recording on by default
-static const size_t kTrackCap = 2000;
-static const double kTrackMinNM = 0.0016;       // ~3 m — record once the boat has moved this far
-static const double kTrackMinSec = 20.0;        // ...or at least this often while armed
-static void track_record(double lat, double lon) {
-  if (!g_track_armed.load()) return;
+static const size_t kTrackCap = 3000;
+static const double kTrackMinNM  = 0.002;       // ~3.7 m — OpenCPN "Medium" min-move (model/src/track.cpp SetPrecision)
+static const double kTrackMinSec = 4.0;         // ...and >= this long since the last point (OpenCPN "Medium")
+static std::string g_track_src;                 // source of the last recorded fix — g_track_mtx
+static void track_record(double lat, double lon, const char* src) {
+  if (!g_track_armed.load()) return;            // always-on by default — recording is automatic, like OpenCPN
   std::time_t now = std::time(nullptr);
   std::lock_guard<std::mutex> lk(g_track_mtx);
+  std::string s = src ? src : "";
+  if (!g_track.empty() && s != g_track_src) {   // source changed (e.g. demo-origin sim → real fix) — the
+    g_track.clear(); g_track_emitted = 0;       // position teleports, so start a CLEAN track, don't draw across it
+  }
+  g_track_src = s;
   if (!g_track.empty()) {
     const TrackPt& last = g_track.back();
     double brg, nm; bd(lat, lon, last.lat, last.lon, &brg, &nm);
-    if (nm < kTrackMinNM && std::difftime(now, last.t) < kTrackMinSec) return;
+    // OpenCPN-style commit: BOTH enough time elapsed AND moved beyond the min delta. Distance-gated
+    // (NOT speed) so the anchor SWING is captured (it's movement) while a dead-still boat adds nothing.
+    if (std::difftime(now, last.t) < kTrackMinSec || nm < kTrackMinNM) return;
   }
   g_track.push_back({lat, lon, now});
   if (g_track.size() > kTrackCap) {
@@ -818,7 +826,7 @@ static void nav_loop(ix::HttpServer* server) {
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
-    track_record(gLat, gLon);         // ownship breadcrumb trail (records the displayed fix when armed)
+    track_record(gLat, gLon, src_pos);  // ownship breadcrumb trail (auto; resets on source change so sim→real doesn't draw across the ocean)
     RoutePoint* act = g_pRouteMan->GetpActivePoint();
     double brgW = 0, dtw = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
     double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
