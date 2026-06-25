@@ -18,6 +18,10 @@
 //     animation frame, so the UI never thrashes through stale intermediate fixes. Only
 //     snapshot/delta are coalescable; alarms, command replies and ping bypass it verbatim.
 //   • reliable alarms (CONTRACT-10) — see the FROZEN ALARM WIRE SCHEMA below.
+//   • channels + client-chosen rate (CONTRACT-7) — the client declares which named streams it wants
+//     (nav/route/alarms/ais/track/conns) and a nav update rate (1–4 Hz) in the hello, re-negotiable at
+//     runtime via setRate()/subscribe()/unsubscribe(); the server filters + paces and echoes the
+//     effective config (opts.onSub). Wire contract: docs/CONTRACT-CHANNELS.md.
 //   • never fakes position — if a real feed drops we go STALE/OFFLINE and say so; we never
 //     silently swap in the simulator presenting a plausible fake fix. The sim is used ONLY
 //     when no engine was ever reached (honest prototype mode).
@@ -138,6 +142,42 @@
     let warnedNoClear = false;      // one-shot warn: alarm.clear arrived but no onAlarmClear wired
     const alarmCmp = (g1, r1, g2, r2) => (g1 !== g2 ? g1 - g2 : r1 - r2);
 
+    // ---- channels/subscriptions + client-chosen nav rate (CONTRACT-7) ----
+    // The client DECLARES which named channels it wants and a nav update rate (1–4 Hz); the server
+    // filters frame content by subscription and paces nav deltas to that rate (alarms/commands are
+    // exempt — always immediate). Desired state persists across reconnect (re-sent in the hello) and
+    // can be re-negotiated at runtime via a sub.update frame; the server echoes the EFFECTIVE config
+    // back in sub.ack. Wire contract: docs/CONTRACT-CHANNELS.md. (Server filtering/pacing is a
+    // CHART/ENGINE-lane consuming task — this is the client half + the frozen contract.)
+    const KNOWN_CHANNELS = ['nav', 'route', 'alarms', 'ais', 'track', 'conns'];
+    const RATE_MIN = 1, RATE_MAX = 4;
+    const clampRate = hz => {                       // fail-fast: surface a bad rate, never silently accept it
+      const n = +hz;
+      if (!isFinite(n)) { console.warn('HelmNavClient: nav rate "' + hz + '" is not a number — ignoring'); return null; }
+      const r = Math.max(RATE_MIN, Math.min(RATE_MAX, Math.round(n)));
+      if (r !== n) console.warn('HelmNavClient: nav rate ' + hz + ' Hz coerced to ' + r + ' Hz (allowed integer ' + RATE_MIN + '..' + RATE_MAX + ')');
+      return r;
+    };
+    const normChannels = chs => {
+      const out = [];
+      (chs || []).forEach(c => {
+        if (typeof c !== 'string' || !c || out.indexOf(c) >= 0) return;
+        if (KNOWN_CHANNELS.indexOf(c) < 0) console.warn('HelmNavClient: unknown channel "' + c + '" (known: ' + KNOWN_CHANNELS.join(', ') + ') — forwarding anyway');
+        out.push(c);
+      });
+      return out;
+    };
+    // 'nav' (position/instruments) is the safety core — always subscribed, never droppable.
+    let subChannels = normChannels(opts.subscribe || KNOWN_CHANNELS);
+    if (subChannels.indexOf('nav') < 0) subChannels.unshift('nav');
+    let navRate = opts.rate != null ? clampRate(opts.rate) : null;   // null ⇒ accept the server default
+    let effSub = null;   // server-echoed effective {subscribe, rate} (from sub.ack); null until acked
+    function sendSubUpdate() {
+      const f = { t: 'sub.update', subscribe: subChannels.slice() };
+      if (navRate != null) f.rate = navRate;
+      return sendRaw(f);   // false if not open — the next hello re-sends current state, so it converges
+    }
+
     const startSim = () => { if (opts.sim && !sim && !everEngine) { sim = opts.sim(onState); status('sim'); } };
     const stopSim = () => { if (sim) { clearInterval(sim); sim = null; } };
 
@@ -243,7 +283,13 @@
         if (msg.t === 'alarm' || msg.t === 'alarm.clear') handleAlarm(msg);
         return;
       }
-      if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0)) {
+      if (msg.t === 'sub.ack') {   // CONTRACT-7: server's EFFECTIVE channel/rate config (possibly clamped)
+        effSub = { subscribe: Array.isArray(msg.subscribe) ? msg.subscribe.slice() : subChannels.slice(), rate: msg.rate != null ? msg.rate : navRate };
+        try { opts.onSub && opts.onSub(effSub); } catch (e) { console.error('HelmNavClient: onSub handler threw:', e); }
+        try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }
+        return;
+      }
+      if (typeof msg.t === 'string' && (msg.t.indexOf('conn.') === 0 || msg.t.indexOf('route.') === 0 || msg.t.indexOf('track.') === 0 || msg.t.indexOf('sub.') === 0)) {
         try { opts.onCommand && opts.onCommand(msg); } catch (e) { console.error('HelmNavClient: onCommand handler threw:', e); }   // command-plane replies
         return;   // not nav state — do not merge or reset the staleness watchdog
       }
@@ -281,7 +327,8 @@
       ws.onopen = () => {
         // Resume hint: lastSeq for nav delta-since; lastAlarmAck (additive/optional) lets the server
         // skip re-asserting alarms we already hold (omitting it ⇒ full re-assert, the safe default).
-        const hello = { t: 'hello', lastSeq, subscribe: opts.subscribe || ['nav', 'route', 'alarms'] };
+        const hello = { t: 'hello', lastSeq, subscribe: subChannels };   // CONTRACT-7: declare channels + rate
+        if (navRate != null) hello.rate = navRate;
         if (alarmState.size) { const la = []; alarmState.forEach((v, id) => la.push({ id, gen: v.gen, rev: v.rev })); hello.lastAlarmAck = la; }
         try { ws.send(JSON.stringify(hello)); }
         catch (e) { console.warn('HelmNavClient: hello send failed:', e && e.message); }
@@ -345,7 +392,21 @@
         (ids || []).forEach(id => { const s = alarmState.get(id); if (s) { s.acked = true; enqueueAck(id, s.gen, s.rev, true); } });
       },
       // Read-only view of the live alarm set (for consumers/tests). Never the source of truth for the banner.
-      alarms() { const o = {}; alarmState.forEach((v, id) => { o[id] = { gen: v.gen, rev: v.rev, sev: v.sev, acked: v.acked }; }); return o; }
+      alarms() { const o = {}; alarmState.forEach((v, id) => { o[id] = { gen: v.gen, rev: v.rev, sev: v.sev, acked: v.acked }; }); return o; },
+      // CONTRACT-7: channel subscriptions + client-chosen nav rate (1–4 Hz). Desired state persists
+      // across reconnect (re-sent in the hello); a runtime change sends a sub.update and the server
+      // echoes the effective config via opts.onSub. Each returns the new DESIRED state; the send is
+      // false-tolerant (re-sent on reconnect) so changes converge over a flaky link.
+      setRate(hz) { const r = clampRate(hz); if (r != null) { navRate = r; sendSubUpdate(); } return navRate; },
+      subscribe(channels) { normChannels(channels).forEach(c => { if (subChannels.indexOf(c) < 0) subChannels.push(c); }); sendSubUpdate(); return subChannels.slice(); },
+      unsubscribe(channels) {
+        (channels || []).forEach(c => {
+          if (c === 'nav') { console.warn('HelmNavClient: "nav" is the safety-core position/instrument stream and cannot be unsubscribed'); return; }
+          const i = subChannels.indexOf(c); if (i >= 0) subChannels.splice(i, 1);
+        });
+        sendSubUpdate(); return subChannels.slice();
+      },
+      subscriptions() { return { desired: { subscribe: subChannels.slice(), rate: navRate }, effective: effSub ? { subscribe: effSub.subscribe.slice(), rate: effSub.rate } : null }; }
     };
   };
 })();

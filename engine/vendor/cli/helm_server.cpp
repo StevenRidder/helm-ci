@@ -1124,12 +1124,59 @@ static void conn_load() {
   }
   std::printf("connections: loaded %zu from %s\n", g_conns.size(), conn_path().c_str());
 }
+// ---------------------------------------------------------------------------
+// CONTRACT-7: per-client channel subscriptions + client-chosen nav rate.
+// The client DECLARES channels + a nav rate (1–4 Hz) in the hello and re-negotiates via sub.update;
+// the server filters frame content to the subscription and paces nav to the EFFECTIVE rate. The
+// effective rate is min(requested, the ~1 Hz nav-loop source) — the server NEVER streams faster than
+// its data source (that would mean faking interpolated fixes, against Helm's honesty rule). When a
+// faster source/loop is wired, higher effective rates follow with no contract change.
+// See docs/CONTRACT-CHANNELS.md.
+// ---------------------------------------------------------------------------
+static const int NAV_SOURCE_HZ = 1;             // nav_loop tick rate; caps the effective client rate
+struct ClientCfg {
+  std::set<std::string> channels{ "nav", "route", "alarms", "ais", "track", "conns" };  // default: ALL
+  int rate = 1;                                  // effective Hz (1..NAV_SOURCE_HZ)
+  long lastSentTick = -1000;                     // last nav tick sent to this client (rate pacing)
+};
+static std::map<ix::WebSocket*, ClientCfg> g_client_cfg;
+static std::mutex g_client_cfg_mtx;
+static int clamp_rate(int r) { return r < 1 ? 1 : (r > 4 ? 4 : r); }
+static int effective_rate(int requested) { int r = clamp_rate(requested); return r < NAV_SOURCE_HZ ? r : NAV_SOURCE_HZ; }
+static void parse_sub(const rapidjson::Document& d, ClientCfg& cfg) {
+  if (d.HasMember("subscribe") && d["subscribe"].IsArray()) {
+    cfg.channels.clear();
+    for (auto& v : d["subscribe"].GetArray()) if (v.IsString()) cfg.channels.insert(v.GetString());
+    cfg.channels.insert("nav");                  // 'nav' (position/instruments) is the safety core — never droppable
+  }
+  if (d.HasMember("rate")) {
+    if (d["rate"].IsInt()) cfg.rate = effective_rate(d["rate"].GetInt());
+    else if (d["rate"].IsNumber()) cfg.rate = effective_rate((int)std::lround(d["rate"].GetDouble()));
+  }
+}
+static std::string sub_ack_msg(const ClientCfg& c) {
+  std::string s = "{\"t\":\"sub.ack\",\"subscribe\":[";
+  bool first = true;
+  for (auto& ch : c.channels) { s += std::string(first ? "" : ",") + "\"" + json_escape(ch) + "\""; first = false; }
+  s += "],\"rate\":" + std::to_string(c.rate) + "}";
+  return s;
+}
+
 // Command-plane: inbound nav-WS messages from a client. (Replaces the old push-only lambda.)
 static void handle_command(const std::string& msg, const std::shared_ptr<ix::WebSocket>& ws) {
   rapidjson::Document d;
   if (d.Parse(msg.c_str()).HasParseError() || !d.IsObject() || !d.HasMember("t") || !d["t"].IsString()) return;
   std::string t = d["t"].GetString();
-  if (t == "hello") return;                                  // legacy nav-client handshake — ignore
+  if (t == "hello" || t == "sub.update") {                   // CONTRACT-7: declare/renegotiate channels + rate
+    std::string ack;
+    { std::lock_guard<std::mutex> lk(g_client_cfg_mtx);
+      ClientCfg& cfg = g_client_cfg[ws.get()];
+      parse_sub(d, cfg);
+      if (t == "hello") cfg.lastSentTick = -1000;            // due immediately for the first frame
+      ack = sub_ack_msg(cfg); }
+    ws->send(ack);
+    return;
+  }
   if (!g_owner_token.empty()) {
     std::string tok = (d.HasMember("token") && d["token"].IsString()) ? d["token"].GetString() : std::string();
     if (tok != g_owner_token) { ws->send(conn_ack(false, "", "unauthorized")); return; }
@@ -1449,25 +1496,42 @@ static void nav_loop(ix::HttpServer* server) {
     for (size_t i = 0; i < route.size(); ++i) { char rb[40]; std::snprintf(rb, sizeof rb, "%s[%.5f,%.5f]", i ? "," : "", route[i].lon, route[i].lat); routeArr += rb; }
     routeArr += "]";
     std::string routeJson = "{\"coords\":" + routeArr + ",\"activeLeg\":" + std::to_string((long)li) + ",\"name\":\"" + json_escape(rname) + "\"}";
-    std::string snapOut(snap);
-    if (!snapOut.empty()) {                                                // top-level, before final }
-      snapOut.insert(snapOut.size() - 1, ",\"ais\":" + aisArr);
-      snapOut.insert(snapOut.size() - 1, ",\"conns\":" + connsArr);
-      snapOut.insert(snapOut.size() - 1, ",\"track\":" + trackFull + ",\"trackArmed\":" + armedJson);
-      snapOut.insert(snapOut.size() - 1, ",\"route\":" + routeJson);
-    }
-    if (keyframe) frame = snapOut;
-    else if (!frame.empty()) {
-      frame.insert(frame.size() - 1, ",\"ais\":" + aisArr);
-      frame.insert(frame.size() - 1, ",\"conns\":" + connsArr);
-      frame.insert(frame.size() - 1, ",\"trackAdd\":" + trackAdd + ",\"trackArmed\":" + armedJson);
-      frame.insert(frame.size() - 1, ",\"route\":" + routeJson);
-    }
+    // CONTRACT-7: per-client channel filtering + rate pacing. Build each channel as a FRAGMENT once;
+    // every client gets nav-core (always) plus only the fragments for the channels it subscribed to,
+    // paced to its effective rate. A new client always gets its first snapshot immediately.
+    const std::string coreSnap(snap);                       // nav core (the 'nav' channel) — snapshot form
+    const std::string coreDelta = keyframe ? std::string() : frame;   // 'frame' here is the nav-core delta (+wind)
+    const std::string fAis    = ",\"ais\":" + aisArr;
+    const std::string fConns  = ",\"conns\":" + connsArr;
+    const std::string fTrackS = ",\"track\":" + trackFull + ",\"trackArmed\":" + armedJson;
+    const std::string fTrackD = ",\"trackAdd\":" + trackAdd + ",\"trackArmed\":" + armedJson;
+    const std::string fRoute  = ",\"route\":" + routeJson;
 
     auto clients = server->getClients();
     std::set<ix::WebSocket*> live;
     for (auto& c : clients) live.insert(c.get());
-    for (auto& c : clients) c->send(g_seen.count(c.get()) ? frame : snapOut);
+    std::vector<std::pair<std::shared_ptr<ix::WebSocket>, std::string>> outbox;
+    {
+      std::lock_guard<std::mutex> lk(g_client_cfg_mtx);
+      for (auto& c : clients) {
+        ix::WebSocket* key = c.get();
+        ClientCfg& cfg = g_client_cfg[key];                 // hello-less clients default to ALL channels @ 1 Hz
+        const bool isNew = !g_seen.count(key);
+        int everyN = NAV_SOURCE_HZ / (cfg.rate < 1 ? 1 : cfg.rate); if (everyN < 1) everyN = 1;
+        if (!isNew && cfg.lastSentTick >= 0 && (tick - cfg.lastSentTick) < everyN) continue;   // rate pacing
+        cfg.lastSentTick = tick;
+        std::string out = (isNew || coreDelta.empty()) ? coreSnap : coreDelta;   // new client / keyframe → snapshot
+        const bool snapVariant = isNew || keyframe;
+        if (cfg.channels.count("route")) out.insert(out.size() - 1, fRoute);
+        if (cfg.channels.count("ais"))   out.insert(out.size() - 1, fAis);
+        if (cfg.channels.count("conns")) out.insert(out.size() - 1, fConns);
+        if (cfg.channels.count("track")) out.insert(out.size() - 1, snapVariant ? fTrackS : fTrackD);
+        outbox.emplace_back(c, std::move(out));
+      }
+      for (auto it = g_client_cfg.begin(); it != g_client_cfg.end(); )   // drop disconnected clients
+        it = live.count(it->first) ? std::next(it) : g_client_cfg.erase(it);
+    }
+    for (auto& p : outbox) p.first->send(p.second);
     g_seen.swap(live);
 
     // CONN-7: reconcile raw-monitor subscribers against the current clients (self-heals on
