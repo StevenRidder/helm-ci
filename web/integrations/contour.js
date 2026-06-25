@@ -25,9 +25,12 @@ export async function enable(map, ctx) {
   }
   if (!demSource) {
     demSource = new mlcontour.DemSource({
-      url: 'data/dem/{z}/{x}/{y}.png',   // LOCAL terrarium DEM (pipeline/fetch_dem.py) — offline-first, no CDN
+      // ABSOLUTE url: maplibre-contour's Web Worker can't resolve a relative path (no
+      // document base), so resolve against the page origin. LOCAL terrarium DEM
+      // (pipeline/fetch_dem.py) — offline-first, no CDN.
+      url: new URL('data/dem/', document.baseURI).href + '{z}/{x}/{y}.png',
       encoding: 'terrarium',
-      maxzoom: 13,
+      maxzoom: 12,
       worker: true,
     });
     demSource.setupMaplibre(ctx.maplibregl);

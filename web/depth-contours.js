@@ -25,7 +25,10 @@ let demSource = null;
 
 // Local terrarium DEM baked by the pipeline. Same {z}/{x}/{y} contract a CDN
 // would use, but served from the app's own origin — offline by default.
-const LOCAL_DEM = 'data/dem/{z}/{x}/{y}.png';
+// ABSOLUTE url on purpose: maplibre-contour fetches DEM tiles inside a Web Worker,
+// which has no document base and can't resolve a relative path (it throws
+// "Failed to parse URL"). Resolve against the page origin so the worker can fetch.
+const LOCAL_DEM = new URL('data/dem/', document.baseURI).href + '{z}/{x}/{y}.png';
 
 export async function enable(map, ctx = {}) {
   const maplibregl = ctx.maplibregl || window.maplibregl;
@@ -40,7 +43,7 @@ export async function enable(map, ctx = {}) {
     demSource = new mlcontour.DemSource({
       url: LOCAL_DEM,
       encoding: 'terrarium',
-      maxzoom: 13,                                // DEM is baked to z13; over-zoom past that
+      maxzoom: 12,                                // DEM is baked to z12; maplibre-contour over-zooms past that
       worker: true,
     });
     demSource.setupMaplibre(maplibregl);

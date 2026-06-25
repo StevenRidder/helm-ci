@@ -21,7 +21,7 @@
 import { cogProtocol } from '@geomatico/maplibre-cog-protocol';
 
 const SRC = 'helm-cog', LYR = 'helm-cog';
-const DEMO_COG = 'cog://data/demo-sst-cog.tif#color:BrewerYlOrRd9,28,33';
+const DEMO_COG = 'cog://data/demo-sst-cog.tif#color:BrewerYlOrRd9,25,28';
 let protocolReady = false;
 
 export async function enable(map, ctx) {

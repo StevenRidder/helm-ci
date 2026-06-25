@@ -12,11 +12,23 @@ live AWS source, but nothing requires it.
 Source: https://registry.opendata.aws/terrain-tiles/ (Mapzen/Terrarium, public).
 Encoding: terrarium  (elevation_m = (R*256 + G + B/256) - 32768; negative = bathymetry).
 """
-import math, os, sys, time, urllib.request
+import math, os, re, sys, time, urllib.request
 
-# Padded a little beyond the chart bbox so depth contours stay on-screen while panning.
-WEST, SOUTH, EAST, NORTH = -82.00, 24.35, -81.50, 24.70
-ZMIN, ZMAX = 9, 13
+# Region-driven: read BBOX (West,South,East,North) from region.env so a region switch
+# only edits region.env. Falls back to the Key West box if region.env is unreadable.
+def _bbox_from_region():
+    p = os.path.join(os.path.dirname(__file__), "region.env")
+    try:
+        m = re.search(r'BBOX="([^"]+)"', open(p).read())
+        if m:
+            w, s, e, n = (float(x) for x in m.group(1).split(","))
+            return w, s, e, n
+    except Exception:
+        pass
+    return -82.00, 24.35, -81.50, 24.70
+
+WEST, SOUTH, EAST, NORTH = _bbox_from_region()
+ZMIN, ZMAX = 9, 12        # z12 is plenty for depth contours — maplibre-contour over-zooms past it
 SRC = "https://elevation-tiles-prod.s3.amazonaws.com/terrarium/{z}/{x}/{y}.png"
 OUT = os.path.join(os.path.dirname(__file__), "..", "web", "data", "dem")
 
