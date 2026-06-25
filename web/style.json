@@ -14,6 +14,17 @@
       "bounds": [176.9, -18.2, 177.9, -17.2],
       "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0) — baked offline"
     },
+    "navionics": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "http://localhost:8091/navionics/{z}/{x}/{y}.png"
+      ],
+      "minzoom": 7,
+      "maxzoom": 17,
+      "bounds": [175.0, -22.5, 180.5, -11.0],
+      "attribution": "Navionics — owned chart pack (Fiji TCL2407)"
+    },
     "charts": {
       "type": "raster",
       "tileSize": 256,
@@ -79,9 +90,15 @@
       "paint": { "background-color": "#0a1622" }
     },
     {
+      "id": "navionics",
+      "type": "raster",
+      "source": "navionics"
+    },
+    {
       "id": "satellite",
       "type": "raster",
-      "source": "sat"
+      "source": "sat",
+      "layout": { "visibility": "none" }
     },
     {
       "id": "charts",
