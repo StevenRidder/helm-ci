@@ -614,6 +614,7 @@
 <script src="community.js"></script>
 <script src="measure.js"></script>
 <script src="collision.js"></script>
+<script src="ais-meta.js"></script>
 <script>
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   const map = new maplibregl.Map({ container: 'map', style: 'style.json', hash: true });
@@ -794,31 +795,80 @@
   // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
   const aisName = s => String(s == null ? '' : s).replace(/@+/g, '').trim();
   const aisAge = sec => sec == null ? null : (sec < 90 ? Math.round(sec) + ' s' : Math.round(sec / 60) + ' min') + ' ago';
+  // Redesigned AIS target card (OpenCPN-class). Every static/voyage field is read
+  // DEFENSIVELY (?? hide-row) so the card works today on the engine's 13-field payload
+  // and lights up the rest — type, nav status, call sign, destination/ETA, size, ROT —
+  // the moment the engine forwards what OpenCPN's decoder already has. Flag + risk tiers
+  // + LOST state are frontend-derived and live now.
   function aisPopupHTML(p) {
+    const meta = window.HelmAisMeta || {};
     const cls = AIS_CLASS[p.class] != null ? AIS_CLASS[p.class] : (p.class != null ? 'Class ' + p.class : '');
     const name = aisName(p.name) || ('MMSI ' + (p.mmsi ?? '?'));
-    const valid = p.cpaValid !== false && p.cpa != null;           // engine flags when CPA is meaningful
+    const fl = meta.flag ? meta.flag(p.mmsi) : '';
+    const type = meta.shipType ? meta.shipType(p.shipType ?? p.type) : null;
+    const ns = meta.navStatus ? meta.navStatus(p.navStatus) : null;
+    const callsign = aisName(p.callsign ?? p.callSign);
+    const dest = aisName(p.destination ?? p.dest);
+
+    const valid = p.cpaValid !== false && p.cpa != null;
+    let tone = 'ok', riskLabel = '';                                 // 3-tier collision risk
+    if (valid) {
+      if (p.cpa < 0.5 && p.tcpa > 0 && p.tcpa < 20) { tone = 'bad'; riskLabel = '⚠ DANGER · close approach'; }
+      else if (p.cpa < 1.5 && p.tcpa > 0 && p.tcpa < 40) { tone = 'warn'; riskLabel = '⚠ Caution'; }
+    }
+    const toneCol = { bad: 'var(--danger)', warn: '#f5c451', ok: 'var(--line)' }[tone];
     const cpa = valid ? aisNum(p.cpa, 2) + ' NM' : '—';
     const tcpa = (valid && p.tcpa != null)
       ? (+p.tcpa).toFixed(0) + ' min' + ((+p.tcpa) < 0 ? ' (opening)' : '') : '—';
-    const danger = valid && p.cpa < 2 && p.tcpa > 0 && p.tcpa < 30;  // close-approach heads-up
-    const rows = [
-      ['SOG', aisNum(p.sog, 1) + ' kn'],
-      ['COG', aisNum(p.cog, 0) + '°'],
-      (p.hdg != null && p.hdg < 360) ? ['HDG', aisNum(p.hdg, 0) + '°'] : null,
-      (p.range != null) ? ['Range', aisNum(p.range, 2) + ' NM'] : null,
-      (p.brg != null) ? ['Bearing', aisNum(p.brg, 0) + '°'] : null,
-      ['CPA', cpa],
-      ['TCPA', tcpa],
-      (aisAge(p.ageSec) != null) ? ['Last heard', aisAge(p.ageSec)] : null
-    ].filter(Boolean);
-    return '<div style="min-width:152px">'
-      + '<div style="font-weight:600;font-size:13px">' + aisEsc(name) + '</div>'
-      + '<div style="font-size:10.5px;color:var(--cdim);margin-bottom:6px">' + (cls || '') + (cls && p.mmsi ? ' · ' : '') + (p.mmsi ? p.mmsi : '') + '</div>'
-      + (danger ? '<div style="font-size:10.5px;color:var(--danger);font-weight:600;margin-bottom:6px">⚠ Close approach</div>' : '')
-      + rows.map(r => '<div style="display:flex;justify-content:space-between;gap:16px;font-size:11.5px;padding:1px 0">'
-          + '<span style="color:var(--cdim)">' + r[0] + '</span>'
-          + '<span style="font-variant-numeric:tabular-nums">' + r[1] + '</span></div>').join('')
+    const stale = p.ageSec != null && p.ageSec > 120;               // unheard target -> LOST/greyed
+
+    const row = (l, v) => '<div style="display:flex;justify-content:space-between;gap:14px;font-size:11.5px;padding:1px 0">'
+      + '<span style="color:var(--cdim)">' + l + '</span><span style="font-variant-numeric:tabular-nums">' + v + '</span></div>';
+    const sec = t => '<div style="font-size:9px;letter-spacing:.08em;color:var(--cdim);text-transform:uppercase;margin:7px 0 2px">' + t + '</div>';
+
+    const motion = [
+      row('SOG', aisNum(p.sog, 1) + ' kn'), row('COG', aisNum(p.cog, 0) + '°'),
+      (p.hdg != null && p.hdg < 360) ? row('HDG', aisNum(p.hdg, 0) + '°') : '',
+      (meta.rot && meta.rot(p.rot) != null) ? row('ROT', meta.rot(p.rot)) : '',
+      (p.range != null) ? row('Range', aisNum(p.range, 2) + ' NM') : '',
+      (p.brg != null) ? row('Bearing', aisNum(p.brg, 0) + '°') : ''
+    ].join('');
+
+    let voyage = '';
+    if (dest || p.eta) voyage = sec('Voyage')
+      + (dest ? row('→ Dest', aisEsc(dest)) : '') + (p.eta ? row('ETA', aisEsc(String(p.eta))) : '');
+    let size = '';
+    if (p.length || p.beam || p.draught) size = row('Size',
+      (p.length ? Math.round(p.length) + ' × ' + (p.beam ? Math.round(p.beam) : '?') + ' m' : '')
+      + (p.draught ? '  ·  ' + (+p.draught).toFixed(1) + ' m draught' : ''));
+
+    let badge = '';
+    if (ns && meta.navStyle) { const st = meta.navStyle(ns.tone);
+      badge = '<div style="display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin:1px 0 5px;'
+        + 'background:' + st.bg + ';color:' + st.fg + '">' + st.icon + ' ' + ns.label.toUpperCase() + '</div>'; }
+
+    const subline = [type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
+
+    return '<div style="min-width:190px' + (stale ? ';opacity:.5' : '') + '">'
+      + '<div style="display:flex;align-items:baseline;gap:6px">'
+      +   '<span style="font-weight:700;font-size:13.5px;flex:1;line-height:1.2">' + aisEsc(name) + '</span>'
+      +   (fl ? '<span style="font-size:14px">' + fl + '</span>' : '')
+      +   (cls ? '<span style="font-size:9.5px;color:var(--cdim)">' + cls + '</span>' : '')
+      + '</div>'
+      + (subline ? '<div style="font-size:10.5px;color:var(--cdim);margin-bottom:4px">' + subline + '</div>' : '')
+      + badge
+      + sec('Motion') + motion
+      + '<div style="border:1px solid ' + toneCol + ';border-radius:8px;padding:5px 7px;margin:7px 0">'
+      +   (riskLabel
+            ? '<div style="font-size:10.5px;font-weight:700;color:' + toneCol + ';margin-bottom:2px">' + riskLabel + '</div>'
+            : '<div style="font-size:9px;letter-spacing:.08em;color:var(--cdim);text-transform:uppercase;margin-bottom:1px">Collision risk</div>')
+      +   row('CPA', cpa) + row('TCPA', tcpa)
+      + '</div>'
+      + voyage + size
+      + (p.ageSec != null
+          ? '<div style="font-size:10px;color:' + (stale ? 'var(--danger)' : 'var(--cdim)') + ';margin-top:5px">'
+            + (stale ? '⚠ LOST · ' : '') + 'Last heard ' + aisAge(p.ageSec) + '</div>'
+          : '')
       + '</div>';
   }
   function updateAisFromEngine(list) {
