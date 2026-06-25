@@ -21,16 +21,28 @@ from gen_demo_data import elevation, BBOX
 W = H = 256
 OUT = os.path.join(os.path.dirname(__file__), '..', 'web', 'data', 'key-west-depth.tif')
 
+R = 6378137.0  # Web Mercator sphere radius
+
+def merc_x(lon): return R * math.radians(lon)
+def merc_y(lat): return R * math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))
+def inv_lon(x):  return math.degrees(x / R)
+def inv_lat(y):  return math.degrees(2 * math.atan(math.exp(y / R)) - math.pi / 2)
+
 def build():
+    # maplibre-cog-protocol expects COGs in EPSG:3857 (Web Mercator metres), so
+    # author the grid in 3857: sample the elevation field on an even metre grid,
+    # tag the CRS as projected 3857. (A 4326 file is read as metres -> wrong place.)
     minlon, minlat, maxlon, maxlat = BBOX
-    sx = (maxlon - minlon) / W
-    sy = (maxlat - minlat) / H
-    # pixel grid, row 0 = north (maxlat)
+    x0, x1 = merc_x(minlon), merc_x(maxlon)
+    y0, y1 = merc_y(minlat), merc_y(maxlat)   # y1 = north (larger)
+    sx = (x1 - x0) / W
+    sy = (y1 - y0) / H
+    # pixel grid, row 0 = north (y1)
     pix = bytearray()
     for j in range(H):
-        lat = maxlat - (j + 0.5) * sy
+        lat = inv_lat(y1 - (j + 0.5) * sy)
         for i in range(W):
-            lon = minlon + (i + 0.5) * sx
+            lon = inv_lon(x0 + (i + 0.5) * sx)
             pix += struct.pack('<f', float(elevation(lon, lat)))
 
     entries = []  # (tag, type, count, value_or_offset, is_inline, raw_external)
@@ -45,12 +57,12 @@ def build():
 
     # GeoKeyDirectory: version,rev,minor,numkeys + per-key (id,loc,count,value)
     geo_keys = [1, 1, 0, 3,
-                1024, 0, 1, 2,      # GTModelTypeGeoKey = 2 (geographic)
+                1024, 0, 1, 1,      # GTModelTypeGeoKey = 1 (projected)
                 1025, 0, 1, 1,      # GTRasterTypeGeoKey = 1 (PixelIsArea)
-                2048, 0, 1, 4326]   # GeographicTypeGeoKey = WGS84
+                3072, 0, 1, 3857]   # ProjectedCSTypeGeoKey = Web Mercator
     geo_raw = b''.join(struct.pack('<H', v) for v in geo_keys)
     pixscale_raw = struct.pack('<3d', sx, sy, 0.0)
-    tiepoint_raw = struct.pack('<6d', 0, 0, 0, minlon, maxlat, 0.0)
+    tiepoint_raw = struct.pack('<6d', 0, 0, 0, x0, y1, 0.0)  # top-left in 3857 metres
 
     # tags in ASCENDING order (TIFF requirement)
     tags = [
@@ -119,7 +131,7 @@ def build():
         if here < strip_off:
             f.write(b'\x00' * (strip_off - here))
         f.write(pix)            # image data
-    print(f'wrote {OUT}: {W}x{H} float32 EPSG:4326, strip@{strip_off}, '
+    print(f'wrote {OUT}: {W}x{H} float32 EPSG:3857, strip@{strip_off}, '
           f'{(strip_off + len(pix))/1024:.0f} KB')
 
 if __name__ == '__main__':

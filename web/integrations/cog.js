@@ -10,9 +10,17 @@
  * value-encoded single-band COG client-side (the Mercator-style idea, applied
  * to a file instead of a tile pyramid).
  *
- * DEMO_COG points at geomatico's public demo GeoTIFF; swap it for any COG
- * (e.g. a GFS field exported with `gdal_translate -of COG`). If it 404s the
- * layer simply doesn't draw — non-fatal.
+ * TWO requirements verified the hard way, both true of any real COG host:
+ *   - the COG must be EPSG:3857 (Web Mercator). geotiff.js reads a 4326 file's
+ *     coords AS METRES and lands it at the wrong place. pipeline/make_geotiff.py
+ *     authors data/key-west-depth.tif in 3857.
+ *   - the server must support HTTP Range requests (206). geotiff.js streams the
+ *     COG with ranges; a server that returns the full file (e.g. a bare
+ *     python -m http.server) errors "Server responded with full file".
+ *
+ * Local default below is that 3857 depth COG; swap for any COG (e.g. a GFS field
+ * exported with `gdal_translate -of COG`). If it 404s the layer simply doesn't
+ * draw — non-fatal.
  *
  * https://github.com/geomatico/maplibre-cog-protocol
  */
