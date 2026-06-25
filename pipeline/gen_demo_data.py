@@ -78,29 +78,42 @@ def write_png(path, rgb, size=256, alpha=False):
         f.write(png)
 
 # ---------------------------------------------------------------- bathymetry
+# Irregular island chain: hand-placed keys of varied size/spacing along the ridge
+# (centre lon, half-width°, height, lat-offset°) — organic, not evenly spaced.
+_KEYS = [
+    (-81.92, 0.018, 0.95, -0.002), (-81.865, 0.011, 0.72, 0.004),
+    (-81.815, 0.026, 1.05, 0.0), (-81.758, 0.013, 0.80, -0.003),
+    (-81.705, 0.020, 0.92, 0.003), (-81.648, 0.015, 0.70, -0.002),
+    (-81.60, 0.024, 1.00, 0.001), (-81.556, 0.010, 0.60, 0.004),
+]
+
+def _fbm(lon, lat):
+    """A little smooth pseudo-noise from incommensurate sines (organic texture)."""
+    return (0.55 * math.sin(lon / 0.031 + 1.3) * math.cos(lat / 0.028)
+            + 0.30 * math.sin((lon + lat) / 0.019 + 0.4)
+            + 0.18 * math.sin(lat / 0.013 - 0.7) * math.sin(lon / 0.017))
+
 def elevation(lon, lat):
     """Metres; negative = below sea level. Smooth, plausible, invented."""
-    # distance north/south of the island chain (~24.55 N)
-    dn = lat - 24.55
-    # The Keys: a low ridge of land along the chain, broken into islands by lon.
-    chain = math.exp(-((dn) ** 2) / (2 * 0.012 ** 2))
-    islands = 0.5 + 0.5 * math.sin((lon + 81.77) / 0.045 * math.pi)  # 0..1 gaps
-    land = chain * islands  # 0..1
-    if land > 0.55:
-        # above water: 0..5 m
-        return (land - 0.55) / 0.45 * 5.0 + 0.3
+    dn = lat - 24.55                       # distance N/S of the chain
+    # land = strongest nearby key (varied widths/heights/offsets -> irregular)
+    land = 0.0
+    for cx, w, h, off in _KEYS:
+        ridge = math.exp(-((lat - (24.55 + off)) ** 2) / (2 * 0.011 ** 2))
+        bump = h * math.exp(-((lon - cx) ** 2) / (2 * w ** 2))
+        land = max(land, ridge * bump)
+    if land > 0.5:
+        return (land - 0.5) / 0.5 * 5.0 + 0.3 + 0.4 * _fbm(lon * 2, lat * 2)
 
-    # Water: north (Florida Bay) shallow flats; south (Straits) deep.
-    if dn >= 0:  # north side — shallow grassy flats, gentle to ~ -4 m
-        base = -4.0 * (1 - math.exp(-(dn) / 0.05))
-        ripple = 0.6 * math.sin(lon / 0.02) * math.cos(lat / 0.02)
-        return min(-0.2, base + ripple)
-    # south side — reef shelf then steep drop into the Straits of Florida
-    d = -dn  # >0 going south
-    reef = -3.0 - 9.0 * (1 - math.exp(-d / 0.012))          # reef crest ~ -3..-12
-    shelf = -120.0 * (1 / (1 + math.exp(-(d - 0.06) / 0.02)))  # drop to ~ -120 m
-    wobble = 1.4 * math.sin(lon / 0.03) * math.sin(d / 0.03)
-    return reef + shelf + wobble
+    n = _fbm(lon, lat)
+    if dn >= 0:  # north — shallow Florida Bay flats, gentle to ~ -4 m, organic
+        base = -4.0 * (1 - math.exp(-dn / 0.05))
+        return min(-0.2, base + 0.7 * n)
+    # south — reef crest, then a steep drop into the Straits of Florida
+    d = -dn
+    reef = -3.0 - 9.0 * (1 - math.exp(-d / 0.012))
+    shelf = -120.0 * (1 / (1 + math.exp(-(d - 0.06) / 0.02)))
+    return reef + shelf + 1.6 * n * math.exp(-d / 0.05)
 
 # ---------------------------------------------------------------- encoders
 def terrarium_rgb(e):
@@ -112,19 +125,38 @@ def terrarium_rgb(e):
     b = int((rem - g) * 256)
     return r, g, b
 
+# Smooth bathymetric gradient (depth in m -> RGB), interpolated between stops for
+# a continuous "Windy"-style depth field rather than hard colour steps.
+_BATHY = [
+    (0,   (210, 232, 233)),   # shoreline — pale shell
+    (2,   (156, 223, 235)),   # white sand flats
+    (5,   (96,  196, 224)),
+    (10,  (54,  158, 210)),
+    (20,  (36,  120, 188)),
+    (40,  (26,  86,  158)),
+    (80,  (18,  56,  120)),
+    (140, (11,  33,  82)),    # deep navy — the Straits
+]
+_LAND = [
+    (0,  (164, 196, 168)),    # coastal green-grey
+    (2,  (190, 200, 150)),
+    (5,  (150, 132, 102)),    # tan
+]
+
+def _ramp(stops, x):
+    if x <= stops[0][0]:
+        return stops[0][1]
+    for (x0, c0), (x1, c1) in zip(stops, stops[1:]):
+        if x <= x1:
+            t = (x - x0) / (x1 - x0)
+            # smoothstep for a softer, more organic transition
+            t = t * t * (3 - 2 * t)
+            return tuple(int(round(a + (b - a) * t)) for a, b in zip(c0, c1))
+    return stops[-1][1]
+
 def relief_rgb(e):
-    """Nautical colour ramp: land tan, flats cyan, deeps blue. Returns (r,g,b)."""
-    if e >= 0:           # land
-        t = min(1.0, e / 5.0)
-        return (int(150 + 60 * t), int(140 + 55 * t), int(110 + 40 * t))
-    d = -e
-    if d < 2:   return (160, 226, 232)   # white/cyan shallow
-    if d < 5:   return (95, 198, 222)
-    if d < 10:  return (54, 160, 210)
-    if d < 20:  return (38, 120, 190)
-    if d < 40:  return (28, 86, 158)
-    if d < 80:  return (20, 60, 128)
-    return (14, 42, 98)
+    """Continuous bathymetric colour: deep navy -> teal -> pale flats -> sand."""
+    return _ramp(_LAND, e) if e >= 0 else _ramp(_BATHY, -e)
 
 # ---------------------------------------------------------------- generators
 def gen_field(kind, zmin, zmax):
