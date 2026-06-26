@@ -1,63 +1,116 @@
-// true-wind-ui.js — WX-13 UI: live True Wind readout (TWS/TWD/TWA), wired through the SHELL
-// registration seam. The pure derivation lives in true-wind.js (HelmTrueWind, fully unit-tested);
-// this file is just the on-screen surface + the per-frame update. Lane: WX-owned new file.
+// true-wind-ui.js — WX-13 UI: APPARENT vs TRUE wind, surfaced by TAPPING the Wind tiles in the
+// bottom instrument bar (not a rail icon). The pure derivation lives in true-wind.js (HelmTrueWind,
+// unit-tested); this file is the on-screen surface + the per-frame update. Lane: WX-owned.
 //
-// Registers a HelmShell panel + a ⌘K command from THIS file (no index.html body edits beyond the
-// two <script> tags + one applyNav() wiring line — the existing convention for a new nav consumer;
-// see the note on a future HelmShell.onNav() hook below).
+// Why a tile tap, not a rail panel: true wind is a *detail of the wind reading*, so its home is the
+// Wind instrument itself. Tap "Wind Speed" or "Wind Dir" → a popover with apparent vs true (speed,
+// direction, angle). The richer "tap any instrument → history line charts" is a BOARD-epic task.
+// Wired live via index.html applyNav() → HelmTrueWindUI.onNav(s) (unchanged). ⌘K still opens it.
 (function () {
   'use strict';
   if (typeof window === 'undefined') return;
 
-  var els = null, last = null;
-  var fmtDir = function (d) { return d == null ? '—' : (Math.round(d) % 360) + '°'; };
-  var fmtSpd = function (s) { return s == null ? '—' : s.toFixed(1); };
-  var fmtTwa = function (tw) { return tw == null ? '—' : (Math.abs(Math.round(tw.twa)) + '°' + (tw.twaSide === 'P' ? ' P' : ' S')); };
+  var TW = window.HelmTrueWind;
+  var trueW = null, apparent = null, pop = null, open = false;
+
+  function num(x) { return typeof x === 'number' && isFinite(x); }
+  function norm360(d) { d = d % 360; return d < 0 ? d + 360 : d; }
+  function signed180(d) { d = norm360(d); return d > 180 ? d - 360 : d; }
+  function side(a) { return a == null ? '' : (a >= 0 ? 'S' : 'P'); }   // starboard / port, off the bow
+
+  // apparent wind from the nav frame: AWS (speed), AWD (compass dir), AWA (angle off the bow)
+  function apparentOf(s) {
+    if (!s || !s.wind || !num(s.wind.spd) || !num(s.wind.dir)) return null;
+    var hdg = num(s.hdg) ? s.hdg : (num(s.cog) ? s.cog : 0);
+    var src = s.sources && s.sources.wind;
+    return { aws: s.wind.spd, awd: norm360(s.wind.dir), awa: signed180(s.wind.dir - hdg),
+             real: !!(src && src !== 'simulated' && src !== 'sim') };
+  }
+
+  function ensurePop() {
+    if (pop) return pop;
+    pop = document.createElement('div');
+    pop.id = 'helm-wind-detail';
+    pop.style.cssText = 'position:fixed;z-index:20;display:none;min-width:208px;max-width:248px;padding:11px 13px;' +
+      'border-radius:12px;font:500 12px -apple-system,system-ui;color:#eef4f9;background:rgba(16,22,30,.95);' +
+      'border:.5px solid rgba(255,255,255,.16);box-shadow:0 16px 48px -16px rgba(0,0,0,.8);' +
+      '-webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);';
+    document.body.appendChild(pop);
+    return pop;
+  }
 
   function paint() {
-    if (!els) return;
-    if (!last) { els.empty.style.display = ''; els.grid.style.display = 'none'; return; }
-    els.empty.style.display = 'none'; els.grid.style.display = '';
-    els.tws.textContent = fmtSpd(last.tws);
-    els.twd.textContent = fmtDir(last.twd);
-    els.twa.textContent = fmtTwa(last);
-  }
-
-  function render(body) {
-    body.innerHTML =
-      '<div class="sub">Derived from apparent wind + boat motion (SOG/COG). Ground-referenced.</div>' +
-      '<div id="helm-wx-tw-empty" class="sub" style="opacity:.7">Waiting for wind + motion data…</div>' +
-      '<div id="helm-wx-tw-grid" style="display:none">' +
-      '  <div class="row"><span class="lbl">True wind speed</span><span><b id="helm-wx-tw-tws">—</b> kn</span></div>' +
-      '  <div class="row"><span class="lbl">True wind dir (TWD)</span><b id="helm-wx-tw-twd">—</b></div>' +
-      '  <div class="row"><span class="lbl">True wind angle (TWA)</span><b id="helm-wx-tw-twa">—</b></div>' +
-      '</div>';
-    els = {
-      empty: body.querySelector('#helm-wx-tw-empty'), grid: body.querySelector('#helm-wx-tw-grid'),
-      tws: body.querySelector('#helm-wx-tw-tws'), twd: body.querySelector('#helm-wx-tw-twd'), twa: body.querySelector('#helm-wx-tw-twa')
+    if (!pop || pop.style.display === 'none') return;
+    var a = apparent, t = trueW;
+    if (!a) { pop.innerHTML = '<div style="opacity:.7">Waiting for wind data…</div>'; return; }
+    var head = '<td style="text-align:right;color:#7d92a6;font-size:10px;letter-spacing:.05em;padding:0 0 4px">';
+    var row = function (lbl, ap, tr) {
+      return '<tr><td style="padding:3px 0;color:#8aa0b0">' + lbl + '</td>' +
+        '<td style="padding:3px 16px 3px 0;text-align:right;font-variant-numeric:tabular-nums">' + ap + '</td>' +
+        '<td style="padding:3px 0;text-align:right;font-variant-numeric:tabular-nums">' + tr + '</td></tr>';
     };
-    paint();
+    var sp = function (v) { return num(v) ? v.toFixed(1) : '—'; };
+    var dir = function (v) { return num(v) ? Math.round(norm360(v)) + '°' : '—'; };
+    var ang = function (v, sd) { return num(v) ? Math.abs(Math.round(v)) + '° ' + (sd || side(v)) : '—'; };
+    pop.innerHTML =
+      '<div style="font-weight:500;margin-bottom:7px;display:flex;justify-content:space-between;align-items:baseline;gap:10px">' +
+        '<span>Wind — apparent vs true</span>' + (a.real ? '' : '<span style="font-size:10px;color:#ffc06a">sim, no sensor</span>') + '</div>' +
+      '<table style="width:100%;border-collapse:collapse">' +
+      '<tr><td></td>' + head + 'APPARENT</td>' + head + 'TRUE</td></tr>' +
+      row('Speed', sp(a.aws) + ' kn', t ? sp(t.tws) + ' kn' : '—') +
+      row('Direction', dir(a.awd), t ? dir(t.twd) : '—') +
+      row('Angle', ang(a.awa), t ? ang(t.twa, t.twaSide) : '—') +
+      '</table>' +
+      '<div style="margin-top:8px;font-size:10px;color:#7d92a6;line-height:1.4">True = apparent minus your motion (SOG/COG), ground-referenced.</div>';
   }
 
-  // Called every nav frame from index.html applyNav(). Computes true wind and updates the panel
-  // + a global (window.__truewind) that laylines (ROUTING-6) and any instrument can read.
+  function place() {
+    var anchor = document.getElementById('nv-wind');
+    var tile = anchor && anchor.closest ? anchor.closest('.it') : null;
+    var bar = document.querySelector('.ib');
+    var left = tile ? tile.getBoundingClientRect().left : 12;
+    var barH = bar ? bar.offsetHeight : 64;
+    var p = ensurePop();
+    p.style.display = 'block';
+    p.style.left = Math.round(Math.max(8, left)) + 'px';
+    p.style.bottom = (barH + 10) + 'px';   // anchored to the instrument bar (robust to viewport quirks)
+    p.style.top = 'auto';
+  }
+
+  function show() { open = true; ensurePop(); place(); paint(); }
+  function hide() { open = false; if (pop) pop.style.display = 'none'; }
+  function toggle() { open ? hide() : show(); }
+
   function onNav(s) {
-    if (!window.HelmTrueWind || !s) return;
-    var tw = window.HelmTrueWind.fromNav(s);   // treats nav `wind` as apparent
-    if (tw) { last = tw; window.__truewind = tw; paint(); }
+    if (!s) return;
+    apparent = apparentOf(s);
+    trueW = (TW && TW.fromNav) ? TW.fromNav(s) : null;
+    if (trueW) window.__truewind = trueW;   // laylines (ROUTING-6) + others read this
+    if (open) { place(); paint(); }
   }
 
-  // Register the panel + ⌘K command from this module (queued until HelmShell.boot()).
-  if (window.HelmShell && typeof window.HelmShell.registerPanel === 'function') {
-    window.HelmShell.registerPanel({
-      id: 'helm-wx-truewind', epic: 'WX', title: 'True wind', icon: 'TW', render: render
+  function wireTiles() {
+    ['nv-wind', 'nv-winddir'].forEach(function (id) {
+      var el = document.getElementById(id), tile = el && el.closest ? el.closest('.it') : null;
+      if (tile && !tile._windTap) {
+        tile._windTap = true;
+        tile.style.cursor = 'pointer';
+        tile.setAttribute('title', 'Tap for apparent vs true wind');
+        tile.addEventListener('click', function (e) { e.stopPropagation(); toggle(); });
+      }
     });
+  }
+  if (document.readyState !== 'loading') wireTiles(); else document.addEventListener('DOMContentLoaded', wireTiles);
+  document.addEventListener('click', function (e) { if (open && pop && !pop.contains(e.target)) hide(); }, false);
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') hide(); });
+
+  // ⌘K still opens it (the rail panel is gone — it lives on the wind tile now).
+  if (window.HelmShell && typeof window.HelmShell.registerCommand === 'function') {
     window.HelmShell.registerCommand({
-      id: 'helm-wx-truewind-show', epic: 'WX', title: 'Show true wind', subtitle: 'TWS / TWD / TWA',
-      keywords: 'wind true twa twd tws apparent', group: 'Weather',
-      run: function () { var p = window.HelmShell.panel && window.HelmShell.panel('helm-wx-truewind'); if (p) p.open(); }
+      id: 'helm-wx-truewind-show', epic: 'WX', title: 'Show true wind', subtitle: 'Apparent vs true (TWS / TWD / TWA)',
+      keywords: 'wind true twa twd tws apparent', group: 'Weather', run: show
     });
   }
 
-  window.HelmTrueWindUI = { onNav: onNav, current: function () { return last; } };
+  window.HelmTrueWindUI = { onNav: onNav, current: function () { return trueW; }, show: show, hide: hide };
 })();
