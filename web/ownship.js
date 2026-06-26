@@ -86,9 +86,7 @@
       '<div style="position:absolute;left:50%;top:7px;width:0;height:0;margin-left:-9px;' +
         'border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:26px solid #fff;"></div>' +
       '<div style="position:absolute;left:50%;top:11px;width:3px;height:18px;margin-left:-1.5px;' +
-        'background:#06121d;border-radius:2px;opacity:.9;"></div>' +
-      '<div style="position:absolute;left:50%;top:29px;width:13px;height:5px;margin-left:-6.5px;' +
-        'background:#f5c451;border:1px solid #06121d;border-radius:4px;"></div>';
+        'background:#06121d;border-radius:2px;opacity:.9;"></div>';
     const marker = new maplibregl.Marker({ element: el, rotationAlignment: 'map' });
     const label = document.createElement('div');
     label.className = 'ownship-label';
