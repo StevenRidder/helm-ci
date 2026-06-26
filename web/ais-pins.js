@@ -35,7 +35,7 @@
     var name = nm(p.name) || ('MMSI ' + mmsi);
     var fresh = fmt().freshChip ? fmt().freshChip(p.ageSec) : '';
     var srcL = fmt().sourceLabel ? fmt().sourceLabel(p.source) : '';
-    var srcChip = srcL ? '<span style="display:inline-flex;align-items:center;gap:5px;font-size:11px;color:var(--cdim);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);padding:3px 8px;border-radius:8px">📡 ' + srcL + '</span>' : '';
+    var srcChip = srcL ? '<span style="display:inline-flex;align-items:center;font-size:11px;color:var(--cdim);background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);padding:3px 8px;border-radius:8px">' + srcL + '</span>' : '';
     return '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
       + '<span style="width:9px;height:9px;border-radius:50%;background:' + c + ';flex:0 0 auto"></span>'
       + '<span style="flex:1;font-size:14.5px;font-weight:600;color:#eef4f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</span>'

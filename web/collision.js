@@ -564,10 +564,14 @@
         (window.HelmAisHub && HelmAisHub.registerTab ? HelmAisHub.registerTab : HelmShell.registerPanel)({
           id: 'helm-ais-list', epic: 'AIS', title: 'AIS targets', icon: ICON,
           render(body) {
-            body.appendChild(buildSuppressUI());           // AIS-6: hide moored/slow toggle + threshold
+            // The list's CSS is scoped to #helm-ais-list, but the hub mounts us in a bare pane — so
+            // wrap our content in that id, else the whole table inherits the 16px body default (large).
+            const root = document.createElement('div'); root.id = 'helm-ais-list';
+            root.appendChild(buildSuppressUI());            // AIS-6: hide moored/slow toggle + threshold
             const stat = document.createElement('div'); stat.className = 'ais-stat'; stat.textContent = 'Loading…';
             const wrap = document.createElement('div'); wrap.className = 'ais-scroll';
-            body.appendChild(stat); body.appendChild(wrap);
+            root.appendChild(stat); root.appendChild(wrap);
+            body.appendChild(root);
             statEl = stat; bodyEl = wrap; render();
           },
           onOpen() { render(); }                                  // refresh live data each time it opens

@@ -19,7 +19,7 @@
     brightest: { label: 'Brightest', cdim: '#e2eaf0', cdim2: '#cdd8e0' }
   };
   var SIZES = { s: { label: 'Small', v: 0.9 }, m: { label: 'Default', v: 1 }, l: { label: 'Large', v: 1.15 }, xl: { label: 'X-large', v: 1.3 } };
-  var DEF_SHADE = 'brighter', DEF_SIZE = 'm';                 // a touch whiter than the old default, per request
+  var DEF_SHADE = 'bright', DEF_SIZE = 'm';                   // Bright (#cdd9e2) muted text by default, per request
   var KEY_SHADE = 'helm.ui.textShade', KEY_SIZE = 'helm.ui.textSize';
 
   function load(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : v; } catch (e) { return d; } }
@@ -31,7 +31,10 @@
   function injectStyle() {
     if (document.getElementById('helm-uitext-style')) return;
     var s = document.createElement('style'); s.id = 'helm-uitext-style';
-    s.textContent = '.helm-ais-card,#helm-ais-pins{zoom:var(--ui-scale,1)}';
+    // Global UI text-scale: zoom EVERY floating panel + popup together; the map/chart stays 1:1.
+    // Future surfaces opt in automatically by being a .drawer/.glass panel, a MapLibre popup, or the
+    // command palette — or, for any other free-floating panel, by adding the .helm-scale class.
+    s.textContent = '.drawer,.helm-ais-card,#helm-ais-pins,.maplibregl-popup-content,.cmdk-box,.helm-scale{zoom:var(--ui-scale,1)}';
     (document.head || document.documentElement).appendChild(s);
   }
   function apply() {

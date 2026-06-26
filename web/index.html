@@ -1112,14 +1112,14 @@
 
     const fresh = aisFreshChip(p.ageSec);
     const srcLabel = aisSourceLabel(p.source);
-    const srcChip = srcLabel ? '<span style="' + AIS_CHIP + '">📡 ' + aisEsc(srcLabel) + '</span>' : '';
+    const srcChip = srcLabel ? '<span style="' + AIS_CHIP + '">' + aisEsc(srcLabel) + '</span>' : '';
     const pinned = !!(window.HelmAisPins && HelmAisPins.has && HelmAisPins.has(p.mmsi));
     const pinBtn = '<button onclick="window.HelmAisPins&&HelmAisPins.toggle(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
       + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';
 
     return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
       + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
-      +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:16px">' + fl + '</span>' : '') + '</span>'
+      +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:1.15em;line-height:1;vertical-align:-1px">' + fl + '</span>' : '') + '</span>'
       +   pinBtn
       + '</div>'
       + (subline ? '<div style="font-size:12px;color:var(--cdim);margin-bottom:6px">' + subline + '</div>' : '')
