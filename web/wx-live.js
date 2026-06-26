@@ -43,7 +43,7 @@
              particles: true, notify: function () {}, moveHandler: null, endHandler: null,
              debounce: null, abort: null, lastKey: '', requestCount: 0, phase: 'off', opacity: 0.72,
              cache: Object.create(null), cacheOrder: [], cacheLoaded: false, cacheHits: 0,
-             lastError: '', backoffUntil: 0, forceFetch: false };
+             lastError: '', backoffUntil: 0, forceFetch: false, imageUrl: '', imageShift: null };
 
   function codec() { return window.HelmWxCodec; }
   function layerCache() { return window.HelmLayerCache; }
@@ -224,6 +224,31 @@
     return field.west <= w && field.east >= e && field.south <= v[1] && field.north >= v[3];
   }
 
+  // MapLibre image sources do not automatically repeat across wrapped world copies. A field fetched
+  // around Fiji can honestly cover a viewport at -175° after a ±360° shift, but if the image source
+  // stays anchored at the original 35°..319° copy it renders off-screen. Keep the data bbox stable
+  // and shift only the display coordinates to the copy closest to the current viewport.
+  function displayShift(field, map) {
+    if (!field || !map) return 0;
+    var v = viewport(map), viewMid = (v[0] + v[2]) / 2, fieldMid = (field.west + field.east) / 2;
+    return Math.round((viewMid - fieldMid) / 360) * 360;
+  }
+
+  function imageCoordsForShift(field, shift) {
+    return [[field.west + shift, field.north], [field.east + shift, field.north],
+            [field.east + shift, field.south], [field.west + shift, field.south]];
+  }
+
+  function reanchorImage(map) {
+    map = map || st.map;
+    if (!map || !st.field || !st.imageUrl || !map.getSource(SRC)) return false;
+    var shift = displayShift(st.field, map);
+    if (st.imageShift === shift) return true;
+    map.getSource(SRC).updateImage({ url: st.imageUrl, coordinates: imageCoordsForShift(st.field, shift) });
+    st.imageShift = shift;
+    return true;
+  }
+
   function grid(bbox, nx, ny) {
     var lats = [], lons = [], qlat = [], qlon = [];
     for (var j = 0; j < ny; j++) lats.push(bbox[3] - (bbox[3] - bbox[1]) * j / (ny - 1));
@@ -326,7 +351,9 @@
     }
     cx.putImageData(img, 0, 0);
     var urlData = cv.toDataURL('image/png');
-    var coords = [[field.west, field.north], [field.east, field.north], [field.east, field.south], [field.west, field.south]];
+    st.imageUrl = urlData;
+    st.imageShift = displayShift(field, map);
+    var coords = imageCoordsForShift(field, st.imageShift);
     if (map.getSource(SRC)) map.getSource(SRC).updateImage({ url: urlData, coordinates: coords });
     else {
       map.addSource(SRC, { type: 'image', url: urlData, coordinates: coords });
@@ -356,7 +383,7 @@
     if (!map) return;
     if (map.getLayer(LYR)) map.removeLayer(LYR);
     if (map.getSource(SRC)) map.removeSource(SRC);
-    st.field = null; st.velocity = null;
+    st.field = null; st.velocity = null; st.imageUrl = ''; st.imageShift = null;
     applyParticles(null);
     publishStatus(st.on ? 'empty' : 'off');
   }
@@ -410,6 +437,7 @@
     var force = st.forceFetch;
     st.forceFetch = false;
     if (!force && st.field && covers(st.field, st.map)) {
+      reanchorImage(st.map);
       st.lastError = '';
       publishStatus('ready');
       return;
@@ -510,6 +538,7 @@
     if (st.abort) { st.token++; st.abort.abort(); st.abort = null; st.lastKey = ''; }
     if (st.field && covers(st.field, st.map)) {
       clearTimeout(st.debounce);
+      reanchorImage(st.map);
       publishStatus('ready');
       return;
     }
@@ -518,7 +547,7 @@
   }
 
   function onMoveEnd() {
-    if (st.field && covers(st.field, st.map)) { publishStatus('ready'); return; }
+    if (st.field && covers(st.field, st.map)) { reanchorImage(st.map); publishStatus('ready'); return; }
     scheduleRefresh(0);
   }
 
