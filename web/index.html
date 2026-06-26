@@ -682,6 +682,8 @@
 <script src="ais-vectors.js"></script><!-- AIS-4: CPA cone + speed-scaled predictor overlay (self-wired via the `ais` source + HelmShell) -->
 <script src="ais-guard.js"></script><!-- AIS-5: guard-zone / proximity alarm (fed the full target list by collision.js + HelmShell) -->
 <script src="ais-distress.js"></script><!-- AIS-7: SART/MOB/EPIRB + DSC distress surfacing (fed the full target list by HelmShell; CONTRACT-10 alarms) -->
+<script src="ais-tracks.js"></script><!-- AIS target trails ("wakes") — client-side accumulation, registers a hub "Tracks" tab -->
+<script src="ais-pins.js"></script><!-- pin multiple AIS targets into a live right-hand column (tap a vessel -> Pin) -->
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <script>
@@ -962,11 +964,29 @@
   // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
   const aisName = s => { const n = String(s == null ? '' : s).replace(/@+/g, '').trim(); return /^unknown$/i.test(n) ? '' : n; };
   const aisAge = sec => sec == null ? null : (sec < 90 ? Math.round(sec) + ' s' : Math.round(sec / 60) + ' min') + ' ago';
+  // Freshness chip — green fresh / amber aging / red stale, so you trust (or distrust) the reading at a glance.
+  const aisFreshChip = sec => {
+    if (sec == null) return '';
+    const a = +sec, col = a <= 15 ? ['#173404', '#97c459'] : a <= 120 ? ['#412402', '#ef9f27'] : ['#3a0f0d', '#ff8a82'];
+    const txt = a < 90 ? Math.round(a) + 's ago' : Math.round(a / 60) + 'm ago';
+    return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:' + col[0] + ';background:' + col[1] + ';padding:5px 10px;border-radius:16px">🕒 ' + (a > 120 ? 'stale · ' : 'updated ') + txt + '</span>';
+  };
+  // Source chip — resolve the engine's source connection id to its friendly name (the conns list rides
+  // the nav frame). Lets you tell "via Vesper AIS" from "via DataHub" from a 3rd-party feed at a glance.
+  const aisSourceLabel = id => {
+    if (!id) return '';
+    const c = (window.__helmConns || []).find(x => x && x.id === id);
+    return c ? (c.name || id) : id;
+  };
+  window.HelmAisFmt = { freshChip: aisFreshChip, sourceLabel: aisSourceLabel, age: aisAge };   // shared with the pinned-target cards (ais-pins.js)
   // Redesigned AIS target card (OpenCPN-class). Every static/voyage field is read
   // DEFENSIVELY (?? hide-row) so the card works today on the engine's 13-field payload
   // and lights up the rest — type, nav status, call sign, destination/ETA, size, ROT —
   // the moment the engine forwards what OpenCPN's decoder already has. Flag + risk tiers
   // + LOST state are frontend-derived and live now.
+  // Redesigned for the helm: larger type (iPad + low-vision), a big two-up CPA/TCPA safety stat
+  // color-coded to the risk tier, plus freshness + source chips and a pin button. Static/voyage
+  // fields are still read DEFENSIVELY (?? hide-row) so it degrades gracefully on a thin payload.
   function aisPopupHTML(p) {
     const meta = window.HelmAisMeta || {};
     const cls = AIS_CLASS[p.class] != null ? AIS_CLASS[p.class] : (p.class != null ? 'Class ' + p.class : '');
@@ -978,19 +998,25 @@
     const dest = aisName(p.destination ?? p.dest);
 
     const valid = p.cpaValid !== false && p.cpa != null;
-    let tone = 'ok', riskLabel = '';                                 // 3-tier collision risk (HelmAisRisk — single source of truth, no silent default)
+    let tone = 'ok', riskLabel = 'Safe · clear';
     const _rt = HelmAisRisk.tier(p);
     if (_rt === 'danger') { tone = 'bad'; riskLabel = '⚠ DANGER · collision risk'; }
     else if (_rt === 'caution') { tone = 'warn'; riskLabel = '⚠ Caution'; }
-    const toneCol = { bad: 'var(--danger)', warn: '#f5c451', ok: 'var(--line)' }[tone];
-    const cpa = valid ? aisNum(p.cpa, 2) + ' NM' : '—';
-    const tcpa = (valid && p.tcpa != null)
-      ? (+p.tcpa).toFixed(0) + ' min' + ((+p.tcpa) < 0 ? ' (opening)' : '') : '—';
-    const stale = p.ageSec != null && p.ageSec > 120;               // unheard target -> LOST/greyed
+    const toneCol = { bad: '#ff5a52', warn: '#f5c451', ok: '#43d17d' }[tone];
+    const cpa = valid ? aisNum(p.cpa, 2) : '—';
+    const tcpa = (valid && p.tcpa != null) ? (+p.tcpa).toFixed(0) : '—';
+    const tcpaOpening = valid && p.tcpa != null && (+p.tcpa) < 0;
+    const stale = p.ageSec != null && p.ageSec > 120;
 
-    const row = (l, v) => '<div style="display:flex;justify-content:space-between;gap:14px;font-size:11.5px;padding:1px 0">'
+    // big two-up safety stat (the two numbers that decide a threat), colored to the risk tier
+    const stat = (l, v, u, extra) => '<div style="flex:1;background:rgba(255,255,255,.04);border:1px solid ' + toneCol + '55;border-radius:11px;padding:8px 11px">'
+      + '<div style="font-size:11.5px;letter-spacing:.05em;color:var(--cdim)">' + l + '</div>'
+      + '<div style="font-size:23px;font-weight:600;color:' + (tone === 'ok' ? '#e6eef5' : toneCol) + ';line-height:1.1">' + v
+      + '<span style="font-size:12.5px;color:var(--cdim)"> ' + u + '</span></div>' + (extra || '') + '</div>';
+
+    const row = (l, v) => '<div style="display:flex;justify-content:space-between;gap:14px;font-size:14px;padding:2px 0">'
       + '<span style="color:var(--cdim)">' + l + '</span><span style="font-variant-numeric:tabular-nums">' + v + '</span></div>';
-    const sec = t => '<div style="font-size:9px;letter-spacing:.08em;color:var(--cdim);text-transform:uppercase;margin:7px 0 2px">' + t + '</div>';
+    const sec = t => '<div style="font-size:10.5px;letter-spacing:.07em;color:var(--cdim);text-transform:uppercase;margin:10px 0 3px">' + t + '</div>';
 
     const motion = [
       row('SOG', aisNum(p.sog, 1) + ' kn'), row('COG', aisNum(p.cog, 0) + '°'),
@@ -1010,31 +1036,32 @@
 
     let badge = '';
     if (ns && meta.navStyle) { const st = meta.navStyle(ns.tone);
-      badge = '<div style="display:inline-block;font-size:10px;font-weight:700;padding:2px 8px;border-radius:10px;margin:1px 0 5px;'
-        + 'background:' + st.bg + ';color:' + st.fg + '">' + st.icon + ' ' + ns.label.toUpperCase() + '</div>'; }
+      badge = '<span style="display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:10px;margin:2px 0 6px;'
+        + 'background:' + st.bg + ';color:' + st.fg + '">' + st.icon + ' ' + ns.label + '</span>'; }
 
-    const subline = [type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
+    const subline = [cls, type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
 
-    return '<div style="min-width:190px' + (stale ? ';opacity:.5' : '') + '">'
-      + '<div style="display:flex;align-items:baseline;gap:6px">'
-      +   '<span style="font-weight:700;font-size:13.5px;flex:1;line-height:1.2">' + aisEsc(name) + '</span>'
-      +   (fl ? '<span style="font-size:14px">' + fl + '</span>' : '')
-      +   (cls ? '<span style="font-size:9.5px;color:var(--cdim)">' + cls + '</span>' : '')
+    const fresh = aisFreshChip(p.ageSec);
+    const srcLabel = aisSourceLabel(p.source);
+    const srcChip = srcLabel ? '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#042c53;background:#85b7eb;padding:5px 10px;border-radius:16px">📡 ' + aisEsc(srcLabel) + '</span>' : '';
+    const pinned = !!(window.HelmAisPins && HelmAisPins.has && HelmAisPins.has(p.mmsi));
+    const pinBtn = '<button onclick="window.HelmAisPins&&HelmAisPins.toggle(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
+      + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';
+
+    return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
+      + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
+      +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:16px">' + fl + '</span>' : '') + '</span>'
+      +   pinBtn
       + '</div>'
-      + (subline ? '<div style="font-size:10.5px;color:var(--cdim);margin-bottom:4px">' + subline + '</div>' : '')
+      + (subline ? '<div style="font-size:12px;color:var(--cdim);margin-bottom:6px">' + subline + '</div>' : '')
       + badge
-      + sec('Motion') + motion
-      + '<div style="border:1px solid ' + toneCol + ';border-radius:8px;padding:5px 7px;margin:7px 0">'
-      +   (riskLabel
-            ? '<div style="font-size:10.5px;font-weight:700;color:' + toneCol + ';margin-bottom:2px">' + riskLabel + '</div>'
-            : '<div style="font-size:9px;letter-spacing:.08em;color:var(--cdim);text-transform:uppercase;margin-bottom:1px">Collision risk</div>')
-      +   row('CPA', cpa) + row('TCPA', tcpa)
+      + '<div style="display:flex;gap:8px;margin:8px 0 4px">'
+      +   stat('CPA', cpa, 'NM') + stat('TCPA', tcpa, 'min', tcpaOpening ? '<div style="font-size:10.5px;color:#5dd0b0">opening</div>' : '')
       + '</div>'
+      + '<div style="font-size:12.5px;font-weight:600;color:' + toneCol + ';margin:0 0 2px">' + riskLabel + '</div>'
+      + sec('Motion') + motion
       + voyage + size
-      + (p.ageSec != null
-          ? '<div style="font-size:10px;color:' + (stale ? 'var(--danger)' : 'var(--cdim)') + ';margin-top:5px">'
-            + (stale ? '⚠ LOST · ' : '') + 'Last heard ' + aisAge(p.ageSec) + '</div>'
-          : '')
+      + '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">' + fresh + srcChip + '</div>'
       + '</div>';
   }
   function updateAisFromEngine(list) {
@@ -1085,7 +1112,7 @@
     map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
     map.on('click', layer, e => { if (measuring()) return;
-      new maplibregl.Popup({ closeButton: true, maxWidth: '280px' })
+      new maplibregl.Popup({ closeButton: true, maxWidth: 'min(92vw, 340px)' })
         .setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
   });
 
@@ -1206,7 +1233,7 @@
       ownship.update(s);   // smooth glide + follow / course-up (ownship.js)
       alarms.onNav(s);     // depth / anchor / MOB safety alarms (alarms.js) — CPA handled by collision.js
       if (s.ais) updateAisFromEngine(s.ais);          // live AIS targets (range/brg/CPA/TCPA from the engine)
-      if (window.HelmConnections && s.conns) HelmConnections.onState(s.conns);   // live connection status
+      if (s.conns) { window.__helmConns = s.conns; if (window.HelmConnections) HelmConnections.onState(s.conns); }   // live connection status (+ shared map for the AIS source chip)
       if (window.HelmTrack) HelmTrack.onState(s);                                 // ownship breadcrumb trail
       if (window.HelmTrueWindUI) HelmTrueWindUI.onNav(s);                          // WX-13: live true-wind readout (TWS/TWD/TWA)
       if (window.HelmShell) HelmShell.dispatchNav(s);                              // SHELL-5: fan this frame to any module-registered HelmShell.onNav() listeners
@@ -1255,6 +1282,8 @@
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
     if (window.HelmRoutes) HelmRoutes.init({ client: window.__navClient });             // saved-route management UI
     if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)
+    if (window.HelmAisTracks) HelmAisTracks.init({ map: window.map });   // AIS target trails ("wakes")
+    if (window.HelmAisPins) HelmAisPins.init({ map: window.map });       // pinned-target live cards
   })();
 
   // ============ CLIENT-8: AIS viewport cull — debounced map moveend/zoomend → navClient.setBbox ============

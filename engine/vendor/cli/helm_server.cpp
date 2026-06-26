@@ -593,10 +593,14 @@ extern Select* pSelectAIS;                 // model global (ais_decoder.cpp), se
 static AisDecoder* g_ais = nullptr;
 static std::mutex  g_ais_mtx;
 struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
-                bool cpaValid; int cls; std::string name; std::time_t seen;
+                bool cpaValid; int cls; std::string name; std::time_t seen;   // seen = TRUE last-report time (PositionReportTicks)
                 // forwarded from OpenCPN's already-decoded AisTargetData for the rich target card
                 int navStatus, shipType, rot, imo, length, beam, etaMo, etaDay, etaHr, etaMin;
-                std::string callsign, destination; double draft; };
+                std::string callsign, destination; double draft;
+                std::string source; std::time_t prt; };   // source = feed id; prt = raw OpenCPN report tick (internal per-target "just reported" change-detector)
+// Per-thread "current AIS source": each connection driver thread stamps its conn id here before parsing,
+// so the !AIVDM harvest can tag the just-heard target with the feed it arrived on (set in conn_feed_*).
+static thread_local std::string g_cur_source;
 static std::string ais_trim(std::string s) {     // AIS text fields are right-padded with '@' (6-bit 0) / spaces
   size_t e = s.find_last_not_of("@ "); return e == std::string::npos ? std::string() : s.substr(0, e + 1);
 }
@@ -634,10 +638,18 @@ static void nmea_parse(const std::string& line, int prio) {
     std::time_t snap = std::time(nullptr);
     for (auto& kv : g_ais->GetTargetList()) {
       auto& t = kv.second;
-      g_ais_rows[t->MMSI] = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
-        t->CPA, t->TCPA, (g_have_fix.load() ? t->bCPA_Valid : false), (int)t->Class, ais_trim(t->ShipName), snap,
+      AisRow& row = g_ais_rows[t->MMSI];                          // existing entry (default if new)
+      // OpenCPN's PositionReportTicks uses wxDateTime's epoch, which is NOT std::time's base in this
+      // headless build — so use it ONLY as a per-target "did this target just report?" change flag and
+      // stamp freshness with reliable std::time(). seen then = TRUE time this target last reported.
+      std::time_t prt = std::max(t->PositionReportTicks, t->StaticReportTicks);
+      bool justHeard = (prt != row.prt) || (row.seen == 0);       // changed report tick (or brand new) = heard now
+      std::time_t seen = justHeard ? snap : row.seen;             // refresh on report; else keep so age grows truthfully
+      std::string src = justHeard ? g_cur_source : row.source;    // tag the just-heard target's feed; preserve others'
+      row = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
+        t->CPA, t->TCPA, (g_have_fix.load() ? t->bCPA_Valid : false), (int)t->Class, ais_trim(t->ShipName), seen,
         t->NavStatus, (int)t->ShipType, t->ROTAIS, t->IMO, t->DimA + t->DimB, t->DimC + t->DimD,
-        t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft };
+        t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft, src, prt };
     }
     return;
   }
@@ -894,7 +906,7 @@ static void conn_read_lines(int fd, const std::shared_ptr<ConnRuntime>& rt,
   }
 }
 static void conn_feed_fd(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
-  conn_read_lines(fd, rt, [&](const std::string& line) { raw_capture(conn_id, line); nmea_parse(line, prio); rt->sentences++; });
+  conn_read_lines(fd, rt, [&](const std::string& line) { g_cur_source = conn_id; raw_capture(conn_id, line); nmea_parse(line, prio); rt->sentences++; });
 }
 // SignalK driver as a managed connection (CONN-5): a per-connection WebSocket that feeds the SAME
 // sk_on_message → g_real per-field overrides as the HELM_SIGNALK path, but lifecycle-bound to the
@@ -991,7 +1003,7 @@ static void n2k_decode_line(const std::string& line, int prio) {
   }
 }
 static void conn_feed_n2k(int fd, const std::shared_ptr<ConnRuntime>& rt, int prio, const std::string& conn_id) {
-  conn_read_lines(fd, rt, [&](const std::string& line){ raw_capture(conn_id, line); n2k_decode_line(line, prio); rt->sentences++; });
+  conn_read_lines(fd, rt, [&](const std::string& line){ g_cur_source = conn_id; raw_capture(conn_id, line); n2k_decode_line(line, prio); rt->sentences++; });
 }
 
 // ---- CONN-10: internet AIS. Raw !AIVDM over TCP already works via tcp-client (→ AisDecoder); this
@@ -1820,12 +1832,12 @@ static void nav_loop(ix::HttpServer* server) {
         std::snprintf(tb, sizeof tb,
           "{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%s,\"sog\":%s,\"hdg\":%.0f,"
           "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,\"risk\":\"%s\","
-          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,"
+          "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,\"source\":\"%s\","
           "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
           "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
           t.mmsi, t.lat, t.lon, cogj, sogj, t.hdg,
           t.range, t.brg, t.cpa, t.tcpa, cpaEff ? "true" : "false", risk,
-          t.cls, json_escape(t.name).c_str(), age,
+          t.cls, json_escape(t.name).c_str(), age, json_escape(t.source).c_str(),
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
           eta, t.length, t.beam, t.draft, rotj, t.imo);
         aisTargets.push_back({ t.lat, t.lon, tb }); ++it;
