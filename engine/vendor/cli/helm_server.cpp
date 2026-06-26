@@ -1224,6 +1224,24 @@ static std::string pair_redeem(const std::string& pin, const std::string& name) 
   std::printf("pairing: issued owner token to \"%s\"\n", name.c_str());
   return tok;
 }
+// CONTRACT-15: bearer-role enforcement. HELM_REQUIRE_AUTH gates /nav + /chart + /catalog on a paired
+// token (CONTRACT-14); the UI shell + /pair + /health stay OPEN so a fresh client can load and pair.
+// Token rides ?token= (baked into navUrl()/tileTemplate() by server-endpoint.js) or Authorization: Bearer.
+static bool g_require_auth = false;
+static std::string token_role(const std::string& tok) {
+  if (tok.empty()) return "";
+  std::lock_guard<std::mutex> lk(g_tokens_mtx);
+  auto it = g_tokens.find(tok); return it == g_tokens.end() ? std::string() : it->second.role;
+}
+static std::string extract_token(const std::string& uri, const ix::WebSocketHttpHeaders& headers) {
+  for (std::size_t q = uri.find("token="); q != std::string::npos; q = uri.find("token=", q + 1)) {
+    if (q != 0 && uri[q - 1] != '?' && uri[q - 1] != '&') continue;   // a real query key (?token=/&token=), not a suffix like ?mytoken=
+    std::string t = uri.substr(q + 6); std::size_t amp = t.find('&'); return amp == std::string::npos ? t : t.substr(0, amp);
+  }
+  std::string a = header_ci(headers, "Authorization");   // Authorization: Bearer <token>
+  if (a.rfind("Bearer ", 0) == 0) return a.substr(7);
+  return "";
+}
 // ---------------------------------------------------------------------------
 // CONTRACT-7: per-client channel subscriptions + client-chosen nav rate.
 // The client DECLARES channels + a nav rate (1–4 Hz) in the hello and re-negotiates via sub.update;
@@ -1238,6 +1256,7 @@ struct ClientCfg {
   std::set<std::string> channels{ "nav", "route", "alarms", "ais", "track", "conns" };  // default: ALL
   int rate = 1;                                  // effective Hz (1..NAV_SOURCE_HZ)
   long lastSentTick = -1000;                     // last nav tick sent to this client (rate pacing)
+  std::string role = "owner";                    // CONTRACT-15: "owner"|"viewer" from the paired token (owner when auth off)
   bool forceSnapshot = false;                    // CONTRACT-6: next frame must be a fresh snapshot (re-baseline)
   long lastSeq = 0;                              // CONTRACT-6: client's last-seen seq from hello (advisory)
   bool hasBbox = false;                          // CONTRACT-8: cull the 'ais' channel to a viewport bbox
@@ -1425,7 +1444,10 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     }
     return;
   }
-  if (!g_owner_token.empty()) {
+  if (g_require_auth) {                            // CONTRACT-15: writes require the OWNER role (viewers are read-only)
+    std::lock_guard<std::mutex> lk(g_client_cfg_mtx);
+    if (g_client_cfg[ws.get()].role != "owner") { ws->send(conn_ack(false, "", "viewer is read-only")); return; }
+  } else if (!g_owner_token.empty()) {             // legacy env gate (when not in token mode)
     std::string tok = (d.HasMember("token") && d["token"].IsString()) ? d["token"].GetString() : std::string();
     if (tok != g_owner_token) { ws->send(conn_ack(false, "", "unauthorized")); return; }
   }
@@ -1576,6 +1598,8 @@ static void conn_init() {
   if (!g_owner_token.empty()) std::printf("connections: writes gated by HELM_OWNER_TOKEN\n");
   tokens_load();                            // CONTRACT-14: restore issued tokens; mint a fresh boot PIN
   g_pair_pin = gen_pin();
+  if (const char* ra = std::getenv("HELM_REQUIRE_AUTH")) g_require_auth = (*ra != '\0' && std::strcmp(ra, "0") != 0);  // CONTRACT-15
+  if (g_require_auth) std::printf("CONTRACT-15: HELM_REQUIRE_AUTH on — /nav,/chart,/catalog require a paired token (owner=write, viewer=read-only)\n");
 }
 
 static long g_seq = 0;
@@ -2004,7 +2028,13 @@ public:
         if (auto ws = wptr.lock()) {
           std::weak_ptr<ix::WebSocket> wk = ws;                  // capture weak to avoid a ref cycle
           ws->setOnMessageCallback([wk](const ix::WebSocketMessagePtr& m) {
-            if (m->type == ix::WebSocketMessageType::Message)    // command-plane: conn.list/upsert/delete
+            if (m->type == ix::WebSocketMessageType::Open) {     // CONTRACT-15: resolve the bearer token → role (or reject)
+              if (auto s = wk.lock()) {
+                std::string role = g_require_auth ? token_role(extract_token(m->openInfo.uri, m->openInfo.headers)) : std::string("owner");
+                if (g_require_auth && role.empty()) { s->close(4401, "unauthorized — pair first"); return; }
+                std::lock_guard<std::mutex> lk(g_client_cfg_mtx); g_client_cfg[s.get()].role = role;
+              }
+            } else if (m->type == ix::WebSocketMessageType::Message)    // command-plane: conn.list/upsert/delete
               if (auto s = wk.lock()) handle_command(m->str, s);
           });
         }
@@ -2015,6 +2045,14 @@ public:
     server->setOnConnectionCallback(
       [](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
         ix::WebSocketHttpHeaders h; h["Access-Control-Allow-Origin"] = "*";
+        const std::string path = req->uri.substr(0, req->uri.find('?'));   // route on the PATH — a ?token= query must not break exact-match routes
+        if (g_require_auth) {                        // CONTRACT-15: gate chart tiles + catalog on a paired token (UI/health/pair stay open)
+          bool prot = (path.rfind("/chart/", 0) == 0) || (path == "/catalog");
+          if (prot && token_role(extract_token(req->uri, req->headers)).empty()) {
+            h["Content-Type"] = "application/json";
+            return std::make_shared<ix::HttpResponse>(401, "Unauthorized", ix::HttpErrorCode::Ok, h, std::string("{\"ok\":false,\"error\":\"unauthorized — pair first\"}"));
+          }
+        }
         int z; long x, y;
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
@@ -2071,7 +2109,7 @@ public:
             job.status == TileStatus::BadRequest ? "Bad Request" : "Query Failed", ix::HttpErrorCode::Ok, h,
             std::string(job.status == TileStatus::BadRequest ? "no chart loaded\n" : "S-57 query failed; see server log\n"));
         }
-        if (req->method == "POST" && req->uri == "/pair") {   // CONTRACT-14: redeem a boot PIN for an owner bearer token
+        if (req->method == "POST" && path == "/pair") {   // CONTRACT-14: redeem a boot PIN for an owner bearer token
           h["Content-Type"] = "application/json";
           rapidjson::Document pd; std::string pin, nm;
           if (!pd.Parse(req->body.c_str()).HasParseError() && pd.IsObject()) {
@@ -2083,9 +2121,9 @@ public:
           std::string pbody = "{\"ok\":true,\"token\":\"" + tok + "\",\"role\":\"owner\",\"fingerprint\":\"" + json_escape(g_tls_fingerprint) + "\",\"name\":\"" + json_escape(nm) + "\"}";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, pbody);
         }
-        if (req->uri == "/health") { h["Content-Type"] = "application/json";
+        if (path == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
-        if (req->uri == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
+        if (path == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
           int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
           std::string edtn, eddate;                                             // CONTRACT-5b: cell edition from the loaded chart
           if (g_chart) { edtn = std::string(g_chart->GetSE().ToUTF8());
@@ -2096,7 +2134,7 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string(cb)); }
         // static UI (the page is served from the engine → same origin → no ?server=)
         std::string body, mime;
-        if (serve_static(req->uri, body, mime)) { h["Content-Type"] = mime;
+        if (serve_static(path, body, mime)) { h["Content-Type"] = mime;
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body); }
         h["Content-Type"] = "text/plain";
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string("not found\n"));

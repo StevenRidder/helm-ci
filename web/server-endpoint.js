@@ -64,12 +64,17 @@
 
   // Resolved once at load. Call HelmEndpoint.refresh() if the override changes at runtime.
   let cur = resolve();
+  // CONTRACT-15: ride the paired bearer token on the nav WS + chart tiles via ?token= (browsers can't
+  // set a WS Authorization header, and the tile template is consumed verbatim by MapLibre). No-op until
+  // a token is paired, so the open/dev path is unchanged.
+  const readTok = () => { try { return (window.localStorage && localStorage.getItem('helm.token')) || null; } catch (e) { return null; } };
+  const withTok = u => { const t = readTok(); return t ? u + (u.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(t) : u; };
   window.HelmEndpoint = {
     host: () => cur.host,
     port: () => cur.port,
     secure: () => cur.secure,
-    navUrl: () => cur.navUrl(),
-    tileTemplate: () => cur.tileTemplate(),
+    navUrl: () => withTok(cur.navUrl()),
+    tileTemplate: () => withTok(cur.tileTemplate()),
     healthUrl: () => cur.healthUrl(),
     origin: () => cur.origin(),
     describe: () => cur.describe(),
