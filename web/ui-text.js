@@ -40,9 +40,18 @@
     (document.head || document.documentElement).appendChild(s);
   }
   function apply() {
-    var root = document.documentElement.style;
-    root.setProperty('--cdim', SHADES[shade].cdim);
-    root.setProperty('--cdim2', SHADES[shade].cdim2);
+    var el = document.documentElement, root = el.style;
+    // Night & Dusk own the muted-text colour (low-sat red / amber for night vision). The day "label
+    // shade" greys would clobber that as INLINE styles (which beat the theme stylesheet), so in those
+    // themes we release --cdim/--cdim2 back to the theme. Re-applied on every theme switch (index.html
+    // applyTheme → HelmUiText.apply). Size (--ui-scale) is theme-independent and always applies.
+    if (el.classList.contains('theme-night') || el.classList.contains('theme-dusk')) {
+      root.removeProperty('--cdim');
+      root.removeProperty('--cdim2');
+    } else {
+      root.setProperty('--cdim', SHADES[shade].cdim);
+      root.setProperty('--cdim2', SHADES[shade].cdim2);
+    }
     root.setProperty('--ui-scale', String(SIZES[size].v));
   }
 

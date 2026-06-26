@@ -48,19 +48,40 @@
   :root.theme-dusk{
     --glass:rgba(8,3,1,.84);--glass2:rgba(22,9,4,.72);
     --line:rgba(224,112,58,.16);--line2:rgba(224,112,58,.07);
-    --ctext:#d2843a;--cdim:#a85f2c;--cdim2:#7a431f;
-    --accent:#e0703a;--mag:#b04a78;--ok:#b5642a;--danger:#ff5a52;--warn:#d98a3e;
+    --ctext:#e0883c;--cdim:#c47433;--cdim2:#a05a29;
+    --accent:#e0703a;--mag:#b04a78;--ok:#c47433;--danger:#ff5a52;--warn:#e0883c;
   }
   /* NIGHT — low-saturation RED on black (IHO S-52 night palette / the marine night-vision convention):
      red preserves dark adaptation and least disturbs sleep. */
   :root.theme-night{
     --glass:rgba(10,2,1,.9);--glass2:rgba(26,6,4,.76);
     --line:rgba(226,74,58,.2);--line2:rgba(226,74,58,.09);
-    --ctext:#e2503c;--cdim:#b23d2e;--cdim2:#7e2c20;
-    --accent:#ff5e46;--mag:#c2506a;--ok:#c0683a;--danger:#ff5a52;--warn:#e08a4a;
+    --ctext:#e2503c;--cdim:#d04835;--cdim2:#aa3a2a;
+    --accent:#ff5e46;--mag:#c2506a;--ok:#d04835;--danger:#ff5a52;--warn:#e08a4a;
   }
   :root.theme-dusk body{background:#0a0604}
   :root.theme-night, :root.theme-night body{background:#000}
+
+  /* ── TOOLS-5b — night-vision COMPLETENESS: pull EVERY bit of chrome (all text + all icons) into the
+     red (night) / amber (dusk) ramp. The var-swap alone left labels/rail too dark to read as red, the
+     MapLibre control icons blue-grey (a hardcoded filter), and ~30 hardcoded hexes + inline panel
+     colours untouched. The chart is a WebGL canvas, so this DOM sweep can't reach chart/AIS/weather/
+     tack colours — only chrome. `!important` here also overrides inline `style="color:…"` set in JS
+     panels. Two tiers keep depth (floor --cdim, values/titles --ctext); bright-fill pills + active
+     rail/segment accents are restored after so dark-on-colour text and the selected state survive. */
+  :root.theme-dusk body *, :root.theme-night body *{ color:var(--cdim) !important; }
+  :root.theme-dusk body :is(.it .v,.v,.v2,.ttl,.nm,h1,h2,h3,strong,b),
+  :root.theme-night body :is(.it .v,.v,.v2,.ttl,.nm,h1,h2,h3,strong,b){ color:var(--ctext) !important; }
+  :root.theme-dusk body .ri.on, :root.theme-night body .ri.on,
+  :root.theme-dusk body .ri:hover, :root.theme-night body .ri:hover{ color:var(--accent) !important; }
+  /* hardcoded SVG strokes follow the text colour (currentColor icons already do) */
+  :root.theme-dusk svg [stroke]:not([stroke="none"]), :root.theme-night svg [stroke]:not([stroke="none"]){ stroke:currentColor !important; }
+  /* MapLibre + custom map-control icons: swap the blue-grey filter for a red / amber tint */
+  :root.theme-dusk .maplibregl-ctrl-group button .maplibregl-ctrl-icon{ filter:brightness(0) saturate(100%) invert(64%) sepia(48%) saturate(900%) hue-rotate(346deg) brightness(95%) contrast(89%) !important; }
+  :root.theme-night .maplibregl-ctrl-group button .maplibregl-ctrl-icon{ filter:brightness(0) saturate(100%) invert(39%) sepia(85%) saturate(1700%) hue-rotate(335deg) brightness(95%) contrast(90%) !important; }
+  /* keep dark text legible on the (now red/amber) bright-fill pills */
+  :root.theme-dusk body :is(.seg span.on,.conn-btn.primary,.wx button.on,.nc-head .ic,.cpa-role.give,.cpa-role.stand),
+  :root.theme-night body :is(.seg span.on,.conn-btn.primary,.wx button.on,.nc-head .ic,.cpa-role.give,.cpa-role.stand){ color:#1a0503 !important; }
   #bril-wrap{display:flex;align-items:center;gap:7px;margin-left:8px;padding:0 4px}
   #bril-wrap[hidden]{display:none}
   #bril-wrap .ico{font-size:13px;color:var(--cdim)}
@@ -1442,6 +1463,7 @@
       paintRasters(p);
       document.documentElement.classList.toggle('theme-night', t === 'night');   // swaps every colour var
       document.documentElement.classList.toggle('theme-dusk', t === 'dusk');
+      if (window.HelmUiText) HelmUiText.apply();   // release/re-apply ui-text's inline --cdim so night/dusk own the muted-text colour
       if (brilWrap) brilWrap.hidden = (t !== 'night');
       applyBrilliance();
     }
