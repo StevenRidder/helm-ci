@@ -574,7 +574,8 @@ static std::string fmtDur(double hours) {
 }
 
 // NMEA 0183 over TCP (real data overrides the sim per-field; source flags stay truthful)
-static const int kNmeaPort = 10110;
+static int relay_port() { if (const char* s = std::getenv("HELM_RELAY_PORT")) { if (*s) { int p = std::atoi(s); if (p > 0 && p < 65536) return p; } } return 10110; }
+static const int kNmeaPort = relay_port();   // NMEA relay listen port (HELM_RELAY_PORT override → hermetic tests + coexistence with a live :8080)
 static const double kStaleSec = 5.0;
 struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; int prio = 0; };
 struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea"; int pos_prio = 0;
@@ -652,7 +653,14 @@ static void nmea_parse(const std::string& line, int prio) {
   else if (type == "MWV" && f.size() >= 6 && f[5] == "A") {
     if (!f[1].empty()) setf(g_real.wdir, std::atof(f[1].c_str()), now, "nmea", prio);
     if (!f[3].empty()) { double sp = std::atof(f[3].c_str()); if (f[4] == "K") sp *= 0.539957; else if (f[4] == "M") sp *= 1.943844; setf(g_real.wspd, sp, now, "nmea", prio); }
-  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) setf(g_real.hdg, std::atof(f[1].c_str()), now, "nmea", prio);
+  } else if (type == "HDT" && f.size() >= 2 && !f[1].empty()) setf(g_real.hdg, std::atof(f[1].c_str()), now, "nmea", prio);   // Heading, True
+  else if (type == "THS" && f.size() >= 2 && !f[1].empty()) setf(g_real.hdg, std::atof(f[1].c_str()), now, "nmea", prio);     // True Heading & Status (modern)
+  else if (type == "HDG" && f.size() >= 2 && !f[1].empty()) {   // Heading, Magnetic — apply deviation + variation → TRUE so it matches the GPS-true COG/route (e.g. Vesper $AIHDG,240.1,,,12.9,E → 253.0°)
+    double h = std::atof(f[1].c_str());
+    if (f.size() >= 4 && !f[2].empty()) { double dev = std::atof(f[2].c_str()); if (f[3] == "W") dev = -dev; h += dev; }   // deviation E+/W−
+    if (f.size() >= 6 && !f[4].empty()) { double var = std::atof(f[4].c_str()); if (f[5] == "W") var = -var; h += var; }   // variation E+/W− (magnetic → true)
+    setf(g_real.hdg, std::fmod(h + 360.0, 360.0), now, "nmea", prio);
+  }
 }
 // SignalK overlay — consume a SignalK server's WS delta stream as a CLIENT. Maps self-vessel
 // paths onto the SAME g_real per-field override, tagged "signalk". SI units -> kn/deg/m.

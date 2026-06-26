@@ -272,11 +272,16 @@
     return {
       update(s) {
         if (s && s.pos) {
-          target = {
-            lat: s.pos.lat, lon: s.pos.lon,
-            cog: (s.cog != null ? +s.cog : (target ? target.cog : 0)),
-            hdg: (s.hdg != null ? +s.hdg : (s.cog != null ? +s.cog : (target ? target.hdg : 0))),
-          };
+          const cog = (s.cog != null ? +s.cog : (target ? target.cog : 0));
+          // HONEST HEADING: trust s.hdg ONLY when it comes from a REAL source. The engine emits
+          // hdg:0 with sources.hdg:"missing" when no compass is wired (and "simulated" in pure sim),
+          // which would otherwise peg the bow to north. With no real heading, point along the real
+          // track (COG) when moving, and HOLD the last orientation at rest (COG is just noise then).
+          const sh = s.sources && s.sources.hdg;
+          const hdgReal = (sh === 'nmea' || sh === 'nmea2000' || sh === 'signalk') && s.hdg != null;
+          const moving = (s.sog != null ? parseFloat(s.sog) : sog) >= 0.5;
+          const hdg = hdgReal ? +s.hdg : (moving ? cog : (target ? target.hdg : cog));
+          target = { lat: s.pos.lat, lon: s.pos.lon, cog: cog, hdg: hdg };
           if (s.sog != null) sog = parseFloat(s.sog) || 0;
         }
       },

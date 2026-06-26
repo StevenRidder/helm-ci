@@ -30,6 +30,7 @@ SPORT="${HELM_TEST_PORT:-8077}"   # one-origin helm-server test port
 free_port(){ python3 -c 'import socket;s=socket.socket();s.bind(("127.0.0.1",0));p=s.getsockname()[1];s.close();print(p)'; }
 EPORT="${HELM_ENGINE_PORT:-$(free_port)}"   # helm-engine nav WS port
 NPORT="${HELM_NMEA_PORT:-$(free_port)}"     # helm-engine NMEA 0183 / AIS ingest port
+RPORT="${HELM_RELAY_PORT:-$(free_port)}"     # helm-server NMEA relay (live-data-only: feed a fix here or nav idles)
 
 pass=0; fail=0
 P(){ printf '\033[32m  PASS\033[0m  %s\n' "$*"; pass=$((pass+1)); }
@@ -39,8 +40,8 @@ jget(){ python3 -c 'import json,sys;exec("o=json.load(sys.stdin)\nfor k in sys.a
 
 [ -x "$BIN/helm-server" ] || { echo "no helm-server at $BIN — run engine/bootstrap.sh first"; exit 2; }
 
-inject_rmc(){ # lat lon  → send one valid GPRMC fix to the engine's NMEA port ($NPORT)
-python3 - "$1" "$2" "$NPORT" <<'PY'
+inject_rmc(){ # lat lon [port=$NPORT]  → send one valid GPRMC fix to an NMEA listener
+python3 - "$1" "$2" "${3:-$NPORT}" <<'PY'
 import socket,sys
 lat=float(sys.argv[1]); lon=float(sys.argv[2]); port=int(sys.argv[3]); la=abs(lat); lo=abs(lon)
 lats=f"{int(la):02d}{(la-int(la))*60:07.4f}"; lons=f"{int(lo):03d}{(lo-int(lo))*60:07.4f}"
@@ -57,11 +58,17 @@ echo "binaries: $BIN"
 # ---------- A) one-origin server ----------
 hdr "A. One-origin server  (ENGINE-9 merge · ENGINE-12 build · CHART-3 tiles)"
 ST="$(mktemp -d)"
-HELM_BIND=127.0.0.1 HELM_PORT=$SPORT HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$ST" \
+HELM_BIND=127.0.0.1 HELM_PORT=$SPORT HELM_RELAY_PORT=$RPORT HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$ST" \
   "$BIN/helm-server" >/tmp/te-server.log 2>&1 &
 SPID=$!; sleep 3
+# live-data-only engine (the simulator was removed): feed a continuous real fix into the seeded
+# NMEA relay (tcp-server on $RPORT) or the nav loop idles and streams nothing — the contract is
+# "no fabricated boat; nav idles until a real fix (pos+SOG+COG)".
+( for _ in $(seq 1 14); do inject_rmc 24.50 -81.80 $RPORT 2>/dev/null; sleep 0.7; done ) &
+FEEDPID=$!; sleep 1.5
 # nav-stream framing (snapshot → deltas, strictly increasing seq) via the contract smoke
 node "$HERE/stream-smoke.js" 127.0.0.1 $SPORT --ws-only >/tmp/te-smoke.txt 2>&1
+kill $FEEDPID 2>/dev/null
 if grep -q 'ALL PASS' /tmp/te-smoke.txt; then
   while IFS= read -r l; do P "nav stream:${l#  ok  }"; done < <(grep '  ok   ' /tmp/te-smoke.txt)
 else
