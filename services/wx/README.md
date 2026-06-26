@@ -41,7 +41,7 @@ GET /health
 [`web/integrations/cog.js`](../../web/integrations/cog.js) (`helmwx://` protocol). `scale`/`offset`
 are **fixed per layer** so colours and values are comparable across every tile and session.
 
-Layers: `wind, gust, temp, pressure, rain, clouds, cape`.
+Layers: `wind, gust, temp, pressure, rain, clouds, cape` (forecast API) + `sst, waves, swell, current` (Marine API).
 
 ## Run
 

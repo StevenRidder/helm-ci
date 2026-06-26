@@ -70,6 +70,10 @@ _load_dotenv()
 OPENMETEO_KEY = os.environ.get("HELM_WX_OPENMETEO_KEY", "").strip()
 FORECAST = ("https://customer-api.open-meteo.com/v1/forecast" if OPENMETEO_KEY
             else "https://api.open-meteo.com/v1/forecast")
+# Marine endpoint (waves/swell/sst/currents) — same key, different host. Marine layers carry marine:True.
+MARINE = ("https://customer-marine-api.open-meteo.com/v1/marine" if OPENMETEO_KEY
+          else "https://marine-api.open-meteo.com/v1/marine")
+KMH2KN = 0.539957
 CACHE_DIR = os.environ.get("HELM_WX_CACHE", os.path.join(os.path.dirname(__file__), "cache"))
 TTL = int(os.environ.get("HELM_WX_TTL", "1800"))            # a fetched grid / baked tile is reusable for 30 min
 COOLDOWN = int(os.environ.get("HELM_WX_COOLDOWN", "300"))   # after a 429 we serve cache only for 5 min
@@ -92,7 +96,7 @@ USER_AGENT = "helm-wx/0.1 (+https://github.com/StevenRidder/Helm; marine chartpl
 # and decoded values are comparable across EVERY tile and session — like Windy's fixed scales, and
 # unlike the offline baker's per-pack min/max. Ramps mirror web/wx-live.js so Live and tiles agree.
 LAYERS: Dict[str, dict] = {
-    "wind":     {"v": "wind_speed_10m", "unit": "kn", "vmin": 0.0, "vmax": 80.0,
+    "wind":     {"v": "wind_speed_10m", "dir": "wind_direction_10m", "vector": True, "unit": "kn", "vmin": 0.0, "vmax": 80.0,
                  "stops": [[0, [98, 113, 183]], [5, [57, 131, 168]], [10, [52, 171, 151]], [16, [123, 183, 80]],
                            [22, [225, 200, 60]], [30, [232, 130, 50]], [40, [214, 70, 74]], [55, [150, 60, 150]]]},
     "gust":     {"v": "wind_gusts_10m", "unit": "kn", "vmin": 0.0, "vmax": 100.0,
@@ -113,8 +117,23 @@ LAYERS: Dict[str, dict] = {
     "cape":     {"v": "cape", "unit": "J/kg", "vmin": 0.0, "vmax": 4000.0,
                  "stops": [[0, [56, 160, 200, 0]], [300, [120, 200, 120, 0.5]], [1000, [245, 205, 60, 0.8]],
                            [2500, [240, 120, 40, 0.9]], [4000, [220, 40, 40, 0.95]]]},
+    # MARINE layers — Open-Meteo Marine API (marine:True). NODATA over land falls out as transparent.
+    "sst":      {"v": "sea_surface_temperature", "marine": True, "unit": "°C", "vmin": 0.0, "vmax": 35.0,
+                 "stops": [[0, [70, 90, 200]], [10, [80, 180, 235]], [18, [70, 200, 150]], [24, [245, 205, 60]],
+                           [30, [240, 120, 40]], [35, [210, 40, 40]]]},
+    "waves":    {"v": "wave_height", "marine": True, "unit": "m", "vmin": 0.0, "vmax": 12.0,
+                 "stops": [[0, [60, 110, 180, 0.15]], [1, [60, 160, 190, 0.6]], [2.5, [80, 200, 140, 0.8]],
+                           [4, [235, 205, 70, 0.85]], [6, [235, 130, 50, 0.9]], [9, [210, 50, 60, 0.95]]]},
+    "swell":    {"v": "swell_wave_height", "marine": True, "unit": "m", "vmin": 0.0, "vmax": 10.0,
+                 "stops": [[0, [60, 110, 180, 0.15]], [1, [70, 150, 200, 0.6]], [2.5, [90, 190, 160, 0.8]],
+                           [4, [230, 200, 80, 0.85]], [6, [230, 120, 60, 0.9]], [8, [200, 50, 70, 0.95]]]},
+    "current":  {"v": "ocean_current_velocity", "dir": "ocean_current_direction", "vector": True, "conv": "kmh2kn",
+                 "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 6.0,
+                 "stops": [[0, [56, 160, 200, 0]], [0.5, [80, 200, 180, 0.55]], [1.5, [120, 200, 120, 0.8]],
+                           [3, [245, 205, 60, 0.85]], [4.5, [240, 120, 40, 0.9]], [6, [220, 40, 40, 0.95]]]},
 }
 MODEL_NAME = "Open-Meteo (GFS-seamless)"
+MARINE_MODEL = "Open-Meteo Marine"
 
 
 def layer_scale_offset(cfg: dict) -> Tuple[float, float]:
@@ -293,6 +312,7 @@ async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
         params["apikey"] = OPENMETEO_KEY
     if layer in ("wind", "gust"):
         params["wind_speed_unit"] = "kn"
+    endpoint = MARINE if cfg.get("marine") else FORECAST   # waves/swell/sst/currents come from the Marine API
     # Be a polite client: cap concurrency + space calls, so a viewport's burst of cell-fetches doesn't
     # hammer Open-Meteo (what tripped the 429s before caching+throttling).
     global _om_sem, _om_last
@@ -305,7 +325,7 @@ async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
         _om_last = time.time()
         _stats["openmeteo_calls"] += 1
         async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
-            r = await client.get(FORECAST, params=params)
+            r = await client.get(endpoint, params=params)
     if r.status_code == 429:
         _cooldown_until = time.time() + COOLDOWN
         _stats["cooldowns"] += 1
@@ -314,11 +334,15 @@ async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
     nodes = r.json()
     if not isinstance(nodes, list):
         nodes = [nodes]
+    conv = cfg.get("conv")
     vals: List[Optional[float]] = []
     for node in nodes:
         cur = (node or {}).get("current") or {}
         v = cur.get(cfg["v"])
-        vals.append(float(v) if isinstance(v, (int, float)) else None)
+        if isinstance(v, (int, float)):
+            vals.append(float(v) * KMH2KN if conv == "kmh2kn" else float(v))
+        else:
+            vals.append(None)                            # NODATA (land for an ocean-only layer) — never faked
     return Grid(GRID_N, GRID_N, lons[0], lats[-1], lons[-1], lats[0], vals)
 
 
@@ -399,7 +423,7 @@ def manifest_for(layer: str) -> dict:
         "bbox": [-180.0, -85.0, 180.0, 85.0],         # global — the gateway serves anywhere
         "global": True,                                # tells cog.js NOT to set source bounds (wrap across the dateline)
         "vmin": cfg["vmin"], "vmax": cfg["vmax"], "ramp": cfg["stops"],
-        "source": "open-meteo", "model": MODEL_NAME,
+        "source": "open-meteo", "model": MARINE_MODEL if cfg.get("marine") else MODEL_NAME,
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
         "times": None, "frames": None,
         "tiles_template": "{z}/{x}/{y}.png",
@@ -423,7 +447,7 @@ def health():
 @app.get("/index.json")
 def index():
     return {"encoding": ENCODING, "layers": {
-        k: {"unit": v["unit"], "source": "open-meteo", "model": MODEL_NAME,
+        k: {"unit": v["unit"], "source": "open-meteo", "model": MARINE_MODEL if v.get("marine") else MODEL_NAME,
             "minzoom": 0, "maxzoom": DATA_Z_MAX, "frames": 1, "manifest": "%s/manifest.json" % k}
         for k, v in LAYERS.items()}}
 
@@ -449,8 +473,11 @@ def _snap(w, s, e, n, step=2.0):
     return fl(w), max(-84.0, fl(s)), ce(e), min(84.0, ce(n))
 
 
-async def _fetch_velocity(w, s, e, n, gn):
+async def _fetch_velocity(layer, w, s, e, n, gn):
     global _cooldown_until, _om_last, _om_sem
+    cfg = LAYERS[layer]
+    spd_var, dir_var, conv = cfg["v"], cfg["dir"], cfg.get("conv")
+    endpoint = MARINE if cfg.get("marine") else FORECAST
     D2R = math.pi / 180.0
     lats = [n - (n - s) * j / (gn - 1) for j in range(gn)]
     lons = [w + (e - w) * i / (gn - 1) for i in range(gn)]
@@ -460,7 +487,9 @@ async def _fetch_velocity(w, s, e, n, gn):
             qlat.append(round(la, 3))
             qlon.append(round(((lo + 180) % 360 + 360) % 360 - 180, 3))
     params = {"latitude": ",".join(str(v) for v in qlat), "longitude": ",".join(str(v) for v in qlon),
-              "current": "wind_speed_10m,wind_direction_10m", "wind_speed_unit": "kn"}
+              "current": spd_var + "," + dir_var}
+    if not cfg.get("marine"):
+        params["wind_speed_unit"] = "kn"
     if OPENMETEO_KEY:
         params["apikey"] = OPENMETEO_KEY
     if _om_sem is None:
@@ -472,7 +501,7 @@ async def _fetch_velocity(w, s, e, n, gn):
         _om_last = time.time()
         _stats["openmeteo_calls"] += 1
         async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
-            r = await client.get(FORECAST, params=params)
+            r = await client.get(endpoint, params=params)
     if r.status_code == 429:
         _cooldown_until = time.time() + COOLDOWN
         raise RuntimeError("open-meteo 429")
@@ -483,11 +512,13 @@ async def _fetch_velocity(w, s, e, n, gn):
     us, vs = [], []
     for node in nodes:
         cur = (node or {}).get("current") or {}
-        spd = cur.get("wind_speed_10m")
-        dr = cur.get("wind_direction_10m")
+        spd = cur.get(spd_var)
+        dr = cur.get(dir_var)
         spd = float(spd) if isinstance(spd, (int, float)) else 0.0
         dr = float(dr) if isinstance(dr, (int, float)) else 0.0
-        us.append(-spd * math.sin(dr * D2R))            # FROM-direction -> motion vector (negated)
+        if conv == "kmh2kn":
+            spd *= KMH2KN
+        us.append(-spd * math.sin(dr * D2R))            # FROM/heading-direction -> motion vector (negated)
         vs.append(-spd * math.cos(dr * D2R))
     hdr = {"nx": gn, "ny": gn, "lo1": lons[0], "la1": lats[0], "lo2": lons[-1], "la2": lats[-1],
            "dx": (lons[-1] - lons[0]) / (gn - 1), "dy": (lats[0] - lats[-1]) / (gn - 1)}
@@ -497,12 +528,13 @@ async def _fetch_velocity(w, s, e, n, gn):
 
 @app.get("/velocity/{layer}")
 async def velocity(layer: str, w: float, s: float, e: float, n: float):
-    if layer != "wind":
-        return JSONResponse({"error": True, "reason": "velocity is wind-only (phase 1)"}, status_code=404)
+    cfg = LAYERS.get(layer)
+    if not cfg or not cfg.get("vector"):
+        return JSONResponse({"error": True, "reason": "velocity is for vector layers (wind, current)"}, status_code=404)
     if e < w:
         e += 360.0                                       # continuous across the antimeridian
     sw, ss, se, sn = _snap(w, s, e, n)                   # snap so nearby pans/zooms reuse one fetch
-    key = "vel|%.2f,%.2f,%.2f,%.2f" % (sw, ss, se, sn)
+    key = "vel|%s|%.2f,%.2f,%.2f,%.2f" % (layer, sw, ss, se, sn)
     now = time.time()
     hit = _vel.get(key)
     if hit and now - hit[1] <= TTL:
@@ -515,7 +547,7 @@ async def velocity(layer: str, w: float, s: float, e: float, n: float):
         if hit and time.time() - hit[1] <= TTL:
             return hit[0]
         try:
-            vel = await _fetch_velocity(sw, ss, se, sn, GRID_N)
+            vel = await _fetch_velocity(layer, sw, ss, se, sn, GRID_N)
         except Exception:
             if hit:
                 return hit[0]
