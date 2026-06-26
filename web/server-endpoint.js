@@ -73,6 +73,23 @@
     healthUrl: () => cur.healthUrl(),
     origin: () => cur.origin(),
     describe: () => cur.describe(),
-    refresh: () => { cur = resolve(); return cur.describe(); }
+    refresh: () => { cur = resolve(); return cur.describe(); },
+    // CONTRACT-14 (TOFU pairing): the bearer token + pinned cert fingerprint a paired client holds.
+    // Stored in localStorage on a successful pair(); CONTRACT-15 attaches token() to /nav + tile requests.
+    token: () => { try { return (window.localStorage && localStorage.getItem('helm.token')) || null; } catch (e) { return null; } },
+    fingerprint: () => { try { return (window.localStorage && localStorage.getItem('helm.fp')) || null; } catch (e) { return null; } },
+    // Redeem the boot PIN shown on the boat-server console for an owner token; persists token + cert fp.
+    pair: function (pin, name) {
+      return fetch(cur.origin() + '/pair', { method: 'POST', headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ pin: String(pin == null ? '' : pin), name: name || '' }) })
+        .then(r => r.json())
+        .then(j => {
+          if (j && j.ok && j.token) { try { localStorage.setItem('helm.token', j.token); if (j.fingerprint) localStorage.setItem('helm.fp', j.fingerprint); } catch (e) {} }
+          else console.warn('HelmEndpoint.pair: rejected —', (j && j.error) || 'unknown');
+          return j;
+        })
+        .catch(e => { console.error('HelmEndpoint.pair: request failed:', e && e.message); return { ok: false, error: 'network' }; });
+    },
+    unpair: () => { try { localStorage.removeItem('helm.token'); localStorage.removeItem('helm.fp'); } catch (e) {} }
   };
 })();

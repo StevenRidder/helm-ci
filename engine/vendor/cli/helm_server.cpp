@@ -37,6 +37,7 @@
 #include <vector>
 #include <ctime>
 #include <fstream>
+#include <random>
 #include <sstream>
 #include <atomic>
 #include <algorithm>
@@ -1153,6 +1154,64 @@ static void conn_load() {
   std::printf("connections: loaded %zu from %s\n", g_conns.size(), conn_path().c_str());
 }
 // ---------------------------------------------------------------------------
+// CONTRACT-14: TOFU pairing. A fresh 6-digit PIN per boot (printed to the console, where the owner has
+// physical access) mints bearer tokens over POST /pair; tokens persist in ~/.helm/tokens.json with a
+// role (owner today; viewer in CONTRACT-15). No CA — the client TOFU-pins the cert fingerprint (in the
+// Bonjour TXT, CONTRACT-13). This file ISSUES tokens; ENFORCEMENT on /nav,/chart,/catalog is CONTRACT-15.
+// ---------------------------------------------------------------------------
+struct Token { std::string role, name; long issuedAt; };
+static std::map<std::string, Token> g_tokens;
+static std::mutex g_tokens_mtx;
+static std::string g_pair_pin;                    // current boot PIN; empty ⇒ pairing CLOSED (too many bad tries / restart to reopen)
+static int g_pair_fails = 0;
+static std::string tokens_path() { return conn_dir() + "/tokens.json"; }
+static std::string rand_hex(int nbytes) {
+  static std::mt19937_64 rng((uint64_t)std::random_device{}() ^ (uint64_t)std::time(nullptr));
+  static const char* hx = "0123456789abcdef"; std::string s; s.reserve((size_t)nbytes * 2);
+  for (int i = 0; i < nbytes; ++i) { unsigned b = (unsigned)(rng() & 0xFF); s += hx[b >> 4]; s += hx[b & 0xF]; }
+  return s;
+}
+static std::string gen_pin() {
+  static std::mt19937 rng((unsigned)std::random_device{}()); std::uniform_int_distribution<int> d(0, 999999);
+  char b[8]; std::snprintf(b, sizeof b, "%06d", d(rng)); return b;
+}
+static void tokens_save() {
+  std::string js = "["; bool first = true;
+  { std::lock_guard<std::mutex> lk(g_tokens_mtx);
+    for (auto& kv : g_tokens) { js += std::string(first ? "" : ",") + "{\"token\":\"" + json_escape(kv.first) + "\",\"role\":\"" + json_escape(kv.second.role) + "\",\"name\":\"" + json_escape(kv.second.name) + "\",\"issuedAt\":" + std::to_string(kv.second.issuedAt) + "}"; first = false; } }
+  js += "]";
+  std::string dir = conn_dir(); ::mkdir(dir.c_str(), 0700);
+  std::string path = tokens_path(), tmp = path + ".tmp";
+  { std::ofstream f(tmp, std::ios::binary | std::ios::trunc); if (!f) { std::fprintf(stderr, "tokens_save: cannot write %s\n", tmp.c_str()); return; } f << js; }
+  if (::rename(tmp.c_str(), path.c_str()) != 0) std::fprintf(stderr, "tokens_save: rename %s failed\n", path.c_str());
+}
+static void tokens_load() {
+  std::string body; if (!read_file(tokens_path().c_str(), body)) return;
+  rapidjson::Document d;
+  if (d.Parse(body.c_str()).HasParseError() || !d.IsArray()) { std::fprintf(stderr, "tokens_load: %s corrupt — ignoring\n", tokens_path().c_str()); return; }
+  std::lock_guard<std::mutex> lk(g_tokens_mtx);
+  for (auto& e : d.GetArray()) {
+    if (!e.IsObject() || !e.HasMember("token") || !e["token"].IsString()) continue;
+    Token t; t.role = (e.HasMember("role") && e["role"].IsString()) ? e["role"].GetString() : "owner";
+    t.name = (e.HasMember("name") && e["name"].IsString()) ? e["name"].GetString() : "";
+    t.issuedAt = (e.HasMember("issuedAt") && e["issuedAt"].IsInt64()) ? (long)e["issuedAt"].GetInt64() : 0;
+    g_tokens[e["token"].GetString()] = t;
+  }
+  std::printf("pairing: loaded %zu token(s) from %s\n", g_tokens.size(), tokens_path().c_str());
+}
+// Redeem a PIN for a fresh owner token. Returns "" on bad/closed PIN (and closes pairing after 10 bad tries).
+static std::string pair_redeem(const std::string& pin, const std::string& name) {
+  std::string tok;
+  { std::lock_guard<std::mutex> lk(g_tokens_mtx);
+    if (g_pair_pin.empty()) return "";
+    if (pin != g_pair_pin) { if (++g_pair_fails >= 10) { g_pair_pin.clear(); std::fprintf(stderr, "pairing: too many bad PINs — pairing CLOSED until restart\n"); } return ""; }
+    tok = rand_hex(24); g_tokens[tok] = { "owner", name, (long)std::time(nullptr) };
+  }
+  tokens_save();                                  // locks g_tokens_mtx itself — called after the scope above releases it
+  std::printf("pairing: issued owner token to \"%s\"\n", name.c_str());
+  return tok;
+}
+// ---------------------------------------------------------------------------
 // CONTRACT-7: per-client channel subscriptions + client-chosen nav rate.
 // The client DECLARES channels + a nav rate (1–4 Hz) in the hello and re-negotiates via sub.update;
 // the server filters frame content to the subscription and paces nav to the EFFECTIVE rate. The
@@ -1502,6 +1561,8 @@ static void conn_init() {
       std::printf("connections: seeded default Local NMEA relay tcp://127.0.0.1:%d\n", kNmeaPort);
     } }
   if (!g_owner_token.empty()) std::printf("connections: writes gated by HELM_OWNER_TOKEN\n");
+  tokens_load();                            // CONTRACT-14: restore issued tokens; mint a fresh boot PIN
+  g_pair_pin = gen_pin();
 }
 
 static long g_seq = 0;
@@ -1799,23 +1860,26 @@ static void nav_loop(ix::HttpServer* server) {
 // ===========================================================================
 // Bonjour (_helm._tcp) — system dns_sd; lets an iPad discover "Helm Engine".
 // ===========================================================================
+static std::string g_tls_fingerprint;            // SHA-256 of the serving cert (set by setup_tls below; empty if plaintext)
 static void bonjour_advertise(int port) {
   static DNSServiceRef ref = nullptr;
-  // CONTRACT-13: TXT record so a discovering client (e.g. native NWBrowser) can label the boat and
-  // decide transport before connecting. v=protocol version, name=human boat name. tls=0 is emitted
-  // honestly while plaintext; CONTRACT-12 (one TLS origin) flips it to tls=1 and adds fp=<cert sha256>.
+  // CONTRACT-13: TXT record so a discovering client (native NWBrowser) can label the boat and decide
+  // transport BEFORE connecting. v=protocol version, name=human boat name, tls=1 + fp=<cert sha256>
+  // when the TLS origin (CONTRACT-12) is on so the client can TOFU-pin the cert ahead of connecting.
   const char* nmEnv = std::getenv("HELM_NAME");
   std::string name = (nmEnv && *nmEnv) ? nmEnv : "Helm Engine";
+  const bool tlsOn = !g_tls_fingerprint.empty();
   TXTRecordRef txt; TXTRecordCreate(&txt, 0, nullptr);
   TXTRecordSetValue(&txt, "v", 1, "1");
   TXTRecordSetValue(&txt, "name", (uint8_t)std::min(name.size(), (size_t)255), name.c_str());
-  TXTRecordSetValue(&txt, "tls", 1, "0");
+  TXTRecordSetValue(&txt, "tls", 1, tlsOn ? "1" : "0");
+  if (tlsOn) TXTRecordSetValue(&txt, "fp", (uint8_t)std::min(g_tls_fingerprint.size(), (size_t)255), g_tls_fingerprint.c_str());
   DNSServiceErrorType err = DNSServiceRegister(
     &ref, 0, 0, name.c_str(), "_helm._tcp", nullptr, nullptr, htons((uint16_t)port),
     TXTRecordGetLength(&txt), TXTRecordGetBytesPtr(&txt), nullptr, nullptr);
   TXTRecordDeallocate(&txt);
   if (err != kDNSServiceErr_NoError) { std::fprintf(stderr, "Bonjour: register failed (%d) — discovery off\n", err); return; }
-  std::printf("Bonjour: advertising _helm._tcp on %d as \"%s\" (v=1 tls=0)\n", port, name.c_str());
+  std::printf("Bonjour: advertising _helm._tcp on %d as \"%s\" (v=1 tls=%s%s)\n", port, name.c_str(), tlsOn ? "1" : "0", tlsOn ? " +fp" : "");
   std::thread([] { for (;;) { if (DNSServiceProcessResult(ref) != kDNSServiceErr_NoError) break; } }).detach();
 }
 
@@ -1827,8 +1891,7 @@ static void bonjour_advertise(int port) {
 // Bonjour TXT (CONTRACT-13) and TOFU pairing (CONTRACT-14). Plain HTTP when unset (dev). ixwebsocket
 // is built USE_TLS+USE_OPEN_SSL, so this is a front-door wrapper, not new infra.
 // ===========================================================================
-static std::string g_tls_fingerprint;            // "AA:BB:.." SHA-256 of the serving cert (empty if plaintext)
-static bool setup_tls(ix::HttpServer* server, const char* bindHost) {
+static bool setup_tls(ix::HttpServer* server, const char* bindHost) {   // sets g_tls_fingerprint (declared above, near bonjour)
   const char* certEnv = std::getenv("HELM_TLS_CERT");
   const char* keyEnv  = std::getenv("HELM_TLS_KEY");
   if (!certEnv || !*certEnv || !keyEnv || !*keyEnv) {
@@ -1960,6 +2023,18 @@ public:
             job.status == TileStatus::BadRequest ? "Bad Request" : "Query Failed", ix::HttpErrorCode::Ok, h,
             std::string(job.status == TileStatus::BadRequest ? "no chart loaded\n" : "S-57 query failed; see server log\n"));
         }
+        if (req->method == "POST" && req->uri == "/pair") {   // CONTRACT-14: redeem a boot PIN for an owner bearer token
+          h["Content-Type"] = "application/json";
+          rapidjson::Document pd; std::string pin, nm;
+          if (!pd.Parse(req->body.c_str()).HasParseError() && pd.IsObject()) {
+            if (pd.HasMember("pin") && pd["pin"].IsString()) pin = pd["pin"].GetString();
+            if (pd.HasMember("name") && pd["name"].IsString()) nm = pd["name"].GetString();
+          }
+          std::string tok = pair_redeem(pin, nm);
+          if (tok.empty()) return std::make_shared<ix::HttpResponse>(403, "Forbidden", ix::HttpErrorCode::Ok, h, std::string("{\"ok\":false,\"error\":\"bad or closed pin\"}"));
+          std::string pbody = "{\"ok\":true,\"token\":\"" + tok + "\",\"role\":\"owner\",\"fingerprint\":\"" + json_escape(g_tls_fingerprint) + "\",\"name\":\"" + json_escape(nm) + "\"}";
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, pbody);
+        }
         if (req->uri == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
         if (req->uri == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
@@ -1999,6 +2074,9 @@ public:
     std::thread(nav_loop, server).detach();
     conn_init();   // load/seed persisted connections; each enabled one runs its own driver thread
     bonjour_advertise(port);
+    // CONTRACT-14: print the boot PIN + a scannable pairing payload (host/port/tls/fp/pin) for QR/manual entry.
+    printf("Pairing: PIN %s  —  POST /pair {\"pin\":\"%s\",\"name\":\"<device>\"} for an owner token\n", g_pair_pin.c_str(), g_pair_pin.c_str());
+    printf("Pairing payload: helm://pair?host=%s&port=%d&tls=%d&fp=%s&pin=%s\n", bindHost, port, g_tls_fingerprint.empty() ? 0 : 1, g_tls_fingerprint.c_str(), g_pair_pin.c_str());
     return false;  // no wx event loop; main() runs the render job loop
   }
 };
