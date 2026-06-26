@@ -446,6 +446,7 @@
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
+  <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
   <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
@@ -756,8 +757,13 @@
     // the initial batch fires against the placeholder, fatal on a remote device (localhost = the phone).
     // Port stays 8091 — a ?server= override only relocates the host. Everything else passes through.
     transformRequest: (url) => {
-      if (window.HelmEndpoint && url.indexOf(':8091/') !== -1)
-        return { url: url.replace(/\/\/[^/]+:8091\//, '//' + HelmEndpoint.host() + ':8091/') };
+      // Owned mbtiles basemaps (:8091) + the online-fill cache (:8095, CHART-16) ship a localhost
+      // placeholder — rewrite their HOST to the page host so an iPad/phone on the boat LAN loads
+      // them from THIS Mac. The port is preserved (8091 stays 8091, 8095 stays 8095).
+      if (window.HelmEndpoint) {
+        var m = url.match(/\/\/[^/]+:(8091|8095)\//);
+        if (m) return { url: url.replace(/\/\/[^/]+:(8091|8095)\//, '//' + HelmEndpoint.host() + ':' + m[1] + '/') };
+      }
       return { url };
     }
   });
@@ -803,6 +809,20 @@
         .forEach(l => map.setLayoutProperty(l.id, 'visibility', vis));
     });
   });
+
+  // Online fill (CHART-16): the data-layer handler above toggles visibility; here we persist the
+  // choice like the theme (default OFF = pure-offline baseline) and restore it on load.
+  (function () {
+    const cb = document.querySelector('input[data-layer="helm-chart-online-fill"]');
+    if (!cb) return;
+    cb.addEventListener('change', () => { try { if (window.HelmStore) HelmStore.set('ui.onlineFill', cb.checked); } catch (e) {} });
+    const restore = () => {
+      const on = !!(window.HelmStore && HelmStore.get('ui.onlineFill', false));
+      cb.checked = on;
+      try { if (map.getLayer('helm-chart-online-fill')) map.setLayoutProperty('helm-chart-online-fill', 'visibility', on ? 'visible' : 'none'); } catch (e) {}
+    };
+    if (map.isStyleLoaded && map.isStyleLoaded()) restore(); else map.on('load', restore);
+  })();
 
   // Basemap picker (radios): show the chosen base (your charts vs your satellite), hide the others.
   const BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis'];
