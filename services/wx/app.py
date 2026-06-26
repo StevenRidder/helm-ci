@@ -132,9 +132,10 @@ LAYERS: Dict[str, dict] = {
                            [4, [230, 200, 80, 0.85]], [6, [230, 120, 60, 0.9]], [8, [200, 50, 70, 0.95]]]},
     "current":  {"v": "ocean_current_velocity", "dir": "ocean_current_direction", "vector": True, "conv": "kmh2kn",
                  "dir_to": True,                            # ocean-current direction is TOWARD (oceanographic), unlike wind (FROM)
-                 "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 3.0,   # ocean currents are weak (0–2 kn); vmax 3 + a
-                 "stops": [[0, [60, 120, 200, 0.4]], [0.3, [70, 175, 200, 0.65]], [0.8, [90, 200, 150, 0.8]],
-                           [1.5, [240, 210, 70, 0.88]], [2.2, [240, 130, 50, 0.92]], [3, [215, 50, 60, 0.95]]]},  # visible low end like Windy
+                 "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 3.2,   # MATCHES Windy's current scale (kt: 0,0.4,0.8,1.6,2,3.2)
+                 "stops": [[0.0, [40, 50, 130, 0.5]], [0.4, [40, 110, 230, 0.72]], [0.8, [45, 200, 215, 0.82]],
+                           [1.2, [120, 210, 90, 0.86]], [1.6, [230, 215, 70, 0.9]], [2.0, [242, 150, 40, 0.93]],
+                           [3.2, [216, 45, 50, 0.96]]]},  # Windy currents: navy->blue->cyan->green->yellow->orange->RED at 3.2 kn
 }
 MODEL_NAME = "Open-Meteo (GFS-seamless)"
 MARINE_MODEL = "Open-Meteo Marine"
