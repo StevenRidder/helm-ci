@@ -1768,7 +1768,10 @@ static std::string tide_auto_status_json() {
 }
 
 static void tide_acquisition_loop() {
-  const bool enabled = tide_env_enabled("HELM_TIDES_ACQUISITION", true);
+  // OFFLINE-FIRST: the boat server must NEVER auto-reach the internet unless the operator
+  // explicitly opts in. Default OFF; set HELM_TIDES_ACQUISITION=1 only on a networked shore
+  // machine. (The out-of-band helm-tides-fetch CLI is the preferred place to populate the cache.)
+  const bool enabled = tide_env_enabled("HELM_TIDES_ACQUISITION", false);
   const int interval_sec =
       tide_env_int("HELM_TIDES_ACQUISITION_INTERVAL_SEC", 900, 1, 86400);
   const int lookahead_days =
@@ -1786,7 +1789,7 @@ static void tide_acquisition_loop() {
   tide_auto_status_update(status);
 
   if (!enabled) {
-    std::printf("tides acquisition: background runner disabled (HELM_TIDES_ACQUISITION=0)\n");
+    std::printf("tides acquisition: background runner disabled — offline-first default; set HELM_TIDES_ACQUISITION=1 (networked shore machine only) to enable\n");
     return;
   }
 
