@@ -96,6 +96,35 @@
     };
   }
 
+  // The map "safe-course sector" (AIS-13): for every heading, the WORST CPA across the danger targets —
+  // the same relative-motion sweep adviceFor uses. Green where a heading clears the limit, red where it
+  // would close inside it. ownOverride for tests / a hypothetical.
+  function safeSector(targets, ownOverride, step) {
+    var o = ownOverride || own;
+    if (!o) return null;
+    var cog = num(o.cog), sog = num(o.sog);
+    if (cog == null || sog == null || sog < 0.2) return null;
+    var limit = (window.HelmAisRisk && HelmAisRisk.profile) ? HelmAisRisk.profile().cpa : 1.0;
+    var th = [];
+    (targets || []).forEach(function (t) {
+      var tcog = num(t.cog), tsog = num(t.sog), rng = num(t.range), brg = num(t.brg);
+      if (tcog == null || tsog == null || rng == null || brg == null) return;
+      th.push({ P: [rng * Math.sin(brg * Math.PI / 180), rng * Math.cos(brg * Math.PI / 180)], Vt: vec(tcog, tsog) });
+    });
+    if (!th.length) return null;
+    step = step || 3;
+    var headings = [];
+    for (var h = 0; h < 360; h += step) {
+      var Vo = vec(h, sog), worst = Infinity, closing = false;
+      for (var i = 0; i < th.length; i++) {
+        var r = cpaTcpa(th[i].P, [th[i].Vt[0] - Vo[0], th[i].Vt[1] - Vo[1]]);
+        if (r.tcpa > 0) { closing = true; if (r.cpa < worst) worst = r.cpa; }
+      }
+      headings.push({ deg: h, cpa: closing ? Math.round(worst * 100) / 100 : null, safe: !closing || worst >= limit });
+    }
+    return { headings: headings, step: step, limit: limit, cog: cog, sog: sog, lon: num(o.lon), lat: num(o.lat) };
+  }
+
   function setEnabled(v) {
     enabled = !!v; save();
     try { if (window.dispatchEvent && window.CustomEvent) window.dispatchEvent(new CustomEvent('helm:ais-advisor', { detail: { on: enabled } })); } catch (e) {}
@@ -152,6 +181,6 @@
   if (document.readyState !== 'loading') mountToggle(); else document.addEventListener('DOMContentLoaded', mountToggle);
   setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
 
-  window.HelmAisAdvisor = { adviceFor: adviceFor, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
+  window.HelmAisAdvisor = { adviceFor: adviceFor, safeSector: safeSector, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
     setUnderSail: setUnderSail, setWind: setWind, sailCtx: sailCtx };
 })();
