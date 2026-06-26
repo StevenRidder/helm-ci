@@ -69,6 +69,27 @@ bool ReferenceValidForTime(const OfficialTideReference &ref, std::time_t utc) {
   return true;
 }
 
+bool LongitudeInRange(double lon, double min_lon, double max_lon) {
+  if (min_lon <= max_lon) return lon >= min_lon && lon <= max_lon;
+  return lon >= min_lon || lon <= max_lon;  // bbox crosses the dateline.
+}
+
+bool RegionContainsPoint(const TideProviderRegion &region,
+                         double lat,
+                         double lon) {
+  return lat >= region.min_lat && lat <= region.max_lat &&
+         LongitudeInRange(lon, region.min_lon, region.max_lon);
+}
+
+void AddUniqueRegion(std::vector<TideProviderRegion> *regions,
+                     const TideProviderRegion &region) {
+  if (!regions) return;
+  for (const TideProviderRegion &existing : *regions) {
+    if (existing.id == region.id) return;
+  }
+  regions->push_back(region);
+}
+
 }  // namespace
 
 struct TideEngine::Impl {
@@ -77,6 +98,7 @@ struct TideEngine::Impl {
   std::vector<TideSourceInfo> loaded_sources;
   std::vector<OfficialTideReference> official_references =
       DefaultOfficialReferences();
+  std::vector<TideProviderRegion> provider_regions = DefaultProviderRegions();
 };
 
 TideEngine::TideEngine() : impl_(new Impl()) {}
@@ -127,6 +149,20 @@ std::vector<TideSourceInfo> TideEngine::LoadedSources() const {
 
 std::vector<OfficialTideReference> TideEngine::OfficialReferences() const {
   return impl_->official_references;
+}
+
+std::vector<TideProviderRegion> TideEngine::ProviderRegions() const {
+  return impl_->provider_regions;
+}
+
+std::vector<TideProviderRegion> TideEngine::ProviderRegionsForPoint(
+    double lat, double lon) const {
+  std::vector<TideProviderRegion> matches;
+  if (!std::isfinite(lat) || !std::isfinite(lon)) return matches;
+  for (const TideProviderRegion &region : impl_->provider_regions) {
+    if (RegionContainsPoint(region, lat, lon)) matches.push_back(region);
+  }
+  return matches;
 }
 
 TideStation TideEngine::StationAt(int index) const {
@@ -478,6 +514,33 @@ TideSourceResolution TideEngine::ResolveSources(
       continue;
     }
 
+    out.provider_regions = ProviderRegionsForPoint(point.lat, point.lon);
+    out.provider_catalog_available = !out.provider_regions.empty();
+    for (const TideProviderRegion &region : out.provider_regions) {
+      AddUniqueRegion(&resolution.provider_regions, region);
+      if (region.official && !region.predictions_available) {
+        out.warnings.push_back("matched official provider catalog, but no tide predictions are advertised");
+      }
+      if (region.requires_subscription) {
+        out.warnings.push_back(
+            "matched official provider requires subscription/licensed adapter before caching");
+      } else if (region.requires_api_key) {
+        out.warnings.push_back(
+            "matched official provider requires API credentials before caching");
+      } else if (region.adapter_status != "api-ready") {
+        out.warnings.push_back(
+            "matched official provider needs a format-specific adapter before caching");
+      }
+      if (!region.redistribution_cleared) {
+        out.warnings.push_back(
+            "matched official provider has redistribution/license review pending");
+      }
+    }
+    if (out.provider_regions.empty()) {
+      out.warnings.push_back(
+          "no official/provider region catalog entry covers this point");
+    }
+
     TideStation station;
     if (NearestTideStation(point.lat, point.lon, &station)) {
       out.has_harmonic_station = true;
@@ -485,6 +548,8 @@ TideSourceResolution TideEngine::ResolveSources(
       out.harmonic_offline_available = true;
       out.confidence = AssessConfidence(point.lat, point.lon, utc, station);
       out.cache_status = "local harmonic fallback available";
+      if (out.provider_catalog_available)
+        out.cache_status += "; official provider catalog selected";
 
       if (!station.source_redistribution_cleared) {
         out.warnings.push_back(
@@ -504,6 +569,8 @@ TideSourceResolution TideEngine::ResolveSources(
         resolution.max_harmonic_station_distance_nm = station.distance_nm;
     } else {
       out.cache_status = "no local harmonic fallback";
+      if (out.provider_catalog_available)
+        out.cache_status += "; official provider catalog selected";
       out.warnings.push_back("no usable local harmonic tide station found");
       out.confidence.tier = "very_low";
       out.confidence.summary = "no local harmonic tide station";
@@ -529,6 +596,11 @@ TideSourceResolution TideEngine::ResolveSources(
         resolution.max_official_station_distance_nm = official.distance_nm;
     } else {
       out.warnings.push_back("no official/government tide reference matched");
+    }
+
+    if (out.provider_catalog_available && !out.has_official_reference) {
+      out.warnings.push_back(
+          "official region provider is known, but no cached station/calendar reference is available yet");
     }
 
     if (!out.has_official_reference || !out.official_reference.valid_for_time ||
@@ -626,8 +698,125 @@ std::vector<TideSourceInfo> DefaultSourceCatalog(const std::string &tcdata_dir) 
   };
 }
 
+std::vector<TideProviderRegion> DefaultProviderRegions() {
+  TideProviderRegion noaa;
+  noaa.id = "noaa-coops-us";
+  noaa.provider = "NOAA CO-OPS";
+  noaa.authority = "NOAA Center for Operational Oceanographic Products and Services";
+  noaa.product = "CO-OPS metadata, datums, predictions, water levels, currents";
+  noaa.region_name = "United States coastal waters, territories, and Great Lakes";
+  noaa.country = "United States";
+  noaa.source_url = "https://tidesandcurrents.noaa.gov/";
+  noaa.metadata_url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/";
+  noaa.prediction_url_template =
+      "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+      "?station={station}&product=predictions&datum={datum}&time_zone=gmt"
+      "&units=metric&format=json";
+  noaa.observed_url_template =
+      "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
+      "?station={station}&product=water_level&datum={datum}&time_zone=gmt"
+      "&units=metric&format=json";
+  noaa.datum_name = "station datum, commonly MLLW for predictions";
+  noaa.license = "US government public data";
+  noaa.provenance = "NOAA CO-OPS Data API and Metadata API";
+  noaa.redistribution_status = "redistributable-public-domain";
+  noaa.cache_policy =
+      "cache station metadata/datums by station; cache predictions by station/day; "
+      "refresh observed water levels only when online";
+  noaa.update_cadence =
+      "metadata on demand; predictions by request window; observed water levels near-real-time";
+  noaa.adapter_status = "api-ready";
+  noaa.intended_use = "official-station";
+  noaa.notes =
+      "No spatial interpolation; resolver must pick a station and expose distance/datum.";
+  noaa.min_lat = 13.0;
+  noaa.max_lat = 72.0;
+  noaa.min_lon = -180.0;
+  noaa.max_lon = -64.0;
+  noaa.official = true;
+  noaa.predictions_available = true;
+  noaa.observations_available = true;
+  noaa.currents_available = true;
+  noaa.redistribution_cleared = true;
+  noaa.enabled_by_default = true;
+
+  TideProviderRegion fiji;
+  fiji.id = "fiji-met-cosppac";
+  fiji.provider = "Fiji Meteorological Service / COSPPac";
+  fiji.authority = "Fiji Meteorological Service";
+  fiji.product = "annual tide prediction calendars and COSPPac observed water levels";
+  fiji.region_name = "Fiji";
+  fiji.country = "Fiji";
+  fiji.source_url =
+      "https://www.met.gov.fj/climate-services/suva-tide-prediction/";
+  fiji.metadata_url = "https://www.met.gov.fj/climate-services/";
+  fiji.prediction_url_template =
+      "https://www.met.gov.fj/climate-services/{station}-tide-prediction/";
+  fiji.observed_url_template = "https://www.bom.gov.au/cosppac/rtdd/";
+  fiji.datum_name = "Tide Prediction Datum";
+  fiji.license = "public web calendar; redistribution review required";
+  fiji.provenance =
+      "Fiji Meteorological Service tide prediction pages and COSPPac RTDD";
+  fiji.redistribution_status = "official-publication-license-review";
+  fiji.cache_policy =
+      "cache annual station calendars after parser verifies issue date and station";
+  fiji.update_cadence = "annual prediction calendar; observed feed when available";
+  fiji.adapter_status = "manual-calendar";
+  fiji.intended_use = "official-station";
+  fiji.notes =
+      "Catalog match is not enough for pass advice; station/calendar parser must cache the departure window.";
+  fiji.min_lat = -22.0;
+  fiji.max_lat = -15.0;
+  fiji.min_lon = 172.0;
+  fiji.max_lon = -176.0;
+  fiji.official = true;
+  fiji.predictions_available = true;
+  fiji.observations_available = true;
+  fiji.redistribution_cleared = false;
+  fiji.enabled_by_default = true;
+
+  TideProviderRegion shom;
+  shom.id = "shom-spm-refmar-fr-polynesia";
+  shom.provider = "SHOM / REFMAR";
+  shom.authority = "Service hydrographique et oceanographique de la Marine";
+  shom.product =
+      "official tide predictions, sea-level observations, and station metadata";
+  shom.region_name = "French Polynesia";
+  shom.country = "France / French Polynesia";
+  shom.source_url = "https://refmar.shom.fr/";
+  shom.metadata_url = "https://data.shom.fr/";
+  shom.prediction_url_template =
+      "https://services.data.shom.fr/{key}/spm/prediction/maree";
+  shom.observed_url_template = "https://refmar.shom.fr/";
+  shom.datum_name = "SHOM station datum";
+  shom.license = "SHOM public/service terms; subscription key required for prediction service";
+  shom.provenance = "SHOM/REFMAR public portals and SHOM data services";
+  shom.redistribution_status = "subscription-required-license-review";
+  shom.cache_policy =
+      "cache itinerary prediction windows only with a configured SHOM key and retained source terms";
+  shom.update_cadence =
+      "predictions by request window; observed stations as published by REFMAR";
+  shom.adapter_status = "subscription-api";
+  shom.intended_use = "official-station-or-point";
+  shom.notes =
+      "This is the Tuamotu/French Polynesia official-source hook; do not treat Copernicus/Open-Meteo as equivalent.";
+  shom.min_lat = -28.0;
+  shom.max_lat = -5.0;
+  shom.min_lon = -155.0;
+  shom.max_lon = -134.0;
+  shom.official = true;
+  shom.predictions_available = true;
+  shom.observations_available = true;
+  shom.requires_subscription = true;
+  shom.redistribution_cleared = false;
+  shom.enabled_by_default = false;
+
+  return {noaa, fiji, shom};
+}
+
 std::vector<OfficialTideReference> DefaultOfficialReferences() {
   OfficialTideReference suva;
+  suva.provider_region_id = "fiji-met-cosppac";
   suva.provider = "Fiji Meteorological Service / COSPPac";
   suva.product = "Suva 2026 tide prediction calendar";
   suva.station_id = "FJ-SUVA-WHARF";
@@ -649,6 +838,7 @@ std::vector<OfficialTideReference> DefaultOfficialReferences() {
   suva.observed_water_level_available = true;
 
   OfficialTideReference honolulu;
+  honolulu.provider_region_id = "noaa-coops-us";
   honolulu.provider = "NOAA CO-OPS";
   honolulu.product = "CO-OPS station metadata, datums, water levels, predictions";
   honolulu.station_id = "1612340";

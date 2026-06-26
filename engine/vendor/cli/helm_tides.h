@@ -25,6 +25,7 @@ struct TideSourceInfo {
 };
 
 struct OfficialTideReference {
+  std::string provider_region_id;
   std::string provider;
   std::string product;
   std::string station_id;
@@ -44,6 +45,40 @@ struct OfficialTideReference {
   bool prediction_calendar = false;
   bool observed_water_level_available = false;
   bool valid_for_time = false;
+};
+
+struct TideProviderRegion {
+  std::string id;
+  std::string provider;
+  std::string authority;
+  std::string product;
+  std::string region_name;
+  std::string country;
+  std::string source_url;
+  std::string metadata_url;
+  std::string prediction_url_template;
+  std::string observed_url_template;
+  std::string datum_name;
+  std::string license;
+  std::string provenance;
+  std::string redistribution_status;
+  std::string cache_policy;
+  std::string update_cadence;
+  std::string adapter_status;
+  std::string intended_use;
+  std::string notes;
+  double min_lat = 0.0;
+  double max_lat = 0.0;
+  double min_lon = 0.0;
+  double max_lon = 0.0;
+  bool official = false;
+  bool predictions_available = false;
+  bool observations_available = false;
+  bool currents_available = false;
+  bool requires_api_key = false;
+  bool requires_subscription = false;
+  bool redistribution_cleared = false;
+  bool enabled_by_default = false;
 };
 
 struct TideConfidence {
@@ -127,10 +162,12 @@ struct TideResolvedPoint {
   bool official_prediction_cached = false;
   bool observed_feed_available = false;
   bool offline_ready = false;
+  bool provider_catalog_available = false;
   std::string cache_status;
   std::vector<std::string> warnings;
   TideStation harmonic_station;
   OfficialTideReference official_reference;
+  std::vector<TideProviderRegion> provider_regions;
   TideConfidence confidence;
 };
 
@@ -152,6 +189,7 @@ struct TideSourceResolution {
   std::vector<std::string> warnings;
   std::vector<TideResolvedPoint> points;
   std::vector<TideSourceInfo> loaded_sources;
+  std::vector<TideProviderRegion> provider_regions;
 };
 
 class TideEngine {
@@ -172,6 +210,9 @@ public:
                           std::string *error);
   std::vector<TideSourceInfo> LoadedSources() const;
   std::vector<OfficialTideReference> OfficialReferences() const;
+  std::vector<TideProviderRegion> ProviderRegions() const;
+  std::vector<TideProviderRegion> ProviderRegionsForPoint(double lat,
+                                                          double lon) const;
   std::vector<TideStation> Stations() const;
   TideStation StationAt(int index) const;
   bool NearestTideStation(double lat, double lon, TideStation *out) const;
@@ -197,6 +238,7 @@ private:
 TideSourceInfo ClassifySourcePath(const std::string &path);
 std::vector<TideSourceInfo> DefaultSourceCatalog(const std::string &tcdata_dir);
 std::vector<OfficialTideReference> DefaultOfficialReferences();
+std::vector<TideProviderRegion> DefaultProviderRegions();
 std::vector<std::string> DefaultSourcePaths(
     const std::string &tcdata_dir,
     TideSourcePolicy policy = TideSourcePolicy::kRedistributableOnly);
