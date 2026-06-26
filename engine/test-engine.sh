@@ -238,6 +238,25 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-scheduler-repeat.json 2>/dev/null || true
   fi
 
+  TIDE_SERVER_PORT="$(free_port)"
+  TIDE_SERVER_RELAY="$(free_port)"
+  TIDE_SERVER_CONFIG="$(mktemp -d)"
+  TIDE_SERVER_SCHED="$TIDE_CACHE_GENERATED/server-scheduler.tsv"
+  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_SERVER_PORT HELM_RELAY_PORT=$TIDE_SERVER_RELAY HELM_SIM=1 HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_SERVER_CONFIG" HELM_TIDES_CACHE_DIR="$TIDE_CACHE_GENERATED" \
+    "$BIN/helm-server" >/tmp/te-tides-server.log 2>&1 &
+  TIDE_SERVER_PID=$!; sleep 3
+  if curl -fsS "http://127.0.0.1:$TIDE_SERVER_PORT/tides/acquisition?route=active&date=2026-06-26&scheduler=1&scheduler_state=$TIDE_SERVER_SCHED&max_live_fetches=1" >/tmp/te-tides-server-acquisition.json 2>/tmp/te-tides-server-acquisition.err; then
+    tide_server_acquisition_shape=$(python3 -c 'import json,os,sys; o=json.load(open(sys.argv[1])); sc=o.get("scheduler",{}); items=o.get("items",[]); statuses=[i.get("scheduler",{}).get("status") for i in items]; scheduled=sum(sc.get(k,0) for k in ("cached","pending_fetch","deferred_rate_limit","manual_import","blocked","manual_review")); print(int(o.get("ok") is True and o.get("mode")=="acquisition-manifest" and o.get("request_mode")=="active-route" and o.get("route_name")=="Key West Approach" and o.get("dry_run") is True and o.get("point_count")==5 and o.get("item_count",0)>=1 and sc.get("state_written") is True and scheduled==o.get("item_count") and all(i.get("request",{}).get("provider_region_id") for i in items) and all(i.get("point_count",0)>=1 for i in items) and all(statuses) and os.path.exists(sc.get("state_path",""))))' /tmp/te-tides-server-acquisition.json 2>/dev/null || echo 0)
+    [ "$tide_server_acquisition_shape" = 1 ] \
+      && P "helm-server /tides/acquisition plans grouped official cache work from the active route (TIDES-9)" \
+      || { F "helm-server /tides/acquisition JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-server-acquisition.json; }
+  else
+    F "helm-server /tides/acquisition request failed:"
+    sed 's/^/        /' /tmp/te-tides-server-acquisition.err
+    sed 's/^/        /' /tmp/te-tides-server.log 2>/dev/null || true
+  fi
+  kill $TIDE_SERVER_PID 2>/dev/null; wait $TIDE_SERVER_PID 2>/dev/null; rm -rf "$TIDE_SERVER_CONFIG"
+
   if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("fiji_prediction_cached") is True and o.get("official_request_action")=="use-cache" and o.get("fiji_request_action")=="use-cache" and o.get("remote_request_action")=="configure-subscription" and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
   [ "$tide_shape" = 1 ] \

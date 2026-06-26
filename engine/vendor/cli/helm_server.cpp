@@ -416,6 +416,15 @@ static double query_double_or(const std::string& uri, const std::string& key,
   return end && *end == '\0' ? d : fallback;
 }
 
+static int query_int_or(const std::string& uri, const std::string& key,
+                        int fallback) {
+  std::string v = query_param(uri, key);
+  if (v.empty()) return fallback;
+  char* end = nullptr;
+  long d = std::strtol(v.c_str(), &end, 10);
+  return end && *end == '\0' ? (int)d : fallback;
+}
+
 static std::string tide_cache_dir() {
   if (const char* d = std::getenv("HELM_TIDES_CACHE_DIR")) {
     if (*d) return d;
@@ -815,32 +824,54 @@ static void tide_add_point(std::vector<helm::tides::TideResolvePoint>& points,
   points.push_back(p);
 }
 
-static std::string tide_resolve_json(const std::string& uri) {
-  std::lock_guard<std::mutex> lock(g_tide_mtx);
-  const bool all = query_param(uri, "all") == "1";
-  const std::string source_policy = all ? "all-local" : "redistributable-only";
+static bool tide_parse_request_time(const std::string& text,
+                                    std::time_t* utc) {
+  if (text.size() == 10)
+    return helm::tides::ParseUtcIso8601(text + "T00:00:00Z", utc);
+  return helm::tides::ParseUtcIso8601(text, utc);
+}
+
+struct TideRequestContext {
+  bool ok = true;
+  bool all = false;
+  std::time_t utc = 0;
+  double corridor_nm = 25.0;
+  std::string mode = "unresolved";
+  std::string route_name;
+  std::string source_policy = "redistributable-only";
+  std::string error;
+  std::vector<helm::tides::TideResolvePoint> points;
+  std::vector<std::string> warnings;
+};
+
+static TideRequestContext tide_request_context(const std::string& uri) {
+  TideRequestContext ctx;
+  ctx.all = query_param(uri, "all") == "1";
+  ctx.source_policy = ctx.all ? "all-local" : "redistributable-only";
+
   std::string iso = query_param(uri, "time");
+  if (iso.empty()) iso = query_param(uri, "date");
   std::time_t utc = 0;
   if (iso.empty()) {
     utc = std::time(nullptr);
-  } else if (!helm::tides::ParseUtcIso8601(iso, &utc)) {
-    return "{\"ok\":false,\"error\":\"bad UTC time; use YYYY-MM-DDTHH:MM:SSZ\"}";
+  } else if (!tide_parse_request_time(iso, &utc)) {
+    ctx.ok = false;
+    ctx.error = "bad UTC time; use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ";
+    return ctx;
   }
-  double corridor_nm = query_double_or(uri, "corridor_nm", 25.0);
-  if (corridor_nm < 1.0) corridor_nm = 1.0;
-  if (corridor_nm > 250.0) corridor_nm = 250.0;
+  ctx.utc = utc;
+  ctx.corridor_nm = query_double_or(uri, "corridor_nm", 25.0);
+  if (ctx.corridor_nm < 1.0) ctx.corridor_nm = 1.0;
+  if (ctx.corridor_nm > 250.0) ctx.corridor_nm = 250.0;
 
-  std::vector<helm::tides::TideResolvePoint> points;
-  std::vector<std::string> warnings;
   std::vector<std::string> mode_parts;
-  std::string route_name;
 
   const std::string lat_s = query_param(uri, "lat");
   const std::string lon_s = query_param(uri, "lon");
   if (!lat_s.empty() && !lon_s.empty()) {
-    tide_add_point(points, "query-1", "Query position", "query",
+    tide_add_point(ctx.points, "query-1", "Query position", "query",
                    query_double_or(uri, "lat", 0.0),
-                   query_double_or(uri, "lon", 0.0), utc);
+                   query_double_or(uri, "lon", 0.0), ctx.utc);
     mode_parts.push_back("query");
   }
 
@@ -855,12 +886,12 @@ static std::string tide_resolve_json(const std::string& uri) {
       double lat = 0.0, lon = 0.0;
       if (std::sscanf(item.c_str(), "%lf,%lf", &lat, &lon) == 2) {
         char id[32]; std::snprintf(id, sizeof id, "point-%d", ++n);
-        tide_add_point(points, id, id, "explicit", lat, lon, utc);
+        tide_add_point(ctx.points, id, id, "explicit", lat, lon, ctx.utc);
       } else {
-        warnings.push_back("ignored malformed points entry: " + item);
+        ctx.warnings.push_back("ignored malformed points entry: " + item);
       }
       if (n >= 128) {
-        warnings.push_back("points list capped at 128 entries");
+        ctx.warnings.push_back("points list capped at 128 entries");
         break;
       }
     }
@@ -871,15 +902,15 @@ static std::string tide_resolve_json(const std::string& uri) {
   if (!bbox.empty()) {
     double w = 0.0, s = 0.0, e = 0.0, n = 0.0;
     if (std::sscanf(bbox.c_str(), "%lf,%lf,%lf,%lf", &w, &s, &e, &n) == 4) {
-      tide_add_point(points, "bbox-center", "Viewport center", "viewport",
-                     (s + n) / 2.0, (w + e) / 2.0, utc);
-      tide_add_point(points, "bbox-sw", "Viewport SW", "viewport-corner",
-                     s, w, utc);
-      tide_add_point(points, "bbox-ne", "Viewport NE", "viewport-corner",
-                     n, e, utc);
+      tide_add_point(ctx.points, "bbox-center", "Viewport center", "viewport",
+                     (s + n) / 2.0, (w + e) / 2.0, ctx.utc);
+      tide_add_point(ctx.points, "bbox-sw", "Viewport SW", "viewport-corner",
+                     s, w, ctx.utc);
+      tide_add_point(ctx.points, "bbox-ne", "Viewport NE", "viewport-corner",
+                     n, e, ctx.utc);
       mode_parts.push_back("viewport");
     } else {
-      warnings.push_back("ignored malformed bbox; expected w,s,e,n");
+      ctx.warnings.push_back("ignored malformed bbox; expected w,s,e,n");
     }
   }
 
@@ -888,57 +919,477 @@ static std::string tide_resolve_json(const std::string& uri) {
     std::vector<WP> route;
     { std::lock_guard<std::mutex> lk(g_route_mtx);
       route = ROUTE;
-      route_name = g_route_name;
+      ctx.route_name = g_route_name;
     }
     if (route.empty()) {
-      warnings.push_back("route=active requested, but no active route is loaded");
+      ctx.warnings.push_back("route=active requested, but no active route is loaded");
     } else {
       for (size_t i = 0; i < route.size() && i < 128; ++i) {
         char id[32]; std::snprintf(id, sizeof id, "route-%zu", i + 1);
-        tide_add_point(points, id,
+        tide_add_point(ctx.points, id,
                        route[i].name.empty() ? id : route[i].name,
-                       "route-waypoint", route[i].lat, route[i].lon, utc);
+                       "route-waypoint", route[i].lat, route[i].lon, ctx.utc);
       }
-      if (route.size() > 128) warnings.push_back("active route capped at 128 waypoints");
+      if (route.size() > 128) ctx.warnings.push_back("active route capped at 128 waypoints");
       mode_parts.push_back("active-route");
     }
   }
 
   const bool want_gps = query_param(uri, "gps") == "1" ||
                         query_param(uri, "position") == "1";
-  if (want_gps || points.empty()) {
+  if (want_gps || ctx.points.empty()) {
     if (g_have_fix.load()) {
-      tide_add_point(points, "gps", "Current GPS position", "gps", gLat, gLon, utc);
+      tide_add_point(ctx.points, "gps", "Current GPS position", "gps",
+                     gLat, gLon, ctx.utc);
       mode_parts.push_back("gps");
-    } else if (want_gps || points.empty()) {
-      warnings.push_back(
+    } else if (want_gps || ctx.points.empty()) {
+      ctx.warnings.push_back(
           "no fresh GPS fix available; pass lat/lon, points, bbox, or route=active");
     }
   }
 
-  std::string mode;
   for (size_t i = 0; i < mode_parts.size(); ++i) {
-    if (i) mode += "+";
-    mode += mode_parts[i];
+    if (i) ctx.mode += "+";
+    if (i == 0) ctx.mode.clear();
+    ctx.mode += mode_parts[i];
   }
-  if (mode.empty()) mode = "unresolved";
+  if (ctx.mode.empty()) ctx.mode = "unresolved";
+  return ctx;
+}
+
+static std::string tide_resolve_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  TideRequestContext ctx = tide_request_context(uri);
+  if (!ctx.ok)
+    return "{\"ok\":false,\"error\":\"" + json_escape(ctx.error) + "\"}";
 
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
   std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
   helm::tides::TideSourcePolicy policy =
-      all ? helm::tides::TideSourcePolicy::kAllLocal
-          : helm::tides::TideSourcePolicy::kRedistributableOnly;
+      ctx.all ? helm::tides::TideSourcePolicy::kAllLocal
+              : helm::tides::TideSourcePolicy::kRedistributableOnly;
   helm::tides::TideEngine engine;
   engine.SetOfficialPredictionCacheDir(tide_cache_dir());
   std::string error;
   if (!engine.LoadDefaultSources(tcdata, policy, &error))
-    return "{\"ok\":false,\"mode\":\"" + json_escape(mode) +
+    return "{\"ok\":false,\"mode\":\"" + json_escape(ctx.mode) +
            "\",\"error\":\"" + json_escape(error) +
-           "\",\"warnings\":" + string_array_json(warnings) + "}";
+           "\",\"warnings\":" + string_array_json(ctx.warnings) + "}";
 
   helm::tides::TideSourceResolution resolution =
-      engine.ResolveSources(points, utc, corridor_nm);
-  return tide_resolution_json(resolution, mode, route_name, source_policy, warnings);
+      engine.ResolveSources(ctx.points, ctx.utc, ctx.corridor_nm);
+  return tide_resolution_json(resolution, ctx.mode, ctx.route_name,
+                              ctx.source_policy, ctx.warnings);
+}
+
+struct TideAcquisitionItem {
+  helm::tides::OfficialPredictionRequest request;
+  std::vector<helm::tides::TideResolvePoint> points;
+  std::string schedule_status;
+  std::string schedule_reason;
+  int planned_count = 0;
+  bool eligible_to_execute = false;
+};
+
+struct TideAcquisitionSummary {
+  int use_cache = 0;
+  int fetch_live = 0;
+  int refresh_live = 0;
+  int import_calendar = 0;
+  int refresh_calendar = 0;
+  int blocked = 0;
+  int auto_fetchable = 0;
+  int manual_import = 0;
+  int needs_credentials = 0;
+  int needs_work = 0;
+};
+
+struct TideSchedulerSummary {
+  std::string state_path;
+  std::string planned_utc;
+  int max_live_fetches = 4;
+  int cached = 0;
+  int pending_fetch = 0;
+  int deferred_rate_limit = 0;
+  int manual_import = 0;
+  int blocked = 0;
+  int manual_review = 0;
+  bool state_written = false;
+};
+
+static std::string tide_acquisition_key(
+    const helm::tides::OfficialPredictionRequest& request) {
+  const std::string station =
+      request.station_id.empty() ? "<station>" : request.station_id;
+  return request.provider_region_id + "|" + station + "|" +
+         request.date_utc + "|" + request.action;
+}
+
+static void tide_add_acquisition_summary(
+    const helm::tides::OfficialPredictionRequest& request,
+    TideAcquisitionSummary* summary) {
+  if (request.action == "use-cache") {
+    ++summary->use_cache;
+  } else if (request.action == "fetch-live") {
+    ++summary->fetch_live;
+  } else if (request.action == "refresh-live") {
+    ++summary->refresh_live;
+  } else if (request.action == "import-calendar") {
+    ++summary->import_calendar;
+  } else if (request.action == "refresh-calendar") {
+    ++summary->refresh_calendar;
+  }
+  if (request.blocked) ++summary->blocked;
+  if (!request.blocked && request.can_fetch_live &&
+      (request.action == "fetch-live" || request.action == "refresh-live")) {
+    ++summary->auto_fetchable;
+  }
+  if (!request.blocked && request.manual_import_required &&
+      (request.action == "import-calendar" ||
+       request.action == "refresh-calendar")) {
+    ++summary->manual_import;
+  }
+  if (request.requires_api_key || request.requires_subscription) {
+    ++summary->needs_credentials;
+  }
+  if (request.needed || request.blocked) ++summary->needs_work;
+}
+
+static std::vector<std::string> tide_split_tab_line(const std::string& line) {
+  std::vector<std::string> fields;
+  std::string field;
+  for (char c : line) {
+    if (c == '\t') {
+      fields.push_back(field);
+      field.clear();
+    } else {
+      field.push_back(c);
+    }
+  }
+  fields.push_back(field);
+  return fields;
+}
+
+static std::map<std::string, int> tide_read_scheduler_counts(
+    const std::string& path) {
+  std::map<std::string, int> counts;
+  if (path.empty()) return counts;
+  std::ifstream in(path);
+  if (!in.good()) return counts;
+  std::string line;
+  while (std::getline(in, line)) {
+    if (line.empty() || line[0] == '#') continue;
+    std::vector<std::string> fields = tide_split_tab_line(line);
+    if (fields.size() < 3) continue;
+    char* end = nullptr;
+    long count = std::strtol(fields[2].c_str(), &end, 10);
+    if (end && *end == '\0') counts[fields[0]] = (int)count;
+  }
+  return counts;
+}
+
+static bool tide_write_scheduler_state(
+    const std::string& path,
+    const std::vector<TideAcquisitionItem>& items,
+    const std::string& planned_utc,
+    std::string* error) {
+  std::ofstream out(path, std::ios::trunc);
+  if (!out.good()) {
+    if (error) *error = "could not write scheduler state: " + path;
+    return false;
+  }
+  out << "# helm-server tides scheduler-state-v1\n";
+  out << "# key\tstatus\tplanned_count\tlast_planned_utc\tprovider_region_id\tstation_id\tdate_utc\taction\n";
+  for (const TideAcquisitionItem& item : items) {
+    out << tide_acquisition_key(item.request) << "\t"
+        << item.schedule_status << "\t"
+        << item.planned_count << "\t"
+        << planned_utc << "\t"
+        << item.request.provider_region_id << "\t"
+        << item.request.station_id << "\t"
+        << item.request.date_utc << "\t"
+        << item.request.action << "\n";
+  }
+  return true;
+}
+
+static bool tide_apply_scheduler_state(
+    std::vector<TideAcquisitionItem>* items,
+    const std::string& state_path,
+    int max_live_fetches,
+    std::time_t now_utc,
+    TideSchedulerSummary* summary,
+    std::string* error) {
+  summary->state_path = state_path;
+  summary->planned_utc = helm::tides::FormatUtcIso8601(now_utc);
+  summary->max_live_fetches = max_live_fetches;
+  std::map<std::string, int> prior_counts =
+      tide_read_scheduler_counts(state_path);
+
+  int live_fetches = 0;
+  for (TideAcquisitionItem& item : *items) {
+    const helm::tides::OfficialPredictionRequest& request = item.request;
+    const std::string key = tide_acquisition_key(request);
+    item.planned_count = prior_counts[key] + 1;
+    item.eligible_to_execute = false;
+
+    if (request.action == "use-cache") {
+      item.schedule_status = "cached";
+      item.schedule_reason =
+          "official prediction cache already satisfies this request";
+      ++summary->cached;
+    } else if (request.blocked) {
+      item.schedule_status = "blocked";
+      item.schedule_reason = request.status;
+      ++summary->blocked;
+    } else if (request.can_fetch_live &&
+               (request.action == "fetch-live" ||
+                request.action == "refresh-live")) {
+      if (live_fetches < max_live_fetches) {
+        item.schedule_status = "pending_fetch";
+        item.schedule_reason = "eligible for explicit provider fetch";
+        item.eligible_to_execute = true;
+        ++live_fetches;
+        ++summary->pending_fetch;
+      } else {
+        item.schedule_status = "deferred_rate_limit";
+        item.schedule_reason =
+            "provider live-fetch budget exhausted for this planning run";
+        ++summary->deferred_rate_limit;
+      }
+    } else if (request.manual_import_required &&
+               (request.action == "import-calendar" ||
+                request.action == "refresh-calendar")) {
+      item.schedule_status = "manual_import";
+      item.schedule_reason =
+          "official calendar publication requires manual import";
+      ++summary->manual_import;
+    } else {
+      item.schedule_status = "manual_review";
+      item.schedule_reason =
+          request.status.empty() ? "request needs review" : request.status;
+      ++summary->manual_review;
+    }
+  }
+
+  if (!state_path.empty()) {
+    if (!tide_write_scheduler_state(state_path, *items,
+                                    summary->planned_utc, error)) {
+      return false;
+    }
+    summary->state_written = true;
+  }
+  return true;
+}
+
+static std::vector<helm::tides::TideResolvePoint> tide_expand_points(
+    const std::vector<helm::tides::TideResolvePoint>& points,
+    int lookahead_days) {
+  std::vector<helm::tides::TideResolvePoint> expanded;
+  for (const helm::tides::TideResolvePoint& base_point : points) {
+    for (int day = 0; day < lookahead_days; ++day) {
+      helm::tides::TideResolvePoint point = base_point;
+      point.eta_utc += static_cast<std::time_t>(day) * 86400;
+      if (lookahead_days > 1) point.id += "+d" + std::to_string(day);
+      expanded.push_back(point);
+    }
+  }
+  return expanded;
+}
+
+static std::string tide_scheduler_json(const TideAcquisitionItem& item) {
+  if (item.schedule_status.empty()) return "";
+  return ",\"scheduler\":{\"status\":\"" +
+         json_escape(item.schedule_status) +
+         "\",\"reason\":\"" + json_escape(item.schedule_reason) +
+         "\",\"eligible_to_execute\":" +
+         (item.eligible_to_execute ? "true" : "false") +
+         ",\"planned_count\":" + std::to_string(item.planned_count) + "}";
+}
+
+static std::string tide_acquisition_manifest_json(
+    const helm::tides::TideSourceResolution& resolution,
+    const TideRequestContext& ctx,
+    const std::vector<helm::tides::TideResolvePoint>& points,
+    const std::vector<TideAcquisitionItem>& items,
+    const TideAcquisitionSummary& summary,
+    const TideSchedulerSummary* scheduler,
+    int lookahead_days) {
+  std::string sched = "null";
+  if (scheduler) {
+    sched = "{\"state_path\":\"" + json_escape(scheduler->state_path) +
+            "\",\"state_written\":" +
+            (scheduler->state_written ? "true" : "false") +
+            ",\"planned_utc\":\"" + json_escape(scheduler->planned_utc) +
+            "\",\"max_live_fetches\":" +
+            std::to_string(scheduler->max_live_fetches) +
+            ",\"cached\":" + std::to_string(scheduler->cached) +
+            ",\"pending_fetch\":" +
+            std::to_string(scheduler->pending_fetch) +
+            ",\"deferred_rate_limit\":" +
+            std::to_string(scheduler->deferred_rate_limit) +
+            ",\"manual_import\":" +
+            std::to_string(scheduler->manual_import) +
+            ",\"blocked\":" + std::to_string(scheduler->blocked) +
+            ",\"manual_review\":" +
+            std::to_string(scheduler->manual_review) + "}";
+  }
+
+  std::string warnings = "[";
+  bool first_warning = true;
+  auto add_warning = [&](const std::string& warning) {
+    if (!first_warning) warnings += ",";
+    first_warning = false;
+    warnings += "\"" + json_escape(warning) + "\"";
+  };
+  for (const std::string& warning : ctx.warnings) add_warning(warning);
+  for (const std::string& warning : resolution.warnings) add_warning(warning);
+  warnings += "]";
+
+  std::string items_json = "[";
+  for (size_t i = 0; i < items.size(); ++i) {
+    const TideAcquisitionItem& item = items[i];
+    if (i) items_json += ",";
+    items_json += "{\"point_count\":" + std::to_string(item.points.size()) +
+                  ",\"request\":" +
+                  tide_official_prediction_request_json(item.request) +
+                  tide_scheduler_json(item) + ",\"points\":[";
+    for (size_t j = 0; j < item.points.size(); ++j) {
+      if (j) items_json += ",";
+      items_json += tide_resolve_point_json(item.points[j]);
+    }
+    items_json += "]}";
+  }
+  items_json += "]";
+
+  return "{\"ok\":true,\"engine\":\"" + json_escape(resolution.engine) +
+         "\",\"mode\":\"acquisition-manifest\",\"request_mode\":\"" +
+         json_escape(ctx.mode) +
+         "\",\"route_name\":\"" + json_escape(ctx.route_name) +
+         "\",\"source_policy\":\"" + json_escape(ctx.source_policy) +
+         "\",\"generated_utc\":\"" +
+         helm::tides::FormatUtcIso8601(resolution.generated_utc) +
+         "\",\"dry_run\":true"
+         ",\"scheduler_status\":\"planner-only; execute eligible requests separately through the explicit provider fetch path\""
+         ",\"point_count\":" + std::to_string(points.size()) +
+         ",\"lookahead_days\":" + std::to_string(lookahead_days) +
+         ",\"item_count\":" + std::to_string(items.size()) +
+         ",\"summary\":{\"use_cache\":" + std::to_string(summary.use_cache) +
+         ",\"fetch_live\":" + std::to_string(summary.fetch_live) +
+         ",\"refresh_live\":" + std::to_string(summary.refresh_live) +
+         ",\"import_calendar\":" + std::to_string(summary.import_calendar) +
+         ",\"refresh_calendar\":" +
+         std::to_string(summary.refresh_calendar) +
+         ",\"blocked\":" + std::to_string(summary.blocked) +
+         ",\"auto_fetchable\":" +
+         std::to_string(summary.auto_fetchable) +
+         ",\"manual_import\":" + std::to_string(summary.manual_import) +
+         ",\"needs_credentials\":" +
+         std::to_string(summary.needs_credentials) +
+         ",\"needs_work\":" + std::to_string(summary.needs_work) +
+         "},\"scheduler\":" + sched +
+         ",\"warnings\":" + warnings +
+         ",\"items\":" + items_json + "}";
+}
+
+static std::string tide_acquisition_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  TideRequestContext ctx = tide_request_context(uri);
+  if (!ctx.ok)
+    return "{\"ok\":false,\"error\":\"" + json_escape(ctx.error) + "\"}";
+
+  int lookahead_days = query_int_or(uri, "lookahead_days", 1);
+  if (lookahead_days < 1 || lookahead_days > 14)
+    return "{\"ok\":false,\"error\":\"lookahead_days must be between 1 and 14\"}";
+  std::vector<helm::tides::TideResolvePoint> points =
+      tide_expand_points(ctx.points, lookahead_days);
+
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy =
+      ctx.all ? helm::tides::TideSourcePolicy::kAllLocal
+              : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  const std::string cache_dir = tide_cache_dir();
+  engine.SetOfficialPredictionCacheDir(cache_dir);
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error))
+    return "{\"ok\":false,\"mode\":\"acquisition-manifest\",\"request_mode\":\"" +
+           json_escape(ctx.mode) + "\",\"error\":\"" + json_escape(error) +
+           "\",\"warnings\":" + string_array_json(ctx.warnings) + "}";
+
+  helm::tides::TideSourceResolution resolution =
+      engine.ResolveSources(points, ctx.utc, ctx.corridor_nm);
+  if (!resolution.ok) {
+    return tide_resolution_json(resolution, "acquisition-manifest",
+                                ctx.route_name, ctx.source_policy,
+                                ctx.warnings);
+  }
+
+  std::map<std::string, TideAcquisitionItem> grouped;
+  std::vector<std::string> order;
+  for (const helm::tides::TideResolvedPoint& resolved : resolution.points) {
+    const helm::tides::OfficialPredictionRequest& request =
+        resolved.official_prediction_request;
+    if (!request.ok) {
+      if (!resolved.point.id.empty()) {
+        ctx.warnings.push_back(
+            "no official acquisition request for " + resolved.point.id);
+      }
+      continue;
+    }
+    const std::string key = tide_acquisition_key(request);
+    auto it = grouped.find(key);
+    if (it == grouped.end()) {
+      TideAcquisitionItem item;
+      item.request = request;
+      item.points.push_back(resolved.point);
+      grouped[key] = item;
+      order.push_back(key);
+    } else {
+      it->second.points.push_back(resolved.point);
+    }
+  }
+
+  std::vector<TideAcquisitionItem> items;
+  TideAcquisitionSummary summary;
+  for (const std::string& key : order) {
+    items.push_back(grouped[key]);
+    tide_add_acquisition_summary(items.back().request, &summary);
+  }
+
+  TideSchedulerSummary scheduler_summary;
+  TideSchedulerSummary* scheduler_ptr = nullptr;
+  const bool scheduler_requested =
+      query_param(uri, "scheduler") == "1" ||
+      query_param(uri, "state") == "1" ||
+      !query_param(uri, "scheduler_state").empty();
+  if (scheduler_requested) {
+    int max_live_fetches = query_int_or(uri, "max_live_fetches", 4);
+    if (max_live_fetches < 0) max_live_fetches = 0;
+    if (max_live_fetches > 100) max_live_fetches = 100;
+    std::time_t scheduler_now = std::time(nullptr);
+    const std::string scheduler_now_text = query_param(uri, "scheduler_now");
+    if (!scheduler_now_text.empty() &&
+        !tide_parse_request_time(scheduler_now_text, &scheduler_now)) {
+      return "{\"ok\":false,\"error\":\"bad scheduler_now; use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ\"}";
+    }
+    std::string scheduler_state = query_param(uri, "scheduler_state");
+    if (scheduler_state.empty()) {
+      ::mkdir(cache_dir.c_str(), 0700);
+      scheduler_state = cache_dir + "/scheduler.tsv";
+    }
+    if (!tide_apply_scheduler_state(&items, scheduler_state, max_live_fetches,
+                                    scheduler_now, &scheduler_summary,
+                                    &error)) {
+      return "{\"ok\":false,\"error\":\"" + json_escape(error) + "\"}";
+    }
+    scheduler_ptr = &scheduler_summary;
+  }
+
+  return tide_acquisition_manifest_json(resolution, ctx, points, items,
+                                        summary, scheduler_ptr,
+                                        lookahead_days);
 }
 
 static std::string tide_providers_json(const std::string& uri) {
@@ -2901,6 +3352,8 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_providers_json(req->uri)); }
         if (path == "/tides/resolve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-8: GPS/route/viewport source resolver + offline readiness
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_resolve_json(req->uri)); }
+        if (path == "/tides/acquisition") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-9: planner-only official cache acquisition manifest
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_acquisition_json(req->uri)); }
         if (path == "/tides/curve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: batched 24h curve + events in one call
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_curve_json(req->uri)); }
         if (path == "/tides/stations") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: station markers (GeoJSON)
