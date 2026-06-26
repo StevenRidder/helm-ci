@@ -665,6 +665,7 @@
 <script src="ais-meta.js"></script>
 <script src="ais-vectors.js"></script><!-- AIS-4: CPA cone + speed-scaled predictor overlay (self-wired via the `ais` source + HelmShell) -->
 <script src="ais-guard.js"></script><!-- AIS-5: guard-zone / proximity alarm (fed the full target list by collision.js + HelmShell) -->
+<script src="ais-distress.js"></script><!-- AIS-7: SART/MOB/EPIRB + DSC distress surfacing (fed the full target list by HelmShell; CONTRACT-10 alarms) -->
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <script>
@@ -978,7 +979,13 @@
       src.setData({ type: 'FeatureCollection', features: list
         .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
         .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
-                     properties: { ...t, name: aisName(t.name) } })) });   // strip '@' padding for the map label too
+                     // Normalise the AIS "not available" sentinels to null so we never render them as
+                     // real data: SOG 1023 → 102.3 kn (a moored Class-B with no GPS speed would show as
+                     // a 100-kn ghost + a huge AIS-4 predictor), COG 3600 → 360°. A target not reporting
+                     // speed/course must read "—", not a fake value.
+                     properties: { ...t, name: aisName(t.name),
+                       sog: (t.sog != null && +t.sog <= 102.2) ? t.sog : null,
+                       cog: (t.cog != null && +t.cog < 360) ? t.cog : null } })) });   // strip '@' padding for the map label too
     } catch (e) { /* style not ready this tick */ }
   }
   // ---- live route line: drive the `route` source from the engine's route geometry (not the

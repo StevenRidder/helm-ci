@@ -1511,15 +1511,22 @@ static void nav_loop(ix::HttpServer* server) {
           if (dm > 720) dm = 720; if (dm < -720) dm = -720;
           std::snprintf(rotj, sizeof rotj, "%.0f", dm);
         }
+        // AIS "not available" sentinels -> JSON null so a client never renders them as REAL data:
+        // SOG 1023 decodes to 102.3 kn (a moored Class-B with no GPS-speed source), COG 3600 -> 360 deg.
+        // A target with no real speed also has no meaningful CPA, so report cpaValid=false for it rather
+        // than feed a 102.3-kn ghost into the collision math (which would raise false CPA alarms).
+        bool sog_ok = (t.sog >= 0.0 && t.sog <= 102.2);
+        char sogj[16] = "null"; if (sog_ok) std::snprintf(sogj, sizeof sogj, "%.1f", t.sog);
+        char cogj[16] = "null"; if (t.cog >= 0.0 && t.cog < 360.0) std::snprintf(cogj, sizeof cogj, "%.0f", t.cog);
         char tb[800];
         std::snprintf(tb, sizeof tb,
-          "{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
+          "{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%s,\"sog\":%s,\"hdg\":%.0f,"
           "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
           "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,"
           "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
           "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
-          t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
-          t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
+          t.mmsi, t.lat, t.lon, cogj, sogj, t.hdg,
+          t.range, t.brg, t.cpa, t.tcpa, (t.cpaValid && sog_ok) ? "true" : "false",
           t.cls, json_escape(t.name).c_str(), age,
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
           eta, t.length, t.beam, t.draft, rotj, t.imo);
