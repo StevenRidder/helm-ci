@@ -35,11 +35,10 @@
   function pol() { return allLocal ? '&all=1' : ''; }
 
   // ---------- the tide-curve instrument (inline SVG) ----------
-  // A real instrument: smooth-ish line + area, datum/zero reference, time-of-day grid, a NOW marker,
-  // and high/low pins from curve.events — so the headline number and the plot agree.
-  function curveSVG(curve) {
+  // Shared geometry so the SVG and the drag-scrubber agree exactly on time↔x and height↔y.
+  function curveGeom(curve) {
     var s = (curve && curve.samples) || [];
-    if (s.length < 2) return '<div class="t-empty">curve unavailable</div>';
+    if (s.length < 2) return null;
     var W = 244, H = 132, L = 6, R = 6, T = 12, B = 20;
     var xs = s.map(function (p) { return Date.parse(p.t_utc); });
     var ys = s.map(function (p) { return p.value_m; });
@@ -47,8 +46,27 @@
     var ymin = Math.min.apply(null, ys), ymax = Math.max.apply(null, ys);
     if (curve.datum_m != null) { ymin = Math.min(ymin, curve.datum_m); ymax = Math.max(ymax, curve.datum_m); }
     var pad = Math.max(0.05, (ymax - ymin) * 0.16); ymin -= pad; ymax += pad;
-    var X = function (t) { return L + (t - t0) / (t1 - t0) * (W - L - R); };
-    var Y = function (v) { return T + (1 - (v - ymin) / (ymax - ymin)) * (H - T - B); };
+    return {
+      W: W, H: H, L: L, R: R, T: T, B: B, xs: xs, ys: ys, t0: t0, t1: t1, ymin: ymin, ymax: ymax,
+      X: function (t) { return L + (t - t0) / (t1 - t0) * (W - L - R); },
+      Y: function (v) { return T + (1 - (v - ymin) / (ymax - ymin)) * (H - T - B); },
+      // linear-interpolated height at an arbitrary time (matches the drawn line between samples)
+      valueAt: function (t) {
+        if (t <= t0) return ys[0]; if (t >= t1) return ys[ys.length - 1];
+        var k = 0; while (k < xs.length - 1 && xs[k + 1] < t) k++;
+        var f = (t - xs[k]) / (xs[k + 1] - xs[k] || 1); return ys[k] + (ys[k + 1] - ys[k]) * f;
+      }
+    };
+  }
+
+  // A real instrument: smooth-ish line + area, datum/zero reference, time-of-day grid, a NOW marker,
+  // and high/low pins from curve.events — so the headline number and the plot agree.
+  function curveSVG(curve) {
+    var g = curveGeom(curve);
+    if (!g) return '<div class="t-empty">curve unavailable</div>';
+    var W = g.W, H = g.H, L = g.L, R = g.R, T = g.T, B = g.B;
+    var xs = g.xs, ys = g.ys, t0 = g.t0, t1 = g.t1, ymin = g.ymin, ymax = g.ymax, X = g.X, Y = g.Y;
+    var s = curve.samples;
     var line = '', i;
     for (i = 0; i < s.length; i++) line += (i ? 'L' : 'M') + X(xs[i]).toFixed(1) + ' ' + Y(ys[i]).toFixed(1) + ' ';
     var area = line + 'L' + X(t1).toFixed(1) + ' ' + Y(ymin).toFixed(1) + ' L' + X(t0).toFixed(1) + ' ' + Y(ymin).toFixed(1) + ' Z';
@@ -92,6 +110,43 @@
       '<path d="' + area + '" fill="var(--accent)" fill-opacity="0.13"/>' +
       '<path d="' + line + '" fill="none" stroke="var(--accent)" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>' +
       pins + nowEl + '</svg>';
+  }
+
+  // ---------- drag-scrubber: read tide height at any time on the curve ----------
+  // Built for a touch chartplotter (pointer events: drag on touch, hover on mouse). Shows a moving
+  // marker + a "HH:MM · X.XX m" readout interpolated from the same samples the line is drawn from.
+  function wireScrubber(scope, curve) {
+    if (!scope) return;
+    var svg = scope.querySelector('.t-curve'), wrap = scope.querySelector('.t-curvewrap');
+    if (!svg || !wrap) return;
+    var g = curveGeom(curve); if (!g) return;
+    var NS = 'http://www.w3.org/2000/svg';
+    var grp = document.createElementNS(NS, 'g'); grp.setAttribute('class', 't-scrub'); grp.style.display = 'none';
+    var vline = document.createElementNS(NS, 'line');
+    vline.setAttribute('y1', g.T); vline.setAttribute('y2', g.H - g.B);
+    vline.setAttribute('stroke', 'var(--ctext)'); vline.setAttribute('stroke-width', '1');
+    vline.setAttribute('stroke-dasharray', '2 2'); vline.setAttribute('opacity', '0.85');
+    var dot = document.createElementNS(NS, 'circle'); dot.setAttribute('r', '3.4');
+    dot.setAttribute('fill', 'var(--ctext)'); dot.setAttribute('stroke', 'var(--bg,#05080c)'); dot.setAttribute('stroke-width', '1.5');
+    grp.appendChild(vline); grp.appendChild(dot); svg.appendChild(grp);
+    var read = document.createElement('div'); read.className = 't-scrub-read'; read.style.display = 'none'; wrap.appendChild(read);
+
+    function clock(t) { try { return new Date(t).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }); } catch (e) { return ''; } }
+    function update(clientX) {
+      var rect = svg.getBoundingClientRect(); if (!rect.width) return;
+      var vbX = Math.max(g.L, Math.min(g.W - g.R, (clientX - rect.left) / rect.width * g.W));
+      var t = g.t0 + (vbX - g.L) / (g.W - g.L - g.R) * (g.t1 - g.t0);
+      var v = g.valueAt(t), x = g.X(t), y = g.Y(v);
+      vline.setAttribute('x1', x); vline.setAttribute('x2', x); dot.setAttribute('cx', x); dot.setAttribute('cy', y);
+      grp.style.display = '';
+      read.textContent = clock(t) + ' · ' + fmtM(v) + ' m'; read.style.display = '';
+      var ww = wrap.clientWidth, rx = (vbX / g.W) * ww;
+      read.style.left = Math.max(2, Math.min(ww - read.offsetWidth - 2, rx - read.offsetWidth / 2)) + 'px';
+    }
+    svg.style.touchAction = 'none'; svg.style.cursor = 'crosshair';
+    svg.addEventListener('pointermove', function (e) { update(e.clientX); });
+    svg.addEventListener('pointerdown', function (e) { try { svg.setPointerCapture(e.pointerId); } catch (x) {} update(e.clientX); });
+    svg.addEventListener('pointerleave', function (e) { if (e.pointerType === 'mouse') { grp.style.display = 'none'; read.style.display = 'none'; } });
   }
 
   // ---------- confidence + official-source surfacing ----------
@@ -171,7 +226,8 @@
       '.t-nl{font-size:10px;text-transform:uppercase;letter-spacing:.6px;color:var(--cdim2)}' +
       '.t-nt{font-size:15px;color:var(--ctext);font-variant-numeric:tabular-nums}' +
       '.t-nv{font-size:12px;color:var(--cdim)}.t-dim{color:var(--cdim2)}' +
-      '.t-curvewrap{margin-top:6px}.t-curve{width:100%;height:auto;display:block}' +
+      '.t-curvewrap{margin-top:6px;position:relative}.t-curve{width:100%;height:auto;display:block;touch-action:none}' +
+      '.t-scrub-read{position:absolute;top:0;pointer-events:none;font-size:10px;font-variant-numeric:tabular-nums;color:var(--ctext);background:var(--glass,rgba(13,19,27,.92));border:.5px solid var(--line);border-radius:6px;padding:2px 7px;white-space:nowrap;z-index:3;box-shadow:0 1px 5px rgba(0,0,0,.35)}' +
       '.t-empty{font-size:10.5px;color:var(--cdim2);padding:14px 0}' +
       '.t-src{margin-top:12px;padding-top:10px;border-top:.5px solid var(--line2)}' +
       '.t-srcrow{display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:3px 0;color:var(--cdim)}' +
@@ -212,6 +268,7 @@
       .then(function (r) {
         var sum = r[0], curve = r[1];
         el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + confidenceDetail(sum) + sourceLedger(sum);
+        wireScrubber(el, curve);
       })
       .catch(function (e) { el.querySelector('.t-body').innerHTML = '<div class="t-empty" style="color:var(--danger)">tides: ' + esc(e.message) + '</div>'; });
   }
@@ -297,7 +354,7 @@
       .setLngLat(lngLat).setHTML('<div class="t-body"><div class="t-empty">loading…</div></div>').addTo(map);
     if (!document.getElementById('helm-tides-style')) document.head.insertAdjacentHTML('beforeend', styles());
     Promise.all([getJSON('/tides/summary' + q + pol()), getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; })])
-      .then(function (r) { try { pop.setHTML('<div class="t-body">' + cardHTML(r[0], r[1]) + '</div>'); } catch (e) {} })
+      .then(function (r) { try { pop.setHTML('<div class="t-body">' + cardHTML(r[0], r[1]) + '</div>'); wireScrubber(pop.getElement(), r[1]); } catch (e) {} })
       .catch(function (e) { pop.setHTML('<div class="t-body"><div class="t-empty" style="color:var(--danger)">' + esc(e.message) + '</div></div>'); });
   }
 
