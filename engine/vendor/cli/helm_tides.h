@@ -1,0 +1,160 @@
+#ifndef HELM_TIDES_H
+#define HELM_TIDES_H
+
+#include <ctime>
+#include <memory>
+#include <string>
+#include <vector>
+
+namespace helm {
+namespace tides {
+
+enum class TideSourcePolicy {
+  kRedistributableOnly,
+  kAllLocal,
+};
+
+struct TideSourceInfo {
+  std::string path;
+  std::string basename;
+  std::string license;
+  std::string provenance;
+  std::string redistribution_status;
+  bool redistribution_cleared = false;
+  bool enabled_by_default = false;
+};
+
+struct OfficialTideReference {
+  std::string provider;
+  std::string product;
+  std::string station_id;
+  std::string station_name;
+  std::string country;
+  std::string source_url;
+  std::string observed_url;
+  std::string datum_name;
+  std::string issue_date;
+  std::string valid_start_utc;
+  std::string valid_end_utc;
+  std::string interpolation_method;
+  double lat = 0.0;
+  double lon = 0.0;
+  double distance_nm = -1.0;
+  bool official = false;
+  bool prediction_calendar = false;
+  bool observed_water_level_available = false;
+  bool valid_for_time = false;
+};
+
+struct TideConfidence {
+  std::string tier;
+  std::string summary;
+  std::string basis;
+  std::vector<std::string> factors;
+  double score = 0.0;
+  double harmonic_station_distance_nm = -1.0;
+  double official_station_distance_nm = -1.0;
+  bool has_official_reference = false;
+  bool official_reference_valid_for_time = false;
+  bool live_observation_available = false;
+  OfficialTideReference official_reference;
+};
+
+struct TideStation {
+  int index = -1;
+  char type = '?';
+  std::string name;
+  std::string reference_name;
+  std::string source;
+  std::string source_license;
+  std::string source_provenance;
+  std::string source_redistribution_status;
+  std::string unit;
+  std::string units_abbrev;
+  double lat = 0.0;
+  double lon = 0.0;
+  double datum_m = 0.0;
+  double distance_nm = -1.0;
+  int timezone_minutes = 0;
+  bool usable = false;
+  bool has_datum = false;
+  bool source_redistribution_cleared = false;
+  bool source_enabled_by_default = false;
+
+  bool is_tide() const { return type == 'T' || type == 't'; }
+  bool is_current() const { return type == 'C' || type == 'c'; }
+};
+
+struct TidePrediction {
+  bool ok = false;
+  std::string error;
+  std::string engine = "opencpn-tcmgr";
+  std::time_t time_utc = 0;
+  double value_m = 0.0;
+  double direction_deg = 0.0;
+  bool has_direction = false;
+  bool is_current = false;
+  TideStation station;
+  TideConfidence confidence;
+};
+
+struct TideEvent {
+  bool ok = false;
+  std::string error;
+  std::string engine = "opencpn-tcmgr";
+  std::string kind;
+  std::time_t search_start_utc = 0;
+  std::time_t event_utc = 0;
+  double value_m = 0.0;
+  TideStation station;
+};
+
+class TideEngine {
+public:
+  TideEngine();
+  ~TideEngine();
+
+  TideEngine(TideEngine &&) noexcept;
+  TideEngine &operator=(TideEngine &&) noexcept;
+
+  TideEngine(const TideEngine &) = delete;
+  TideEngine &operator=(const TideEngine &) = delete;
+
+  bool LoadSources(const std::vector<std::string> &sources,
+                   std::string *error);
+  bool LoadDefaultSources(const std::string &tcdata_dir,
+                          TideSourcePolicy policy,
+                          std::string *error);
+  std::vector<TideSourceInfo> LoadedSources() const;
+  std::vector<OfficialTideReference> OfficialReferences() const;
+  std::vector<TideStation> Stations() const;
+  TideStation StationAt(int index) const;
+  bool NearestTideStation(double lat, double lon, TideStation *out) const;
+  bool NearestOfficialReference(double lat, double lon, std::time_t utc,
+                                OfficialTideReference *out) const;
+  TideConfidence AssessConfidence(double lat, double lon, std::time_t utc,
+                                  const TideStation &station) const;
+  TidePrediction Predict(int station_index, std::time_t utc) const;
+  TidePrediction PredictNearest(double lat, double lon, std::time_t utc) const;
+  TideEvent NextHighLowEvent(int station_index, std::time_t after_utc) const;
+  TideEvent NextHighLowEventNearest(double lat, double lon,
+                                    std::time_t after_utc) const;
+
+private:
+  struct Impl;
+  std::unique_ptr<Impl> impl_;
+};
+
+TideSourceInfo ClassifySourcePath(const std::string &path);
+std::vector<TideSourceInfo> DefaultSourceCatalog(const std::string &tcdata_dir);
+std::vector<OfficialTideReference> DefaultOfficialReferences();
+std::vector<std::string> DefaultSourcePaths(
+    const std::string &tcdata_dir,
+    TideSourcePolicy policy = TideSourcePolicy::kRedistributableOnly);
+bool ParseUtcIso8601(const std::string &text, std::time_t *out);
+std::string FormatUtcIso8601(std::time_t t);
+
+}  // namespace tides
+}  // namespace helm
+
+#endif  // HELM_TIDES_H

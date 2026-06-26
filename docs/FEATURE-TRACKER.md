@@ -93,7 +93,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - ⚪ Departure advisor (Phase D) · ⚪ Tidal-gate / tide-aware ETA (Phase 2)
 
 ### Tides & currents
-- ⚪ Harmonic tide prediction + stations (OpenCPN tcmgr.cpp gui→core; PRD Phase 1) · ⚪ Time-animated current arrows (Phase 2)
+- 🟢 Offline harmonic tide engine (OpenCPN TCMgr, source-tagged station/datum metadata) · 🟢 official station/datum/freshness confidence model · 🟢 pinned free-source regression + high/low event tripwire · 🟢 free-only default harmonic data policy with unverified sources gated · ⚪ observed current/residual model · ⚪ Pass Condition Estimator · ⚪ Tide/pass dashboard
 
 ### Places / community
 - 🟢 OSM/OpenSeaMap places overlay (anchorages/marinas/fuel/services), offline-cached

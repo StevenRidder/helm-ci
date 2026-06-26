@@ -1,6 +1,7 @@
 # Vendoring OpenCPN — the headless chart-render build is reproducible
 
-The headless S-52 renderer (`ocpn::chart-render`) and the `helm-tiles` / `helm-engine`
+The headless S-52 renderer (`ocpn::chart-render`), the harmonic tide/current wrapper
+(`ocpn::tides`), and the `helm-tiles` / `helm-engine`
 binaries are **not** built by hand-editing a clone. They are reproduced from three
 source-of-truth artifacts in this repo, glued by [`bootstrap.sh`](bootstrap.sh):
 
@@ -28,8 +29,13 @@ patches a bundled lib with GNU syntax), `cmake`, `git`. Override `WX_CONFIG` /
 `HELM_OCPN_DIR` if your paths differ.
 
 Output binaries land in `$HELM_OCPN_DIR/build/cli/` (`helm-tiles`, `helm-engine`,
-`chart-spike`, `libhelm-chartrender.a`). The script asserts the Step-6 seam invariant
+`chart-spike`, `helm-tides-smoke`, `libhelm-chartrender.a`, `libhelm-tides.a`). The script asserts the Step-6 seam invariant
 (zero `top_frame::Get` symbols in the library) after building.
+
+The tide wrapper defaults to the redistributable `harmonics-dwf-20210110-free.tcd`
+source only. Other OpenCPN-local harmonic bundles are classified in output metadata
+but stay off the default path unless a dev/test caller explicitly requests all local
+sources.
 
 ## The patch series
 
@@ -37,18 +43,23 @@ Output binaries land in `$HELM_OCPN_DIR/build/cli/` (`helm-tiles`, `helm-engine`
 |-------|---------|-----|
 | `0001-s57chart-headless-correctness.patch` | `gui/src/s57chart.cpp` | copy the SENC native scale into the chart so `GetNativeScale()` is correct on the headless full-Init path (SCAMIN / safety-contour correctness — a real upstream latent bug); sever the GUI `top_frame`/`GetBestVPScale` + plugin `dynamic_cast` from the render path under `OCPN_HEADLESS` |
 | `0002-senc_manager-headless-topframe-seam.patch` | `gui/src/senc_manager.cpp` | guard the 5 background-SENC `top_frame::Get()` status-bar calls under `#ifndef OCPN_HEADLESS` so the library needs no frame object (Step-6 seam) |
-| `0003-cli-cmakelists-helm-targets.patch` | `cli/CMakeLists.txt` | add the `helm-chartrender` library + `chart-spike` / `helm-tiles` / `helm-engine` targets (purely additive) |
+| `0003-cli-cmakelists-helm-targets.patch` | `cli/CMakeLists.txt` | add the `helm-chartrender` and `helm-tides` libraries + `chart-spike` / `helm-tides-smoke` / `helm-tiles` / `helm-engine` targets (purely additive) |
+| `0007-tcmgr-headless-include-seam.patch` | `gui/src/tcmgr.cpp` | under `OCPN_HEADLESS`, avoid GUI/navutil headers so the tide wrapper links only the tide/data-source slice plus narrow helper stubs |
 
-All three are deliberately small, real, and **upstreamable** — no faked symbols, no
-workarounds. See [`HARDENING.md`](HARDENING.md) for the per-change rationale + verification.
+These patch entries are deliberately small, real, and **upstreamable** where they touch
+upstream-tracked files. See [`HARDENING.md`](HARDENING.md) for the per-change rationale
+and verification.
 
 ## The overlay (`vendor/cli/`)
 
 Our new files that OpenCPN's `cli/` does not ship: `chart_stubs.cpp` (the headless app
 globals — `g_Platform`, `GetpSharedDataLocation`, the offscreen frame; **no** frame stub
 since the Step-6 seam), `chart_spike.cpp` (single-tile render harness), `helm_tiles.cpp`
-(S-52 tile HTTP server), `helm_engine.cpp` (nav WebSocket + NMEA feed), `helm_spike.cpp`
-(minimal model-core spike). `api_shim.cpp` is upstream — not part of the overlay.
+(S-52 tile HTTP server), `helm_tides.cpp` / `helm_tides.h` (thin source-tagged wrapper
+over OpenCPN `TCMgr`), `helm_tides_stubs.cpp` (headless GUI seam for the tide slice),
+`helm_tides_smoke.cpp` (offline harmonic prediction proof), `helm_engine.cpp` (nav
+WebSocket + NMEA feed), `helm_spike.cpp` (minimal model-core spike). `api_shim.cpp` is
+upstream — not part of the overlay.
 
 ## Refreshing a patch (when upstream moves or our edits change)
 
