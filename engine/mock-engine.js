@@ -204,6 +204,37 @@ function readClientFrames(buf, onText, onClose) {      // minimal masked-frame r
   return buf;
 }
 
+// ---- CONTRACT-10 producer (mock parity): headless anchor-drag alarm over the frozen schema ----
+let mockAnchor = null;                                    // { lat, lon, radiusM }
+const mockAlarms = {};                                    // id -> { id,kind,sev,msg,gen,rev,active,hasPos,lat,lon,clearedAt }
+const ALARM_GEN = Math.floor(Date.now() / 1000);
+let dragOver = 0;
+function haversineM(aLat, aLon, bLat, bLon) {
+  const R = 6371000, r = x => x * Math.PI / 180;
+  const dLat = r(bLat - aLat), dLon = r(bLon - aLon);
+  const s = Math.sin(dLat / 2) ** 2 + Math.cos(r(aLat)) * Math.cos(r(bLat)) * Math.sin(dLon / 2) ** 2;
+  return 2 * R * Math.asin(Math.sqrt(s));
+}
+function alarmRaise(id, kind, sev, msg, hasPos, lat, lon) {
+  const a = mockAlarms[id];
+  if (!a || !a.active) mockAlarms[id] = { id, kind, sev, msg, gen: ALARM_GEN, rev: 1, active: true, hasPos, lat, lon, clearedAt: 0 };
+  else { if (a.sev !== sev || a.msg !== msg) { a.sev = sev; a.msg = msg; a.rev++; } a.kind = kind; a.hasPos = hasPos; a.lat = lat; a.lon = lon; }
+}
+function alarmClearId(id) { const a = mockAlarms[id]; if (a && a.active) { a.active = false; a.rev++; a.clearedAt = Date.now(); } }
+function alarmEval() {
+  const o = navState().pos;
+  if (mockAnchor && o) {
+    const dM = haversineM(o.lat, o.lon, mockAnchor.lat, mockAnchor.lon);
+    if (dM > mockAnchor.radiusM) { if (dragOver < 1000) dragOver++; } else dragOver = 0;
+    if (dragOver >= 4) alarmRaise('anchor', 'anchor', 'critical', 'Anchor dragging — beyond ' + Math.round(mockAnchor.radiusM) + ' m watch circle', true, mockAnchor.lat, mockAnchor.lon);
+    else if (dM <= mockAnchor.radiusM) alarmClearId('anchor');
+  } else { dragOver = 0; alarmClearId('anchor'); }
+  const now = Date.now();
+  for (const id of Object.keys(mockAlarms)) { const a = mockAlarms[id]; if (!a.active && now - a.clearedAt > 20000) delete mockAlarms[id]; }
+}
+function alarmFrame(a) { const f = { t: 'alarm', op: a.rev <= 1 ? 'raise' : 'update', id: a.id, rev: a.rev, gen: a.gen, kind: a.kind, sev: a.sev, msg: a.msg, silenceable: true }; if (a.hasPos) { f.lat = a.lat; f.lon = a.lon; } return f; }
+function alarmClearFrame(a) { return { t: 'alarm.clear', id: a.id, gen: a.gen, rev: a.rev, reason: 'resolved' }; }
+
 let clients = 0;
 function handleWs(req, socket) {
   const key = req.headers['sec-websocket-key'];
@@ -215,7 +246,11 @@ function handleWs(req, socket) {
   const snapshot = () => send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, navState(), { conns: connStatusArray() }));
   snapshot();                                           // full state on connect
 
+  const alarmAcked = {};                                 // CONTRACT-10: alarm id -> "gen.rev" this client transport-ACKed
   const tick = setInterval(() => {
+    alarmEval();                                         // CONTRACT-10 producer: anchor-drag watch, resend until ACK
+    for (const aid of Object.keys(mockAlarms)) { const a = mockAlarms[aid]; const tok = a.gen + '.' + a.rev;
+      if (alarmAcked[aid] === tok) continue; send(a.active ? alarmFrame(a) : alarmClearFrame(a)); }
     const s = navState(); frames++;
     if (frames % 30 === 0) { send(Object.assign({ t: 'snapshot', seq: ++seq, ts: Date.now() / 1000 }, s, { conns: connStatusArray() })); return; } // keyframe
     // delta: only the fields that move each tick (wind every ~5th tick). conns ride every frame, like the engine.
@@ -242,7 +277,10 @@ function handleWs(req, socket) {
       console.log('[nav] #' + id + ' ' + m.t + ' subscribe=' + chans.join(',') + ' rate=' + rate + (m.t === 'hello' ? ' lastSeq=' + m.lastSeq : ''));
       if (m.t === 'hello' && m.lastSeq) snapshot();          // resume hint → re-send a fresh snapshot
     }
-    else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);
+    else if (m.t === 'ack') console.log('[nav] #' + id + ' ack ' + m.alarm);   // legacy single-ack log
+    else if (m.t === 'alarm.ack' && Array.isArray(m.acks)) { for (const e of m.acks) if (e && e.id) alarmAcked[e.id] = (e.gen | 0) + '.' + (e.rev | 0); }   // CONTRACT-10 transport-ACK
+    else if (m.t === 'anchor.set' && typeof m.lat === 'number' && typeof m.lon === 'number') { mockAnchor = { lat: m.lat, lon: m.lon, radiusM: (typeof m.radius === 'number' ? m.radius : 40) }; dragOver = 0; send({ t: 'anchor.ack', set: true }); console.log('[anchor] #' + id + ' set @ ' + m.lat.toFixed(5) + ',' + m.lon.toFixed(5)); }
+    else if (m.t === 'anchor.clear') { mockAnchor = null; dragOver = 0; alarmClearId('anchor'); send({ t: 'anchor.ack', set: false }); console.log('[anchor] #' + id + ' cleared'); }
     else if (typeof m.t === 'string' && m.t.indexOf('conn.') === 0) { handleConnCmd(send, m); console.log('[conn] #' + id + ' ' + m.t + (m.conn ? ' (' + (m.conn.type || '?') + ')' : (m.id ? ' ' + m.id : ''))); }
     else if (m.t === 'nmea.monitor') { handleMonitor(send, m); console.log('[conn] #' + id + ' nmea.monitor ' + (m.on ? 'on' : 'off')); }
   }); });

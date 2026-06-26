@@ -24,7 +24,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 | 3 | **Track recording** — *always-on automatic* (no on-screen control), distance-gated (records the anchor swing like OpenCPN); engine-owned trail + map line | 🟢 **done** — `4623f78`+ |
 | 4 | **Route create/save/activate** — draw a route → persisted to navobj.db (OpenCPN's SQLite store, reused) → active + survives restart | 🟢 **done** — `route.create` |
 | 4a | **Route/waypoint *edit*/delete + multi-route list** in UI over the same router | 🔴 **next (interactive)** |
-| 4b | **Anchor watch + drag alarm** — drop at fix, settable swing radius (−/+), live drift readout, **debounced** critical alarm (a single GPS jitter can't trip it) — boat-verified on the live Fiji fix | 🟢 **done** (on-screen; remote/off-boat alert still Phase 2) |
+| 4b | **Anchor watch + drag alarm** — drop at fix, settable swing radius (−/+ **or drag the ring edge**), live drift readout, **debounced** critical alarm (a single GPS jitter can't trip it) — boat-verified on the live Fiji fix. **Now ENGINE-generated headless** — the setpoint persists to the engine (`anchor.set`), so the boat keeps watch with **no phone connected** and the alarm rides the CONTRACT-10 reliable transport (resend-until-ACK) | 🟢 **done** (on-screen + **headless engine watch**; remote/off-boat push still Phase 2) |
 | 5 | Follow-mode / center-on-ownship + course-up / head-up orientation | 🔴 later |
 | 6 | Cursor lat/lon + coord-format, range rings, EBL/VRM, drop-waypoint-by-range/bearing (tool cluster) | 🔴 later |
 | 7 | Cheap alarms now the math exists: arrival, off-course (XTE), depth/shallow, audible no-fix, AIS guard zone | 🔴 later |

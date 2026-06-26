@@ -709,7 +709,9 @@
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
   const ownship = HelmOwnship(map, { follow: !__initialHash });  window.__ownship = ownship;   // follow on unless a view was pinned in the URL
-  const alarms = HelmAlarms(map);  window.__alarms = alarms;   // depth / anchor / MOB safety alarms + banner (alarms.js)
+  const alarms = HelmAlarms(map, { onAnchor: (set, pos, radius) =>     // CONTRACT-10: push the anchor watch to the ENGINE so it keeps watch headless
+    { if (window.__navClient && __navClient.send) __navClient.send(set ? { t: 'anchor.set', lat: pos.lat, lon: (pos.lon != null ? pos.lon : pos.lng), radius } : { t: 'anchor.clear' }); } });
+  window.__alarms = alarms;   // depth / anchor / MOB safety alarms + banner (alarms.js)
 
   // Google-Earth-style seamless zoom: a 3D globe at world scale (you see Earth's curvature)
   // that smoothly flattens to web-mercator as you zoom to the chart — one continuous surface,
@@ -1161,7 +1163,10 @@
     // the boat — so this single line behaves identically local or remote.
     window.__navClient = HelmNavClient(applyNav,
       st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
-      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); if (window.HelmRouteEdit) HelmRouteEdit.onCommand(m); } });   // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
+      { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); if (window.HelmRouteEdit) HelmRouteEdit.onCommand(m); },
+        onAlarm: a => { if (window.__alarms) __alarms.fromAlarm(a); },              // CONTRACT-10: engine alarm raise/update → banner/beep
+        onAlarmClear: id => { if (window.__alarms) __alarms.clearById(id); } });    // CONTRACT-10: engine alarm.clear → remove banner
+      // NO sim fallback — real engine/NMEA (Vesper) position only; if no engine, show an honest empty state, never a fabricated boat
     if (window.HelmConnections) HelmConnections.init({ client: window.__navClient });   // Connections settings UI
     if (window.HelmRoutes) HelmRoutes.init({ client: window.__navClient });             // saved-route management UI
     if (window.HelmTrack) HelmTrack.init({ map: window.map });   // draws the auto-recorded track line (no control)

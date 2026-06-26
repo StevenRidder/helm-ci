@@ -220,17 +220,59 @@ window.HelmAlarms = function (map, opts) {
     if (!pos) return;
     anchor = { lat: pos.lat, lon: pos.lon }; dragSince = null;
     redrawAnchor(); pill.style.display = 'flex'; updatePill(0); paintCtl();
+    if (opts && opts.onAnchor) opts.onAnchor(true, anchor, anchorRadius);   // CONTRACT-10: hand the watch to the ENGINE so it watches headless (phone off)
   }
   function weighAnchor() {
     anchor = null; dragSince = null; clear('anchor'); pill.style.display = 'none';
     try { if (map.getSource('helm-anchor')) map.getSource('helm-anchor').setData({ type: 'FeatureCollection', features: [] }); } catch (e) {}
     paintCtl();
+    if (opts && opts.onAnchor) opts.onAnchor(false);
   }
   function setRadius(delta) {
     anchorRadius = Math.max(10, Math.min(300, anchorRadius + delta));
     savePrefs();   // ALARM-11: the chosen anchor-watch radius persists as the default
-    if (anchor) { redrawAnchor(); updatePill(lastPos ? distM(lastPos, anchor) : 0); }
+    if (anchor) {
+      redrawAnchor(); updatePill(lastPos ? distM(lastPos, anchor) : 0);
+      if (opts && opts.onAnchor) opts.onAnchor(true, anchor, anchorRadius);   // keep the ENGINE watch radius in sync (−/+ buttons, like the drag)
+    }
   }
+
+  // ---- drag the circle's edge to resize the swing radius (desktop + touch) ----
+  (function enableRadiusDrag() {
+    let dragging = false, hovering = false;
+    const ringPx = () => {                                  // current ring radius, in screen pixels
+      const c = map.project([anchor.lon, anchor.lat]);
+      const edge = map.project([anchor.lon, anchor.lat + anchorRadius / 111320]);
+      return Math.hypot(edge.x - c.x, edge.y - c.y);
+    };
+    const nearRing = pt => {                                // cursor within ~14 px of the ring band
+      if (!anchor) return false;
+      const c = map.project([anchor.lon, anchor.lat]);
+      return Math.abs(Math.hypot(pt.x - c.x, pt.y - c.y) - ringPx()) < 14;
+    };
+    const apply = ll => {                                   // radius = distance from the set-point to the cursor
+      anchorRadius = Math.max(10, Math.min(300, Math.round(distM({ lat: ll.lat, lon: ll.lng }, anchor))));
+      redrawAnchor(); updatePill(lastPos ? distM(lastPos, anchor) : 0);
+    };
+    const end = () => {
+      if (!dragging) return;
+      dragging = false; map.dragPan.enable(); map.getCanvas().style.cursor = ''; hovering = false;
+      savePrefs();                                          // ALARM-11: new radius becomes the default
+      if (opts && opts.onAnchor) opts.onAnchor(true, anchor, anchorRadius);   // CONTRACT-10: push the new radius to the ENGINE watch
+    };
+    map.on('mousedown', e => { if (anchor && nearRing(e.point)) { dragging = true; map.dragPan.disable(); e.preventDefault(); } });
+    map.on('mousemove', e => {
+      if (dragging) { apply(e.lngLat); e.preventDefault(); return; }
+      if (!anchor) return;
+      const near = nearRing(e.point);
+      if (near && !hovering) { hovering = true; map.getCanvas().style.cursor = 'ew-resize'; }
+      else if (!near && hovering) { hovering = false; map.getCanvas().style.cursor = ''; }
+    });
+    map.on('mouseup', end);
+    map.on('touchstart', e => { if (anchor && e.points && e.points.length === 1 && nearRing(e.point)) { dragging = true; map.dragPan.disable(); } });
+    map.on('touchmove', e => { if (dragging) { apply(e.lngLat); e.preventDefault(); } });
+    map.on('touchend', end); map.on('touchcancel', end);
+  })();
 
   // anchor status pill (live drift / radius + radius control), bottom-centre, only while anchored
   const pill = document.createElement('div');
@@ -628,7 +670,9 @@ window.HelmAlarms = function (map, opts) {
     setDepthLimit, setXteLimit, setArrivalNM, setSafetyDepth, setEnabled, setMuted, settings, status,   // ALARM-11 settings API
     onSource,                                            // feed state in → hold + audible no-fix/feed-loss alarm (ALARM-9/10)
     setActive(f) { fresh = !!f; },                       // legacy hold/resume w/o source detail — superseded by onSource
-    fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames
+    fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames (legacy {kind,sev,msg})
+    fromAlarm(a) { if (a && (a.kind || a.id)) fire(a.kind || a.id, a.sev || 'warning', a.msg || a.kind || a.id); },  // CONTRACT-10 raise/update (via onAlarm)
+    clearById(id) { if (id) clear(id); },                // CONTRACT-10 alarm.clear (via onAlarmClear; id == kind for singletons)
     dropAnchor: p => dropAnchor(p || lastPos), markMOB: () => markMOB(lastPos), setRadius,
     dropGuard: (p, mode) => dropGuard(p || lastPos, mode), clearGuard, setGuardMode, setGuardRadius,   // guard zone (ALARM-7)
     _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob, fresh, feedState, hadFeed,

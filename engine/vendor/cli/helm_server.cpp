@@ -1170,6 +1170,7 @@ struct ClientCfg {
   long lastSeq = 0;                              // CONTRACT-6: client's last-seen seq from hello (advisory)
   bool hasBbox = false;                          // CONTRACT-8: cull the 'ais' channel to a viewport bbox
   double bw = 0, bs = 0, be = 0, bn = 0;         // west, south, east, north (deg)
+  std::map<std::string, std::string> alarmAcked; // CONTRACT-10: alarm id -> "gen.rev" this client transport-ACKed
   // 'ais'-channel viewport test ONLY — nav core / alarms / route / track / conns are never bbox-filtered.
   bool inBbox(double lat, double lon) const {
     if (!hasBbox) return true;
@@ -1211,6 +1212,114 @@ static std::string sub_ack_msg(const ClientCfg& c) {
   return s;
 }
 
+// ---------------------------------------------------------------------------
+// ENGINE/ALARM + CONTRACT-10 PRODUCER: server-side alarm GENERATION over the frozen
+// alarm wire schema (docs/CONTRACT-ALARM-SCHEMA.md). The engine keeps watch even with
+// NO phone connected — anchor-drag / depth fire on the boat, persist, and re-send every
+// tick until the client transport-ACKs (id,gen,rev). This is the dormant "persist+resend"
+// half of CONTRACT-10 that the client reliability tier (nav-client.js) was already waiting on.
+// ---------------------------------------------------------------------------
+struct AlarmState {
+  std::string id, kind, sev, msg;
+  long gen = 0, rev = 0;
+  bool hasPos = false; double lat = 0, lon = 0;
+  bool silenceable = true;
+  long raisedTs = 0;
+  bool active = true; long clearedAt = 0;          // active=false => pending-clear delivery
+};
+static std::map<std::string, AlarmState> g_alarms; // id -> active OR pending-clear
+static std::mutex g_alarm_mtx;
+static long g_alarm_gen = 0;                        // process generation = start epoch (set in OnInit)
+
+// Anchor watch setpoint — server-side + persisted, so the watch survives a closed phone / restart.
+struct AnchorState { bool set = false; double lat = 0, lon = 0; double radiusM = 40; };
+static AnchorState g_anchor;
+static std::mutex g_anchor_mtx;
+static std::string anchor_path() { return conn_dir() + "/anchor.json"; }
+static void anchor_save() {
+  std::string js; { std::lock_guard<std::mutex> lk(g_anchor_mtx);
+    char b[160]; std::snprintf(b, sizeof b, "{\"set\":%s,\"lat\":%.6f,\"lon\":%.6f,\"radiusM\":%.1f}",
+      g_anchor.set ? "true" : "false", g_anchor.lat, g_anchor.lon, g_anchor.radiusM); js = b; }
+  std::string dir = conn_dir(); ::mkdir(dir.c_str(), 0700);
+  std::string path = anchor_path(), tmp = path + ".tmp";
+  { std::ofstream f(tmp, std::ios::binary | std::ios::trunc); if (!f) return; f << js; }
+  ::chmod(tmp.c_str(), 0600); ::rename(tmp.c_str(), path.c_str());
+}
+static void anchor_load() {
+  std::string body; if (!read_file(anchor_path().c_str(), body)) return;
+  rapidjson::Document d; if (d.Parse(body.c_str()).HasParseError() || !d.IsObject()) return;
+  std::lock_guard<std::mutex> lk(g_anchor_mtx);
+  if (d.HasMember("set") && d["set"].IsBool()) g_anchor.set = d["set"].GetBool();
+  if (d.HasMember("lat") && d["lat"].IsNumber()) g_anchor.lat = d["lat"].GetDouble();
+  if (d.HasMember("lon") && d["lon"].IsNumber()) g_anchor.lon = d["lon"].GetDouble();
+  if (d.HasMember("radiusM") && d["radiusM"].IsNumber()) g_anchor.radiusM = d["radiusM"].GetDouble();
+  if (g_anchor.set) std::printf("anchor: watch restored @ %.5f,%.5f r=%.0fm\n", g_anchor.lat, g_anchor.lon, g_anchor.radiusM);
+}
+
+// raise/update — full-state revision: rev bumps only when sev or msg changes. Caller holds g_alarm_mtx.
+static void alarm_raise(const std::string& id, const char* kind, const char* sev, const std::string& msg,
+                        bool hasPos, double lat, double lon, bool silenceable) {
+  long now = (long)std::time(nullptr);
+  auto it = g_alarms.find(id);
+  if (it == g_alarms.end() || !it->second.active) {
+    AlarmState a; a.id = id; a.kind = kind; a.sev = sev; a.msg = msg; a.gen = g_alarm_gen; a.rev = 1;
+    a.hasPos = hasPos; a.lat = lat; a.lon = lon; a.silenceable = silenceable; a.raisedTs = now; a.active = true;
+    g_alarms[id] = a;
+  } else {
+    AlarmState& a = it->second;
+    if (a.sev != sev || a.msg != msg) { a.sev = sev; a.msg = msg; ++a.rev; }   // escalation / text change => new rev
+    a.kind = kind; a.hasPos = hasPos; a.lat = lat; a.lon = lon; a.silenceable = silenceable;
+  }
+}
+static void alarm_clear_id(const std::string& id) {   // caller holds g_alarm_mtx
+  auto it = g_alarms.find(id);
+  if (it != g_alarms.end() && it->second.active) { it->second.active = false; ++it->second.rev; it->second.clearedAt = (long)std::time(nullptr); }
+}
+
+// Per-tick evaluator: anchor-drag (from the persisted setpoint) + depth (REAL source only — never sim).
+static int g_drag_over = 0;
+static void alarm_eval(double oLat, double oLon, double depth, const char* src_depth) {
+  std::lock_guard<std::mutex> lk(g_alarm_mtx);
+  AnchorState anc; { std::lock_guard<std::mutex> la(g_anchor_mtx); anc = g_anchor; }
+  if (anc.set) {
+    double brg, nm; bd(oLat, oLon, anc.lat, anc.lon, &brg, &nm); double driftM = nm * 1852.0;
+    if (driftM > anc.radiusM) { if (g_drag_over < 1000) ++g_drag_over; } else g_drag_over = 0;
+    if (g_drag_over >= 8) {                                    // ~8 s beyond the circle before we sound (rides out GPS jitter)
+      char msg[96]; std::snprintf(msg, sizeof msg, "Anchor dragging — beyond %.0f m watch circle", anc.radiusM);
+      alarm_raise("anchor", "anchor", "critical", msg, true, anc.lat, anc.lon, true);
+    } else if (driftM <= anc.radiusM) alarm_clear_id("anchor");
+  } else { g_drag_over = 0; alarm_clear_id("anchor"); }
+
+  bool depthReal = src_depth && std::strcmp(src_depth, "simulated") != 0;    // NEVER alarm on synthetic depth (fail-loud policy)
+  if (depthReal && depth > 0) {
+    const double limit = 3.0, clearAt = 3.3;                  // 0.3 m hysteresis so it doesn't chatter at the threshold
+    if (depth < limit) {
+      char msg[80]; std::snprintf(msg, sizeof msg, "Shallow water — %.1f m (limit %.1f m)", depth, limit);
+      alarm_raise("depth", "depth", "critical", msg, false, 0, 0, true);
+    } else if (depth >= clearAt) alarm_clear_id("depth");
+  } else alarm_clear_id("depth");
+
+  long now = (long)std::time(nullptr);                         // drop fully-delivered clears after a TTL
+  for (auto it = g_alarms.begin(); it != g_alarms.end(); )
+    if (!it->second.active && now - it->second.clearedAt > 20) it = g_alarms.erase(it); else ++it;
+}
+
+static std::string alarm_raise_json(const AlarmState& a) {
+  std::string pos; if (a.hasPos) { char pb[64]; std::snprintf(pb, sizeof pb, ",\"lat\":%.6f,\"lon\":%.6f", a.lat, a.lon); pos = pb; }
+  char buf[420];
+  std::snprintf(buf, sizeof buf,
+    "{\"t\":\"alarm\",\"op\":\"%s\",\"id\":\"%s\",\"rev\":%ld,\"gen\":%ld,\"kind\":\"%s\",\"sev\":\"%s\",\"msg\":\"%s\",\"silenceable\":%s,\"raisedTs\":%ld%s}",
+    a.rev <= 1 ? "raise" : "update", json_escape(a.id).c_str(), a.rev, a.gen, json_escape(a.kind).c_str(),
+    a.sev.c_str(), json_escape(a.msg).c_str(), a.silenceable ? "true" : "false", a.raisedTs, pos.c_str());
+  return buf;
+}
+static std::string alarm_clear_json(const AlarmState& a) {
+  char buf[160];
+  std::snprintf(buf, sizeof buf, "{\"t\":\"alarm.clear\",\"id\":\"%s\",\"gen\":%ld,\"rev\":%ld,\"reason\":\"resolved\"}",
+    json_escape(a.id).c_str(), a.gen, a.rev);
+  return buf;
+}
+
 // Command-plane: inbound nav-WS messages from a client. (Replaces the old push-only lambda.)
 static void handle_command(const std::string& msg, const std::shared_ptr<ix::WebSocket>& ws) {
   rapidjson::Document d;
@@ -1227,9 +1336,21 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
                                                               // client refuses a delta with no baseline; keyframes make a
                                                               // reconnect snapshot near-free, so delta-since isn't worth the risk)
         if (d.HasMember("lastSeq") && d["lastSeq"].IsNumber()) cfg.lastSeq = (long)d["lastSeq"].GetDouble();
+        cfg.alarmAcked.clear();                              // CONTRACT-10: reconnect re-asserts every active alarm
       }
       ack = sub_ack_msg(cfg); }
     ws->send(ack);
+    return;
+  }
+  if (t == "alarm.ack" && d.HasMember("acks") && d["acks"].IsArray()) {   // CONTRACT-10 transport-ACK (ungated, like hello)
+    std::lock_guard<std::mutex> lk(g_client_cfg_mtx);
+    ClientCfg& cfg = g_client_cfg[ws.get()];
+    for (auto& e : d["acks"].GetArray()) {
+      if (!e.IsObject() || !e.HasMember("id") || !e["id"].IsString()) continue;
+      long gen = (e.HasMember("gen") && e["gen"].IsNumber()) ? (long)e["gen"].GetDouble() : 0;
+      long rev = (e.HasMember("rev") && e["rev"].IsNumber()) ? (long)e["rev"].GetDouble() : 0;
+      cfg.alarmAcked[e["id"].GetString()] = std::to_string(gen) + "." + std::to_string(rev);
+    }
     return;
   }
   if (!g_owner_token.empty()) {
@@ -1267,6 +1388,20 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     { std::lock_guard<std::mutex> lk(g_track_mtx); g_track.clear(); g_track_emitted = 0; }
     std::printf("track: cleared\n");
     ws->send("{\"t\":\"track.ack\",\"cleared\":true}"); return;
+  }
+  if (t == "anchor.set" && d.HasMember("lat") && d["lat"].IsNumber() && d.HasMember("lon") && d["lon"].IsNumber()) {
+    { std::lock_guard<std::mutex> lk(g_anchor_mtx);
+      g_anchor.set = true; g_anchor.lat = d["lat"].GetDouble(); g_anchor.lon = d["lon"].GetDouble();
+      if (d.HasMember("radius") && d["radius"].IsNumber()) g_anchor.radiusM = d["radius"].GetDouble(); }
+    anchor_save();
+    std::printf("anchor: watch set @ %.5f,%.5f r=%.0fm\n", g_anchor.lat, g_anchor.lon, g_anchor.radiusM);
+    ws->send("{\"t\":\"anchor.ack\",\"set\":true}"); return;
+  }
+  if (t == "anchor.clear") {
+    { std::lock_guard<std::mutex> lk(g_anchor_mtx); g_anchor.set = false; } anchor_save();
+    { std::lock_guard<std::mutex> lk(g_alarm_mtx); alarm_clear_id("anchor"); }
+    std::printf("anchor: watch cleared\n");
+    ws->send("{\"t\":\"anchor.ack\",\"set\":false}"); return;
   }
   if (t == "route.create" && d.HasMember("points") && d["points"].IsArray()) {   // create/replace the active route
     std::vector<WP> pts;
@@ -1355,6 +1490,8 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
 }
 static void conn_init() {
   if (const char* tok = std::getenv("HELM_OWNER_TOKEN")) if (*tok) g_owner_token = tok;
+  g_alarm_gen = (long)std::time(nullptr);   // CONTRACT-10: process generation for alarm (gen,rev) ordering across restarts
+  anchor_load();                            // restore a persisted anchor watch so it survives a restart
   conn_load();
   { std::lock_guard<std::mutex> lk(g_conns_mtx);
     if (g_conns.empty()) {                                    // first run: seed the legacy local relay (and a UI template)
@@ -1434,6 +1571,7 @@ static void nav_loop(ix::HttpServer* server) {
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
     track_record(gLat, gLon, src_pos);  // ownship breadcrumb trail (auto; resets on source change so sim→real doesn't draw across the ocean)
+    alarm_eval(gLat, gLon, depth, src_depth);   // CONTRACT-10 producer: headless anchor-drag / depth watch (runs even with no client)
     RoutePoint* act = g_pRouteMan->GetpActivePoint();
     double brgW = 0, dtw = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
     double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
@@ -1608,6 +1746,25 @@ static void nav_loop(ix::HttpServer* server) {
         it = live.count(it->first) ? std::next(it) : g_client_cfg.erase(it);
     }
     for (auto& p : outbox) p.first->send(p.second);
+
+    // CONTRACT-10 producer: per-client alarm delivery — resend each active alarm (and pending clears)
+    // until THIS client transport-ACKs its (gen,rev). New/reconnected clients re-get every active alarm.
+    std::vector<std::pair<std::shared_ptr<ix::WebSocket>, std::string>> alarmOut;
+    { std::lock_guard<std::mutex> lkA(g_alarm_mtx);
+      std::lock_guard<std::mutex> lkC(g_client_cfg_mtx);
+      for (auto& c : clients) {
+        ClientCfg& cfg = g_client_cfg[c.get()];
+        if (!cfg.channels.count("alarms")) continue;
+        for (auto& kv : g_alarms) {
+          const AlarmState& a = kv.second;
+          std::string tok = std::to_string(a.gen) + "." + std::to_string(a.rev);
+          auto ai = cfg.alarmAcked.find(a.id);
+          if (ai != cfg.alarmAcked.end() && ai->second == tok) continue;   // already ACKed this rev
+          alarmOut.emplace_back(c, a.active ? alarm_raise_json(a) : alarm_clear_json(a));
+        }
+      }
+    }
+    for (auto& p : alarmOut) p.first->send(p.second);
     g_seen.swap(live);
 
     // CONN-7: reconcile raw-monitor subscribers against the current clients (self-heals on

@@ -8,7 +8,13 @@
 > The **decode + client reliability path** lives in [`web/nav-client.js`](../web/nav-client.js) — the
 > singly-owned alarm decode point. Consumers subscribe to typed events; they never parse alarm frames.
 > The **engine-side emit + persist + resend-until-ACK** is a separate consuming concern (ENGINE/ALARM)
-> — see [§7 Engine-side handoff](#7-engine-side-handoff). An executable spec + 42 assertions live in
+> — see [§7 Engine-side handoff](#7-engine-side-handoff). **LANDED** (ENGINE/ALARM): `helm_server.cpp`
+> now generates alarms server-side over this schema — **anchor-drag** (from a persisted `anchor.set`
+> setpoint, so the boat keeps watch with no phone connected) and **depth** (real-source-gated) — with a
+> per-connection active set, `gen`/`rev` revisions, resend-until-`alarm.ack`, and `alarm.clear` on
+> resolve; `mock-engine.js` mirrors it for offline client dev; SHELL/ALARM wire `onAlarm`/`onAlarmClear`
+> → banner/beep. Proven by `engine/alarm-producer-smoke.js` (raise→resend→ack→clear) + a live one-origin
+> run. An executable spec + 42 assertions live in
 > [`engine/contract-alarm-smoke.js`](../engine/contract-alarm-smoke.js) (`node engine/contract-alarm-smoke.js`).
 
 ## 0. Why a reliability tier
