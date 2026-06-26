@@ -5,6 +5,7 @@
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
+#include <ctime>
 #include <fstream>
 #include <iostream>
 #include <map>
@@ -58,6 +59,17 @@ bool ParseDouble(const std::string &text, double *out) {
     return false;
   }
   *out = value;
+  return true;
+}
+
+bool ParseInt(const std::string &text, int *out) {
+  errno = 0;
+  char *end = nullptr;
+  long value = std::strtol(text.c_str(), &end, 10);
+  if (end == text.c_str() || *end != '\0' || errno == ERANGE) {
+    return false;
+  }
+  *out = static_cast<int>(value);
   return true;
 }
 
@@ -324,6 +336,10 @@ void PrintRequestPlan(const helm::tides::OfficialPredictionRequest &request,
 struct ManifestItem {
   helm::tides::OfficialPredictionRequest request;
   std::vector<ManifestPoint> points;
+  std::string schedule_status;
+  std::string schedule_reason;
+  int planned_count = 0;
+  bool eligible_to_execute = false;
 };
 
 struct ManifestSummary {
@@ -337,6 +353,19 @@ struct ManifestSummary {
   int manual_import = 0;
   int needs_credentials = 0;
   int needs_work = 0;
+};
+
+struct SchedulerSummary {
+  std::string state_path;
+  std::string planned_utc;
+  int max_live_fetches = 4;
+  int cached = 0;
+  int pending_fetch = 0;
+  int deferred_rate_limit = 0;
+  int manual_import = 0;
+  int blocked = 0;
+  int manual_review = 0;
+  bool state_written = false;
 };
 
 std::string ManifestKey(
@@ -376,6 +405,124 @@ void AddManifestSummary(const helm::tides::OfficialPredictionRequest &request,
   if (request.needed || request.blocked) ++summary->needs_work;
 }
 
+std::vector<std::string> SplitTabLine(const std::string &line) {
+  std::vector<std::string> fields;
+  std::string field;
+  for (char c : line) {
+    if (c == '\t') {
+      fields.push_back(field);
+      field.clear();
+    } else {
+      field.push_back(c);
+    }
+  }
+  fields.push_back(field);
+  return fields;
+}
+
+std::map<std::string, int> ReadSchedulerCounts(const std::string &path) {
+  std::map<std::string, int> counts;
+  if (path.empty()) return counts;
+  std::ifstream in(path);
+  if (!in.good()) return counts;
+  std::string line;
+  while (std::getline(in, line)) {
+    if (line.empty() || line[0] == '#') continue;
+    std::vector<std::string> fields = SplitTabLine(line);
+    if (fields.size() < 3) continue;
+    int count = 0;
+    if (ParseInt(fields[2], &count)) counts[fields[0]] = count;
+  }
+  return counts;
+}
+
+bool WriteSchedulerState(const std::string &path,
+                         const std::vector<ManifestItem> &items,
+                         const std::string &planned_utc,
+                         std::string *error) {
+  std::ofstream out(path, std::ios::trunc);
+  if (!out.good()) {
+    if (error) *error = "could not write scheduler state: " + path;
+    return false;
+  }
+  out << "# helm-tides-fetch scheduler-state-v1\n";
+  out << "# key\tstatus\tplanned_count\tlast_planned_utc\tprovider_region_id\tstation_id\tdate_utc\taction\n";
+  for (const ManifestItem &item : items) {
+    out << ManifestKey(item.request) << "\t"
+        << item.schedule_status << "\t"
+        << item.planned_count << "\t"
+        << planned_utc << "\t"
+        << item.request.provider_region_id << "\t"
+        << item.request.station_id << "\t"
+        << item.request.date_utc << "\t"
+        << item.request.action << "\n";
+  }
+  return true;
+}
+
+bool ApplySchedulerState(std::vector<ManifestItem> *items,
+                         const std::string &state_path,
+                         int max_live_fetches,
+                         std::time_t now_utc,
+                         SchedulerSummary *summary,
+                         std::string *error) {
+  summary->state_path = state_path;
+  summary->planned_utc = helm::tides::FormatUtcIso8601(now_utc);
+  summary->max_live_fetches = max_live_fetches;
+  std::map<std::string, int> prior_counts = ReadSchedulerCounts(state_path);
+
+  int live_fetches = 0;
+  for (ManifestItem &item : *items) {
+    const helm::tides::OfficialPredictionRequest &request = item.request;
+    const std::string key = ManifestKey(request);
+    item.planned_count = prior_counts[key] + 1;
+    item.eligible_to_execute = false;
+
+    if (request.action == "use-cache") {
+      item.schedule_status = "cached";
+      item.schedule_reason = "official prediction cache already satisfies this request";
+      ++summary->cached;
+    } else if (request.blocked) {
+      item.schedule_status = "blocked";
+      item.schedule_reason = request.status;
+      ++summary->blocked;
+    } else if (request.can_fetch_live &&
+               (request.action == "fetch-live" ||
+                request.action == "refresh-live")) {
+      if (live_fetches < max_live_fetches) {
+        item.schedule_status = "pending_fetch";
+        item.schedule_reason = "eligible for explicit provider fetch";
+        item.eligible_to_execute = true;
+        ++live_fetches;
+        ++summary->pending_fetch;
+      } else {
+        item.schedule_status = "deferred_rate_limit";
+        item.schedule_reason = "provider live-fetch budget exhausted for this planning run";
+        ++summary->deferred_rate_limit;
+      }
+    } else if (request.manual_import_required &&
+               (request.action == "import-calendar" ||
+                request.action == "refresh-calendar")) {
+      item.schedule_status = "manual_import";
+      item.schedule_reason = "official calendar publication requires manual import";
+      ++summary->manual_import;
+    } else {
+      item.schedule_status = "manual_review";
+      item.schedule_reason = request.status.empty() ? "request needs review" :
+                                                 request.status;
+      ++summary->manual_review;
+    }
+  }
+
+  if (!state_path.empty()) {
+    if (!WriteSchedulerState(state_path, *items, summary->planned_utc, error)) {
+      return false;
+    }
+    summary->state_written = true;
+  }
+  return true;
+}
+
 void WriteManifestPointJson(std::ostream &out, const ManifestPoint &point) {
   out << "{\"id\":\"" << JsonEscape(point.id) << "\""
       << ",\"name\":\"" << JsonEscape(point.name) << "\""
@@ -388,11 +535,12 @@ void WriteManifestPointJson(std::ostream &out, const ManifestPoint &point) {
 void PrintAcquisitionManifest(const std::vector<ManifestPoint> &points,
                               const std::vector<ManifestItem> &items,
                               const ManifestSummary &summary,
+                              const SchedulerSummary *scheduler,
                               int lookahead_days) {
   std::cout << "{\"ok\":true"
             << ",\"mode\":\"acquisition-manifest\""
             << ",\"dry_run\":true"
-            << ",\"scheduler_status\":\"planner-only; execute individual requests with --resolve-lat/--resolve-lon --execute-request\""
+            << ",\"scheduler_status\":\"planner-only; execute eligible requests separately with --resolve-lat/--resolve-lon --execute-request\""
             << ",\"point_count\":" << points.size()
             << ",\"lookahead_days\":" << lookahead_days
             << ",\"item_count\":" << items.size()
@@ -406,6 +554,28 @@ void PrintAcquisitionManifest(const std::vector<ManifestPoint> &points,
             << ",\"manual_import\":" << summary.manual_import
             << ",\"needs_credentials\":" << summary.needs_credentials
             << ",\"needs_work\":" << summary.needs_work << "}"
+            << ",\"scheduler\":";
+  if (scheduler) {
+    std::cout << "{\"state_path\":\"" << JsonEscape(scheduler->state_path)
+              << "\""
+              << ",\"state_written\":"
+              << JsonBool(scheduler->state_written)
+              << ",\"planned_utc\":\""
+              << JsonEscape(scheduler->planned_utc) << "\""
+              << ",\"max_live_fetches\":"
+              << scheduler->max_live_fetches
+              << ",\"cached\":" << scheduler->cached
+              << ",\"pending_fetch\":" << scheduler->pending_fetch
+              << ",\"deferred_rate_limit\":"
+              << scheduler->deferred_rate_limit
+              << ",\"manual_import\":" << scheduler->manual_import
+              << ",\"blocked\":" << scheduler->blocked
+              << ",\"manual_review\":" << scheduler->manual_review
+              << "}";
+  } else {
+    std::cout << "null";
+  }
+  std::cout
             << ",\"items\":[";
   for (size_t i = 0; i < items.size(); ++i) {
     const ManifestItem &item = items[i];
@@ -413,6 +583,16 @@ void PrintAcquisitionManifest(const std::vector<ManifestPoint> &points,
     std::cout << "{\"point_count\":" << item.points.size()
               << ",\"request\":";
     WriteRequestJson(std::cout, item.request);
+    if (!item.schedule_status.empty()) {
+      std::cout << ",\"scheduler\":{\"status\":\""
+                << JsonEscape(item.schedule_status) << "\""
+                << ",\"reason\":\"" << JsonEscape(item.schedule_reason)
+                << "\""
+                << ",\"eligible_to_execute\":"
+                << JsonBool(item.eligible_to_execute)
+                << ",\"planned_count\":" << item.planned_count
+                << "}";
+    }
     std::cout << ",\"points\":[";
     for (size_t j = 0; j < item.points.size(); ++j) {
       if (j) std::cout << ",";
@@ -513,7 +693,8 @@ void PrintUsage() {
          "[--ready-radius-nm NM] [--execute-request] "
          "[--input-json FILE | --input-calendar FILE | --live]\n"
          "       helm-tides-fetch --points-csv FILE --date YYYY-MM-DD "
-         "--cache-dir DIR [--lookahead-days N] [--ready-radius-nm NM]\n";
+         "--cache-dir DIR [--lookahead-days N] [--ready-radius-nm NM] "
+         "[--scheduler-state FILE] [--max-live-fetches N]\n";
 }
 
 }  // namespace
@@ -528,10 +709,13 @@ int main(int argc, char **argv) {
   std::string input_json;
   std::string input_calendar;
   std::string points_csv;
+  std::string scheduler_state;
+  std::string scheduler_now_text;
   std::string source_url;
   std::string fetched_utc;
   int interval_minutes = 60;
   int lookahead_days = 1;
+  int max_live_fetches = 4;
   bool live = false;
   bool execute_request = false;
   double resolve_lat = 0.0;
@@ -560,6 +744,10 @@ int main(int argc, char **argv) {
       input_calendar = argv[++i];
     } else if (arg == "--points-csv" && i + 1 < argc) {
       points_csv = argv[++i];
+    } else if (arg == "--scheduler-state" && i + 1 < argc) {
+      scheduler_state = argv[++i];
+    } else if (arg == "--scheduler-now" && i + 1 < argc) {
+      scheduler_now_text = argv[++i];
     } else if (arg == "--source-url" && i + 1 < argc) {
       source_url = argv[++i];
     } else if (arg == "--fetched-utc" && i + 1 < argc) {
@@ -567,7 +755,15 @@ int main(int argc, char **argv) {
     } else if (arg == "--interval-minutes" && i + 1 < argc) {
       interval_minutes = std::atoi(argv[++i]);
     } else if (arg == "--lookahead-days" && i + 1 < argc) {
-      lookahead_days = std::atoi(argv[++i]);
+      if (!ParseInt(argv[++i], &lookahead_days)) {
+        PrintError("bad --lookahead-days");
+        return 2;
+      }
+    } else if (arg == "--max-live-fetches" && i + 1 < argc) {
+      if (!ParseInt(argv[++i], &max_live_fetches)) {
+        PrintError("bad --max-live-fetches");
+        return 2;
+      }
     } else if (arg == "--resolve-lat" && i + 1 < argc) {
       if (!ParseDouble(argv[++i], &resolve_lat)) {
         PrintError("bad --resolve-lat");
@@ -626,10 +822,20 @@ int main(int argc, char **argv) {
       PrintError("--lookahead-days must be between 1 and 14");
       return 2;
     }
+    if (max_live_fetches < 0 || max_live_fetches > 100) {
+      PrintError("--max-live-fetches must be between 0 and 100");
+      return 2;
+    }
 
     std::time_t default_utc = 0;
     if (!ParseDay(day_text, &default_utc)) {
       PrintError("bad date/time; use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ");
+      return 2;
+    }
+    std::time_t scheduler_now = std::time(nullptr);
+    if (!scheduler_now_text.empty() &&
+        !helm::tides::ParseUtcIso8601(scheduler_now_text, &scheduler_now)) {
+      PrintError("bad --scheduler-now; use YYYY-MM-DDTHH:MM:SSZ");
       return 2;
     }
 
@@ -676,7 +882,18 @@ int main(int argc, char **argv) {
       items.push_back(grouped[key]);
       AddManifestSummary(items.back().request, &summary);
     }
-    PrintAcquisitionManifest(expanded_points, items, summary, lookahead_days);
+    SchedulerSummary scheduler_summary;
+    SchedulerSummary *scheduler_ptr = nullptr;
+    if (!scheduler_state.empty()) {
+      if (!ApplySchedulerState(&items, scheduler_state, max_live_fetches,
+                               scheduler_now, &scheduler_summary, &error)) {
+        PrintError(error);
+        return 1;
+      }
+      scheduler_ptr = &scheduler_summary;
+    }
+    PrintAcquisitionManifest(expanded_points, items, summary, scheduler_ptr,
+                             lookahead_days);
     return 0;
   }
 

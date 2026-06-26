@@ -216,6 +216,28 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-acquisition.json 2>/dev/null || true
   fi
 
+  TIDE_SCHED_STATE="$TIDE_CACHE_GENERATED/tide-scheduler.tsv"
+  if "$BIN/helm-tides-fetch" --points-csv "$TIDE_ACQUISITION_POINTS" --cache-dir "$TIDE_CACHE_GENERATED" --date 2026-06-26 --lookahead-days 3 --scheduler-state "$TIDE_SCHED_STATE" --scheduler-now 2026-06-25T00:00:00Z --max-live-fetches 1 >/tmp/te-tides-scheduler.json 2>/tmp/te-tides-scheduler.err; then
+    tide_scheduler_shape=$(python3 -c 'import json,os,sys; o=json.load(open(sys.argv[1])); sc=o.get("scheduler",{}); items=o.get("items",[]); statuses=sorted(i.get("scheduler",{}).get("status") for i in items); counts={s:statuses.count(s) for s in set(statuses)}; max_count=max([i.get("scheduler",{}).get("planned_count",0) for i in items] or [0]); print(int(o.get("ok") is True and o.get("point_count")==12 and o.get("item_count")==9 and sc.get("state_written") is True and sc.get("pending_fetch")==1 and sc.get("deferred_rate_limit")==1 and sc.get("manual_import")==2 and sc.get("blocked")==3 and sc.get("cached")==2 and counts.get("pending_fetch")==1 and counts.get("deferred_rate_limit")==1 and counts.get("manual_import")==2 and counts.get("blocked")==3 and counts.get("cached")==2 and max_count==1 and os.path.exists(sc.get("state_path",""))))' /tmp/te-tides-scheduler.json 2>/dev/null || echo 0)
+    [ "$tide_scheduler_shape" = 1 ] \
+      && P "helm-tides-fetch writes scheduler ledger with provider budget/defer/manual/block states (TIDES-9)" \
+      || { F "tide scheduler ledger JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-scheduler.json; }
+  else
+    F "helm-tides-fetch scheduler ledger failed:"
+    sed 's/^/        /' /tmp/te-tides-scheduler.err
+    sed 's/^/        /' /tmp/te-tides-scheduler.json 2>/dev/null || true
+  fi
+  if "$BIN/helm-tides-fetch" --points-csv "$TIDE_ACQUISITION_POINTS" --cache-dir "$TIDE_CACHE_GENERATED" --date 2026-06-26 --lookahead-days 3 --scheduler-state "$TIDE_SCHED_STATE" --scheduler-now 2026-06-25T00:05:00Z --max-live-fetches 1 >/tmp/te-tides-scheduler-repeat.json 2>/tmp/te-tides-scheduler-repeat.err; then
+    tide_scheduler_repeat_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); items=o.get("items",[]); counts=[i.get("scheduler",{}).get("planned_count",0) for i in items]; print(int(len(counts)==9 and min(counts)==2 and max(counts)==2))' /tmp/te-tides-scheduler-repeat.json 2>/dev/null || echo 0)
+    [ "$tide_scheduler_repeat_shape" = 1 ] \
+      && P "helm-tides-fetch reuses scheduler ledger and increments persisted plan counts (TIDES-9)" \
+      || { F "tide scheduler repeat JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-scheduler-repeat.json; }
+  else
+    F "helm-tides-fetch scheduler repeat failed:"
+    sed 's/^/        /' /tmp/te-tides-scheduler-repeat.err
+    sed 's/^/        /' /tmp/te-tides-scheduler-repeat.json 2>/dev/null || true
+  fi
+
   if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("fiji_prediction_cached") is True and o.get("official_request_action")=="use-cache" and o.get("fiji_request_action")=="use-cache" and o.get("remote_request_action")=="configure-subscription" and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
   [ "$tide_shape" = 1 ] \
