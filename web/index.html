@@ -599,7 +599,7 @@
 <div class="insp glass">
   <div class="ttl" id="insp-handle">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 17 C 14 13 10 7 16 6"/></svg>
-    <span>Route to Marina</span>
+    <span id="nv-route-name">Route</span>
   </div>
   <div class="eta"><span class="l">ETA</span><span class="v" id="nv-eta">—</span></div>
   <div class="kpis">
@@ -1215,6 +1215,7 @@
       set('nv-winddir', miss('wind') ? '—' : Math.round(s.wind.dir));
       const hasRoute = !!(s.route && s.route.coords && s.route.coords.length >= 2);   // no active route → no route readouts/inspector
       set('nv-pos', s.posStr); set('nv-next', hasRoute ? s.active.nextWp : '—');
+      set('nv-route-name', (s.active.name && s.active.name.trim()) || 'Route');   // real route name from the engine (route.create / GPX), not a hardcoded label
       set('nv-eta', s.active.eta); set('nv-ttg', s.active.ttg); set('nv-vmg', s.active.vmg);
       set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
       // Suppress the route inspector when the active route clearly isn't being navigated here
