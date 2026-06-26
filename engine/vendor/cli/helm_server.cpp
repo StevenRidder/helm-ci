@@ -2602,10 +2602,13 @@ static void nav_loop(ix::HttpServer* server) {
     trackFull += "]"; trackAdd += "]";
     // Active route geometry (full line + active-leg index) so the client redraws the line on change.
     // Routes are small (a handful of waypoints), so it rides every frame — coords are [lon,lat].
-    std::string routeArr = "[";
-    for (size_t i = 0; i < route.size(); ++i) { char rb[40]; std::snprintf(rb, sizeof rb, "%s[%.5f,%.5f]", i ? "," : "", route[i].lon, route[i].lat); routeArr += rb; }
-    routeArr += "]";
-    std::string routeJson = "{\"coords\":" + routeArr + ",\"activeLeg\":" + std::to_string((long)li) + ",\"name\":\"" + json_escape(rname) + "\"}";
+    std::string routeArr = "[", namesArr = "[";
+    for (size_t i = 0; i < route.size(); ++i) {
+      char rb[40]; std::snprintf(rb, sizeof rb, "%s[%.5f,%.5f]", i ? "," : "", route[i].lon, route[i].lat); routeArr += rb;
+      namesArr += (i ? "," : "") + ("\"" + json_escape(route[i].name) + "\"");   // per-waypoint names → editor round-trip
+    }
+    routeArr += "]"; namesArr += "]";
+    std::string routeJson = "{\"coords\":" + routeArr + ",\"names\":" + namesArr + ",\"activeLeg\":" + std::to_string((long)li) + ",\"name\":\"" + json_escape(rname) + "\"}";
     // CONTRACT-7: per-client channel filtering + rate pacing. Build each channel as a FRAGMENT once;
     // every client gets nav-core (always) plus only the fragments for the channels it subscribed to,
     // paced to its effective rate. A new client always gets its first snapshot immediately.
