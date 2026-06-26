@@ -602,6 +602,10 @@ struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
 // Per-thread "current AIS source": each connection driver thread stamps its conn id here before parsing,
 // so the !AIVDM harvest can tag the just-heard target with the feed it arrived on (set in conn_feed_*).
 static thread_local std::string g_cur_source;
+// Active collision profile, pushed live by the client (ais.risk command) so the per-target risk tier +
+// CPA alarm re-band when the skipper switches Harbor/Bay/Ocean (or anchored auto-tighten kicks in).
+// g_CPAWarn_NM / g_TCPA_Max are OpenCPN globals (set at startup); g_minTargetSog is Helm's profile speed gate.
+static double g_minTargetSog = 2.0;   // vessels slower than this aren't flagged as a collision risk (declutter; guard zone still catches close ones)
 static std::string ais_trim(std::string s) {     // AIS text fields are right-padded with '@' (6-bit 0) / spaces
   size_t e = s.find_last_not_of("@ "); return e == std::string::npos ? std::string() : s.substr(0, e + 1);
 }
@@ -1509,6 +1513,13 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     std::printf("track: cleared\n");
     ws->send("{\"t\":\"track.ack\",\"cleared\":true}"); return;
   }
+  if (t == "ais.risk") {   // client pushes the active collision profile so the per-target risk tier + CPA alarm re-band live
+    if (d.HasMember("cpa")    && d["cpa"].IsNumber())    g_CPAWarn_NM   = d["cpa"].GetDouble();
+    if (d.HasMember("tcpa")   && d["tcpa"].IsNumber())   g_TCPA_Max     = d["tcpa"].GetDouble();
+    if (d.HasMember("minSog") && d["minSog"].IsNumber()) g_minTargetSog = d["minSog"].GetDouble();
+    std::printf("ais.risk: collision profile -> CPA<%.1f NM, TCPA<%.0f min, vessels>=%.1f kn\n", g_CPAWarn_NM, g_TCPA_Max, g_minTargetSog);
+    ws->send("{\"t\":\"ais.risk.ack\",\"ok\":true}"); return;
+  }
   if (t == "anchor.set" && d.HasMember("lat") && d["lat"].IsNumber() && d.HasMember("lon") && d["lon"].IsNumber()) {
     { std::lock_guard<std::mutex> lk(g_anchor_mtx);
       g_anchor.set = true; g_anchor.lat = d["lat"].GetDouble(); g_anchor.lon = d["lon"].GetDouble();
@@ -1829,7 +1840,7 @@ static void nav_loop(ix::HttpServer* server) {
         // ENGINE-13: per-target collision-risk tier, computed from the SAME g_CPAWarn_NM/g_TCPA_Max alarm
         // band the client uses (web/ais-risk.js tier()); caution = the 2x pre-alarm watch band. Clients
         // prefer this engine value over recomputing locally, so the thresholds live in ONE authoritative place.
-        const char* risk = (!cpaEff || t.tcpa <= 0.0) ? "normal"
+        const char* risk = (!cpaEff || t.tcpa <= 0.0 || t.sog < g_minTargetSog) ? "normal"   // profile speed gate: slow/moored vessels aren't a collision risk (guard zone still catches close ones)
           : (t.cpa < g_CPAWarn_NM && t.tcpa < g_TCPA_Max) ? "danger"
           : (t.cpa < 2.0 * g_CPAWarn_NM && t.tcpa < 2.0 * g_TCPA_Max) ? "caution" : "normal";
         char tb[800];

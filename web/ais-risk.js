@@ -62,8 +62,18 @@
   function profiles() {
     return Object.keys(PROFILES).map(function (id) { return clone(PROFILES[id]); });
   }
+  // Push the EFFECTIVE (anchored-aware) profile thresholds to the engine, so its authoritative per-target
+  // risk tier + CPA alarm re-band live. The client PREFERS the engine's risk, so without this the
+  // Harbor/Bay/Ocean selector wouldn't change anything on live data (engine risk would stay at startup).
+  function pushToEngine() {
+    try {
+      var s = settings();
+      if (global.__navClient && global.__navClient.send) global.__navClient.send({ t: 'ais.risk', cpa: s.cpa, tcpa: s.tcpa, minSog: s.minTargetSog });
+    } catch (e) {}
+  }
   function fireChanged() {
     try { if (global.dispatchEvent && global.CustomEvent) global.dispatchEvent(new global.CustomEvent('helm:ais-risk-profile', { detail: profile() })); } catch (e) {}
+    pushToEngine();
   }
   function setProfile(id) {
     if (!PROFILES[id]) return profile();
@@ -170,6 +180,11 @@
   // Auto-feed the live ownship SOG so "anchored" is detected with no caller wiring. ais-risk.js loads
   // after shell.js, so HelmShell.onNav is available; each nav frame carries the ownship sog.
   try {
-    if (global.HelmShell && global.HelmShell.onNav) global.HelmShell.onNav(function (s) { if (s) setOwnSpeed(s.sog); });
+    var _pushed = false;
+    if (global.HelmShell && global.HelmShell.onNav) global.HelmShell.onNav(function (s) {
+      if (!s) return;
+      setOwnSpeed(s.sog);
+      if (!_pushed) { _pushed = true; pushToEngine(); }   // apply the loaded/active profile to the engine once the nav WS is up
+    });
   } catch (e) {}
 })(typeof window !== 'undefined' ? window : this);
