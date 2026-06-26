@@ -1153,7 +1153,8 @@
       const ad = HelmAisAdvisor.adviceFor(p);
       if (ad) {
         let line;
-        if (ad.side === 'hold') line = 'Hold course &amp; speed — be ready to act.';
+        if (ad.needWind) line = 'Set the wind (in the AIS panel) for the give-way call.';
+        else if (ad.side === 'hold') line = 'Hold course &amp; speed — be ready to act.';
         else if (ad.turnDeg != null && ad.achievable) line = '↻ ≥' + ad.turnDeg + '° to ' + ad.side + ' to clear ' + ad.limit + ' NM'
           + (ad.newCourse != null ? ' — steer ' + Math.round(ad.newCourse) + '°' : '')
           + (ad.slowToKn != null ? ', or slow to ' + ad.slowToKn + ' kn' : '');
@@ -1161,10 +1162,13 @@
           + (ad.slowToKn != null ? '; or slow to ' + ad.slowToKn + ' kn' : '');
         else if (ad.slowToKn != null) line = 'Slow to ' + ad.slowToKn + ' kn to clear.';
         else line = 'No course or speed change clears — reduce speed and verify visually.';
+        const caveat = ad.sail ? ('Sailing rule — assumes she is under sail (AIS type/status); if she is motoring, power rules apply.'
+          + (ad.rule === 'Rule 12' ? ' Her tack is inferred from her course and the wind.' : '')) : '';
         avoid = sec('Avoid')
           + '<div style="background:rgba(255,90,82,.10);border:1px solid #ff5a5240;border-radius:9px;padding:8px 10px">'
           + (ad.action ? '<div style="font-size:12.5px;color:#ffd0cc;margin-bottom:4px">' + aisEsc(ad.action) + (ad.rule ? ' <span style="color:var(--cdim)">· ' + aisEsc(ad.rule) + '</span>' : '') + '</div>' : '')
           + '<div style="font-size:13.5px;font-weight:600;color:#ff9a93">' + line + '</div>'
+          + (caveat ? '<div style="font-size:10px;color:#f0c98a;margin-top:5px">⚠ ' + caveat + '</div>' : '')
           + '<div style="font-size:10px;color:var(--cdim);margin-top:5px">Advisory — keep a lookout; you remain responsible under the Rules.</div>'
           + '</div>';
       }

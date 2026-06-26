@@ -12,12 +12,15 @@
 // ADVISORY ONLY — never an autopilot command. Toggleable (some skippers won't want it); default ON.
 (function () {
   'use strict';
-  var KEY = 'helm.ais.advisor.on';
+  var KEY = 'helm.ais.advisor.on', K_SAIL = 'helm.sail.underSail', K_WIND = 'helm.sail.windFrom';
   var enabled = load(KEY, true);
-  var own = null;                                   // latest ownship {cog, sog} from the nav stream
+  var ownUnderSail = load(K_SAIL, false);          // skipper's own propulsion mode — default POWER (safe: no sail assumption until opted in; a sailboat motoring IS power-driven)
+  var windFrom = load(K_WIND, null);               // skipper-set true-wind FROM° (this boat has no wind instrument)
+  var own = null, lastNav = null;                  // latest ownship {cog, sog} + full nav frame (for WX-13 true wind)
 
   function load(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
-  function save() { try { localStorage.setItem(KEY, JSON.stringify(enabled)); } catch (e) {} }
+  function saveKey(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
+  function save() { saveKey(KEY, enabled); }
   function num(v) { return (v == null || v === '' || !isFinite(+v)) ? null : +v; }
   function norm(d) { d %= 360; return d < 0 ? d + 360 : d; }
 
@@ -87,6 +90,7 @@
 
     return {
       type: col && col.type, role: col && col.role, rule: col && col.rule, action: col && col.action,
+      sail: !!(col && col.sail), needWind: !!(col && col.needWind),
       side: side, turnDeg: turnDeg, newCourse: newCourse, achievable: achievable, clearBy: clearBy,
       slowToKn: slowTo, limit: limit, nowCpa: Math.round(nowCpa * 100) / 100
     };
@@ -96,6 +100,24 @@
     enabled = !!v; save();
     try { if (window.dispatchEvent && window.CustomEvent) window.dispatchEvent(new CustomEvent('helm:ais-advisor', { detail: { on: enabled } })); } catch (e) {}
   }
+
+  // ---- sailing context (Rules 12 & 18): own propulsion mode + the best wind we have ----
+  function measuredTwd() {
+    try {
+      if (!lastNav || (lastNav.sources && lastNav.sources.wind === 'missing')) return null;
+      var tw = window.HelmTrueWind && HelmTrueWind.fromNav && HelmTrueWind.fromNav(lastNav);   // WX-13
+      return tw && isFinite(tw.twd) ? tw.twd : null;
+    } catch (e) { return null; }
+  }
+  // collision.js classify() reads this. Skipper-set wind wins; else measured WX-13 true wind; else null
+  // (Rule 12 then asks for it). Own mode is the skipper's call (a sailboat motoring is power-driven).
+  function sailCtx() {
+    var w = (windFrom != null && isFinite(windFrom)) ? norm(windFrom) : measuredTwd();
+    return { underSail: ownUnderSail === true, twd: (w == null ? null : norm(w)), windSource: windFrom != null ? 'set' : (w != null ? 'measured' : null) };
+  }
+  function setUnderSail(v) { ownUnderSail = !!v; saveKey(K_SAIL, ownUnderSail); }
+  function setWind(deg) { windFrom = (deg == null || deg === '' || !isFinite(+deg)) ? null : norm(+deg); saveKey(K_WIND, windFrom); }
+  window.HelmSailCtx = sailCtx;
 
   // best-effort toggle in the AIS hub header (works regardless; the flag persists either way)
   function mountToggle() {
@@ -109,12 +131,27 @@
       cb.style.cssText = 'width:13px;height:13px;accent-color:#5dd0b0';
       cb.addEventListener('change', function () { setEnabled(cb.checked); });
       lab.appendChild(cb); lab.appendChild(document.createTextNode('Evasion advisor'));
+      hd.style.flexWrap = 'wrap'; hd.style.rowGap = '4px';
       hd.appendChild(lab);
+      var sail = document.createElement('label');
+      sail.style.cssText = 'display:flex;align-items:center;gap:5px;font-size:11px;color:var(--cdim);cursor:pointer;white-space:nowrap';
+      var scb = document.createElement('input'); scb.type = 'checkbox'; scb.checked = ownUnderSail; scb.style.cssText = 'width:13px;height:13px;accent-color:#5dd0b0';
+      scb.addEventListener('change', function () { setUnderSail(scb.checked); });
+      sail.appendChild(scb); sail.appendChild(document.createTextNode('Under sail'));
+      var wlab = document.createElement('label');
+      wlab.style.cssText = 'display:flex;align-items:center;gap:3px;font-size:11px;color:var(--cdim);white-space:nowrap';
+      var wi = document.createElement('input'); wi.type = 'number'; wi.min = '0'; wi.max = '359'; wi.placeholder = '—'; wi.value = (windFrom != null ? windFrom : '');
+      wi.style.cssText = 'width:42px;font-size:11px;padding:2px 4px;border:1px solid rgba(255,255,255,.16);border-radius:5px;background:transparent;color:var(--ctext)';
+      wi.title = 'True wind FROM direction (°) for the sailing rules — auto from a wind instrument if you have one';
+      wi.addEventListener('change', function () { setWind(wi.value); });
+      wlab.appendChild(document.createTextNode('Wind')); wlab.appendChild(wi);
+      hd.appendChild(sail); hd.appendChild(wlab);
     } catch (e) { /* hub mid-render — a later retry catches it */ }
   }
-  if (window.HelmShell && HelmShell.onNav) HelmShell.onNav(function (s) { if (s) own = { cog: s.cog, sog: s.sog, lat: s.lat, lon: s.lon }; });
+  if (window.HelmShell && HelmShell.onNav) HelmShell.onNav(function (s) { if (s) { lastNav = s; own = { cog: s.cog, sog: s.sog, lat: s.lat, lon: s.lon }; } });
   if (document.readyState !== 'loading') mountToggle(); else document.addEventListener('DOMContentLoaded', mountToggle);
   setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
 
-  window.HelmAisAdvisor = { adviceFor: adviceFor, isEnabled: function () { return enabled; }, setEnabled: setEnabled };
+  window.HelmAisAdvisor = { adviceFor: adviceFor, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
+    setUnderSail: setUnderSail, setWind: setWind, sailCtx: sailCtx };
 })();

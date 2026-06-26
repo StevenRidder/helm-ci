@@ -17,31 +17,68 @@
   if (!window.HelmAisRisk) console.error('[AIS] collision.js requires ais-risk.js (HelmAisRisk) — it must load FIRST. Collision-risk classification is unavailable; this is a real failure, not a soft default.');
   const norm = d => { d %= 360; return d < 0 ? d + 360 : d; };
 
-  // Classify the encounter from own course/speed + the target's bearing/course/speed.
-  // Returns { type, role: 'give-way'|'stand-on'|'monitor', rule, action }.
+  // AIS ship-type / nav-status → 'sail' | 'power' | 'unknown' (for Rules 12 & 18). 36 = sailing,
+  // nav-status 8 = under-way-sailing. Clear power categories (fishing/HSC/special/passenger/cargo/
+  // tanker) → power. Everything else (incl. 37 pleasure, unset) is unknown — we never assume.
+  function vesselKind(t) {
+    var st = +t.shipType, ns = +t.navStatus;
+    if (st === 36 || ns === 8) return 'sail';
+    if ((st >= 30 && st <= 35) || (st >= 40 && st <= 89)) return 'power';
+    return 'unknown';
+  }
+  function tackOf(course, windFrom) { return norm(windFrom - course) < 180 ? 'starboard' : 'port'; }   // wind over which side
+  function ownIsWindward(t, windFrom) {                       // own at origin; target by bearing+range
+    var pe = (t.range || 1) * Math.sin(t.brg * Math.PI / 180), pn = (t.range || 1) * Math.cos(t.brg * Math.PI / 180);
+    var ue = Math.sin(windFrom * Math.PI / 180), un = Math.cos(windFrom * Math.PI / 180);
+    return (pe * ue + pn * un) < 0;                           // target downwind ⇒ own is to windward
+  }
+
+  // Classify the encounter → { type, role:'give-way'|'stand-on'|'monitor', rule, action, sail? }.
+  // POWER rules (13/14/15/17) PLUS the SAILING rules (12 & 18) when a sailing context is set
+  // (HelmSailCtx: own propulsion mode + wind), so the alarm and the advisor card stay one truth.
   function classify(own, t) {
     if (!isFinite(own.cog) || t.brg == null || t.cog == null)
       return { type: 'Risk of collision', role: 'monitor', rule: 'Rule 7', action: 'In doubt — assume risk exists. Reduce speed and keep a sharp lookout.' };
     const rel = norm(t.brg - own.cog);           // target relative to own bow: 0 ahead, 90 stbd, 270 port
     const courseDiff = norm(t.cog - own.cog);    // 180 ≈ reciprocal, 0 ≈ same direction
 
-    // Head-on (Rule 14): target near dead ahead AND courses near reciprocal.
-    if ((rel < 15 || rel > 345) && courseDiff > 150 && courseDiff < 210)
-      return { type: 'Head-on', role: 'give-way', rule: 'Rule 14', action: 'Alter course to STARBOARD — pass port-to-port.' };
-
-    // Overtaking (Rule 13): target abaft own beam → she is overtaking you (you stand on).
+    // Rule 13 (overtaking) applies regardless of vessel type — so it's resolved FIRST.
     if (rel > 112.5 && rel < 247.5)
       return { type: 'Being overtaken', role: 'stand-on', rule: 'Rule 13', action: 'Hold course & speed. The overtaking vessel must keep clear — watch her.' };
-
-    // …or you are overtaking her: she's forward, near-parallel course, and you're faster.
     if ((courseDiff < 45 || courseDiff > 315) && own.sog > t.sog + 0.3)
       return { type: 'Overtaking', role: 'give-way', rule: 'Rule 13', action: 'Keep well clear — alter early and boldly; do not cut back across her.' };
 
-    // Crossing (Rule 15): target on your STARBOARD bow → you give way.
+    // Sailing context (set by ais-advisor.js): own propulsion mode + wind (measured WX-13 or skipper-set).
+    const ctx = (typeof window !== 'undefined' && window.HelmSailCtx && window.HelmSailCtx()) || {};
+    const ownSail = ctx.underSail === true;
+    const wind = (typeof ctx.twd === 'number' && isFinite(ctx.twd)) ? norm(ctx.twd) : null;
+    const tk = vesselKind(t);
+
+    // Rule 18 — a power-driven vessel keeps clear of a sailing vessel (no wind needed).
+    if (ownSail && tk === 'power')
+      return { type: 'Sail vs power', role: 'stand-on', rule: 'Rule 18', sail: true, action: 'You are under sail; she is power-driven — she must keep clear (Rule 18). Hold course & speed; be ready if she does not.' };
+    if (!ownSail && tk === 'sail')
+      return { type: 'Power vs sail', role: 'give-way', rule: 'Rule 18', sail: true, action: 'She is under sail; you are power-driven — keep clear (Rule 18). Alter early and pass well clear.' };
+
+    // Rule 12 — between two sailing vessels (needs the wind direction).
+    if (ownSail && tk === 'sail') {
+      if (wind == null)
+        return { type: 'Both sailing', role: 'monitor', rule: 'Rule 12', sail: true, needWind: true, action: 'Both under sail — set the wind direction so I can tell who gives way (tack / windward).' };
+      const ot = tackOf(own.cog, wind), tt = tackOf(t.cog, wind);
+      if (ot !== tt)
+        return ot === 'port'
+          ? { type: 'Opposite tacks', role: 'give-way', rule: 'Rule 12', sail: true, action: 'You are on PORT tack, she is on starboard — you keep clear (Rule 12). Bear away and pass astern.' }
+          : { type: 'Opposite tacks', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'You are on STARBOARD tack — hold (Rule 12); the port-tack boat keeps clear. Watch her.' };
+      return ownIsWindward(t, wind)
+        ? { type: 'Same tack', role: 'give-way', rule: 'Rule 12', sail: true, action: 'Same tack — you are to WINDWARD, she is to leeward — you keep clear (Rule 12). Bear away to pass clear.' }
+        : { type: 'Same tack', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'Same tack — you are to LEEWARD — hold (Rule 12); the windward boat keeps clear.' };
+    }
+
+    // Power vs power (or unknown vessel type) — Rule 14 / 15 / 17.
+    if ((rel < 15 || rel > 345) && courseDiff > 150 && courseDiff < 210)
+      return { type: 'Head-on', role: 'give-way', rule: 'Rule 14', action: 'Alter course to STARBOARD — pass port-to-port.' };
     if (rel > 0 && rel <= 112.5)
       return { type: 'Crossing', role: 'give-way', rule: 'Rule 15', action: 'She is on your STARBOARD — you give way. Alter to STARBOARD and pass astern. Do not cross ahead.' };
-
-    // …target on your PORT bow → you are the stand-on vessel.
     return { type: 'Crossing', role: 'stand-on', rule: 'Rule 17', action: 'She is on your PORT — you are stand-on. Hold course & speed, but be ready to act if she does not give way.' };
   }
   // Expose the COLREGS classifier so the evasion advisor (ais-advisor.js) reuses the SAME role/rule/action.
