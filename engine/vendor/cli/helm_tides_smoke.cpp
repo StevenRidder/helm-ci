@@ -427,7 +427,9 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
     if (!Check(cache.provider_region_id == "noaa-coops-us" &&
                    cache.station_id == "1612340" &&
                    cache.datum_name == "MLLW" && cache.valid_for_time &&
-                   cache.redistribution_cleared && cache.sample_count >= 3,
+                   !cache.data_path.empty() &&
+                   !cache.refresh_after_utc.empty() &&
+                   cache.redistribution_cleared && cache.sample_count == 24,
                "NOAA official prediction cache metadata changed", error)) {
       return false;
     }

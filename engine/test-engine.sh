@@ -145,19 +145,34 @@ fi
 # ---------- D) tides: offline harmonic prediction ----------
 hdr "D. Tides: offline harmonic prediction + official provider catalog  (TIDES-1/2/6/7/9)"
 TCDATA="${HELM_TCDATA_DIR:-${HELM_OCPN_DIR:-/tmp/helm-opencpn}/data/tcdata}"
-TIDE_CACHE_FIXTURE="$HERE/test/fixtures/tides-cache"
+NOAA_PREDICTION_FIXTURE="$HERE/test/fixtures/noaa-coops/1612340-2026-06-26-predictions.json"
+TIDE_CACHE_GENERATED="$(mktemp -d)"
 if [ ! -x "$BIN/helm-tides-smoke" ]; then
   F "helm-tides-smoke missing at $BIN — run engine/bootstrap.sh after the TIDES-1 target lands"
-elif "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_FIXTURE" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
+elif [ ! -x "$BIN/helm-tides-fetch" ]; then
+  F "helm-tides-fetch missing at $BIN — run engine/bootstrap.sh after the TIDES-9 target lands"
+elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir "$TIDE_CACHE_GENERATED" --station 1612340 --station-name "Honolulu, Honolulu Harbor" --datum MLLW --date 2026-06-26 --fetched-utc 2026-06-25T00:00:00Z >/tmp/te-tides-fetch.json 2>/tmp/te-tides-fetch.err; then
+  tide_fetch_shape=$(python3 -c 'import json,os,sys; o=json.load(open(sys.argv[1])); c=o.get("cache",{}); print(int(o.get("ok") is True and o.get("provider_region_id")=="noaa-coops-us" and o.get("station_id")=="1612340" and o.get("mode")=="fixture" and c.get("sample_count")==24 and c.get("valid_for_time") is True and c.get("redistribution_cleared") is True and os.path.exists(c.get("cache_path","")) and os.path.exists(c.get("data_path",""))))' /tmp/te-tides-fetch.json 2>/dev/null || echo 0)
+  [ "$tide_fetch_shape" = 1 ] \
+    && P "helm-tides-fetch validates NOAA JSON and writes source-tagged cache metadata (TIDES-9)" \
+    || { F "helm-tides-fetch JSON/cache shape changed:"; sed 's/^/        /' /tmp/te-tides-fetch.json; }
+
+  if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
   [ "$tide_shape" = 1 ] \
     && P "helm-tides-smoke pinned heights + official-source/provider catalog/cache metadata (TIDES-2/6/7/9)" \
     || { F "helm-tides-smoke regression JSON missing pinned source/event:"; sed 's/^/        /' /tmp/te-tides.json; }
+  else
+    F "helm-tides-smoke failed:"
+    sed 's/^/        /' /tmp/te-tides.err
+    sed 's/^/        /' /tmp/te-tides.json 2>/dev/null || true
+  fi
 else
-  F "helm-tides-smoke failed:"
-  sed 's/^/        /' /tmp/te-tides.err
-  sed 's/^/        /' /tmp/te-tides.json 2>/dev/null || true
+  F "helm-tides-fetch failed:"
+  sed 's/^/        /' /tmp/te-tides-fetch.err
+  sed 's/^/        /' /tmp/te-tides-fetch.json 2>/dev/null || true
 fi
+rm -rf "$TIDE_CACHE_GENERATED"
 
 # ---------- result ----------
 hdr "RESULT"

@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,153 @@ if (APPLE)
+@@ -90,3 +90,159 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -116,11 +116,17 @@ index 1909f44..ae59f3e 100644
 +  ${PROJECT_SOURCE_DIR}/resources)
 +target_compile_definitions(helm-tides PUBLIC USE_MOCK_DEFS OCPN_HEADLESS)
 +target_link_libraries(helm-tides PUBLIC ${wxWidgets_LIBRARIES})
++target_link_libraries(helm-tides PUBLIC ocpn::rapidjson)
 +add_library(ocpn::tides ALIAS helm-tides)
 +
 +add_executable(helm-tides-smoke helm_tides_smoke.cpp)
 +set_property(TARGET helm-tides-smoke PROPERTY ENABLE_EXPORTS ON)
 +target_link_libraries(helm-tides-smoke PRIVATE ocpn::tides)
++
++add_executable(helm-tides-fetch helm_tides_fetch.cpp)
++set_property(TARGET helm-tides-fetch PROPERTY ENABLE_EXPORTS ON)
++target_include_directories(helm-tides-fetch PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
++target_link_libraries(helm-tides-fetch PRIVATE ocpn::tides ixwebsocket)
 +
 +# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
 +add_executable(helm-engine helm_engine.cpp api_shim.cpp)

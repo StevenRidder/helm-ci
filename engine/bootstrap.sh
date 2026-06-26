@@ -137,11 +137,11 @@ say "build helm targets (-j$JOBS)"
 # on ONE port, default 8080) that helm_server.cpp implements and that .claude/run-helm-server.sh
 # + .claude/launch.json exec. It is built by default here (ENGINE-12) so the reproducible build
 # produces build/cli/helm-server and one-origin launchers work with no manual extra step.
-cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tiles helm-engine helm-server -j"$JOBS"
+cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-tiles helm-engine helm-server -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
-ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-tides-smoke,helm-server} 2>/dev/null | sed 's/^/  /'
+ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-server} 2>/dev/null | sed 's/^/  /'
 [ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
 # assert the Step-6 seam invariant survived the reproducible build
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)

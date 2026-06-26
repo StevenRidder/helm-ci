@@ -1,6 +1,7 @@
 #include "helm_tides.h"
 
 #include <algorithm>
+#include <cerrno>
 #include <cmath>
 #include <cstdio>
 #include <cstring>
@@ -10,8 +11,10 @@
 #include <limits>
 #include <map>
 #include <sstream>
+#include <sys/stat.h>
 #include <utility>
 
+#include "rapidjson/document.h"
 #include "tc_data_factory.h"
 #include "tcmgr.h"
 
@@ -174,6 +177,133 @@ std::string JoinPath(std::string base, const std::string &child) {
 std::string UtcDateKey(std::time_t t) {
   std::string iso = FormatUtcIso8601(t);
   return iso.size() >= 10 ? iso.substr(0, 10) : iso;
+}
+
+std::string NoaaDateParam(std::time_t t) {
+  std::string key = UtcDateKey(t);
+  std::string out;
+  out.reserve(8);
+  for (char c : key) {
+    if (c != '-') out.push_back(c);
+  }
+  return out;
+}
+
+std::time_t AddSeconds(std::time_t t, long seconds) {
+  return static_cast<std::time_t>(t + seconds);
+}
+
+std::string DayStartUtc(std::time_t t) {
+  return UtcDateKey(t) + "T00:00:00Z";
+}
+
+std::string DayEndUtc(std::time_t t) {
+  return UtcDateKey(t) + "T23:59:59Z";
+}
+
+std::string CacheMetaPath(const std::string &cache_dir,
+                          const OfficialTideReference &reference,
+                          std::time_t utc) {
+  std::string path = cache_dir;
+  path = JoinPath(path, SanitizePathToken(reference.provider_region_id));
+  path = JoinPath(path, SanitizePathToken(reference.station_id));
+  return JoinPath(path, UtcDateKey(utc) + ".meta");
+}
+
+std::string CacheDataPath(const std::string &cache_dir,
+                          const OfficialTideReference &reference,
+                          std::time_t utc) {
+  std::string path = cache_dir;
+  path = JoinPath(path, SanitizePathToken(reference.provider_region_id));
+  path = JoinPath(path, SanitizePathToken(reference.station_id));
+  return JoinPath(path, UtcDateKey(utc) + ".json");
+}
+
+std::string ParentDir(const std::string &path) {
+  size_t slash = path.find_last_of("/\\");
+  return slash == std::string::npos ? std::string() : path.substr(0, slash);
+}
+
+bool DirectoryExists(const std::string &path) {
+  struct stat st {};
+  return ::stat(path.c_str(), &st) == 0 && S_ISDIR(st.st_mode);
+}
+
+bool MkdirIfNeeded(const std::string &path, std::string *error) {
+  if (path.empty() || DirectoryExists(path)) return true;
+  if (::mkdir(path.c_str(), 0755) == 0 || errno == EEXIST) return true;
+  if (error) {
+    *error = "could not create directory: " + path + " errno=" +
+             std::to_string(errno);
+  }
+  return false;
+}
+
+bool EnsureDirRecursive(const std::string &path, std::string *error) {
+  if (path.empty()) return true;
+  size_t pos = path[0] == '/' ? 1 : 0;
+  while (true) {
+    pos = path.find('/', pos);
+    std::string part = pos == std::string::npos ? path : path.substr(0, pos);
+    if (!part.empty() && !MkdirIfNeeded(part, error)) return false;
+    if (pos == std::string::npos) break;
+    ++pos;
+  }
+  return true;
+}
+
+bool WriteTextFile(const std::string &path,
+                   const std::string &body,
+                   std::string *error) {
+  std::ofstream out(path, std::ios::binary | std::ios::trunc);
+  if (!out.good()) {
+    if (error) *error = "could not open for write: " + path;
+    return false;
+  }
+  out << body;
+  if (!out.good()) {
+    if (error) *error = "could not write: " + path;
+    return false;
+  }
+  return true;
+}
+
+std::string KeyValueLine(const std::string &key, const std::string &value) {
+  return key + "=" + value + "\n";
+}
+
+int CountNoaaPredictionSamples(const std::string &json_body,
+                               std::string *error) {
+  rapidjson::Document d;
+  if (d.Parse(json_body.c_str()).HasParseError() || !d.IsObject()) {
+    if (error) *error = "NOAA response is not a JSON object";
+    return -1;
+  }
+  if (d.HasMember("error")) {
+    if (error) *error = "NOAA response contained an error object";
+    return -1;
+  }
+  if (!d.HasMember("predictions") || !d["predictions"].IsArray()) {
+    if (error) *error = "NOAA response missing predictions array";
+    return -1;
+  }
+  const rapidjson::Value &predictions = d["predictions"];
+  int count = 0;
+  for (rapidjson::SizeType i = 0; i < predictions.Size(); ++i) {
+    const rapidjson::Value &p = predictions[i];
+    if (!p.IsObject() || !p.HasMember("t") || !p["t"].IsString() ||
+        !p.HasMember("v") ||
+        !(p["v"].IsString() || p["v"].IsNumber())) {
+      if (error) *error = "NOAA prediction sample has unexpected shape";
+      return -1;
+    }
+    ++count;
+  }
+  if (count <= 0) {
+    if (error) *error = "NOAA response contained no prediction samples";
+    return -1;
+  }
+  return count;
 }
 
 bool CacheValidForTime(const OfficialPredictionCacheInfo &cache,
@@ -402,11 +532,13 @@ bool TideEngine::CachedOfficialPrediction(
   cache.datum_name = ValueOr(kv, "datum_name", reference.datum_name);
   cache.source_url = ValueOr(kv, "source_url", reference.source_url);
   cache.cache_path = path;
+  cache.data_path = ValueOr(kv, "data_path", "");
   cache.fetched_utc = ValueOr(kv, "fetched_utc", "");
   cache.issue_date = ValueOr(kv, "issue_date", reference.issue_date);
   cache.valid_start_utc =
       ValueOr(kv, "valid_start_utc", reference.valid_start_utc);
   cache.valid_end_utc = ValueOr(kv, "valid_end_utc", reference.valid_end_utc);
+  cache.refresh_after_utc = ValueOr(kv, "refresh_after_utc", "");
   cache.license = ValueOr(kv, "license", region ? region->license : "");
   cache.provenance =
       ValueOr(kv, "provenance", region ? region->provenance : "");
@@ -421,6 +553,15 @@ bool TideEngine::CachedOfficialPrediction(
       kv, "redistribution_cleared",
       region ? region->redistribution_cleared : false);
   cache.valid_for_time = CacheValidForTime(cache, utc);
+  std::time_t refresh_after = 0;
+  cache.refresh_due =
+      !cache.refresh_after_utc.empty() &&
+      ParseUtcIso8601(cache.refresh_after_utc, &refresh_after) &&
+      std::time(nullptr) > refresh_after;
+  if (cache.refresh_due &&
+      cache.cache_status.find("refresh due") == std::string::npos) {
+    cache.cache_status += "; refresh due when online";
+  }
 
   if (cache.provider_region_id != reference.provider_region_id ||
       cache.station_id != reference.station_id || !cache.valid_for_time) {
@@ -896,8 +1037,9 @@ std::vector<TideProviderRegion> DefaultProviderRegions() {
   noaa.metadata_url = "https://api.tidesandcurrents.noaa.gov/mdapi/prod/";
   noaa.prediction_url_template =
       "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
-      "?station={station}&product=predictions&datum={datum}&time_zone=gmt"
-      "&units=metric&format=json";
+      "?begin_date={begin_yyyymmdd}&end_date={end_yyyymmdd}"
+      "&station={station}&product=predictions&datum={datum}&time_zone=gmt"
+      "&interval=60&units=metric&application=Helm&format=json";
   noaa.observed_url_template =
       "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter"
       "?station={station}&product=water_level&datum={datum}&time_zone=gmt"
@@ -1057,6 +1199,139 @@ std::vector<std::string> DefaultSourcePaths(const std::string &tcdata_dir,
     }
   }
   return paths;
+}
+
+std::string NoaaCoopsPredictionUrl(const OfficialTideReference &reference,
+                                   std::time_t day_utc,
+                                   int interval_minutes) {
+  int interval = interval_minutes > 0 ? interval_minutes : 60;
+  std::string url =
+      "https://api.tidesandcurrents.noaa.gov/api/prod/datagetter";
+  url += "?begin_date=" + NoaaDateParam(day_utc);
+  url += "&end_date=" + NoaaDateParam(day_utc);
+  url += "&station=" + reference.station_id;
+  url += "&product=predictions";
+  url += "&datum=" + (reference.datum_name.empty() ? "MLLW" :
+                                                   reference.datum_name);
+  url += "&time_zone=gmt";
+  url += "&interval=" + std::to_string(interval);
+  url += "&units=metric";
+  url += "&application=Helm";
+  url += "&format=json";
+  return url;
+}
+
+bool WriteNoaaCoopsPredictionCache(const OfficialTideReference &reference,
+                                   const std::string &cache_dir,
+                                   std::time_t day_utc,
+                                   const std::string &json_body,
+                                   const std::string &source_url,
+                                   const std::string &fetched_utc,
+                                   OfficialPredictionCacheInfo *out,
+                                   std::string *error) {
+  if (reference.provider_region_id != "noaa-coops-us") {
+    if (error) *error = "NOAA cache writer requires provider noaa-coops-us";
+    return false;
+  }
+  if (cache_dir.empty()) {
+    if (error) *error = "cache directory is required";
+    return false;
+  }
+  if (reference.station_id.empty()) {
+    if (error) *error = "NOAA station id is required";
+    return false;
+  }
+
+  int sample_count = CountNoaaPredictionSamples(json_body, error);
+  if (sample_count < 0) return false;
+
+  std::string meta_path = CacheMetaPath(cache_dir, reference, day_utc);
+  std::string data_path = CacheDataPath(cache_dir, reference, day_utc);
+  std::string parent = ParentDir(meta_path);
+  if (!EnsureDirRecursive(parent, error)) return false;
+  if (!WriteTextFile(data_path, json_body, error)) return false;
+
+  std::string fetched =
+      fetched_utc.empty() ? FormatUtcIso8601(std::time(nullptr)) : fetched_utc;
+  std::time_t fetched_time = 0;
+  std::string refresh_after;
+  if (ParseUtcIso8601(fetched, &fetched_time)) {
+    refresh_after = FormatUtcIso8601(AddSeconds(fetched_time, 30L * 86400L));
+  }
+
+  TideProviderRegion region;
+  for (const TideProviderRegion &candidate : DefaultProviderRegions()) {
+    if (candidate.id == reference.provider_region_id) {
+      region = candidate;
+      break;
+    }
+  }
+
+  std::ostringstream meta;
+  meta << KeyValueLine("provider_region_id", reference.provider_region_id);
+  meta << KeyValueLine("provider",
+                       reference.provider.empty() ? "NOAA CO-OPS" :
+                                                    reference.provider);
+  meta << KeyValueLine("station_id", reference.station_id);
+  meta << KeyValueLine("station_name", reference.station_name);
+  meta << KeyValueLine("datum_name",
+                       reference.datum_name.empty() ? "MLLW" :
+                                                     reference.datum_name);
+  meta << KeyValueLine("source_url", source_url);
+  meta << KeyValueLine("data_path", data_path);
+  meta << KeyValueLine("fetched_utc", fetched);
+  meta << KeyValueLine("issue_date", fetched.size() >= 10 ?
+                                         fetched.substr(0, 10) : "");
+  meta << KeyValueLine("valid_start_utc", DayStartUtc(day_utc));
+  meta << KeyValueLine("valid_end_utc", DayEndUtc(day_utc));
+  if (!refresh_after.empty())
+    meta << KeyValueLine("refresh_after_utc", refresh_after);
+  meta << KeyValueLine("license", region.license.empty() ?
+                                      "US government public data" :
+                                      region.license);
+  meta << KeyValueLine("provenance", region.provenance.empty() ?
+                                         "NOAA CO-OPS Data API" :
+                                         region.provenance);
+  meta << KeyValueLine("redistribution_status",
+                       region.redistribution_status.empty() ?
+                           "redistributable-public-domain" :
+                           region.redistribution_status);
+  meta << KeyValueLine("cache_status",
+                       "official NOAA CO-OPS predictions cached for query day");
+  meta << KeyValueLine("sample_count", std::to_string(sample_count));
+  meta << KeyValueLine("official", "true");
+  meta << KeyValueLine("redistribution_cleared", "true");
+
+  if (!WriteTextFile(meta_path, meta.str(), error)) return false;
+
+  if (out) {
+    TideEngine engine;
+    engine.SetOfficialPredictionCacheDir(cache_dir);
+    OfficialPredictionCacheInfo cache;
+    if (engine.CachedOfficialPrediction(reference, day_utc, &cache)) {
+      *out = cache;
+    } else {
+      cache.provider_region_id = reference.provider_region_id;
+      cache.provider = reference.provider;
+      cache.station_id = reference.station_id;
+      cache.station_name = reference.station_name;
+      cache.datum_name = reference.datum_name;
+      cache.source_url = source_url;
+      cache.cache_path = meta_path;
+      cache.data_path = data_path;
+      cache.fetched_utc = fetched;
+      cache.valid_start_utc = DayStartUtc(day_utc);
+      cache.valid_end_utc = DayEndUtc(day_utc);
+      cache.refresh_after_utc = refresh_after;
+      cache.sample_count = sample_count;
+      cache.official = true;
+      cache.valid_for_time = true;
+      cache.redistribution_cleared = true;
+      cache.ok = true;
+      *out = cache;
+    }
+  }
+  return true;
 }
 
 bool ParseUtcIso8601(const std::string &text, std::time_t *out) {

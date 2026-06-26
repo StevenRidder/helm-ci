@@ -90,10 +90,12 @@ struct OfficialPredictionCacheInfo {
   std::string datum_name;
   std::string source_url;
   std::string cache_path;
+  std::string data_path;
   std::string fetched_utc;
   std::string issue_date;
   std::string valid_start_utc;
   std::string valid_end_utc;
+  std::string refresh_after_utc;
   std::string license;
   std::string provenance;
   std::string redistribution_status;
@@ -101,6 +103,7 @@ struct OfficialPredictionCacheInfo {
   int sample_count = 0;
   bool official = false;
   bool valid_for_time = false;
+  bool refresh_due = false;
   bool redistribution_cleared = false;
 };
 
@@ -271,6 +274,17 @@ std::vector<TideProviderRegion> DefaultProviderRegions();
 std::vector<std::string> DefaultSourcePaths(
     const std::string &tcdata_dir,
     TideSourcePolicy policy = TideSourcePolicy::kRedistributableOnly);
+std::string NoaaCoopsPredictionUrl(const OfficialTideReference &reference,
+                                   std::time_t day_utc,
+                                   int interval_minutes = 60);
+bool WriteNoaaCoopsPredictionCache(const OfficialTideReference &reference,
+                                   const std::string &cache_dir,
+                                   std::time_t day_utc,
+                                   const std::string &json_body,
+                                   const std::string &source_url,
+                                   const std::string &fetched_utc,
+                                   OfficialPredictionCacheInfo *out,
+                                   std::string *error);
 bool ParseUtcIso8601(const std::string &text, std::time_t *out);
 std::string FormatUtcIso8601(std::time_t t);
 

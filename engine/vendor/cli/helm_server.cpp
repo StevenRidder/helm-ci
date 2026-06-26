@@ -452,11 +452,14 @@ static std::string tide_official_prediction_cache_json(
          "\",\"datum_name\":\"" + json_escape(c.datum_name) +
          "\",\"source_url\":\"" + json_escape(c.source_url) +
          "\",\"cache_path\":\"" + json_escape(c.cache_path) +
+         "\",\"data_path\":\"" + json_escape(c.data_path) +
          "\",\"fetched_utc\":\"" + json_escape(c.fetched_utc) +
          "\",\"issue_date\":\"" + json_escape(c.issue_date) +
          "\",\"valid_start_utc\":\"" +
          json_escape(c.valid_start_utc) +
          "\",\"valid_end_utc\":\"" + json_escape(c.valid_end_utc) +
+         "\",\"refresh_after_utc\":\"" +
+         json_escape(c.refresh_after_utc) +
          "\",\"license\":\"" + json_escape(c.license) +
          "\",\"provenance\":\"" + json_escape(c.provenance) +
          "\",\"redistribution_status\":\"" +
@@ -466,6 +469,7 @@ static std::string tide_official_prediction_cache_json(
          ",\"official\":" + (c.official ? "true" : "false") +
          ",\"valid_for_time\":" +
          (c.valid_for_time ? "true" : "false") +
+         ",\"refresh_due\":" + (c.refresh_due ? "true" : "false") +
          ",\"redistribution_cleared\":" +
          (c.redistribution_cleared ? "true" : "false") + "}";
 }
