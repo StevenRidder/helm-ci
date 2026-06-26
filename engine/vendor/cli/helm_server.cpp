@@ -1830,6 +1830,147 @@ static std::string tide_providers_json(const std::string& uri) {
   return body.str();
 }
 
+static std::string tide_current_observed_json(
+    const helm::tides::CurrentObservationComponent& c) {
+  std::ostringstream out;
+  out << "{\"available\":" << (c.available ? "true" : "false")
+      << ",\"applied\":" << (c.applied ? "true" : "false")
+      << ",\"source\":\"" << json_escape(c.source) << "\""
+      << ",\"status\":\"" << json_escape(c.status) << "\""
+      << ",\"valid_time_utc\":";
+  if (c.valid_time_utc.empty()) {
+    out << "null";
+  } else {
+    out << "\"" << json_escape(c.valid_time_utc) << "\"";
+  }
+  out << ",\"speed_kn\":";
+  if (c.available) {
+    out << c.speed_kn;
+  } else {
+    out << "null";
+  }
+  out << ",\"direction_deg\":";
+  if (c.available && c.has_direction) {
+    out << c.direction_deg;
+  } else {
+    out << "null";
+  }
+  out << ",\"has_direction\":" << (c.has_direction ? "true" : "false")
+      << "}";
+  return out.str();
+}
+
+static std::string tide_current_residual_factor_json(
+    const helm::tides::CurrentResidualFactor& f) {
+  return "{\"name\":\"" + json_escape(f.name) +
+         "\",\"source\":\"" + json_escape(f.source) +
+         "\",\"status\":\"" + json_escape(f.status) +
+         "\",\"available\":" + (f.available ? "true" : "false") +
+         ",\"applied\":" + (f.applied ? "true" : "false") + "}";
+}
+
+static std::string tide_current_condition_json(
+    const helm::tides::TideCurrentCondition& c,
+    const std::string& source_policy) {
+  std::string residuals = "[";
+  for (size_t i = 0; i < c.residual_factors.size(); ++i) {
+    if (i) residuals += ",";
+    residuals += tide_current_residual_factor_json(c.residual_factors[i]);
+  }
+  residuals += "]";
+
+  std::ostringstream nums;
+  nums << "\"lat\":" << c.lat
+       << ",\"lon\":" << c.lon
+       << ",\"speed_kn\":";
+  if (c.theoretical_available) {
+    nums << c.speed_kn;
+  } else {
+    nums << "null";
+  }
+  nums << ",\"signed_speed_kn\":";
+  if (c.theoretical_available) {
+    nums << c.signed_speed_kn;
+  } else {
+    nums << "null";
+  }
+  nums << ",\"direction_deg\":";
+  if (c.theoretical_available && c.has_direction) {
+    nums << c.direction_deg;
+  } else {
+    nums << "null";
+  }
+
+  const std::string station =
+      c.station.index >= 0 ? tide_station_json(c.station) : "null";
+  return "{\"ok\":" + std::string(c.ok ? "true" : "false") +
+         ",\"engine\":\"" + json_escape(c.engine) +
+         "\",\"mode\":\"current-condition\",\"source_policy\":\"" +
+         json_escape(source_policy) +
+         "\",\"valid_time_utc\":\"" +
+         helm::tides::FormatUtcIso8601(c.time_utc) + "\"," + nums.str() +
+         ",\"unit\":\"knots\""
+         ",\"theoretical\":{\"available\":" +
+         std::string(c.theoretical_available ? "true" : "false") +
+         ",\"applied\":" +
+         std::string(c.theoretical_applied ? "true" : "false") +
+         ",\"source\":\"opencpn-harmonic-current\""
+         ",\"speed_kn\":" +
+         (c.theoretical_available ? std::to_string(c.speed_kn) : "null") +
+         ",\"signed_speed_kn\":" +
+         (c.theoretical_available ? std::to_string(c.signed_speed_kn) : "null") +
+         ",\"direction_deg\":" +
+         (c.theoretical_available && c.has_direction
+              ? std::to_string(c.direction_deg)
+              : "null") +
+         ",\"has_direction\":" +
+         std::string(c.has_direction ? "true" : "false") +
+         ",\"station\":" + station +
+         "},\"observed\":" + tide_current_observed_json(c.observed) +
+         ",\"residual\":{\"available\":false,\"applied\":false"
+         ",\"status\":\"wind/swell/lagoon-fill/ocean-current/pressure residuals not yet applied\""
+         ",\"factors\":" + residuals + "}"
+         ",\"station\":" + station +
+         ",\"provider_regions\":" +
+         tide_provider_regions_json(c.provider_regions) +
+         ",\"confidence\":" + tide_confidence_json(c.confidence) +
+         ",\"warnings\":" + string_array_json(c.warnings) +
+         (c.error.empty() ? "" :
+                            (",\"error\":\"" + json_escape(c.error) + "\"")) +
+         "}";
+}
+
+static std::string tide_currents_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  const bool all = query_param(uri, "all") == "1";
+  const double lat = query_double_or(uri, "lat", all ? 50.4075 : 21.3069);
+  const double lon = query_double_or(uri, "lon", all ? -125.8509 : -157.8583);
+  std::string iso = query_param(uri, "time");
+  std::time_t utc = 0;
+  if (iso.empty()) {
+    utc = std::time(nullptr);
+  } else if (!helm::tides::ParseUtcIso8601(iso, &utc)) {
+    return "{\"ok\":false,\"mode\":\"current-condition\",\"error\":\"bad UTC time; use YYYY-MM-DDTHH:MM:SSZ\"}";
+  }
+
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy =
+      all ? helm::tides::TideSourcePolicy::kAllLocal
+          : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error)) {
+    return "{\"ok\":false,\"mode\":\"current-condition\",\"error\":\"" +
+           json_escape(error) + "\"}";
+  }
+
+  helm::tides::TideCurrentCondition current =
+      engine.CurrentCondition(lat, lon, utc);
+  return tide_current_condition_json(
+      current, all ? "all-local" : "redistributable-only");
+}
+
 static std::string tide_summary_json(const std::string& uri) {
   std::lock_guard<std::mutex> lock(g_tide_mtx);
   const bool all = query_param(uri, "all") == "1";
@@ -3761,6 +3902,8 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_summary_json(req->uri)); }
         if (path == "/tides/providers") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-9: audited official/provider region catalog
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_providers_json(req->uri)); }
+        if (path == "/tides/currents") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-3: valid-time current + observed/residual honesty contract
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_currents_json(req->uri)); }
         if (path == "/tides/resolve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-8: GPS/route/viewport source resolver + offline readiness
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_resolve_json(req->uri)); }
         if (path == "/tides/acquisition") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-9: planner-only official cache acquisition manifest

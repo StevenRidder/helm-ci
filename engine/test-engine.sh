@@ -243,7 +243,7 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
   TIDE_SERVER_RELAY="$(free_port)"
   TIDE_SERVER_CONFIG="$(mktemp -d)"
   TIDE_SERVER_SCHED="$TIDE_CACHE_GENERATED/server-scheduler.tsv"
-  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_SERVER_PORT HELM_RELAY_PORT=$TIDE_SERVER_RELAY HELM_SIM=1 HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_SERVER_CONFIG" HELM_TIDES_CACHE_DIR="$TIDE_CACHE_GENERATED" \
+  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_SERVER_PORT HELM_RELAY_PORT=$TIDE_SERVER_RELAY HELM_SIM=1 HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_SERVER_CONFIG" HELM_TCDATA_DIR="$TCDATA" HELM_TIDES_CACHE_DIR="$TIDE_CACHE_GENERATED" \
     "$BIN/helm-server" >/tmp/te-tides-server.log 2>&1 &
   TIDE_SERVER_PID=$!; sleep 3
   if curl -fsS "http://127.0.0.1:$TIDE_SERVER_PORT/tides/acquisition?route=active&date=2026-06-26&scheduler=1&scheduler_state=$TIDE_SERVER_SCHED&max_live_fetches=1" >/tmp/te-tides-server-acquisition.json 2>/tmp/te-tides-server-acquisition.err; then
@@ -256,13 +256,23 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-server-acquisition.err
     sed 's/^/        /' /tmp/te-tides-server.log 2>/dev/null || true
   fi
+  if curl -fsS "http://127.0.0.1:$TIDE_SERVER_PORT/tides/currents?all=1&lat=50.4075&lon=-125.8509&time=2026-06-26T12:00:00Z" >/tmp/te-tides-current.json 2>/tmp/te-tides-current.err; then
+    tide_current_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); th=o.get("theoretical",{}); obs=o.get("observed",{}); res=o.get("residual",{}); st=o.get("station") or {}; factors={f.get("name") for f in res.get("factors",[])}; print(int(o.get("ok") is True and o.get("mode")=="current-condition" and o.get("source_policy")=="all-local" and o.get("valid_time_utc")=="2026-06-26T12:00:00Z" and o.get("unit")=="knots" and th.get("available") is True and th.get("applied") is True and isinstance(th.get("speed_kn"), (int,float)) and th.get("speed_kn") >= 0 and th.get("has_direction") is True and st.get("type") in ("c","C") and st.get("unit")=="knots" and st.get("source_redistribution_cleared") is False and obs.get("applied") is False and res.get("applied") is False and {"wind_duration","swell_lagoon_fill","pass_geometry"}.issubset(factors) and o.get("confidence",{}).get("tier") in ("very_low","low","medium") and any("residual" in w for w in o.get("warnings",[]))))' /tmp/te-tides-current.json 2>/dev/null || echo 0)
+    [ "$tide_current_shape" = 1 ] \
+      && P "helm-server /tides/currents returns valid-time theoretical current with observed/residual honesty metadata (TIDES-3)" \
+      || { F "helm-server /tides/currents JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-current.json; }
+  else
+    F "helm-server /tides/currents request failed:"
+    sed 's/^/        /' /tmp/te-tides-current.err
+    sed 's/^/        /' /tmp/te-tides-server.log 2>/dev/null || true
+  fi
   kill $TIDE_SERVER_PID 2>/dev/null; wait $TIDE_SERVER_PID 2>/dev/null; rm -rf "$TIDE_SERVER_CONFIG"
 
   TIDE_RUNNER_CACHE="$(mktemp -d)"
   TIDE_RUNNER_PORT="$(free_port)"
   TIDE_RUNNER_RELAY="$(free_port)"
   TIDE_RUNNER_CONFIG="$(mktemp -d)"
-  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_RUNNER_PORT HELM_RELAY_PORT=$TIDE_RUNNER_RELAY HELM_ROUTE="$TIDE_HONOLULU_ROUTE" HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_RUNNER_CONFIG" HELM_TIDES_CACHE_DIR="$TIDE_RUNNER_CACHE" HELM_TIDES_ACQUISITION=1 HELM_TIDES_ACQUISITION_INTERVAL_SEC=30 HELM_TIDES_ACQUISITION_DATE=2026-06-26 HELM_TIDES_LOOKAHEAD_DAYS=1 HELM_TIDES_MAX_LIVE_FETCHES=1 HELM_TIDES_NOAA_FIXTURE="$NOAA_PREDICTION_FIXTURE" \
+  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_RUNNER_PORT HELM_RELAY_PORT=$TIDE_RUNNER_RELAY HELM_ROUTE="$TIDE_HONOLULU_ROUTE" HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_RUNNER_CONFIG" HELM_TCDATA_DIR="$TCDATA" HELM_TIDES_CACHE_DIR="$TIDE_RUNNER_CACHE" HELM_TIDES_ACQUISITION=1 HELM_TIDES_ACQUISITION_INTERVAL_SEC=30 HELM_TIDES_ACQUISITION_DATE=2026-06-26 HELM_TIDES_LOOKAHEAD_DAYS=1 HELM_TIDES_MAX_LIVE_FETCHES=1 HELM_TIDES_NOAA_FIXTURE="$NOAA_PREDICTION_FIXTURE" \
     "$BIN/helm-server" >/tmp/te-tides-runner-server.log 2>&1 &
   TIDE_RUNNER_PID=$!
   tide_runner_shape=0

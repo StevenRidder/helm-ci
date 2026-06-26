@@ -777,6 +777,29 @@ bool TideEngine::NearestTideStation(double lat, double lon,
   return true;
 }
 
+bool TideEngine::NearestCurrentStation(double lat, double lon,
+                                       TideStation *out) const {
+  if (!impl_->loaded || !out) return false;
+
+  double best_nm = std::numeric_limits<double>::infinity();
+  TideStation best;
+  int max_idx = impl_->manager.Get_max_IDX();
+  for (int index = 1; index <= max_idx; ++index) {
+    TideStation station = StationAt(index);
+    if (!station.is_current() || !station.usable) continue;
+    double dist_nm = DistanceNm(lat, lon, station.lat, station.lon);
+    if (dist_nm < best_nm) {
+      best_nm = dist_nm;
+      best = std::move(station);
+      best.distance_nm = dist_nm;
+    }
+  }
+
+  if (best.index < 0) return false;
+  *out = std::move(best);
+  return true;
+}
+
 bool TideEngine::NearestOfficialReference(double lat, double lon,
                                           std::time_t utc,
                                           OfficialTideReference *out) const {
@@ -1028,6 +1051,90 @@ TideConfidence TideEngine::AssessConfidence(double lat, double lon,
   return c;
 }
 
+namespace {
+
+TideConfidence AssessCurrentConfidenceFromContext(
+    const TideStation &station,
+    const std::vector<TideProviderRegion> &provider_regions,
+    bool theoretical_available) {
+  TideConfidence c;
+  c.basis =
+      "nearest harmonic current station; observed and weather/swell residuals are reported separately";
+  c.harmonic_station_distance_nm = station.distance_nm;
+  c.score = theoretical_available ? 0.30 : 0.05;
+
+  if (!theoretical_available) {
+    c.factors.push_back("no harmonic current station is available for this point");
+  } else {
+    c.factors.push_back("theoretical tidal current comes from an OpenCPN harmonic current station");
+    if (station.source_redistribution_cleared) {
+      c.score += 0.05;
+      c.factors.push_back("harmonic current source is redistributable by default");
+    } else {
+      c.score -= 0.10;
+      c.factors.push_back("harmonic current source is local/opt-in and needs license review");
+    }
+
+    if (station.distance_nm >= 0.0) {
+      if (station.distance_nm <= 2.0) {
+        c.score += 0.15;
+        c.factors.push_back("current station is within 2 nm");
+      } else if (station.distance_nm <= 10.0) {
+        c.score += 0.10;
+        c.factors.push_back("current station is within 10 nm");
+      } else if (station.distance_nm <= 25.0) {
+        c.score += 0.05;
+        c.factors.push_back("current station is within 25 nm");
+      } else {
+        c.score -= 0.15;
+        c.factors.push_back("current station is more than 25 nm away");
+      }
+    }
+  }
+
+  bool provider_currents_available = false;
+  for (const TideProviderRegion &region : provider_regions) {
+    if (region.currents_available) {
+      provider_currents_available = true;
+      break;
+    }
+  }
+  if (provider_currents_available) {
+    c.score += 0.10;
+    c.factors.push_back("official provider catalog advertises current data in this region");
+  } else if (!provider_regions.empty()) {
+    c.factors.push_back("official provider catalog does not yet advertise current data here");
+  } else {
+    c.factors.push_back("no official provider region covers this point");
+  }
+
+  c.factors.push_back("observed current reports are not yet applied");
+  c.factors.push_back("wind, swell, lagoon-fill, ocean-current, and pressure residuals are not yet applied");
+  c.live_observation_available = false;
+  c.score = Clamp(c.score, 0.0, theoretical_available ? 0.60 : 0.25);
+
+  if (c.score >= 0.80) {
+    c.tier = "high";
+  } else if (c.score >= 0.55) {
+    c.tier = "medium";
+  } else if (c.score >= 0.35) {
+    c.tier = "low";
+  } else {
+    c.tier = "very_low";
+  }
+
+  if (!theoretical_available) {
+    c.summary = "no current station available; do not infer pass current from tide height";
+  } else if (c.tier == "medium") {
+    c.summary = "theoretical current only; compare with local observations and weather";
+  } else {
+    c.summary = "current estimate lacks observed/residual correction; verify locally";
+  }
+  return c;
+}
+
+}  // namespace
+
 TidePrediction TideEngine::Predict(int station_index, std::time_t utc) const {
   TidePrediction prediction;
   prediction.time_utc = utc;
@@ -1075,6 +1182,101 @@ TidePrediction TideEngine::PredictNearest(double lat, double lon,
   prediction.station.distance_nm = nearest.distance_nm;
   prediction.confidence = AssessConfidence(lat, lon, utc, prediction.station);
   return prediction;
+}
+
+TidePrediction TideEngine::PredictNearestCurrent(double lat, double lon,
+                                                 std::time_t utc) const {
+  TideStation nearest;
+  if (!NearestCurrentStation(lat, lon, &nearest)) {
+    TidePrediction prediction;
+    prediction.time_utc = utc;
+    prediction.error = "no usable current station found in loaded sources";
+    return prediction;
+  }
+
+  TidePrediction prediction = Predict(nearest.index, utc);
+  prediction.station.distance_nm = nearest.distance_nm;
+  prediction.confidence =
+      AssessCurrentConfidenceFromContext(prediction.station,
+                                         ProviderRegionsForPoint(lat, lon),
+                                         prediction.ok);
+  return prediction;
+}
+
+TideCurrentCondition TideEngine::CurrentCondition(double lat, double lon,
+                                                  std::time_t utc) const {
+  TideCurrentCondition condition;
+  condition.lat = lat;
+  condition.lon = lon;
+  condition.time_utc = utc == 0 ? std::time(nullptr) : utc;
+  condition.observed.status =
+      "no observed current report is attached to this point yet";
+
+  const CurrentResidualFactor factors[] = {
+      {"local_observation_log", "helm-pass-estimator", "no local observation log applied", false, false},
+      {"wind_duration", "wx-valid-time", "wind setup/downwind outflow residual not applied", false, false},
+      {"swell_lagoon_fill", "wx-valid-time", "swell/lagoon-fill residual not applied", false, false},
+      {"ocean_current", "model-context", "background ocean current residual not applied", false, false},
+      {"pressure", "wx-valid-time", "barometric residual not applied", false, false},
+      {"pass_geometry", "local-pass-model", "pass geometry/slack-delay model not applied", false, false},
+  };
+  condition.residual_factors.assign(
+      factors, factors + sizeof(factors) / sizeof(factors[0]));
+
+  if (!std::isfinite(lat) || !std::isfinite(lon) || lat < -90.0 ||
+      lat > 90.0 || lon < -180.0 || lon > 180.0) {
+    condition.error = "invalid coordinate";
+    condition.confidence =
+        AssessCurrentConfidenceFromContext(condition.station,
+                                           condition.provider_regions, false);
+    return condition;
+  }
+
+  if (!impl_->loaded) {
+    condition.error = "tide engine has not loaded harmonic sources";
+    condition.confidence =
+        AssessCurrentConfidenceFromContext(condition.station,
+                                           condition.provider_regions, false);
+    return condition;
+  }
+
+  condition.provider_regions = ProviderRegionsForPoint(lat, lon);
+
+  TidePrediction prediction = PredictNearestCurrent(lat, lon, condition.time_utc);
+  if (!prediction.ok) {
+    condition.ok = true;
+    condition.warnings.push_back(prediction.error);
+    condition.warnings.push_back(
+        "do not derive pass current from tide height alone");
+    condition.confidence =
+        AssessCurrentConfidenceFromContext(condition.station,
+                                           condition.provider_regions, false);
+    return condition;
+  }
+
+  condition.ok = true;
+  condition.theoretical_available = true;
+  condition.theoretical_applied = true;
+  condition.signed_speed_kn = prediction.value_m;
+  condition.speed_kn = std::fabs(prediction.value_m);
+  condition.has_direction = prediction.has_direction;
+  condition.direction_deg = prediction.direction_deg;
+  condition.station = prediction.station;
+  condition.confidence =
+      AssessCurrentConfidenceFromContext(condition.station,
+                                         condition.provider_regions, true);
+
+  if (!condition.has_direction) {
+    condition.warnings.push_back(
+        "current station did not return a direction; suppress map arrow");
+  }
+  if (!condition.station.source_redistribution_cleared) {
+    condition.warnings.push_back(
+        "current harmonic source is local/opt-in and needs license review");
+  }
+  condition.warnings.push_back(
+      "observed current and wind/swell residual corrections are not applied yet");
+  return condition;
 }
 
 TideEvent TideEngine::NextHighLowEvent(int station_index,

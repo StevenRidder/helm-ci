@@ -192,6 +192,46 @@ struct TidePrediction {
   TideConfidence confidence;
 };
 
+struct CurrentObservationComponent {
+  bool available = false;
+  bool applied = false;
+  std::string source;
+  std::string status;
+  std::string valid_time_utc;
+  double speed_kn = 0.0;
+  double direction_deg = 0.0;
+  bool has_direction = false;
+};
+
+struct CurrentResidualFactor {
+  std::string name;
+  std::string source;
+  std::string status;
+  bool available = false;
+  bool applied = false;
+};
+
+struct TideCurrentCondition {
+  bool ok = false;
+  std::string error;
+  std::string engine = "opencpn-tcmgr";
+  std::time_t time_utc = 0;
+  double lat = 0.0;
+  double lon = 0.0;
+  bool theoretical_available = false;
+  bool theoretical_applied = false;
+  double speed_kn = 0.0;
+  double signed_speed_kn = 0.0;
+  double direction_deg = 0.0;
+  bool has_direction = false;
+  TideStation station;
+  CurrentObservationComponent observed;
+  std::vector<CurrentResidualFactor> residual_factors;
+  TideConfidence confidence;
+  std::vector<TideProviderRegion> provider_regions;
+  std::vector<std::string> warnings;
+};
+
 struct TideEvent {
   bool ok = false;
   std::string error;
@@ -279,6 +319,7 @@ public:
   std::vector<TideStation> Stations() const;
   TideStation StationAt(int index) const;
   bool NearestTideStation(double lat, double lon, TideStation *out) const;
+  bool NearestCurrentStation(double lat, double lon, TideStation *out) const;
   bool NearestOfficialReference(double lat, double lon, std::time_t utc,
                                 OfficialTideReference *out) const;
   bool CachedOfficialPrediction(const OfficialTideReference &reference,
@@ -291,6 +332,10 @@ public:
                                   const TideStation &station) const;
   TidePrediction Predict(int station_index, std::time_t utc) const;
   TidePrediction PredictNearest(double lat, double lon, std::time_t utc) const;
+  TidePrediction PredictNearestCurrent(double lat, double lon,
+                                       std::time_t utc) const;
+  TideCurrentCondition CurrentCondition(double lat, double lon,
+                                        std::time_t utc) const;
   TideEvent NextHighLowEvent(int station_index, std::time_t after_utc) const;
   TideEvent NextHighLowEventNearest(double lat, double lon,
                                     std::time_t after_utc) const;
