@@ -60,31 +60,54 @@
       ],
       "attribution": "S-52 via OpenCPN (Helm Engine)",
       "_note": "default origin only — index.html rewrites this to the resolved boat-server origin (server-endpoint.js) at load, so it is address-agnostic (localhost / helm.local / LAN IP)"
+    },
+    "helm-chart-online-fill": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "http://localhost:8095/basemap/eox/{z}/{x}/{y}.jpg"
+      ],
+      "minzoom": 0,
+      "maxzoom": 19,
+      "attribution": "Sentinel-2 cloudless — EOX IT Services (CC-BY-4.0); online fill via helm basemap-fill cache",
+      "_note": "ONLINE-FILL underlay (CHART-16) — GLOBAL (no bounds). Served by services/basemap-fill on :8095 (NOT :8091). index.html transformRequest rewrites the :8095 host for LAN devices, like :8091. Default layer is OFF."
     }
   },
   "layers": [
     {
+      "_note": "INVARIANT (CHART-16): online-fill MUST stay FIRST in this (first manifest) fragment's layers[] — directly above 'ocean' (helm-base.json), beneath all 4 MBTiles basemaps. visibility:'none' = default OFF = pure-offline baseline. Fails safe: toggle-off / proxy-down / offline / cache-empty all collapse to today's MBTiles-over-ocean stack (can only ADD beneath the charts, never subtract).",
+      "id": "helm-chart-online-fill",
+      "type": "raster",
+      "source": "helm-chart-online-fill",
+      "layout": { "visibility": "none" },
+      "paint": { "raster-fade-duration": 0, "raster-resampling": "linear" }
+    },
+    {
       "id": "navionics",
       "type": "raster",
-      "source": "navionics"
+      "source": "navionics",
+      "paint": { "raster-fade-duration": 0 }
     },
     {
       "id": "googlesat",
       "type": "raster",
       "source": "googlesat",
-      "layout": { "visibility": "none" }
+      "layout": { "visibility": "none" },
+      "paint": { "raster-fade-duration": 0 }
     },
     {
       "id": "bingsat",
       "type": "raster",
       "source": "bingsat",
-      "layout": { "visibility": "none" }
+      "layout": { "visibility": "none" },
+      "paint": { "raster-fade-duration": 0 }
     },
     {
       "id": "arcgis",
       "type": "raster",
       "source": "arcgis",
-      "layout": { "visibility": "none" }
+      "layout": { "visibility": "none" },
+      "paint": { "raster-fade-duration": 0 }
     },
     {
       "id": "satellite",
