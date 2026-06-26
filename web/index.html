@@ -1068,13 +1068,15 @@
       + '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">' + fresh + srcChip + '</div>'
       + '</div>';
   }
+  // AIS targets → the `ais` source. The source carries promoteId:'mmsi' (CLIENT-5) so each target's
+  // feature.id == its MMSI — a stable id for tap hit-testing and future incremental updates.
   function updateAisFromEngine(list) {
     if (!Array.isArray(list)) return;
     try {
       const src = map.getSource('ais'); if (!src) return;
       src.setData({ type: 'FeatureCollection', features: list
         .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
-        .map(t => ({ type: 'Feature', geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
+        .map(t => ({ type: 'Feature', id: t.mmsi, geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
                      // Normalise the AIS "not available" sentinels to null so we never render them as
                      // real data: SOG 1023 → 102.3 kn (a moored Class-B with no GPS speed would show as
                      // a 100-kn ghost + a huge AIS-4 predictor), COG 3600 → 360°. A target not reporting
