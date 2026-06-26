@@ -460,6 +460,8 @@ static std::string tide_official_prediction_cache_json(
          "\",\"valid_end_utc\":\"" + json_escape(c.valid_end_utc) +
          "\",\"refresh_after_utc\":\"" +
          json_escape(c.refresh_after_utc) +
+         "\",\"time_zone\":\"" + json_escape(c.time_zone) +
+         "\",\"time_basis\":\"" + json_escape(c.time_basis) +
          "\",\"license\":\"" + json_escape(c.license) +
          "\",\"provenance\":\"" + json_escape(c.provenance) +
          "\",\"redistribution_status\":\"" +

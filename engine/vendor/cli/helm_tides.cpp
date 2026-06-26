@@ -219,6 +219,15 @@ std::string CacheDataPath(const std::string &cache_dir,
   return JoinPath(path, UtcDateKey(utc) + ".json");
 }
 
+std::string FijiCalendarDataPath(const std::string &cache_dir,
+                                 const OfficialTideReference &reference,
+                                 const std::string &year) {
+  std::string path = cache_dir;
+  path = JoinPath(path, SanitizePathToken(reference.provider_region_id));
+  path = JoinPath(path, SanitizePathToken(reference.station_id));
+  return JoinPath(path, year + "-calendar.csv");
+}
+
 std::string ParentDir(const std::string &path) {
   size_t slash = path.find_last_of("/\\");
   return slash == std::string::npos ? std::string() : path.substr(0, slash);
@@ -270,6 +279,147 @@ bool WriteTextFile(const std::string &path,
 
 std::string KeyValueLine(const std::string &key, const std::string &value) {
   return key + "=" + value + "\n";
+}
+
+std::vector<std::string> SplitCsvLine(const std::string &line) {
+  std::vector<std::string> fields;
+  std::string field;
+  bool in_quotes = false;
+  for (size_t i = 0; i < line.size(); ++i) {
+    char c = line[i];
+    if (c == '"') {
+      if (in_quotes && i + 1 < line.size() && line[i + 1] == '"') {
+        field.push_back('"');
+        ++i;
+      } else {
+        in_quotes = !in_quotes;
+      }
+    } else if (c == ',' && !in_quotes) {
+      fields.push_back(Trim(field));
+      field.clear();
+    } else {
+      field.push_back(c);
+    }
+  }
+  fields.push_back(Trim(field));
+  return fields;
+}
+
+std::string Lower(std::string s) {
+  std::transform(s.begin(), s.end(), s.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
+  return s;
+}
+
+bool ValidHourMinute(const std::string &text) {
+  size_t colon = text.find(':');
+  if (colon == std::string::npos || colon == 0 || colon + 1 >= text.size()) {
+    return false;
+  }
+  std::string hour_text = text.substr(0, colon);
+  std::string minute_text = text.substr(colon + 1);
+  if (minute_text.size() != 2) return false;
+  for (char c : hour_text + minute_text) {
+    if (!std::isdigit(static_cast<unsigned char>(c))) return false;
+  }
+  int hour = std::atoi(hour_text.c_str());
+  int minute = std::atoi(minute_text.c_str());
+  return hour >= 0 && hour <= 23 && minute >= 0 && minute <= 59;
+}
+
+struct FijiCalendarRow {
+  std::string date;
+  std::string time;
+  std::string height_m;
+  std::string event;
+  std::string source_note;
+  std::time_t day_utc = 0;
+};
+
+bool ParseFijiMetCalendarRows(const std::string &calendar_body,
+                              std::vector<FijiCalendarRow> *rows,
+                              std::string *error) {
+  if (!rows) return false;
+  rows->clear();
+  std::istringstream input(calendar_body);
+  std::string line;
+  bool saw_header = false;
+  int line_no = 0;
+  while (std::getline(input, line)) {
+    ++line_no;
+    if (!line.empty() && line.back() == '\r') line.pop_back();
+    std::string trimmed = Trim(line);
+    if (trimmed.empty() || trimmed[0] == '#') continue;
+
+    std::vector<std::string> fields = SplitCsvLine(trimmed);
+    if (!saw_header) {
+      saw_header = true;
+      if (fields.size() < 4 || Lower(fields[0]) != "date" ||
+          Lower(fields[1]) != "time" || Lower(fields[2]) != "height_m" ||
+          Lower(fields[3]) != "event") {
+        if (error) {
+          *error =
+              "Fiji calendar CSV header must be date,time,height_m,event";
+        }
+        return false;
+      }
+      continue;
+    }
+
+    if (fields.size() < 4) {
+      if (error) {
+        *error = "Fiji calendar CSV row has too few fields at line " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+
+    FijiCalendarRow row;
+    row.date = fields[0];
+    row.time = fields[1];
+    row.height_m = fields[2];
+    row.event = Lower(fields[3]);
+    if (fields.size() >= 5) row.source_note = fields[4];
+
+    if (row.date.size() != 10 ||
+        !ParseUtcIso8601(row.date + "T00:00:00Z", &row.day_utc)) {
+      if (error) {
+        *error = "Fiji calendar row has bad YYYY-MM-DD date at line " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    if (!ValidHourMinute(row.time)) {
+      if (error) {
+        *error = "Fiji calendar row has bad HH:MM time at line " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    char *height_end = nullptr;
+    std::strtod(row.height_m.c_str(), &height_end);
+    if (!height_end || *height_end != '\0') {
+      if (error) {
+        *error = "Fiji calendar row has bad height_m at line " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    if (row.event != "high" && row.event != "low") {
+      if (error) {
+        *error = "Fiji calendar event must be high or low at line " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    rows->push_back(row);
+  }
+
+  if (rows->empty()) {
+    if (error) *error = "Fiji calendar CSV contained no tide events";
+    return false;
+  }
+  return true;
 }
 
 int CountNoaaPredictionSamples(const std::string &json_body,
@@ -539,6 +689,8 @@ bool TideEngine::CachedOfficialPrediction(
       ValueOr(kv, "valid_start_utc", reference.valid_start_utc);
   cache.valid_end_utc = ValueOr(kv, "valid_end_utc", reference.valid_end_utc);
   cache.refresh_after_utc = ValueOr(kv, "refresh_after_utc", "");
+  cache.time_zone = ValueOr(kv, "time_zone", "");
+  cache.time_basis = ValueOr(kv, "time_basis", "");
   cache.license = ValueOr(kv, "license", region ? region->license : "");
   cache.provenance =
       ValueOr(kv, "provenance", region ? region->provenance : "");
@@ -1286,6 +1438,8 @@ bool WriteNoaaCoopsPredictionCache(const OfficialTideReference &reference,
   meta << KeyValueLine("valid_end_utc", DayEndUtc(day_utc));
   if (!refresh_after.empty())
     meta << KeyValueLine("refresh_after_utc", refresh_after);
+  meta << KeyValueLine("time_zone", "GMT");
+  meta << KeyValueLine("time_basis", "NOAA CO-OPS GMT API predictions");
   meta << KeyValueLine("license", region.license.empty() ?
                                       "US government public data" :
                                       region.license);
@@ -1323,10 +1477,165 @@ bool WriteNoaaCoopsPredictionCache(const OfficialTideReference &reference,
       cache.valid_start_utc = DayStartUtc(day_utc);
       cache.valid_end_utc = DayEndUtc(day_utc);
       cache.refresh_after_utc = refresh_after;
+      cache.time_zone = "GMT";
+      cache.time_basis = "NOAA CO-OPS GMT API predictions";
       cache.sample_count = sample_count;
       cache.official = true;
       cache.valid_for_time = true;
       cache.redistribution_cleared = true;
+      cache.ok = true;
+      *out = cache;
+    }
+  }
+  return true;
+}
+
+bool WriteFijiMetCalendarCache(const OfficialTideReference &reference,
+                               const std::string &cache_dir,
+                               std::time_t day_utc,
+                               const std::string &calendar_body,
+                               const std::string &source_url,
+                               const std::string &fetched_utc,
+                               OfficialPredictionCacheInfo *out,
+                               std::string *error) {
+  if (reference.provider_region_id != "fiji-met-cosppac") {
+    if (error) {
+      *error = "Fiji calendar writer requires provider fiji-met-cosppac";
+    }
+    return false;
+  }
+  if (cache_dir.empty()) {
+    if (error) *error = "cache directory is required";
+    return false;
+  }
+  if (reference.station_id.empty()) {
+    if (error) *error = "Fiji station id is required";
+    return false;
+  }
+
+  std::vector<FijiCalendarRow> rows;
+  if (!ParseFijiMetCalendarRows(calendar_body, &rows, error)) return false;
+
+  const std::string requested_date = UtcDateKey(day_utc);
+  std::map<std::string, int> sample_counts;
+  for (const FijiCalendarRow &row : rows) {
+    sample_counts[row.date] += 1;
+  }
+  auto requested = sample_counts.find(requested_date);
+  if (requested == sample_counts.end()) {
+    if (error) {
+      *error = "Fiji calendar CSV has no events for requested date " +
+               requested_date;
+    }
+    return false;
+  }
+
+  TideProviderRegion region;
+  for (const TideProviderRegion &candidate : DefaultProviderRegions()) {
+    if (candidate.id == reference.provider_region_id) {
+      region = candidate;
+      break;
+    }
+  }
+
+  std::string year = requested_date.size() >= 4 ? requested_date.substr(0, 4)
+                                                : "calendar";
+  std::string data_path = FijiCalendarDataPath(cache_dir, reference, year);
+  std::string parent = ParentDir(data_path);
+  if (!EnsureDirRecursive(parent, error)) return false;
+  if (!WriteTextFile(data_path, calendar_body, error)) return false;
+
+  std::string fetched =
+      fetched_utc.empty() ? FormatUtcIso8601(std::time(nullptr)) : fetched_utc;
+  std::string refresh_after;
+  if (year.size() == 4) {
+    refresh_after = year;
+    char *end = nullptr;
+    long y = std::strtol(year.c_str(), &end, 10);
+    if (end && *end == '\0') {
+      refresh_after = std::to_string(y + 1) + "-01-31T00:00:00Z";
+    } else {
+      refresh_after.clear();
+    }
+  }
+
+  for (const auto &entry : sample_counts) {
+    std::time_t date_utc = 0;
+    if (!ParseUtcIso8601(entry.first + "T00:00:00Z", &date_utc)) continue;
+    std::string meta_path = CacheMetaPath(cache_dir, reference, date_utc);
+    std::ostringstream meta;
+    meta << KeyValueLine("provider_region_id", reference.provider_region_id);
+    meta << KeyValueLine("provider", reference.provider.empty() ?
+                                         "Fiji Meteorological Service / COSPPac" :
+                                         reference.provider);
+    meta << KeyValueLine("station_id", reference.station_id);
+    meta << KeyValueLine("station_name", reference.station_name);
+    meta << KeyValueLine("datum_name", reference.datum_name.empty() ?
+                                           "Tide Prediction Datum" :
+                                           reference.datum_name);
+    meta << KeyValueLine("source_url",
+                         source_url.empty() ? reference.source_url : source_url);
+    meta << KeyValueLine("data_path", data_path);
+    meta << KeyValueLine("fetched_utc", fetched);
+    meta << KeyValueLine("issue_date", reference.issue_date.empty() ?
+                                           (fetched.size() >= 10 ?
+                                                fetched.substr(0, 10) :
+                                                "") :
+                                           reference.issue_date);
+    meta << KeyValueLine("valid_start_utc", DayStartUtc(date_utc));
+    meta << KeyValueLine("valid_end_utc", DayEndUtc(date_utc));
+    if (!refresh_after.empty())
+      meta << KeyValueLine("refresh_after_utc", refresh_after);
+    meta << KeyValueLine("time_zone", "Pacific/Fiji");
+    meta << KeyValueLine(
+        "time_basis",
+        "published local Fiji calendar times; not normalized to UTC in this cache slice");
+    meta << KeyValueLine("license", region.license.empty() ?
+                                        "public web calendar; redistribution review required" :
+                                        region.license);
+    meta << KeyValueLine("provenance", region.provenance.empty() ?
+                                           "Fiji Meteorological Service tide prediction calendar" :
+                                           region.provenance);
+    meta << KeyValueLine("redistribution_status",
+                         region.redistribution_status.empty() ?
+                             "official-publication-license-review" :
+                             region.redistribution_status);
+    meta << KeyValueLine(
+        "cache_status",
+        "official Fiji Met/COSPPac calendar events cached for query date; redistribution review pending; weather/swell residuals not included");
+    meta << KeyValueLine("sample_count", std::to_string(entry.second));
+    meta << KeyValueLine("official", "true");
+    meta << KeyValueLine("redistribution_cleared", "false");
+    if (!WriteTextFile(meta_path, meta.str(), error)) return false;
+  }
+
+  if (out) {
+    TideEngine engine;
+    engine.SetOfficialPredictionCacheDir(cache_dir);
+    OfficialPredictionCacheInfo cache;
+    if (engine.CachedOfficialPrediction(reference, day_utc, &cache)) {
+      *out = cache;
+    } else {
+      cache.provider_region_id = reference.provider_region_id;
+      cache.provider = reference.provider;
+      cache.station_id = reference.station_id;
+      cache.station_name = reference.station_name;
+      cache.datum_name = reference.datum_name;
+      cache.source_url = source_url.empty() ? reference.source_url : source_url;
+      cache.cache_path = CacheMetaPath(cache_dir, reference, day_utc);
+      cache.data_path = data_path;
+      cache.fetched_utc = fetched;
+      cache.issue_date = reference.issue_date;
+      cache.valid_start_utc = DayStartUtc(day_utc);
+      cache.valid_end_utc = DayEndUtc(day_utc);
+      cache.refresh_after_utc = refresh_after;
+      cache.time_zone = "Pacific/Fiji";
+      cache.time_basis =
+          "published local Fiji calendar times; not normalized to UTC in this cache slice";
+      cache.sample_count = requested->second;
+      cache.official = true;
+      cache.valid_for_time = true;
+      cache.redistribution_cleared = false;
       cache.ok = true;
       *out = cache;
     }

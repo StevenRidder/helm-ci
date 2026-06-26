@@ -43,7 +43,7 @@ void PrintError(const std::string &error) {
 bool ReadFile(const std::string &path, std::string *body, std::string *error) {
   std::ifstream in(path, std::ios::binary);
   if (!in.good()) {
-    if (error) *error = "could not read input JSON: " + path;
+    if (error) *error = "could not read input file: " + path;
     return false;
   }
   std::ostringstream ss;
@@ -134,7 +134,9 @@ void PrintUsage() {
   std::cerr
       << "usage: helm-tides-fetch --provider noaa-coops-us --station ID "
          "--date YYYY-MM-DD --cache-dir DIR [--datum MLLW] "
-         "[--station-name NAME] (--input-json FILE | --live)\n";
+         "[--station-name NAME] (--input-json FILE | --live)\n"
+         "       helm-tides-fetch --provider fiji-met-cosppac --station ID "
+         "--date YYYY-MM-DD --cache-dir DIR --input-calendar FILE\n";
 }
 
 }  // namespace
@@ -147,6 +149,7 @@ int main(int argc, char **argv) {
   std::string day_text;
   std::string cache_dir;
   std::string input_json;
+  std::string input_calendar;
   std::string source_url;
   std::string fetched_utc;
   int interval_minutes = 60;
@@ -168,6 +171,8 @@ int main(int argc, char **argv) {
       cache_dir = argv[++i];
     } else if (arg == "--input-json" && i + 1 < argc) {
       input_json = argv[++i];
+    } else if (arg == "--input-calendar" && i + 1 < argc) {
+      input_calendar = argv[++i];
     } else if (arg == "--source-url" && i + 1 < argc) {
       source_url = argv[++i];
     } else if (arg == "--fetched-utc" && i + 1 < argc) {
@@ -189,10 +194,6 @@ int main(int argc, char **argv) {
   if (cache_dir.empty()) {
     if (const char *env = std::getenv("HELM_TIDES_CACHE_DIR")) cache_dir = env;
   }
-  if (provider_region_id != "noaa-coops-us") {
-    PrintError("only NOAA CO-OPS provider fetch is implemented in this slice");
-    return 2;
-  }
   if (station_id.empty()) {
     PrintError("--station is required");
     return 2;
@@ -205,8 +206,19 @@ int main(int argc, char **argv) {
     PrintError("--cache-dir or HELM_TIDES_CACHE_DIR is required");
     return 2;
   }
-  if (input_json.empty() == !live) {
-    PrintError("use exactly one of --input-json FILE or --live");
+  if (provider_region_id == "noaa-coops-us" &&
+      (input_json.empty() == !live || !input_calendar.empty())) {
+    PrintError("NOAA uses exactly one of --input-json FILE or --live");
+    return 2;
+  }
+  if (provider_region_id == "fiji-met-cosppac" &&
+      (input_calendar.empty() || !input_json.empty() || live)) {
+    PrintError("Fiji Met/COSPPac uses --input-calendar FILE only");
+    return 2;
+  }
+  if (provider_region_id != "noaa-coops-us" &&
+      provider_region_id != "fiji-met-cosppac") {
+    PrintError("provider fetch is not implemented: " + provider_region_id);
     return 2;
   }
 
@@ -218,16 +230,26 @@ int main(int argc, char **argv) {
 
   helm::tides::OfficialTideReference reference =
       FindReference(provider_region_id, station_id, station_name, datum_name);
-  std::string generated_url =
-      helm::tides::NoaaCoopsPredictionUrl(reference, day_utc,
-                                          interval_minutes);
-  if (source_url.empty()) source_url = generated_url;
+  if (provider_region_id == "fiji-met-cosppac" && datum_name == "MLLW") {
+    reference.datum_name = "Tide Prediction Datum";
+  }
+
+  std::string generated_url;
+  if (provider_region_id == "noaa-coops-us") {
+    generated_url = helm::tides::NoaaCoopsPredictionUrl(reference, day_utc,
+                                                        interval_minutes);
+    if (source_url.empty()) source_url = generated_url;
+  } else if (source_url.empty()) {
+    source_url = reference.source_url;
+  }
 
   std::string body;
   std::string error;
   bool used_live = false;
-  if (!input_json.empty()) {
-    if (!ReadFile(input_json, &body, &error)) {
+  if (!input_json.empty() || !input_calendar.empty()) {
+    std::string input_path =
+        !input_json.empty() ? input_json : input_calendar;
+    if (!ReadFile(input_path, &body, &error)) {
       PrintError(error);
       return 1;
     }
@@ -243,9 +265,17 @@ int main(int argc, char **argv) {
   }
 
   helm::tides::OfficialPredictionCacheInfo cache;
-  if (!helm::tides::WriteNoaaCoopsPredictionCache(
-          reference, cache_dir, day_utc, body, source_url, fetched_utc, &cache,
-          &error)) {
+  bool wrote_cache = false;
+  if (provider_region_id == "noaa-coops-us") {
+    wrote_cache = helm::tides::WriteNoaaCoopsPredictionCache(
+        reference, cache_dir, day_utc, body, source_url, fetched_utc, &cache,
+        &error);
+  } else {
+    wrote_cache = helm::tides::WriteFijiMetCalendarCache(
+        reference, cache_dir, day_utc, body, source_url, fetched_utc, &cache,
+        &error);
+  }
+  if (!wrote_cache) {
     PrintError(error);
     return 1;
   }
@@ -260,7 +290,10 @@ int main(int argc, char **argv) {
             << "\""
             << ",\"datum_name\":\"" << JsonEscape(reference.datum_name)
             << "\""
-            << ",\"mode\":\"" << (used_live ? "live" : "fixture") << "\""
+            << ",\"mode\":\""
+            << (used_live ? "live" :
+                         (!input_calendar.empty() ? "calendar" : "fixture"))
+            << "\""
             << ",\"source_url\":\"" << JsonEscape(source_url) << "\""
             << ",\"cache\":{\"cache_path\":\""
             << JsonEscape(cache.cache_path) << "\""
@@ -273,6 +306,8 @@ int main(int argc, char **argv) {
             << "\""
             << ",\"refresh_after_utc\":\""
             << JsonEscape(cache.refresh_after_utc) << "\""
+            << ",\"time_zone\":\"" << JsonEscape(cache.time_zone) << "\""
+            << ",\"time_basis\":\"" << JsonEscape(cache.time_basis) << "\""
             << ",\"sample_count\":" << cache.sample_count
             << ",\"valid_for_time\":"
             << (cache.valid_for_time ? "true" : "false")

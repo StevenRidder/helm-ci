@@ -96,6 +96,8 @@ struct OfficialPredictionCacheInfo {
   std::string valid_start_utc;
   std::string valid_end_utc;
   std::string refresh_after_utc;
+  std::string time_zone;
+  std::string time_basis;
   std::string license;
   std::string provenance;
   std::string redistribution_status;
@@ -285,6 +287,14 @@ bool WriteNoaaCoopsPredictionCache(const OfficialTideReference &reference,
                                    const std::string &fetched_utc,
                                    OfficialPredictionCacheInfo *out,
                                    std::string *error);
+bool WriteFijiMetCalendarCache(const OfficialTideReference &reference,
+                               const std::string &cache_dir,
+                               std::time_t day_utc,
+                               const std::string &calendar_body,
+                               const std::string &source_url,
+                               const std::string &fetched_utc,
+                               OfficialPredictionCacheInfo *out,
+                               std::string *error);
 bool ParseUtcIso8601(const std::string &text, std::time_t *out);
 std::string FormatUtcIso8601(std::time_t t);
 

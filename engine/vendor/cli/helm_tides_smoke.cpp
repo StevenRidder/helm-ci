@@ -435,6 +435,42 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
     }
   }
 
+  std::time_t fiji_cache_time = 0;
+  helm::tides::ParseUtcIso8601("2026-06-18T00:00:00Z", &fiji_cache_time);
+  helm::tides::TideResolvePoint suva_point;
+  suva_point.id = "suva";
+  suva_point.name = "Suva Wharf regression point";
+  suva_point.role = "route-waypoint";
+  suva_point.lat = -18.1330;
+  suva_point.lon = 178.4280;
+  suva_point.eta_utc = fiji_cache_time;
+  helm::tides::TideSourceResolution suva_resolution =
+      engine->ResolveSources({suva_point}, fiji_cache_time, 25.0);
+  if (!Check(suva_resolution.ok, "resolver failed for Suva", error)) {
+    return false;
+  }
+  const bool fiji_cached =
+      !suva_resolution.points.empty() &&
+      suva_resolution.points[0].official_prediction_cached;
+  if (expect_official_cache) {
+    if (!Check(fiji_cached,
+               "Suva resolver should find the Fiji calendar cache", error)) {
+      return false;
+    }
+    const helm::tides::OfficialPredictionCacheInfo &cache =
+        suva_resolution.points[0].official_prediction_cache;
+    if (!Check(cache.provider_region_id == "fiji-met-cosppac" &&
+                   cache.station_id == "FJ-SUVA-WHARF" &&
+                   cache.datum_name == "Tide Prediction Datum" &&
+                   cache.time_zone == "Pacific/Fiji" &&
+                   !cache.time_basis.empty() && cache.valid_for_time &&
+                   !cache.data_path.empty() &&
+                   !cache.redistribution_cleared && cache.sample_count >= 1,
+               "Fiji official calendar cache metadata changed", error)) {
+      return false;
+    }
+  }
+
   helm::tides::TideResolvePoint remote_point;
   remote_point.id = "remote-pass";
   remote_point.name = "Remote off-grid pass";
@@ -492,6 +528,8 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
             << (honolulu_resolution.offline_ready ? "true" : "false")
             << ",\"official_prediction_cached\":"
             << (honolulu_cached ? "true" : "false")
+            << ",\"fiji_prediction_cached\":"
+            << (fiji_cached ? "true" : "false")
             << ",\"resolver_remote_tier\":\""
             << JsonEscape(remote_resolution.confidence_tier) << "\""
             << ",\"provider_catalog_count\":" << provider_catalog.size()
