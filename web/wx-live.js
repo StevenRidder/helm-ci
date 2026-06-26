@@ -43,11 +43,23 @@
              particles: true, notify: function () {}, moveHandler: null, endHandler: null,
              debounce: null, abort: null, lastKey: '', requestCount: 0, phase: 'off', opacity: 0.72,
              cache: Object.create(null), cacheOrder: [], cacheLoaded: false, cacheHits: 0,
-             lastError: '', backoffUntil: 0 };
+             lastError: '', backoffUntil: 0, forceFetch: false };
 
   function codec() { return window.HelmWxCodec; }
   function layerCache() { return window.HelmLayerCache; }
-  function cacheScope() { return st.layer + ':' + (st.model || 'gfs_seamless'); }
+  function services() { return window.HelmServices || null; }
+  function layerEndpointKind(layer) { return LAYERS[layer] && LAYERS[layer].endpoint === MARINE ? 'marine' : 'forecast'; }
+  function providerInfo() {
+    var S = services();
+    if (S && S.publicWeatherProvider) return S.publicWeatherProvider();
+    return { label: 'Open-Meteo Free', scope: 'openmeteo:free' };
+  }
+  function providerLabel() { return providerInfo().label || 'Open-Meteo'; }
+  function providerScope() {
+    var S = services();
+    return S && S.providerScope ? S.providerScope() : (providerInfo().scope || 'openmeteo:free');
+  }
+  function cacheScope() { return st.layer + ':' + (st.model || 'gfs_seamless') + ':' + providerScope(); }
   function fieldBbox(field) { return field ? [field.west, field.south, field.east, field.north] : null; }
 
   function now() { return Date.now ? Date.now() : +new Date(); }
@@ -111,7 +123,7 @@
           cacheKey: key,
           kind: 'raster-field',
           bbox: fieldBbox(field),
-          source: 'open-meteo',
+          source: providerLabel(),
           model: st.model || 'gfs_seamless',
           ttlMs: CACHE_TTL_MS,
           payload: { field: field, velocity: velocity || null }
@@ -229,7 +241,10 @@
     if (layer === 'wind' || layer === 'gust' || layer === 'current') p += '&wind_speed_unit=kn';
     if (L.endpoint === MARINE) p += '&cell_selection=sea';
     else if (model && model !== 'gfs_seamless') p += '&models=' + model;
-    return (L.endpoint || FORECAST) + '?' + p;
+    var S = services(), kind = layerEndpointKind(layer);
+    var endpoint = S && S.weatherEndpoint ? S.weatherEndpoint(kind) : (L.endpoint || FORECAST);
+    var raw = endpoint + '?' + p;
+    return S && S.withOpenMeteoAuth ? S.withOpenMeteoAuth(raw) : raw;
   }
 
   // turn Open-Meteo's per-point response into a field-<layer> grid (row-major N->S).
@@ -353,7 +368,8 @@
       field: st.field ? [st.field.west, st.field.south, st.field.east, st.field.north] : null,
       viewport: view, covers: !!(st.field && st.map && covers(st.field, st.map)),
       requests: st.requestCount, opacity: st.opacity, cacheHits: st.cacheHits,
-      lastError: st.lastError, backoffUntil: st.backoffUntil, hasField: !!st.field
+      lastError: st.lastError, backoffUntil: st.backoffUntil, hasField: !!st.field,
+      provider: providerInfo()
     };
   }
 
@@ -372,6 +388,8 @@
     el.dataset.wxError = s.lastError || '';
     el.dataset.wxBackoff = s.backoffUntil ? String(s.backoffUntil) : '';
     el.dataset.wxHasField = s.hasField ? '1' : '0';
+    el.dataset.wxProvider = s.provider && s.provider.label ? s.provider.label : '';
+    el.dataset.wxProviderScope = s.provider && s.provider.scope ? s.provider.scope : '';
     el.dataset.wxField = s.field ? s.field.map(function (x) { return x.toFixed(3); }).join(',') : '';
     el.dataset.wxViewport = s.viewport ? s.viewport.map(function (x) { return x.toFixed(3); }).join(',') : '';
   }
@@ -383,30 +401,32 @@
     var particleOk = applyParticles(entry.velocity || null);
     st.lastError = '';
     st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
-      ' · cached Open-Meteo field (' + (why || cacheAge(entry)) + ')', 'ok');
+      ' · cached ' + providerLabel() + ' field (' + (why || cacheAge(entry)) + ')', 'ok');
     return true;
   }
 
   async function refresh() {
     if (!st.on || !supports(st.layer)) return;
-    if (st.field && covers(st.field, st.map)) {
+    var force = st.forceFetch;
+    st.forceFetch = false;
+    if (!force && st.field && covers(st.field, st.map)) {
       st.lastError = '';
       publishStatus('ready');
       return;
     }
-    var cached = findCached(st.map);
+    var cached = force ? null : findCached(st.map);
     if (cached && renderCached(cached)) return;
     if (st.backoffUntil && now() < st.backoffUntil) {
       st.lastKey = ''; st.abort = null;
       st.lastError = 'rate_limited';
       publishStatus(st.field ? (covers(st.field, st.map) ? 'stale' : 'out_of_coverage') : 'empty');
       st.notify(st.field
-        ? 'Live weather is rate-limited — showing the last Open-Meteo pull as stale.'
+        ? 'Live weather is rate-limited — showing the last ' + providerLabel() + ' pull as stale.'
         : 'Live weather is rate-limited and no cached field covers this view yet.', 'warn');
       return;
     }
     var bbox = viewBbox(st.map);
-    var key = st.layer + ':' + st.model + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
+    var key = providerScope() + ':' + st.layer + ':' + st.model + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
     if (key === st.lastKey) return;                       // same view+layer -> skip
     st.lastKey = key;
 
@@ -420,7 +440,7 @@
     var ac = new AbortController(); st.abort = ac;
     st.requestCount++;
     publishStatus('loading');
-    st.notify('Fetching live ' + st.layer + ' for this view …', 'info');
+    st.notify('Fetching live ' + st.layer + ' for this view via ' + providerLabel() + ' …', 'info');
     try {
       var nodes = await fetchPoints(url(g, st.layer, st.model === 'gfs_seamless' ? null : st.model), ac.signal);
       if (my !== st.token || !st.on) return;              // a newer pan superseded this one
@@ -444,7 +464,7 @@
       st.abort = null;
       st.lastError = '';
       st.notify('Live ' + st.layer + (particleOk ? ' + animated particles' : '') +
-        ' · Open-Meteo (' + field.nx + '×' + field.ny + ' over view)', 'ok');
+        ' · ' + providerLabel() + ' (' + field.nx + '×' + field.ny + ' over view)', 'ok');
     } catch (e) {
       if (e && e.name === 'AbortError') {
         if (st.abort === ac) st.abort = null;
@@ -459,7 +479,7 @@
       if (fallback && renderCached(fallback, e && e.status === 429 ? 'rate-limited fallback' : 'offline fallback')) {
         st.lastError = e && e.status === 429 ? 'rate_limited' : (e && e.message ? e.message : 'fetch_failed');
         st.lastKey = ''; st.abort = null; publishStatus('ready');
-        st.notify('Live weather provider is unavailable — showing cached Open-Meteo field for this view.', 'warn');
+        st.notify('Live weather provider is unavailable — showing cached ' + providerLabel() + ' field for this view.', 'warn');
         return;
       }
       if (st.field && covers(st.field, st.map)) {
@@ -472,7 +492,7 @@
       st.lastKey = ''; st.abort = null;
       publishStatus(st.field ? (covers(st.field, st.map) ? 'stale' : 'out_of_coverage') : 'empty');
       st.notify(e && e.status === 429
-        ? (st.field ? 'Live weather is rate-limited — keeping the last Open-Meteo pull as stale.'
+        ? (st.field ? 'Live weather is rate-limited — keeping the last ' + providerLabel() + ' pull as stale.'
           : 'Live weather is rate-limited and no cached field covers this view yet.')
         : (st.field ? 'Live weather needs a connection — keeping the last weather pull as stale.'
           : 'Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)'), 'warn');
@@ -542,8 +562,17 @@
     if (lon < f.west || lon > f.east || lat < f.south || lat > f.north) return { value: null, source: 'open', note: 'outside live view' };
     var fx = (lon - f.west) / ((f.east - f.west) || 1) * (f.nx - 1), fy = (f.north - lat) / ((f.north - f.south) || 1) * (f.ny - 1);
     var v = C.bilinear(f.values, f.nx, f.ny, fx, fy);
-    return { layer: f.layer, value: (v == null || !isFinite(v)) ? null : Math.round(v * 100) / 100, unit: f.unit, source: 'open', sourceRef: { title: 'Open-Meteo (live)' } };
+    return { layer: f.layer, value: (v == null || !isFinite(v)) ? null : Math.round(v * 100) / 100, unit: f.unit, source: 'open', sourceRef: { title: providerLabel() + ' (live)' } };
   }
+
+  window.addEventListener('helm-services-changed', function (e) {
+    if (e && e.detail && e.detail.service && e.detail.service !== 'weather.openmeteo') return;
+    st.lastKey = '';
+    st.backoffUntil = 0;
+    st.forceFetch = true;
+    publishStatus(st.phase);
+    if (st.on) scheduleRefresh(0);
+  });
 
   window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel,
     setParticles: setParticles, setOpacity: setOpacity, isEnabled: isEnabled,
