@@ -5,7 +5,11 @@
 #include <cstdio>
 #include <cstring>
 #include <cstdlib>
+#include <cctype>
+#include <fstream>
 #include <limits>
+#include <map>
+#include <sstream>
 #include <utility>
 
 #include "tc_data_factory.h"
@@ -90,6 +94,112 @@ void AddUniqueRegion(std::vector<TideProviderRegion> *regions,
   regions->push_back(region);
 }
 
+std::string Trim(const std::string &s) {
+  size_t first = 0;
+  while (first < s.size() &&
+         std::isspace(static_cast<unsigned char>(s[first]))) {
+    ++first;
+  }
+  size_t last = s.size();
+  while (last > first &&
+         std::isspace(static_cast<unsigned char>(s[last - 1]))) {
+    --last;
+  }
+  return s.substr(first, last - first);
+}
+
+std::map<std::string, std::string> ReadKeyValueFile(const std::string &path) {
+  std::map<std::string, std::string> values;
+  std::ifstream in(path);
+  std::string line;
+  while (std::getline(in, line)) {
+    std::string trimmed = Trim(line);
+    if (trimmed.empty() || trimmed[0] == '#') continue;
+    size_t eq = trimmed.find('=');
+    if (eq == std::string::npos) continue;
+    values[Trim(trimmed.substr(0, eq))] = Trim(trimmed.substr(eq + 1));
+  }
+  return values;
+}
+
+std::string ValueOr(const std::map<std::string, std::string> &values,
+                    const std::string &key,
+                    const std::string &fallback) {
+  auto it = values.find(key);
+  return it == values.end() || it->second.empty() ? fallback : it->second;
+}
+
+bool BoolValueOr(const std::map<std::string, std::string> &values,
+                 const std::string &key,
+                 bool fallback) {
+  auto it = values.find(key);
+  if (it == values.end()) return fallback;
+  std::string v = it->second;
+  std::transform(v.begin(), v.end(), v.begin(),
+                 [](unsigned char c) { return std::tolower(c); });
+  if (v == "1" || v == "true" || v == "yes") return true;
+  if (v == "0" || v == "false" || v == "no") return false;
+  return fallback;
+}
+
+int IntValueOr(const std::map<std::string, std::string> &values,
+               const std::string &key,
+               int fallback) {
+  auto it = values.find(key);
+  if (it == values.end()) return fallback;
+  char *end = nullptr;
+  long v = std::strtol(it->second.c_str(), &end, 10);
+  return end && *end == '\0' ? static_cast<int>(v) : fallback;
+}
+
+std::string SanitizePathToken(const std::string &token) {
+  std::string out;
+  out.reserve(token.size());
+  for (unsigned char c : token) {
+    if (std::isalnum(c) || c == '-' || c == '_') {
+      out.push_back(static_cast<char>(c));
+    } else {
+      out.push_back('_');
+    }
+  }
+  return out.empty() ? "_" : out;
+}
+
+std::string JoinPath(std::string base, const std::string &child) {
+  if (base.empty()) return child;
+  if (base.back() != '/') base.push_back('/');
+  return base + child;
+}
+
+std::string UtcDateKey(std::time_t t) {
+  std::string iso = FormatUtcIso8601(t);
+  return iso.size() >= 10 ? iso.substr(0, 10) : iso;
+}
+
+bool CacheValidForTime(const OfficialPredictionCacheInfo &cache,
+                       std::time_t utc) {
+  std::time_t start = 0;
+  std::time_t end = 0;
+  if (!cache.valid_start_utc.empty() &&
+      ParseUtcIso8601(cache.valid_start_utc, &start) && utc < start) {
+    return false;
+  }
+  if (!cache.valid_end_utc.empty() &&
+      ParseUtcIso8601(cache.valid_end_utc, &end) && utc > end) {
+    return false;
+  }
+  return true;
+}
+
+const TideProviderRegion *FindRegion(
+    const std::vector<TideProviderRegion> &regions,
+    const std::string &id) {
+  for (const TideProviderRegion &region : regions) {
+    if (region.id == id) return &region;
+  }
+  return nullptr;
+}
+
 }  // namespace
 
 struct TideEngine::Impl {
@@ -99,6 +209,7 @@ struct TideEngine::Impl {
   std::vector<OfficialTideReference> official_references =
       DefaultOfficialReferences();
   std::vector<TideProviderRegion> provider_regions = DefaultProviderRegions();
+  std::string official_prediction_cache_dir;
 };
 
 TideEngine::TideEngine() : impl_(new Impl()) {}
@@ -141,6 +252,14 @@ bool TideEngine::LoadDefaultSources(const std::string &tcdata_dir,
                                     TideSourcePolicy policy,
                                     std::string *error) {
   return LoadSources(DefaultSourcePaths(tcdata_dir, policy), error);
+}
+
+void TideEngine::SetOfficialPredictionCacheDir(const std::string &cache_dir) {
+  impl_->official_prediction_cache_dir = cache_dir;
+}
+
+std::string TideEngine::OfficialPredictionCacheDir() const {
+  return impl_->official_prediction_cache_dir;
 }
 
 std::vector<TideSourceInfo> TideEngine::LoadedSources() const {
@@ -251,6 +370,65 @@ bool TideEngine::NearestOfficialReference(double lat, double lon,
 
   if (best.distance_nm < 0.0) return false;
   *out = std::move(best);
+  return true;
+}
+
+bool TideEngine::CachedOfficialPrediction(
+    const OfficialTideReference &reference,
+    std::time_t utc,
+    OfficialPredictionCacheInfo *out) const {
+  if (!out || impl_->official_prediction_cache_dir.empty() ||
+      reference.provider_region_id.empty() || reference.station_id.empty()) {
+    return false;
+  }
+
+  std::string path = impl_->official_prediction_cache_dir;
+  path = JoinPath(path, SanitizePathToken(reference.provider_region_id));
+  path = JoinPath(path, SanitizePathToken(reference.station_id));
+  path = JoinPath(path, UtcDateKey(utc) + ".meta");
+  std::ifstream probe(path);
+  if (!probe.good()) return false;
+  probe.close();
+
+  std::map<std::string, std::string> kv = ReadKeyValueFile(path);
+  OfficialPredictionCacheInfo cache;
+  const TideProviderRegion *region =
+      FindRegion(impl_->provider_regions, reference.provider_region_id);
+  cache.provider_region_id =
+      ValueOr(kv, "provider_region_id", reference.provider_region_id);
+  cache.provider = ValueOr(kv, "provider", reference.provider);
+  cache.station_id = ValueOr(kv, "station_id", reference.station_id);
+  cache.station_name = ValueOr(kv, "station_name", reference.station_name);
+  cache.datum_name = ValueOr(kv, "datum_name", reference.datum_name);
+  cache.source_url = ValueOr(kv, "source_url", reference.source_url);
+  cache.cache_path = path;
+  cache.fetched_utc = ValueOr(kv, "fetched_utc", "");
+  cache.issue_date = ValueOr(kv, "issue_date", reference.issue_date);
+  cache.valid_start_utc =
+      ValueOr(kv, "valid_start_utc", reference.valid_start_utc);
+  cache.valid_end_utc = ValueOr(kv, "valid_end_utc", reference.valid_end_utc);
+  cache.license = ValueOr(kv, "license", region ? region->license : "");
+  cache.provenance =
+      ValueOr(kv, "provenance", region ? region->provenance : "");
+  cache.redistribution_status = ValueOr(
+      kv, "redistribution_status",
+      region ? region->redistribution_status : "unknown");
+  cache.cache_status =
+      ValueOr(kv, "cache_status", "official predictions cached for query day");
+  cache.sample_count = IntValueOr(kv, "sample_count", 0);
+  cache.official = BoolValueOr(kv, "official", reference.official);
+  cache.redistribution_cleared = BoolValueOr(
+      kv, "redistribution_cleared",
+      region ? region->redistribution_cleared : false);
+  cache.valid_for_time = CacheValidForTime(cache, utc);
+
+  if (cache.provider_region_id != reference.provider_region_id ||
+      cache.station_id != reference.station_id || !cache.valid_for_time) {
+    return false;
+  }
+
+  cache.ok = true;
+  *out = std::move(cache);
   return true;
 }
 
@@ -584,6 +762,14 @@ TideSourceResolution TideEngine::ResolveSources(
       out.official_reference = official;
       out.official_metadata_available = true;
       out.observed_feed_available = official.observed_water_level_available;
+      OfficialPredictionCacheInfo cache;
+      if (CachedOfficialPrediction(official, utc, &cache)) {
+        out.official_prediction_cached = true;
+        out.official_prediction_cache = cache;
+        if (!out.cache_status.empty()) out.cache_status += "; ";
+        out.cache_status += cache.cache_status;
+        if (official.distance_nm <= ready_radius_nm) out.offline_ready = true;
+      }
       if (!official.valid_for_time) {
         out.warnings.push_back(
             "nearest official tide reference is outside its validity window");

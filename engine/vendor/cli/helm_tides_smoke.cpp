@@ -411,6 +411,27 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
              error)) {
     return false;
   }
+  const bool expect_official_cache =
+      !engine->OfficialPredictionCacheDir().empty();
+  const bool honolulu_cached =
+      !honolulu_resolution.points.empty() &&
+      honolulu_resolution.points[0].official_prediction_cached;
+  if (expect_official_cache) {
+    if (!Check(honolulu_cached,
+               "Honolulu resolver should find the pinned NOAA prediction cache",
+               error)) {
+      return false;
+    }
+    const helm::tides::OfficialPredictionCacheInfo &cache =
+        honolulu_resolution.points[0].official_prediction_cache;
+    if (!Check(cache.provider_region_id == "noaa-coops-us" &&
+                   cache.station_id == "1612340" &&
+                   cache.datum_name == "MLLW" && cache.valid_for_time &&
+                   cache.redistribution_cleared && cache.sample_count >= 3,
+               "NOAA official prediction cache metadata changed", error)) {
+      return false;
+    }
+  }
 
   helm::tides::TideResolvePoint remote_point;
   remote_point.id = "remote-pass";
@@ -467,6 +488,8 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
             << JsonEscape(suva_ref.station_id) << "\""
             << ",\"resolver_offline_ready\":"
             << (honolulu_resolution.offline_ready ? "true" : "false")
+            << ",\"official_prediction_cached\":"
+            << (honolulu_cached ? "true" : "false")
             << ",\"resolver_remote_tier\":\""
             << JsonEscape(remote_resolution.confidence_tier) << "\""
             << ",\"provider_catalog_count\":" << provider_catalog.size()
@@ -492,6 +515,7 @@ int main(int argc, char **argv) {
 
   bool all_local_sources = false;
   bool regression = false;
+  std::string official_cache_dir;
   std::vector<std::string> positional;
   for (int i = 1; i < argc; ++i) {
     std::string arg = argv[i];
@@ -499,6 +523,8 @@ int main(int argc, char **argv) {
       all_local_sources = true;
     } else if (arg == "--regression") {
       regression = true;
+    } else if (arg == "--official-cache-dir" && i + 1 < argc) {
+      official_cache_dir = argv[++i];
     } else {
       positional.push_back(arg);
     }
@@ -519,6 +545,9 @@ int main(int argc, char **argv) {
   }
 
   helm::tides::TideEngine engine;
+  if (!official_cache_dir.empty()) {
+    engine.SetOfficialPredictionCacheDir(official_cache_dir);
+  }
   std::string error;
   helm::tides::TideSourcePolicy policy =
       all_local_sources ? helm::tides::TideSourcePolicy::kAllLocal

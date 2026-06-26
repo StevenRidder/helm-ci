@@ -81,6 +81,29 @@ struct TideProviderRegion {
   bool enabled_by_default = false;
 };
 
+struct OfficialPredictionCacheInfo {
+  bool ok = false;
+  std::string provider_region_id;
+  std::string provider;
+  std::string station_id;
+  std::string station_name;
+  std::string datum_name;
+  std::string source_url;
+  std::string cache_path;
+  std::string fetched_utc;
+  std::string issue_date;
+  std::string valid_start_utc;
+  std::string valid_end_utc;
+  std::string license;
+  std::string provenance;
+  std::string redistribution_status;
+  std::string cache_status;
+  int sample_count = 0;
+  bool official = false;
+  bool valid_for_time = false;
+  bool redistribution_cleared = false;
+};
+
 struct TideConfidence {
   std::string tier;
   std::string summary;
@@ -167,6 +190,7 @@ struct TideResolvedPoint {
   std::vector<std::string> warnings;
   TideStation harmonic_station;
   OfficialTideReference official_reference;
+  OfficialPredictionCacheInfo official_prediction_cache;
   std::vector<TideProviderRegion> provider_regions;
   TideConfidence confidence;
 };
@@ -208,6 +232,8 @@ public:
   bool LoadDefaultSources(const std::string &tcdata_dir,
                           TideSourcePolicy policy,
                           std::string *error);
+  void SetOfficialPredictionCacheDir(const std::string &cache_dir);
+  std::string OfficialPredictionCacheDir() const;
   std::vector<TideSourceInfo> LoadedSources() const;
   std::vector<OfficialTideReference> OfficialReferences() const;
   std::vector<TideProviderRegion> ProviderRegions() const;
@@ -218,6 +244,9 @@ public:
   bool NearestTideStation(double lat, double lon, TideStation *out) const;
   bool NearestOfficialReference(double lat, double lon, std::time_t utc,
                                 OfficialTideReference *out) const;
+  bool CachedOfficialPrediction(const OfficialTideReference &reference,
+                                std::time_t utc,
+                                OfficialPredictionCacheInfo *out) const;
   TideConfidence AssessConfidence(double lat, double lon, std::time_t utc,
                                   const TideStation &station) const;
   TidePrediction Predict(int station_index, std::time_t utc) const;

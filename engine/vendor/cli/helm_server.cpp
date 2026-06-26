@@ -416,6 +416,18 @@ static double query_double_or(const std::string& uri, const std::string& key,
   return end && *end == '\0' ? d : fallback;
 }
 
+static std::string tide_cache_dir() {
+  if (const char* d = std::getenv("HELM_TIDES_CACHE_DIR")) {
+    if (*d) return d;
+  }
+  if (const char* c = std::getenv("HELM_CONFIG")) {
+    if (*c) return std::string(c) + "/tides-cache";
+  }
+  const char* home = std::getenv("HOME");
+  std::string base = home && *home ? home : ".";
+  return base + "/.helm/tides-cache";
+}
+
 static std::string tide_source_json(const helm::tides::TideSourceInfo& s) {
   return "{\"path\":\"" + json_escape(s.path) +
          "\",\"basename\":\"" + json_escape(s.basename) +
@@ -427,6 +439,35 @@ static std::string tide_source_json(const helm::tides::TideSourceInfo& s) {
          (s.redistribution_cleared ? "true" : "false") +
          ",\"enabled_by_default\":" +
          (s.enabled_by_default ? "true" : "false") + "}";
+}
+
+static std::string tide_official_prediction_cache_json(
+    const helm::tides::OfficialPredictionCacheInfo& c) {
+  return "{\"ok\":" + std::string(c.ok ? "true" : "false") +
+         ",\"provider_region_id\":\"" +
+         json_escape(c.provider_region_id) +
+         "\",\"provider\":\"" + json_escape(c.provider) +
+         "\",\"station_id\":\"" + json_escape(c.station_id) +
+         "\",\"station_name\":\"" + json_escape(c.station_name) +
+         "\",\"datum_name\":\"" + json_escape(c.datum_name) +
+         "\",\"source_url\":\"" + json_escape(c.source_url) +
+         "\",\"cache_path\":\"" + json_escape(c.cache_path) +
+         "\",\"fetched_utc\":\"" + json_escape(c.fetched_utc) +
+         "\",\"issue_date\":\"" + json_escape(c.issue_date) +
+         "\",\"valid_start_utc\":\"" +
+         json_escape(c.valid_start_utc) +
+         "\",\"valid_end_utc\":\"" + json_escape(c.valid_end_utc) +
+         "\",\"license\":\"" + json_escape(c.license) +
+         "\",\"provenance\":\"" + json_escape(c.provenance) +
+         "\",\"redistribution_status\":\"" +
+         json_escape(c.redistribution_status) +
+         "\",\"cache_status\":\"" + json_escape(c.cache_status) +
+         "\",\"sample_count\":" + std::to_string(c.sample_count) +
+         ",\"official\":" + (c.official ? "true" : "false") +
+         ",\"valid_for_time\":" +
+         (c.valid_for_time ? "true" : "false") +
+         ",\"redistribution_cleared\":" +
+         (c.redistribution_cleared ? "true" : "false") + "}";
 }
 
 static std::string tide_provider_region_json(
@@ -617,6 +658,11 @@ static std::string tide_resolved_point_json(
          (p.official_prediction_cached ? "true" : "false") +
          ",\"observed_feed_available\":" +
          (p.observed_feed_available ? "true" : "false") + "}" +
+         ",\"official_prediction_cache\":" +
+         (p.official_prediction_cached
+              ? tide_official_prediction_cache_json(
+                    p.official_prediction_cache)
+              : std::string("null")) +
          ",\"station\":" +
          (p.has_harmonic_station ? tide_station_json(p.harmonic_station)
                                  : std::string("null")) +
@@ -833,6 +879,7 @@ static std::string tide_resolve_json(const std::string& uri) {
       all ? helm::tides::TideSourcePolicy::kAllLocal
           : helm::tides::TideSourcePolicy::kRedistributableOnly;
   helm::tides::TideEngine engine;
+  engine.SetOfficialPredictionCacheDir(tide_cache_dir());
   std::string error;
   if (!engine.LoadDefaultSources(tcdata, policy, &error))
     return "{\"ok\":false,\"mode\":\"" + json_escape(mode) +

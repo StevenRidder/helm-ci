@@ -145,12 +145,13 @@ fi
 # ---------- D) tides: offline harmonic prediction ----------
 hdr "D. Tides: offline harmonic prediction + official provider catalog  (TIDES-1/2/6/7/9)"
 TCDATA="${HELM_TCDATA_DIR:-${HELM_OCPN_DIR:-/tmp/helm-opencpn}/data/tcdata}"
+TIDE_CACHE_FIXTURE="$HERE/test/fixtures/tides-cache"
 if [ ! -x "$BIN/helm-tides-smoke" ]; then
   F "helm-tides-smoke missing at $BIN — run engine/bootstrap.sh after the TIDES-1 target lands"
-elif "$BIN/helm-tides-smoke" --regression "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
-  tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
+elif "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_FIXTURE" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
+  tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
   [ "$tide_shape" = 1 ] \
-    && P "helm-tides-smoke pinned heights + official-source/provider catalog metadata (TIDES-2/6/7/9)" \
+    && P "helm-tides-smoke pinned heights + official-source/provider catalog/cache metadata (TIDES-2/6/7/9)" \
     || { F "helm-tides-smoke regression JSON missing pinned source/event:"; sed 's/^/        /' /tmp/te-tides.json; }
 else
   F "helm-tides-smoke failed:"
