@@ -226,7 +226,8 @@
   function inst() { return window.__aisVectors; }
 
   if (window.HelmShell && HelmShell.registerPanel) {
-    HelmShell.registerPanel({
+    // AIS-10: a tab in the consolidated AIS hub when present; else a standalone rail panel.
+    (window.HelmAisHub && HelmAisHub.registerTab ? HelmAisHub.registerTab : HelmShell.registerPanel)({
       id: 'helm-ais-vectors',
       epic: 'AIS',
       title: 'AIS vectors',

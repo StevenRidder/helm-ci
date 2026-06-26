@@ -308,7 +308,8 @@
   // ---- SHELL controls (panel + ⌘K) ----
   function inst() { return window.HelmAisGuard; }
   if (window.HelmShell && HelmShell.registerPanel) {
-    HelmShell.registerPanel({
+    // AIS-10: a tab in the consolidated AIS hub when present; else a standalone rail panel.
+    (window.HelmAisHub && HelmAisHub.registerTab ? HelmAisHub.registerTab : HelmShell.registerPanel)({
       id: 'helm-ais-guard', epic: 'AIS', title: 'Guard zone', icon: '◎',
       render: function (body) {
         body.innerHTML =

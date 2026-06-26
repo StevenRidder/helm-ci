@@ -506,7 +506,9 @@
           '#helm-ais-list .ais-supp.off .kts{opacity:.35;pointer-events:none}';
         document.head.appendChild(css);
 
-        HelmShell.registerPanel({
+        // AIS-10: render into the consolidated AIS hub (one boat icon) when present; else fall back
+        // to a standalone rail panel so a missing hub never leaves a dead button.
+        (window.HelmAisHub && HelmAisHub.registerTab ? HelmAisHub.registerTab : HelmShell.registerPanel)({
           id: 'helm-ais-list', epic: 'AIS', title: 'AIS targets', icon: ICON,
           render(body) {
             body.appendChild(buildSuppressUI());           // AIS-6: hide moored/slow toggle + threshold
@@ -520,7 +522,7 @@
         HelmShell.registerCommand({
           id: 'helm-ais-open-list', epic: 'AIS', title: 'AIS target list',
           subtitle: 'Sortable table of all AIS targets', keywords: ['ais', 'targets', 'traffic', 'vessels', 'list'],
-          group: 'AIS', run() { const h = HelmShell.panel('helm-ais-list'); if (h) h.open(); }
+          group: 'AIS', run() { if (window.HelmAisHub) return HelmAisHub.open('helm-ais-list'); const h = HelmShell.panel('helm-ais-list'); if (h) h.open(); }
         });
         HelmShell.registerCommand({
           id: 'helm-ais-toggle-moored', epic: 'AIS', title: 'Toggle moored / slow AIS targets',

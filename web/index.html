@@ -394,9 +394,7 @@
   <div class="ri" data-rail="routes" title="Routes">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="19" r="2.5"/><circle cx="18" cy="5" r="2.5"/><path d="M8 17 C 14 13 10 7 16 6"/></svg>
   </div>
-  <div class="ri" data-rail="ais" title="AIS">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M3 13h18l-2 5H5z"/><path d="M12 3v10"/><path d="M8 8h8"/></svg>
-  </div>
+  <!-- AIS-10: the AIS rail icon is now the consolidated hub's registered boat button (web/ais-hub.js) -->
   <div class="ri" data-rail="places" title="Places">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M12 21s-7-6.3-7-11a7 7 0 0 1 14 0c0 4.7-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
   </div>
@@ -658,6 +656,7 @@
 <script src="community.js"></script>
 <script src="measure.js"></script>
 <script src="ais-risk.js"></script><!-- single source of truth for AIS collision-risk tiers + palette (used by collision.js, ais-vectors.js, the tap card) -->
+<script src="ais-hub.js"></script><!-- AIS-10: one boat icon -> one AIS panel; the modules below register their surfaces as tabs (HelmAisHub.registerTab) instead of separate rail icons -->
 <script src="collision.js"></script>
 <script src="ais-meta.js"></script>
 <script src="ais-vectors.js"></script><!-- AIS-4: CPA cone + speed-scaled predictor overlay (self-wired via the `ais` source + HelmShell) -->
