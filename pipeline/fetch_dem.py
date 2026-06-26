@@ -14,17 +14,19 @@ Encoding: terrarium  (elevation_m = (R*256 + G + B/256) - 32768; negative = bath
 """
 import math, os, re, sys, time, urllib.request
 
-# Region-driven: read BBOX (West,South,East,North) from region.env so a region switch
-# only edits region.env. Falls back to the Key West box if region.env is unreadable.
+# Region-driven: read BBOX (West,South,East,North) from a local region.env when
+# present, otherwise from the public sample. Falls back to Key West if unreadable.
 def _bbox_from_region():
-    p = os.path.join(os.path.dirname(__file__), "region.env")
-    try:
-        m = re.search(r'BBOX="([^"]+)"', open(p).read())
-        if m:
-            w, s, e, n = (float(x) for x in m.group(1).split(","))
-            return w, s, e, n
-    except Exception:
-        pass
+    here = os.path.dirname(__file__)
+    for name in ("region.env", "region.env.example"):
+        p = os.path.join(here, name)
+        try:
+            m = re.search(r'BBOX="([^"]+)"', open(p).read())
+            if m:
+                w, s, e, n = (float(x) for x in m.group(1).split(","))
+                return w, s, e, n
+        except Exception:
+            pass
     return -82.00, 24.35, -81.50, 24.70
 
 WEST, SOUTH, EAST, NORTH = _bbox_from_region()

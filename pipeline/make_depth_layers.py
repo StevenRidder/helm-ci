@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """Synthesize the S-52 "depth on satellite" layers from the baked DEM bathymetry, so the
-depth-area fill / depth contours / soundings work for regions with NO NOAA ENC cell (e.g. Fiji).
+depth-area fill / depth contours / soundings work for regions with NO NOAA ENC cell.
 
 Outputs (S-57 attribute names the style reads):
   web/data/depare.geojson  depth-area fill polygons   (DRVAL1 = shallow depth of the band)
@@ -23,11 +23,16 @@ SOUND_STEP = 12                             # sample every N px for spot soundin
 
 
 def region():
-    env = open(os.path.join(HERE, "region.env")).read()
+    for filename in ("region.env", "region.env.example"):
+        try:
+            env = open(os.path.join(HERE, filename)).read()
+            break
+        except OSError:
+            env = ""
     for line in env.splitlines():
         if line.startswith("BBOX="):
             return [float(v) for v in line.split("=", 1)[1].strip().strip('"').split(",")]
-    return [176.9, -18.2, 177.9, -17.2]
+    return [-82.02, 24.34, -81.52, 24.72]
 
 
 def deg2tile(lon, lat, z):

@@ -5,8 +5,8 @@ to expect *at the destination*. Neither is a one-shot report — they ingest con
 update on a timeline as the picture changes.**
 
 > Status: **Committed** ([ADR-0006](decisions/0006-destination-dossier-and-briefings.md)) ·
-> spec v0.2 · 2026-06-24 · Owner: Steve Ridder
-> The single most-requested capability, in Steve's words: *"Briefings — what to expect along
+> spec v0.2 · 2026-06-24 · Owner: Helm project
+> The single most-requested capability: *"Briefings — what to expect along
 > the way, and what to expect once I get there — are my unmet need… It's what you need when
 > sailing. We need this!!"* Wireframe:
 > [mockups/destination-dossier.html](mockups/destination-dossier.html). Companion to
@@ -96,7 +96,7 @@ can safely do:
 | Reading load | seconds, arm's-length legible | minutes, lean-back |
 | Where the heavy work runs | shows the distilled result | can run heavier RAG / link-following |
 
-This is the model Steve named: *"even if the iOS companion app is where you read stuff with
+This is the model: *"even if the iOS companion app is where you read stuff with
 links for more info, and these are more quick notes."* **Same dataset, two presentations —
 not two products.** The helm surface must stay terse (a wall of text underway is a failure);
 the companion is where depth and links live. Committed in
@@ -108,7 +108,7 @@ The deep-read loop has an **output**: saved places. While researching on the pho
 **Pin to chart** on any spot — an anchorage, a snorkeling reef a blog raved about, a
 chandlery, a "check the bar at half-tide" hazard. It **syncs to the helm** and shows up as a
 POI/bookmark on the plotter, carrying the **note** and the **source link** you saved it from.
-Bookmarks you can sail up to. This is the feature Steve named: *"as I read and research, pin
+Bookmarks you can sail up to. This is the feature: *"as I read and research, pin
 locations from my phone that stick on the Helm plotter — bookmarks that become POIs/waypoints
 to check out."*
 
@@ -139,7 +139,7 @@ data that, with permission, enriches the next sailor's dossier. Wireframe:
 ## 4. Destination data sources — the honest map
 
 The hard truth from [integrations/noforeignland.md](integrations/noforeignland.md) and
-[COMPETITIVE.md](COMPETITIVE.md): **the richest community sources are walled.** So the dossier
+The richest community sources are walled. So the dossier
 is built primarily on **open + owned** data, enriched by **RAG over public web** content, and
 uses walled sources only where sanctioned.
 
@@ -198,7 +198,7 @@ scrubber — briefings, weather, and route are three views of one continuously-u
 
 ## 6. LLM / RAG architecture & guardrails
 
-Briefings are the flagship **LLM-derived** feature; Steve has already named that this is
+Briefings are the flagship **LLM-derived** feature; this is
 expected. **Default to the latest Claude models** for cloud-side synthesis; the structured
 nav/weather + retrieved community text are an ideal tool-use + RAG substrate.
 

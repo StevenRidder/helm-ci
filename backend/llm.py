@@ -1,7 +1,7 @@
 """
 Helm backend — the "where to go" recommender.
 
-Honesty spine (see docs/BUILD-PLAN-COMMUNITY-LLM.md §2 and WEATHER-ROUTING.md §7):
+Honesty spine:
 - The DETERMINISTIC pre-filter computes the hard facts — distance/ETA, a draft check, and a
   shelter score vs. the forecast wind direction. These are never LLM-generated.
 - The LLM only RANKS and EXPLAINS, with citations + confidence. It never invents a depth,

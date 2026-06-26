@@ -500,7 +500,7 @@ _`CLIENT` is deliberately **cross-cutting**: it OWNS the genuinely-new infra fil
 
 # Experimental — Labs (pro-maritime survey)
 
-_Not wave-gated. Born from a **2026-06-26 survey** of advanced charting tech in the cruise / military / commercial-ship world (S-100 layered ENCs, Furuno-style AR nav, AI-lookout sensor fusion, dynamic under-keel clearance, military Additional Military Layers). The through-line: nearly every pro innovation is **fusion + a new layer** — which is Helm's exact thesis and the layer-marketplace ([BUSINESS-MODEL.md §10](BUSINESS-MODEL.md)). LABS is where we prove the cruiser-grade version of each, flag-gated and advisory-only, before it graduates to a real workstream or a sellable layer. Full spec with per-task acceptance: **[LABS.md](LABS.md)**._
+_Not wave-gated. Born from a **2026-06-26 survey** of advanced charting tech in the cruise / military / commercial-ship world (S-100 layered ENCs, Furuno-style AR nav, AI-lookout sensor fusion, dynamic under-keel clearance, military Additional Military Layers). The through-line: nearly every pro innovation is **fusion + a new layer**. LABS is where we prove the cruiser-grade version of each, flag-gated and advisory-only, before it graduates to a real workstream or commercial review. Full spec with per-task acceptance: **[LABS.md](LABS.md)**._
 
 ## 🧪 `LABS` — Experimental pro-maritime features (advisory-only, flag-gated)
 

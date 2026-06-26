@@ -2,7 +2,7 @@
 
 - **Status:** Accepted for public-alpha source release posture; still requires IP-counsel sign-off before any *paid* launch — see [ADR-0003](0003-license-posture.md), [LEGAL](../LEGAL.md)
 - **Date:** 2026-06-26
-- **Builds on:** [ADR-0001](0001-successor-not-fork.md) · [ADR-0003](0003-license-posture.md) · [ADR-0009](0009-arms-length-gpl-containment.md) · [BUSINESS-MODEL](../BUSINESS-MODEL.md) · relates to `NATIVE-12`
+- **Builds on:** [ADR-0001](0001-successor-not-fork.md) · [ADR-0003](0003-license-posture.md) · [ADR-0009](0009-arms-length-gpl-containment.md) · relates to `NATIVE-12`
 
 ## Context
 
@@ -14,7 +14,7 @@ Helm spans three things that must ship under three different licenses:
 
 The load-bearing enabler is already built: [ADR-0009](0009-arms-length-gpl-containment.md) — clients couple to the GPL engine **only over the network protocol** (nav WS + chart HTTP), never by linking/bundling it. That arm's-length boundary (enforced by `engine/containment-check.sh`) is what lets the clients carry *any* license we choose. Lose it and the client becomes a GPL derivative.
 
-The revenue thesis ([BUSINESS-MODEL.md](../BUSINESS-MODEL.md)) is the Home-Assistant playbook: **free/source-available software is the on-ramp; the money is the cloud subscription** (hosted tiling, GRIB, sync, AI copilot inference, community, remote watch), with an optional near-cost appliance. So the licensing job is not to hide the clients — it is to **protect the cloud business** while keeping the on-ramp open.
+The revenue thesis is: **free/source-available software is the on-ramp; hosted services remain the monetizable layer** (tiling, GRIB, sync, AI copilot inference, community, remote watch), with optional turnkey hardware later. So the licensing job is not to hide the clients — it is to **protect the hosted-service business** while keeping the on-ramp open.
 
 ## Decision
 
@@ -43,13 +43,13 @@ This is the standard "open now, monetize later" instrument (MariaDB, Sentry, Has
 ### Distribution channels
 
 - **Web:** hosted at an app origin behind auth/subscription, **and/or** shipped on the boat-server (offline-first) as *mere aggregation* next to the GPL engine — permissible because the coupling is the network protocol, not linkage ([ADR-0009](0009-arms-length-gpl-containment.md)).
-- **macOS:** **notarized DMG, not the App Store** — sidesteps the GPL-vs-App-Store "VLC problem" entirely (the engine is a contained process). macOS is the strongest reuse path ([BUSINESS-MODEL.md §3](../BUSINESS-MODEL.md)).
+- **macOS:** **notarized DMG, not the App Store** — sidesteps the GPL-vs-App-Store "VLC problem" entirely (the engine is a contained process). macOS is the strongest reuse path.
 - **iOS/iPadOS:** App Store **thin network client**; the GPL engine stays on the boat (Mac mini / Pi), so nothing GPL ships through the App Store.
 - **Appliance:** Mac mini + marine touchscreen, pre-configured, sold **near cost** — convenience on-ramp, not the revenue.
 
 ### Where the money is
 
-Per [BUSINESS-MODEL.md](../BUSINESS-MODEL.md): the **Helm Cloud subscription** (weather/GRIB, AI copilot inference, sync, community, remote watch) is the revenue engine, protected by the BSL backend + our hosting/ops/brand. Native app sales and the appliance are secondary. The open engine and open-ish clients are the wedge that brings OpenCPN refugees in.
+The **Helm Cloud subscription** concept (weather/GRIB, AI copilot inference, sync, community, remote watch) is the reserved business layer, protected by the BSL backend + our hosting/ops/brand. Native app sales and hardware are secondary. The open engine and source-visible clients are the wedge that brings OpenCPN users in.
 
 ## Consequences
 

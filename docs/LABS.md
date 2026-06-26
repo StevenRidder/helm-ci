@@ -1,11 +1,10 @@
 # Helm — LABS (experimental features)
 
-> Status: spec v1 · 2026-06-26 · Owner: Steve Ridder
+> Status: spec v1 · 2026-06-26 · Owner: Helm project
 > Source: pro-maritime survey (S-100 layered charts, Furuno-style AR nav, AI lookout / machine
 > vision, dynamic under-keel clearance, military Additional Military Layers).
-> Companion: **[BUSINESS-MODEL.md §10](BUSINESS-MODEL.md)** — these are the layer marketplace's
-> hero exhibits — plus [VISION.md](VISION.md), [COMPETITIVE.md](COMPETITIVE.md),
-> [LEGAL.md](LEGAL.md), [FEATURE-TRACKER.md](FEATURE-TRACKER.md).
+> Companion to [VISION.md](VISION.md), [LEGAL.md](LEGAL.md), and
+> [FEATURE-TRACKER.md](FEATURE-TRACKER.md).
 
 ---
 
@@ -14,11 +13,11 @@
 `LABS` is a flag-gated, **advisory-only** surface for experimental navigation features that ride
 the existing **lazy-isolated Lab loader** (`OFFLINE-2`). They are *not* part of the trusted
 nav core. Each Lab is a proving ground: it graduates into a real workstream — or becomes a
-sellable marketplace layer — only after it is boat-tested and its guardrails are verified.
+commercially reviewed layer — only after it is boat-tested and its guardrails are verified.
 
 **The through-line.** Nearly every advanced feature in the professional maritime world is the
 same shape: *fusion + a new layer*. That is exactly Helm's thesis and exactly the layer
-marketplace ([BUSINESS-MODEL.md §10](BUSINESS-MODEL.md)). The pro standard **S-100** (IMO-enabled
+future layer ecosystem. The pro standard **S-100** (IMO-enabled
 from 2026) reframes the chart as a layered data canvas — an S-101 base ENC plus plug-in product
 specs (S-102 bathymetry, S-104 water levels, S-111 currents, S-124 nav warnings, S-129
 under-keel clearance). The big players are spending millions to arrive where Helm's architecture
@@ -28,7 +27,7 @@ already points. LABS is where we prove the cruiser-grade version of each.
 
 ## 2. Ownership (collision boundary)
 
-Per [CLAUDE.md] / [EPICS.md](EPICS.md), each epic owns its files so parallel agents don't fight.
+Per [EPICS.md](EPICS.md), each epic owns its files so parallel agents don't fight.
 **LABS owns an isolated namespace:**
 
 - `web/labs/**` — all Lab UI, layers, and views (mounted only via the lazy-isolated Lab loader)
@@ -93,7 +92,7 @@ shading per leg).
 
 **Why.** This is the pros' Dynamic Under-Keel Clearance (OMC DUKC), shrunk to the cruiser's real
 fear: putting a keel on coral in a swell-loaded pass. No competitor ships it for recreational
-craft; it is pure fusion of data Helm already has; it is native to where Steve actually sails
+craft; it is pure fusion of data Helm already has; it is native to offshore and coastal sailing
 (Fiji reef passes).
 
 **Inputs.**
@@ -240,7 +239,7 @@ rendered through the Lab loader; no production UI claim until a real dataset ren
   S-100. That strengthens the OpenCPN-refugee pitch rather than competing with it.
 - **Lowers marketplace integration cost.** A provider publishes a *standard* S-102/S-104
   product rather than a Helm-specific adapter, so some tier-2 ("yes at scale") rev-share
-  answers get easier (see [BUSINESS-MODEL.md §10](BUSINESS-MODEL.md)).
+  answers get easier.
 - **Makes the flagship standards-native.** The S-104→S-101 safety-contour interop *is* the
   pass advisor (`LABS-2`) + `ALARM-8`, first-class rather than stitched from heterogeneous
   sources — more robust and more defensible.

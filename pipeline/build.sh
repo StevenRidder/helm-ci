@@ -1,6 +1,7 @@
 #!/usr/bin/env bash
 # Helm pipeline — one-command runner.
-# Builds everything the web prototype (and offline charts) need, driven by region.env.
+# Builds everything the web prototype (and offline charts) need, driven by
+# pipeline/region.env when present, otherwise the public sample region.
 # Tolerant by design: a failed or skipped step never aborts the rest (set -u, NOT set -e).
 #
 # Usage:
@@ -13,13 +14,17 @@ ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DATA="$ROOT/web/data"
 mkdir -p "$DATA"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/region.env"
+REGION_ENV="${HELM_REGION_ENV:-$SCRIPT_DIR/region.env}"
+if [ ! -f "$REGION_ENV" ]; then
+  REGION_ENV="$SCRIPT_DIR/region.env.example"
+fi
+source "$REGION_ENV"
 
 ENC="${1:-}"   # optional NOAA ENC .000 cell for the depth step
 step() { printf "\n\033[1m== %s ==\033[0m\n" "$1"; }
 have() { command -v "$1" >/dev/null 2>&1; }
 
-step "region: $REGION_NAME   charts bbox $BBOX   wind bbox $WIND_BBOX"
+step "region: $REGION_NAME   charts bbox $BBOX   wind bbox $WIND_BBOX   config $REGION_ENV"
 
 # --- quick overlay data (the web prototype needs these) ---
 step "weather  (Open-Meteo: wind/rain/temp/pressure/waves/current heatmap fields + wind particles)"

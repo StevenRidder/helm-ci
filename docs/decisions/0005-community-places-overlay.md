@@ -21,7 +21,7 @@ Build the **Places overlay from open data**, and treat the walled gardens as add
 3. **NoForeignLand push (official):** let the user mirror their track to NFL via their own
    NFL boat API key.
 4. **NoForeignLand pull:** **partnership only** for a shipped product; allowed behind a
-   personal-use *experimental* flag for Steve's own build, never in a distributed binary.
+   personal-use *experimental* flag, never in a distributed binary.
 5. **SeaPeople / ActiveCaptain:** not integrated (walled; partnership-only).
 
 ## Consequences

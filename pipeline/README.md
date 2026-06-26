@@ -19,7 +19,7 @@ bash pipeline/build.sh ~/Downloads/US5FLxxx.000
 
 # ...or step by step. NOTE the --bbox= form: a bbox starting with "-" is otherwise
 # mistaken for a flag (argparse). Wind covers WIND_BBOX (much larger than the charts).
-cd pipeline && source region.env
+cd pipeline && cp region.env.example region.env && source region.env
 python3 fetch_wind.py  --bbox="$WIND_BBOX" --nx="$WIND_NX" --ny="$WIND_NY" --out ../web/data
 python3 fetch_places.py
 python3 fetch_tiles.py --source "$SRC_CHART" --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-charts.mbtiles --name "NOAA"

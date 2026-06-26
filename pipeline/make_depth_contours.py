@@ -49,8 +49,14 @@ MAJOR = {-10, -20, -50, -100, -200, -500, -1000}
 
 
 def bbox():
-    m = re.search(r'BBOX="([^"]+)"', open(os.path.join(HERE, "region.env")).read())
-    return tuple(float(x) for x in m.group(1).split(","))   # W,S,E,N
+    for filename in ("region.env", "region.env.example"):
+        try:
+            m = re.search(r'BBOX="([^"]+)"', open(os.path.join(HERE, filename)).read())
+        except OSError:
+            m = None
+        if m:
+            return tuple(float(x) for x in m.group(1).split(","))   # W,S,E,N
+    return -82.02, 24.34, -81.52, 24.72
 
 
 def deg2tile(lon, lat, z):

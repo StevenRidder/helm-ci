@@ -23,10 +23,24 @@ dist/
 *.grib2
 /charts/
 /cache/
+web/data/sat/
+web/data/wxtiles/
+pipeline/region.env
 
 # Generated design archives can embed local paths; commit expanded assets instead.
 docs/design/app-icons/*.zip
 docs/Helm Icons/Official Icons/*.zip
+
+# Private strategy/research/operator artifacts. Keep the public repo focused on
+# runnable alpha code, safety, licensing, architecture, and public examples.
+CLAUDE.md
+*.docx
+docs/AUDIT-*.md
+docs/BUSINESS-MODEL.md
+docs/BUILD-PLAN-COMMUNITY-LLM.md
+docs/COMPETITIVE.md
+docs/research/
+docs/integrations/nfl-outreach-draft.md
 
 # Secrets / API keys (Windy, etc.)
 .env

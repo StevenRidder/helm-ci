@@ -1,22 +1,41 @@
 #!/usr/bin/env python3
-"""Helm mbtiles tile server — serves the user's own chart packs (Navionics / satellite)
-straight from .mbtiles to MapLibre as XYZ raster tiles, no conversion.
+"""Helm mbtiles tile server — serves BYO local chart packs from .mbtiles.
 
   GET /{name}/{z}/{x}/{y}.{ext}   ->  tile_data (mbtiles is TMS, so we flip y)
   GET /catalog                    ->  JSON of available packs + bounds/zoom
 
 Offline-first: everything is local SQLite, no network. Bind 0.0.0.0 so the iPad/phone
 on the boat LAN can load the same charts. Read-only + immutable so it can't touch the file.
-"""
-import sqlite3, http.server, socketserver, threading, os, json, sys
 
-BASE = os.path.expanduser("~/Library/CloudStorage/Dropbox/COS/Charts/South Pacific/Fiji")
-PACKS = {
-    "navionics": "Fiji_TCL2407_Navionics_Z8-16,18.mbtiles",
-    "googlesat": "Fiji_TCL2407_GoogleSat_Z8-16,18.mbtiles",
-    "bingsat":   "Fiji_TCL2407_BingSat_Z8-16,18.mbtiles",
-    "arcgis":    "Fiji_TCL2407_ArcGIS_Z8-16,18.mbtiles",
-}
+Configuration:
+  HELM_MBTILES_DIR=/path/to/mbtiles
+  HELM_MBTILES_PACKS='{"chart":"my-chart.mbtiles","sat":"my-sat.mbtiles"}'
+
+If HELM_MBTILES_PACKS is omitted, every *.mbtiles file in HELM_MBTILES_DIR is exposed by
+its filename stem. Keep license-bound commercial packs local; do not commit them.
+"""
+import glob, sqlite3, http.server, socketserver, threading, os, json, sys
+
+BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
+
+
+def _pack_map():
+    raw = os.environ.get("HELM_MBTILES_PACKS", "").strip()
+    if raw:
+        try:
+            packs = json.loads(raw)
+        except json.JSONDecodeError as e:
+            print(f"FATAL: HELM_MBTILES_PACKS is not valid JSON: {e}", file=sys.stderr)
+            sys.exit(2)
+        return {str(name): str(filename) for name, filename in packs.items()}
+    packs = {}
+    for path in sorted(glob.glob(os.path.join(BASE, "*.mbtiles"))):
+        name = os.path.splitext(os.path.basename(path))[0]
+        packs[name] = os.path.basename(path)
+    return packs
+
+
+PACKS = _pack_map()
 conns, locks, meta = {}, {}, {}
 for name, fn in PACKS.items():
     path = os.path.join(BASE, fn)
@@ -71,7 +90,9 @@ class TS(socketserver.ThreadingMixIn, http.server.HTTPServer):
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8091
     if not conns:
-        print(f"FATAL: no mbtiles found under {BASE}", file=sys.stderr); sys.exit(1)
+        print(f"FATAL: no mbtiles found under {BASE}", file=sys.stderr)
+        print("Set HELM_MBTILES_DIR or HELM_MBTILES_PACKS to point at your own local packs.", file=sys.stderr)
+        sys.exit(1)
     print(f"mbtiles server :{port} — packs: {list(conns.keys())}")
     for k, v in meta.items():
         print(f"  {k}: {v['title']}  z{v['minzoom']}-{v['maxzoom']}  {v['format']}")

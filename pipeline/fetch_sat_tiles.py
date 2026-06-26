@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 """Bake local satellite tiles so the basemap is OFFLINE-by-default — no CDN at runtime.
 
-Reads BBOX + SRC_SAT from region.env; writes web/data/sat/{z}/{x}/{y}.jpg (standard XYZ),
-which the one-origin helm-server serves as static files. The style points its default `sat`
-source at data/sat/{z}/{x}/{y}.jpg with a maxzoom so MapLibre native-over-zooms for higher
-display. Idempotent (skips existing), threaded, polite.
+Reads BBOX + SRC_SAT from a local region.env when present, otherwise from the
+public sample. Writes web/data/sat/{z}/{x}/{y}.jpg (standard XYZ), which the
+one-origin helm-server serves as static files. Idempotent, threaded, polite.
 
 Usage: python3 pipeline/fetch_sat_tiles.py [zmin] [zmax]   (default 8 13)
 """
@@ -16,11 +15,16 @@ OUT = os.path.join(ROOT, "web", "data", "sat")
 
 
 def env(name, default=""):
-    path = os.path.join(ROOT, "pipeline", "region.env")
-    for line in open(path):
-        line = line.strip()
-        if line.startswith(name + "="):
-            return line.split("=", 1)[1].strip().strip('"').strip("'")
+    for filename in ("region.env", "region.env.example"):
+        path = os.path.join(ROOT, "pipeline", filename)
+        try:
+            lines = open(path).read().splitlines()
+        except OSError:
+            continue
+        for line in lines:
+            line = line.strip()
+            if line.startswith(name + "="):
+                return line.split("=", 1)[1].strip().strip('"').strip("'")
     return default
 
 
@@ -35,7 +39,7 @@ def deg2tile(lon, lat, z):
 def main():
     zmin = int(sys.argv[1]) if len(sys.argv) > 1 else 8
     zmax = int(sys.argv[2]) if len(sys.argv) > 2 else 13
-    W, S, E, N = [float(v) for v in env("BBOX", "176.9,-18.2,177.9,-17.2").split(",")]
+    W, S, E, N = [float(v) for v in env("BBOX", "-82.02,24.34,-81.52,24.72").split(",")]
     src = env("SRC_SAT", "https://tiles.maps.eox.at/wmts/1.0.0/s2cloudless-2020_3857/default/g/{z}/{y}/{x}.jpg")
 
     jobs = []

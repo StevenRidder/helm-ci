@@ -1,7 +1,7 @@
 # OpenCPN reuse — read the repo, here's the plan
 
 > Produced by a 5-agent file-by-file read of the OpenCPN source (cloned, ~700 C++ files).
-> Raw output: [research/opencpn-deep-read.json](research/opencpn-deep-read.json).
+> Source notes: OpenCPN deep-read notes kept outside the public tree.
 
 ## TL;DR — the reframe
 

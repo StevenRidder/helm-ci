@@ -3,8 +3,8 @@
 > **v1 · 2026-06-25** · the single mutable source of truth for *what's built, what's next*.
 > Baseline: [FEATURE-AUDIT.md](FEATURE-AUDIT.md) (immutable point-in-time audit, 2026-06-24).
 > Provenance for phase + parity: [PRD](../PRD.md) · [ROADMAP](ROADMAP.md) · [VISION](VISION.md) ·
-> [COMPETITIVE](COMPETITIVE.md) · [OPENCPN-REUSE](OPENCPN-REUSE.md).
-> Strategy (Steve): **perfect the web client first → native (Mac → iPad → iPhone) last.** The web
+> [OPENCPN-REUSE](OPENCPN-REUSE.md).
+> Strategy: **perfect the web client first → native (Mac → iPad → iPhone) last.** The web
 > client is the reference impl of the one engine protocol native inherits, so every feature here is
 > built once, web-first, and boat-tested.
 
@@ -108,14 +108,14 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - 🟢 Weather stack offline · 🟢 Places cached · 🟡 On-demand mbtiles caching (CLI; UI mockup) · ⚪ Pre-baked tile packs (ADR-0008)
 - 🟡 Offline-first as safety (UI never touches internet at sea; community/AI must degrade gracefully)
 
-### Native clients (all ⚪ until the web contract is locked + boat-tested — Steve's rule)
+### Native clients (all ⚪ until the web contract is locked + boat-tested)
 - 🟡 Shared C++ nav core compiled headless (proven) — Apple-target compile is Phase 0/1
 - ⚪ macOS SwiftUI/AppKit · ⚪ iPadOS SwiftUI/Metal · ⚪ iOS one-handed · ⚪ Smart Board dashboard (Phase B)
 - ⚪ Glance surfaces (Watch / widgets / Live Activity / CarPlay) · 🟡 Settings/theme/board persistence (connections persist; rest = Phase A)
 
 ---
 
-## Don't-lose-these — gaps surfaced from COMPETITIVE / OPENCPN-REUSE (beyond the basic-chartplotter matrix)
+## Don't-lose-these — gaps surfaced from audits / OPENCPN-REUSE (beyond the basic-chartplotter matrix)
 
 These are real features competitors ship or OpenCPN parity demands, easy to forget because no code exists yet:
 

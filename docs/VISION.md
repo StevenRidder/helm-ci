@@ -2,9 +2,8 @@
 
 **What Helm could and should be: the world-class, AI-native client for the water.**
 
-> Status: Vision draft v0.1 · 2026-06-24 · Owner: Steve Ridder
-> Companion to [PRD.md](../PRD.md) (what we're building) and [COMPETITIVE.md](COMPETITIVE.md)
-> (the field). This document is the *north star* — the product Helm grows into once the
+> Status: Vision draft v0.1 · 2026-06-24 · Owner: Helm project
+> Companion to [PRD.md](../PRD.md) (what we're building). This document is the *north star* — the product Helm grows into once the
 > tracer bullet proves the magic. It is deliberately ambitious. Every claim is tagged
 > **[ship]** (do it), **[earn]** (gated on partnership/scale/legal), or **[honesty]**
 > (a constraint we must never paper over).
@@ -515,7 +514,7 @@ can start as early as A because it's mostly a thin layer over existing commands.
 
 What "world-class" looks like in numbers:
 
-- **The acid test (from the PRD):** Steve plans and sails a real passage on Helm alone —
+- **The acid test (from the PRD):** a tester plans and sails a real passage on Helm alone —
   no Windy, no PredictWind, no chart app. *Extend it:* and never opens the boat's vendor
   MFD app either, because the Smart Board is better.
 - **Time-to-wow < 60s** from first launch (the fused hero scene).

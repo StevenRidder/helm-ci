@@ -44,7 +44,7 @@ HELM_TILES_NO_WARMUP=1 \
 open http://127.0.0.1:9001/
 ```
 
-The UI will load even without live boat data. To see live movement, feed NMEA or
+The UI will load even without live vessel data. To see live movement, feed NMEA or
 configure a SignalK/NMEA connection as described below.
 
 ## 1. Prerequisites

@@ -12,7 +12,7 @@
       ],
       "minzoom": 8,
       "maxzoom": 13,
-      "bounds": [176.9, -18.2, 177.9, -17.2],
+      "bounds": [-82.02, 24.34, -81.52, 24.72],
       "attribution": "Sentinel-2 cloudless by EOX (CC-BY-4.0) — baked offline"
     },
     "navionics": {
@@ -23,26 +23,25 @@
       ],
       "minzoom": 7,
       "maxzoom": 17,
-      "bounds": [175.0, -22.5, 180.5, -11.0],
-      "attribution": "Navionics — owned chart pack (Fiji TCL2407)"
+      "attribution": "BYO local raster chart pack (not included)"
     },
     "googlesat": {
       "type": "raster", "tileSize": 256,
       "tiles": ["http://localhost:8091/googlesat/{z}/{x}/{y}.jpg"],
-      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
-      "attribution": "Google satellite — owned (Fiji TCL2407)"
+      "minzoom": 7, "maxzoom": 17,
+      "attribution": "BYO local imagery pack (not included)"
     },
     "bingsat": {
       "type": "raster", "tileSize": 256,
       "tiles": ["http://localhost:8091/bingsat/{z}/{x}/{y}.jpg"],
-      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
-      "attribution": "Bing satellite — owned (Fiji TCL2407)"
+      "minzoom": 7, "maxzoom": 17,
+      "attribution": "BYO local imagery pack (not included)"
     },
     "arcgis": {
       "type": "raster", "tileSize": 256,
       "tiles": ["http://localhost:8091/arcgis/{z}/{x}/{y}.jpg"],
-      "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
-      "attribution": "ArcGIS satellite — owned (Fiji TCL2407)"
+      "minzoom": 7, "maxzoom": 17,
+      "attribution": "BYO local imagery pack (not included)"
     },
     "charts": {
       "type": "raster",
@@ -111,7 +110,10 @@
     {
       "id": "navionics",
       "type": "raster",
-      "source": "navionics"
+      "source": "navionics",
+      "layout": {
+        "visibility": "none"
+      }
     },
     {
       "id": "googlesat",
@@ -141,9 +143,6 @@
       "id": "charts",
       "type": "raster",
       "source": "charts",
-      "layout": {
-        "visibility": "none"
-      },
       "paint": {
         "raster-opacity": 0.85
       }
@@ -636,8 +635,8 @@
     }
   ],
   "center": [
-    177.4,
-    -17.7
+    -81.77,
+    24.52
   ],
   "zoom": 11
 }

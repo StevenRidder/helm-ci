@@ -9,7 +9,7 @@ also composites **over satellite** (depth-on-satellite). This doc explains what 
 concretely — **where OpenCPN's quilting falls short in its own code**, and what we do instead.
 
 > Honesty note: OpenCPN class/method names below come from our file-by-file read
-> ([docs/research/opencpn-deep-read.json](research/opencpn-deep-read.json)); the quilt lives in
+> (from the OpenCPN deep-read notes); the quilt lives in
 > `gui/src/Quilt.cpp` + `ChartCanvas` (`gui/src/chcanv.cpp`). Treat exact symbol names as
 > "as-read," re-verify against source before quoting in anything binding. The architectural
 > claims (GUI/viewport coupling, dual GL/DC paths, no tile cache) are well-established.

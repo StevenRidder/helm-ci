@@ -18,7 +18,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DATA="$ROOT/web/data"
 # shellcheck disable=SC1091
-source "$SCRIPT_DIR/region.env"
+REGION_ENV="${HELM_REGION_ENV:-$SCRIPT_DIR/region.env}"
+if [ ! -f "$REGION_ENV" ]; then
+  REGION_ENV="$SCRIPT_DIR/region.env.example"
+fi
+source "$REGION_ENV"
 
 IN="${1:-$DATA/${REGION_NAME}-sat.mbtiles}"
 OUT="${IN%.mbtiles}.pmtiles"

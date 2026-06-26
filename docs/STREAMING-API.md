@@ -207,7 +207,7 @@ stronger contract:
 No typing IP addresses. The server advertises a Bonjour service; the client browses and
 connects:
 
-- Server: advertise `_helm._tcp.local` (TXT: `v=1`, `name=Steve's Boat`, `tls=1`,
+- Server: advertise `_helm._tcp.local` (TXT: `v=1`, `name=Helm Demo`, `tls=1`,
   `fp=<cert-fingerprint>`). On macOS/Pi this is `dns-sd`/Avahi.
 - Client: `NWBrowser` (Network.framework) lists boats; tap to connect. `helm.local` as the
   friendly host.

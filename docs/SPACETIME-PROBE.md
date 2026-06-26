@@ -5,7 +5,7 @@ space and time, and Helm fuses *all* layers there into one source-tagged slice t
 agent narrates.**
 
 > Status: **Committed** ([ADR-0007](decisions/0007-spacetime-probe.md)) · spec v0.1 ·
-> 2026-06-24 · Owner: Steve Ridder
+> 2026-06-24 · Owner: Helm project
 > The generalization of two things we'd already written per-domain — the *weather* field
 > ([WEATHER-ROUTING.md §1](WEATHER-ROUTING.md), `W(lat,lon,t)`) and the *destination* dossier
 > ([BRIEFINGS.md](BRIEFINGS.md)) — into one primitive: **any** layer, **any** point in

@@ -3285,7 +3285,7 @@ static void nav_loop(ix::HttpServer* server) {
       continue;
     }
     // route-walk simulation — only meaningful with an active route. In live mode real data overrides
-    // these; a route-less live boat skips it entirely and just shows position + AIS (no demo line).
+    // these; a route-less live vessel skips it entirely and just shows position + AIS (no demo line).
     bool have_route = (route.size() >= 2 && r != nullptr);
     double sim_sog = 5.6 + std::sin(tick / 9.0) * 0.9;
     double sim_lat = gLat, sim_lon = gLon, sim_wspd = 14, sim_depth = 0, legBrg = 0;

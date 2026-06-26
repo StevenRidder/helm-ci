@@ -1,6 +1,6 @@
 # Tides — UI polish + chartplotter integration (internal spec)
 
-Owner: Claude (CHART agent), per Steve's direction. Codex keeps the harmonic **engine** (TIDES-1/2/3/5);
+Owner: CHART agent. Codex keeps the harmonic **engine** (TIDES-1/2/3/5);
 this spec covers the **presentation layer** + the two thin **read routes** the dashboard needs.
 
 ## Why this exists

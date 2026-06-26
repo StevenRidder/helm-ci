@@ -13,9 +13,8 @@ _Last updated: 2026-06-24 · Branch: `claude/awesome-maplibre-exploration-acctbi
 >     contours silently never rendered. `depth-contours.js`/`contour.js` now resolve the DEM URL against
 >     the page origin (`new URL('data/dem/', document.baseURI)`). Verified in a real browser: **456 contour
 >     features generated / 373 painted** at the live region.
->   - **Region note:** the active region is now **Fiji (Viti Levu)** — real bathymetry relief
->     (−3,500 m…+1,300 m), so contours trace the reefs/shelf well. (Key West, the prior demo region, was a
->     flat shoal where the global DEM had no detail — see git history to switch back via `region.env`.)
+>   - **Region note:** the public sample uses the Key West demo region. Local builds can
+>     switch regions by copying `pipeline/region.env.example` to `pipeline/region.env`.
 > - **No more runtime CDN.** Every Lab toggle's data is now local, baked once at build time:
 >   `pipeline/fetch_dem.py` → `web/data/dem/` (contours + the mercator hillshade), local rain-forecast
 >   frames for the temporal control, `pipeline/make_demo_cog.py` → `web/data/demo-sst-cog.tif` for cog://,

@@ -8,7 +8,7 @@
 We had described data fusion only per-domain: the *weather* field
 ([WEATHER-ROUTING.md §1](../WEATHER-ROUTING.md), `W(lat,lon,t)`) and the *destination* dossier
 ([BRIEFINGS.md](../BRIEFINGS.md)). In practice the data lives as discrete visual layers
-(MapLibre + the S-52 engine) and discrete backend tools. Steve's framing generalized it:
+(MapLibre + the S-52 engine) and discrete backend tools. The project framing generalized it:
 *"I want any layer to be part of that space/time slice"* — pick a point in space and time and
 have the agent narrate the weather, climate, community/NFL data, depth, etc., all at once.
 

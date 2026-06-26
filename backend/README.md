@@ -3,7 +3,7 @@
 The small FastAPI service the static web app + C++ engine don't provide: the **place store**,
 **owned pins/reviews**, the **"where to go" recommender**, **ReAct research agents** that fill
 the dossier cards, and the **give-back publishers** (NFL push + OSM Notes). Source-agnostic,
-offline-first, NFL-slot-open. Spec: [../docs/BUILD-PLAN-COMMUNITY-LLM.md](../docs/BUILD-PLAN-COMMUNITY-LLM.md).
+offline-first, NFL-slot-open, and source-labelled.
 
 ## Run
 

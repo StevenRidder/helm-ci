@@ -5,7 +5,7 @@
 mode; keys add real LLM prose + real weather.
 
 > Specs this implements: [SPACETIME-PROBE.md](SPACETIME-PROBE.md) ·
-> [BUILD-PLAN-COMMUNITY-LLM.md](BUILD-PLAN-COMMUNITY-LLM.md) ·
+> public-alpha backend/community prototype ·
 > [BRIEFINGS.md](BRIEFINGS.md) · ADRs [0005](decisions/0005-community-places-overlay.md)–[0007](decisions/0007-spacetime-probe.md).
 
 ---

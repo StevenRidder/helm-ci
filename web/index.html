@@ -484,10 +484,12 @@
   <h2>Layers</h2>
   <p class="sub">Chart &amp; data overlays</p>
   <div class="lbl">Basemap</div>
-  <label class="row"><input type="radio" name="basemap" data-base="navionics" checked> Navionics chart<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="charts" checked> NOAA public chart<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">clean</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="satellite"> Sentinel-2 sample<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">open</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="navionics"> BYO chart pack<span style="margin-left:auto;font-size:9.5px;color:#f5c451">local</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="googlesat"> BYO imagery A<span style="margin-left:auto;font-size:9.5px;color:#f5c451">local</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="bingsat"> BYO imagery B<span style="margin-left:auto;font-size:9.5px;color:#f5c451">local</span></label>
+  <label class="row"><input type="radio" name="basemap" data-base="arcgis"> BYO imagery C<span style="margin-left:auto;font-size:9.5px;color:#f5c451">local</span></label>
   <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
   <div class="lbl">Depth on satellite</div>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
@@ -546,9 +548,8 @@
   <p class="sub">For the visible area · on-demand</p>
   <label class="row"><input type="checkbox" checked> NOAA ENC<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">free</span></label>
   <label class="row"><input type="checkbox" checked> Sentinel-2<span style="margin-left:auto;font-size:9.5px;color:var(--ok)">open</span></label>
-  <label class="row"><input type="checkbox"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:var(--warn)">personal</span></label>
-  <label class="row"><input type="checkbox"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:var(--warn)">personal</span></label>
-  <label class="row" style="color:var(--cdim)"><input type="checkbox" disabled> Navionics<span style="margin-left:auto;font-size:9.5px;color:var(--danger)">partnership</span></label>
+  <label class="row"><input type="checkbox"> BYO imagery pack<span style="margin-left:auto;font-size:9.5px;color:var(--warn)">local only</span></label>
+  <label class="row" style="color:var(--cdim)"><input type="checkbox" disabled> Commercial chart packs<span style="margin-left:auto;font-size:9.5px;color:var(--danger)">license gated</span></label>
   <div class="hint">Prototype panel — in the native app this drives the on-device tiler (bbox &rarr; offline mbtiles). See docs/CHART-PIPELINE.md.</div>
 </div>
 
@@ -647,7 +648,7 @@
   <div id="gb-status" style="font-size:10.5px;color:var(--cdim);margin-top:7px;min-height:14px"></div>
 
   <div class="hint">Runs on open + owned + RAG. NoForeignLand <i>read</i> is an experimental enrichment (off);
-    give-back (position→NFL, contribute→OSM) is sanctioned. See docs/BUILD-PLAN-COMMUNITY-LLM.md.</div>
+    give-back (position→NFL, contribute→OSM) is opt-in and source-labelled.</div>
 </div>
 
 <!-- ========================= RIGHT ROUTE INSPECTOR ========================= -->
@@ -814,8 +815,8 @@
   }
   const map = new maplibregl.Map({
     container: 'map', style: style, hash: true,
-    // Owned mbtiles basemaps ship a localhost:8091 placeholder in style.json. Rewrite the HOST of every
-    // :8091 tile request to the page host (so the iPad/phone on the boat WiFi loads charts from THIS Mac)
+    // BYO mbtiles basemaps ship a localhost:8091 placeholder in style.json. Rewrite the HOST of every
+    // :8091 tile request to the page host (so a phone/tablet on boat WiFi loads charts from this server)
     // BEFORE the request goes out — including the FIRST tile. A setTiles-in-'load' rewrite loses that race:
     // the initial batch fires against the placeholder, fatal on a remote device (localhost = the phone).
     // Port stays 8091 — a ?server= override only relocates the host. Everything else passes through.
@@ -837,7 +838,7 @@
   });
   // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
   // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
-  // (The owned mbtiles basemaps on :8091 are rewritten by transformRequest in the Map
+  // (The BYO mbtiles basemaps on :8091 are rewritten by transformRequest in the Map
   // constructor above, which catches the FIRST tile too — setTiles here would lose that race.)
   map.on('load', () => {
     // Surface wiring failures rather than silently leaving the style.json default in place.
@@ -868,8 +869,8 @@
     });
   });
 
-  // Basemap picker (radios): show the chosen base (your charts vs your satellite), hide the others.
-  const BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis'];
+  // Basemap picker (radios): show the chosen clean/BYO base, hide the others.
+  const BASEMAPS = ['charts', 'satellite', 'navionics', 'googlesat', 'bingsat', 'arcgis'];
   document.querySelectorAll('input[name="basemap"]').forEach(rb => {
     rb.addEventListener('change', () => {
       if (!rb.checked) return;

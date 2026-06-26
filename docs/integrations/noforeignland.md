@@ -62,7 +62,7 @@ Reverse-engineer the JSON the NFL web map fetches by bbox and render it as an ov
 (the oleedv approach).
 - **Reality:** undocumented, **fragile** (will break on their changes), and **against their
   ToS / data posture**. **Must NOT ship in a distributed or commercial product.**
-- Acceptable only for Steve's personal build, behind an **"experimental · personal use ·
+- Acceptable only for a personal build, behind an **"experimental · personal use ·
   may break"** flag, with aggressive client-side caching and gentle rate-limiting so we
   never hammer their backend. Best-effort, expect breakage.
 
@@ -116,7 +116,7 @@ strong on *allowed* data alone and only *enriched* by NFL where access exists:
   - **Partnership (Option A)** — the clean, shippable way to read NFL places/boats.
   - **Personal-experimental pull (Option C)** — lives behind an **Experimental Features**
     flag: `personal · unofficial · may break · not in shared/commercial builds`. Cached hard,
-    rate-limited, best-effort. Feeds *Steve's own* recommender; never ships.
+    rate-limited, best-effort. Feeds only a personal recommender; never ships.
   - **NFL public-page RAG** is **partnership-preferred**, not a backdoor (NFL guards
     redistribution); prefer Noonsite/blogs for RAG.
 - **Honesty:** every recommendation tags its sources; NFL-sourced enrichment is labelled, and

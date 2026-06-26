@@ -1,10 +1,7 @@
 # Helm — Product Requirements Document
 
 **Status:** Draft v0.1 · 2026-06-23
-**Owner:** Steve Ridder
-**Source:** distilled from a 13-agent research+design+verification workflow (see
-[docs/research/](docs/research/)). Every legal/feasibility claim here survived an
-adversarial review pass.
+**Source:** distilled from design, architecture, and legal-feasibility review.
 
 ---
 
@@ -156,8 +153,8 @@ for the binding guardrails — this is the single largest legal exposure in the 
 | **Bring-your-own** | Google, Bing imagery | User imports their own; we never server-fetch or host |
 | **Partnership** | Navionics, Esri/ArcGIS | Only via official paid SDK/agreement; not scraped |
 
-For Steve's **personal use**, BYO covers all four exactly as ChartLocker does today; the
-tiers only bind a *distributed* product.
+For **personal/local use**, BYO can cover sources the user has independently
+acquired rights to use. The tiers bind any distributed product.
 
 ## 10. Platforms & UX principles
 
@@ -231,5 +228,5 @@ Full detail: [docs/ROADMAP.md](docs/ROADMAP.md).
 
 - **Tracer bullet:** one screen showing satellite + ENC depth overlay + a live GRIB wind
   layer, offline, that *feels worth using*. If yes, proceed.
-- **MVP:** Steve plans and sails a real passage using only Helm on the Mac and the phone —
+- **MVP:** a tester plans and sails a real passage using only Helm on the Mac and the phone —
   charts, weather, route, AIS — without opening Windy, PredictWind, or a chart app.

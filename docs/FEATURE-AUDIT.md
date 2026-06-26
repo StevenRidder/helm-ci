@@ -356,13 +356,13 @@ asked to verify.
   internal GPS (already the engine's design).
 - **Encrypted/commercial charts (S-63, Navionics, C-MAP)**: licensing-gated; BYO/partnership
   only — see `docs/LEGAL.md`.
-- **Auto-routing / dock-to-dock**: deliberately not built (liability + it's the incumbents'
-  moat) — see `docs/COMPETITIVE.md`.
+- **Auto-routing / dock-to-dock**: deliberately not built (liability + incumbents'
+  chart-data moat).
 
 ---
 
 *Cross-references: `PRD.md` §6 (feature requirements), `docs/OPENCPN-REUSE.md` (reuse map),
-`docs/ROADMAP.md` (phasing), `docs/COMPETITIVE.md` (positioning), `engine/README.md`
+`docs/ROADMAP.md` (phasing), `engine/README.md`
 (engine state + next increments).*
 
 ---

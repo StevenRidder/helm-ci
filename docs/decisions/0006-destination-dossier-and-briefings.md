@@ -5,8 +5,8 @@
 
 ## Context
 
-The single most-requested capability from real passage-making (Steve's 18-day
-Maupiti→Fiji run): two briefings — **"along the way"** (what the passage will be like) and
+The single most-requested capability from real passage-making: two briefings —
+**"along the way"** (what the passage will be like) and
 **"once I get there"** (what landfall will be like) — that **update continuously** instead
 of forcing the sailor to re-download GRIB, open many pages, and re-derive everything by
 hand. The wireframe ([../mockups/destination-dossier.html](../mockups/destination-dossier.html))

@@ -1,7 +1,7 @@
 """
 Helm backend — give-back publishers (the outbound, sanctioned direction).
 
-Two targets, both honest about being mock-first per docs/BUILD-PLAN-COMMUNITY-LLM.md:
+Two targets, both honest about being mock-first in the public-alpha prototype:
 
 - NFLPublisher: pushes the user's OWN position/track to NoForeignLand using the user's own
   boat key (Helm -> NFL only). Runs in MOCK mode unless NFL_BOAT_KEY + NFL_PUSH_ENABLED are

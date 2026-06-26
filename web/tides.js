@@ -21,7 +21,7 @@
     }).then(function (j) { if (j && j.ok === false) throw new Error(j.error || 'tide error'); return j; });
   }
 
-  // where to query: live boat fix → else map centre → else Honolulu (the free default station)
+  // where to query: vessel fix -> else map centre -> else Honolulu (the free default station)
   var navPos = null;
   if (Shell.onNav) Shell.onNav(function (s) { if (s && typeof s.lat === 'number' && typeof s.lon === 'number') navPos = { lat: s.lat, lon: s.lon }; });
   function queryPoint(map) {

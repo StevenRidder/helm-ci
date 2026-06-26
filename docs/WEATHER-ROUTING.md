@@ -4,7 +4,7 @@
 forecast update magic-in-the-background. Make ocean routing easy enough that you stop
 juggling eight apps — and honest enough to tell you when to still call a human.**
 
-> Status: Spec draft v0.1 · 2026-06-24 · Owner: Steve Ridder
+> Status: Spec draft v0.1 · 2026-06-24 · Owner: Helm project
 > Companion to [VISION.md](VISION.md) (§6 Weather, §8 Copilot) and [WEATHER.md](WEATHER.md)
 > (the own-GRIB rendering stack). Born from a real 18-day Maupiti→Fiji passage and the
 > misery of constantly re-downloading GRIB, opening tabs, and re-deriving the route by hand.
