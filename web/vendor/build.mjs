@@ -1,8 +1,14 @@
 import { build } from 'esbuild';
 import { mkdirSync } from 'fs';
+import { fileURLToPath } from 'url';
+import { dirname } from 'path';
 
-const OUT = '/Users/steveridder/Library/CloudStorage/Dropbox/Git/Helm/web/vendor';
-const RESOLVE = '/tmp/helm-vendor';
+// Portable: emit next to this script (web/vendor/) and resolve deps from web/vendor/node_modules, so
+// `npm ci && node build.mjs` reproduces every bundle on ANY machine (no hardcoded home path). Override
+// with VENDOR_OUT / VENDOR_RESOLVE — e.g. build into a temp dir to diff against the committed files.
+const HERE = dirname(fileURLToPath(import.meta.url));
+const OUT = process.env.VENDOR_OUT || HERE;
+const RESOLVE = process.env.VENDOR_RESOLVE || HERE;
 mkdirSync(OUT, { recursive: true });
 
 const COMMON = {

@@ -26,19 +26,26 @@ duplicate-module hazard that a multi-file CDN setup hits.
 
 ## How these were built (to reproduce / bump a version)
 
-Each file is an esbuild bundle: `format=esm`, `platform=browser`, `target=es2020`, minified,
-with `maplibre-gl` (and, inside the deck bundle, nothing else) marked **external** so it resolves
-through the import map at runtime. Built with `esbuild@0.24.2`.
+Versions are pinned in **`package.json`** + the committed **`package-lock.json`** in this directory —
+the table above is descriptive, the lockfile is the source of truth. Each plugin is an esbuild bundle
+(`format=esm`, `platform=browser`, `target=es2020`, minified) with `maplibre-gl` marked **external** so it
+resolves through the page's import map at runtime; `deck.js` bundles the three deck sub-packages into one.
+
+`build.mjs` is path-portable (emits next to itself, resolves from `./node_modules`), so any machine can
+reproduce every bundle:
 
 ```sh
-mkdir -p /tmp/helm-vendor && cd /tmp/helm-vendor && npm init -y
-npm i esbuild@0.24.2 \
-  pmtiles@4.4.1 @geomatico/maplibre-cog-protocol@0.9.0 maplibre-contour@0.1.0 \
-  terra-draw@1.31.2 terra-draw-maplibre-gl-adapter@1.4.1 \
-  maplibre-gl-measures@0.0.20 maplibre-gl-temporal-control@1.2.0 \
-  @deck.gl/core@9.3.4 @deck.gl/mapbox@9.3.4 @deck.gl/layers@9.3.4 @deck.gl/aggregation-layers@9.3.4
-# then run build.mjs (kept alongside this README as build.mjs) which emits each bundle here.
+cd web/vendor
+npm ci            # restore the exact pinned tree from package-lock.json
+node build.mjs    # rebuilds every *.js plugin bundle here
 ```
 
-MapLibre core is the published UMD dist, copied verbatim:
+Verified (CLIENT-16): `npm ci && node build.mjs` reproduces all 8 committed plugin bundles
+**byte-identical**. To bump a version: edit `package.json` → `npm install` → `node build.mjs` → re-test
+the app. (`build.mjs` honours `VENDOR_OUT` / `VENDOR_RESOLVE` env overrides for a build-into-temp diff.)
+
+MapLibre core is the published UMD dist, copied verbatim (loaded via `<script>`, not esbuild-bundled):
 `curl -L https://unpkg.com/maplibre-gl@5.24.0/dist/maplibre-gl.{js,css}`.
+
+Supply-chain / CVE status (JS **and** the Python companion services): see
+[`docs/SUPPLY-CHAIN.md`](../../docs/SUPPLY-CHAIN.md).
