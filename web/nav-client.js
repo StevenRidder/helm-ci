@@ -89,7 +89,12 @@
 // ===========================================================================================
 (function () {
   function mergeState(base, patch) {
-    const out = base ? JSON.parse(JSON.stringify(base)) : {};
+    // CLIENT-9: shallow copy-on-write instead of a per-frame deep clone (JSON.parse(JSON.stringify))
+    // that re-serialised the WHOLE state — including the full AIS array — on every snapshot/delta.
+    // The loop below already isolates each PATCHED key (a fresh object for nested merges, replacement
+    // for arrays/primitives), so `base` is never mutated; unchanged branches are shared by reference,
+    // which is safe because every consumer (applyNav → ownship/collision/alarms) only READS the state.
+    const out = base ? Object.assign({}, base) : {};
     for (const k in patch) {
       const v = patch[k];
       if (v && typeof v === 'object' && !Array.isArray(v) && out[k] && typeof out[k] === 'object' && !Array.isArray(out[k])) {
