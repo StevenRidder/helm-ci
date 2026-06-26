@@ -109,6 +109,51 @@ struct TideEvent {
   TideStation station;
 };
 
+struct TideResolvePoint {
+  std::string id;
+  std::string name;
+  std::string role;
+  double lat = 0.0;
+  double lon = 0.0;
+  std::time_t eta_utc = 0;
+};
+
+struct TideResolvedPoint {
+  TideResolvePoint point;
+  bool has_harmonic_station = false;
+  bool has_official_reference = false;
+  bool harmonic_offline_available = false;
+  bool official_metadata_available = false;
+  bool official_prediction_cached = false;
+  bool observed_feed_available = false;
+  bool offline_ready = false;
+  std::string cache_status;
+  std::vector<std::string> warnings;
+  TideStation harmonic_station;
+  OfficialTideReference official_reference;
+  TideConfidence confidence;
+};
+
+struct TideSourceResolution {
+  bool ok = false;
+  std::string error;
+  std::string engine = "opencpn-tcmgr";
+  std::string summary;
+  std::string confidence_tier;
+  std::string cache_summary;
+  std::time_t generated_utc = 0;
+  double corridor_nm = 25.0;
+  double min_confidence_score = 0.0;
+  double max_harmonic_station_distance_nm = -1.0;
+  double max_official_station_distance_nm = -1.0;
+  bool offline_ready = false;
+  bool official_coverage_ready = false;
+  bool needs_attention = false;
+  std::vector<std::string> warnings;
+  std::vector<TideResolvedPoint> points;
+  std::vector<TideSourceInfo> loaded_sources;
+};
+
 class TideEngine {
 public:
   TideEngine();
@@ -139,6 +184,10 @@ public:
   TideEvent NextHighLowEvent(int station_index, std::time_t after_utc) const;
   TideEvent NextHighLowEventNearest(double lat, double lon,
                                     std::time_t after_utc) const;
+  TideSourceResolution ResolveSources(
+      const std::vector<TideResolvePoint> &points,
+      std::time_t fallback_utc,
+      double corridor_nm = 25.0) const;
 
 private:
   struct Impl;
