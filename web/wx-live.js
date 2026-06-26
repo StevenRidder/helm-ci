@@ -8,9 +8,9 @@
 // over the visible bbox, colour-ramped/interpolated into one georeferenced image, and cached. The
 // baked Tier-2 value tiles are the structural path for true tile-pyramid pan/zoom.
 //
-// HONESTY: weather is fetched live; if the network is unreachable (offshore / no link) it surfaces
-// a clear notice and renders NOTHING — it never fabricates a field to fill the gap (docs/VISION.md).
-// Provenance is always Open-Meteo (named); for offline coverage, bake Tier-2 tiles for your area.
+// HONESTY: weather is fetched live; if the network is unreachable (offshore / no link), Helm keeps
+// the last known good field at its true geographic bbox and marks it stale. It never fabricates or
+// stretches a field to fill the gap (docs/VISION.md). For offline coverage, bake Tier-2 tiles.
 (function () {
   'use strict';
   var FORECAST = 'https://api.open-meteo.com/v1/forecast';
@@ -46,6 +46,9 @@
              lastError: '', backoffUntil: 0 };
 
   function codec() { return window.HelmWxCodec; }
+  function layerCache() { return window.HelmLayerCache; }
+  function cacheScope() { return st.layer + ':' + (st.model || 'gfs_seamless'); }
+  function fieldBbox(field) { return field ? [field.west, field.south, field.east, field.north] : null; }
 
   function now() { return Date.now ? Date.now() : +new Date(); }
 
@@ -99,14 +102,63 @@
     st.cache[key] = entry;
     pruneCache();
     saveCache();
+    var LC = layerCache();
+    if (LC) {
+      try {
+        LC.put({
+          layerId: 'weather.live',
+          scope: cacheScope(),
+          cacheKey: key,
+          kind: 'raster-field',
+          bbox: fieldBbox(field),
+          source: 'open-meteo',
+          model: st.model || 'gfs_seamless',
+          ttlMs: CACHE_TTL_MS,
+          payload: { field: field, velocity: velocity || null }
+        });
+      } catch (_) {}
+    }
   }
 
   function findCached(map) {
+    var LC = layerCache(), view = map ? viewport(map) : null;
+    if (LC) {
+      var rec = LC.getBest('weather.live', { scope: cacheScope(), bbox: view });
+      if (rec && rec.payload && rec.payload.field) {
+        return {
+          key: rec.cacheKey, layer: st.layer, model: st.model,
+          savedAt: rec.fetchedAtMs || rec.storedAt || now(),
+          field: rec.payload.field, velocity: rec.payload.velocity || null,
+          shared: true
+        };
+      }
+    }
     loadCache(); pruneCache();
     for (var i = st.cacheOrder.length - 1; i >= 0; i--) {
       var entry = st.cache[st.cacheOrder[i]];
       if (!entry || entry.layer !== st.layer || entry.model !== st.model) continue;
       if (entry.field && covers(entry.field, map)) return entry;
+    }
+    return null;
+  }
+
+  function latestCached() {
+    var LC = layerCache();
+    if (LC) {
+      var rec = LC.getBest('weather.live', { scope: cacheScope(), allowAny: true });
+      if (rec && rec.payload && rec.payload.field) {
+        return {
+          key: rec.cacheKey, layer: st.layer, model: st.model,
+          savedAt: rec.fetchedAtMs || rec.storedAt || now(),
+          field: rec.payload.field, velocity: rec.payload.velocity || null,
+          shared: true
+        };
+      }
+    }
+    loadCache(); pruneCache();
+    for (var i = st.cacheOrder.length - 1; i >= 0; i--) {
+      var entry = st.cache[st.cacheOrder[i]];
+      if (entry && entry.layer === st.layer && entry.model === st.model && entry.field) return entry;
     }
     return null;
   }
@@ -301,7 +353,7 @@
       field: st.field ? [st.field.west, st.field.south, st.field.east, st.field.north] : null,
       viewport: view, covers: !!(st.field && st.map && covers(st.field, st.map)),
       requests: st.requestCount, opacity: st.opacity, cacheHits: st.cacheHits,
-      lastError: st.lastError, backoffUntil: st.backoffUntil
+      lastError: st.lastError, backoffUntil: st.backoffUntil, hasField: !!st.field
     };
   }
 
@@ -319,6 +371,7 @@
     el.dataset.wxCacheHits = String(s.cacheHits);
     el.dataset.wxError = s.lastError || '';
     el.dataset.wxBackoff = s.backoffUntil ? String(s.backoffUntil) : '';
+    el.dataset.wxHasField = s.hasField ? '1' : '0';
     el.dataset.wxField = s.field ? s.field.map(function (x) { return x.toFixed(3); }).join(',') : '';
     el.dataset.wxViewport = s.viewport ? s.viewport.map(function (x) { return x.toFixed(3); }).join(',') : '';
   }
@@ -344,11 +397,12 @@
     var cached = findCached(st.map);
     if (cached && renderCached(cached)) return;
     if (st.backoffUntil && now() < st.backoffUntil) {
-      clearOverlay(st.map);
       st.lastKey = ''; st.abort = null;
       st.lastError = 'rate_limited';
-      publishStatus('empty');
-      st.notify('Live weather is rate-limited right now — retrying later. Cached fields will be reused when they cover the view.', 'warn');
+      publishStatus(st.field ? (covers(st.field, st.map) ? 'stale' : 'out_of_coverage') : 'empty');
+      st.notify(st.field
+        ? 'Live weather is rate-limited — showing the last Open-Meteo pull as stale.'
+        : 'Live weather is rate-limited and no cached field covers this view yet.', 'warn');
       return;
     }
     var bbox = viewBbox(st.map);
@@ -356,8 +410,10 @@
     if (key === st.lastKey) return;                       // same view+layer -> skip
     st.lastKey = key;
 
-    // Never leave weather from a different part of the world on-screen while the replacement loads.
-    if (st.field && !covers(st.field, st.map)) clearOverlay(st.map);
+    // Never stretch a field into a new part of the world. Keep the old source at its true bbox
+    // while a replacement loads; if it does not cover the view, MapLibre simply will not draw it
+    // there, but panning back still shows the last pull.
+    if (st.field && !covers(st.field, st.map)) publishStatus('out_of_coverage');
 
     var size = gridSize(st.map), g = grid(bbox, size.nx, size.ny), my = ++st.token;
     if (st.abort) st.abort.abort();
@@ -370,8 +426,11 @@
       if (my !== st.token || !st.on) return;              // a newer pan superseded this one
       var field = toField(nodes, g, st.layer);
       if (!field.values.some(function (v) { return isFinite(v); })) {
-        clearOverlay(st.map); st.lastKey = ''; st.abort = null;
-        st.notify('No live data for this area', 'warn'); return;
+        st.lastKey = ''; st.abort = null; st.lastError = 'no_data';
+        publishStatus(st.field ? (covers(st.field, st.map) ? 'stale' : 'out_of_coverage') : 'empty');
+        st.notify(st.field ? 'No new live data for this area — keeping the last weather pull as stale.'
+          : 'No live data for this area', 'warn');
+        return;
       }
       if (!covers(field, st.map)) {
         st.lastKey = ''; st.abort = null; publishStatus('stale');
@@ -408,11 +467,15 @@
         st.notify('Live weather provider is unavailable — keeping the current field because it still covers the view.', 'warn');
         return;
       }
-      // honest offline behaviour — never fabricate a field or keep a wrong-location overlay
-      clearOverlay(st.map); st.lastKey = ''; st.abort = null;
+      // Honest offline behaviour — never fabricate a field, but never delete a valid last pull
+      // merely because the next pull failed.
+      st.lastKey = ''; st.abort = null;
+      publishStatus(st.field ? (covers(st.field, st.map) ? 'stale' : 'out_of_coverage') : 'empty');
       st.notify(e && e.status === 429
-        ? 'Live weather is rate-limited right now — retrying later. (Bake Tier-2 tiles for true offline/global coverage.)'
-        : 'Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)', 'warn');
+        ? (st.field ? 'Live weather is rate-limited — keeping the last Open-Meteo pull as stale.'
+          : 'Live weather is rate-limited and no cached field covers this view yet.')
+        : (st.field ? 'Live weather needs a connection — keeping the last weather pull as stale.'
+          : 'Live weather needs a connection — offline. (Bake Tier-2 tiles for offline coverage.)'), 'warn');
     }
   }
 
@@ -430,8 +493,7 @@
       publishStatus('ready');
       return;
     }
-    if (st.field) clearOverlay(st.map);
-    else publishStatus('moving');
+    publishStatus(st.field ? 'out_of_coverage' : 'moving');
     scheduleRefresh(220);
   }
 

@@ -30,31 +30,48 @@
 
   HelmRadar.prototype.load = function () {
     var self = this;
+    function applyManifest(j, cached) {
+      self.host = j.host;
+      var past = (j.radar && j.radar.past) || [];
+      var now = (j.radar && j.radar.nowcast) || [];
+      self.frames = past.concat(now);
+      if (!self.frames.length) return null;
+      self.idx = Math.max(0, past.length - 1);   // start at "now"
+      var url = self._tileUrl(self.frames[self.idx]);
+      var map = self.map;
+      if (map.getSource(SRC)) {
+        map.getSource(SRC).setTiles([url]);
+        map.setLayoutProperty(LYR, 'visibility', 'visible');
+      } else {
+        map.addSource(SRC, { type: 'raster', tiles: [url], tileSize: 256,
+          attribution: 'Radar &copy; RainViewer' });
+        var before = (self.beforeId && map.getLayer(self.beforeId)) ? self.beforeId : undefined;
+        map.addLayer({ id: LYR, type: 'raster', source: SRC,
+          paint: { 'raster-opacity': cached ? 0.55 : 0.7, 'raster-fade-duration': 0 } }, before);
+      }
+      self.play();
+      return self.frames.length;
+    }
     return fetch('https://api.rainviewer.com/public/weather-maps.json')
       .then(function (r) { return r.json(); })
       .then(function (j) {
-        self.host = j.host;
-        var past = (j.radar && j.radar.past) || [];
-        var now = (j.radar && j.radar.nowcast) || [];
-        self.frames = past.concat(now);
-        if (!self.frames.length) return null;
-        self.idx = Math.max(0, past.length - 1);   // start at "now"
-        var url = self._tileUrl(self.frames[self.idx]);
-        var map = self.map;
-        if (map.getSource(SRC)) {
-          map.getSource(SRC).setTiles([url]);
-          map.setLayoutProperty(LYR, 'visibility', 'visible');
-        } else {
-          map.addSource(SRC, { type: 'raster', tiles: [url], tileSize: 256,
-            attribution: 'Radar &copy; RainViewer' });
-          var before = (self.beforeId && map.getLayer(self.beforeId)) ? self.beforeId : undefined;
-          map.addLayer({ id: LYR, type: 'raster', source: SRC,
-            paint: { 'raster-opacity': 0.7, 'raster-fade-duration': 0 } }, before);
-        }
-        self.play();
-        return self.frames.length;
+        if (global.HelmLayerCache) try {
+          global.HelmLayerCache.put({
+            layerId: 'radar.rainviewer', scope: 'global', kind: 'tile-manifest',
+            bbox: [-180, -85, 180, 85], source: 'rainviewer', ttlMs: 30 * 60 * 1000,
+            payload: { manifest: j }
+          });
+        } catch (_) {}
+        return applyManifest(j, false);
       })
-      .catch(function (e) { console.warn('[HelmRadar] load failed', e && e.message); return null; });
+      .catch(function (e) {
+        var rec = global.HelmLayerCache && global.HelmLayerCache.getBest('radar.rainviewer', { scope: 'global' });
+        if (rec && rec.payload && rec.payload.manifest) {
+          console.warn('[HelmRadar] load failed', e && e.message, '— using cached frame index');
+          return applyManifest(rec.payload.manifest, true);
+        }
+        console.warn('[HelmRadar] load failed', e && e.message); return null;
+      });
   };
 
   HelmRadar.prototype.play = function () {

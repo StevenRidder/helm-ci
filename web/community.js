@@ -11,6 +11,7 @@ window.HelmCommunity = function (map, opts) {
   const listeners = [];
   const onStatus = (fn) => listeners.push(fn);
   const emit = () => listeners.forEach((fn) => fn(online));
+  const cache = () => window.HelmLayerCache;
 
   async function health() {
     try {
@@ -28,40 +29,65 @@ window.HelmCommunity = function (map, opts) {
     const s = map.getSource(source);
     if (s && fc) s.setData(fc);
   }
+  function rememberGeo(source, scope, fc) {
+    const C = cache(); if (!C || !fc) return;
+    try {
+      C.put({
+        layerId: 'community.' + source, scope: scope || 'default', kind: 'geojson',
+        bbox: [-180, -85, 180, 85], source: 'helm-community', ttlMs: 24 * 60 * 60 * 1000,
+        payload: { geojson: fc }
+      });
+    } catch (_) {}
+  }
+  function cachedGeo(source, scope) {
+    const C = cache(); if (!C) return null;
+    const rec = C.getBest('community.' + source, { scope: scope || 'default', allowAny: true });
+    return rec && rec.payload && rec.payload.geojson ? rec.payload.geojson : null;
+  }
 
   // Pull places (optionally restricted to sources) into the existing 'places' source.
   async function loadPlaces(sources) {
-    if (!online) return null;
+    const scope = sources && sources.length ? sources.join(',') : 'all';
+    if (!online) { const fc = cachedGeo('places', scope); if (fc) setData('places', fc); return fc; }
     try {
       const q = sources && sources.length ? '?sources=' + sources.join(',') : '';
       const fc = await (await fetch(API + '/places' + q)).json();
+      rememberGeo('places', scope, fc);
       setData('places', fc);
       return fc;
-    } catch (e) { return null; }
+    } catch (e) { const fc = cachedGeo('places', scope); if (fc) setData('places', fc); return fc; }
   }
 
   // Pull owned saved pins into the 'saved' source (else the committed sample stays).
   async function loadSaved() {
-    if (!online) return null;
+    if (!online) { const fc = cachedGeo('saved', 'owned'); if (fc) setData('saved', fc); return fc; }
     try {
       const fc = await (await fetch(API + '/saved')).json();
+      rememberGeo('saved', 'owned', fc);
       setData('saved', fc);
       return fc;
-    } catch (e) { return null; }
+    } catch (e) { const fc = cachedGeo('saved', 'owned'); if (fc) setData('saved', fc); return fc; }
   }
 
   // "Where to go": ask the recommender, highlight results on the chart, return the list.
   async function whereTo(body) {
-    if (!online) return { offline: true, recommendations: [] };
+    if (!online) {
+      const fc = cachedGeo('whereto', 'last'); if (fc) setData('whereto', fc);
+      return { offline: true, recommendations: [] };
+    }
     try {
       const r = await fetch(API + '/whereto', {
         method: 'POST', headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(body),
       });
       const j = await r.json();
+      rememberGeo('whereto', 'last', j.geojson);
       setData('whereto', j.geojson);
       return j;
-    } catch (e) { return { error: String(e), recommendations: [] }; }
+    } catch (e) {
+      const fc = cachedGeo('whereto', 'last'); if (fc) setData('whereto', fc);
+      return { error: String(e), recommendations: [] };
+    }
   }
 
   function clearWhereTo() { setData('whereto', { type: 'FeatureCollection', features: [] }); }
