@@ -343,6 +343,19 @@
     background:var(--glass2);font-size:12px;color:var(--cdim)}
   .cpa-btn:hover{color:var(--ctext)}
 
+  /* ---- global "degraded" / error surface (app health — distinct from the top nav alarms) ---- */
+  .degraded-banner{position:absolute;bottom:calc(94px + env(safe-area-inset-bottom));left:50%;
+    transform:translateX(-50%);z-index:9;max-width:440px;width:calc(100% - 32px);box-sizing:border-box;
+    border-radius:13px;padding:10px 12px;display:flex;gap:11px;align-items:flex-start;
+    border:.5px solid rgba(255,192,106,.5)}
+  .degraded-banner[hidden]{display:none}
+  .dg-ic{color:var(--warn);font-size:18px;line-height:1.1;flex:none}
+  .dg-body{flex:1;min-width:0}
+  .dg-ttl{font-size:12.5px;font-weight:600;color:var(--ctext);margin-bottom:2px}
+  .dg-msg{font-size:11px;color:var(--cdim);line-height:1.4;word-break:break-word}
+  .dg-x{color:var(--cdim2);cursor:pointer;font-size:16px;line-height:1;flex:none;padding:0 2px}
+  .dg-x:hover{color:var(--ctext)}
+
   /* ---- ⌘K command palette (SHELL-3) ---- */
   #cmdk{position:fixed;inset:0;z-index:30}
   #cmdk[hidden]{display:none}
@@ -364,6 +377,13 @@
 </head>
 <body>
 <div id="map"></div>
+
+<!-- Global "degraded" banner (CLIENT-4): shown when a feature/bootstrap/map error is surfaced. -->
+<div id="degraded-banner" class="degraded-banner glass" hidden role="alert" aria-live="assertive">
+  <div class="dg-ic">⚠</div>
+  <div class="dg-body"><div class="dg-ttl" id="dg-ttl">Something went wrong</div><div class="dg-msg" id="dg-msg"></div></div>
+  <div class="dg-x" id="dg-x" title="Dismiss" aria-label="Dismiss">×</div>
+</div>
 
 <!-- ========================= TOP TOOLBAR ========================= -->
 <div class="tb glass">
@@ -665,6 +685,46 @@
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <script>
+// --- Global error surface (CLIENT-4): a thrown exception or rejected promise must SAY so — never
+// die silently on a safety display. ONLY a failed MAP RESOURCE (tile/sprite/glyph/.png/.pbf — common
+// when offline, non-fatal) is logged-not-bannered; EVERY other fault SURFACES, because on a safety
+// display hiding a real failure (a dead backend, a broken feature) is worse than a stray banner —
+// and connection health already has its own LIVE/STALE/OFFLINE badge. Dismissible + rate-limited so
+// one repeating fault can't spam. window.__helmDegrade(title, detail) is reused by bootstrap + map.on('error').
+(function () {
+  var bn = null, last = Object.create(null);
+  // Narrow ON PURPOSE: do NOT suppress generic "failed to fetch" / "network error" / "aborted" — those
+  // can be a dead nav WebSocket or backend, which MUST surface on a marine display. Map tiles only.
+  var BENIGN = /\b(tile|sprite|glyph)\b|\.(png|pbf)\b/i;
+  function banner() { return bn || (bn = document.getElementById('degraded-banner')); }
+  function degrade(title, detail) {
+    var d = detail == null ? '' : String(detail);
+    console.error('[helm] degraded —', title + (d ? ': ' + d : ''));   // always log the real cause (fail-loud)
+    var b = banner(); if (!b) return;
+    var key = title + '|' + d, t = Date.now();
+    if (last[key] && t - last[key] < 4000) return;                     // rate-limit identical repeats
+    last[key] = t;
+    var tt = document.getElementById('dg-ttl'), mm = document.getElementById('dg-msg');
+    if (tt) tt.textContent = title;
+    if (mm) mm.textContent = d.slice(0, 500);
+    b.hidden = false;
+  }
+  window.__helmDegrade = degrade;
+  window.__helmBenignError = function (m) { return BENIGN.test(String(m || '')); };
+  window.addEventListener('error', function (e) {
+    var m = (e && (e.message || (e.error && e.error.message))) || 'Script error';
+    if (BENIGN.test(m)) return;                                        // resource 404 / benign
+    var where = (e && e.filename) ? ' — ' + String(e.filename).split('/').pop() + ':' + e.lineno : '';
+    degrade('A feature failed', m + where);
+  });
+  window.addEventListener('unhandledrejection', function (e) {
+    var r = e && e.reason, m = (r && (r.message || r)) || 'Unhandled rejection';
+    if (BENIGN.test(m)) return;
+    degrade('A background task failed', m);
+  });
+  var x = document.getElementById('dg-x');
+  if (x) x.addEventListener('click', function () { var b = banner(); if (b) b.hidden = true; });
+})();
 // The shell body runs inside an async bootstrap so the per-domain style fragments
 // (web/style/*.json) can be fetched + merged (SHELL-2) BEFORE the map is constructed.
 // HelmShell.buildStyle() falls back to the monolithic style.json if the split manifest is
@@ -675,9 +735,17 @@
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
   // Assemble the merged style from the per-domain fragments (SHELL-2). If shell.js somehow didn't
   // load, fall back to the monolithic style.json so the map still draws (degraded, no registration API).
-  const style = window.HelmShell
-    ? await HelmShell.buildStyle({ styleDir: 'style', fallback: 'style.json' })
-    : await (await fetch('style.json')).json();
+  let style;
+  try {
+    style = window.HelmShell
+      ? await HelmShell.buildStyle({ styleDir: 'style', fallback: 'style.json' })
+      : await (await fetch('style.json')).json();
+  } catch (e) {
+    // The map can't be built without a style — surface it explicitly instead of a silent blank page.
+    if (window.__helmDegrade) window.__helmDegrade('Chart failed to load', (e && e.message) || e);
+    else console.error('[helm] style load failed:', e);
+    return;
+  }
   const map = new maplibregl.Map({
     container: 'map', style: style, hash: true,
     // Owned mbtiles basemaps ship a localhost:8091 placeholder in style.json. Rewrite the HOST of every
@@ -694,6 +762,13 @@
   window.map = map;   // debug/automation hook
   if (map.setMaxPitch) map.setMaxPitch(0);          // a chart is flat — no accidental 3D tilt
   if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
+  // Surface real map failures (style/source/layer) on the degraded banner; stay quiet on benign
+  // tile/sprite/glyph 404s (common offline) so we never cry wolf.
+  map.on('error', function (ev) {
+    var m = (ev && ev.error && ev.error.message) || (ev && ev.message) || 'map error';
+    if (window.__helmDegrade && !window.__helmBenignError(m)) window.__helmDegrade('Chart error', m);
+    else console.warn('[helm] map:', m);
+  });
   // Point the S-52 ENC tiles at the resolved boat-server origin (server-endpoint.js) —
   // localhost on this Mac, or helm.local / a LAN IP on the Mac mini / Pi. Same code path.
   // (The owned mbtiles basemaps on :8091 are rewritten by transformRequest in the Map

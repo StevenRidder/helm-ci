@@ -133,8 +133,26 @@
       }
       return { type: 'FeatureCollection', features: feats };
     }
-    function redrawOverlay() {
+    // --- overlay redraw gating: rebuild the rings/predictor source only when something VISIBLE
+    // changed (pose moved, COG/SOG changed, or rings toggled) instead of ~60×/s. Thresholds are tiny
+    // (sub-metre / sub-degree) so the overlay stays glued to the gliding marker while moving — the win
+    // is eliminating the churn when the boat is settled/stationary (anchored, paused, stale, no fix).
+    const OVL_POS_EPS = 1e-6;     // deg (~0.1 m) — "did the boat actually move"
+    const OVL_COG_EPS = 0.05;     // deg — predictor direction
+    const OVL_SOG_EPS = 0.05;     // kn  — predictor length
+    let lastOvlLat = null, lastOvlLon = null, lastOvlCog = 0, lastOvlSog = 0, lastOvlRings = showRings;
+    function redrawOverlay() {     // force a rebuild (rings-toggle handlers route here; the gated tick too)
       try { ensureOverlay(); const s = map.getSource(SRC); if (s) s.setData(overlayData()); } catch (e) {}
+      if (disp) { lastOvlLat = disp.lat; lastOvlLon = disp.lon; lastOvlCog = disp.cog; }
+      lastOvlSog = sog; lastOvlRings = showRings;
+    }
+    function tickOverlay() {       // per-frame: skip the setData unless something visible actually changed
+      if (!disp) return;
+      if (showRings !== lastOvlRings || lastOvlLat == null
+          || Math.abs(disp.lat - lastOvlLat) > OVL_POS_EPS || Math.abs(disp.lon - lastOvlLon) > OVL_POS_EPS
+          || angDiff(disp.cog, lastOvlCog) > OVL_COG_EPS || Math.abs(sog - lastOvlSog) > OVL_SOG_EPS) {
+        redrawOverlay();
+      }
     }
     if (map.isStyleLoaded && map.isStyleLoaded()) ensureOverlay(); else map.on('load', ensureOverlay);
 
@@ -221,7 +239,7 @@
         // The marker always points where the BOAT points (heading if we have it, else COG).
         marker.setLngLat([disp.lon, disp.lat]).setRotation(disp.hdg != null ? disp.hdg : disp.cog);
         labelMarker.setLngLat([disp.lon, disp.lat]);   // the "YOU" label rides upright above the boat
-        redrawOverlay();
+        tickOverlay();
 
         // ORIENTATION — ease the chart bearing toward the target (course-up: COG, head-up: heading).
         if (orient !== 0) {

@@ -5,6 +5,7 @@
 // recording just happens. (Clear/pause remain available over the command-plane: track.clear / track.arm.)
 (function () {
   const SRC = 'helm-track';
+  const MAX_TRACK_POINTS = 3000;   // mirror the engine's kTrackCap — never let the client trail grow unbounded
   let map = null, coords = [];
 
   function lineGeo() {
@@ -21,10 +22,11 @@
   }
   function redraw() { try { ensureLayer(); const s = map && map.getSource(SRC); if (s) s.setData(lineGeo()); } catch (e) {} }
 
+  function cap() { if (coords.length > MAX_TRACK_POINTS) coords = coords.slice(coords.length - MAX_TRACK_POINTS); }
   function onState(s) {
     if (!s) return;
-    if (Array.isArray(s.track)) { coords = s.track.map(p => [p[1], p[0]]); redraw(); }                       // snapshot: full trail
-    else if (Array.isArray(s.trackAdd) && s.trackAdd.length) { for (const p of s.trackAdd) coords.push([p[1], p[0]]); redraw(); }  // delta: append
+    if (Array.isArray(s.track)) { coords = s.track.map(p => [p[1], p[0]]); cap(); redraw(); }                       // snapshot: full trail (capped)
+    else if (Array.isArray(s.trackAdd) && s.trackAdd.length) { for (const p of s.trackAdd) coords.push([p[1], p[0]]); cap(); redraw(); }  // delta: append (capped)
   }
 
   function init(opts) {

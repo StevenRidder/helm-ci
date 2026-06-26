@@ -71,5 +71,8 @@ export async function enable(map, ctx) {
 }
 
 export function disable(map) {
-  if (overlay) { overlay.setProps({ layers: [] }); }
+  // Fully DETACH the deck overlay (frees its GL resources + picking machinery) instead of just
+  // clearing its layers, and null the ref so the next enable() builds a FRESH MapboxOverlay —
+  // sidestepping deck.gl's "re-add renders nothing" gotcha and the prior reuse-a-cleared-overlay leak.
+  if (overlay) { try { map.removeControl(overlay); } catch (e) {} overlay = null; }
 }
