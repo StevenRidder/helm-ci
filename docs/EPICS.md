@@ -8,15 +8,16 @@
 
 ## Board at a glance
 
-- **20 epics** · **209 tasks** — 🟢 60 done · 🟡 23 in-progress · 🔴 0 blocked · ⚪ 126 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit)_
+- **21 epics** · **218 tasks** — 🟢 63 done · 🟡 22 in-progress · 🔴 0 blocked · ⚪ 133 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit; +`LABS`: 7 experimental pro-maritime features from the 2026-06-26 cruise/military/commercial-charting survey — see [LABS.md](LABS.md))_
 
 | Wave | Theme | Epics | Tasks done |
 |---|---|---|---|
 | **1** | Foundations & unblockers | BACKEND, CHART, CONTRACT, ENGINE, SHELL | 25/51 |
 | **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 29/78 |
-| **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 6/47 |
+| **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 9/49 |
 | **4** | Native + commercial (last) | NATIVE | 0/15 |
 | **✚** | Cross-cutting · web-client hardening | CLIENT | 0/18 |
+| **🧪** | Experimental · pro-maritime survey (Labs) | LABS | 0/7 |
 
 ## How to run it (parallel streams)
 
@@ -407,20 +408,23 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - [ ] ⚪ **ROUTING-8** — Tidal-gate-aware route ETA  ↳ ROUTING-2, TIDES-2
 - [ ] ⚪ **ROUTING-9** — Depth-aware dock-to-dock auto-routing (shown assumptions, leg-by-leg confirm)  ↳ ROUTING-2, CHART-5, BOAT-1
 
-## ⚪ `TIDES` — Tides & currents — tcmgr.cpp gui→core + dashboard
+## 🟡 `TIDES` — Tides & pass conditions — official tides, local pass current, confidence
 
-**Wave 3 · not-started · 0/4 done · ⛓ serializes on SHELL**
+**Wave 3 · mixed · 3/7 done · ⛓ serializes on SHELL**
 
-> Harmonic tide & current prediction ported from OpenCPN tcmgr.cpp into the headless core via a SEPARATE translation unit, with stations, time-animated current arrows, and dashboard instruments — the substrate tide-aware routing depends on.
+> Government tide predictions are the base layer, but the product is confidence-banded pass conditions: official/source-tagged tide stations, datum handling, predicted-vs-observed current, wind/swell residuals, local slack delay, and an observation log for remote passes/bars.
 
 - **Owns (collision boundary):** `engine/vendor/cli/helm_tides.cpp`
 - **Touches shared (coordinate):** `engine/vendor/cli/helm_engine.cpp`, `web/index.html`, `web/style.json`
-- **Done =** tcmgr.cpp relocated gui→core into a NEW translation unit engine/vendor/cli/helm_tides.cpp (ENGINE owns helm_engine.cpp; TIDES only adds an include line) so it never edits the nav loop; harmonic tide prediction with tide stations; time-animated tidal-current arrow field; tide/current dashboard instruments; sea-level layer wired to the weather scalar contract.
+- **Done =** tcmgr.cpp relocated gui→core into a NEW translation unit engine/vendor/cli/helm_tides.cpp (ENGINE owns helm_engine.cpp; TIDES only adds an include line) so it never edits the nav loop; harmonic tide prediction with government/source-tagged tide stations; datum + station-distance confidence; predicted-vs-observed currents; wind/swell lagoon-fill residuals; local pass model with observation log, slack-delay tuning, and Plan B warning; tide/pass dashboard wired to the weather scalar/probe contract. Remote-pass output is always advisory and never a raw "safe" claim.
 
-- [ ] ⚪ **TIDES-1** — tcmgr.cpp gui→core relocation into helm_tides.cpp (harmonic math in headless core) ⛔  ↳ ENGINE-2
-- [ ] ⚪ **TIDES-2** — Harmonic tide prediction + tide stations  ↳ TIDES-1
-- [ ] ⚪ **TIDES-3** — Time-animated tidal-current arrow field  ↳ TIDES-2, WX-9
-- [ ] ⚪ **TIDES-4** — Tides/currents dashboard instruments + sea-level layer  ↳ TIDES-2
+- [x] 🟢 **TIDES-1** — Harmonic tide engine — offline, source-tagged water-level core ⛔  ↳ ENGINE-2
+- [x] 🟢 **TIDES-2** — Government tide stations + datum + confidence model  ↳ TIDES-1
+- [ ] ⚪ **TIDES-3** — Predicted-vs-observed currents + wind/swell residuals  ↳ TIDES-2, WX-9
+- [ ] ⚪ **TIDES-4** — Tides/pass dashboard — next tide, slack estimate, confidence, station distance  ↳ TIDES-2, TIDES-5
+- [ ] ⚪ **TIDES-5** — Pass Condition Estimator — local pass model, observations, wind/wave factor, slack-delay confidence ⛔  ↳ TIDES-2, TIDES-3, TOOLS-7, WX-1, CHART-7
+- [x] 🟢 **TIDES-6** — Pin numeric harmonic regression test — free-source station/time/height + HW/LW event tripwire  ↳ TIDES-1
+- [x] 🟢 **TIDES-7** — Enforce harmonic-data licensing policy — free-only default + unverified source gates  ↳ TIDES-1
 
 ---
 
@@ -494,6 +498,31 @@ _`CLIENT` is deliberately **cross-cutting**: it OWNS the genuinely-new infra fil
 
 ---
 
+# Experimental — Labs (pro-maritime survey)
+
+_Not wave-gated. Born from a **2026-06-26 survey** of advanced charting tech in the cruise / military / commercial-ship world (S-100 layered ENCs, Furuno-style AR nav, AI-lookout sensor fusion, dynamic under-keel clearance, military Additional Military Layers). The through-line: nearly every pro innovation is **fusion + a new layer** — which is Helm's exact thesis and the layer-marketplace ([BUSINESS-MODEL.md §10](BUSINESS-MODEL.md)). LABS is where we prove the cruiser-grade version of each, flag-gated and advisory-only, before it graduates to a real workstream or a sellable layer. Full spec with per-task acceptance: **[LABS.md](LABS.md)**._
+
+## 🧪 `LABS` — Experimental pro-maritime features (advisory-only, flag-gated)
+
+**Experimental · not-started · 0/7 done · ⚡ parallel-safe (own `web/labs/**` + `backend/labs/**` namespace)**
+
+> Flag-gated, advisory-only experiments mounted on the existing lazy-isolated Lab loader (OFFLINE-2): a cruiser-grade dynamic under-keel-clearance "pass advisor", a camera-as-a-layer AI lookout, AR heads-up pilotage, an S-100 ingestion spike, shareable cruiser layers + RTZ, and an RTK spike. The proving ground for the layer marketplace's hero layers. Each graduates to a real workstream / sellable layer only after boat-testing.
+
+- **Owns (collision boundary):** `web/labs/**` (e.g. `web/labs/loader.js`, `web/labs/guardrail.js`), `backend/labs/**` (e.g. `backend/labs/ukc.py`), `docs/LABS.md`
+- **Consumes (never edits):** the nav stream + alarm schema (CONTRACT-10), the layer/probe contract (AI-5/AI-17), source-tagging (ENGINE-7), the SHELL registration hooks, and the OFFLINE-owned Lab loader harness (`web/integrations/lab.js`). A Lab that needs a core change files a task against the owning epic and depends on it.
+- **Shared guardrail (every LABS task):** supplemental, never authoritative; source-tagged + confidence-labelled; never overrides real AIS/radar/official ENC; advise-don't-act (AI-13); off by default behind the Labs flag.
+- **Done =** the Labs surface + guardrail wrapper ship (LABS-1); the flagship pass advisor computes green/amber/red transit windows offline from charted-depth + tide + swell + draft (LABS-2); camera-fused AI lookout + AR pilotage prove the camera-as-a-layer model (LABS-3/4); the S-100 spike yields an ADR + a rendered sample dataset (LABS-5); cruiser-layer + RTZ exchange round-trips (LABS-6); RTK fix-quality surfaces honestly (LABS-7). Each task carries its own acceptance check ([LABS.md](LABS.md)).
+
+- [ ] ⚪ **LABS-1** — Labs framework & advisory guardrail (flag-gated, lazy-isolated Lab surface) ⛔
+- [ ] ⚪ **LABS-2** — Reef & Bar Pass Advisor — cruiser-grade dynamic under-keel clearance [FLAGSHIP]  ↳ LABS-1, BOAT-1, TIDES-2, WX-1, CHART-5, CHART-7, ROUTE-2, ALARM-8
+- [ ] ⚪ **LABS-3** — Camera-as-a-Layer AI Lookout (machine-vision collision aid)  ↳ LABS-1, ENGINE-4, ALARM-5, CONTRACT-10, AI-13, AI-14, CONN-1, AI-5, AI-17
+- [ ] ⚪ **LABS-4** — AR Heads-Up Pilotage Overlay (nav data on the live camera view)  ↳ LABS-1, AIS-1, ROUTE-2, CHART-10, OWNSHIP-1, NATIVE-2, NATIVE-5
+- [ ] ⚪ **LABS-5** — S-100 layer ingestion spike + layer-contract alignment  ↳ LABS-1, CHART-3, AI-5, AI-17, TIDES-2, WX-1
+- [ ] ⚪ **LABS-6** — Shareable cruiser layers (AML/NUDL pattern) + RTZ route exchange  ↳ LABS-1, PLACES-2, ENGINE-7, ROUTE-3, SHELL-1, NATIVE-14
+- [ ] ⚪ **LABS-7** — RTK / precise-positioning spike (anchor-drop and bommie avoidance) [optional]  ↳ LABS-1, CONN-1, ENGINE-7
+
+---
+
 # Collision map (resolved)
 
 - web/index.html (85KB shared shell) is the #1 hazard — RESOLVED by making SHELL a wave-1 BLOCKING epic that owns index.html outright and ships a panel-registration / <!-- EPIC:XXX --> partial API (SHELL-1) + ⌘K registration hook (SHELL-3). Every wave-2/3 epic that adds UI (OWNSHIP-5, ROUTE-3, AIS-2, CONN-3, OFFLINE-3/4, TOOLS-3, AI-6) now DEPENDS on SHELL-1/SHELL-3 in its task deps, so the 12-epic shell collision is serialized through one owner and one API rather than concurrent edits to the monolith body.
@@ -507,10 +536,10 @@ _`CLIENT` is deliberately **cross-cutting**: it OWNS the genuinely-new infra fil
 - web/integrations/temporal.js — RESOLVED: WX is the SOLE owner (forecast time-scrubber, WX-6). BOARD's scrubber/state needs differ and live in its own web/board.js (BOARD-1) — BOARD does not touch temporal.js.
 - ALARM (alarms.js) and CONTRACT (alarm-reliability tier) must agree on the alarm wire schema — RESOLVED: CONTRACT-10 is the SINGLE owner of the alarm frame contract and is marked blocking; AIS-5/AIS-7, ALARM-6/7, and BOARD-4 all carry an explicit dep on CONTRACT-10 so the schema is frozen before any epic builds new alarm types onto it.
 - engine/vendor/cli/chart_stubs.cpp (links into the headless chart lib) is now owned by CHART (CHART-2). web/serve.py is owned by SHELL (dev static server alongside the shell). web/integrations/lab.js + web/integrations/_maplibre-shim.js (Lab loader harness) are owned by OFFLINE (OFFLINE-2). pipeline/fetch_glyphs.py + fetch_sat_tiles.py + make_pmtiles.{py,sh} are owned by OFFLINE. No file is now orphaned.
+- web/integrations/lab.js + _maplibre-shim.js (the lazy-isolated Lab LOADER harness) stay owned by OFFLINE (OFFLINE-2). The new LABS epic owns a SEPARATE `web/labs/**` + `backend/labs/**` feature namespace that the loader MOUNTS — LABS never edits the loader or any core epic file; a Lab that needs a core change files a task against the owning epic and depends on it (LABS-1 is the gate, marked blocking).
 
 ---
 
 # Porting / tracking
 
 Mirrors the taikun-plan model 1:1 (epics = workstreams, tasks = `{EPIC}-{N}` with `⛔ blocking` + `↳ deps`). Live on **plan.taikunai.com**; agents read/update via the `taikun-plan` MCP with **`project="helm"`** (`board_summary`/`get_task`/`search_tasks` to read, `update_task`/`add_comment` to write; `ask_plan` for board-grounded Q&A). Omitting `project` targets a different customer's board — never do that.
-

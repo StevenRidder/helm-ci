@@ -45,11 +45,13 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | Doc | What it is |
 |-----|------------|
 | [PRD.md](PRD.md) | The product requirements — read this first |
+| [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
 | [docs/VISION.md](docs/VISION.md) | The north-star UX study — what world-class & AI-native looks like |
 | [docs/SPACETIME-PROBE.md](docs/SPACETIME-PROBE.md) | The keystone primitive — any layer, any point in space/time, fused into one narratable slice |
 | [docs/WEATHER-ROUTING.md](docs/WEATHER-ROUTING.md) | Spacetime weather engine — forecast follows the boat; easy routing; LLM guardrails |
 | [docs/BRIEFINGS.md](docs/BRIEFINGS.md) | Living briefings — "along the way" + "once I get there", on a continuously-updating timeline |
 | [docs/BUSINESS-MODEL.md](docs/BUSINESS-MODEL.md) | Software + Helm Cloud + the appliance bundle (the Home Assistant playbook) |
+| [docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md) | Public-alpha release gate, licensing posture, and Cruisers Forum sharing plan |
 | [docs/BUILD-PLAN-COMMUNITY-LLM.md](docs/BUILD-PLAN-COMMUNITY-LLM.md) | Pre-build spec — give-back, the "where to go" LLM, NFL reciprocity |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
@@ -71,6 +73,39 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [docs/research/](docs/research/) | The multi-agent research dossier + raw output |
 | [docs/mockups/](docs/mockups/) | UI mockups (macOS / iPad / iPhone) |
 
+## Navigation Safety
+
+Helm is pre-alpha marine navigation software. It is not certified, not
+type-approved ECDIS, not carriage-compliant, and not a substitute for official
+charts, notices, instruments, watchkeeping, or seamanship. Treat it as a
+supplemental evaluation tool only.
+
+Read [SAFETY.md](SAFETY.md) before running Helm, sharing screenshots, posting a
+demo, or inviting testers.
+
+## Quick Start
+
+The current public-alpha path is the one-origin `helm-server`: it serves the
+browser UI, `/nav`, `/chart`, `/catalog`, and `/health` on one private port.
+
+```bash
+brew install wxwidgets@3.2 gpatch cmake gdal node python3
+engine/bootstrap.sh
+
+export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
+HELM_PORT=9001 \
+HELM_WEB_ROOT="$PWD/web" \
+HELM_CONFIG="$(mktemp -d)" \
+HELM_TILES_NO_WARMUP=1 \
+  /tmp/helm-opencpn/build/cli/helm-server
+
+open http://127.0.0.1:9001/
+```
+
+Use [docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input,
+and end-to-end verification. In the shared development environment, do not use
+`:8080`; use a private development port instead.
+
 ## The tracer bullet (first code)
 
 Prove the magic before architecting anything. A macOS spike that:
@@ -86,12 +121,21 @@ core then *emerges from working code* rather than upfront architecture.
 
 ## License
 
-Undecided — see [ADR-0003](docs/decisions/0003-license-posture.md). Posture:
-open-source now, preserve the option to commercialize later. The hard rule that falls
-out of that: **Helm's own code stays GPL-free** (no OpenCPN source in the core), so an
-S-52 chart engine is either rebuilt on permissive GDAL/PROJ or kept as an arm's-length
-optional component. Recommended license: **BSL 1.1** (source-available now,
-auto-converts to Apache-2.0).
+Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL), and
+[ADR-0010](docs/decisions/0010-distribution-and-packaging-posture.md).
+
+- **OpenCPN-derived engine work:** GPLv2-or-later, source-visible, and kept in a
+  separate boat-server process behind the HTTP/WebSocket protocol boundary.
+- **Helm-authored web/backend/pipeline/docs:** Business Source License 1.1
+  today, with personal boat use, self-hosting, internal use, modification,
+  redistribution, non-commercial use, and contribution allowed now. It converts
+  to Apache-2.0 on the change date.
+- **Reserved use:** offering Helm as a competing hosted or managed commercial
+  service before the BSL change date.
+
+BSL is source-available, not OSI open source. The paid/commercial distribution
+path is still gated on IP counsel; see [docs/LEGAL.md](docs/LEGAL.md) and
+[docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md).
 
 ## Provenance
 

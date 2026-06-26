@@ -59,7 +59,9 @@ substrings (`sample`, `submit`, `discard`, …), not license declarations.
 ## 2 · First-party code
 
 Helm-authored client code is GPL-free and carries Helm's own license
-([ADR-0003](decisions/0003-license-posture.md): BSL-1.1 → Apache-2.0). Every OpenCPN reference in
+([LICENSE.BSL](../LICENSE.BSL), per
+[ADR-0010](decisions/0010-distribution-and-packaging-posture.md): BSL-1.1 → Apache-2.0).
+Every OpenCPN reference in
 `web/` is a **boundary comment** ("the engine computes CPA/TCPA / route — OpenCPN's
 AisDecoder/Routeman — this module just renders"); no OpenCPN C++ type, global, or symbol appears in
 the JS.
@@ -147,6 +149,7 @@ curl -s https://registry.npmjs.org/<pkg>/<version> | grep -o '"license":"[^"]*"'
 
 - [ADR-0009 — Arm's-length GPL containment interface](decisions/0009-arms-length-gpl-containment.md)
   (the boundary + binary guard; `ENGINE-11`)
+- [ADR-0010 — Distribution & packaging posture](decisions/0010-distribution-and-packaging-posture.md)
 - [ADR-0003 — License posture: open now, sellable later](decisions/0003-license-posture.md)
 - [ADR-0002 — ENC engine (GPL vs clean-room GDAL rebuild)](decisions/0002-enc-engine.md)
 - [ADR-0006 — Server / thin-client split](decisions/0006-server-client-thin-display.md)
