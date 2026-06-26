@@ -221,7 +221,7 @@
       function mooredExpr() {
         return ['all',
           ['<=', ['coalesce', ['get', 'sog'], 99], suppressKts],
-          ['any', ['!', ['has', 'navStatus']], ['==', ['get', 'navStatus'], 1], ['==', ['get', 'navStatus'], 5]]];
+          ['any', ['!', ['has', 'navStatus']], ['==', ['get', 'navStatus'], 1], ['==', ['get', 'navStatus'], 5], ['==', ['get', 'navStatus'], 15]]];
       }
       // never suppress a target the CPA alarm fires on — same danger band as the alarm (HelmAisRisk).
       const isDanger = HelmAisRisk.dangerExpr();
@@ -483,6 +483,11 @@
       }
       function openCard(lon, lat, mmsi) {
         const t = targets().find(x => String(x.mmsi) === String(mmsi)) || { lon, lat, mmsi };
+        // Prefer the shell's rich draggable card (the same one a map tap opens); fall back to the
+        // self-contained compact popup only if it isn't loaded.
+        if (window.openAisCard) {
+          try { const pt = map.project([lon, lat]); window.openAisCard(t, { x: pt.x, y: pt.y }); return; } catch (e) {}
+        }
         try {
           new maplibregl.Popup({ closeButton: true, maxWidth: '260px' })
             .setLngLat([lon, lat]).setHTML(cardHTML(t)).addTo(map);

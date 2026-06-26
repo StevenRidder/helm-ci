@@ -144,7 +144,7 @@
     var sog = +t.sog;
     if (!isFinite(sog) || sog > thr) return false;             // moving -> always shown
     var ns = t.navStatus == null ? null : +t.navStatus;
-    return ns == null || ns === 1 || ns === 5;                 // at-anchor (1) / moored (5) / unknown
+    return ns == null || ns === 1 || ns === 5 || ns === 15;    // at-anchor (1) / moored (5) / not-defined (15, the AIS default — most Class-B + unset Class-A)
   }
 
   global.HelmAisMeta = {

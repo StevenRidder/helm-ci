@@ -73,6 +73,8 @@
     var p = pins.get(mmsi); if (!p || !isFinite(p.lon)) p = currentProps(mmsi) || p;
     if (!map || !p || !isFinite(p.lon) || !isFinite(p.lat)) return;
     try { map.easeTo({ center: [p.lon, p.lat], duration: 600 }); } catch (e) {}
+    try { if (window.HelmAisSelect && HelmAisSelect.select) HelmAisSelect.select(mmsi); } catch (e) {}   // CLIENT-7 ring on the centred target
+
     try {
       var el = document.createElement('div');
       el.style.cssText = 'width:42px;height:42px;border-radius:50%;border:3px solid #5dd0b0;box-sizing:border-box;pointer-events:none';

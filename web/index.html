@@ -1134,7 +1134,7 @@
     const srcLabel = aisSourceLabel(p.source);
     const srcChip = srcLabel ? '<span style="' + AIS_CHIP + '">' + aisEsc(srcLabel) + '</span>' : '';
     const pinned = !!(window.HelmAisPins && HelmAisPins.has && HelmAisPins.has(p.mmsi));
-    const pinBtn = '<button onclick="window.HelmAisPins&&HelmAisPins.toggle(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
+    const pinBtn = '<button onclick="window.aisPinFromCard&&window.aisPinFromCard(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
       + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';
 
     return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
@@ -1227,6 +1227,15 @@
   window.addEventListener('resize', function () { if (_aisCard) clampAisCard(_aisCard, parseFloat(_aisCard.style.left) || 0, parseFloat(_aisCard.style.top) || 0); });
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAisCard(); });
   window.openAisCard = openAisCard; window.closeAisCard = closeAisCard;   // debug/automation hook (like window.map)
+  // Pin from the card: pinning docks a live card on the right, so close the floating one (mirrors the
+  // map-tap card). Unpinning from an already-pinned target's card leaves it open so you can re-pin.
+  function aisPinFromCard(mmsi) {
+    if (!window.HelmAisPins) return;
+    var wasPinned = HelmAisPins.has && HelmAisPins.has(mmsi);
+    HelmAisPins.toggle(mmsi);
+    if (!wasPinned) closeAisCard();
+  }
+  window.aisPinFromCard = aisPinFromCard;
   // AIS targets → the `ais` source. The source carries promoteId:'mmsi' (CLIENT-5) so each target's
   // feature.id == its MMSI — a stable id for tap hit-testing and future incremental updates.
   function updateAisFromEngine(list) {
