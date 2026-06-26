@@ -109,6 +109,7 @@
     var pfx3 = mmsi.substr(0, 3);
     // SART / MOB / EPIRB — class 6, nav status 14, or the 970/972/974 MMSI prefix. Highest priority.
     if (cls === 6 || +t.navStatus === 14 || pfx3 === '970' || pfx3 === '972' || pfx3 === '974') return 'sart';
+    if (cls === 9) return 'meteo';                                  // AIS-11: meteo BEFORE aton — class is authoritative; met MMSIs can fall in the 99x AtoN range
     if (cls === 2 || mmsi.substr(0, 2) === '99') return 'aton';     // AtoN (also 99xxxxxxx MMSI)
     if (cls === 3 || mmsi.substr(0, 2) === '00') return 'base';     // base station (00xxxxxxx MMSI)
     if (isLost(t)) return 'lost';
@@ -128,6 +129,7 @@
     aton:   { glyph: '◆', label: 'AtoN',     rot: false },
     base:   { glyph: '◉', label: 'Base stn', rot: false },
     sart:   { glyph: '✚', label: 'SART/MOB', rot: false },
+    meteo:  { glyph: '◈', label: 'Weather',  rot: false },
     lost:   { glyph: '▲', label: 'Lost',     rot: true  }
   };
   function symbol(kind) { return SYMBOL[kind] || SYMBOL.classB; }

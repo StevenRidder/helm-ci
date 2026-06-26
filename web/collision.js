@@ -200,14 +200,15 @@
         ['==', pfx3, '970'], ['==', pfx3, '972'], ['==', pfx3, '974']];
       const isAton = ['any', ['==', ['coalesce', ['get', 'class'], -1], 2], ['==', pfx2, '99']];
       const isBase = ['any', ['==', ['coalesce', ['get', 'class'], -1], 3], ['==', pfx2, '00']];
+      const isMeteo = ['==', ['coalesce', ['get', 'class'], -1], 9];   // AIS-11: weather/met station (msg 8) — a glyph, not a vessel triangle
       const isLost = ['>', ['coalesce', ['get', 'ageSec'], 0], (window.HelmAisMeta && HelmAisMeta.LOST_SEC) || 360];
       // Class A vs B share the ▲ glyph (OpenCPN distinguishes them by fill, not shape); the list
       // table + tap card carry the A/B label. point-style kinds (AtoN/base/SART) don't rotate;
       // vessels (A/B/lost) point along COG.
-      const rotates = ['all', ['!', isSart], ['!', isAton], ['!', isBase]];
+      const rotates = ['all', ['!', isSart], ['!', isAton], ['!', isBase], ['!', isMeteo]];
       // glyph per kind — vessels (the ▲ case) now render as a directional triangle ICON layer below
       // (so heading is legible); only SART/AtoN/base keep a text glyph here.
-      const glyph = ['case', isSart, '✚', isAton, '◆', isBase, '◉', ''];
+      const glyph = ['case', isSart, '✚', isMeteo, '◈', isAton, '◆', isBase, '◉', ''];   // meteo before aton: class-9 stations can carry a 99x AtoN-range MMSI
       // colour: SART distress pink → lost grey → risk-tier colour (HelmAisRisk, == the alarm).
       const cpaCol = HelmAisRisk.riskColorExpr();
       const color = ['case', isSart, sart, isLost, lost, cpaCol];

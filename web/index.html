@@ -1040,12 +1040,31 @@
       (p.length ? Math.round(p.length) + ' × ' + (p.beam ? Math.round(p.beam) : '?') + ' m' : '')
       + (p.draught ? '  ·  ' + (+p.draught).toFixed(1) + ' m draught' : ''));
 
+    let weather = '';   // AIS-11: weather/met station readout (only the fields the station actually broadcasts)
+    if (p.met) {
+      const mt = (typeof p.met === 'string' ? (function () { try { return JSON.parse(p.met); } catch (e) { return null; } })() : p.met) || {};   // MapLibre stringifies nested feature props — parse back to an object
+      const w = [];
+      const wrow = (l, v) => { if (v != null && v !== '') w.push(row(l, v)); };
+      wrow('Wind', mt.windKn != null ? (mt.windKn + ' kn' + (mt.windDir != null ? ' @ ' + mt.windDir + '°' : '')) : null);
+      wrow('Gust', mt.gustKn != null ? mt.gustKn + ' kn' : null);
+      wrow('Pressure', mt.press != null ? mt.press + ' hPa' : null);
+      wrow('Air temp', mt.airTemp != null ? mt.airTemp + ' °C' : null);
+      wrow('Humidity', mt.humid != null ? mt.humid + ' %' : null);
+      wrow('Water temp', mt.waterTemp != null ? mt.waterTemp + ' °C' : null);
+      wrow('Waves', mt.waveM != null ? (mt.waveM + ' m' + (mt.wavePer != null ? ' / ' + mt.wavePer + ' s' : '') + (mt.waveDir != null ? ' @ ' + mt.waveDir + '°' : '')) : null);
+      wrow('Current', mt.curKn != null ? (mt.curKn + ' kn' + (mt.curDir != null ? ' @ ' + mt.curDir + '°' : '')) : null);
+      wrow('Sea state', mt.seaState != null ? 'Bft ' + mt.seaState : null);
+      if (w.length) weather = sec('Weather station') + w.join('');
+    }
+
     let badge = '';
     if (ns && meta.navStyle) { const st = meta.navStyle(ns.tone);
       badge = '<span style="display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:10px;margin:2px 0 6px;'
         + 'background:' + st.bg + ';color:' + st.fg + '">' + st.icon + ' ' + ns.label + '</span>'; }
 
-    const subline = [p.sar ? '✈ SAR aircraft' : '', cls, type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
+    const subline = p.met
+      ? ['Weather station', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ')
+      : [p.sar ? '✈ SAR aircraft' : '', cls, type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
 
     const fresh = aisFreshChip(p.ageSec);
     const srcLabel = aisSourceLabel(p.source);
@@ -1065,6 +1084,7 @@
       +   stat('CPA', cpa, 'NM') + stat('TCPA', tcpa, 'min', tcpaOpening ? '<div style="font-size:10.5px;color:#5dd0b0">opening</div>' : '')
       + '</div>'
       + '<div style="font-size:12.5px;font-weight:600;color:' + toneCol + ';margin:0 0 2px">' + riskLabel + '</div>'
+      + weather
       + sec('Motion') + motion
       + voyage + size
       + '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">' + fresh + srcChip

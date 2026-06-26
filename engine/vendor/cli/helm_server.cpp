@@ -598,7 +598,8 @@ struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
                 int navStatus, shipType, rot, imo, length, beam, etaMo, etaDay, etaHr, etaMin;
                 std::string callsign, destination; double draft;
                 std::string source; std::time_t prt;   // source = feed id; prt = raw OpenCPN report tick (internal per-target "just reported" change-detector)
-                bool posDoubtful, sarAircraft; int altitude; };   // b_positionDoubtful (degraded GNSS), SAR-aircraft msg-9 + altitude (m)
+                bool posDoubtful, sarAircraft; int altitude;   // b_positionDoubtful (degraded GNSS), SAR-aircraft msg-9 + altitude (m)
+                std::string metJson; };   // AIS-11: pre-built met-station JSON for AIS_METEO (msg 8) targets, "" otherwise
 // Per-thread "current AIS source": each connection driver thread stamps its conn id here before parsing,
 // so the !AIVDM harvest can tag the just-heard target with the feed it arrived on (set in conn_feed_*).
 static thread_local std::string g_cur_source;
@@ -651,11 +652,22 @@ static void nmea_parse(const std::string& line, int prio) {
       bool justHeard = (prt != row.prt) || (row.seen == 0);       // changed report tick (or brand new) = heard now
       std::time_t seen = justHeard ? snap : row.seen;             // refresh on report; else keep so age grows truthfully
       std::string src = justHeard ? g_cur_source : row.source;    // tag the just-heard target's feed; preserve others'
+      std::string metJson;                                        // AIS-11: weather-station met data (AIS msg 8) — only for AIS_METEO targets
+      if (t->Class == AIS_METEO) {
+        auto& mt = t->met_data; std::string mj = "{";             // OpenCPN's decoder already applies units; we just honor each field's NaN marker
+        auto aI = [&](const char* k, int v, int nan){ if (v != nan) mj += std::string("\"") + k + "\":" + std::to_string(v) + ","; };
+        auto aD = [&](const char* k, double v, double nan){ if (std::fabs(v - nan) > 0.05) { char b[40]; std::snprintf(b, sizeof b, "\"%s\":%.1f,", k, v); mj += b; } };
+        aI("windKn", mt.wind_kn, 127); aI("gustKn", mt.wind_gust_kn, 127); aI("windDir", mt.wind_dir, 360);
+        aD("airTemp", mt.air_temp, -102.4); aI("humid", mt.rel_humid, 101); aI("press", mt.airpress, 1310);
+        aD("waterTemp", mt.water_temp, 50.1); aD("waveM", mt.wave_height, 25.5); aI("wavePer", mt.wave_period, 63); aI("waveDir", mt.wave_dir, 360);
+        aD("curKn", mt.current, 25.5); aI("curDir", mt.curr_dir, 360); aI("seaState", mt.seastate, 13);
+        if (mj.size() > 1) mj.pop_back(); mj += "}"; metJson = mj;
+      }
       row = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
         t->CPA, t->TCPA, (g_have_fix.load() ? t->bCPA_Valid : false), (int)t->Class, ais_trim(t->ShipName), seen,
         t->NavStatus, (int)t->ShipType, t->ROTAIS, t->IMO, t->DimA + t->DimB, t->DimC + t->DimD,
         t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft, src, prt,
-        t->b_positionDoubtful, t->b_SarAircraftPosnReport, t->altitude };
+        t->b_positionDoubtful, t->b_SarAircraftPosnReport, t->altitude, metJson };
     }
     return;
   }
@@ -1857,7 +1869,9 @@ static void nav_loop(ix::HttpServer* server) {
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
           eta, t.length, t.beam, t.draft, rotj, t.imo,
           t.posDoubtful ? "true" : "false", t.sarAircraft ? "true" : "false", t.altitude);
-        aisTargets.push_back({ t.lat, t.lon, tb }); ++it;
+        std::string tj(tb);
+        if (!t.metJson.empty()) tj.insert(tj.size() - 1, ",\"met\":" + t.metJson);   // AIS-11: splice the weather-station block in before the closing brace
+        aisTargets.push_back({ t.lat, t.lon, tj }); ++it;
       }
     }
     std::string connsArr = conn_status_array();   // live per-connection status, streamed to clients
