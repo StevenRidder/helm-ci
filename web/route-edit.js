@@ -83,13 +83,15 @@
 
   // ── module state ────────────────────────────────────────────────────────────────────────────
   var map = null;                  // set on first panel render (ctx.map)
-  var pts = [];                    // WORKING geometry while editing — [[lon,lat],…] (source of truth)
+  var pts = [];                    // WORKING geometry while editing — [[lon,lat],…] (source of truth).
+                                   //   each element MAY carry a `.name` (custom waypoint name) — array
+                                   //   element objects preserve it across reverse/splice/slice.
   var routeName = 'Route';
   var editing = false;             // is edit mode armed?
   var dirty = false;               // local edits not yet committed to the engine
   var dragIdx = -1;                // vertex being dragged, or -1
   var lpTimer = null, lpLngLat = null;   // long-press detection
-  var listEl = null, msgEl = null, statusEl = null, btnEdit = null, countEl = null, lenEl = null;
+  var listEl = null, msgEl = null, statusEl = null, btnEdit = null, countEl = null, lenEl = null, routeNameInput = null;
   var msgTimer = null;
   var VERTEX_TOL = 14;             // px hit-radius for grabbing a vertex
   var LEG_TOL = 16;                // px hit-radius for inserting on a leg
@@ -225,12 +227,20 @@
       row.innerHTML =
         '<div class="conn-dot" style="color:' + col + ';background:' + col + '"></div>' +
         '<div class="conn-main">' +
-          '<div class="conn-name">WP' + (i + 1) + '</div>' +
+          '<div class="conn-name"></div>' +
           '<div class="conn-meta">' + fmtLatLon(c) + (legTxt ? ' · ' + legTxt : '') + '</div>' +
         '</div>' +
         '<button class="conn-icon" data-act="up" title="Center map here">◎</button>' +
         '<button class="conn-icon" data-act="split" title="Split route here (keep first part)">⋔</button>' +
         '<button class="conn-icon" data-act="del" title="Delete this waypoint">✕</button>';
+      // editable waypoint name (XSS-safe: DOM .value, never innerHTML). Custom name shows; the auto
+      // "WPn" the engine assigns to unnamed points is treated as the default → shown as placeholder.
+      var wpIn = document.createElement('input'); wpIn.className = 'wp-name'; wpIn.placeholder = 'WP' + (i + 1);
+      wpIn.title = 'Name this waypoint — saved to the boat (OpenCPN RoutePoint)';
+      wpIn.value = (c.name && c.name !== 'WP' + (i + 1)) ? c.name : '';
+      wpIn.addEventListener('change', function () { renameWp(i, wpIn.value); });
+      wpIn.addEventListener('keydown', function (e) { if (e.key === 'Enter') wpIn.blur(); });
+      row.querySelector('.conn-name').appendChild(wpIn);
       row.querySelector('[data-act="up"]').addEventListener('click', function () { map.flyTo({ center: c, zoom: Math.max(map.getZoom(), 12) }); });
       row.querySelector('[data-act="split"]').addEventListener('click', function () { splitAt(i); });
       row.querySelector('[data-act="del"]').addEventListener('click', function () { deleteAt(i); });
@@ -262,11 +272,20 @@
     pts = pts.slice(0, i + 1); markDirty(); commit('Split — kept first ' + pts.length + ' WPs');
   }
   function clearRoute() { pts = []; dragIdx = -1; markDirty(); }
+  // rename a waypoint (fires on blur/Enter of its name input). Empty → clears back to the auto "WPn".
+  function renameWp(i, name) {
+    if (i < 0 || i >= pts.length) return;
+    var v = (name || '').trim();
+    if (v) pts[i].name = v; else delete pts[i].name;
+    markDirty();
+    if (pts.length >= 2) commit('Renamed waypoint');
+  }
+  function syncNameInput() { if (routeNameInput) routeNameInput.value = (routeName && routeName !== 'Route') ? routeName : ''; }
 
   // ── commit: the ONE engine verb. Sends the whole geometry; engine persists + activates + echoes. ─
   function commit(verb) {
     if (pts.length < 2) { flash('Route needs ≥2 waypoints to save.', 'warn'); return; }
-    var points = pts.map(function (c) { return [c[1], c[0]]; });   // [lon,lat] → [lat,lon] for the engine
+    var points = pts.map(function (c) { return [c[1], c[0], c.name || '']; });   // [lon,lat] → [lat,lon,name] for the engine (blank → engine auto-names WPn)
     var ok = send({ t: 'route.create', name: routeName, points: points });
     if (ok) { dirty = false; flash((verb || 'Saved') + ' — ' + points.length + ' waypoints sent to the boat ✓'); }
     renderList();
@@ -289,7 +308,8 @@
     map.on('mousemove', function (e) {
       if (!editing) return;
       if (dragIdx >= 0) {                              // live drag-with-recompute
-        pts[dragIdx] = [e.lngLat.lng, e.lngLat.lat];
+        var _nm = pts[dragIdx].name;                   // drag replaces the element → carry the name across
+        pts[dragIdx] = [e.lngLat.lng, e.lngLat.lat]; if (_nm) pts[dragIdx].name = _nm;
         dirty = true; renderHandles(); renderWorkingRouteLine(); renderList();
         return;
       }
@@ -335,13 +355,20 @@
   }
 
   // adopt the engine's currently-shown route into the working geometry, unless we're mid-edit.
-  // Tries a synchronous read first, then falls back to the async getData() promise (MapLibre v4+).
+  // Prefer window.__route (the engine's route channel) — it carries the route name + per-waypoint
+  // names; the map `route` source is geometry-only. Fall back to the map source for the geometry.
   function adoptLiveRoute() {
     ensureMap();
     if (dirty) return;                                 // never clobber un-saved edits
+    var er = window.__route;                           // { coords:[[lon,lat]…], names:[…], name }
+    if (er && Array.isArray(er.coords) && er.coords.length >= 2) {
+      pts = er.coords.map(function (c, i) { var p = [c[0], c[1]]; var nm = er.names && er.names[i]; if (nm) p.name = nm; return p; });
+      if (er.name) routeName = er.name;
+      syncNameInput(); renderAll(); return;
+    }
     var s = seedSync();
-    if (s) { pts = s; renderAll(); return; }
-    seedAsync(function (coords) { if (coords && !dirty) { pts = coords; renderAll(); } });
+    if (s) { pts = s; syncNameInput(); renderAll(); return; }
+    seedAsync(function (coords) { if (coords && !dirty) { pts = coords; syncNameInput(); renderAll(); } });
   }
 
   function setEditing(on) {
@@ -394,6 +421,20 @@
       var sub = document.createElement('p'); sub.className = 'sub';
       sub.textContent = 'Direct-manipulation editor. Tap the chart to add, drag a dot to move, long-press a leg to insert. Every change is saved to the boat (route.create) and navigated.';
       body.appendChild(sub);
+
+      // route name (editable) — persisted via route.create's `name`; shows in the Saved list + OpenCPN.
+      var nameWrap = document.createElement('div'); nameWrap.className = 'conn-actions';
+      nameWrap.style.cssText = 'display:flex;gap:6px;align-items:center;margin:2px 0 8px';
+      var nameLbl = document.createElement('span'); nameLbl.className = 'lbl'; nameLbl.style.cssText = 'margin:0;flex:0 0 auto'; nameLbl.textContent = 'Name';
+      routeNameInput = document.createElement('input'); routeNameInput.type = 'text'; routeNameInput.placeholder = 'Route name';
+      routeNameInput.title = 'Name this route — saved to the boat (OpenCPN) and shown in the Saved list';
+      routeNameInput.style.cssText = 'flex:1;min-width:0;padding:6px 8px;border:.5px solid var(--line);border-radius:8px;background:rgba(255,255,255,.05);color:var(--ctext);font:inherit;font-size:12px';
+      routeNameInput.value = (routeName && routeName !== 'Route') ? routeName : '';
+      function commitName() { routeName = routeNameInput.value.trim() || 'Route'; if (pts.length >= 2) commit('Renamed route'); else renderList(); }
+      routeNameInput.addEventListener('change', commitName);
+      routeNameInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') routeNameInput.blur(); });
+      nameWrap.appendChild(nameLbl); nameWrap.appendChild(routeNameInput);
+      body.appendChild(nameWrap);
 
       // edit toggle
       btnEdit = document.createElement('button'); btnEdit.className = 'conn-btn'; btnEdit.style.width = '100%';
