@@ -108,7 +108,7 @@ window.HelmAlarms = function (map, opts) {
     '-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);';
   banner.innerHTML = '<span id="alarm-ico" style="font-size:16px">⚠︎</span>' +
     '<span id="alarm-txt" style="flex:1;line-height:1.25"></span>' +
-    '<button id="alarm-ack" style="flex:none;border:0;border-radius:7px;padding:6px 11px;font:600 12px system-ui;' +
+    '<button id="alarm-ack" title="Acknowledge — silence the audible alarm (the banner stays while the condition holds)" style="flex:none;border:0;border-radius:7px;padding:6px 11px;font:600 12px system-ui;' +
     'background:rgba(255,255,255,.92);color:#111;cursor:pointer;touch-action:manipulation">ACK</button>';
   document.body.appendChild(banner);
   banner.querySelector('#alarm-ack').addEventListener('click', () => {
@@ -280,9 +280,9 @@ window.HelmAlarms = function (map, opts) {
   pill.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:96px;z-index:8;display:none;align-items:center;gap:8px;' +
     'padding:5px 8px;border-radius:11px;font:600 12px -apple-system,system-ui;color:#eef4f9;background:rgba(13,19,27,.82);' +
     '-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(255,255,255,.14);box-shadow:0 12px 40px -16px rgba(0,0,0,.8)';
-  const mkPillBtn = t => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t;
+  const mkPillBtn = (t, title) => { const b = document.createElement('button'); b.type = 'button'; b.textContent = t; if (title) b.title = title;
     b.style.cssText = 'width:22px;height:22px;border:0;border-radius:7px;background:rgba(255,255,255,.12);color:#eef4f9;font:700 14px system-ui;cursor:pointer;touch-action:manipulation'; return b; };
-  const pillMinus = mkPillBtn('−'), pillTxt = document.createElement('span'), pillPlus = mkPillBtn('+');
+  const pillMinus = mkPillBtn('−', 'Decrease the anchor swing radius'), pillTxt = document.createElement('span'), pillPlus = mkPillBtn('+', 'Increase the anchor swing radius');
   pillTxt.style.cssText = 'min-width:118px;text-align:center;font-variant-numeric:tabular-nums';
   pill.appendChild(document.createTextNode('⚓')); pill.appendChild(pillMinus); pill.appendChild(pillTxt); pill.appendChild(pillPlus);
   document.body.appendChild(pill);
@@ -392,9 +392,9 @@ window.HelmAlarms = function (map, opts) {
   guardPill.style.cssText = 'position:fixed;left:50%;transform:translateX(-50%);bottom:140px;z-index:8;display:none;align-items:center;gap:8px;' +
     'padding:5px 8px;border-radius:11px;font:600 12px -apple-system,system-ui;color:#eef4f9;background:rgba(13,19,27,.82);' +
     '-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);border:.5px solid rgba(255,255,255,.14);box-shadow:0 12px 40px -16px rgba(0,0,0,.8)';
-  const guardModeBtn = document.createElement('button'); guardModeBtn.type = 'button';
+  const guardModeBtn = document.createElement('button'); guardModeBtn.type = 'button'; guardModeBtn.title = 'Switch keep-in (alarm on leaving) ↔ keep-out (alarm on entering)';
   guardModeBtn.style.cssText = 'border:0;border-radius:6px;padding:3px 7px;font:700 11px system-ui;background:rgba(59,214,198,.18);color:#7ff0e2;cursor:pointer;touch-action:manipulation';
-  const guardMinus = mkPillBtn('−'), guardTxt = document.createElement('span'), guardPlus = mkPillBtn('+'), guardClear = mkPillBtn('✕');
+  const guardMinus = mkPillBtn('−', 'Decrease the guard-zone radius'), guardTxt = document.createElement('span'), guardPlus = mkPillBtn('+', 'Increase the guard-zone radius'), guardClear = mkPillBtn('✕', 'Clear the guard zone');
   guardTxt.style.cssText = 'min-width:110px;text-align:center;font-variant-numeric:tabular-nums';
   guardPill.appendChild(document.createTextNode('▣')); guardPill.appendChild(guardModeBtn);
   guardPill.appendChild(guardMinus); guardPill.appendChild(guardTxt); guardPill.appendChild(guardPlus); guardPill.appendChild(guardClear);

@@ -82,7 +82,7 @@
 
   function mountTab(t) {           // build a tab's button + (empty) pane once the hub body exists
     if (!tabBar || t._btn) return;
-    var b = document.createElement('button'); b.type = 'button'; b.textContent = t.title;
+    var b = document.createElement('button'); b.type = 'button'; b.textContent = t.title; b.title = t.title + ' tab';
     b.addEventListener('click', function () { showTab(t.id); });
     tabBar.appendChild(b); t._btn = b;
     var p = document.createElement('div'); p.className = 'aish-pane'; p.hidden = true;
@@ -134,7 +134,7 @@
         anch.textContent = cur.anchored ? '⚓ anchored → tightened' : '';
       }
       HelmAisRisk.profiles().forEach(function (p) {
-        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', p.id); b.textContent = p.label;
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', p.id); b.textContent = p.label; b.title = 'Collision-risk profile: ' + p.label;
         b.addEventListener('click', function () { HelmAisRisk.setProfile(p.id); });   // paint() runs via the event below
         seg.appendChild(b);
       });

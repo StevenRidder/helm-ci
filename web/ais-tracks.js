@@ -85,7 +85,7 @@
     sl.addEventListener('input', function () { setMaxMin(sl.value); out(); });
     pane.appendChild(sl); out();
 
-    var clr = document.createElement('button'); clr.type = 'button'; clr.textContent = 'Clear all trails';
+    var clr = document.createElement('button'); clr.type = 'button'; clr.textContent = 'Clear all trails'; clr.title = 'Remove all AIS target trails';
     clr.style.cssText = 'margin-top:12px;width:100%;font:500 11.5px/1 inherit;padding:8px;border-radius:8px;border:.5px solid rgba(255,255,255,.16);background:transparent;color:#cdd9e3;cursor:pointer';
     clr.addEventListener('click', clearAll);
     pane.appendChild(clr);

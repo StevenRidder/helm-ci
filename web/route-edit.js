@@ -391,6 +391,7 @@
 
       // edit toggle
       btnEdit = document.createElement('button'); btnEdit.className = 'conn-btn'; btnEdit.style.width = '100%';
+      btnEdit.title = 'Toggle direct route editing: tap the chart to add waypoints, drag to move, long-press a leg to insert';
       btnEdit.textContent = 'Start editing';
       btnEdit.addEventListener('click', function () { setEditing(!editing); });
       body.appendChild(btnEdit);
@@ -405,9 +406,9 @@
 
       // action buttons: reverse / clear
       var actions = document.createElement('div'); actions.className = 'conn-actions'; actions.style.display = 'flex'; actions.style.gap = '6px'; actions.style.marginTop = '8px';
-      var bRev = document.createElement('button'); bRev.className = 'conn-btn'; bRev.style.flex = '1'; bRev.textContent = 'Reverse';
+      var bRev = document.createElement('button'); bRev.className = 'conn-btn'; bRev.style.flex = '1'; bRev.textContent = 'Reverse'; bRev.title = 'Reverse the active route (swap start ↔ end)';
       bRev.addEventListener('click', function () { reverse(); });
-      var bClr = document.createElement('button'); bClr.className = 'conn-btn'; bClr.style.flex = '1'; bClr.textContent = 'Clear';
+      var bClr = document.createElement('button'); bClr.className = 'conn-btn'; bClr.style.flex = '1'; bClr.textContent = 'Clear'; bClr.title = 'Clear all waypoints from the route being edited';
       bClr.addEventListener('click', function () { if (!pts.length || window.confirm('Clear all waypoints? (Not saved until you add ≥2 again.)')) clearRoute(); });
       actions.appendChild(bRev); actions.appendChild(bClr);
       body.appendChild(actions);
@@ -418,7 +419,7 @@
       var llRow = document.createElement('div'); llRow.className = 'conn-actions'; llRow.style.display = 'flex'; llRow.style.gap = '6px';
       var inp = document.createElement('input'); inp.type = 'text'; inp.placeholder = '-17.70, 177.40';
       inp.style.cssText = 'flex:1;min-width:0;padding:6px 8px;border:.5px solid var(--line);border-radius:8px;background:rgba(255,255,255,.05);color:var(--ctext);font:inherit;font-size:12px';
-      var bAdd = document.createElement('button'); bAdd.className = 'conn-btn'; bAdd.textContent = 'Add';
+      var bAdd = document.createElement('button'); bAdd.className = 'conn-btn'; bAdd.textContent = 'Add'; bAdd.title = 'Add a waypoint at the entered latitude / longitude';
       function doAdd() {
         var c = parseLatLon(inp.value);
         if (!c) { flash('Enter decimal “lat, lon”, e.g. -17.70, 177.40', 'warn'); return; }

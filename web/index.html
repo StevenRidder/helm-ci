@@ -464,19 +464,19 @@
   <h2>Weather</h2>
   <p class="sub">Live models via Open-Meteo</p>
   <div class="wx" id="wx">
-    <button data-wx="wind">Wind</button>
-    <button data-wx="gust">Gust</button>
-    <button data-wx="rain">Rain</button>
-    <button data-wx="radar">Radar</button>
-    <button data-wx="temp">Temp</button>
-    <button data-wx="sst">SST</button>
-    <button data-wx="clouds">Cloud</button>
-    <button data-wx="waves">Waves</button>
-    <button data-wx="swell">Swell</button>
-    <button data-wx="pressure">Pressure</button>
-    <button data-wx="cape">CAPE</button>
-    <button data-wx="current">Current</button>
-    <button data-wx="off">Off</button>
+    <button data-wx="wind" title="10 m wind speed &amp; direction">Wind</button>
+    <button data-wx="gust" title="Wind gusts (peak)">Gust</button>
+    <button data-wx="rain" title="Precipitation / rain rate">Rain</button>
+    <button data-wx="radar" title="Live rain radar nowcast (RainViewer)">Radar</button>
+    <button data-wx="temp" title="Air temperature (2 m)">Temp</button>
+    <button data-wx="sst" title="Sea-surface temperature">SST</button>
+    <button data-wx="clouds" title="Cloud cover">Cloud</button>
+    <button data-wx="waves" title="Significant wave height">Waves</button>
+    <button data-wx="swell" title="Swell height">Swell</button>
+    <button data-wx="pressure" title="Mean sea-level pressure (isobars)">Pressure</button>
+    <button data-wx="cape" title="CAPE — atmospheric instability / thunderstorm potential">CAPE</button>
+    <button data-wx="current" title="Ocean surface current">Current</button>
+    <button data-wx="off" title="Turn off all weather layers">Off</button>
   </div>
   <label class="row" style="margin-top:10px"><input type="checkbox" id="particles" checked> Animated particles</label>
   <div class="row" style="margin-top:2px"><span style="font-size:11px;color:var(--cdim);min-width:74px">Transparency</span><input type="range" id="wxopacity" min="0" max="100" value="28" step="1" style="flex:1;accent-color:var(--accent)"></div>
@@ -486,7 +486,7 @@
   </div>
   <div id="time" style="display:none">
     <div class="scrub">
-      <button id="play">&#9658;</button>
+      <button id="play" title="Play / pause the forecast animation">&#9658;</button>
       <input type="range" id="tslider" min="0" max="0" value="0" step="1">
     </div>
     <div id="tlabel"></div>
@@ -523,7 +523,7 @@
 
   <div class="lbl">Connections — live data in</div>
   <div id="conn-list" class="conn-list"><div class="hint" style="margin:6px 0">Connecting to engine…</div></div>
-  <button id="conn-add-btn" type="button" class="conn-btn">+ Add connection</button>
+  <button id="conn-add-btn" type="button" class="conn-btn" title="Add a boat-data connection (TCP / UDP / serial / SignalK / internet AIS)">+ Add connection</button>
   <form id="conn-form" class="conn-form" hidden>
     <div id="conn-form-title" class="conn-form-title">New connection</div>
     <label class="conn-fld">Name<input id="conn-f-name" autocomplete="off" placeholder="Garmin Vesper Cortex"></label>
@@ -532,8 +532,8 @@
     <label class="conn-fld">Port<input id="conn-f-port" type="number" min="1" max="65535" placeholder="39150"></label>
     <label class="conn-chk"><input id="conn-f-en" type="checkbox" checked> Enabled</label>
     <div class="conn-actions">
-      <button type="submit" class="conn-btn primary">Save</button>
-      <button type="button" id="conn-cancel" class="conn-btn">Cancel</button>
+      <button type="submit" class="conn-btn primary" title="Save this connection">Save</button>
+      <button type="button" id="conn-cancel" class="conn-btn" title="Cancel without saving">Cancel</button>
     </div>
     <div class="hint" style="margin-top:8px">TCP for a marine WiFi gateway (Vesper Cortex :39150, PredictWind DataHub) — one stream carries GPS + AIS + instruments. SignalK servers: choose the “SignalK — WebSocket” type above. Stored on the engine; survives restart.</div>
   </form>
@@ -568,8 +568,8 @@
   <div class="lsec">Tools</div>
   <label class="lrow"><span class="ltx"><b>Measure</b><i>Distance &amp; bearing</i></span><span class="sw"><input type="checkbox" data-lab="measures"><span class="swt"></span></span></label>
   <div class="ltools">
-    <button data-lab-action="draw-route">Draw route</button>
-    <button data-lab-action="draw-lasso">Select area</button>
+    <button data-lab-action="draw-route" title="Draw a route on the chart (Lab tool)">Draw route</button>
+    <button data-lab-action="draw-lasso" title="Lasso-select an area on the chart (Lab tool)">Select area</button>
   </div>
 </div>
 
@@ -579,11 +579,11 @@
   <p class="sub" id="comm-status">Connecting to Helm backend…</p>
 
   <div class="lbl">Narrate (spacetime probe)</div>
-  <div class="wx"><button id="narrate-arm" data-wx="narr">✨ Narrate a point</button><button id="narrate-path" data-wx="path">Narrate the passage</button></div>
+  <div class="wx"><button id="narrate-arm" data-wx="narr" title="Tap the chart, then get an AI narrative of the conditions there">✨ Narrate a point</button><button id="narrate-path" data-wx="path" title="AI narrative of conditions along the whole active passage">Narrate the passage</button></div>
   <p class="sub" style="margin:7px 0 0;font-size:10.5px" id="narrate-hint">Tap the chart to fuse the enabled layers at that point &amp; the current time. Only checked layers join the slice.</p>
 
   <div class="lbl">Where to go</div>
-  <div class="wx"><button id="wt-go" data-wx="go">Suggest for tonight</button><button id="wt-clear" data-wx="clear">Clear</button></div>
+  <div class="wx"><button id="wt-go" data-wx="go" title="Suggest anchorages / destinations for tonight (AI, wind-aware)">Suggest for tonight</button><button id="wt-clear" data-wx="clear" title="Clear the suggestions">Clear</button></div>
   <div id="wt-results" style="margin-top:9px;font-size:11.5px"></div>
 
   <div class="lbl">Give back</div>

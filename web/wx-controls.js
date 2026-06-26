@@ -94,7 +94,7 @@
     function segctl(opts) {
       var w = document.createElement('div'); w.style.cssText = 'display:flex;border:.5px solid var(--line,#345);border-radius:8px;overflow:hidden;margin-bottom:10px';
       opts.forEach(function (o) {
-        var b = document.createElement('button'); b.dataset.val = o.val; b.textContent = o.txt;
+        var b = document.createElement('button'); b.dataset.val = o.val; b.textContent = o.txt; b.title = o.title || o.txt;
         b.style.cssText = 'flex:1;font-size:12px;padding:7px;border:0;background:transparent;color:var(--cdim,#8aa);cursor:pointer';
         b.addEventListener('mouseenter', function () { if (b.dataset.sel !== '1') b.style.background = 'rgba(255,255,255,.04)'; });
         b.addEventListener('mouseleave', function () { b.style.background = b.dataset.sel === '1' ? 'var(--accent,#39c2c9)' : 'transparent'; });

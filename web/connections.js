@@ -212,13 +212,13 @@
     if (msgEl && !document.getElementById('conn-mon-btn')) {
       const wrap = document.createElement('div'); wrap.style.marginTop = '10px';
       monBtn = document.createElement('button');
-      monBtn.id = 'conn-mon-btn'; monBtn.type = 'button'; monBtn.className = 'conn-btn'; monBtn.textContent = '▸ NMEA monitor';
+      monBtn.id = 'conn-mon-btn'; monBtn.type = 'button'; monBtn.className = 'conn-btn'; monBtn.textContent = '▸ NMEA monitor'; monBtn.title = 'Show the raw NMEA data monitor (live sentences from your connections)';
       monEl = document.createElement('div'); monEl.id = 'conn-mon'; monEl.hidden = true; monEl.style.marginTop = '8px';
       const head = document.createElement('div');
       head.style.cssText = 'display:flex;justify-content:space-between;align-items:center;margin-bottom:4px';
       head.innerHTML = '<span class="hint" style="margin:0">Raw sentences from every source (debug)</span>';
       const clr = document.createElement('button');
-      clr.type = 'button'; clr.className = 'conn-icon'; clr.textContent = 'Clear';
+      clr.type = 'button'; clr.className = 'conn-icon'; clr.textContent = 'Clear'; clr.title = 'Clear the NMEA monitor log';
       clr.style.cssText = 'width:auto;padding:0 8px';
       clr.addEventListener('click', () => { monLines = []; renderMon(); });
       head.appendChild(clr);
