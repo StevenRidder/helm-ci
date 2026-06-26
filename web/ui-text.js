@@ -73,7 +73,7 @@
     sec.appendChild(seg('Label shade — how white the muted text reads', SHADES, function () { return shade; }, function (k) { shade = k; save(KEY_SHADE, k); apply(); }));
     sec.appendChild(seg('Card text size', SIZES, function () { return size; }, function (k) { size = k; save(KEY_SIZE, k); apply(); }));
     var hint = document.createElement('div'); hint.className = 'hint'; hint.style.marginTop = '4px';
-    hint.textContent = 'Shade brightens the muted labels everywhere; size scales the AIS cards. More surfaces follow as their text moves onto the shared variable.';
+    hint.textContent = 'Shade brightens the muted labels everywhere; size scales every panel, card, popup, and the bottom instrument bar together. The chart itself stays 1:1.';
     sec.appendChild(hint);
     drawer.appendChild(sec);
   }
