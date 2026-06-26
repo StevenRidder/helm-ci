@@ -2190,6 +2190,7 @@ public:
         // static UI (the page is served from the engine → same origin → no ?server=)
         std::string body, mime;
         if (serve_static(path, body, mime)) { h["Content-Type"] = mime;
+          h["Cache-Control"] = "no-cache, must-revalidate";   // the UI ships live; never let a browser pin a stale index.html/JS (the "my card reverted" trap). Tiles stay immutable above.
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body); }
         h["Content-Type"] = "text/plain";
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string("not found\n"));
