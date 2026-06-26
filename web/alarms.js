@@ -396,7 +396,7 @@ window.HelmAlarms = function (map, opts) {
   guardModeBtn.style.cssText = 'border:0;border-radius:6px;padding:3px 7px;font:700 11px system-ui;background:rgba(59,214,198,.18);color:#7ff0e2;cursor:pointer;touch-action:manipulation';
   const guardMinus = mkPillBtn('−', 'Decrease the guard-zone radius'), guardTxt = document.createElement('span'), guardPlus = mkPillBtn('+', 'Increase the guard-zone radius'), guardClear = mkPillBtn('✕', 'Clear the guard zone');
   guardTxt.style.cssText = 'min-width:110px;text-align:center;font-variant-numeric:tabular-nums';
-  guardPill.appendChild(document.createTextNode('▣')); guardPill.appendChild(guardModeBtn);
+  guardPill.appendChild(document.createTextNode('🛡')); guardPill.appendChild(guardModeBtn);
   guardPill.appendChild(guardMinus); guardPill.appendChild(guardTxt); guardPill.appendChild(guardPlus); guardPill.appendChild(guardClear);
   document.body.appendChild(guardPill);
   guardModeBtn.addEventListener('click', () => setGuardMode(guardMode === 'in' ? 'out' : 'in'));
@@ -505,7 +505,7 @@ window.HelmAlarms = function (map, opts) {
   group.className = 'maplibregl-ctrl maplibregl-ctrl-group';
   const mkBtn = (label, title, color) => { const b = document.createElement('button'); b.type = 'button'; b.title = title; b.textContent = label; b.style.cssText = 'font:700 12px system-ui;color:' + (color || '#cfe6ff') + ';touch-action:manipulation'; return b; };
   const anchorBtn = mkBtn('⚓', 'Drop / weigh anchor watch');
-  const guardBtn = mkBtn('▣', 'Guard zone — tap to place a keep-in / keep-out boundary');
+  const guardBtn = mkBtn('🛡', 'Guard zone — tap to place a keep-in / keep-out boundary');
   const mobBtn = mkBtn('MOB', 'Man overboard', '#ff6b6b');
   group.appendChild(anchorBtn); group.appendChild(guardBtn); group.appendChild(mobBtn);
   map.addControl({ onAdd() { return group; }, onRemove() { group.remove(); } }, 'bottom-left');
