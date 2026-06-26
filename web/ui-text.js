@@ -18,7 +18,9 @@
     bright:    { label: 'Bright',    cdim: '#cdd9e2', cdim2: '#b4c3cf' },
     brightest: { label: 'Brightest', cdim: '#e2eaf0', cdim2: '#cdd8e0' }
   };
-  var SIZES = { s: { label: 'Small', v: 0.9 }, m: { label: 'Default', v: 1 }, l: { label: 'Large', v: 1.15 }, xl: { label: 'X-large', v: 1.3 } };
+  // Chartplotter-legible scale: a helm display is read at arm's length in sunlight, so the floor is
+  // 1.0 (the old default) and the steps climb well past it. Default sits one notch up (1.2).
+  var SIZES = { s: { label: 'Compact', v: 1.0 }, m: { label: 'Default', v: 1.2 }, l: { label: 'Large', v: 1.45 }, xl: { label: 'Helm', v: 1.8 } };
   var DEF_SHADE = 'bright', DEF_SIZE = 'm';                   // Bright (#cdd9e2) muted text by default, per request
   var KEY_SHADE = 'helm.ui.textShade', KEY_SIZE = 'helm.ui.textSize';
 
