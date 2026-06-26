@@ -666,6 +666,7 @@
 <script src="wx-controls.js"></script>
 <script src="nav-source.js"></script>
 <script src="server-endpoint.js"></script>
+<script src="log.js"></script>        <!-- CLIENT-18: HelmLog — leveled, level-filtered logger + ring buffer -->
 <script src="nav-client.js"></script>
 <script src="connections.js"></script>
 <script src="routes.js"></script>
@@ -954,16 +955,21 @@
   // click popups (suppressed while the measure tool is active — a click then drops a ruler point)
   const measuring = () => window.__helmMeasure && window.__helmMeasure.active();
   map.on('click', 'soundg-text', e => { if (measuring()) return;
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('Depth: ' + e.features[0].properties.DEPTH + ' m').addTo(map); });
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('Depth: ' + escHtml(e.features[0].properties.DEPTH) + ' m').addTo(map); });
   map.on('click', 'places-icon', e => { if (measuring()) return; const p = e.features[0].properties;
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + (p.name || p.kind) + '</b><br>' + p.kind).addTo(map); });
+    new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>' + escHtml(p.name || p.kind) + '</b><br>' + escHtml(p.kind)).addTo(map); });
   // ---- AIS: live engine-driven targets + rich tap inspector ----
   // The engine streams a per-fix `ais` array (range/brg/CPA/TCPA computed by OpenCPN's
   // AisDecoder). We drive the `ais` map source from it and render the full target detail
   // on tap. In sim mode (no engine) the static sample in style.json stays.
   const AIS_CLASS = { 0: 'Class A', 1: 'Class B', 2: 'AtoN', 3: 'Base station',
                       5: 'DSC', 6: 'SART', 7: 'ARPA', 9: 'Meteo' };
-  const aisEsc = s => String(s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  // CLIENT-18: one null-safe HTML escaper for EVERY untrusted string that reaches innerHTML/setHTML —
+  // AIS names (open-radio, attacker-broadcastable), OSM place names, saved-place notes, AI text.
+  const escHtml = s => String(s == null ? '' : s).replace(/[&<>"]/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[c]));
+  const aisEsc = escHtml;   // back-compat alias used by the AIS detail card
+  // Only let http(s) links through from untrusted place data — neutralise javascript:/data: hrefs.
+  const safeUrl = u => { try { const x = new URL(u, location.href); return (x.protocol === 'http:' || x.protocol === 'https:') ? x.href : ''; } catch (e) { return ''; } };
   const aisNum = (v, d) => (v == null || isNaN(v)) ? '—' : (+v).toFixed(d);
   // AIS text fields are fixed-width, right-padded with '@' (6-bit value 0) and/or spaces.
   // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
@@ -1516,10 +1522,11 @@
     });
 
     map.on('click', 'saved-icon', e => { const p = e.features[0].properties;
-      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>★ ' + (p.name || 'Saved') + '</b><br>' + (p.note || p.kind) +
-        (p.sourceUrl ? '<br><a href="' + p.sourceUrl + '" target="_blank" style="color:#5bc0ff">source ↗</a>' : '')).addTo(map); });
+      const _u = safeUrl(p.sourceUrl);
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>★ ' + escHtml(p.name || 'Saved') + '</b><br>' + escHtml(p.note || p.kind) +
+        (_u ? '<br><a href="' + escHtml(_u) + '" target="_blank" rel="noopener noreferrer" style="color:#5bc0ff">source ↗</a>' : '')).addTo(map); });
     map.on('click', 'whereto-rank', e => { const p = e.features[0].properties;
-      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>#' + p.rank + ' ' + (p.name || '') + '</b><br>confidence: ' + p.confidence).addTo(map); });
+      new maplibregl.Popup().setLngLat(e.lngLat).setHTML('<b>#' + escHtml(p.rank) + ' ' + escHtml(p.name || '') + '</b><br>confidence: ' + escHtml(p.confidence)).addTo(map); });
     ['saved-icon', 'whereto-rank'].forEach(l => {
       map.on('mouseenter', l, () => map.getCanvas().style.cursor = 'pointer');
       map.on('mouseleave', l, () => map.getCanvas().style.cursor = '');
