@@ -430,7 +430,7 @@ static std::string tide_source_json(const helm::tides::TideSourceInfo& s) {
 
 static std::string tide_official_reference_json(
     const helm::tides::OfficialTideReference& r) {
-  char nums[160];
+  char nums[256];   // was 160 — overflowed (~167 chars) → truncated JSON ("valid_for_time":tru)
   std::snprintf(nums, sizeof nums,
     "\"lat\":%.6f,\"lon\":%.6f,\"distance_nm\":%.6f,"
     "\"official\":%s,\"prediction_calendar\":%s,"
@@ -456,7 +456,7 @@ static std::string tide_official_reference_json(
 
 static std::string tide_confidence_json(
     const helm::tides::TideConfidence& c) {
-  char nums[320];
+  char nums[512];   // headroom for the confidence numeric block
   std::snprintf(nums, sizeof nums,
     "\"score\":%.3f,\"harmonic_station_distance_nm\":%.6f,"
     "\"official_station_distance_nm\":%.6f,"
@@ -485,7 +485,7 @@ static std::string tide_confidence_json(
 }
 
 static std::string tide_station_json(const helm::tides::TideStation& s) {
-  char b[320];
+  char b[512];   // headroom for the station numeric block
   std::snprintf(b, sizeof b,
     "\"index\":%d,\"type\":\"%c\",\"lat\":%.6f,\"lon\":%.6f,"
     "\"distance_nm\":%.6f,\"datum_m\":%.6f,\"has_datum\":%s,"
