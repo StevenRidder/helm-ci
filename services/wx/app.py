@@ -378,6 +378,99 @@ async def get_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
         return grid
 
 
+# ---------------------------------------------------------------- dense REGIONAL ingestion (Windy parity)
+# Fetch a HIGH-RES grid over the boat's region ONCE (batched), cache it, and bake every tile in that
+# region from it -> native-resolution (Copernicus ~8 km) detail at EVERY zoom, like Windy's pre-baked CDN.
+# Outside the region we fall back to the coarse on-demand path. A boat only needs its own area, and the
+# region follows you (re-warm on a schedule). Same Open-Meteo data, no new deps, fits the keyed budget.
+REGION_TTL = int(os.environ.get("HELM_WX_REGION_TTL", "10800"))    # 3 h (fields change slowly)
+REGION_RES = float(os.environ.get("HELM_WX_REGION_RES", "0.1"))    # ~11 km sampling (~Copernicus native)
+_regions: Dict[str, dict] = {}                                     # layer -> {bbox, grid, vel, t}
+_region_lock = asyncio.Lock()
+
+
+def _region_covers(reg, cz, cx, cy) -> bool:
+    w, s, e, n = tile_bounds(cz, cx, cy)
+    rw, rs, re_, rn = reg["bbox"]
+    return rw <= w and re_ >= e and rs <= s and rn >= n
+
+
+async def _fetch_points(layer: str, qlat, qlon):
+    """One batched (<=~140-pt) Open-Meteo request -> list of nodes. Throttled + keyed; raises on 429."""
+    global _om_sem, _om_last, _cooldown_until
+    cfg = LAYERS[layer]
+    cur = cfg["v"] + ("," + cfg["dir"] if cfg.get("dir") else "")
+    params = {"latitude": ",".join(str(round(a, 3)) for a in qlat),
+              "longitude": ",".join(str(round(((o + 180) % 360 + 360) % 360 - 180, 3)) for o in qlon),
+              "current": cur}
+    if not cfg.get("marine"):
+        params["wind_speed_unit"] = "kn"
+    if OPENMETEO_KEY:
+        params["apikey"] = OPENMETEO_KEY
+    endpoint = MARINE if cfg.get("marine") else FORECAST
+    if _om_sem is None:
+        _om_sem = asyncio.Semaphore(CONCURRENCY)
+    async with _om_sem:
+        gap = MIN_INTERVAL - (time.time() - _om_last)
+        if gap > 0:
+            await asyncio.sleep(gap)
+        _om_last = time.time()
+        _stats["openmeteo_calls"] += 1
+        async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
+            r = await client.get(endpoint, params=params)
+    if r.status_code == 429:
+        _cooldown_until = time.time() + COOLDOWN
+        raise RuntimeError("open-meteo 429")
+    r.raise_for_status()
+    nodes = r.json()
+    return nodes if isinstance(nodes, list) else [nodes]
+
+
+async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: float = REGION_RES):
+    """Ingest a dense grid over (w,s,e,n) into _regions[layer] — the source for Windy-parity tiles there."""
+    cfg = LAYERS[layer]
+    conv = cfg.get("conv"); sign = 1.0 if cfg.get("dir_to") else -1.0; D2R = math.pi / 180.0
+    nx = max(2, int(round((e - w) / res)) + 1)
+    ny = max(2, int(round((n - s) / res)) + 1)
+    lats = [n - (n - s) * j / (ny - 1) for j in range(ny)]
+    lons = [w + (e - w) * i / (nx - 1) for i in range(nx)]
+    pts = [(j, i) for j in range(ny) for i in range(nx)]
+    vals: List[Optional[float]] = [None] * (nx * ny)
+    us = [0.0] * (nx * ny); vs = [0.0] * (nx * ny)
+    BATCH = 140
+
+    async def do_batch(chunk):
+        nodes = await _fetch_points(layer, [lats[j] for (j, i) in chunk], [lons[i] for (j, i) in chunk])
+        for k, (j, i) in enumerate(chunk):
+            c = (nodes[k] or {}).get("current") or {}
+            v = c.get(cfg["v"])
+            if isinstance(v, (int, float)):
+                vv = float(v) * KMH2KN if conv == "kmh2kn" else float(v)
+                vals[j * nx + i] = vv
+                if cfg.get("dir"):
+                    d = c.get(cfg["dir"]); d = float(d) if isinstance(d, (int, float)) else 0.0
+                    us[j * nx + i] = sign * vv * math.sin(d * D2R)
+                    vs[j * nx + i] = sign * vv * math.cos(d * D2R)
+
+    await asyncio.gather(*[do_batch(pts[b:b + BATCH]) for b in range(0, len(pts), BATCH)])
+    reg = {"bbox": (w, s, e, n), "grid": Grid(nx, ny, lons[0], lats[-1], lons[-1], lats[0], vals), "t": time.time()}
+    if cfg.get("vector"):
+        hdr = {"nx": nx, "ny": ny, "lo1": lons[0], "la1": lats[0], "lo2": lons[-1], "la2": lats[-1],
+               "dx": (lons[-1] - lons[0]) / (nx - 1), "dy": (lats[0] - lats[-1]) / (ny - 1)}
+        reg["vel"] = [{"header": dict(parameterNumber=2, **hdr), "data": us},
+                      {"header": dict(parameterNumber=3, **hdr), "data": vs}]
+    _regions[layer] = reg
+    # Invalidate this layer's already-baked tiles so they re-bake from the dense grid (else cache wins).
+    import shutil
+    for k in [k for k in _tiles.order if k.startswith(layer + "/")]:
+        _tiles.mem.pop(k, None)
+    _tiles.order = [k for k in _tiles.order if not k.startswith(layer + "/")]
+    shutil.rmtree(os.path.join(CACHE_DIR, "tiles", layer), ignore_errors=True)
+    for k in [k for k in list(_vel) if k.startswith("vel|" + layer + "|")]:
+        _vel.pop(k, None)
+    return {"layer": layer, "nx": nx, "ny": ny, "points": nx * ny, "res_deg": res, "bbox": [w, s, e, n]}
+
+
 async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
     """Bake (or cache-hit) one helm-wxv1 value tile. PNG bytes, 256x256 RGBA."""
     return await _bake_tile_impl(layer, z, x, y)
@@ -425,8 +518,12 @@ async def _bake_tile_impl(layer: str, z: int, x: int, y: int) -> bytes:
         return cached
     cfg = LAYERS[layer]
     scale, offset = layer_scale_offset(cfg)
-    cz, cx, cy = _coarse_cell(z, x, y)
-    grid = await get_grid(layer, cz, cx, cy)
+    reg = _regions.get(layer)
+    if reg and (time.time() - reg["t"]) <= REGION_TTL and _region_covers(reg, z, x, y):
+        grid = reg["grid"]                               # dense regional grid covers this TILE -> native detail
+    else:
+        cz, cx, cy = _coarse_cell(z, x, y)
+        grid = await get_grid(layer, cz, cx, cy)
     # Per-column lon, per-row lat (512 mercator unprojects, not 65 536), then VECTORISE the whole 256x256
     # bilinear+encode in numpy (was a multi-second Python loop -> a few ms). NODATA (NaN) stays transparent.
     lons = np.array([pixel_to_lonlat(z, x, y, px + 0.5, 0.0)[0] for px in range(256)])
@@ -561,6 +658,11 @@ async def velocity(layer: str, w: float, s: float, e: float, n: float):
         return JSONResponse({"error": True, "reason": "velocity is for vector layers (wind, current)"}, status_code=404)
     if e < w:
         e += 360.0                                       # continuous across the antimeridian
+    reg = _regions.get(layer)                            # dense regional particles (Windy parity) if the view is inside
+    if reg and reg.get("vel") and (time.time() - reg["t"]) <= REGION_TTL:
+        rw, rs, re_, rn = reg["bbox"]
+        if rw <= w and re_ >= e and rs <= s and rn >= n:
+            return reg["vel"]
     sw, ss, se, sn = _snap(w, s, e, n)                   # snap so nearby pans/zooms reuse one fetch
     key = "vel|%s|%.2f,%.2f,%.2f,%.2f" % (layer, sw, ss, se, sn)
     now = time.time()
@@ -582,6 +684,47 @@ async def velocity(layer: str, w: float, s: float, e: float, n: float):
             return JSONResponse({"error": True, "reason": "velocity unavailable"}, status_code=503)
         _vel[key] = (vel, time.time())
         return vel
+
+
+@app.get("/warm")
+async def warm(layers: str, w: float, s: float, e: float, n: float, res: float = REGION_RES):
+    """Dense-ingest a region so its tiles render at native (~Copernicus) resolution — Windy parity.
+    e.g. /warm?layers=current,wind&w=170&s=-25&e=185&n=-10"""
+    out = []
+    async with _region_lock:
+        for L in [x.strip() for x in layers.split(",") if x.strip()]:
+            if L not in LAYERS:
+                out.append({"layer": L, "error": "unknown layer"}); continue
+            try:
+                out.append(await warm_region(L, w, s, e, n, res))
+            except Exception as ex:
+                out.append({"layer": L, "error": str(ex)})
+    return {"warmed": out}
+
+
+@app.on_event("startup")
+async def _startup_warm():
+    """If HELM_WX_WARM_BBOX is set, dense-ingest the boat's region on boot + refresh every REGION_TTL."""
+    bbox = os.environ.get("HELM_WX_WARM_BBOX", "").strip()
+    if not bbox:
+        return
+    try:
+        w, s, e, n = [float(x) for x in bbox.split(",")]
+    except Exception:
+        return
+    layers = [x.strip() for x in os.environ.get("HELM_WX_WARM_LAYERS", "current,wind").split(",") if x.strip()]
+
+    async def loop():
+        while True:
+            async with _region_lock:
+                for L in layers:
+                    if L in LAYERS:
+                        try:
+                            await warm_region(L, w, s, e, n)
+                        except Exception:
+                            pass
+            await asyncio.sleep(REGION_TTL)
+    asyncio.create_task(loop())
 
 
 @app.get("/{layer}/{z}/{x}/{y}.png")
