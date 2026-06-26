@@ -7,7 +7,7 @@
 // the source of truth for SAVED routes, and we surface the currently-drawn in-session route (read
 // live from the map's `route` source) as an unsaved entry so the panel isn't blank in preview mode.
 (function () {
-  let client = null, listEl, msgEl, routes = [], msgTimer = null, online = false;
+  let client = null, listEl, msgEl, routes = [], msgTimer = null, online = false, editMounted = false, curTab = 'saved';
   function esc(s) { return String(s == null ? '' : s).replace(/[&<>"]/g, m => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' }[m])); }
   // The nav-client's send() returns true ONLY when the WebSocket is open (ws.readyState === 1), so
   // it's our live connectivity signal — `client` itself always exists (index.html ~1144), even with
@@ -63,8 +63,11 @@
         '<div class="conn-name">' + esc(r.name || 'Route') + tag + '</div>' +
         '<div class="conn-meta">' + (r.points || 0) + ' waypoint' + (r.points === 1 ? '' : 's') + (r.unsaved ? ' · on the chart, not yet saved to the boat' : '') + '</div>' +
       '</div>' +
+      '<button class="conn-icon" data-act="edit" title="Edit this route (opens the Edit tab)">✎</button>' +
       (r.unsaved ? '' : ((on ? '' : '<button class="conn-icon" data-act="go" title="Activate (navigate this route)">▸</button>') +
         '<button class="conn-icon" data-act="del" title="Delete route">✕</button>'));
+    const ed = row.querySelector('[data-act="edit"]');
+    if (ed) ed.addEventListener('click', () => editRoute(r));
     const go = row.querySelector('[data-act="go"]');
     if (go) go.addEventListener('click', () => send({ t: 'route.activate', guid: r.guid }));
     const del = row.querySelector('[data-act="del"]');
@@ -109,12 +112,55 @@
       else { flash(msg.deleted ? 'Route deleted ✓' : (msg.name ? 'Now navigating ' + msg.name + ' ✓' : 'Saved ✓')); refresh(); }
     }
   }
+  // ── Saved | Edit tabs (consolidated single Routes drawer) ───────────────────────────────────────
+  // One rail button → this drawer. "Saved" is the library above; "Edit" hosts the direct-manipulation
+  // editor (route-edit.js), mounted lazily into #route-edit-host the first time the Edit tab opens.
+  function host() { return document.getElementById('route-edit-host'); }
+  function showTab(tab) {
+    tab = (tab === 'edit') ? 'edit' : 'saved';
+    curTab = tab;
+    const drawer = document.getElementById('drawer-routes'); if (!drawer) return;
+    drawer.querySelectorAll('.rtab').forEach(b => {
+      const sel = b.getAttribute('data-rtab') === tab;
+      b.classList.toggle('on', sel); b.setAttribute('aria-selected', sel ? 'true' : 'false');
+    });
+    drawer.querySelectorAll('.rpane').forEach(p => { p.hidden = p.getAttribute('data-rpane') !== tab; });
+    if (tab === 'edit') {
+      const h = host();
+      if (h && window.HelmRouteEdit) {
+        if (!editMounted && HelmRouteEdit.mount) { HelmRouteEdit.mount(h, { map: window.map }); editMounted = true; }
+        if (HelmRouteEdit.onShow) HelmRouteEdit.onShow();   // re-sync to the live route each time
+      }
+    } else {
+      refresh();                                            // back to the library → re-pull saved routes
+    }
+  }
+  // Open the Routes drawer (reusing the built-in rail wiring) and land on the Edit tab.
+  function openEditor() {
+    const d = document.getElementById('drawer-routes');
+    if (d && d.hidden) { const b = document.querySelector('.ri[data-rail="routes"]'); if (b) b.click(); }
+    showTab('edit');
+  }
+  // "Pick/edit a saved route → jump to Edit." Activating makes it the live route the editor adopts —
+  // edits commit via route.create, which REPLACES the active route, so the edited one must be active.
+  function editRoute(r) {
+    if (r && r.guid && !r.active) send({ t: 'route.activate', guid: r.guid });   // offline → calm hint; still opens the editor
+    openEditor();
+    // the activated geometry rides back on the next nav frame; re-adopt once it lands (guarded on !dirty)
+    setTimeout(() => { if (curTab === 'edit' && window.HelmRouteEdit && HelmRouteEdit.onShow) HelmRouteEdit.onShow(); }, 700);
+  }
+
   function init(opts) {
     client = opts && opts.client;
     listEl = document.getElementById('route-list');
     msgEl = document.getElementById('route-msg');
+    const drawer = document.getElementById('drawer-routes');
+    if (drawer && !drawer._rtabsWired) {                    // wire the Saved | Edit tab buttons once
+      drawer._rtabsWired = true;
+      drawer.querySelectorAll('.rtab').forEach(b => b.addEventListener('click', () => showTab(b.getAttribute('data-rtab'))));
+    }
     if (!listEl) return;
     refresh();
   }
-  window.HelmRoutes = { init, onCommand, refresh };
+  window.HelmRoutes = { init, onCommand, refresh, showTab, openEditor };
 })();

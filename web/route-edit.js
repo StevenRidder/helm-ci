@@ -19,10 +19,12 @@
 // updateRouteFromEngine() — one round-trip, one source of truth (the engine).
 //
 // ── WIRING ──────────────────────────────────────────────────────────────────────────────────────
-//   • A left-rail PANEL  (helm-route-edit-panel)  — controls + the live waypoint list.
+//   • The EDIT TAB of the consolidated Routes drawer — controls + the live waypoint list. This
+//     module exposes mount()/onShow(); routes.js hosts the single "Routes" rail button + Saved|Edit
+//     tabs and surfaces this workspace into #route-edit-host (no separate rail button anymore).
 //   • Two ⌘K COMMANDS    (helm-route-edit-*)       — toggle editing, reverse the route.
 //   • A STYLE FRAGMENT   (helm-route-edit-*)       — the draggable vertex + insert-ghost handles.
-// All ids namespaced helm-route-*. Zero edits to index.html's body beyond the one <script> tag.
+// All ids namespaced helm-route-*.
 (function () {
   'use strict';
   if (!window.HelmShell) { console.warn('[route-edit] HelmShell missing — not loading'); return; }
@@ -335,6 +337,7 @@
   // adopt the engine's currently-shown route into the working geometry, unless we're mid-edit.
   // Tries a synchronous read first, then falls back to the async getData() promise (MapLibre v4+).
   function adoptLiveRoute() {
+    ensureMap();
     if (dirty) return;                                 // never clobber un-saved edits
     var s = seedSync();
     if (s) { pts = s; renderAll(); return; }
@@ -342,6 +345,7 @@
   }
 
   function setEditing(on) {
+    ensureMap();
     editing = !!on;
     if (editing) {
       if (!pts.length || !dirty) adoptLiveRoute();     // adopt/re-sync the live route unless mid-edit
@@ -377,13 +381,15 @@
   }
 
   // ── panel ───────────────────────────────────────────────────────────────────────────────────
-  HelmShell.registerPanel({
-    id: 'helm-route-edit-panel',
-    epic: 'ROUTE',
-    title: 'Route editor',
-    icon: '<svg viewBox="0 0 24 24" width="17" height="17" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="5" cy="19" r="2.2"/><circle cx="19" cy="5" r="2.2"/><path d="M6.5 17.5 17.5 6.5"/><circle cx="12" cy="12" r="1.4" fill="currentColor"/></svg>',
-    render: function (body, ctx) {
-      map = ctx.map;
+  // ── editor workspace — mounted into the consolidated Routes drawer's "Edit" tab ────────────────
+  // ROUTE consolidation: the editor no longer owns its own rail button. routes.js hosts ONE "Routes"
+  // drawer with Saved | Edit tabs and calls mount() (once, lazily) + onShow() (each time the Edit tab
+  // is shown) to surface this workspace into #route-edit-host. (Was: HelmShell.registerPanel.)
+  var mounted = false;
+  function ensureMap() { if (!map) map = window.map; return map; }   // map is global once HelmShell.boot ran
+  function mount(body, ctx) {
+      if (mounted) return; mounted = true;
+      map = (ctx && ctx.map) || window.map;
 
       var sub = document.createElement('p'); sub.className = 'sub';
       sub.textContent = 'Direct-manipulation editor. Tap the chart to add, drag a dot to move, long-press a leg to insert. Every change is saved to the boat (route.create) and navigated.';
@@ -441,13 +447,9 @@
       body.appendChild(msgEl);
 
       renderAll();
-    },
-    onOpen: function () {
-      // re-sync to the engine's current route each time the drawer opens, unless mid-edit.
-      adoptLiveRoute();
-      renderAll();
-    }
-  });
+  }
+  // re-sync to the engine's current route each time the Edit tab is shown, unless mid-edit.
+  function onShow() { ensureMap(); adoptLiveRoute(); renderAll(); }
 
   // ── ⌘K commands ─────────────────────────────────────────────────────────────────────────────
   HelmShell.registerCommand({
@@ -455,7 +457,7 @@
     title: 'Edit route — direct manipulation', subtitle: 'Tap to add · drag to move · long-press to insert',
     keywords: ['route', 'edit', 'waypoint', 'move', 'drag', 'insert', 'delete'], group: 'Route',
     run: function () {
-      var h = HelmShell.panel('helm-route-edit-panel'); if (h) h.open();
+      if (window.HelmRoutes && HelmRoutes.openEditor) HelmRoutes.openEditor();   // open the Routes drawer → Edit tab (mounts the editor)
       setEditing(true);
     }
   });
@@ -464,6 +466,7 @@
     title: 'Reverse active route', subtitle: 'Swap start ↔ end',
     keywords: ['route', 'reverse', 'flip', 'return'], group: 'Route',
     run: function () {
+      ensureMap();
       if (pts.length >= 2) { reverse(); return; }      // already have geometry → reverse now
       var s = seedSync(); if (s) { pts = s; reverse(); return; }
       seedAsync(function (coords) { if (coords) { pts = coords; reverse(); } });
@@ -473,6 +476,7 @@
   // expose for index.html's onCommand fan-out + tests
   window.HelmRouteEdit = {
     onCommand: onCommand,
+    mount: mount, onShow: onShow,                       // surfaced by routes.js into the Routes drawer's Edit tab
     setEditing: setEditing,
     isEditing: function () { return editing; },
     reverse: reverse,

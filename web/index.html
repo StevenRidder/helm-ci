@@ -398,6 +398,13 @@
   .cmdk-item .cmdk-g{margin-left:auto;font-size:9.5px;color:var(--cdim2);letter-spacing:.04em;
     border:.5px solid var(--line);border-radius:5px;padding:1px 6px;white-space:nowrap}
   .cmdk-empty{padding:14px 11px;font-size:12.5px;color:var(--cdim)}
+  /* EPIC:ROUTE — Routes drawer Saved/Edit tabs (consolidated single Routes panel) */
+  #drawer-routes .rtabs{display:flex;gap:2px;margin:2px 0 10px;border-bottom:.5px solid var(--line)}
+  #drawer-routes .rtab{flex:1;padding:7px 4px 8px;margin-bottom:-.5px;background:none;border:none;
+    border-bottom:2px solid transparent;color:var(--cdim);font:inherit;font-size:12.5px;font-weight:600;
+    letter-spacing:.02em;cursor:pointer}
+  #drawer-routes .rtab:hover{color:var(--ctext)}
+  #drawer-routes .rtab.on{color:var(--ctext);border-bottom-color:var(--accent)}
 </style>
 </head>
 <body>
@@ -540,10 +547,22 @@
 
 <!-- ========================= SETTINGS DRAWER ========================= -->
 <div class="drawer glass" id="drawer-routes" hidden>
+  <!-- EPIC:ROUTE — consolidated Routes panel: Saved (library) + Edit (workspace) tabs.
+       One rail button, two tabs. routes.js owns tab switching; the Edit tab hosts the
+       direct-manipulation editor (route-edit.js) mounted into #route-edit-host. -->
   <h2>Routes</h2>
-  <p class="sub">Saved routes — tap ▸ to navigate, ✕ to delete (stored on the boat)</p>
-  <div id="route-list" class="conn-list"><div class="hint" style="margin:6px 0">Connecting to engine…</div></div>
-  <div id="route-msg" class="conn-msg"></div>
+  <div class="rtabs" role="tablist" aria-label="Routes">
+    <button class="rtab on" data-rtab="saved" role="tab" aria-selected="true">Saved</button>
+    <button class="rtab" data-rtab="edit" role="tab" aria-selected="false">Edit</button>
+  </div>
+  <div class="rpane" data-rpane="saved">
+    <p class="sub">Saved routes — tap ▸ to navigate, ✎ to edit, ✕ to delete (stored on the boat)</p>
+    <div id="route-list" class="conn-list"><div class="hint" style="margin:6px 0">Connecting to engine…</div></div>
+    <div id="route-msg" class="conn-msg"></div>
+  </div>
+  <div class="rpane" data-rpane="edit" hidden>
+    <div id="route-edit-host"></div>
+  </div>
 </div>
 
 <div class="drawer glass" id="drawer-settings" hidden>
@@ -1280,7 +1299,7 @@
         const d = document.getElementById(drawers[key]), wasOpen = !d.hidden;
         closeDrawers(); d.hidden = wasOpen;
         rail.forEach(r => r.classList.toggle('on', !wasOpen && r === btn));
-        if (!wasOpen && key === 'routes' && window.HelmRoutes) window.HelmRoutes.refresh();   // reload saved routes on open
+        if (!wasOpen && key === 'routes' && window.HelmRoutes) { window.HelmRoutes.refresh(); if (HelmRoutes.showTab) HelmRoutes.showTab('saved'); }   // reload saved routes + land on Saved tab
       } else if (key === 'ais' || key === 'places') { // toggle that chart layer group via its checkbox
         const cb = document.querySelector('.row input[data-layer="' + key + '"]');
         if (cb) { cb.checked = !cb.checked; cb.dispatchEvent(new Event('change')); }
