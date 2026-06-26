@@ -1,13 +1,16 @@
 #include "helm_tides.h"
 
 #include <cerrno>
+#include <cctype>
 #include <cmath>
 #include <cstdio>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
+#include <map>
 #include <sstream>
 #include <string>
+#include <utility>
 #include <vector>
 
 #include "ixwebsocket/IXHttpClient.h"
@@ -67,6 +70,176 @@ bool ReadFile(const std::string &path, std::string *body, std::string *error) {
   std::ostringstream ss;
   ss << in.rdbuf();
   *body = ss.str();
+  return true;
+}
+
+bool ParseDay(const std::string &date_or_time, std::time_t *utc);
+
+std::string Trim(const std::string &s) {
+  size_t first = 0;
+  while (first < s.size() &&
+         std::isspace(static_cast<unsigned char>(s[first]))) {
+    ++first;
+  }
+  size_t last = s.size();
+  while (last > first &&
+         std::isspace(static_cast<unsigned char>(s[last - 1]))) {
+    --last;
+  }
+  return s.substr(first, last - first);
+}
+
+std::string LowerAscii(std::string s) {
+  for (char &c : s) {
+    c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+  }
+  return s;
+}
+
+std::vector<std::string> SplitCsvLine(const std::string &line) {
+  std::vector<std::string> fields;
+  std::string field;
+  bool quoted = false;
+  for (size_t i = 0; i < line.size(); ++i) {
+    char c = line[i];
+    if (c == '"') {
+      if (quoted && i + 1 < line.size() && line[i + 1] == '"') {
+        field.push_back('"');
+        ++i;
+      } else {
+        quoted = !quoted;
+      }
+    } else if (c == ',' && !quoted) {
+      fields.push_back(Trim(field));
+      field.clear();
+    } else {
+      field.push_back(c);
+    }
+  }
+  fields.push_back(Trim(field));
+  return fields;
+}
+
+struct ManifestPoint {
+  std::string id;
+  std::string name;
+  double lat = 0.0;
+  double lon = 0.0;
+  std::time_t utc = 0;
+};
+
+bool HasCsvHeader(const std::vector<std::string> &fields) {
+  bool has_lat = false;
+  bool has_lon = false;
+  for (const std::string &field : fields) {
+    const std::string key = LowerAscii(Trim(field));
+    has_lat = has_lat || key == "lat" || key == "latitude";
+    has_lon = has_lon || key == "lon" || key == "lng" ||
+              key == "longitude";
+  }
+  return has_lat && has_lon;
+}
+
+std::string FieldByName(const std::vector<std::string> &fields,
+                        const std::map<std::string, size_t> &header,
+                        const std::vector<std::string> &names) {
+  for (const std::string &name : names) {
+    auto it = header.find(name);
+    if (it != header.end() && it->second < fields.size()) {
+      return fields[it->second];
+    }
+  }
+  return "";
+}
+
+bool ParseManifestCsv(const std::string &path,
+                      std::time_t default_utc,
+                      std::vector<ManifestPoint> *points,
+                      std::string *error) {
+  std::ifstream in(path);
+  if (!in.good()) {
+    if (error) *error = "could not read points CSV: " + path;
+    return false;
+  }
+
+  std::map<std::string, size_t> header;
+  bool saw_layout = false;
+  bool has_header = false;
+  std::string line;
+  int line_no = 0;
+  while (std::getline(in, line)) {
+    ++line_no;
+    line = Trim(line);
+    if (line.empty() || line[0] == '#') continue;
+
+    std::vector<std::string> fields = SplitCsvLine(line);
+    if (!saw_layout) {
+      saw_layout = true;
+      has_header = HasCsvHeader(fields);
+      if (has_header) {
+        for (size_t i = 0; i < fields.size(); ++i) {
+          header[LowerAscii(Trim(fields[i]))] = i;
+        }
+        continue;
+      }
+    }
+
+    ManifestPoint point;
+    std::string lat_text;
+    std::string lon_text;
+    std::string time_text;
+    if (has_header) {
+      point.id = FieldByName(fields, header, {"id", "point_id"});
+      point.name = FieldByName(fields, header, {"name", "label"});
+      lat_text = FieldByName(fields, header, {"lat", "latitude"});
+      lon_text = FieldByName(fields, header, {"lon", "lng", "longitude"});
+      time_text = FieldByName(fields, header,
+                              {"time", "eta", "time_utc", "date"});
+    } else if (fields.size() >= 5) {
+      point.id = fields[0];
+      point.name = fields[1];
+      lat_text = fields[2];
+      lon_text = fields[3];
+      time_text = fields[4];
+    } else if (fields.size() >= 3) {
+      lat_text = fields[0];
+      lon_text = fields[1];
+      time_text = fields[2];
+    } else if (fields.size() >= 2) {
+      lat_text = fields[0];
+      lon_text = fields[1];
+    } else {
+      if (error) {
+        *error = "bad points CSV row " + std::to_string(line_no);
+      }
+      return false;
+    }
+
+    if (!ParseDouble(lat_text, &point.lat) ||
+        !ParseDouble(lon_text, &point.lon)) {
+      if (error) {
+        *error = "bad coordinate in points CSV row " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    if (time_text.empty()) {
+      point.utc = default_utc;
+    } else if (!ParseDay(time_text, &point.utc)) {
+      if (error) {
+        *error = "bad time/date in points CSV row " +
+                 std::to_string(line_no);
+      }
+      return false;
+    }
+    if (point.id.empty()) point.id = "point-" + std::to_string(points->size() + 1);
+    points->push_back(point);
+  }
+
+  if (points->empty()) {
+    if (error) *error = "points CSV contained no route/GPS points";
+    return false;
+  }
   return true;
 }
 
@@ -146,6 +319,108 @@ void PrintRequestPlan(const helm::tides::OfficialPredictionRequest &request,
     WriteCacheJson(std::cout, *cache);
   }
   std::cout << "}\n";
+}
+
+struct ManifestItem {
+  helm::tides::OfficialPredictionRequest request;
+  std::vector<ManifestPoint> points;
+};
+
+struct ManifestSummary {
+  int use_cache = 0;
+  int fetch_live = 0;
+  int refresh_live = 0;
+  int import_calendar = 0;
+  int refresh_calendar = 0;
+  int blocked = 0;
+  int auto_fetchable = 0;
+  int manual_import = 0;
+  int needs_credentials = 0;
+  int needs_work = 0;
+};
+
+std::string ManifestKey(
+    const helm::tides::OfficialPredictionRequest &request) {
+  const std::string station =
+      request.station_id.empty() ? "<station>" : request.station_id;
+  return request.provider_region_id + "|" + station + "|" +
+         request.date_utc + "|" + request.action;
+}
+
+void AddManifestSummary(const helm::tides::OfficialPredictionRequest &request,
+                        ManifestSummary *summary) {
+  if (request.action == "use-cache") {
+    ++summary->use_cache;
+  } else if (request.action == "fetch-live") {
+    ++summary->fetch_live;
+  } else if (request.action == "refresh-live") {
+    ++summary->refresh_live;
+  } else if (request.action == "import-calendar") {
+    ++summary->import_calendar;
+  } else if (request.action == "refresh-calendar") {
+    ++summary->refresh_calendar;
+  }
+  if (request.blocked) ++summary->blocked;
+  if (!request.blocked && request.can_fetch_live &&
+      (request.action == "fetch-live" || request.action == "refresh-live")) {
+    ++summary->auto_fetchable;
+  }
+  if (!request.blocked && request.manual_import_required &&
+      (request.action == "import-calendar" ||
+       request.action == "refresh-calendar")) {
+    ++summary->manual_import;
+  }
+  if (request.requires_api_key || request.requires_subscription) {
+    ++summary->needs_credentials;
+  }
+  if (request.needed || request.blocked) ++summary->needs_work;
+}
+
+void WriteManifestPointJson(std::ostream &out, const ManifestPoint &point) {
+  out << "{\"id\":\"" << JsonEscape(point.id) << "\""
+      << ",\"name\":\"" << JsonEscape(point.name) << "\""
+      << ",\"lat\":" << point.lat
+      << ",\"lon\":" << point.lon
+      << ",\"time_utc\":\""
+      << JsonEscape(helm::tides::FormatUtcIso8601(point.utc)) << "\"}";
+}
+
+void PrintAcquisitionManifest(const std::vector<ManifestPoint> &points,
+                              const std::vector<ManifestItem> &items,
+                              const ManifestSummary &summary,
+                              int lookahead_days) {
+  std::cout << "{\"ok\":true"
+            << ",\"mode\":\"acquisition-manifest\""
+            << ",\"dry_run\":true"
+            << ",\"scheduler_status\":\"planner-only; execute individual requests with --resolve-lat/--resolve-lon --execute-request\""
+            << ",\"point_count\":" << points.size()
+            << ",\"lookahead_days\":" << lookahead_days
+            << ",\"item_count\":" << items.size()
+            << ",\"summary\":{\"use_cache\":" << summary.use_cache
+            << ",\"fetch_live\":" << summary.fetch_live
+            << ",\"refresh_live\":" << summary.refresh_live
+            << ",\"import_calendar\":" << summary.import_calendar
+            << ",\"refresh_calendar\":" << summary.refresh_calendar
+            << ",\"blocked\":" << summary.blocked
+            << ",\"auto_fetchable\":" << summary.auto_fetchable
+            << ",\"manual_import\":" << summary.manual_import
+            << ",\"needs_credentials\":" << summary.needs_credentials
+            << ",\"needs_work\":" << summary.needs_work << "}"
+            << ",\"items\":[";
+  for (size_t i = 0; i < items.size(); ++i) {
+    const ManifestItem &item = items[i];
+    if (i) std::cout << ",";
+    std::cout << "{\"point_count\":" << item.points.size()
+              << ",\"request\":";
+    WriteRequestJson(std::cout, item.request);
+    std::cout << ",\"points\":[";
+    for (size_t j = 0; j < item.points.size(); ++j) {
+      if (j) std::cout << ",";
+      WriteManifestPointJson(std::cout, item.points[j]);
+    }
+    std::cout << "]}";
+  }
+  std::cout << "]}\n";
 }
 
 bool ParseDay(const std::string &date_or_time, std::time_t *utc) {
@@ -236,7 +511,9 @@ void PrintUsage() {
          "       helm-tides-fetch --resolve-lat LAT --resolve-lon LON "
          "--date YYYY-MM-DD --cache-dir DIR "
          "[--ready-radius-nm NM] [--execute-request] "
-         "[--input-json FILE | --input-calendar FILE | --live]\n";
+         "[--input-json FILE | --input-calendar FILE | --live]\n"
+         "       helm-tides-fetch --points-csv FILE --date YYYY-MM-DD "
+         "--cache-dir DIR [--lookahead-days N] [--ready-radius-nm NM]\n";
 }
 
 }  // namespace
@@ -250,9 +527,11 @@ int main(int argc, char **argv) {
   std::string cache_dir;
   std::string input_json;
   std::string input_calendar;
+  std::string points_csv;
   std::string source_url;
   std::string fetched_utc;
   int interval_minutes = 60;
+  int lookahead_days = 1;
   bool live = false;
   bool execute_request = false;
   double resolve_lat = 0.0;
@@ -279,12 +558,16 @@ int main(int argc, char **argv) {
       input_json = argv[++i];
     } else if (arg == "--input-calendar" && i + 1 < argc) {
       input_calendar = argv[++i];
+    } else if (arg == "--points-csv" && i + 1 < argc) {
+      points_csv = argv[++i];
     } else if (arg == "--source-url" && i + 1 < argc) {
       source_url = argv[++i];
     } else if (arg == "--fetched-utc" && i + 1 < argc) {
       fetched_utc = argv[++i];
     } else if (arg == "--interval-minutes" && i + 1 < argc) {
       interval_minutes = std::atoi(argv[++i]);
+    } else if (arg == "--lookahead-days" && i + 1 < argc) {
+      lookahead_days = std::atoi(argv[++i]);
     } else if (arg == "--resolve-lat" && i + 1 < argc) {
       if (!ParseDouble(argv[++i], &resolve_lat)) {
         PrintError("bad --resolve-lat");
@@ -321,6 +604,82 @@ int main(int argc, char **argv) {
   if (cache_dir.empty()) {
     if (const char *env = std::getenv("HELM_TIDES_CACHE_DIR")) cache_dir = env;
   }
+  if (!points_csv.empty()) {
+    if (has_resolve_lat || has_resolve_lon) {
+      PrintError("--points-csv cannot be combined with --resolve-lat/--resolve-lon");
+      return 2;
+    }
+    if (live || execute_request || !input_json.empty() ||
+        !input_calendar.empty()) {
+      PrintError("--points-csv is planner-only; execute individual requests separately");
+      return 2;
+    }
+    if (day_text.empty()) {
+      PrintError("--date YYYY-MM-DD or --time UTC_ISO is required");
+      return 2;
+    }
+    if (cache_dir.empty()) {
+      PrintError("--cache-dir or HELM_TIDES_CACHE_DIR is required");
+      return 2;
+    }
+    if (lookahead_days < 1 || lookahead_days > 14) {
+      PrintError("--lookahead-days must be between 1 and 14");
+      return 2;
+    }
+
+    std::time_t default_utc = 0;
+    if (!ParseDay(day_text, &default_utc)) {
+      PrintError("bad date/time; use YYYY-MM-DD or YYYY-MM-DDTHH:MM:SSZ");
+      return 2;
+    }
+
+    std::vector<ManifestPoint> base_points;
+    std::string error;
+    if (!ParseManifestCsv(points_csv, default_utc, &base_points, &error)) {
+      PrintError(error);
+      return 2;
+    }
+
+    helm::tides::TideEngine engine;
+    engine.SetOfficialPredictionCacheDir(cache_dir);
+    std::map<std::string, ManifestItem> grouped;
+    std::vector<std::string> order;
+    std::vector<ManifestPoint> expanded_points;
+    for (const ManifestPoint &base_point : base_points) {
+      for (int day = 0; day < lookahead_days; ++day) {
+        ManifestPoint point = base_point;
+        point.utc += static_cast<std::time_t>(day) * 86400;
+        if (lookahead_days > 1) {
+          point.id += "+d" + std::to_string(day);
+        }
+        expanded_points.push_back(point);
+        helm::tides::OfficialPredictionRequest request =
+            engine.PlanOfficialPredictionRequest(
+                point.lat, point.lon, point.utc, ready_radius_nm);
+        const std::string key = ManifestKey(request);
+        auto it = grouped.find(key);
+        if (it == grouped.end()) {
+          ManifestItem item;
+          item.request = request;
+          item.points.push_back(point);
+          grouped[key] = item;
+          order.push_back(key);
+        } else {
+          it->second.points.push_back(point);
+        }
+      }
+    }
+
+    std::vector<ManifestItem> items;
+    ManifestSummary summary;
+    for (const std::string &key : order) {
+      items.push_back(grouped[key]);
+      AddManifestSummary(items.back().request, &summary);
+    }
+    PrintAcquisitionManifest(expanded_points, items, summary, lookahead_days);
+    return 0;
+  }
+
   const bool resolve_mode = has_resolve_lat || has_resolve_lon;
   if (resolve_mode) {
     if (!has_resolve_lat || !has_resolve_lon) {

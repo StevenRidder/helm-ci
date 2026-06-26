@@ -147,6 +147,7 @@ hdr "D. Tides: offline harmonic prediction + official provider catalog  (TIDES-1
 TCDATA="${HELM_TCDATA_DIR:-${HELM_OCPN_DIR:-/tmp/helm-opencpn}/data/tcdata}"
 NOAA_PREDICTION_FIXTURE="$HERE/test/fixtures/noaa-coops/1612340-2026-06-26-predictions.json"
 FIJI_CALENDAR_FIXTURE="$HERE/test/fixtures/fiji-met/suva-2026-calendar.csv"
+TIDE_ACQUISITION_POINTS="$HERE/test/fixtures/tides-acquisition-points.csv"
 TIDE_CACHE_GENERATED="$(mktemp -d)"
 if [ ! -x "$BIN/helm-tides-smoke" ]; then
   F "helm-tides-smoke missing at $BIN — run engine/bootstrap.sh after the TIDES-1 target lands"
@@ -203,6 +204,17 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-plan-execute.json 2>/dev/null || true
   fi
   rm -rf "$TIDE_PLAN_CACHE"
+
+  if "$BIN/helm-tides-fetch" --points-csv "$TIDE_ACQUISITION_POINTS" --cache-dir "$TIDE_CACHE_GENERATED" --date 2026-06-26 >/tmp/te-tides-acquisition.json 2>/tmp/te-tides-acquisition.err; then
+    tide_acquisition_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); s=o.get("summary",{}); items=o.get("items",[]); grouped=max([i.get("point_count",0) for i in items] or [0]); actions=sorted(i.get("request",{}).get("action") for i in items); print(int(o.get("ok") is True and o.get("mode")=="acquisition-manifest" and o.get("dry_run") is True and o.get("point_count")==4 and o.get("item_count")==3 and s.get("use_cache")==2 and s.get("blocked")==1 and s.get("needs_credentials")==1 and grouped==2 and actions==["configure-subscription","use-cache","use-cache"]))' /tmp/te-tides-acquisition.json 2>/dev/null || echo 0)
+    [ "$tide_acquisition_shape" = 1 ] \
+      && P "helm-tides-fetch builds grouped GPS/route acquisition manifest without duplicate station-day work (TIDES-9)" \
+      || { F "tide acquisition manifest JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-acquisition.json; }
+  else
+    F "helm-tides-fetch acquisition manifest failed:"
+    sed 's/^/        /' /tmp/te-tides-acquisition.err
+    sed 's/^/        /' /tmp/te-tides-acquisition.json 2>/dev/null || true
+  fi
 
   if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("fiji_prediction_cached") is True and o.get("official_request_action")=="use-cache" and o.get("fiji_request_action")=="use-cache" and o.get("remote_request_action")=="configure-subscription" and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
