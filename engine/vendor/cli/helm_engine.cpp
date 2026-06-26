@@ -562,13 +562,18 @@ int main(int argc, char** argv) {
         AisRow& t = it->second;
         long age = (long)(aisNow - t.seen);
         if (age > 600) { it = g_ais_rows.erase(it); continue; }   // drop targets silent >10 min
-        char tb[440];
+        // ENGINE-13: per-target collision-risk tier from the same g_CPAWarn_NM/g_TCPA_Max alarm band the
+        // client uses (web/ais-risk.js tier()); caution = the 2x watch band. (this binary gates on raw cpaValid.)
+        const char* risk = (!t.cpaValid || t.tcpa <= 0.0) ? "normal"
+          : (t.cpa < g_CPAWarn_NM && t.tcpa < g_TCPA_Max) ? "danger"
+          : (t.cpa < 2.0 * g_CPAWarn_NM && t.tcpa < 2.0 * g_TCPA_Max) ? "caution" : "normal";
+        char tb[480];
         std::snprintf(tb, sizeof tb,
           "%s{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%.0f,\"sog\":%.1f,\"hdg\":%.0f,"
-          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
+          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,\"risk\":\"%s\","
           "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld}",
           first ? "" : ",", t.mmsi, t.lat, t.lon, t.cog, t.sog, t.hdg,
-          t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false",
+          t.range, t.brg, t.cpa, t.tcpa, t.cpaValid ? "true" : "false", risk,
           t.cls, json_escape(t.name).c_str(), age);
         aisArr += tb; first = false; ++it;
       }

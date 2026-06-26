@@ -1518,15 +1518,22 @@ static void nav_loop(ix::HttpServer* server) {
         bool sog_ok = (t.sog >= 0.0 && t.sog <= 102.2);
         char sogj[16] = "null"; if (sog_ok) std::snprintf(sogj, sizeof sogj, "%.1f", t.sog);
         char cogj[16] = "null"; if (t.cog >= 0.0 && t.cog < 360.0) std::snprintf(cogj, sizeof cogj, "%.0f", t.cog);
+        bool cpaEff = (t.cpaValid && sog_ok);     // effective CPA validity (a no-real-speed target has no real CPA)
+        // ENGINE-13: per-target collision-risk tier, computed from the SAME g_CPAWarn_NM/g_TCPA_Max alarm
+        // band the client uses (web/ais-risk.js tier()); caution = the 2x pre-alarm watch band. Clients
+        // prefer this engine value over recomputing locally, so the thresholds live in ONE authoritative place.
+        const char* risk = (!cpaEff || t.tcpa <= 0.0) ? "normal"
+          : (t.cpa < g_CPAWarn_NM && t.tcpa < g_TCPA_Max) ? "danger"
+          : (t.cpa < 2.0 * g_CPAWarn_NM && t.tcpa < 2.0 * g_TCPA_Max) ? "caution" : "normal";
         char tb[800];
         std::snprintf(tb, sizeof tb,
           "{\"mmsi\":%d,\"lat\":%.5f,\"lon\":%.5f,\"cog\":%s,\"sog\":%s,\"hdg\":%.0f,"
-          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,"
+          "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,\"risk\":\"%s\","
           "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,"
           "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
           "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
           t.mmsi, t.lat, t.lon, cogj, sogj, t.hdg,
-          t.range, t.brg, t.cpa, t.tcpa, (t.cpaValid && sog_ok) ? "true" : "false",
+          t.range, t.brg, t.cpa, t.tcpa, cpaEff ? "true" : "false", risk,
           t.cls, json_escape(t.name).c_str(), age,
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
           eta, t.length, t.beam, t.draft, rotj, t.imo);

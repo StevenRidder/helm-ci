@@ -24,12 +24,28 @@ forwarded with a warning):
 | `nav` | core position/SOG/COG/HDG/depth/wind — **always subscribed, never droppable** (safety core) |
 | `route` | active-route geometry + inspector (`active`, legs, ETA/DTG/XTE) |
 | `alarms` | `t:"alarm"` / `alarm.clear` frames (CONTRACT-10) |
-| `ais` | AIS targets array (`ais[]`) — the big one; bbox-culling rides this (CONTRACT-8) |
+| `ais` | AIS targets array (`ais[]`) — the big one; bbox-culling rides this (CONTRACT-8). Each target carries a server-computed `risk` tier (ENGINE-13) |
 | `track` | own-ship breadcrumb trail |
 | `conns` | per-connection live status |
 
 A frame includes a channel's fields only if that channel is subscribed. **Absent `subscribe` ⇒ all
 channels** (back-compat: a client that says nothing gets everything, as today).
+
+### AIS target `risk` tier (ENGINE-13)
+
+Each `ais[]` row carries `risk: "danger" | "caution" | "normal"` — the collision-risk tier **computed
+server-side** from the same authoritative thresholds the engine owns (`g_CPAWarn_NM` = 2.0 NM,
+`g_TCPA_Max` = 30 min; caution = the 2× pre-alarm watch band). The rule (mirrors `web/ais-risk.js`):
+
+- **`normal`** if CPA is not effectively valid (no real-speed/CPA solution) or `tcpa ≤ 0` (opening / past CPA)
+- **`danger`** if `cpa < g_CPAWarn_NM && tcpa < g_TCPA_Max` (== the CPA alarm band)
+- **`caution`** if `cpa < 2·g_CPAWarn_NM && tcpa < 2·g_TCPA_Max`
+- **`normal`** otherwise
+
+Clients **prefer `risk` over recomputing locally** (`web/ais-risk.js` `tier()` returns it verbatim), so
+the thresholds live in ONE authoritative place and every surface (alarm / chart symbol / list / card /
+overlay) classifies identically. `risk` is a UI gradient layered under the symbology overrides
+(SART/lost are not risk tiers). Additive, non-breaking — the field set is otherwise unchanged.
 
 ## Nav rate
 

@@ -85,7 +85,7 @@ subscribes to in `hello`:
 |----------|-----------------|-------------------------------------------|----------------|
 | `nav`    | 1–4 Hz (client-chosen) | pos · SOG · COG · HDG · depth        | everyone |
 | `route`  | on-change       | active route · XTE · ETA · next WP        | chart views |
-| `ais`    | 1 Hz, **bbox-culled** | targets in viewport + CPA/TCPA      | chart views |
+| `ais`    | 1 Hz, **bbox-culled** | targets in viewport + CPA/TCPA + `risk` tier | chart views |
 | `alarms` | event-driven, **reliable tier** | anchor · depth · CPA · MOB    | **everyone, always** |
 | `weather`/`tide` | low / on-change | overlay state, tide curve         | optional |
 
