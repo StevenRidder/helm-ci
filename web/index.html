@@ -633,8 +633,6 @@
      instead of editing this monolith. See web/SHELL.md for the three conventions. -->
 <script src="shell.js"></script>
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
-<script src="service-credentials.js"></script><!-- Connected-services credential registry (Open-Meteo customer keys, future providers) -->
-<script src="layer-cache.js"></script><!-- Shared last-known-good map-layer snapshots (stale survives failed pulls) -->
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -652,7 +650,6 @@
 <script src="server-endpoint.js"></script>
 <script src="nav-client.js"></script>
 <script src="connections.js"></script>
-<script src="settings-services.js"></script>
 <script src="routes.js"></script>
 <script src="route-edit.js"></script>
 <script src="track.js"></script>
@@ -754,7 +751,6 @@
 
   // ---- weather: heatmap color field (HelmField) + animated particles (HelmWind) ----
   const wind = window.HelmWind ? HelmWind(map) : null;
-  window.__helmWindLayer = wind;                    // shared with WX live fetch-on-pan mode
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
@@ -816,14 +812,10 @@
     if (field) field.load(fieldUrl(name), fieldOpts(name)).then(f => { wxNoticeClear(); buildLegend(f); }).catch(() => wxNotice(name));
     const partOn = document.getElementById('particles').checked;
     if (wind) {
-      if (VECTOR[name] && partOn) {
-        wind.setVisible(true);
-        wind.load(velUrl(name)).then(ok => { if (!ok) wxNotice(name, '⚠ Animated ' + name + ' data unavailable — run the weather pipeline or use Live wind.'); });
-      }
+      if (VECTOR[name] && partOn) { wind.load(velUrl(name)); wind.setVisible(true); }
       else wind.setVisible(false);
     }
   }
-  window.__helmSetWeather = setWeather;             // unified WX controls restore Standard mode through this seam
 
   function setFrame(i) {
     if (!forecast) return;
@@ -857,10 +849,6 @@
 
   document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx)));
   document.getElementById('particles').addEventListener('change', () => {
-    if (window.HelmWxLive && HelmWxLive.isEnabled()) {
-      HelmWxLive.setParticles(document.getElementById('particles').checked);
-      return;
-    }
     const active = document.querySelector('#wx button.on');
     if (active) setWeather(active.dataset.wx);
   });

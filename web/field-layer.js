@@ -78,27 +78,6 @@
     this.current = null;
   }
 
-  function cache() { return global.HelmLayerCache; }
-  function applyField(self, field) {
-    self.current = field;
-    var coords = [[field.west, field.north], [field.east, field.north],
-                  [field.east, field.south], [field.west, field.south]];
-    var dataURL = fieldToDataURL(field);
-    var map = self.map;
-    if (map.getSource(SRC)) {
-      map.getSource(SRC).updateImage({ url: dataURL, coordinates: coords });
-      map.setLayoutProperty(LYR, 'visibility', 'visible');
-    } else {
-      map.addSource(SRC, { type: 'image', url: dataURL, coordinates: coords });
-      var before = (self.beforeId && map.getLayer(self.beforeId)) ? self.beforeId : undefined;
-      map.addLayer({
-        id: LYR, type: 'raster', source: SRC,
-        paint: { 'raster-opacity': self.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 }
-      }, before);
-    }
-    return field;
-  }
-
   HelmField.prototype.load = function (url, opts) {
     var self = this;
     return fetch(url).then(function (r) {
@@ -106,22 +85,24 @@
       return r.json();
     }).then(function (field) {
       if (opts && opts.stops) field.stops = opts.stops;   // palette override (e.g. the Windy wind ramp)
-      var C = cache();
-      if (C) try {
-        C.put({
-          layerId: 'weather.field', scope: url, kind: 'raster-field',
-          bbox: [field.west, field.south, field.east, field.north],
-          source: 'offline-field', ttlMs: 12 * 60 * 60 * 1000,
-          payload: { field: field }
-        });
-      } catch (_) {}
-      return applyField(self, field);
-    }).catch(function (e) {
-      var C = cache(), rec = C && C.getBest('weather.field', { scope: url, allowAny: true });
-      if (rec && rec.payload && rec.payload.field) {
-        console.warn('[HelmField] could not load', url, e && e.message, '— using cached field');
-        return applyField(self, rec.payload.field);
+      self.current = field;
+      var coords = [[field.west, field.north], [field.east, field.north],
+                    [field.east, field.south], [field.west, field.south]];
+      var dataURL = fieldToDataURL(field);
+      var map = self.map;
+      if (map.getSource(SRC)) {
+        map.getSource(SRC).updateImage({ url: dataURL, coordinates: coords });
+        map.setLayoutProperty(LYR, 'visibility', 'visible');
+      } else {
+        map.addSource(SRC, { type: 'image', url: dataURL, coordinates: coords });
+        var before = (self.beforeId && map.getLayer(self.beforeId)) ? self.beforeId : undefined;
+        map.addLayer({
+          id: LYR, type: 'raster', source: SRC,
+          paint: { 'raster-opacity': self.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 }
+        }, before);
       }
+      return field;
+    }).catch(function (e) {
       console.warn('[HelmField] could not load', url, e && e.message);
       throw e;   // propagate — never silently swallow a failed weather load
     });
