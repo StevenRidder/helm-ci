@@ -471,6 +471,152 @@ bool CacheValidForTime(const OfficialPredictionCacheInfo &cache,
   return true;
 }
 
+OfficialPredictionRequest BuildOfficialPredictionRequest(
+    const OfficialTideReference *reference,
+    const TideProviderRegion *region,
+    std::time_t utc,
+    const std::string &cache_dir,
+    const OfficialPredictionCacheInfo *cache) {
+  OfficialPredictionRequest request;
+  const bool has_reference = reference != nullptr;
+  const bool has_region = region != nullptr;
+  if (!has_reference && !has_region) {
+    request.status = "no official provider or station reference matched";
+    return request;
+  }
+
+  request.ok = true;
+  request.cached = cache && cache->ok;
+  request.cache_refresh_due = cache && cache->refresh_due;
+  request.needed = !request.cached || request.cache_refresh_due;
+
+  if (has_reference) {
+    request.provider_region_id = reference->provider_region_id;
+    request.provider = reference->provider;
+    request.station_id = reference->station_id;
+    request.station_name = reference->station_name;
+    request.datum_name = reference->datum_name;
+    request.source_url = reference->source_url;
+  } else {
+    request.provider_region_id = region->id;
+    request.provider = region->provider;
+    request.datum_name = region->datum_name;
+    request.source_url = region->source_url;
+  }
+
+  if (has_region) {
+    if (request.provider.empty()) request.provider = region->provider;
+    if (request.datum_name.empty()) request.datum_name = region->datum_name;
+    if (request.source_url.empty()) request.source_url = region->source_url;
+    request.adapter_status = region->adapter_status;
+    request.requires_api_key = region->requires_api_key;
+    request.requires_subscription = region->requires_subscription;
+    request.license = region->license;
+    request.provenance = region->provenance;
+    request.redistribution_status = region->redistribution_status;
+    request.redistribution_cleared = region->redistribution_cleared;
+  }
+
+  request.date_utc = UtcDateKey(utc);
+  if (has_reference && !cache_dir.empty()) {
+    request.cache_path = CacheMetaPath(cache_dir, *reference, utc);
+    request.cache_key = SanitizePathToken(reference->provider_region_id) +
+                        "/" + SanitizePathToken(reference->station_id) +
+                        "/" + request.date_utc;
+  } else if (!request.provider_region_id.empty()) {
+    request.cache_key = SanitizePathToken(request.provider_region_id) +
+                        "/<station>/" + request.date_utc;
+  }
+
+  if (cache) {
+    if (!cache->cache_path.empty()) request.cache_path = cache->cache_path;
+    request.data_path = cache->data_path;
+    if (!cache->time_zone.empty()) request.time_zone = cache->time_zone;
+    if (!cache->source_url.empty()) request.source_url = cache->source_url;
+  }
+
+  if (request.provider_region_id == "noaa-coops-us") {
+    request.can_fetch_live = true;
+    request.time_zone = request.time_zone.empty() ? "GMT" : request.time_zone;
+    if (has_reference) {
+      request.fetch_url = NoaaCoopsPredictionUrl(*reference, utc, 60);
+      if (request.source_url.empty()) request.source_url = request.fetch_url;
+    }
+  } else if (request.provider_region_id == "fiji-met-cosppac") {
+    request.manual_import_required = true;
+    request.time_zone =
+        request.time_zone.empty() ? "Pacific/Fiji" : request.time_zone;
+  }
+
+  if (request.cached && !request.cache_refresh_due) {
+    request.action = "use-cache";
+    request.status = "official prediction cache is present for this date";
+    return request;
+  }
+
+  if (!has_reference) {
+    request.needed = true;
+    request.blocked = true;
+    if (request.requires_subscription) {
+      request.action = "configure-subscription";
+      request.status =
+          "provider region matched, but subscription credentials and station selection are required";
+    } else if (request.requires_api_key) {
+      request.action = "configure-api-key";
+      request.status =
+          "provider region matched, but API credentials and station selection are required";
+    } else {
+      request.action = "select-station";
+      request.status =
+          "provider region matched, but no station/calendar reference is available yet";
+    }
+    return request;
+  }
+
+  if (!reference->valid_for_time) {
+    request.blocked = true;
+    request.action = "refresh-reference";
+    request.status =
+        "official station reference is outside its advertised validity window";
+    return request;
+  }
+
+  if (request.requires_subscription) {
+    request.blocked = true;
+    request.action = "configure-subscription";
+    request.status =
+        "official provider requires subscription credentials before caching";
+  } else if (request.requires_api_key) {
+    request.blocked = true;
+    request.action = "configure-api-key";
+    request.status =
+        "official provider requires API credentials before caching";
+  } else if (request.can_fetch_live) {
+    request.action = request.cache_refresh_due ? "refresh-live" : "fetch-live";
+    request.status =
+        request.cache_refresh_due ? "cached official prediction is stale; refresh when online" :
+                                    "official prediction can be fetched when online";
+  } else if (request.manual_import_required) {
+    request.action =
+        request.cache_refresh_due ? "refresh-calendar" : "import-calendar";
+    request.status =
+        request.cache_refresh_due ? "cached official calendar is stale; re-import the latest publication" :
+                                    "official calendar publication must be imported for this date";
+  } else if (!request.adapter_status.empty() &&
+             request.adapter_status != "api-ready") {
+    request.blocked = true;
+    request.action = "implement-adapter";
+    request.status =
+        "provider is cataloged, but the adapter is not ready for automatic caching";
+  } else {
+    request.blocked = true;
+    request.action = "manual-review";
+    request.status =
+        "official provider cache path needs manual review before use";
+  }
+  return request;
+}
+
 const TideProviderRegion *FindRegion(
     const std::vector<TideProviderRegion> &regions,
     const std::string &id) {
@@ -1055,6 +1201,8 @@ TideSourceResolution TideEngine::ResolveSources(
       out.official_reference = official;
       out.official_metadata_available = true;
       out.observed_feed_available = official.observed_water_level_available;
+      const TideProviderRegion *official_region =
+          FindRegion(impl_->provider_regions, official.provider_region_id);
       OfficialPredictionCacheInfo cache;
       if (CachedOfficialPrediction(official, utc, &cache)) {
         out.official_prediction_cached = true;
@@ -1062,6 +1210,26 @@ TideSourceResolution TideEngine::ResolveSources(
         if (!out.cache_status.empty()) out.cache_status += "; ";
         out.cache_status += cache.cache_status;
         if (official.distance_nm <= ready_radius_nm) out.offline_ready = true;
+      }
+      bool official_matches_provider_region = out.provider_regions.empty();
+      for (const TideProviderRegion &region : out.provider_regions) {
+        if (region.id == official.provider_region_id) {
+          official_matches_provider_region = true;
+          break;
+        }
+      }
+      if (!official_matches_provider_region &&
+          official.distance_nm > ready_radius_nm &&
+          !out.provider_regions.empty()) {
+        out.official_prediction_request = BuildOfficialPredictionRequest(
+            nullptr, &out.provider_regions[0], utc,
+            impl_->official_prediction_cache_dir, nullptr);
+      } else {
+        out.official_prediction_request = BuildOfficialPredictionRequest(
+            &official, official_region, utc,
+            impl_->official_prediction_cache_dir,
+            out.official_prediction_cached ? &out.official_prediction_cache :
+                                            nullptr);
       }
       if (!official.valid_for_time) {
         out.warnings.push_back(
@@ -1075,6 +1243,11 @@ TideSourceResolution TideEngine::ResolveSources(
         resolution.max_official_station_distance_nm = official.distance_nm;
     } else {
       out.warnings.push_back("no official/government tide reference matched");
+      if (!out.provider_regions.empty()) {
+        out.official_prediction_request = BuildOfficialPredictionRequest(
+            nullptr, &out.provider_regions[0], utc,
+            impl_->official_prediction_cache_dir, nullptr);
+      }
     }
 
     if (out.provider_catalog_available && !out.has_official_reference) {

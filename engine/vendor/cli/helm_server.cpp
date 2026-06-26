@@ -534,6 +534,45 @@ static std::string tide_provider_regions_json(
   return out;
 }
 
+static std::string tide_official_prediction_request_json(
+    const helm::tides::OfficialPredictionRequest& r) {
+  return "{\"ok\":" + std::string(r.ok ? "true" : "false") +
+         ",\"needed\":" + (r.needed ? "true" : "false") +
+         ",\"cached\":" + (r.cached ? "true" : "false") +
+         ",\"cache_refresh_due\":" +
+         (r.cache_refresh_due ? "true" : "false") +
+         ",\"can_fetch_live\":" + (r.can_fetch_live ? "true" : "false") +
+         ",\"manual_import_required\":" +
+         (r.manual_import_required ? "true" : "false") +
+         ",\"requires_api_key\":" +
+         (r.requires_api_key ? "true" : "false") +
+         ",\"requires_subscription\":" +
+         (r.requires_subscription ? "true" : "false") +
+         ",\"blocked\":" + (r.blocked ? "true" : "false") +
+         ",\"action\":\"" + json_escape(r.action) +
+         "\",\"status\":\"" + json_escape(r.status) +
+         "\",\"provider_region_id\":\"" +
+         json_escape(r.provider_region_id) +
+         "\",\"provider\":\"" + json_escape(r.provider) +
+         "\",\"adapter_status\":\"" + json_escape(r.adapter_status) +
+         "\",\"station_id\":\"" + json_escape(r.station_id) +
+         "\",\"station_name\":\"" + json_escape(r.station_name) +
+         "\",\"datum_name\":\"" + json_escape(r.datum_name) +
+         "\",\"date_utc\":\"" + json_escape(r.date_utc) +
+         "\",\"time_zone\":\"" + json_escape(r.time_zone) +
+         "\",\"source_url\":\"" + json_escape(r.source_url) +
+         "\",\"fetch_url\":\"" + json_escape(r.fetch_url) +
+         "\",\"cache_key\":\"" + json_escape(r.cache_key) +
+         "\",\"cache_path\":\"" + json_escape(r.cache_path) +
+         "\",\"data_path\":\"" + json_escape(r.data_path) +
+         "\",\"license\":\"" + json_escape(r.license) +
+         "\",\"provenance\":\"" + json_escape(r.provenance) +
+         "\",\"redistribution_status\":\"" +
+         json_escape(r.redistribution_status) +
+         "\",\"redistribution_cleared\":" +
+         (r.redistribution_cleared ? "true" : "false") + "}";
+}
+
 static std::string tide_official_reference_json(
     const helm::tides::OfficialTideReference& r) {
   std::ostringstream nums;
@@ -668,6 +707,11 @@ static std::string tide_resolved_point_json(
          (p.official_prediction_cached
               ? tide_official_prediction_cache_json(
                     p.official_prediction_cache)
+              : std::string("null")) +
+         ",\"official_prediction_request\":" +
+         (p.official_prediction_request.ok
+              ? tide_official_prediction_request_json(
+                    p.official_prediction_request)
               : std::string("null")) +
          ",\"station\":" +
          (p.has_harmonic_station ? tide_station_json(p.harmonic_station)

@@ -109,6 +109,37 @@ struct OfficialPredictionCacheInfo {
   bool redistribution_cleared = false;
 };
 
+struct OfficialPredictionRequest {
+  bool ok = false;
+  bool needed = false;
+  bool cached = false;
+  bool cache_refresh_due = false;
+  bool can_fetch_live = false;
+  bool manual_import_required = false;
+  bool requires_api_key = false;
+  bool requires_subscription = false;
+  bool blocked = false;
+  std::string action;
+  std::string status;
+  std::string provider_region_id;
+  std::string provider;
+  std::string adapter_status;
+  std::string station_id;
+  std::string station_name;
+  std::string datum_name;
+  std::string date_utc;
+  std::string time_zone;
+  std::string source_url;
+  std::string fetch_url;
+  std::string cache_key;
+  std::string cache_path;
+  std::string data_path;
+  std::string license;
+  std::string provenance;
+  std::string redistribution_status;
+  bool redistribution_cleared = false;
+};
+
 struct TideConfidence {
   std::string tier;
   std::string summary;
@@ -196,6 +227,7 @@ struct TideResolvedPoint {
   TideStation harmonic_station;
   OfficialTideReference official_reference;
   OfficialPredictionCacheInfo official_prediction_cache;
+  OfficialPredictionRequest official_prediction_request;
   std::vector<TideProviderRegion> provider_regions;
   TideConfidence confidence;
 };

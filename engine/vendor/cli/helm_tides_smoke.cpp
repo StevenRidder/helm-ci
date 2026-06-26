@@ -416,6 +416,19 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
   const bool honolulu_cached =
       !honolulu_resolution.points.empty() &&
       honolulu_resolution.points[0].official_prediction_cached;
+  const helm::tides::OfficialPredictionRequest *honolulu_request =
+      !honolulu_resolution.points.empty()
+          ? &honolulu_resolution.points[0].official_prediction_request
+          : nullptr;
+  if (!Check(honolulu_request && honolulu_request->ok &&
+                 honolulu_request->provider_region_id == "noaa-coops-us" &&
+                 honolulu_request->station_id == "1612340" &&
+                 honolulu_request->date_utc == "2026-06-26" &&
+                 honolulu_request->can_fetch_live &&
+                 !honolulu_request->fetch_url.empty(),
+             "NOAA official prediction request metadata changed", error)) {
+    return false;
+  }
   if (expect_official_cache) {
     if (!Check(honolulu_cached,
                "Honolulu resolver should find the pinned NOAA prediction cache",
@@ -431,6 +444,12 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
                    !cache.refresh_after_utc.empty() &&
                    cache.redistribution_cleared && cache.sample_count == 24,
                "NOAA official prediction cache metadata changed", error)) {
+      return false;
+    }
+    if (!Check(honolulu_request->cached &&
+                   honolulu_request->action == "use-cache" &&
+                   honolulu_request->needed == false,
+               "NOAA official prediction request should use cache", error)) {
       return false;
     }
   }
@@ -452,6 +471,19 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
   const bool fiji_cached =
       !suva_resolution.points.empty() &&
       suva_resolution.points[0].official_prediction_cached;
+  const helm::tides::OfficialPredictionRequest *fiji_request =
+      !suva_resolution.points.empty()
+          ? &suva_resolution.points[0].official_prediction_request
+          : nullptr;
+  if (!Check(fiji_request && fiji_request->ok &&
+                 fiji_request->provider_region_id == "fiji-met-cosppac" &&
+                 fiji_request->station_id == "FJ-SUVA-WHARF" &&
+                 fiji_request->date_utc == "2026-06-18" &&
+                 fiji_request->manual_import_required &&
+                 fiji_request->time_zone == "Pacific/Fiji",
+             "Fiji official prediction request metadata changed", error)) {
+    return false;
+  }
   if (expect_official_cache) {
     if (!Check(fiji_cached,
                "Suva resolver should find the Fiji calendar cache", error)) {
@@ -467,6 +499,12 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
                    !cache.data_path.empty() &&
                    !cache.redistribution_cleared && cache.sample_count >= 1,
                "Fiji official calendar cache metadata changed", error)) {
+      return false;
+    }
+    if (!Check(fiji_request->cached &&
+                   fiji_request->action == "use-cache" &&
+                   fiji_request->needed == false,
+               "Fiji official prediction request should use cache", error)) {
       return false;
     }
   }
@@ -510,6 +548,20 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
              error)) {
     return false;
   }
+  const helm::tides::OfficialPredictionRequest *remote_request =
+      !remote_resolution.points.empty()
+          ? &remote_resolution.points[0].official_prediction_request
+          : nullptr;
+  if (!Check(remote_request && remote_request->ok &&
+                 remote_request->provider_region_id ==
+                     "shom-spm-refmar-fr-polynesia" &&
+                 remote_request->requires_subscription &&
+                 remote_request->blocked &&
+                 remote_request->action == "configure-subscription",
+             "remote resolver did not expose SHOM subscription request",
+             error)) {
+    return false;
+  }
 
   std::string remote_provider_region;
   if (!remote_resolution.points.empty() &&
@@ -530,6 +582,14 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
             << (honolulu_cached ? "true" : "false")
             << ",\"fiji_prediction_cached\":"
             << (fiji_cached ? "true" : "false")
+            << ",\"official_request_action\":\""
+            << JsonEscape(honolulu_request ? honolulu_request->action : "")
+            << "\""
+            << ",\"fiji_request_action\":\""
+            << JsonEscape(fiji_request ? fiji_request->action : "") << "\""
+            << ",\"remote_request_action\":\""
+            << JsonEscape(remote_request ? remote_request->action : "")
+            << "\""
             << ",\"resolver_remote_tier\":\""
             << JsonEscape(remote_resolution.confidence_tier) << "\""
             << ",\"provider_catalog_count\":" << provider_catalog.size()
