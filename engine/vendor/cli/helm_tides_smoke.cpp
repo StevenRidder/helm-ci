@@ -60,7 +60,9 @@ void PrintSourceInfo(const helm::tides::TideSourceInfo &s) {
 }
 
 void PrintOfficialReference(const helm::tides::OfficialTideReference &r) {
-  std::cout << "{\"provider\":\"" << JsonEscape(r.provider) << "\""
+  std::cout << "{\"provider_region_id\":\""
+            << JsonEscape(r.provider_region_id) << "\""
+            << ",\"provider\":\"" << JsonEscape(r.provider) << "\""
             << ",\"product\":\"" << JsonEscape(r.product) << "\""
             << ",\"station_id\":\"" << JsonEscape(r.station_id) << "\""
             << ",\"station_name\":\"" << JsonEscape(r.station_name) << "\""
@@ -85,6 +87,15 @@ void PrintOfficialReference(const helm::tides::OfficialTideReference &r) {
             << ",\"valid_for_time\":"
             << (r.valid_for_time ? "true" : "false")
             << "}";
+}
+
+bool HasProviderRegion(
+    const std::vector<helm::tides::TideProviderRegion> &regions,
+    const std::string &id) {
+  for (const helm::tides::TideProviderRegion &region : regions) {
+    if (region.id == id) return true;
+  }
+  return false;
 }
 
 void PrintConfidence(const helm::tides::TideConfidence &c) {
@@ -349,6 +360,31 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
     return false;
   }
 
+  std::vector<helm::tides::TideProviderRegion> provider_catalog =
+      engine->ProviderRegions();
+  if (!Check(provider_catalog.size() >= 3,
+             "provider catalog should include NOAA, Fiji, and SHOM regions",
+             error)) {
+    return false;
+  }
+  if (!Check(HasProviderRegion(engine->ProviderRegionsForPoint(kLat, kLon),
+                               "noaa-coops-us"),
+             "NOAA provider region does not cover Honolulu", error)) {
+    return false;
+  }
+  if (!Check(HasProviderRegion(engine->ProviderRegionsForPoint(-18.1248,
+                                                               178.4501),
+                               "fiji-met-cosppac"),
+             "Fiji provider region does not cover Suva", error)) {
+    return false;
+  }
+  if (!Check(HasProviderRegion(engine->ProviderRegionsForPoint(-15.0, -147.0),
+                               "shom-spm-refmar-fr-polynesia"),
+             "SHOM/REFMAR provider region does not cover Tuamotu test point",
+             error)) {
+    return false;
+  }
+
   helm::tides::TideResolvePoint honolulu_point;
   honolulu_point.id = "gps";
   honolulu_point.name = "Honolulu regression point";
@@ -403,6 +439,24 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
              error)) {
     return false;
   }
+  if (!Check(!remote_resolution.official_coverage_ready,
+             "remote resolver should not claim cached official coverage",
+             error)) {
+    return false;
+  }
+  if (!Check(!remote_resolution.points.empty() &&
+                 HasProviderRegion(remote_resolution.points[0].provider_regions,
+                                   "shom-spm-refmar-fr-polynesia"),
+             "remote resolver did not attach SHOM provider catalog match",
+             error)) {
+    return false;
+  }
+
+  std::string remote_provider_region;
+  if (!remote_resolution.points.empty() &&
+      !remote_resolution.points[0].provider_regions.empty()) {
+    remote_provider_region = remote_resolution.points[0].provider_regions[0].id;
+  }
 
   std::cout << std::fixed << std::setprecision(6)
             << "{\"ok\":true,\"regression\":true"
@@ -415,8 +469,11 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
             << (honolulu_resolution.offline_ready ? "true" : "false")
             << ",\"resolver_remote_tier\":\""
             << JsonEscape(remote_resolution.confidence_tier) << "\""
+            << ",\"provider_catalog_count\":" << provider_catalog.size()
+            << ",\"resolver_remote_provider_region\":\""
+            << JsonEscape(remote_provider_region) << "\""
             << ",\"checks\":"
-            << (static_cast<int>(sizeof(goldens) / sizeof(goldens[0])) + 19)
+            << (static_cast<int>(sizeof(goldens) / sizeof(goldens[0])) + 25)
             << ",\"next_event\":";
   PrintEvent(event);
   std::cout << "}\n";
