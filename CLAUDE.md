@@ -28,6 +28,12 @@ The C++ engine is the safety core (on the boat); everything web-native orbits it
 Other build prerequisites (wxWidgets **3.2** pin, GNU `patch`/`gpatch`, Xcode CLT) are checked by
 `bootstrap.sh`, which fails loud with the exact fix — don't guess those either; read its output.
 
+**Ports are fixed — see [docs/PORTS.md](docs/PORTS.md) (binding).** The boat is three production
+ports: **`:8080`** (the one-origin `helm-server` = the integrated `main` view Steve watches),
+**`:8090`** (backend weather + community), **`:8091`** (`pipeline/mbtiles_server.py` — Navionics +
+satellite basemaps). **NEVER bind these for dev** — pick your own high scratch port (CLIENT 8077, WX
+8092, …). Binding a production port blanks Steve's live chart (this already happened — see WX-15).
+
 ---
 
 ## Tracking your work — the plan board (use the MCP)
