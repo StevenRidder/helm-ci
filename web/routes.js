@@ -36,7 +36,7 @@
   }
 
   // The route currently drawn on the chart (driven into the `route` map source live by
-  // index.html's updateRouteFromEngine, or seeded from data/route.geojson in preview mode). We read
+  // index.html's updateRouteFromEngine; the source starts empty — no hardcoded demo route). We read
   // it back so the drawer can show it as an UNSAVED in-session entry without owning any engine call.
   function liveRoute() {
     try {

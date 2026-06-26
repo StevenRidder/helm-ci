@@ -77,7 +77,7 @@
     },
     "route": {
       "type": "geojson",
-      "data": "data/route.geojson"
+      "data": { "type": "FeatureCollection", "features": [] }
     },
     "wind": {
       "type": "geojson",

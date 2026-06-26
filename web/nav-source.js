@@ -35,7 +35,7 @@
   // onState: called ~1 Hz with the engine-shaped state object. Returns the interval id.
   window.HelmNav = function (onState, opts) {
     opts = opts || {};
-    const route = opts.route || [                 // the drawn route (web/data/route.geojson) — inside US5FL96M
+    const route = opts.route || [                 // SIM-ONLY demo route (HELM_SIM); not used on the live screen
       { lat: 24.770, lon: -81.580, name: 'WP1 · start' },
       { lat: 24.792, lon: -81.515, name: 'WP2 · sea buoy' },
       { lat: 24.812, lon: -81.448, name: 'WP3 · channel' },
