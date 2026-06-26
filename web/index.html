@@ -44,12 +44,22 @@
   /* TOOLS-5 — whole-shell NIGHT palette: a class on <html> swaps every colour var to black + low-saturation
      red/amber (zero white/blue), so all chrome that uses the vars (toolbar, rail, drawers, instruments,
      labels) goes dark together. Transient inline-coloured popups (e.g. the AIS card) are a known follow-up. */
-  :root.theme-night{
-    --glass:rgba(8,3,1,.86);--glass2:rgba(22,9,4,.74);
-    --line:rgba(224,112,58,.18);--line2:rgba(224,112,58,.08);
+  /* DUSK — warm amber: the gentler evening step (brighter than night). */
+  :root.theme-dusk{
+    --glass:rgba(8,3,1,.84);--glass2:rgba(22,9,4,.72);
+    --line:rgba(224,112,58,.16);--line2:rgba(224,112,58,.07);
     --ctext:#d2843a;--cdim:#a85f2c;--cdim2:#7a431f;
     --accent:#e0703a;--mag:#b04a78;--ok:#b5642a;--danger:#ff5a52;--warn:#d98a3e;
   }
+  /* NIGHT — low-saturation RED on black (IHO S-52 night palette / the marine night-vision convention):
+     red preserves dark adaptation and least disturbs sleep. */
+  :root.theme-night{
+    --glass:rgba(10,2,1,.9);--glass2:rgba(26,6,4,.76);
+    --line:rgba(226,74,58,.2);--line2:rgba(226,74,58,.09);
+    --ctext:#e2503c;--cdim:#b23d2e;--cdim2:#7e2c20;
+    --accent:#ff5e46;--mag:#c2506a;--ok:#c0683a;--danger:#ff5a52;--warn:#e08a4a;
+  }
+  :root.theme-dusk body{background:#0a0604}
   :root.theme-night, :root.theme-night body{background:#000}
   #bril-wrap{display:flex;align-items:center;gap:7px;margin-left:8px;padding:0 4px}
   #bril-wrap[hidden]{display:none}
@@ -1295,7 +1305,7 @@
     // single worst colour for both night vision and melatonin. brightness-max is then driven by brilliance.)
     const THEMES = {
       day:   { 'raster-brightness-min': 0, 'raster-brightness-max': 1,    'raster-saturation': 0,     'raster-contrast': 0,     'raster-hue-rotate': 0 },
-      dusk:  { 'raster-brightness-min': 0, 'raster-brightness-max': 0.72, 'raster-saturation': -0.2,  'raster-contrast': 0.04,  'raster-hue-rotate': 0 },
+      dusk:  { 'raster-brightness-min': 0, 'raster-brightness-max': 0.6,  'raster-saturation': -0.32, 'raster-contrast': 0.03,  'raster-hue-rotate': 0 },
       night: { 'raster-brightness-min': 0, 'raster-brightness-max': 0.3,  'raster-saturation': -0.85, 'raster-contrast': -0.05, 'raster-hue-rotate': 0 }
     };
     const NIGHT_TINT = '24,6,3';                 // deep-red film (rgb); opacity comes from brilliance
@@ -1313,7 +1323,7 @@
     // brilliance v∈[0..1] (night only): one slider drives basemap brightness + red-film opacity together,
     // from "dim" to "near-black red". Persisted via HelmStore so it survives a reload.
     function applyBrilliance() {
-      if (cur !== 'night') { film.style.background = (cur === 'dusk') ? 'rgba(92,44,10,0.13)' : 'transparent'; return; }
+      if (cur !== 'night') { film.style.background = (cur === 'dusk') ? 'rgba(74,34,10,0.28)' : 'transparent'; return; }
       const v = (window.HelmStore ? +HelmStore.get('ui.nightBrilliance', 45) : 45) / 100;
       paintRasters({ 'raster-brightness-max': 0.55 - 0.45 * v });           // 0.55 (dimmer) → 0.10 (darkest)
       film.style.background = 'rgba(' + NIGHT_TINT + ',' + (0.18 + 0.62 * v).toFixed(2) + ')';   // 0.18 → 0.80
