@@ -100,12 +100,12 @@ north-star (esp. for iOS, where OpenCPN can't go).
 The webview talks to the C++ engine over **localhost (WebSocket + HTTP tiles)** — so the UI stays
 decoupled from C++ (it even runs in a plain browser during dev), and Tauri/Rust is just the shell.
 
-## Licensing reckoning (important — supersedes part of ADR-0003)
+## Licensing reckoning
 Reusing OpenCPN's `model/` makes the engine **GPLv2-or-later** → the desktop app is GPL.
 - For a **personal / open-source** Helm (your lean): embrace it. A GPL modern OpenCPN successor that
   reuses its battle-tested nav core is honest, community-friendly, and *far* faster than clean-room.
-- The **"sell it closed later"** option from [ADR-0003](decisions/0003-license-posture.md) is then
-  **off the table for this codepath** — that would require the clean-room rebuild (the B / GDAL path).
+- The **"sell it closed later"** option is **off the table for this GPL-engine codepath** — that
+  would require the clean-room rebuild (the B / GDAL path) and IP-counsel review.
 - **iOS** can't *host* the wx-bound GPL engine (App Store + wxWidgets + GPL). But it doesn't have to:
   the engine runs as a **boat server** (Mac mini / Pi) and iPad/iPhone are **thin network clients** —
   no GPL or wx on the phone, App Store-clean (network use ≠ distribution; arm's-length protocol ≠

@@ -55,4 +55,5 @@ Reload the page → depth + wind light up over the chart.
 3. Re-implement the layer toggles / inspector in SwiftUI.
 4. Port the wind particle layer to a Metal custom layer (or keep web-wrapped — decide here).
 
-See [docs/ROADMAP.md](docs/ROADMAP.md) Phase 1 for what follows.
+Further build sequencing lives in the private roadmap; this public repo keeps the runnable
+tracer-bullet path and supporting architecture notes.

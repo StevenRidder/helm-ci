@@ -5,7 +5,7 @@ The research engine behind the cards. A ReAct-style (reason → act → observe)
 fills the destination dossier and enriches "where to go" by actually researching — searching,
 fetching, extracting, and synthesizing WITH CITATIONS — rather than hallucinating.
 
-Honesty spine (docs/BRIEFINGS.md §6, WEATHER-ROUTING.md §7):
+Honesty spine:
 - Tools return real data (weather from Open-Meteo; fetched page text; the place store). The
   agent may only summarize what tools returned — never invent a fee, depth, holding, or
   forecast. Unknowns are "verify locally". Every claim carries a source + fetch date.
@@ -130,7 +130,7 @@ class ResearchAgent:
 
     def narrate_passage(self, slices, boat=None):
         """Narrate a sequence of slices along a path P(t) — the 'along the way' briefing.
-        Same spacetime probe, path geometry (SPACETIME-PROBE.md §4)."""
+        Same layer-sample contract, applied along the route geometry."""
         legs = [self._leg_summary(s, i) for i, s in enumerate(slices)]
         srcs = []
         for s in slices:

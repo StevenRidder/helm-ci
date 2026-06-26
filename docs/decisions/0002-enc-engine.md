@@ -8,8 +8,8 @@
 MapLibre cannot render S-52 (no IHO symbology, safety contours, or Day/Dusk/Night).
 True vector ENC needs a dedicated S-52 engine composited on top of the raster renderer.
 OpenCPN has a mature, GPLv2+ S-52 engine. Using it in a closed App Store binary is the
-"VLC problem"; the posture ([ADR-0003](0003-license-posture.md)) wants to keep the option
-to commercialize.
+"VLC problem"; the project license posture keeps the option to commercialize Helm-authored
+code separately from the GPL engine.
 
 ## Options
 

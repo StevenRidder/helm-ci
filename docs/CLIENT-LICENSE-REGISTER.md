@@ -8,8 +8,8 @@
 >
 > Scope is deliberately narrow: **code/dependencies that ship to the client.** The chart/weather
 > **data-source** register (Sentinel, NOAA, OpenSeaMap, Windy, …) and its attribution checklist
-> live in [LEGAL.md](LEGAL.md); the BSL-1.1→Apache-2.0 posture for Helm's own code lives in
-> [ADR-0003](decisions/0003-license-posture.md). This doc does not restate them.
+> live in [LEGAL.md](LEGAL.md); Helm's own code license terms live in root [LICENSE](../LICENSE)
+> and [LICENSE.BSL](../LICENSE.BSL). This doc does not restate them.
 
 ## Bottom line
 
@@ -59,8 +59,7 @@ substrings (`sample`, `submit`, `discard`, …), not license declarations.
 ## 2 · First-party code
 
 Helm-authored client code is GPL-free and carries Helm's own license
-([LICENSE.BSL](../LICENSE.BSL), per
-[ADR-0010](decisions/0010-distribution-and-packaging-posture.md): BSL-1.1 → Apache-2.0).
+([LICENSE.BSL](../LICENSE.BSL): BSL-1.1 → Apache-2.0).
 Every OpenCPN reference in
 `web/` is a **boundary comment** ("the engine computes CPA/TCPA / route — OpenCPN's
 AisDecoder/Routeman — this module just renders"); no OpenCPN C++ type, global, or symbol appears in
@@ -133,8 +132,8 @@ curl -s https://registry.npmjs.org/<pkg>/<version> | grep -o '"license":"[^"]*"'
 
 - **IP-counsel sign-off** before any *commercial* distribution that depends on the GPL engine — the
   technical boundary is necessary, not by itself sufficient
-  ([ADR-0003](decisions/0003-license-posture.md), [ADR-0009](decisions/0009-arms-length-gpl-containment.md),
-  [LEGAL.md](LEGAL.md)).
+  ([ADR-0009](decisions/0009-arms-length-gpl-containment.md), [LEGAL.md](LEGAL.md),
+  root [LICENSE](../LICENSE) / [LICENSE.BSL](../LICENSE.BSL)).
 - **Server-side dependency register.** This doc covers the *client*. A complete attribution register
   for the **engine** process (OpenCPN GPLv2+, wxWidgets 3.2 / wxWindows licence, GDAL/OGR/PROJ
   MIT-X-style) is a separate NATIVE-12 deliverable — out of scope here because none of it ships to the
@@ -149,8 +148,6 @@ curl -s https://registry.npmjs.org/<pkg>/<version> | grep -o '"license":"[^"]*"'
 
 - [ADR-0009 — Arm's-length GPL containment interface](decisions/0009-arms-length-gpl-containment.md)
   (the boundary + binary guard; `ENGINE-11`)
-- [ADR-0010 — Distribution & packaging posture](decisions/0010-distribution-and-packaging-posture.md)
-- [ADR-0003 — License posture: open now, sellable later](decisions/0003-license-posture.md)
 - [ADR-0002 — ENC engine (GPL vs clean-room GDAL rebuild)](decisions/0002-enc-engine.md)
 - [ADR-0006 — Server / thin-client split](decisions/0006-server-client-thin-display.md)
 - [LEGAL.md — chart/weather data-source register + attribution checklist](LEGAL.md)

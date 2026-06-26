@@ -34,7 +34,7 @@ Google/Bing remain **bring-your-own / personal-use only** (see [LEGAL.md](../LEG
    depths, contours, rocks/wrecks, buoy & light characteristics, datum. Imagery shows only the
    surface; it cannot show what's *under* the water, can't give a light's characteristic, and
    clouds/glint/turbidity **hide** hazards (imagery can even paint a reef out). Primary nav on
-   imagery is unsafe — it's missing the layer that makes a chart a chart (see [PRD §11](../../PRD.md)).
+   imagery is unsafe — it's missing the layer that makes a chart a chart.
 4. **Datum & accuracy.** Charts are surveyed to IHO standards with known horizontal + sounding
    datum; imagery has neither a depth reference nor survey-grade accuracy for close piloting.
 
@@ -68,5 +68,5 @@ See [CHART-PIPELINE.md](../CHART-PIPELINE.md).
   on-demand tiler), rather than free-riding Google. That *is* the moat — incumbents won't.
 - The product promise is honest: seamless and beautiful **and** safe + offline, with imagery as
   an aid, never the authority.
-- Reinforces [ADR-0003](0003-license-posture.md) (license posture) and the depth-on-satellite
-  work in [CHART-QUILTING.md](../CHART-QUILTING.md).
+- Reinforces the license posture in root [LICENSE](../../LICENSE) / [LICENSE.BSL](../../LICENSE.BSL)
+  and the depth-on-satellite work in [CHART-QUILTING.md](../CHART-QUILTING.md).

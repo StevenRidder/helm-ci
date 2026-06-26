@@ -44,20 +44,13 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 
 | Doc | What it is |
 |-----|------------|
-| [PRD.md](PRD.md) | The product requirements — read this first |
 | [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
-| [docs/VISION.md](docs/VISION.md) | The north-star UX study — what world-class & AI-native looks like |
-| [docs/SPACETIME-PROBE.md](docs/SPACETIME-PROBE.md) | The keystone primitive — any layer, any point in space/time, fused into one narratable slice |
-| [docs/WEATHER-ROUTING.md](docs/WEATHER-ROUTING.md) | Spacetime weather engine — forecast follows the boat; easy routing; LLM guardrails |
-| [docs/BRIEFINGS.md](docs/BRIEFINGS.md) | Living briefings — "along the way" + "once I get there", on a continuously-updating timeline |
-| [docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md) | Public-alpha release gate, licensing posture, and Cruisers Forum sharing plan |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
 | [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md) | Read OpenCPN file-by-file: reuse its nav core; the new plan |
-| [docs/FEATURE-AUDIT.md](docs/FEATURE-AUDIT.md) | **Client feature audit** — what's wired vs missing, benchmarked feature-by-feature against OpenCPN, pro MFDs, and iOS apps |
 | [docs/CHART-QUILTING.md](docs/CHART-QUILTING.md) | Multi-cell S-52 tiler → quilting; where OpenCPN's quilt code falls short vs ours |
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | **Build & run on macOS** — bootstrap the engine, run the stack, feature-by-feature verification checklist |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
@@ -65,11 +58,10 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [pipeline/](pipeline/) | Reusable engine: tiler · depth · wind |
 | [web/](web/) | MapLibre prototype + shared `style.json` |
 | [docs/LEGAL.md](docs/LEGAL.md) | Source licensing tiers — **read before touching a tile** |
-| [docs/ROADMAP.md](docs/ROADMAP.md) | Phases 0–3 |
 | [docs/decisions/](docs/decisions/) | Architecture decision records (ADRs) |
-| [docs/mockups/](docs/mockups/) | UI mockups (macOS / iPad / iPhone) |
 
-Internal business strategy, raw research artifacts, live-machine notes, and local
+Internal business strategy, product requirements, feature audits, roadmap/epic plans,
+release-post drafts, UI mockups, raw research artifacts, live-machine notes, and local
 operator configuration are intentionally kept out of the public repository.
 
 ## Navigation Safety
@@ -121,7 +113,7 @@ core then *emerges from working code* rather than upfront architecture.
 ## License
 
 Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL), and
-[ADR-0010](docs/decisions/0010-distribution-and-packaging-posture.md).
+[docs/LEGAL.md](docs/LEGAL.md).
 
 - **OpenCPN-derived engine work:** GPLv2-or-later, source-visible, and kept in a
   separate boat-server process behind the HTTP/WebSocket protocol boundary.
@@ -133,5 +125,4 @@ Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL), and
   service before the BSL change date.
 
 BSL is source-available, not OSI open source. The paid/commercial distribution
-path is still gated on IP counsel; see [docs/LEGAL.md](docs/LEGAL.md) and
-[docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md).
+path is still gated on IP counsel; see [docs/LEGAL.md](docs/LEGAL.md).

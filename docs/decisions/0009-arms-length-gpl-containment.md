@@ -1,6 +1,6 @@
 # ADR-0009 — Arm's-length GPL containment interface
 
-- **Status:** Accepted (interface + build-time guard implemented; commercial distribution of any GPL-derived path stays gated on IP counsel per [ADR-0003](0003-license-posture.md))
+- **Status:** Accepted (interface + build-time guard implemented; commercial distribution of any GPL-derived path stays gated on IP counsel)
 - **Date:** 2026-06-26
 - **Tracked as:** `ENGINE-11`
 
@@ -8,11 +8,10 @@
 
 Helm reuses OpenCPN's `model/` nav core and its `s57chart` S-52 renderer headless
 ([ADR-0001](0001-successor-not-fork.md), [OPENCPN-REUSE](../OPENCPN-REUSE.md)). That makes
-the **engine GPLv2-or-later**. The license posture is "open now, sellable later"
-([ADR-0003](0003-license-posture.md)), and the hard constraint from
-[LEGAL](../LEGAL.md) is the **VLC problem**: GPL source must **never be statically linked
-into a distributed, closed binary** (e.g. an App Store app) — GPL's terms are
-non-transferable against App Store terms.
+the **engine GPLv2-or-later**. Helm's own code is licensed separately, and the hard
+constraint from [LEGAL](../LEGAL.md) is the **VLC problem**: GPL source must **never be
+statically linked into a distributed, closed binary** (e.g. an App Store app) — GPL's terms
+are non-transferable against App Store terms.
 
 Two earlier ADRs set the frame but did not, by themselves, resolve how a GPL engine ships:
 [ADR-0002](0002-enc-engine.md) leans toward *rebuilding* S-52 on permissive GDAL/PROJ to
@@ -52,8 +51,8 @@ derivative work" ([ADR-0006](0006-server-client-thin-display.md)).
    cannot cover. It requires the **clean-room S-52 rebuild on GDAL/PROJ + custom symbology**
    ([ADR-0002](0002-enc-engine.md) option 2) — no OpenCPN code on the device at all.
 
-Helm's *own* code stays GPL-free and BSL-1.1→Apache-2.0 ([ADR-0003](0003-license-posture.md));
-the GPL lives only in the contained engine process.
+Helm's *own* code stays GPL-free under the root [LICENSE](../../LICENSE) /
+[LICENSE.BSL](../../LICENSE.BSL); the GPL lives only in the contained engine process.
 
 ### Enforcement (so the boundary can't silently erode)
 
@@ -71,7 +70,7 @@ the GPL lives only in the contained engine process.
 - **Packaging rule (future native):** any notarized/installer artifact must bundle the
   engine as a separate executable the client launches/▸connects to, never a statically
   linked dependency. The guard extends to native build outputs when those exist
-  (relates to [NATIVE-12](../EPICS.md) / [NATIVE-13](../EPICS.md)).
+  (tracked in private native packaging tasks).
 
 ## Consequences
 
@@ -86,7 +85,7 @@ the GPL lives only in the contained engine process.
   it remains the optional north-star for a fully offline, server-less phone app only.
 - **Still gated on IP counsel** before any *commercial* distribution that depends on the
   GPL engine — the technical boundary is necessary, not by itself sufficient
-  ([ADR-0003](0003-license-posture.md), [LEGAL](../LEGAL.md)).
+  ([LEGAL](../LEGAL.md)).
 
 ## Open
 

@@ -46,8 +46,7 @@ value  = offset + ((R<<16)|(G<<8)|B) * scale      ← only when A >= 128, else N
   far below any weather display precision. The decoder is unchanged. `--bits 24` is available for max
   fidelity.
 - **NODATA stays NODATA.** `A = 0` (land for an ocean-only layer, gap in coverage) renders transparent
-  and samples as `value: null` with a "verify locally" note. Helm never fakes a value to fill a gap
-  (`docs/VISION.md`).
+  and samples as `value: null` with a "verify locally" note. Helm never fakes a value to fill a gap.
 - Projection: standard Web-Mercator slippy tiles. Tile math mirrors `pipeline/gen_demo_data.py`.
 
 ### Tile-set layout + manifest
@@ -82,8 +81,7 @@ web/data/wxtiles/
 ## The probe — `sample(lat, lon, t)`
 
 `web/integrations/cog.js` exposes `sampleWx(lat, lon, t)` (and `window.__helmWxSample(lat, lon, t)`).
-It decodes the value from the tiles and returns a **`LayerSample`** matching
-`docs/SPACETIME-PROBE.md`:
+It decodes the value from the tiles and returns a **`LayerSample`**:
 
 ```js
 { layer, value,            // DECODED from the tiles — never invented; null when NODATA/out-of-coverage
@@ -167,8 +165,8 @@ share pixels. No tiler, no server-side colourising, fully offline.
 
 ## Ensemble spread (WX-11) — GFS vs ECMWF
 
-Multi-model honesty (`docs/VISION.md`: *"when we show GFS vs ECMWF, say which and show
-spread/agreement — disagreement between models is itself decision-relevant"*). Two value-tile sets
+Multi-model honesty: when Helm shows more than one model, it names each model and shows
+spread/agreement because disagreement between models is itself decision-relevant. Two value-tile sets
 of the same layer (one per model) are decoded together and the per-pixel **spread `|GFS − ECMWF|`**
 is painted through a ramp that is **transparent where the models agree and reddens where they
 diverge** — the map literally highlights "the forecast is uncertain here" (which typically grows with

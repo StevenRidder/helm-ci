@@ -11,7 +11,7 @@ context, weather, AIS, routing, and instruments on one offline-first screen.
 The icon therefore uses the chart itself as the brand object:
 
 - dark S-52 water and depth contours from the canonical Helm night/dusk palette
-- a route-magenta passage line, matching `#d6219a` in the mockups
+- a route-magenta passage line, matching Helm's route styling
 - a cyan own-ship arrow, matching Helm's live position/source accent
 - mint weather streamlines, echoing the own-GRIB weather layer
 - a small tan land/shoal signal so it reads as marine navigation rather than generic maps

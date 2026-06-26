@@ -5,8 +5,8 @@
 
 ## Context
 
-Offline-first is a non-negotiable differentiator (the PRD's "true BYO/offline-everything,
-no chart-subscription lock-in"). But our chart-rendering architecture
+Offline-first is a non-negotiable differentiator: true BYO/offline use, without chart-subscription
+lock-in. But our chart-rendering architecture
 ([ADR-0006](0006-server-client-thin-display.md)) renders S-52 **on the boat server** and
 ships **PNG tiles** to thin clients (`/chart/{z}/{x}/{y}.png`, per
 [engine/README.md](../../engine/README.md)). That is exactly the right call — it keeps the
@@ -16,7 +16,7 @@ powered down, or no LAN → no charts on the phone.
 
 The full fix — a **native S-52 renderer on the client** (the permissive GDAL/PROJ rebuild,
 [ADR-0002](0002-enc-engine.md) Option B) — is multi-engineer-years of safety-critical work
-and is deliberately held as an **insurance policy, not a roadmap line item** (see the S-57
+and is deliberately held as an **insurance policy, not a committed public milestone** (see the S-57
 reasoning: we designed *around* the GPL wall with the tile-server split rather than rewriting
 through it). We need offline charts on the phone **without** paying for that rewrite yet.
 
@@ -90,7 +90,7 @@ Per the production quality bar — truthful signals, never silently degrade:
 - **Complements [ADR-0006](0006-server-client-thin-display.md).** Identical tile contract; the
   client just swaps the live source for a local one. The boat server remains the renderer of
   record (live tiles when connected, baked packs when not).
-- **Extends Phase 1's on-demand pipeline** (mbtiles → offline) from raster basemaps to S-52
+- **Extends the on-demand pipeline** (mbtiles → offline) from raster basemaps to S-52
   charts.
 
 ## Open questions

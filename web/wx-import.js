@@ -5,7 +5,7 @@
 // HelmShell panel with a file picker, parses the file ENTIRELY ON-DEVICE (web/wx-grib2.js for GRIB,
 // DOMParser for GPX), and overlays it distinctly, labelled honestly as imported.
 //
-// HONESTY / LICENSE (docs/WEATHER.md, docs/WEATHER-ROUTING.md, ARCHITECTURE.md): imported PredictWind
+// HONESTY / LICENSE (docs/WEATHER.md, docs/ARCHITECTURE.md): imported PredictWind
 // GRIB is ECMWF/AROME/UKMO-derived ("internal use only"), so it is kept **device-local** — it is
 // never uploaded, never sent to the engine/backend, never persisted server-side, and is **excluded
 // from any cloud-sync/share path**. We hold it only in page memory + map layers (ids helm-wx-import-*)

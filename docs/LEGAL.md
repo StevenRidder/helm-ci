@@ -44,8 +44,8 @@
   on permissive **GDAL/PROJ + custom symbology**. Given the "open-now-maybe-sell-later"
   posture, the permissive rebuild is favored. See [ADR-0002](decisions/0002-enc-engine.md).
 - **IP counsel must sign off before any OpenCPN source is embedded.**
-- Helm's own license: see [ADR-0003](decisions/0003-license-posture.md) (recommended BSL
-  1.1 → Apache-2.0).
+- Helm's own license terms are in root [LICENSE](../LICENSE) and
+  [LICENSE.BSL](../LICENSE.BSL): BSL 1.1 → Apache-2.0 for Helm-authored components.
 
 ## Mandatory user-facing disclaimer
 

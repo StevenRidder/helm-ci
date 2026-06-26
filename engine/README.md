@@ -93,7 +93,7 @@ isolating a nav-only or chart-only bug.
 - Client code must not link, embed, or port OpenCPN source expression.
 - The engine never silently labels simulated/stale data as live.
 - Public or paid distribution remains gated on the legal/licensing checks in
-  `docs/LEGAL.md`, `docs/CLIENT-LICENSE-REGISTER.md`, and `docs/PUBLIC-ALPHA-CHECKLIST.md`.
+  `docs/LEGAL.md` and `docs/CLIENT-LICENSE-REGISTER.md`.
 
 See also: [../docs/RUNBOOK.md](../docs/RUNBOOK.md),
 [VENDORING.md](VENDORING.md), and [../docs/STREAMING-API.md](../docs/STREAMING-API.md).

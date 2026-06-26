@@ -155,5 +155,4 @@ a personal-use flag; pursue Option A (partnership) only if commercializing. Reco
 The **"where to go" recommender** runs on open + owned + RAG (no NFL dependency); **NFL read
 is enrichment only, gated under Experimental Features** (personal/unofficial/may-break) or a
 partnership. **Give-back** (NFL push + opt-in OSM/OpenSeaMap contribution) ships now and is
-the **reciprocity leverage** for a partnership. Wireframe:
-[../mockups/nfl-giveback-experimental.html](../mockups/nfl-giveback-experimental.html).
+the **reciprocity leverage** for a partnership. The UI wireframe is kept with private design files.

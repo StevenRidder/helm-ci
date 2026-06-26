@@ -154,5 +154,5 @@ is the **default behaviour**, not a feature to bolt on.
 ---
 
 *Cross-references: [OPENCPN-REUSE.md](OPENCPN-REUSE.md) (quilting = "rebuild, high"),
-[CHART-PIPELINE.md](CHART-PIPELINE.md) (on-demand download + depth-on-satellite),
-[FEATURE-AUDIT.md](FEATURE-AUDIT.md) §4.1 (chart capability matrix).*
+[CHART-PIPELINE.md](CHART-PIPELINE.md) (on-demand download + depth-on-satellite). Broader
+chart capability context lives in the private feature audit.*

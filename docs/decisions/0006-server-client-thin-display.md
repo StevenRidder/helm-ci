@@ -15,9 +15,9 @@ GPL through the App Store*:
    the OpenCPN core per [OPENCPN-REUSE.md](../OPENCPN-REUSE.md)) has no production iOS
    backend.
 
-Both [ADR-0002](0002-enc-engine.md) and [ADR-0003](0003-license-posture.md) answered this
-with "rebuild the engine on permissive libs (GDAL/PROJ) so there's no GPL to ship." That's
-real but slow work, and it's only *required* if the engine has to live **on the phone**.
+[ADR-0002](0002-enc-engine.md) answered this with "rebuild the engine on permissive libs
+(GDAL/PROJ) so there's no GPL to ship." That's real but slow work, and it's only
+*required* if the engine has to live **on the phone**.
 
 But Phase 2 already built the engine as a **network server**, not a linked library. Per
 [engine/README.md](../../engine/README.md), `helm-engine` already serves nav state over
@@ -84,7 +84,8 @@ regardless of licensing.
   only as good as the stream. The full design — framing, reconnect/resume, staleness,
   alarm reliability, tile caching, discovery, pairing/TLS, iOS specifics, perf budgets — is
   specified in [STREAMING-API.md](../STREAMING-API.md).
-- Not legal advice; the GPL boundary stays "gated on IP counsel" per ADR-0002/0003 — but
+- Not legal advice; the GPL boundary stays "gated on IP counsel" per ADR-0002 and
+  [LEGAL](../LEGAL.md) — but
   this posture is *materially safer* than the linking question those ADRs worry about,
   because there is no linking and no distribution to the phone at all.
 

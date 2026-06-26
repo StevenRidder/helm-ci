@@ -160,8 +160,8 @@ The engine renders S-52 on the main thread (CPU-bound on a Pi). So:
 - **Visible-first priority.** The render queue prioritizes tiles inside requesting clients'
   `viewport` over speculative ones.
 - **Pre-render the route corridor.** When a route loads, render tiles along the corridor at
-  nav zooms at idle, so the client can **bulk-prefetch them for offline** (the PRD's "lasso →
-  cache offline," applied to the thin client). Expose as `GET /prefetch?route=…` → a tile
+  nav zooms at idle, so the client can **bulk-prefetch them for offline** (the selected-region
+  offline-cache flow, applied to the thin client). Expose as `GET /prefetch?route=…` → a tile
   manifest the client downloads.
 
 ### 2.4 Compositing & the future vector path

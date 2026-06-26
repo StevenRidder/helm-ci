@@ -28,6 +28,5 @@ OpenCPN's chart engine only where licensing allows (and only on macOS at first).
 - We are **not** modernizing OpenCPN's code; we're building its modern successor and
   borrowing its engine where clean to do so.
 - iOS/iPadOS are clean re-implementations (a port is impossible — wxWidgets/GPL/serial).
-- Forces the ENC-engine and license decisions ([ADR-0002](0002-enc-engine.md),
-  [ADR-0003](0003-license-posture.md)).
+- Forces the ENC-engine and license decisions ([ADR-0002](0002-enc-engine.md), [LEGAL](../LEGAL.md)).
 - Most upfront work, but the only path that reaches the phone natively.

@@ -17,7 +17,7 @@ GFS-Wave/WW3 (waves/swell) and RTOFS (currents/SST) are separate products — no
 DECODING: GRIB2 needs a real decoder. We use pygrib or cfgrib/xarray IF installed (the production
 boat image ships one); if neither is present — or there's no network — we DEGRADE HONESTLY: print
 exactly what we would have fetched and tell you to use the Tier-1 fetcher or `make_value_tiles.py
---demo`. We NEVER fabricate values to stand in for a real model (docs/VISION.md: never fake a feed).
+--demo`. We NEVER fabricate values to stand in for a real model; missing live data degrades visibly.
 
 Usage:
     python3 fetch_grib.py --bbox="-87,19,-77,29" --nx 24 --ny 24 --layers wind,pressure --hours 12 --out ../web/data

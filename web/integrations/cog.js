@@ -72,7 +72,7 @@ export function disable(map) {
  * (the face ROUTING-3's spacetime probe and AI-5's layer sample() consume). One source of truth:
  * the heatmap you see and the number the probe reads are decoded from identical pixels.
  *
- * Honesty (docs/VISION.md): NODATA pixels (alpha<128) are transparent and sample as a null value
+ * Honesty: NODATA pixels (alpha<128) are transparent and sample as a null value
  * with a "verify locally" note — Helm never fakes a value to fill a gap; every sample carries its
  * model name + valid-time + horizon/confidence so a consumer can show provenance.
  * ============================================================================================ */
@@ -183,7 +183,7 @@ async function wxProtocol(params, abortController) {
 }
 
 function provenanceClass(source) {
-  // docs/SPACETIME-PROBE.md LayerSample.source ∈ open|owned|rag|nfl|engine (+ extensions). Public
+  // LayerSample.source ∈ open|owned|rag|nfl|engine (+ extensions). Public
   // weather MODELS (GFS/ECMWF/ICON/Open-Meteo) are 'open'. The synthetic offline demo is NOT a real
   // feed — it must NOT share the trusted-model 'open' class, so it gets its own 'synthetic' token
   // (a consumer that only trusts the known enum fails closed on it). The authoritative not-for-nav
@@ -203,7 +203,7 @@ function layerSample(cfg, value, frame, note) {
     source: provenanceClass(cfg.source),
     sourceRef: { title: cfg.model || cfg.source, url: SOURCE_URL[cfg.source] || null, provenance: cfg.source },
     // freshness = data-age (when the model was issued/fetched), NOT the forecast valid-time — those
-    // are separate fields per SPACETIME-PROBE.md. validTime is returned distinctly below.
+    // are separate fields. validTime is returned distinctly below.
     freshness: cfg.fetchedAt || (cfg.source === 'demo-synthetic' ? 'synthetic' : 'forecast'),
     confidence: cfg.confidence || 'fair', horizon: cfg.horizon || null,
     validTime: validTime, encoding: cfg.encoding,
@@ -270,12 +270,12 @@ export function setWxFrame(map, frame) {
   if (src && src.setTiles) src.setTiles(['helmwx://' + wxActiveKey + '/' + f + '/{z}/{x}/{y}']);
 }
 
-// PUBLIC PROBE — the deterministic weather sample face (ROUTING-3 / AI-5). Returns a LayerSample
-// (docs/SPACETIME-PROBE.md): { layer, value, unit, source, sourceRef, freshness, confidence,
+// PUBLIC PROBE — the deterministic weather sample face. Returns a LayerSample
+// { layer, value, unit, source, sourceRef, freshness, confidence,
 // horizon, validTime, note? }. value is DECODED from the value tiles (never invented); null +
 // "verify locally" when the point is outside coverage or NODATA.
-//   NOTE on argument order: this honours the doc contract sample(lat, lon, t) — lat FIRST — which
-//   differs from web/wind-layer.js's sample(lon, lat). Documented so AI-5/AI-17 standardise on one.
+//   NOTE on argument order: keep this public probe sample(lat, lon, t) — lat FIRST — which
+//   differs from web/wind-layer.js's sample(lon, lat).
 export async function sampleWx(lat, lon, t, opts) {
   const C = codec(); if (!C) return null;
   const setId = (opts && opts.layer) || wxActiveKey;
@@ -301,8 +301,8 @@ export function activeWx() { const s = wxSets[wxActiveKey]; return s ? s.cfg : n
 /* ============================================================================================
  * WX-11 — ENSEMBLE GFS-vs-ECMWF confidence / spread.
  * --------------------------------------------------------------------------------------------
- * Multi-model honesty (docs/VISION.md): "when we show GFS vs ECMWF, say which and show
- * spread/agreement — disagreement between models is itself decision-relevant." This decodes TWO
+ * Multi-model honesty: when we show GFS vs ECMWF, say which and show spread/agreement;
+ * disagreement between models is itself decision-relevant. This decodes TWO
  * value-tile sets (the same layer from two models) and renders the per-pixel SPREAD |A−B| through a
  * ramp that is transparent where the models agree and reddens where they diverge — so the map
  * literally highlights "the forecast is uncertain here". sampleEnsemble(lat,lon,t) returns both

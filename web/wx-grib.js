@@ -9,7 +9,7 @@
   var cogP = null;
   function cog() { return cogP || (cogP = import('./integrations/cog.js')); }
 
-  // sample(lat, lon, t) -> LayerSample (value-encoded weather tiles). lat-first per SPACETIME-PROBE.md.
+  // sample(lat, lon, t) -> LayerSample (value-encoded weather tiles). Keep the public probe lat-first.
   window.__helmWxSample = function (lat, lon, t, opts) { return cog().then(function (m) { return m.sampleWx(lat, lon, t, opts); }); };
   // ensemble sample -> { value/mean, spread, agreement, confidence, models, ... }.
   window.__helmWxEnsemble = function (lat, lon, t) { return cog().then(function (m) { return m.sampleEnsemble(lat, lon, t); }); };

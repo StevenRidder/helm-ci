@@ -100,9 +100,9 @@ Two compliant options for the ENC engine, gated on IP counsel:
 2. **Rebuild S-52 on permissive GDAL/OGR + PROJ + a custom symbology layer** (clean IP).
 
 Because the posture is "open now, maybe sell later," option 2 is favored — it keeps the
-core relicensable. See [ADR-0002](decisions/0002-enc-engine.md) and
-[ADR-0003](decisions/0003-license-posture.md). **No OpenCPN code in the core until
-counsel signs off.**
+core relicensable. See [ADR-0002](decisions/0002-enc-engine.md), [LEGAL](LEGAL.md), and
+root [LICENSE](../LICENSE) / [LICENSE.BSL](../LICENSE.BSL). **No OpenCPN code in the core
+until counsel signs off.**
 
 ## Offline-first / sync
 

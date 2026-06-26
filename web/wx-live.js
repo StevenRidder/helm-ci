@@ -5,7 +5,7 @@
 // (debounced) as you pan — so weather fills the screen everywhere you look, the way Windy does.
 //
 // HONESTY: weather is fetched live; if the network is unreachable (offshore / no link) it surfaces
-// a clear notice and renders NOTHING — it never fabricates a field to fill the gap (docs/VISION.md).
+// a clear notice and renders NOTHING — it never fabricates a field to fill the gap.
 // Provenance is always Open-Meteo (named); for offline coverage, bake Tier-2 tiles for your area.
 (function () {
   'use strict';

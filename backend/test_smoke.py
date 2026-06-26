@@ -8,7 +8,7 @@ all pass, 1 = something failed.
     cd backend && pip install -r requirements.txt && python test_smoke.py
 
 This is the deterministic floor. With OPENAI_API_KEY set and open network you additionally get
-real OpenAI prose + real Open-Meteo values — verify those separately (see docs/HANDOFF-TESTING.md).
+real OpenAI prose + real Open-Meteo values; verify those separately before live use.
 """
 import os
 os.environ.pop("OPENAI_API_KEY", None)          # force stub mode for a deterministic run
