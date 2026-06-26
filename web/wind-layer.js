@@ -518,6 +518,17 @@
       });
   };
 
+  // Feed an in-memory leaflet-velocity grid (same shape load() fetches). Lets the Live fetch-on-pan
+  // mode (wx-live.js) drive the particles over the current VIEWPORT — the windgl/Windy approach where
+  // the GPU particle field re-renders to fill the screen at any zoom, instead of one fixed-bbox patch.
+  HelmWindLayer.prototype.setData = function (json) {
+    var ok = this.field.build(json);
+    if (!ok) { this.field.valid = false; this._particles = []; return false; }
+    this._initParticles();
+    if (this._visible) { this._clear(); this._start(); }
+    return true;
+  };
+
   HelmWindLayer.prototype.setVisible = function (v) {
     v = !!v;
     if (v === this._visible) return;

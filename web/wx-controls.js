@@ -12,7 +12,7 @@
   'use strict';
   var cogP = null;
   function cog() { return cogP || (cogP = import('./integrations/cog.js')); }
-  var S = { map: null, resolution: 'standard', model: 'single', els: {}, probeT: null };
+  var S = { map: null, resolution: 'live', model: 'single', els: {}, probeT: null };  // Live (fill-the-view) is the default — Windy-style
 
   function activeLayer() { return window.__activeWx || 'wind'; }
   function notify(msg, level) {
@@ -53,9 +53,15 @@
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
-      showLegacy(false);
-      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) window.HelmWxLive.enable(map, { layer: layer, notify: notify });
-      else notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');
+      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        showLegacy(false);
+        // onState: online → Live (particles + field) fills the view; offline → fall back to the
+        // static local field so there's always something (never a blank screen).
+        window.HelmWxLive.enable(map, { layer: layer, notify: notify, onState: function (s) { showLegacy(s === 'offline'); } });
+      } else {
+        showLegacy(true);                                  // marine layers (waves/swell/sst/current) — static for now
+        notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');
+      }
     } else {
       showLegacy(true);                                   // Standard + Single → the legacy field handles it
       notify('');

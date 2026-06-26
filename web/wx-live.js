@@ -16,7 +16,7 @@
   // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers (waves/swell/sst/current)
   // use a different endpoint and stay on Standard for now.
   var LAYERS = {
-    wind:     { v: 'wind_speed_10m', unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
+    wind:     { v: 'wind_speed_10m', dir: 'wind_direction_10m', vector: true, unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
     gust:     { v: 'wind_gusts_10m', unit: 'kn', stops: [[0,[56,189,248]],[10,[45,212,191]],[20,[250,204,21]],[30,[249,115,22]],[42,[239,68,68]],[60,[217,33,154]]] },
     rain:     { v: 'precipitation', unit: 'mm', stops: [[0,[80,160,220,0]],[0.2,[90,180,255,0.55]],[2,[40,120,235,0.8]],[6,[120,90,235,0.85]],[15,[175,60,200,0.9]]] },
     temp:     { v: 'temperature_2m', unit: '°C', stops: [[-10,[70,90,200]],[0,[80,180,235]],[10,[70,200,130]],[20,[245,205,60]],[30,[240,120,40]],[42,[210,40,40]]] },
@@ -26,7 +26,7 @@
   };
   function supports(layer) { return !!LAYERS[layer]; }
 
-  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {}, handler: null, debounce: null, lastKey: '' };
+  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {}, onState: null, handler: null, debounce: null, lastKey: '' };
 
   function codec() { return window.HelmWxCodec; }
 
@@ -54,10 +54,29 @@
 
   function url(g, layer, model) {
     var L = LAYERS[layer];
-    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + L.v;
+    var cur = L.v + (L.dir ? ',' + L.dir : '');             // vector layers also fetch direction (for particles)
+    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + cur;
     if (layer === 'wind' || layer === 'gust') p += '&wind_speed_unit=kn';
     if (model && model !== 'gfs_seamless') p += '&models=' + model;
     return FORECAST + '?' + p;
+  }
+
+  // Build a leaflet-velocity grid (the format HelmWind.setData/build expects) from speed+direction,
+  // so the GPU particle layer fills the viewport. u/v point WHERE THE WIND BLOWS TO (FROM-dir + 180).
+  function buildVelocity(nodes, g, L) {
+    var us = [], vs = [], D2R = Math.PI / 180;
+    for (var k = 0; k < g.qlat.length; k++) {
+      var node = Array.isArray(nodes) ? nodes[k] : nodes, c = node && node.current;
+      var spd = c && typeof c[L.v] === 'number' ? c[L.v] : 0;
+      var dir = c && typeof c[L.dir] === 'number' ? c[L.dir] : 0;
+      us.push(-spd * Math.sin(dir * D2R));                  // FROM-direction -> motion vector (negated)
+      vs.push(-spd * Math.cos(dir * D2R));
+    }
+    var hdr = { nx: g.nx, ny: g.ny, lo1: g.lons[0], la1: g.lats[0], lo2: g.lons[g.lons.length - 1],
+               la2: g.lats[g.lats.length - 1], dx: (g.lons[g.lons.length - 1] - g.lons[0]) / (g.nx - 1),
+               dy: (g.lats[0] - g.lats[g.lats.length - 1]) / (g.ny - 1) };
+    return [{ header: Object.assign({ parameterNumber: 2 }, hdr), data: us },
+            { header: Object.assign({ parameterNumber: 3 }, hdr), data: vs }];
   }
 
   // turn Open-Meteo's per-point response into a field-<layer> grid (row-major N->S).
@@ -122,16 +141,23 @@
     try {
       var nodes = await fetchPoints(url(g, st.layer, st.model === 'gfs_seamless' ? null : st.model), ac.signal);
       if (my !== st.token || !st.on) return;              // a newer pan superseded this one
-      var field = toField(nodes, g, st.layer);
+      var field = toField(nodes, g, st.layer), L = LAYERS[st.layer];
       if (!field.values.some(function (v) { return isFinite(v); })) { clearLayer(st.map); st.notify('No live data for this area', 'warn'); return; }
       renderField(st.map, field);
+      // Drive the GPU particle layer over the viewport (the Windy "alive" feel) for vector layers.
+      if (window.__helmWind) {
+        if (L.vector) { window.__helmWind.setData(buildVelocity(nodes, g, L)); window.__helmWind.setVisible(true); }
+        else window.__helmWind.setVisible(false);            // no particles for scalar layers (temp/pressure/…)
+      }
       st.notify('Live ' + st.layer + ' · Open-Meteo, this view', 'ok');
+      if (st.onState) st.onState('ok');
     } catch (e) {
       if (e && e.name === 'AbortError') return;
       // honest offline behaviour — never fabricate a field, and don't leave a stale overlay in the
-      // wrong place: if what's rendered no longer covers the view, drop it.
+      // wrong place: if what's rendered no longer covers the view, drop it + fall back to Standard.
       if (!covers(st.field, st.map)) clearLayer(st.map);
-      st.notify('Live weather needs a connection — offline. (Standard mode shows your cached local field.)', 'warn');
+      st.notify('Live weather needs a connection — showing your cached local field.', 'warn');
+      if (st.onState) st.onState('offline');
     }
   }
 
@@ -140,7 +166,7 @@
   function enable(map, opts) {
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
-    st.notify = opts.notify || st.notify; st.on = true; st.lastKey = '';
+    st.notify = opts.notify || st.notify; st.onState = opts.onState || null; st.on = true; st.lastKey = '';
     if (!st.handler) { st.handler = onMove; map.on('moveend', st.handler); }
     refresh();
   }

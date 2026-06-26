@@ -827,6 +827,7 @@
 
   // ---- weather: heatmap color field (HelmField) + animated particles (HelmWind) ----
   const wind = window.HelmWind ? HelmWind(map) : null;
+  window.__helmWind = wind;                    // shared with Live (wx-live.js) to drive particles over the viewport
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
