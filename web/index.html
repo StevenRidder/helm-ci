@@ -995,12 +995,18 @@
   // Strip the padding so "MOIN@@@@@@@@@@@@@@@@" shows as "MOIN" (and an all-pad field -> empty).
   const aisName = s => { const n = String(s == null ? '' : s).replace(/@+/g, '').trim(); return /^unknown$/i.test(n) ? '' : n; };
   const aisAge = sec => sec == null ? null : (sec < 90 ? Math.round(sec) + ' s' : Math.round(sec / 60) + ' min') + ' ago';
-  // Freshness chip — green fresh / amber aging / red stale, so you trust (or distrust) the reading at a glance.
+  // Themed chip — quiet glass to match the card (rgba surface + hairline border), not a candy pill.
+  // Freshness state reads from a small coloured dot (green fresh / amber aging / red stale); the chip
+  // itself stays in the card's muted palette. Shared base used by the source chip too.
+  const AIS_CHIP = 'display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--cdim);'
+    + 'background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.13);padding:4px 10px;border-radius:9px';
   const aisFreshChip = sec => {
     if (sec == null) return '';
-    const a = +sec, col = a <= 15 ? ['#173404', '#97c459'] : a <= 120 ? ['#412402', '#ef9f27'] : ['#3a0f0d', '#ff8a82'];
+    const a = +sec, dot = a <= 15 ? '#43d17d' : a <= 120 ? '#f5c451' : '#ff8a82';
     const txt = a < 90 ? Math.round(a) + 's ago' : Math.round(a / 60) + 'm ago';
-    return '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:' + col[0] + ';background:' + col[1] + ';padding:5px 10px;border-radius:16px">🕒 ' + (a > 120 ? 'stale · ' : 'updated ') + txt + '</span>';
+    return '<span style="' + AIS_CHIP + (a > 120 ? ';color:#ffb4ae' : '') + '">'
+      + '<span style="width:7px;height:7px;border-radius:50%;background:' + dot + ';flex:0 0 auto"></span>'
+      + (a > 120 ? 'stale · ' : 'updated ') + txt + '</span>';
   };
   // Source chip — resolve the engine's source connection id to its friendly name (the conns list rides
   // the nav frame). Lets you tell "via Vesper AIS" from "via DataHub" from a 3rd-party feed at a glance.
@@ -1094,7 +1100,7 @@
 
     const fresh = aisFreshChip(p.ageSec);
     const srcLabel = aisSourceLabel(p.source);
-    const srcChip = srcLabel ? '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#042c53;background:#85b7eb;padding:5px 10px;border-radius:16px">📡 ' + aisEsc(srcLabel) + '</span>' : '';
+    const srcChip = srcLabel ? '<span style="' + AIS_CHIP + '">📡 ' + aisEsc(srcLabel) + '</span>' : '';
     const pinned = !!(window.HelmAisPins && HelmAisPins.has && HelmAisPins.has(p.mmsi));
     const pinBtn = '<button onclick="window.HelmAisPins&&HelmAisPins.toggle(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
       + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';

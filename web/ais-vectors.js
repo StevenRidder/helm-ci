@@ -104,9 +104,9 @@
       add({ id: 'helm-ais-cpa-marker', type: 'circle', source: SRC, filter: ['==', ['get', 'kind'], 'cpa'],
         paint: { 'circle-radius': 5, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': ['get', 'color'], 'circle-stroke-width': 2 } }, before);
       add({ id: 'helm-ais-cpa-label', type: 'symbol', source: SRC, filter: ['==', ['get', 'kind'], 'cpa'],
-        layout: { 'text-field': ['get', 'label'], 'text-font': ['Noto Sans Regular'], 'text-size': 9.5,
-          'text-offset': [0, 1.1], 'text-anchor': 'top', 'text-allow-overlap': true },
-        paint: { 'text-color': ['get', 'color'], 'text-halo-color': 'rgba(7,12,18,0.92)', 'text-halo-width': 1.1 } }, before);
+        layout: { 'text-field': ['get', 'label'], 'text-font': ['Noto Sans Regular'], 'text-size': 13,
+          'text-offset': [0, 1.0], 'text-anchor': 'top', 'text-allow-overlap': true },
+        paint: { 'text-color': ['get', 'color'], 'text-halo-color': 'rgba(7,12,18,0.95)', 'text-halo-width': 1.9 } }, before);
       built = true;
       applyVisibility();
     }
