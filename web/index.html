@@ -799,7 +799,7 @@
   document.querySelectorAll('.row input[data-layer]').forEach(cb => {
     cb.addEventListener('change', () => {
       const id = cb.dataset.layer, vis = cb.checked ? 'visible' : 'none';
-      map.getStyle().layers.filter(l => l.id === id || l.id.startsWith(id + '-'))
+      map.getStyle().layers.filter(l => l.id === id || l.id.startsWith(id + '-') || l.id.startsWith('helm-' + id + '-'))   // also Helm's namespaced layers (helm-ais-* triangles/symbols/lost/tracks/cones — not just the legacy ais-*/label)
         .forEach(l => map.setLayoutProperty(l.id, 'visibility', vis));
     });
   });
