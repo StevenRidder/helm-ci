@@ -1,0 +1,400 @@
+#!/usr/bin/env python3
+"""
+helm-wx — the met-ocean / data-layer gateway (clean-IP microservice)
+====================================================================
+A standalone, permissively-licensed service that turns external weather sources into Helm's
+VALUE-ENCODED Mercator tiles on demand — the online counterpart of pipeline/make_value_tiles.py.
+
+WHY IT EXISTS (the architecture, see docs/decisions/0006/0009 + docs/ARCHITECTURE.md):
+  • The GPL OpenCPN/S-52 engine is quarantined behind the wire (arm's-length containment). This
+    service is the OPPOSITE corner — net-new, clean IP (FastAPI + httpx + Python stdlib only; no GPL,
+    no OpenCPN) — a brick in the POST-GPL data plane, not the legacy core.
+  • It is the seam where map data layers enter Helm. Today: Open-Meteo. Tomorrow: the S-100 met-ocean
+    product specs (S-411 wind/pressure, S-412 waves, S-104 water level, S-111 currents) plug in here,
+    beside the planned permissive S-101 chart rebuild. The client never changes — it just consumes
+    helm-wxv1 tiles over HTTP.
+  • "Fetch once, serve many" (what Windy does): a coarse source grid is fetched per coarse cell and
+    cached; every output tile in that cell is baked from it. One client or twenty, panning or zooming,
+    we touch Open-Meteo only when we move into a genuinely new area or the cache ages out.
+
+CONTRACT (mirrors web/wx-value-codec.js + pipeline/make_value_tiles.py — "helm-wxv1"):
+  GET /{layer}/manifest.json     -> {encoding, scale, offset, ramp, bbox, minzoom, maxzoom, unit, ...}
+  GET /{layer}/{z}/{x}/{y}.png   -> 256x256 RGBA; RGB = 24-bit value, A = NODATA mask (0 = no data)
+      value = offset + ((R<<16)|(G<<8)|B) * scale     (decoded + colourised client-side by cog.js)
+  GET /index.json                -> layer catalogue for the UI picker
+  GET /health
+
+HONESTY: never fabricates a value to fill a gap (NODATA stays transparent). On a provider 429/outage
+we serve stale cache if we have it, else fail honestly — we do NOT invent weather. NOT FOR NAVIGATION.
+
+Run:  uvicorn app:app --port 8091      (deps: pip install -r requirements.txt)
+"""
+import asyncio
+import json
+import math
+import os
+import struct
+import time
+import zlib
+from typing import Dict, List, Optional, Tuple
+
+import httpx
+from fastapi import FastAPI, Response
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi.responses import JSONResponse, PlainTextResponse
+
+# ------------------------------------------------------------------ config
+VMAX24 = 0xFFFFFF
+ENCODING = "helm-wxv1"
+FORECAST = "https://api.open-meteo.com/v1/forecast"
+CACHE_DIR = os.environ.get("HELM_WX_CACHE", os.path.join(os.path.dirname(__file__), "cache"))
+TTL = int(os.environ.get("HELM_WX_TTL", "1800"))            # a fetched grid / baked tile is reusable for 30 min
+COOLDOWN = int(os.environ.get("HELM_WX_COOLDOWN", "300"))   # after a 429 we serve cache only for 5 min
+DATA_Z_MAX = int(os.environ.get("HELM_WX_DATA_Z", "7"))     # finest zoom we fetch SOURCE grids at; tiles above overzoom
+GRID_N = int(os.environ.get("HELM_WX_GRID_N", "12"))        # source-grid resolution per coarse cell (GRID_N x GRID_N pts)
+# NOTE: GRID_N**2 points go in ONE Open-Meteo GET; >~150 points overflows the URI (HTTP 414). 12x12=144
+# is the safe max (matches web/wx-live.js). Finer detail comes from a finer DATA_Z (smaller cells), not N.
+TILE_MEM_MAX = int(os.environ.get("HELM_WX_TILE_MEM", "400"))
+TIMEOUT = float(os.environ.get("HELM_WX_TIMEOUT", "12"))
+USER_AGENT = "helm-wx/0.1 (+https://github.com/StevenRidder/Helm; marine chartplotter, cached client)"
+
+# Per-layer config. scale/offset are FIXED per layer (from a sensible physical [vmin,vmax]) so colours
+# and decoded values are comparable across EVERY tile and session — like Windy's fixed scales, and
+# unlike the offline baker's per-pack min/max. Ramps mirror web/wx-live.js so Live and tiles agree.
+LAYERS: Dict[str, dict] = {
+    "wind":     {"v": "wind_speed_10m", "unit": "kn", "vmin": 0.0, "vmax": 80.0,
+                 "stops": [[0, [98, 113, 183]], [5, [57, 131, 168]], [10, [52, 171, 151]], [16, [123, 183, 80]],
+                           [22, [225, 200, 60]], [30, [232, 130, 50]], [40, [214, 70, 74]], [55, [150, 60, 150]]]},
+    "gust":     {"v": "wind_gusts_10m", "unit": "kn", "vmin": 0.0, "vmax": 100.0,
+                 "stops": [[0, [56, 189, 248]], [10, [45, 212, 191]], [20, [250, 204, 21]], [30, [249, 115, 22]],
+                           [42, [239, 68, 68]], [60, [217, 33, 154]]]},
+    "temp":     {"v": "temperature_2m", "unit": "°C", "vmin": -40.0, "vmax": 50.0,
+                 "stops": [[-10, [70, 90, 200]], [0, [80, 180, 235]], [10, [70, 200, 130]], [20, [245, 205, 60]],
+                           [30, [240, 120, 40]], [42, [210, 40, 40]]]},
+    "pressure": {"v": "pressure_msl", "unit": "hPa", "vmin": 950.0, "vmax": 1050.0,
+                 "stops": [[980, [120, 80, 200]], [1000, [80, 160, 230]], [1013, [120, 205, 140]],
+                           [1025, [240, 200, 80]], [1040, [230, 110, 55]]]},
+    "rain":     {"v": "precipitation", "unit": "mm", "vmin": 0.0, "vmax": 50.0,
+                 "stops": [[0, [80, 160, 220, 0]], [0.2, [90, 180, 255, 0.55]], [2, [40, 120, 235, 0.8]],
+                           [6, [120, 90, 235, 0.85]], [15, [175, 60, 200, 0.9]]]},
+    "clouds":   {"v": "cloud_cover", "unit": "%", "vmin": 0.0, "vmax": 100.0,
+                 "stops": [[0, [150, 170, 190, 0]], [40, [200, 210, 222, 0.4]], [80, [235, 240, 246, 0.75]],
+                           [100, [250, 252, 255, 0.9]]]},
+    "cape":     {"v": "cape", "unit": "J/kg", "vmin": 0.0, "vmax": 4000.0,
+                 "stops": [[0, [56, 160, 200, 0]], [300, [120, 200, 120, 0.5]], [1000, [245, 205, 60, 0.8]],
+                           [2500, [240, 120, 40, 0.9]], [4000, [220, 40, 40, 0.95]]]},
+}
+MODEL_NAME = "Open-Meteo (GFS-seamless)"
+
+
+def layer_scale_offset(cfg: dict) -> Tuple[float, float]:
+    vmin, vmax = float(cfg["vmin"]), float(cfg["vmax"])
+    scale = (vmax - vmin) / VMAX24 if vmax > vmin else 1.0
+    return scale, vmin
+
+
+# ------------------------------------------------------------------ web mercator (mirrors make_value_tiles.py)
+def lonlat_to_tile(lon: float, lat: float, z: int) -> Tuple[float, float]:
+    n = 2 ** z
+    x = (lon + 180.0) / 360.0 * n
+    lat = max(-85.05112878, min(85.05112878, lat))
+    lr = math.radians(lat)
+    y = (1.0 - math.log(math.tan(lr) + 1.0 / math.cos(lr)) / math.pi) / 2.0 * n
+    return x, y
+
+
+def pixel_to_lonlat(z: int, xt: int, yt: int, px: float, py: float, size: int = 256) -> Tuple[float, float]:
+    n = 2 ** z
+    x = xt + px / size
+    y = yt + py / size
+    lon = x / n * 360.0 - 180.0
+    lat = math.degrees(math.atan(math.sinh(math.pi * (1 - 2 * y / n))))
+    return lon, lat
+
+
+def tile_bounds(z: int, xt: int, yt: int) -> Tuple[float, float, float, float]:
+    """(west, south, east, north) of tile (z,xt,yt)."""
+    w, n = pixel_to_lonlat(z, xt, yt, 0, 0)
+    e, s = pixel_to_lonlat(z, xt, yt, 256, 256)
+    return w, s, e, n
+
+
+# ------------------------------------------------------------------ helm-wxv1 encode + PNG (stdlib; mirrors the codec)
+def encode_value(v: float, scale: float, offset: float) -> Tuple[int, int, int]:
+    n = int(round((v - offset) / (scale if scale > 0 else 1.0)))
+    n = 0 if n < 0 else (VMAX24 if n > VMAX24 else n)
+    return (n >> 16) & 255, (n >> 8) & 255, n & 255
+
+
+def write_png_bytes(buf: bytes, size: int = 256, alpha: bool = True) -> bytes:
+    ch = 4 if alpha else 3
+    stride = size * ch
+    raw = bytearray()
+    for row in range(size):
+        raw.append(0)                                   # filter type 0 (None)
+        raw.extend(buf[row * stride:(row + 1) * stride])
+
+    def chunk(tag: bytes, data: bytes) -> bytes:
+        return (struct.pack('>I', len(data)) + tag + data +
+                struct.pack('>I', zlib.crc32(tag + data) & 0xffffffff))
+
+    ihdr = struct.pack('>IIBBBBB', size, size, 8, 6 if alpha else 2, 0, 0, 0)
+    return (b'\x89PNG\r\n\x1a\n' + chunk(b'IHDR', ihdr)
+            + chunk(b'IDAT', zlib.compress(bytes(raw), 6)) + chunk(b'IEND', b''))
+
+
+# ------------------------------------------------------------------ source grid (coarse Open-Meteo data)
+class Grid:
+    """A coarse NxN field over a bbox: row-major, row0=north, col0=west. Bilinear sample, NODATA-honest."""
+    def __init__(self, nx, ny, west, south, east, north, values):
+        self.nx, self.ny = nx, ny
+        self.west, self.south, self.east, self.north = west, south, east, north
+        self.values = values
+
+    def sample(self, lon: float, lat: float) -> Optional[float]:
+        fx = (lon - self.west) / ((self.east - self.west) or 1) * (self.nx - 1)
+        fy = (self.north - lat) / ((self.north - self.south) or 1) * (self.ny - 1)
+        if fx < -0.001 or fx > self.nx - 1 + 0.001 or fy < -0.001 or fy > self.ny - 1 + 0.001:
+            return None
+        x0 = max(0, min(self.nx - 1, int(math.floor(fx))))
+        y0 = max(0, min(self.ny - 1, int(math.floor(fy))))
+        x1 = min(self.nx - 1, x0 + 1)
+        y1 = min(self.ny - 1, y0 + 1)
+        gx, gy = fx - x0, fy - y0
+        v = self.values
+        v00, v10 = v[y0 * self.nx + x0], v[y0 * self.nx + x1]
+        v01, v11 = v[y1 * self.nx + x0], v[y1 * self.nx + x1]
+        if None in (v00, v10, v01, v11):
+            # nearest valid corner rather than NaN-propagate; fully-missing -> None
+            cand = [c for c in (v00, v10, v01, v11) if c is not None]
+            if not cand:
+                return None
+            return cand[0]
+        return (v00 * (1 - gx) + v10 * gx) * (1 - gy) + (v01 * (1 - gx) + v11 * gx) * gy
+
+
+# ------------------------------------------------------------------ caches + provider state
+_grids: Dict[str, Tuple[Grid, float]] = {}
+_grid_locks: Dict[str, asyncio.Lock] = {}
+_tiles: "OrderedTileCache" = None  # set below
+_cooldown_until = 0.0
+_stats = {"openmeteo_calls": 0, "grid_hits": 0, "tile_hits": 0, "bakes": 0, "cooldowns": 0}
+
+
+class OrderedTileCache:
+    """Tiny in-memory LRU of baked PNG bytes, mirrored to disk so restarts/offline keep coverage."""
+    def __init__(self, cap: int):
+        self.cap = cap
+        self.mem: Dict[str, Tuple[bytes, float]] = {}
+        self.order: List[str] = []
+
+    def _disk(self, key: str) -> str:
+        return os.path.join(CACHE_DIR, "tiles", key + ".png")
+
+    def get(self, key: str) -> Optional[bytes]:
+        now = time.time()
+        v = self.mem.get(key)
+        if v and now - v[1] <= TTL:
+            return v[0]
+        p = self._disk(key)
+        try:
+            if os.path.exists(p) and now - os.path.getmtime(p) <= TTL:
+                data = open(p, "rb").read()
+                self.put(key, data, persist=False)
+                return data
+        except OSError:
+            pass
+        return None
+
+    def put(self, key: str, data: bytes, persist: bool = True):
+        self.mem[key] = (data, time.time())
+        self.order.append(key)
+        while len(self.mem) > self.cap:
+            old = self.order.pop(0)
+            self.mem.pop(old, None)
+        if persist:
+            p = self._disk(key)
+            try:
+                os.makedirs(os.path.dirname(p), exist_ok=True)
+                with open(p, "wb") as f:
+                    f.write(data)
+            except OSError:
+                pass
+
+
+_tiles = OrderedTileCache(TILE_MEM_MAX)
+
+
+def _coarse_cell(z: int, x: int, y: int) -> Tuple[int, int, int]:
+    """The source-grid cell a tile is baked from: itself at/below DATA_Z_MAX, else its ancestor there."""
+    if z <= DATA_Z_MAX:
+        return z, x, y
+    d = z - DATA_Z_MAX
+    return DATA_Z_MAX, x >> d, y >> d
+
+
+async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
+    """Fetch ONE coarse Open-Meteo grid over a coarse cell (+small margin). Honest: raises on 429/error."""
+    global _cooldown_until
+    cfg = LAYERS[layer]
+    w, s, e, n = tile_bounds(cz, cx, cy)
+    mw, mh = (e - w) * 0.08, (n - s) * 0.08          # small overlap so child-tile edges interpolate cleanly
+    w, e = w - mw, e + mw
+    s, n = max(-85.0, s - mh), min(85.0, n + mh)
+    lats, lons = [], []
+    for j in range(GRID_N):
+        lats.append(n - (n - s) * j / (GRID_N - 1))
+    for i in range(GRID_N):
+        lons.append(w + (e - w) * i / (GRID_N - 1))
+    qlat, qlon = [], []
+    for la in lats:
+        for lo in lons:
+            qlat.append(round(la, 3))                                      # 3dp keeps the URI short (HTTP 414 guard)
+            qlon.append(round(((lo + 180) % 360 + 360) % 360 - 180, 3))   # wrap for the API (antimeridian-safe)
+    params = {
+        "latitude": ",".join(str(v) for v in qlat),
+        "longitude": ",".join(str(v) for v in qlon),
+        "current": cfg["v"],
+    }
+    if layer in ("wind", "gust"):
+        params["wind_speed_unit"] = "kn"
+    _stats["openmeteo_calls"] += 1
+    async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
+        r = await client.get(FORECAST, params=params)
+    if r.status_code == 429:
+        _cooldown_until = time.time() + COOLDOWN
+        _stats["cooldowns"] += 1
+        raise RuntimeError("open-meteo 429 (hourly limit) — cooling down")
+    r.raise_for_status()
+    nodes = r.json()
+    if not isinstance(nodes, list):
+        nodes = [nodes]
+    vals: List[Optional[float]] = []
+    for node in nodes:
+        cur = (node or {}).get("current") or {}
+        v = cur.get(cfg["v"])
+        vals.append(float(v) if isinstance(v, (int, float)) else None)
+    return Grid(GRID_N, GRID_N, lons[0], lats[-1], lons[-1], lats[0], vals)
+
+
+async def get_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
+    """Cached + deduped coarse grid. Serves stale on cooldown; one fetch per cell feeds many tiles."""
+    key = "%s|z%d|%d|%d" % (layer, cz, cx, cy)
+    now = time.time()
+    hit = _grids.get(key)
+    if hit and now - hit[1] <= TTL:
+        _stats["grid_hits"] += 1
+        return hit[0]
+    if now < _cooldown_until:
+        if hit:                                       # stale-but-present beats hammering a rate-limited API
+            _stats["grid_hits"] += 1
+            return hit[0]
+        raise RuntimeError("rate-limited (cooldown) and no cached grid")
+    lock = _grid_locks.setdefault(key, asyncio.Lock())
+    async with lock:                                  # coalesce concurrent identical fetches
+        hit = _grids.get(key)
+        if hit and time.time() - hit[1] <= TTL:
+            return hit[0]
+        try:
+            grid = await _fetch_grid(layer, cz, cx, cy)
+        except Exception:
+            if hit:
+                return hit[0]                         # any failure -> serve stale if we can
+            raise
+        _grids[key] = (grid, time.time())
+        return grid
+
+
+async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
+    """Bake (or cache-hit) one helm-wxv1 value tile. PNG bytes, 256x256 RGBA."""
+    key = "%s/%d/%d/%d" % (layer, z, x, y)
+    cached = _tiles.get(key)
+    if cached is not None:
+        _stats["tile_hits"] += 1
+        return cached
+    cfg = LAYERS[layer]
+    scale, offset = layer_scale_offset(cfg)
+    cz, cx, cy = _coarse_cell(z, x, y)
+    grid = await get_grid(layer, cz, cx, cy)
+    buf = bytearray(256 * 256 * 4)
+    i = 0
+    any_valid = False
+    for py in range(256):
+        for px in range(256):
+            lon, lat = pixel_to_lonlat(z, x, y, px + 0.5, py + 0.5)
+            val = grid.sample(lon, lat)
+            if val is None:
+                buf[i + 3] = 0                        # transparent NODATA — never faked
+                i += 4
+                continue
+            any_valid = True
+            r, g, b = encode_value(val, scale, offset)
+            buf[i] = r; buf[i + 1] = g; buf[i + 2] = b; buf[i + 3] = 255
+            i += 4
+    png = write_png_bytes(bytes(buf), 256, alpha=True)
+    _stats["bakes"] += 1
+    if any_valid:
+        _tiles.put(key, png)                          # don't pollute cache with all-NODATA tiles
+    return png
+
+
+def manifest_for(layer: str) -> dict:
+    cfg = LAYERS[layer]
+    scale, offset = layer_scale_offset(cfg)
+    return {
+        "encoding": ENCODING, "bits": 24, "tileSize": 256,
+        "layer": layer, "unit": cfg["unit"], "kind": "scalar",
+        "scale": scale, "offset": offset, "nodata_alpha": 0, "has_alpha": True,
+        "minzoom": 0, "maxzoom": DATA_Z_MAX,
+        "bbox": [-180.0, -85.0, 180.0, 85.0],         # global — the gateway serves anywhere
+        "vmin": cfg["vmin"], "vmax": cfg["vmax"], "ramp": cfg["stops"],
+        "source": "open-meteo", "model": MODEL_NAME,
+        "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+        "times": None, "frames": None,
+        "tiles_template": "{z}/{x}/{y}.png",
+        "horizon": "good ~0–7 d; beyond is climatology", "confidence": "fair",
+        "disclaimer": "Forecast — cross-reference official sources. NOT FOR NAVIGATION.",
+    }
+
+
+# ------------------------------------------------------------------ FastAPI app
+app = FastAPI(title="helm-wx", version="0.1",
+              description="Met-ocean / data-layer gateway — value-encoded weather tiles (helm-wxv1).")
+app.add_middleware(CORSMiddleware, allow_origins=["*"], allow_methods=["GET"], allow_headers=["*"])
+
+
+@app.get("/health")
+def health():
+    return {"ok": True, "service": "helm-wx", "encoding": ENCODING,
+            "layers": list(LAYERS.keys()), "cooldown": time.time() < _cooldown_until, "stats": _stats}
+
+
+@app.get("/index.json")
+def index():
+    return {"encoding": ENCODING, "layers": {
+        k: {"unit": v["unit"], "source": "open-meteo", "model": MODEL_NAME,
+            "minzoom": 0, "maxzoom": DATA_Z_MAX, "frames": 1, "manifest": "%s/manifest.json" % k}
+        for k, v in LAYERS.items()}}
+
+
+@app.get("/{layer}/manifest.json")
+def manifest(layer: str):
+    if layer not in LAYERS:
+        return JSONResponse({"error": True, "reason": "unknown layer"}, status_code=404)
+    return manifest_for(layer)
+
+
+@app.get("/{layer}/{z}/{x}/{y}.png")
+async def tile(layer: str, z: int, x: int, y: int):
+    if layer not in LAYERS:
+        return PlainTextResponse("unknown layer", status_code=404)
+    if z < 0 or z > 22 or x < 0 or y < 0 or x >= 2 ** z or y >= 2 ** z:
+        return PlainTextResponse("tile out of range", status_code=404)
+    try:
+        png = await bake_tile(layer, z, x, y)
+    except Exception as e:
+        # honest failure: no cache + rate-limited/offline. The client's own fallback handles it.
+        return PlainTextResponse("weather unavailable: %s" % e, status_code=503)
+    return Response(content=png, media_type="image/png",
+                    headers={"Cache-Control": "public, max-age=%d" % TTL,
+                             "X-Helm-Encoding": ENCODING})
