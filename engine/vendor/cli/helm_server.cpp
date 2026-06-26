@@ -1663,6 +1663,46 @@ static void bonjour_advertise(int port) {
 }
 
 // ===========================================================================
+// CONTRACT-12: one TLS origin. The whole stack (nav WS + chart HTTP + catalog/health/pair) rides a
+// single ix::HttpServer; setting TLS on its SocketServer base makes that ONE port wss+https. Opt-in
+// via HELM_TLS_CERT + HELM_TLS_KEY (PEM); HELM_TLS_AUTO=1 self-signs a no-CA cert (TOFU model — the
+// client pins the fingerprint, there is no CA). The cert SHA-256 fingerprint is exposed for the
+// Bonjour TXT (CONTRACT-13) and TOFU pairing (CONTRACT-14). Plain HTTP when unset (dev). ixwebsocket
+// is built USE_TLS+USE_OPEN_SSL, so this is a front-door wrapper, not new infra.
+// ===========================================================================
+static std::string g_tls_fingerprint;            // "AA:BB:.." SHA-256 of the serving cert (empty if plaintext)
+static bool setup_tls(ix::HttpServer* server, const char* bindHost) {
+  const char* certEnv = std::getenv("HELM_TLS_CERT");
+  const char* keyEnv  = std::getenv("HELM_TLS_KEY");
+  if (!certEnv || !*certEnv || !keyEnv || !*keyEnv) {
+    std::printf("TLS: disabled (set HELM_TLS_CERT + HELM_TLS_KEY for one wss/https origin; +HELM_TLS_AUTO=1 to self-sign)\n");
+    return false;
+  }
+  std::string cert = certEnv, key = keyEnv;
+  if (access(cert.c_str(), R_OK) != 0 || access(key.c_str(), R_OK) != 0) {     // missing → self-sign if allowed
+    if (!std::getenv("HELM_TLS_AUTO")) { std::fprintf(stderr, "TLS: FATAL — cert/key not readable (%s) and HELM_TLS_AUTO unset\n", cert.c_str()); return false; }
+    std::string san = "DNS:helm.local,DNS:localhost,IP:127.0.0.1";
+    if (std::strcmp(bindHost, "127.0.0.1") && std::strcmp(bindHost, "0.0.0.0")) san += ",IP:" + std::string(bindHost);
+    std::string cmd = "openssl req -x509 -newkey rsa:2048 -nodes -days 3650 -subj '/CN=Helm' -addext 'subjectAltName=" + san + "' -keyout '" + key + "' -out '" + cert + "' >/dev/null 2>&1";
+    std::printf("TLS: self-signing cert -> %s (no CA; TOFU fingerprint pinning)\n", cert.c_str());
+    if (std::system(cmd.c_str()) != 0 || access(cert.c_str(), R_OK) != 0) { std::fprintf(stderr, "TLS: FATAL — self-sign failed (is openssl on PATH?)\n"); return false; }
+  }
+  // SHA-256 fingerprint via the openssl CLI (no extra link deps) — for Bonjour TXT + TOFU pairing.
+  std::string fpcmd = "openssl x509 -in '" + cert + "' -noout -fingerprint -sha256 2>/dev/null";
+  if (FILE* f = popen(fpcmd.c_str(), "r")) {
+    char buf[256]; if (fgets(buf, sizeof buf, f)) { std::string s = buf; size_t eq = s.find('=');
+      if (eq != std::string::npos) { g_tls_fingerprint = s.substr(eq + 1);
+        while (!g_tls_fingerprint.empty() && (g_tls_fingerprint.back() == '\n' || g_tls_fingerprint.back() == '\r')) g_tls_fingerprint.pop_back(); } }
+    pclose(f);
+  }
+  ix::SocketTLSOptions opts; opts.tls = true; opts.certFile = cert; opts.keyFile = key;
+  opts.caFile = "NONE";   // no mTLS — clients pin the SERVER cert fingerprint (TOFU); default "SYSTEM" would demand a client cert
+  server->setTLSOptions(opts);
+  std::printf("TLS: ENABLED — one wss+https origin (cert=%s)\n     fingerprint(sha256)=%s\n", cert.c_str(), g_tls_fingerprint.c_str());
+  return true;
+}
+
+// ===========================================================================
 // One ix::HttpServer; HTTP callback routes tiles/health/catalog/static, WS
 // callback handles /nav. Tiles render on the MAIN thread (CoreGraphics).
 // ===========================================================================
@@ -1688,6 +1728,7 @@ public:
     }
 
     server = new ix::HttpServer(port, bindHost);
+    const bool tls = setup_tls(server, bindHost);   // CONTRACT-12: one wss+https origin when configured
 
     // WS side (/nav): set on the WebSocketServer base (HttpServer::handleUpgrade uses it).
     server->WebSocketServer::setOnConnectionCallback(
@@ -1782,7 +1823,7 @@ public:
       });
 
     if (!server->listenAndStart()) { printf("listen on %s:%d FAILED\n", bindHost, port); return false; }
-    printf("Helm one-origin server: http://%s:%d/  (UI + /chart S-52 tiles + ws /nav)\n", bindHost, port);
+    printf("Helm one-origin server: %s://%s:%d/  (UI + /chart S-52 tiles + ws /nav)\n", tls ? "https" : "http", bindHost, port);
     if (std::strcmp(bindHost, "127.0.0.1") != 0)
       printf("  serving the LAN — iPad/iPhone: open http://<this-host>:%d/  (no ?server= needed)\n", port);
 
