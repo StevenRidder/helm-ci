@@ -32,7 +32,8 @@
   }
 
   async function apply() {
-    var map = S.map, layer = activeLayer(), m = await cog();
+    var map = S.map; if (!map) return;                  // guard: setWeather()'s hook can fire before build() sets S.map
+    var layer = activeLayer(), m = await cog();
     if (window.HelmWxLive) window.HelmWxLive.disable(map);
     m.disableEnsemble(map); m.disableWxTiles(map);
     if (layer === 'off') { showLegacy(false); setProbe(''); return; }
@@ -54,10 +55,11 @@
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
       if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        // Live owns the field (helm-wx-live) + drives the particles. NEVER show the legacy static box —
+        // on failure Live serves cached coverage or clears the field (particles carry on); the tiny
+        // fixed-bbox box at extreme zoom-out is exactly what we're getting rid of.
         showLegacy(false);
-        // onState: online → Live (particles + field) fills the view; offline → fall back to the
-        // static local field so there's always something (never a blank screen).
-        window.HelmWxLive.enable(map, { layer: layer, notify: notify, onState: function (s) { showLegacy(s === 'offline'); } });
+        window.HelmWxLive.enable(map, { layer: layer, notify: notify });
       } else {
         showLegacy(true);                                  // marine layers (waves/swell/sst/current) — static for now
         notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');
@@ -71,9 +73,10 @@
   }
 
   function setProbe(html) { if (S.els.probe) S.els.probe.innerHTML = html || '<span style="color:var(--cdim,#8aa)">move the map to read a value</span>'; }
-  function probeSoon() { clearTimeout(S.probeT); S.probeT = setTimeout(probe, 250); }
+  function probeSoon() { clearTimeout(S.probeT); S.probeT = setTimeout(function () { probe().catch(function () {}); }, 250); }
   async function probe() {
-    var map = S.map, c = map.getCenter(), m = await cog(), layer = activeLayer();
+    var map = S.map; if (!map) return;
+    var c = map.getCenter(), m = await cog(), layer = activeLayer();
     if (layer === 'off') return setProbe('');
     var s = null;
     if (S.model === 'ensemble') { var e = await m.sampleEnsemble(c.lat, c.lng); if (e && e.value != null) return setProbe('<b>' + e.mean + ' ' + e.unit + '</b> · spread ' + e.spread + ' · ' + e.agreement); }
@@ -127,15 +130,22 @@
     else drawer.appendChild(box);
 
     paintSeg(resSeg, S.resolution); paintSeg(modSeg, S.model);
-    resSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.resolution = b.dataset.val; paintSeg(resSeg, S.resolution); apply(); });
-    modSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.model = b.dataset.val; paintSeg(modSeg, S.model); apply(); });
+    resSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.resolution = b.dataset.val; paintSeg(resSeg, S.resolution); apply().catch(function () {}); });
+    modSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.model = b.dataset.val; paintSeg(modSeg, S.model); apply().catch(function () {}); });
     setProbe('');
 
     // re-apply my mode whenever the user picks a different weather layer
     var wx = document.getElementById('wx');
-    if (wx) wx.addEventListener('click', function (e) { if (e.target.closest('button')) setTimeout(apply, 60); });
+    if (wx) wx.addEventListener('click', function (e) { if (e.target.closest('button')) setTimeout(function () { apply().catch(function () {}); }, 60); });
     map.on('moveend', probeSoon);
+    // Engage the default mode (Live · fills view) ON LOAD — otherwise the legacy static field stays up
+    // until the user clicks the drawer, which is why weather looked like a fixed box on first paint.
+    setTimeout(function () { if (activeLayer() !== 'off') apply().catch(function () {}); }, 150);
   }
+
+  // Exposed so the shell's setWeather() can re-engage the current mode when the active layer changes
+  // programmatically (not via a drawer click) — keeps Live tracking the active layer.
+  window.HelmWxControls = { apply: function () { apply().catch(function () {}); } };
 
   function boot() {
     var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);

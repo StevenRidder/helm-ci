@@ -34,9 +34,13 @@
   // visible edges (fills the screen with REAL fetched data — not a box, and not a stretched raster).
   function viewBbox(map) {
     var b = map.getBounds(), w = b.getWest(), s = b.getSouth(), e = b.getEast(), n = b.getNorth();
+    if (e < w) e += 360;                                   // viewport crosses the antimeridian (Fiji!) — keep lon CONTINUOUS
     var mw = (e - w) * 0.5, mh = (n - s) * 0.5;
-    return [Math.max(-180, w - mw), Math.max(-84, s - mh), Math.min(180, e + mw), Math.min(84, n + mh)];
+    w -= mw; e += mw;
+    if (e - w > 90) { var c = (w + e) / 2; w = c - 45; e = c + 45; }  // a 12×12 grid past ~90° is too coarse to be meaningful
+    return [w, Math.max(-84, s - mh), e, Math.min(84, n + mh)];        // lon stays continuous (may exceed ±180); wrapped only for the API
   }
+  function wrapLon(x) { x = ((x + 180) % 360 + 360) % 360 - 180; return +x.toFixed(4); }
   function covers(field, map) {                            // does the rendered overlay still span the view?
     if (!field) return false;
     var b = map.getBounds();
@@ -55,7 +59,8 @@
   function url(g, layer, model) {
     var L = LAYERS[layer];
     var cur = L.v + (L.dir ? ',' + L.dir : '');             // vector layers also fetch direction (for particles)
-    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + g.qlon.join(',') + '&current=' + cur;
+    var qlon = g.qlon.map(wrapLon);                         // Open-Meteo wants lon in [-180,180]; the grid may run continuously past the dateline
+    var p = 'latitude=' + g.qlat.join(',') + '&longitude=' + qlon.join(',') + '&current=' + cur;
     if (layer === 'wind' || layer === 'gust') p += '&wind_speed_unit=kn';
     if (model && model !== 'gfs_seamless') p += '&models=' + model;
     return FORECAST + '?' + p;
@@ -123,52 +128,168 @@
     }
   }
 
-  async function fetchPoints(u, signal) {
-    var r = await fetch(u, { signal: signal });
+  async function fetchPoints(u) {
+    var r = await fetch(u);
+    if (r.status === 429) { cooldownUntil = nowMs() + 5 * 60 * 1000; var e = new Error('Open-Meteo hourly limit'); e.code = 429; throw e; }
     if (!r.ok) throw new Error('HTTP ' + r.status);
     return r.json();
   }
 
-  async function refresh() {
-    if (!st.on || !supports(st.layer)) return;
-    var bbox = viewBbox(st.map);
-    var key = st.layer + ':' + bbox.map(function (x) { return x.toFixed(2); }).join(',');
-    if (key === st.lastKey && covers(st.field, st.map)) return;   // same view + overlay still covers it -> skip
-    st.lastKey = key;
-    var g = grid(bbox, 12, 12), my = ++st.token;
-    var ac = new AbortController();
-    st.notify('Fetching live ' + st.layer + ' for this view …', 'info');
+  // ---- caching: be a good Open-Meteo client -------------------------------------------------
+  // Snap the fetch area to a per-zoom grid so nearby pans/zooms reuse ONE fetch; cache the result
+  // (in-memory LRU + localStorage, short TTL) and coalesce concurrent identical fetches. Net effect:
+  // you can zoom in/out all day and we only touch the network when you move into a genuinely new area.
+  var TILE_TTL = 15 * 60 * 1000;          // a fetched view stays reusable for 15 min (current conditions)
+  var TILE_MAX = 120;                     // in-memory LRU cap
+  var LS_PREFIX = 'helmwx2:';
+  var tiles = new Map();                  // key -> { field, vel, t }
+  var inflight = new Map();               // key -> Promise<{field,vel}>  (in-flight dedup)
+  var apiCalls = 0;                       // network fetches actually made (for tests / good-citizen check)
+  var cooldownUntil = 0;                  // after a 429 we serve cache only until this time — don't hammer Open-Meteo
+  function nowMs() { return Date.now(); }
+
+  function zbucket(map) { return Math.round(map.getZoom()); }
+  function snapBbox(bb, zb) {
+    var step = 360 / Math.pow(2, Math.max(1, Math.min(13, zb)));   // ~one screen-width per cell at this zoom
+    var fl = function (x) { return Math.floor(x / step) * step; }, ce = function (x) { return Math.ceil(x / step) * step; };
+    return [+fl(bb[0]).toFixed(4), +Math.max(-84, fl(bb[1])).toFixed(4), +ce(bb[2]).toFixed(4), +Math.min(84, ce(bb[3])).toFixed(4)];
+  }
+  function tileKey(bb, zb, layer, model) { return layer + '|' + (model || 'gfs') + '|z' + zb + '|' + bb.join(','); }
+
+  function getTile(key) {
+    var v = tiles.get(key);
+    if (v) { if (nowMs() - v.t > TILE_TTL) tiles.delete(key); else return v; }
     try {
-      var nodes = await fetchPoints(url(g, st.layer, st.model === 'gfs_seamless' ? null : st.model), ac.signal);
-      if (my !== st.token || !st.on) return;              // a newer pan superseded this one
-      var field = toField(nodes, g, st.layer), L = LAYERS[st.layer];
-      if (!field.values.some(function (v) { return isFinite(v); })) { clearLayer(st.map); st.notify('No live data for this area', 'warn'); return; }
-      renderField(st.map, field);
-      // Drive the GPU particle layer over the viewport (the Windy "alive" feel) for vector layers.
-      if (window.__helmWind) {
-        if (L.vector) { window.__helmWind.setData(buildVelocity(nodes, g, L)); window.__helmWind.setVisible(true); }
-        else window.__helmWind.setVisible(false);            // no particles for scalar layers (temp/pressure/…)
+      var raw = window.localStorage.getItem(LS_PREFIX + key);
+      if (raw) {
+        var o = JSON.parse(raw);
+        if (o && (nowMs() - o.t) <= TILE_TTL) { var hit = { field: o.field, vel: o.vel, t: o.t }; tiles.set(key, hit); return hit; }
+        window.localStorage.removeItem(LS_PREFIX + key);
       }
+    } catch (e) {}
+    return null;
+  }
+  function pruneLS() {                     // shed our oldest localStorage rows under quota pressure
+    try {
+      var ks = [], i, k;
+      for (i = 0; i < window.localStorage.length; i++) { k = window.localStorage.key(i); if (k && k.indexOf(LS_PREFIX) === 0) ks.push(k); }
+      ks.sort(function (a, b) { try { return (JSON.parse(window.localStorage.getItem(a)).t || 0) - (JSON.parse(window.localStorage.getItem(b)).t || 0); } catch (e) { return 0; } });
+      ks.slice(0, Math.ceil(ks.length / 2)).forEach(function (kk) { window.localStorage.removeItem(kk); });
+    } catch (e) {}
+  }
+  function putTile(key, val) {
+    var rec = { field: val.field, vel: val.vel, t: nowMs() };
+    tiles.set(key, rec);
+    if (tiles.size > TILE_MAX) { var oldest = null, ot = Infinity; tiles.forEach(function (v, k) { if (v.t < ot) { ot = v.t; oldest = k; } }); if (oldest) tiles.delete(oldest); }
+    try { window.localStorage.setItem(LS_PREFIX + key, JSON.stringify(rec)); }
+    catch (e) { pruneLS(); try { window.localStorage.setItem(LS_PREFIX + key, JSON.stringify(rec)); } catch (e2) {} }
+  }
+
+  // Best cached tile that fully covers the current view (finest one wins). The graceful fallback when a
+  // live fetch fails: show REAL (if slightly stale) weather covering the screen, never the tiny static box.
+  function bestCachedFor(map) {
+    var b = map.getBounds(), bw = b.getWest(), be = b.getEast(); if (be < bw) be += 360;
+    var bs = b.getSouth(), bn = b.getNorth(), best = null, bestArea = Infinity;
+    tiles.forEach(function (v) {
+      var f = v.field; if (!f || f.layer !== st.layer || (nowMs() - v.t) > TILE_TTL) return;
+      if (f.west <= bw && f.east >= be && f.south <= bs && f.north >= bn) {
+        var area = (f.east - f.west) * (f.north - f.south); if (area < bestArea) { bestArea = area; best = v; }
+      }
+    });
+    return best;
+  }
+  // Warm the in-memory cache from localStorage on load, so a reload (even while rate-limited/offline)
+  // can still paint real cached weather instead of nothing.
+  (function hydrateFromLS() {
+    try {
+      for (var i = 0; i < window.localStorage.length; i++) {
+        var k = window.localStorage.key(i); if (!k || k.indexOf(LS_PREFIX) !== 0) continue;
+        var o = JSON.parse(window.localStorage.getItem(k));
+        if (o && (nowMs() - o.t) <= TILE_TTL) tiles.set(k.slice(LS_PREFIX.length), { field: o.field, vel: o.vel, t: o.t });
+        else window.localStorage.removeItem(k);
+      }
+    } catch (e) {}
+  })();
+
+  async function doFetch(bb, layer, model) {
+    apiCalls++;
+    var g = grid(bb, 12, 12);
+    var nodes = await fetchPoints(url(g, layer, model === 'gfs_seamless' ? null : model));
+    var L = LAYERS[layer], field = toField(nodes, g, layer);
+    if (!field.values.some(function (v) { return isFinite(v); })) throw new Error('no data for area');
+    return { field: field, vel: L.vector ? buildVelocity(nodes, g, L) : null };
+  }
+
+  function applyTile(val) {
+    renderField(st.map, val.field);         // sets st.field + paints the colourised image over the (snapped) area
+    if (window.__helmWind) {
+      if (val.vel) { window.__helmWind.setData(val.vel); window.__helmWind.setVisible(true); }
+      else window.__helmWind.setVisible(false);   // scalar layers (temp/pressure/…) have no particles
+    }
+  }
+
+  async function refresh() {
+    if (!st.on || !st.map || !supports(st.layer)) return;
+    var zb = zbucket(st.map), bb = snapBbox(viewBbox(st.map), zb);
+    var key = tileKey(bb, zb, st.layer, st.model);
+    if (key === st.lastKey && covers(st.field, st.map)) return;   // same snapped view, still covered -> nothing to do
+    st.lastKey = key;
+    var my = ++st.token;
+
+    var hit = getTile(key);                 // CACHE HIT -> render instantly, zero network
+    if (hit) { applyTile(hit); st.notify('Live ' + st.layer + ' · cached', 'ok'); if (st.onState) st.onState('ok'); return; }
+
+    // Rate-limited recently? Don't hammer Open-Meteo — serve the best cached coverage we have.
+    if (nowMs() < cooldownUntil) return serveCachedOrFallback(null, { code: 429 });
+
+    st.notify('Fetching live ' + st.layer + ' for this view …', 'info');
+    var p = inflight.get(key);              // coalesce concurrent identical fetches (kills the boot/zoom burst)
+    if (!p) {
+      p = doFetch(bb, st.layer, st.model).then(function (val) { putTile(key, val); inflight.delete(key); return val; },
+                                              function (e) { inflight.delete(key); throw e; });
+      inflight.set(key, p);
+    }
+    try {
+      var val = await p;
+      if (my !== st.token || !st.on) return; // superseded by a newer view (result is still cached for later)
+      applyTile(val);
       st.notify('Live ' + st.layer + ' · Open-Meteo, this view', 'ok');
       if (st.onState) st.onState('ok');
     } catch (e) {
       if (e && e.name === 'AbortError') return;
-      // honest offline behaviour — never fabricate a field, and don't leave a stale overlay in the
-      // wrong place: if what's rendered no longer covers the view, drop it + fall back to Standard.
-      if (!covers(st.field, st.map)) clearLayer(st.map);
-      st.notify('Live weather needs a connection — showing your cached local field.', 'warn');
-      if (st.onState) st.onState('offline');
+      if (my !== st.token || !st.on) return;
+      serveCachedOrFallback(e);             // 429 / offline -> cached coverage, not the tiny static box
     }
   }
 
-  function onMove() { clearTimeout(st.debounce); st.debounce = setTimeout(refresh, 450); }
+  // Graceful degradation ladder (shared by cooldown + fetch-failure): keep showing REAL weather over the
+  // whole view if we possibly can — a covering cached tile, else the last good render — and only drop to
+  // the static local field when we have nothing that covers the screen.
+  function serveCachedOrFallback(err) {
+    if (!st.map) return;
+    var c = bestCachedFor(st.map);
+    if (c) {
+      applyTile(c);
+      st.notify('Live ' + st.layer + (err && err.code === 429 ? ' · cached (Open-Meteo hourly limit — cooling down)' : ' · cached'), 'ok');
+      if (st.onState) st.onState('ok');
+      return;
+    }
+    if (covers(st.field, st.map)) { if (st.onState) st.onState('ok'); return; }  // keep the last good Live render
+    clearLayer(st.map);
+    st.notify(err && err.code === 429
+      ? 'Live weather paused — Open-Meteo hourly limit reached; showing your local field.'
+      : 'Live weather needs a connection — showing your cached local field.', 'warn');
+    if (st.onState) st.onState('offline');
+  }
+
+  function onMove() { clearTimeout(st.debounce); st.debounce = setTimeout(function () { refresh().catch(function () {}); }, 450); }
 
   function enable(map, opts) {
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
     st.notify = opts.notify || st.notify; st.onState = opts.onState || null; st.on = true; st.lastKey = '';
     if (!st.handler) { st.handler = onMove; map.on('moveend', st.handler); }
-    refresh();
+    refresh().catch(function () {});
   }
   function disable(map) {
     st.on = false;
@@ -176,8 +297,8 @@
     var m = map || st.map; if (m) { if (m.getLayer(LYR)) m.removeLayer(LYR); if (m.getSource(SRC)) m.removeSource(SRC); }
     st.field = null; st.lastKey = '';
   }
-  function setLayer(layer) { st.layer = layer; st.lastKey = ''; if (st.on) refresh(); }
-  function setModel(model) { st.model = model; st.lastKey = ''; if (st.on) refresh(); }
+  function setLayer(layer) { st.layer = layer; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
+  function setModel(model) { st.model = model; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;
     if (lon < f.west || lon > f.east || lat < f.south || lat > f.north) return { value: null, source: 'open', note: 'outside live view' };
@@ -186,5 +307,8 @@
     return { layer: f.layer, value: (v == null || !isFinite(v)) ? null : Math.round(v * 100) / 100, unit: f.unit, source: 'open', sourceRef: { title: 'Open-Meteo (live)' } };
   }
 
-  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel, sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField, _viewBbox: viewBbox, _grid: grid };
+  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel, sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField, _viewBbox: viewBbox, _grid: grid,
+    _stats: function () { return { apiCalls: apiCalls, cached: tiles.size, inflight: inflight.size, cooldown: cooldownUntil > nowMs() }; },
+    _snapBbox: snapBbox, _seedTile: function (key, field, vel) { putTile(key, { field: field, vel: vel }); },
+    _forceCooldown: function (ms) { cooldownUntil = nowMs() + (ms || 300000); } };
 })();

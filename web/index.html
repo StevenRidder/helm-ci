@@ -876,6 +876,10 @@
   function setWeather(name) {
     document.querySelectorAll('#wx button').forEach(b => b.classList.toggle('on', b.dataset.wx === name));
     activeWx = name; window.__activeWx = name;            // shared with the spacetime probe's layer filter
+    // Re-engage the weather mode (default: Live · fills view) for the new layer. Without this, picking a
+    // layer only showed the legacy fixed-bbox field; Live (viewport-filling) never kicked in. Radar is a
+    // separate live nowcast and owns its own path below, so leave it alone.
+    if (name !== 'radar' && window.HelmWxControls && window.HelmWxControls.apply) setTimeout(window.HelmWxControls.apply, 40);
     if (iso) { if (name === 'pressure') iso.load(fieldUrl('pressure')); else iso.setVisible(false); }   // smooth isobars on the pressure layer
     if (name === 'radar') {
       if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null);
