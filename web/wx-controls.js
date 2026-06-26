@@ -179,6 +179,15 @@
     modSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.model = b.dataset.val; paintSeg(modSeg, S.model); apply().catch(function () {}); });
     setProbe('');
 
+    // Transparency slider drives the SERVICE TILES too (index.html only wired it to the legacy field).
+    // Default to nearly-opaque like Windy (its overlays fully cover the basemap).
+    var op = document.getElementById('wxopacity');
+    if (op) {
+      op.value = 8;                                       // (100-8)/100 = 0.92 opacity — Windy-opaque default
+      var applyTileOpacity = function () { cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, wxOpacity()); }).catch(function () {}); };
+      op.addEventListener('input', applyTileOpacity);
+    }
+
     // re-apply my mode whenever the user picks a different weather layer
     var wx = document.getElementById('wx');
     if (wx) wx.addEventListener('click', function (e) { if (e.target.closest('button')) setTimeout(function () { apply().catch(function () {}); }, 60); });

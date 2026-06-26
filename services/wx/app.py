@@ -40,6 +40,7 @@ import zlib
 from typing import Dict, List, Optional, Tuple
 
 import httpx
+import numpy as np
 from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
@@ -88,8 +89,10 @@ GRID_N = int(os.environ.get("HELM_WX_GRID_N", "12"))        # source-grid resolu
 # is the safe max (matches web/wx-live.js). Finer detail comes from a finer FETCH_Z (smaller cells), not N.
 TILE_MEM_MAX = int(os.environ.get("HELM_WX_TILE_MEM", "400"))
 TIMEOUT = float(os.environ.get("HELM_WX_TIMEOUT", "12"))
-CONCURRENCY = int(os.environ.get("HELM_WX_CONCURRENCY", "2"))     # max concurrent Open-Meteo calls (be polite)
-MIN_INTERVAL = float(os.environ.get("HELM_WX_MIN_INTERVAL", "0.2"))  # min seconds between Open-Meteo calls
+# Throttle is key-aware: the commercial key (1M/mo) tolerates bursts, so fetch a viewport's cells in
+# parallel for a faster first paint; the free tier stays conservative to avoid 429s.
+CONCURRENCY = int(os.environ.get("HELM_WX_CONCURRENCY", "6" if OPENMETEO_KEY else "2"))
+MIN_INTERVAL = float(os.environ.get("HELM_WX_MIN_INTERVAL", "0.05" if OPENMETEO_KEY else "0.2"))
 USER_AGENT = "helm-wx/0.1 (+https://github.com/StevenRidder/Helm; marine chartplotter, cached client)"
 
 # Per-layer config. scale/offset are FIXED per layer (from a sensible physical [vmin,vmax]) so colours
@@ -128,9 +131,9 @@ LAYERS: Dict[str, dict] = {
                  "stops": [[0, [60, 110, 180, 0.15]], [1, [70, 150, 200, 0.6]], [2.5, [90, 190, 160, 0.8]],
                            [4, [230, 200, 80, 0.85]], [6, [230, 120, 60, 0.9]], [8, [200, 50, 70, 0.95]]]},
     "current":  {"v": "ocean_current_velocity", "dir": "ocean_current_direction", "vector": True, "conv": "kmh2kn",
-                 "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 6.0,
-                 "stops": [[0, [56, 160, 200, 0]], [0.5, [80, 200, 180, 0.55]], [1.5, [120, 200, 120, 0.8]],
-                           [3, [245, 205, 60, 0.85]], [4.5, [240, 120, 40, 0.9]], [6, [220, 40, 40, 0.95]]]},
+                 "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 3.0,   # ocean currents are weak (0–2 kn); vmax 3 + a
+                 "stops": [[0, [60, 120, 200, 0.4]], [0.3, [70, 175, 200, 0.65]], [0.8, [90, 200, 150, 0.8]],
+                           [1.5, [240, 210, 70, 0.88]], [2.2, [240, 130, 50, 0.92]], [3, [215, 50, 60, 0.95]]]},  # visible low end like Windy
 }
 MODEL_NAME = "Open-Meteo (GFS-seamless)"
 MARINE_MODEL = "Open-Meteo Marine"
@@ -376,6 +379,37 @@ async def get_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
 
 async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
     """Bake (or cache-hit) one helm-wxv1 value tile. PNG bytes, 256x256 RGBA."""
+    return await _bake_tile_impl(layer, z, x, y)
+
+
+def _bake_np(grid: "Grid", lons, lats, scale: float, offset: float):
+    """Vectorised bilinear sample + helm-wxv1 encode of a 256x256 tile. Returns (rgba_bytes, any_valid).
+    NaN (NODATA — land for ocean layers, gaps) -> alpha 0; never faked."""
+    nx, ny = grid.nx, grid.ny
+    gv = np.array([np.nan if v is None else v for v in grid.values], dtype=np.float64).reshape(ny, nx)
+    ew = (grid.east - grid.west) or 1.0
+    ns = (grid.north - grid.south) or 1.0
+    fx = np.clip((lons - grid.west) / ew * (nx - 1), 0, nx - 1)
+    fy = np.clip((grid.north - lats) / ns * (ny - 1), 0, ny - 1)
+    x0 = np.floor(fx).astype(np.intp); x1 = np.minimum(x0 + 1, nx - 1)
+    y0 = np.floor(fy).astype(np.intp); y1 = np.minimum(y0 + 1, ny - 1)
+    gx = fx - x0; gy = fy - y0
+    X0, Y0 = np.meshgrid(x0, y0); X1, Y1 = np.meshgrid(x1, y1)
+    GX, GY = np.meshgrid(gx, gy)
+    v00 = gv[Y0, X0]; v10 = gv[Y0, X1]; v01 = gv[Y1, X0]; v11 = gv[Y1, X1]
+    val = (v00 * (1 - GX) + v10 * GX) * (1 - GY) + (v01 * (1 - GX) + v11 * GX) * GY
+    valid = ~np.isnan(val)
+    s = scale if scale > 0 else 1.0
+    n = np.clip(np.round((np.nan_to_num(val) - offset) / s), 0, VMAX24).astype(np.uint32)
+    rgba = np.empty((256, 256, 4), dtype=np.uint8)
+    rgba[..., 0] = (n >> 16) & 255
+    rgba[..., 1] = (n >> 8) & 255
+    rgba[..., 2] = n & 255
+    rgba[..., 3] = np.where(valid, 255, 0).astype(np.uint8)
+    return rgba.tobytes(), bool(valid.any())
+
+
+async def _bake_tile_impl(layer: str, z: int, x: int, y: int) -> bytes:
     key = "%s/%d/%d/%d" % (layer, z, x, y)
     cached = _tiles.get(key)
     if cached is not None:
@@ -385,27 +419,12 @@ async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
     scale, offset = layer_scale_offset(cfg)
     cz, cx, cy = _coarse_cell(z, x, y)
     grid = await get_grid(layer, cz, cx, cy)
-    # Precompute the per-column lon and per-row lat ONCE (512 mercator unprojects) instead of per pixel
-    # (65 536 — each with a sinh/atan). ~100x fewer trig calls; turns a multi-second bake into ~tens of ms.
-    lons = [pixel_to_lonlat(z, x, y, px + 0.5, 0.0)[0] for px in range(256)]
-    lats = [pixel_to_lonlat(z, x, y, 0.0, py + 0.5)[1] for py in range(256)]
-    buf = bytearray(256 * 256 * 4)
-    i = 0
-    any_valid = False
-    sample = grid.sample
-    for py in range(256):
-        lat = lats[py]
-        for px in range(256):
-            val = sample(lons[px], lat)
-            if val is None:
-                buf[i + 3] = 0                        # transparent NODATA — never faked
-                i += 4
-                continue
-            any_valid = True
-            r, g, b = encode_value(val, scale, offset)
-            buf[i] = r; buf[i + 1] = g; buf[i + 2] = b; buf[i + 3] = 255
-            i += 4
-    png = write_png_bytes(bytes(buf), 256, alpha=True)
+    # Per-column lon, per-row lat (512 mercator unprojects, not 65 536), then VECTORISE the whole 256x256
+    # bilinear+encode in numpy (was a multi-second Python loop -> a few ms). NODATA (NaN) stays transparent.
+    lons = np.array([pixel_to_lonlat(z, x, y, px + 0.5, 0.0)[0] for px in range(256)])
+    lats = np.array([pixel_to_lonlat(z, x, y, 0.0, py + 0.5)[1] for py in range(256)])
+    buf, any_valid = _bake_np(grid, lons, lats, scale, offset)
+    png = write_png_bytes(buf, 256, alpha=True)
     _stats["bakes"] += 1
     if any_valid:
         _tiles.put(key, png)                          # don't pollute cache with all-NODATA tiles
