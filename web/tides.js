@@ -29,6 +29,10 @@
     if (map && map.getCenter) { var c = map.getCenter(); return { lat: c.lat, lon: c.lng }; }
     return { lat: 21.3069, lon: -157.8583 };
   }
+  // Source policy: free public-domain by default; the user EXPLICITLY opts into the commercial-review
+  // sources (TIDES-7 licensing model). Many regions (e.g. Fiji) only have stations in those sources.
+  var allLocal = false;
+  function pol() { return allLocal ? '&all=1' : ''; }
 
   // ---------- the tide-curve instrument (inline SVG) ----------
   // A real instrument: smooth-ish line + area, datum/zero reference, time-of-day grid, a NOW marker,
@@ -102,12 +106,15 @@
       ? '<div class="t-next"><span class="t-nl">Next ' + esc(kindLabel(ev.kind)).toLowerCase() + '</span>' +
         '<span class="t-nt">' + hhmm(ev.event_utc) + '</span><span class="t-nv">' + fmtM(ev.value_m) + ' m</span></div>'
       : '<div class="t-next"><span class="t-nl">Next event</span><span class="t-nt t-dim">unavailable</span></div>';
+    var farHint = (!allLocal && typeof st.distance_nm === 'number' && st.distance_nm > 80)
+      ? '<div class="t-hint">Nearest <b>free</b> station is ' + Math.round(st.distance_nm) + ' nm away. Switch to <b>All local</b> above for nearby stations (commercial-review sources).</div>' : '';
     return '' +
       '<div class="t-hero"><div class="t-big">' + fmtM(sum && sum.value_m) + '<span class="t-unit">m</span></div>' +
         '<div class="t-stn">' + esc(st.name || '—') + '</div>' +
         '<div class="t-meta">' + (st.distance_nm >= 0 ? (Math.round(st.distance_nm * 10) / 10) + ' nm to station · ' : '') +
         (st.has_datum ? 'datum ' + fmtM(st.datum_m) + ' m' : 'no datum') + '</div>' +
         '<div class="t-chips">' + chips + '</div></div>' +
+      farHint +
       next +
       (curve ? '<div class="t-curvewrap">' + curveSVG(curve) + '</div>' : '');
   }
@@ -132,6 +139,11 @@
       '.t-srcrow{display:flex;justify-content:space-between;gap:8px;font-size:10px;padding:3px 0;color:var(--cdim)}' +
       '.t-srcrow b{color:var(--ctext);font-weight:500}' +
       '.maplibregl-popup.helm-tides-pop .maplibregl-popup-content{min-width:212px}' +
+      '.t-seg{display:inline-flex;gap:2px;margin:8px 0 2px;padding:2px;border-radius:8px;background:var(--glass2);border:.5px solid var(--line)}' +
+      '.t-seg button{font-size:10px;padding:3px 10px;border-radius:6px;border:0;background:transparent;color:var(--cdim);cursor:pointer;font:inherit}' +
+      '.t-seg button.on{background:var(--accent);color:#04121c;font-weight:600}' +
+      '.t-hint{font-size:10px;color:var(--warn);margin:10px 0;padding:8px 9px;border:.5px solid rgba(255,192,106,.3);border-radius:8px;background:rgba(255,192,106,.08);line-height:1.4}' +
+      '.t-hint b{color:var(--ctext)}' +
       '</style>';
   }
 
@@ -141,7 +153,7 @@
     var qp = queryPoint(map); lastQP = qp;
     el.querySelector('.t-body').innerHTML = '<div class="t-empty">loading tides…</div>';
     var q = '?lat=' + qp.lat.toFixed(4) + '&lon=' + qp.lon.toFixed(4);
-    Promise.all([getJSON('/tides/summary' + q), getJSON('/tides/curve' + q + '&hours=24&step=30').catch(function () { return null; })])
+    Promise.all([getJSON('/tides/summary' + q + pol()), getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; })])
       .then(function (r) {
         var sum = r[0], curve = r[1];
         el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + sourceLedger(sum);
@@ -163,7 +175,19 @@
     id: 'helm-tides-panel', epic: 'TIDES', title: 'Tides', icon: TIDE_ICON,
     render: function (body, ctx) {
       if (!document.getElementById('helm-tides-style')) body.insertAdjacentHTML('beforeend', styles());
-      body.insertAdjacentHTML('beforeend', '<div class="sub">Offline harmonics, source-tagged · OpenCPN TCMgr</div><div class="t-body"></div>');
+      body.insertAdjacentHTML('beforeend',
+        '<div class="sub">Offline harmonics, source-tagged · OpenCPN TCMgr</div>' +
+        '<div class="t-seg"><button class="' + (allLocal ? '' : 'on') + '" data-pol="0">Free</button>' +
+        '<button class="' + (allLocal ? 'on' : '') + '" data-pol="1">All local</button></div>' +
+        '<div class="t-body"></div>');
+      body.querySelectorAll('.t-seg button').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          allLocal = btn.getAttribute('data-pol') === '1';
+          body.querySelectorAll('.t-seg button').forEach(function (x) { x.classList.toggle('on', x === btn); });
+          loadInto(body, ctx && ctx.map);
+          if (ctx && ctx.map) refreshStations(ctx.map);
+        });
+      });
       ensureStations(ctx && ctx.map);
       loadInto(body, ctx && ctx.map);
     },
@@ -206,7 +230,7 @@
       if (map.getZoom() < 6) { var s = map.getSource('helm-tides-src'); if (s) s.setData({ type: 'FeatureCollection', features: [] }); return; }
       var b = map.getBounds();
       var bbox = b.getWest().toFixed(4) + ',' + b.getSouth().toFixed(4) + ',' + b.getEast().toFixed(4) + ',' + b.getNorth().toFixed(4);
-      getJSON('/tides/stations?bbox=' + bbox + '&limit=300').then(function (fc) {
+      getJSON('/tides/stations?bbox=' + bbox + '&limit=300' + pol()).then(function (fc) {
         var src = map.getSource('helm-tides-src'); if (src && fc && fc.features) src.setData(fc);
       }).catch(function () {});
     }, 250);
@@ -217,7 +241,7 @@
     var pop = new window.maplibregl.Popup({ className: 'helm-tides-pop', maxWidth: '248px', closeButton: true })
       .setLngLat(lngLat).setHTML('<div class="t-body"><div class="t-empty">loading…</div></div>').addTo(map);
     if (!document.getElementById('helm-tides-style')) document.head.insertAdjacentHTML('beforeend', styles());
-    Promise.all([getJSON('/tides/summary' + q), getJSON('/tides/curve' + q + '&hours=24&step=30').catch(function () { return null; })])
+    Promise.all([getJSON('/tides/summary' + q + pol()), getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; })])
       .then(function (r) { try { pop.setHTML('<div class="t-body">' + cardHTML(r[0], r[1]) + '</div>'); } catch (e) {} })
       .catch(function (e) { pop.setHTML('<div class="t-body"><div class="t-empty" style="color:var(--danger)">' + esc(e.message) + '</div></div>'); });
   }
