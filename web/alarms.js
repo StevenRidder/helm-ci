@@ -23,17 +23,28 @@
 //   • CPA/TCPA — from the engine's LIVE AIS via collision.js (not duplicated here).
 window.HelmAlarms = function (map, opts) {
   opts = opts || {};
-  const depthLimit = opts.depthLimit != null ? opts.depthLimit : 3.0;   // metres
-  const depthClear = depthLimit + 0.3;                                   // hysteresis
-  let anchorRadius = opts.anchorRadius != null ? opts.anchorRadius : 40; // metres (settable)
-  const xteLimit = opts.xteLimit != null ? opts.xteLimit : 100;          // metres off track
-  const arrivalNM = opts.arrivalNM != null ? opts.arrivalNM : 0.10;      // NM to next wp
+  // ---- persisted alarm settings (ALARM-11) — defaults ← saved (HelmStore) ← opts override ----
+  const PREF_KEY = 'alarm.prefs';
+  const _saved = (window.HelmStore && window.HelmStore.get(PREF_KEY, null)) || {};
+  const _pick = (k, dflt) => (opts[k] != null ? opts[k] : (_saved[k] != null ? _saved[k] : dflt));
+  let depthLimit = _pick('depthLimit', 3.0);    // metres
+  let depthClear = depthLimit + 0.3;            // hysteresis
+  let anchorRadius = _pick('anchorRadius', 40); // metres (settable)
+  let xteLimit = _pick('xteLimit', 100);        // metres off track
+  let arrivalNM = _pick('arrivalNM', 0.10);     // NM to next wp
+  const ENABLED_DEFAULT = { depth: true, xte: true, arrival: true, nofix: true, contour: true, anchor: true, guard: true, mob: true };
+  const enabled = Object.assign({}, ENABLED_DEFAULT, _saved.enabled || {});   // per-alarm on/off
+  let muted = !!_saved.muted;                   // master audio mute (banner still shows; just no beep)
   const ONROUTE_NM = 60;        // only judge XTE/arrival when plausibly ON the route (guards a stale demo route)
   const DRAG_DEBOUNCE_MS = 8000; // must stay outside the circle this long before the drag alarm trips
+  function savePrefs() {        // persist the live config so it survives reload (TOOLS-7 / HelmStore)
+    if (window.HelmStore) window.HelmStore.set(PREF_KEY, { depthLimit, xteLimit, arrivalNM, anchorRadius, safetyDepth, muted, enabled });
+  }
 
   // ---- alarm state ----
   const active = {};            // kind -> { kind, sev, msg, acked }
   let fresh = true;             // false when feed stale/offline → hold (don't evaluate)
+  let lastNav = null;           // last nav frame (so a settings change can re-evaluate at once)
   const num = v => { const m = String(v == null ? '' : v).match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
 
   // ---- feed-loss / no-fix state (ALARM-9 / ALARM-10) ----
@@ -83,7 +94,8 @@ window.HelmAlarms = function (map, opts) {
   // still sound. That `|| active.nofix` is the whole point of ALARM-9/10: an audible feed loss.
   function beepTick() {
     evalFeedLoss();
-    if ((fresh || active.nofix) && Object.values(active).some(a => !a.acked && a.sev === 'critical')) beep();
+    if (!muted && (fresh || active.nofix) && Object.values(active).some(a => !a.acked && a.sev === 'critical')) beep();
+    syncSettingsPanel();   // keep the open Alarms panel's live status (audio/contour) fresh
   }
   setInterval(beepTick, 1600);
 
@@ -125,6 +137,7 @@ window.HelmAlarms = function (map, opts) {
     const ack = banner.querySelector('#alarm-ack'); ack.style.display = unacked ? '' : 'none';
   }
   function fire(kind, sev, msg) {
+    if (enabled[kind] === false) { clear(kind); return; }   // this alarm type is disabled in settings (ALARM-11)
     const prev = active[kind];
     active[kind] = { kind, sev, msg, acked: prev ? prev.acked : false };   // keep ack across message updates
     render();
@@ -215,6 +228,7 @@ window.HelmAlarms = function (map, opts) {
   }
   function setRadius(delta) {
     anchorRadius = Math.max(10, Math.min(300, anchorRadius + delta));
+    savePrefs();   // ALARM-11: the chosen anchor-watch radius persists as the default
     if (anchor) { redrawAnchor(); updatePill(lastPos ? distM(lastPos, anchor) : 0); }
   }
 
@@ -365,11 +379,12 @@ window.HelmAlarms = function (map, opts) {
   // simulated one). The ROUTE-crossing check runs on the route geometry itself (real regardless of
   // live position). If the contour file isn't present (offline / outside coverage), the check is
   // silently unavailable — never faked.
-  const safetyDepth = opts.safetyDepth != null ? opts.safetyDepth : 5.0;     // m — charted contour ≤ this is unsafe
+  let safetyDepth = _pick('safetyDepth', 5.0);   // m — charted contour ≤ this is unsafe (ALARM-11 settable)
   const CONTOUR_PROXIMITY_M = 60, CONTOUR_THROTTLE_MS = 2000;
-  let shallowSegs = null, contourAt = 0;
+  let shallowSegs = null, contourAt = 0, contourRaw = null, contourState = 'loading';   // 'loading'|'ready'|'unavailable'
   function ingestContours(geojson) {
     try {
+      contourRaw = geojson;       // kept so a safety-depth change can re-filter without re-fetching
       const segs = [];
       (geojson && geojson.features || []).forEach(f => {
         const p = f.properties || {}, depth = p.VALDCO != null ? p.VALDCO : p.depth;
@@ -378,9 +393,9 @@ window.HelmAlarms = function (map, opts) {
         const lines = g.type === 'LineString' ? [g.coordinates] : (g.type === 'MultiLineString' ? g.coordinates : []);
         lines.forEach(c => { for (let i = 0; i < c.length - 1; i++) segs.push({ a: c[i], b: c[i + 1], depth }); });
       });
-      shallowSegs = segs;
+      shallowSegs = segs; contourState = 'ready';
     } catch (e) {
-      shallowSegs = null;
+      shallowSegs = null; contourState = 'unavailable';
       console.warn('HelmAlarms: safety-contour data (depcnt) is malformed — the safety-contour alarm (ALARM-8) is INACTIVE:', e && e.message);
     }
   }
@@ -392,8 +407,8 @@ window.HelmAlarms = function (map, opts) {
       fetch('data/depcnt.geojson')
         .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
         .then(j => ingestContours(j))
-        .catch(e => console.warn('HelmAlarms: safety-contour data (data/depcnt.geojson) failed to load — the safety-contour alarm (ALARM-8) is INACTIVE until it loads:', e && e.message));
-    } catch (e) { console.warn('HelmAlarms: could not start the safety-contour data load — ALARM-8 INACTIVE:', e && e.message); }
+        .catch(e => { contourState = 'unavailable'; console.warn('HelmAlarms: safety-contour data (data/depcnt.geojson) failed to load — the safety-contour alarm (ALARM-8) is INACTIVE until it loads:', e && e.message); });
+    } catch (e) { contourState = 'unavailable'; console.warn('HelmAlarms: could not start the safety-contour data load — ALARM-8 INACTIVE:', e && e.message); }
   })();
   // local-metres geometry (equirectangular about the query point — exact enough at chart scales)
   function pointSegM(p, a, b) {
@@ -465,7 +480,7 @@ window.HelmAlarms = function (map, opts) {
   // ---- evaluate alarms from each fresh nav frame ----
   function onNav(s) {
     if (!s || !s.pos) return;
-    lastPos = s.pos;
+    lastPos = s.pos; lastNav = s;        // kept so a settings change can re-evaluate immediately (ALARM-11)
     if (!fresh) return;                  // hold on stale feed — never (re)evaluate from data we can't trust
     positionBanner();                    // track collision.js's CPA banner so the two never overlap
     const src = s.sources || {};
@@ -532,15 +547,93 @@ window.HelmAlarms = function (map, opts) {
     // CPA/TCPA is owned by collision.js (richer COLREGs guidance + audio); not duplicated here.
   }
 
+  // ---- settings (ALARM-11): mutable thresholds + per-alarm enable + mute, persisted via HelmStore ----
+  function _reEval() { if (lastNav) onNav(lastNav); }      // re-run detection at once after a threshold change
+  function setDepthLimit(v) { v = +v; if (isFinite(v) && v > 0)  { depthLimit = v; depthClear = v + 0.3; savePrefs(); _reEval(); } }
+  function setXteLimit(v)   { v = +v; if (isFinite(v) && v > 0)  { xteLimit = v;  savePrefs(); _reEval(); } }
+  function setArrivalNM(v)  { v = +v; if (isFinite(v) && v > 0)  { arrivalNM = v; savePrefs(); _reEval(); } }
+  function setSafetyDepth(v){ v = +v; if (isFinite(v) && v >= 0) { safetyDepth = v; if (contourRaw) ingestContours(contourRaw); contourAt = 0; savePrefs(); _reEval(); } }
+  function setEnabled(kind, on) { enabled[kind] = !!on; if (!on) clear(kind); savePrefs(); render(); }
+  function setMuted(m) { muted = !!m; savePrefs(); }
+  function settings() { return { depthLimit, xteLimit, arrivalNM, safetyDepth, anchorRadius, muted, enabled: Object.assign({}, enabled) }; }
+  function status() {   // fail-loud signals the panel surfaces to the helm (per PR #34)
+    const audio = muted ? 'muted' : (audioWarned ? 'blocked' : (!ac ? 'idle' : (ac.state === 'running' ? 'on' : (ac.state === 'suspended' ? 'tap' : ac.state))));
+    return { audio, contour: { state: contourState, segments: shallowSegs ? shallowSegs.length : 0, safetyDepth } };
+  }
+
+  // ---- Alarms settings panel (SHELL-registered) ----
+  let _panelBody = null;
+  function syncSettingsPanel() { try { const h = window.HelmShell && HelmShell.panel('helm-alarm-settings'); if (_panelBody && _panelBody._alarmSync && h && h.isOpen && h.isOpen()) _panelBody._alarmSync(); } catch (e) {} }
+  (function registerSettingsPanel() {
+    if (!(window.HelmShell && HelmShell.registerPanel)) return;
+    const ALARMS = [['depth', 'Shallow water (depth)'], ['xte', 'Off-course (XTE)'], ['arrival', 'Arrival'],
+      ['nofix', 'Feed-loss / no-fix'], ['contour', 'Safety-contour (charted shoal)'],
+      ['anchor', 'Anchor drag'], ['guard', 'Guard zone'], ['mob', 'MOB']];
+    const dim = 'color:var(--cdim,#8aa)';
+    HelmShell.registerPanel({
+      id: 'helm-alarm-settings', epic: 'ALARM', title: 'Alarms', icon: '⚠',
+      render: function (body) {
+        _panelBody = body;
+        const numRow = (id, label, val, step, min, unit) =>
+          '<label class="row" style="display:flex;align-items:center;justify-content:space-between;gap:8px;margin:6px 0">' +
+          '<span>' + label + '</span><span><input type="number" id="' + id + '" value="' + val + '" step="' + step + '" min="' + min + '" ' +
+          'style="width:64px;text-align:right;background:transparent;border:.5px solid var(--line,#2a3742);border-radius:6px;color:var(--ctext,#cdd9e3);padding:3px 6px"> ' + unit + '</span></label>';
+        const enRow = (k, label) =>
+          '<label class="row" style="display:flex;align-items:center;gap:8px;margin:5px 0"><input type="checkbox" id="al-en-' + k + '"> ' + label + '</label>';
+        body.innerHTML =
+          '<div class="sub" style="margin-bottom:10px;' + dim + '">Per-alarm enable, audible mute, and thresholds — all persist across reload.</div>' +
+          '<div class="lbl" style="margin:10px 0 4px;font-size:11px;letter-spacing:.04em;' + dim + '">THRESHOLDS</div>' +
+          numRow('al-depth', 'Shallow depth', depthLimit, '0.5', '0.5', 'm') +
+          numRow('al-xte', 'Off-course XTE', xteLimit, '10', '10', 'm') +
+          numRow('al-safety', 'Safety contour', safetyDepth, '1', '0', 'm') +
+          '<div class="lbl" style="margin:14px 0 4px;font-size:11px;letter-spacing:.04em;' + dim + '">ALARMS</div>' +
+          ALARMS.map(a => enRow(a[0], a[1])).join('') +
+          '<label class="row" style="display:flex;align-items:center;gap:8px;margin:10px 0 2px"><input type="checkbox" id="al-mute"> <b>Mute all alarm audio</b> <span style="' + dim + ';font-size:10.5px">(banner still shows)</span></label>' +
+          '<div class="lbl" style="margin:14px 0 4px;font-size:11px;letter-spacing:.04em;' + dim + '">STATUS</div>' +
+          '<div id="al-st-audio" style="font-size:12px;margin:3px 0"></div>' +
+          '<div id="al-st-contour" style="font-size:12px;margin:3px 0"></div>';
+        const g = id => body.querySelector(id);
+        g('#al-depth').onchange = e => setDepthLimit(e.target.value);
+        g('#al-xte').onchange = e => setXteLimit(e.target.value);
+        g('#al-safety').onchange = e => setSafetyDepth(e.target.value);
+        g('#al-mute').onchange = e => setMuted(e.target.checked);
+        ALARMS.forEach(a => { g('#al-en-' + a[0]).onchange = e => setEnabled(a[0], e.target.checked); });
+        body._alarmSync = function () {
+          g('#al-depth').value = depthLimit; g('#al-xte').value = xteLimit; g('#al-safety').value = safetyDepth;
+          g('#al-mute').checked = muted;
+          ALARMS.forEach(a => { g('#al-en-' + a[0]).checked = enabled[a[0]] !== false; });
+          const st = status();
+          const A = { on: ['● audio working', 'var(--ok,#46e0a0)'], tap: ['● tap the chart once to enable audio', 'var(--warn,#ffc06a)'],
+            blocked: ['▲ ALARM AUDIO BLOCKED — you will not hear alarms', 'var(--danger,#ff6b6b)'],
+            muted: ['● audio muted (by you)', 'var(--cdim,#8aa)'], idle: ['○ audio idle (not yet sounded)', 'var(--cdim,#8aa)'] }[st.audio] || ['audio: ' + st.audio, 'var(--cdim,#8aa)'];
+          const ae = g('#al-st-audio'); ae.textContent = A[0]; ae.style.color = A[1];
+          const c = st.contour, ce = g('#al-st-contour');
+          if (c.state === 'ready') { ce.textContent = '● safety-contour data loaded (' + c.segments + ' seg ≤ ' + c.safetyDepth + ' m)'; ce.style.color = 'var(--ok,#46e0a0)'; }
+          else if (c.state === 'unavailable') { ce.textContent = '▲ SAFETY-CONTOUR DATA UNAVAILABLE — shoal alarm inactive here'; ce.style.color = 'var(--danger,#ff6b6b)'; }
+          else { ce.textContent = '○ loading safety-contour data…'; ce.style.color = 'var(--cdim,#8aa)'; }
+        };
+        body._alarmSync();
+      },
+      onOpen: function (body) { if (body._alarmSync) body._alarmSync(); }
+    });
+    if (HelmShell.registerCommand) HelmShell.registerCommand({
+      id: 'helm-alarm-settings-open', epic: 'ALARM', title: 'Alarm settings',
+      subtitle: 'Thresholds, mute, per-alarm enable', keywords: ['alarm', 'settings', 'threshold', 'mute', 'depth', 'xte', 'contour'],
+      group: 'Alarms', run: function () { const h = HelmShell.panel('helm-alarm-settings'); if (h && h.open) h.open(); }
+    });
+  })();
+
   return {
     onNav,
+    setDepthLimit, setXteLimit, setArrivalNM, setSafetyDepth, setEnabled, setMuted, settings, status,   // ALARM-11 settings API
     onSource,                                            // feed state in → hold + audible no-fix/feed-loss alarm (ALARM-9/10)
     setActive(f) { fresh = !!f; },                       // legacy hold/resume w/o source detail — superseded by onSource
     fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames
     dropAnchor: p => dropAnchor(p || lastPos), markMOB: () => markMOB(lastPos), setRadius,
     dropGuard: (p, mode) => dropGuard(p || lastPos, mode), clearGuard, setGuardMode, setGuardRadius,   // guard zone (ALARM-7)
     _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob, fresh, feedState, hadFeed,
-                     guard: !!guard, guardMode, guardRadius, contourSegs: shallowSegs ? shallowSegs.length : 0 }),  // for tests
+                     guard: !!guard, guardMode, guardRadius, contourSegs: shallowSegs ? shallowSegs.length : 0,
+                     muted, depthLimit, xteLimit, safetyDepth, contourState, enabled: Object.assign({}, enabled) }),  // for tests
     _loadContours: ingestContours,                       // inject charted-contour geojson (tests)
     _msg: k => active[k] && active[k].msg,               // current message for an active alarm (tests)
     _tick: beepTick                                      // drive one alarm tick deterministically (tests)

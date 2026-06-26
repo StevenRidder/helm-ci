@@ -49,7 +49,15 @@ const documentStub = {
   querySelector() { return null; },        // no CPA banner present
   querySelectorAll() { return []; },
 };
-const windowStub = { AudioContext: FakeAudioContext, webkitAudioContext: FakeAudioContext };
+// in-memory HelmStore stub (TOOLS-7) so we can test ALARM-11 persistence
+const memStore = {};
+const HelmStoreStub = {
+  get: (k, d) => (k in memStore ? memStore[k] : d),
+  set: (k, v) => { memStore[k] = v; return true; },
+  remove: (k) => { delete memStore[k]; }, keys: () => Object.keys(memStore), available: () => true,
+};
+function resetStore() { Object.keys(memStore).forEach(k => delete memStore[k]); }
+const windowStub = { AudioContext: FakeAudioContext, webkitAudioContext: FakeAudioContext, HelmStore: HelmStoreStub };
 
 // ---- fake maplibre map (only the seams alarms.js touches at construction) ----
 const mapStub = {
@@ -293,6 +301,76 @@ const REAL = { pos: 'gps' }, SIM = { pos: 'simulated' };
   const a = mk();
   a.onSource('connecting', {}); a.onSource('sim', {});
   ok(!warnings.some(w => /unrecognised/i.test(w)), '21. known neutral phases (connecting/sim) do NOT warn');
+}
+
+// ---- alarm settings: enable / mute / thresholds + persistence (ALARM-11) ----
+// 22. per-alarm enable — a disabled alarm never fires; re-enabling restores it
+{
+  resetStore();
+  const a = mk();
+  a.onNav({ pos: { lat: 0, lon: 0 }, sources: { depth: 'nmea' }, depth: 1.0 });   // 1 m < 3 m limit, real source
+  ok(has(a, 'depth'), '22a. (precondition) shallow depth fires');
+  a.setEnabled('depth', false);
+  ok(!has(a, 'depth'), '22b. disabling an alarm clears it');
+  a.onNav({ pos: { lat: 0, lon: 0 }, sources: { depth: 'nmea' }, depth: 1.0 });
+  ok(!has(a, 'depth'), '22c. a disabled alarm does not re-fire');
+  a.setEnabled('depth', true);
+  a.onNav({ pos: { lat: 0, lon: 0 }, sources: { depth: 'nmea' }, depth: 1.0 });
+  ok(has(a, 'depth'), '22d. re-enabling restores the alarm');
+}
+
+// 23. master mute — banner still fires but no beep; unmuting resumes the beep
+{
+  resetStore();
+  const a = mk();
+  a.onNav({ pos: { lat: 0, lon: 0 }, sources: {} }); a.markMOB();   // a critical alarm
+  audioStarts = 0; a.setMuted(true); a._tick();
+  ok(has(a, 'mob') && audioStarts === 0, '23a. muted: critical alarm shows but does NOT beep');
+  a.setMuted(false); a._tick();
+  ok(audioStarts >= 1, '23b. unmuting resumes the beep');
+}
+
+// 24. thresholds are settable and re-evaluate immediately
+{
+  resetStore();
+  const a = mk();
+  a.onNav({ pos: { lat: 0, lon: 0 }, sources: { depth: 'nmea' }, depth: 4.0 });   // 4 m > 3 m default → quiet
+  ok(!has(a, 'depth'), '24a. depth 4 m under the 3 m default → no alarm');
+  a.setDepthLimit(5);
+  ok(a._state().depthLimit === 5 && has(a, 'depth'), '24b. raising the limit to 5 m re-evaluates → alarm fires now');
+}
+
+// 25. settings persist via HelmStore and seed a fresh instance (survive reload)
+{
+  resetStore();
+  const a = mk();
+  a.setDepthLimit(7); a.setEnabled('xte', false); a.setMuted(true);
+  ok(memStore['alarm.prefs'] && memStore['alarm.prefs'].depthLimit === 7, '25a. a setting is written to HelmStore');
+  const b = mk();   // a fresh instance seeds from the persisted prefs
+  ok(b._state().depthLimit === 7 && b._state().enabled.xte === false && b._state().muted === true,
+     '25b. a fresh instance restores persisted thresholds + enable + mute');
+}
+
+// 26. status() surfaces the fail-loud signals (contour data ready vs unavailable)
+{
+  resetStore();
+  const a = mk();
+  a._loadContours({ features: [{ properties: { VALDCO: 2 }, geometry: { type: 'LineString', coordinates: [[-0.01, 0], [0.01, 0]] } }] });
+  ok(a.status().contour.state === 'ready' && a.status().contour.segments === 1, '26a. status: contour data ready + segment count');
+  const a2 = mk(); a2._loadContours({ features: 'broken' });
+  ok(a2.status().contour.state === 'unavailable', '26b. status: contour data UNAVAILABLE on malformed data');
+}
+
+// 27. changing the safety depth re-filters the already-loaded contour data
+{
+  resetStore();
+  const a = mk();
+  a._loadContours({ features: [
+    { properties: { VALDCO: 2 }, geometry: { type: 'LineString', coordinates: [[-0.01, 0], [0.01, 0]] } },
+    { properties: { VALDCO: 8 }, geometry: { type: 'LineString', coordinates: [[-0.01, 1], [0.01, 1]] } }] });
+  ok(a._state().contourSegs === 1, '27a. at safety 5 m only the 2 m contour is indexed (8 m excluded)');
+  a.setSafetyDepth(10);
+  ok(a._state().contourSegs === 2, '27b. raising safety to 10 m re-filters → both contours indexed');
 }
 
 console.log('\n' + (fail ? '\x1b[31m' : '\x1b[32m') + pass + ' passed, ' + fail + ' failed\x1b[0m');
