@@ -597,7 +597,8 @@ struct AisRow { int mmsi; double lat, lon, cog, sog, hdg, range, brg, cpa, tcpa;
                 // forwarded from OpenCPN's already-decoded AisTargetData for the rich target card
                 int navStatus, shipType, rot, imo, length, beam, etaMo, etaDay, etaHr, etaMin;
                 std::string callsign, destination; double draft;
-                std::string source; std::time_t prt; };   // source = feed id; prt = raw OpenCPN report tick (internal per-target "just reported" change-detector)
+                std::string source; std::time_t prt;   // source = feed id; prt = raw OpenCPN report tick (internal per-target "just reported" change-detector)
+                bool posDoubtful, sarAircraft; int altitude; };   // b_positionDoubtful (degraded GNSS), SAR-aircraft msg-9 + altitude (m)
 // Per-thread "current AIS source": each connection driver thread stamps its conn id here before parsing,
 // so the !AIVDM harvest can tag the just-heard target with the feed it arrived on (set in conn_feed_*).
 static thread_local std::string g_cur_source;
@@ -649,7 +650,8 @@ static void nmea_parse(const std::string& line, int prio) {
       row = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
         t->CPA, t->TCPA, (g_have_fix.load() ? t->bCPA_Valid : false), (int)t->Class, ais_trim(t->ShipName), seen,
         t->NavStatus, (int)t->ShipType, t->ROTAIS, t->IMO, t->DimA + t->DimB, t->DimC + t->DimD,
-        t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft, src, prt };
+        t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft, src, prt,
+        t->b_positionDoubtful, t->b_SarAircraftPosnReport, t->altitude };
     }
     return;
   }
@@ -1836,12 +1838,14 @@ static void nav_loop(ix::HttpServer* server) {
           "\"range\":%.2f,\"brg\":%.0f,\"cpa\":%.2f,\"tcpa\":%.1f,\"cpaValid\":%s,\"risk\":\"%s\","
           "\"class\":%d,\"name\":\"%s\",\"ageSec\":%ld,\"source\":\"%s\","
           "\"navStatus\":%d,\"shipType\":%d,\"callsign\":\"%s\",\"destination\":\"%s\","
-          "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d}",
+          "\"eta\":\"%s\",\"length\":%d,\"beam\":%d,\"draught\":%.1f,\"rot\":%s,\"imo\":%d,"
+          "\"posDoubtful\":%s,\"sar\":%s,\"altitude\":%d}",
           t.mmsi, t.lat, t.lon, cogj, sogj, t.hdg,
           t.range, t.brg, t.cpa, t.tcpa, cpaEff ? "true" : "false", risk,
           t.cls, json_escape(t.name).c_str(), age, json_escape(t.source).c_str(),
           t.navStatus, t.shipType, json_escape(t.callsign).c_str(), json_escape(t.destination).c_str(),
-          eta, t.length, t.beam, t.draft, rotj, t.imo);
+          eta, t.length, t.beam, t.draft, rotj, t.imo,
+          t.posDoubtful ? "true" : "false", t.sarAircraft ? "true" : "false", t.altitude);
         aisTargets.push_back({ t.lat, t.lon, tb }); ++it;
       }
     }

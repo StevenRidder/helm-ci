@@ -64,7 +64,11 @@
     6: { label: 'Aground', tone: 'bad' }, 7: { label: 'Fishing', tone: 'warn' },
     8: { label: 'Under way sailing', tone: 'go' }, 9: { label: 'High-speed craft', tone: 'go' },
     10: { label: 'WIG', tone: 'go' }, 11: { label: 'Towing astern', tone: 'warn' },
-    12: { label: 'Pushing / towing', tone: 'warn' }, 14: { label: 'AIS-SART / MOB / EPIRB', tone: 'bad' }
+    12: { label: 'Pushing / towing', tone: 'warn' }, 14: { label: 'AIS-SART / MOB / EPIRB', tone: 'bad' },
+    // AtoN state (OpenCPN nav-status 16–21): virtual (electronic) vs real (physical) aid, and on/off position.
+    16: { label: 'Virtual AtoN', tone: 'mut' }, 17: { label: 'Virtual AtoN · on position', tone: 'mut' },
+    18: { label: 'Virtual AtoN · OFF POSITION', tone: 'warn' }, 19: { label: 'Real AtoN', tone: 'mut' },
+    20: { label: 'Real AtoN · on position', tone: 'mut' }, 21: { label: 'Real AtoN · OFF POSITION', tone: 'warn' }
   };
   function navStatus(code) { return code == null ? null : (NAV[+code] || null); }
   var STYLE = {

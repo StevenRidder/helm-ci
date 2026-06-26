@@ -1027,6 +1027,7 @@
       row('SOG', aisNum(p.sog, 1) + ' kn'), row('COG', aisNum(p.cog, 0) + '°'),
       (p.hdg != null && p.hdg < 360) ? row('HDG', aisNum(p.hdg, 0) + '°') : '',
       (meta.rot && meta.rot(p.rot) != null) ? row('ROT', meta.rot(p.rot)) : '',
+      (p.altitude != null && +p.altitude > 0) ? row('Altitude', Math.round(p.altitude) + ' m') : '',   // SAR aircraft (AIS msg 9)
       (p.range != null) ? row('Range', aisNum(p.range, 2) + ' NM') : '',
       (p.brg != null) ? row('Bearing', aisNum(p.brg, 0) + '°') : ''
     ].join('');
@@ -1044,7 +1045,7 @@
       badge = '<span style="display:inline-block;font-size:11.5px;font-weight:600;padding:3px 9px;border-radius:10px;margin:2px 0 6px;'
         + 'background:' + st.bg + ';color:' + st.fg + '">' + st.icon + ' ' + ns.label + '</span>'; }
 
-    const subline = [cls, type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
+    const subline = [p.sar ? '✈ SAR aircraft' : '', cls, type, callsign ? 'Call ' + aisEsc(callsign) : '', p.mmsi ? 'MMSI ' + p.mmsi : ''].filter(Boolean).join(' · ');
 
     const fresh = aisFreshChip(p.ageSec);
     const srcLabel = aisSourceLabel(p.source);
@@ -1066,7 +1067,9 @@
       + '<div style="font-size:12.5px;font-weight:600;color:' + toneCol + ';margin:0 0 2px">' + riskLabel + '</div>'
       + sec('Motion') + motion
       + voyage + size
-      + '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">' + fresh + srcChip + '</div>'
+      + '<div style="display:flex;gap:7px;flex-wrap:wrap;margin-top:10px">' + fresh + srcChip
+      +   (p.posDoubtful ? '<span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:#412402;background:#ef9f27;padding:5px 10px;border-radius:16px">⚠ position doubtful</span>' : '')
+      + '</div>'
       + '</div>';
   }
   // AIS targets → the `ais` source. The source carries promoteId:'mmsi' (CLIENT-5) so each target's
