@@ -47,6 +47,14 @@
       '#helm-ais .aish-hd input{accent-color:#43d17d;width:15px;height:15px;flex:0 0 auto}' +
       '#helm-ais .aish-hd .lbl{flex:1;cursor:pointer;user-select:none}' +
       '#helm-ais .aish-hd .cnt{font-size:10px;letter-spacing:.04em;color:var(--cdim,#9bb0c0)}' +
+      '#helm-ais .aish-mode{margin:0 0 11px}' +
+      '#helm-ais .aish-mlbl{font-size:9.5px;letter-spacing:.06em;text-transform:uppercase;color:var(--cdim,#9bb0c0);margin:0 0 5px;display:flex;justify-content:space-between}' +
+      '#helm-ais .aish-mlbl .anch{color:#7fd0ff;text-transform:none;letter-spacing:0}' +
+      '#helm-ais .aish-seg{display:flex;gap:5px}' +
+      '#helm-ais .aish-seg button{flex:1;font:500 11px/1 inherit;padding:7px 4px;border-radius:8px;' +
+        'border:.5px solid var(--line,rgba(255,255,255,.13));background:transparent;color:var(--cdim,#9bb0c0);cursor:pointer}' +
+      '#helm-ais .aish-seg button.on{background:rgba(67,209,125,.16);border-color:rgba(67,209,125,.6);color:#a4f4c1}' +
+      '#helm-ais .aish-msub{font-size:10px;color:var(--cdim,#9bb0c0);margin-top:5px;font-variant-numeric:tabular-nums}' +
       '#helm-ais .aish-tabs{display:flex;gap:3px;margin:0 0 10px}' +
       '#helm-ais .aish-tabs button{flex:1;font:500 11.5px/1 inherit;padding:8px 4px;background:transparent;' +
         'border:none;border-bottom:2px solid transparent;color:var(--cdim,#9bb0c0);cursor:pointer}' +
@@ -106,6 +114,34 @@
     if (lc) lc.addEventListener('change', function () { cb.checked = lc.checked; });
     hd.appendChild(lbl);
     body.appendChild(hd);
+
+    // Collision-profile selector (Harbor / Bay / Open ocean) — Cortex-style. Switching re-bands CPA/
+    // TCPA across the whole AIS surface (chart colours, cones, alarm). Only shown if the profiles API
+    // is present. When the boat is anchored we auto-tighten to Harbor and say so.
+    if (window.HelmAisRisk && HelmAisRisk.profiles && HelmAisRisk.setProfile) {
+      var mode = document.createElement('div'); mode.className = 'aish-mode';
+      var ml = document.createElement('div'); ml.className = 'aish-mlbl';
+      var mlt = document.createElement('span'); mlt.textContent = 'Collision profile';
+      var anch = document.createElement('span'); anch.className = 'anch';
+      ml.appendChild(mlt); ml.appendChild(anch); mode.appendChild(ml);
+      var seg = document.createElement('div'); seg.className = 'aish-seg'; mode.appendChild(seg);
+      var sub = document.createElement('div'); sub.className = 'aish-msub'; mode.appendChild(sub);
+      function trim(x) { return (Math.round(x * 10) / 10).toString().replace(/\.0$/, ''); }
+      function paint() {
+        var cur = HelmAisRisk.profile();           // effective (anchored-aware); .id = selected
+        Array.prototype.forEach.call(seg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-id') === cur.id); });
+        sub.textContent = 'CPA ' + trim(cur.cpa) + ' NM · ' + Math.round(cur.tcpa) + ' min · vessels ≥ ' + trim(cur.minTargetSog) + ' kn';
+        anch.textContent = cur.anchored ? '⚓ anchored → tightened' : '';
+      }
+      HelmAisRisk.profiles().forEach(function (p) {
+        var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', p.id); b.textContent = p.label;
+        b.addEventListener('click', function () { HelmAisRisk.setProfile(p.id); });   // paint() runs via the event below
+        seg.appendChild(b);
+      });
+      paint();
+      try { window.addEventListener('helm:ais-risk-profile', paint); } catch (e) {}     // selector + anchored auto-tighten both fire this
+      body.appendChild(mode);
+    }
 
     tabBar = document.createElement('div'); tabBar.className = 'aish-tabs'; body.appendChild(tabBar);
     paneWrap = document.createElement('div'); paneWrap.className = 'aish-panes'; body.appendChild(paneWrap);

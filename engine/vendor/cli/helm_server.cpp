@@ -580,6 +580,7 @@ struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; int p
 struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea"; int pos_prio = 0;
                   RField sog, cog, hdg, depth, wspd, wdir; };
 static RealFeed g_real;
+static std::atomic<bool> g_have_fix{false};   // true only with a fresh real GPS fix (pos+SOG+COG); gates AIS CPA validity
 
 // AIS — OpenCPN's real AisDecoder driven headless (decode + CPA/TCPA stay in its code). We
 // snapshot the decoded targets into our own set at decode time and age on our own clock.
@@ -629,7 +630,7 @@ static void nmea_parse(const std::string& line, int prio) {
     for (auto& kv : g_ais->GetTargetList()) {
       auto& t = kv.second;
       g_ais_rows[t->MMSI] = { t->MMSI, t->Lat, t->Lon, t->COG, t->SOG, t->HDG, t->Range_NM, t->Brg,
-        t->CPA, t->TCPA, t->bCPA_Valid, (int)t->Class, ais_trim(t->ShipName), snap,
+        t->CPA, t->TCPA, (g_have_fix.load() ? t->bCPA_Valid : false), (int)t->Class, ais_trim(t->ShipName), snap,
         t->NavStatus, (int)t->ShipType, t->ROTAIS, t->IMO, t->DimA + t->DimB, t->DimC + t->DimD,
         t->ETA_Mo, t->ETA_Day, t->ETA_Hr, t->ETA_Min, ais_trim(t->CallSign), ais_trim(t->Destination), t->Draft };
     }
@@ -847,13 +848,24 @@ static int udp_bind(const std::string& host, int port, std::string& err) {
 // Read NMEA lines off a connected fd until EOF/error/stop, feeding nmea_parse and updating status.
 // Generic line reader: poll+read an fd (works for sockets AND serial ttys), split on '\n', and
 // hand each trimmed line to on_line. Interruptible via want_stop; marks NoData after 10 s idle.
+// A live feed (the Vesper streams continuously) that goes silent is usually a HALF-OPEN socket: TCP
+// is still up but the peer stopped sending, so poll() just keeps timing out forever and the driver
+// never reconnects. Detect prolonged silence and RETURN so conn_thread closes the fd and reconnects
+// — the automatic equivalent of the manual disable/enable "kick".
+static const long kRxStaleReconnect = 20;     // seconds of silence after which we drop + reconnect
 static void conn_read_lines(int fd, const std::shared_ptr<ConnRuntime>& rt,
                             const std::function<void(const std::string&)>& on_line) {
   std::string buf; char rb[2048];
+  long connected_at = (long)std::time(nullptr);
   for (;;) {
     if (rt->want_stop) return;
     pollfd pfd{fd, POLLIN, 0}; int pr = ::poll(&pfd, 1, 1000);
-    if (pr == 0) { if (rt->last_rx && (long)std::time(nullptr) - rt->last_rx > 10) rt->status = (int)ConnStatus::NoData; continue; }
+    if (pr == 0) {
+      long idle = (long)std::time(nullptr) - (rt->last_rx ? (long)rt->last_rx : connected_at);
+      if (idle > 10) rt->status = (int)ConnStatus::NoData;
+      if (idle > kRxStaleReconnect) { rt->status = (int)ConnStatus::NoData; return; }   // half-open / silent peer → drop + reconnect
+      continue;
+    }
     if (pr < 0) { if (errno == EINTR) continue; return; }
     ssize_t n = ::read(fd, rb, sizeof rb);
     if (n > 0) {
@@ -1050,6 +1062,7 @@ static void conn_thread(std::string id, std::shared_ptr<ConnRuntime> rt) {
     ::close(fd);
     if (rt->want_stop) return;
     rt->status = (int)ConnStatus::NoData;
+    std::printf("connection %s: link dropped (closed or %lds silent) — reconnecting\n", id.c_str(), kRxStaleReconnect);
     for (int i = 0; i < 10 && !rt->want_stop; ++i) std::this_thread::sleep_for(std::chrono::milliseconds(100));
   }
 }
@@ -1349,7 +1362,7 @@ static void alarm_eval(double oLat, double oLon, double depth, const char* src_d
     } else if (driftM <= anc.radiusM) alarm_clear_id("anchor");
   } else { g_drag_over = 0; alarm_clear_id("anchor"); }
 
-  bool depthReal = src_depth && std::strcmp(src_depth, "simulated") != 0;    // NEVER alarm on synthetic depth (fail-loud policy)
+  bool depthReal = src_depth && std::strcmp(src_depth, "simulated") != 0 && std::strcmp(src_depth, "missing") != 0;   // NEVER alarm on synthetic or absent depth (fail-loud policy)
   if (depthReal && depth > 0) {
     const double limit = 3.0, clearAt = 3.3;                  // 0.3 m hysteresis so it doesn't chatter at the threshold
     if (depth < limit) {
@@ -1570,19 +1583,27 @@ static std::set<ix::WebSocket*> g_seen;   // clients already given a snapshot ba
 
 static void nav_loop(ix::HttpServer* server) {
   g_pRouteMan = new Routeman(RoutePropDlgCtx(), RoutemanDlgCtx());
-  // Active route: a saved route from navobj.db (survives restart) wins; else HELM_ROUTE GPX; else the
-  // built-in sample. Populates the shared ROUTE/g_route_name that route.create can swap live.
-  { std::vector<WP> saved; std::string sname;
-    if (load_latest_route_from_db(saved, sname)) {
-      std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = saved; g_route_name = sname;
-      std::printf("route source: navobj.db \"%s\" (%zu wp)\n", sname.c_str(), saved.size());
-    } else {
-      const char* rp = std::getenv("HELM_ROUTE"); std::string gpx;
-      if (rp && *rp) { if (!read_file(rp, gpx)) { std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", rp); std::exit(3); } std::printf("route source: %s\n", rp); }
-      else { gpx = SAMPLE_GPX; std::printf("route source: built-in sample (no saved route; override: HELM_ROUTE=<route.gpx>)\n"); }
+  // Live-data-only by default. HELM_SIM=1 re-enables the route-walking simulator (demos/dev only).
+  const bool g_sim = []{ const char* s = std::getenv("HELM_SIM"); return s && *s; }();
+  std::printf(g_sim ? "HELM_SIM=1: simulator ENABLED (synthetic data when no live feed)\n"
+                    : "live-data-only: no simulator; nav idles until a real fix (pos+SOG+COG)\n");
+  // Active route: explicit HELM_ROUTE at boot, or route.create/route.activate over the command plane.
+  // Boot NEVER auto-activates a saved route — no surprise demo line on the chart. Saved routes stay
+  // listable via route.list. HELM_SIM falls back to the built-in sample so the simulator has a path.
+  { const char* rp = std::getenv("HELM_ROUTE"); std::string gpx;
+    if (rp && *rp) {
+      if (!read_file(rp, gpx)) { std::fprintf(stderr, "FATAL: cannot read GPX route '%s'\n", rp); std::exit(3); }
       std::vector<WP> g; std::string gn;
       if (!load_gpx_route(gpx, g, gn)) { std::fprintf(stderr, "FATAL: GPX route unusable (need <rte> with >=2 <rtept>)\n"); std::exit(4); }
       std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = g; g_route_name = gn;
+      std::printf("route source: %s\n", rp);
+    } else if (g_sim) {
+      gpx = SAMPLE_GPX; std::vector<WP> g; std::string gn; load_gpx_route(gpx, g, gn);
+      std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = g; g_route_name = gn;
+      std::printf("route source: built-in sample (HELM_SIM demo)\n");
+    } else {
+      std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE.clear(); g_route_name = "";
+      std::printf("route source: none (no HELM_ROUTE); waiting for route.create/route.activate\n");
     } }
 
   // Local working snapshot of the active route + its Route object, rebuilt whenever it's swapped.
@@ -1591,33 +1612,52 @@ static void nav_loop(ix::HttpServer* server) {
   double along = 0; size_t lastLeg = 0; long seenVer = -1;
   auto rebuild_route = [&]() {
     { std::lock_guard<std::mutex> lk(g_route_mtx); route = ROUTE; rname = g_route_name; }
+    legLen.clear(); total = 0; along = 0; lastLeg = 0; r = nullptr;
+    if (route.size() < 2) { std::printf("route idle: no active route — position + AIS only until a route is created/activated\n"); return; }
     r = build_route(route, rname);   // prior r intentionally leaked (rare swap; deleting while Routeman-active is unsafe)
-    gLat = route[0].lat; gLon = route[0].lon;
     g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false);
-    legLen.clear(); total = 0; double b, d;
+    double b, d;
     for (size_t i = 0; i + 1 < route.size(); ++i) { bd(route[i + 1].lat, route[i + 1].lon, route[i].lat, route[i].lon, &b, &d); legLen.push_back(d); total += d; }
-    along = 0; lastLeg = 0;
     std::printf("route activated: \"%s\" %zu waypoints; Routeman live (no GUI).\n", rname.c_str(), route.size());
   };
 
   for (long tick = 0;; ++tick) {
     long ver = g_route_version.load();
     if (ver != seenVer) { seenVer = ver; rebuild_route(); }
+    // LIVE-DATA-ONLY gate. Require a fresh real fix; no sim unless HELM_SIM. bGPSValid drives the
+    // AisDecoder's CPA, so clearing it on no-fix invalidates collision math (no plausible-but-wrong
+    // CPA against a frozen / demo-origin ownship). On no-fix we emit NO frame, so the client's
+    // staleness tier + no-fix alarm fire (those trip when frames STOP, not on a synthetic frame).
+    bool have_fix = fresh(g_real.pos_t) && fresh(g_real.sog.t) && fresh(g_real.cog.t);
+    g_have_fix.store(have_fix);
+    bGPSValid = have_fix || g_sim;
+    if (!have_fix && !g_sim) {
+      if (tick % 10 == 0) std::printf("nav idle: waiting for fresh live position, SOG, and COG\n");
+      std::this_thread::sleep_for(std::chrono::seconds(1));
+      continue;
+    }
+    // route-walk simulation — only meaningful with an active route. In live mode real data overrides
+    // these; a route-less live boat skips it entirely and just shows position + AIS (no demo line).
+    bool have_route = (route.size() >= 2 && r != nullptr);
     double sim_sog = 5.6 + std::sin(tick / 9.0) * 0.9;
-    along += sim_sog / 3600.0;
-    if (along >= total) { along = 0; lastLeg = 0; g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false); }
-    size_t li = 0; double acc = 0;
-    while (li + 1 < legLen.size() && acc + legLen[li] < along) { acc += legLen[li]; ++li; }
-    double f = legLen[li] ? (along - acc) / legLen[li] : 0;
-    const WP& A = route[li]; const WP& B = route[li + 1];
-    while (lastLeg < li) { g_pRouteMan->ActivateNextPoint(r, false); ++lastLeg; }
-    double sim_lat = A.lat + (B.lat - A.lat) * f, sim_lon = A.lon + (B.lon - A.lon) * f;
-    double legBrg, segNM; bd(B.lat, B.lon, A.lat, A.lon, &legBrg, &segNM);
-    int sim_cog = (int)std::lround(legBrg);
-    int sim_hdg = ((int)std::lround(legBrg) + (int)std::lround(std::sin(tick / 7.0) * 4) + 360) % 360;
-    double sim_wspd = 14 + std::sin(tick / 11.0) * 3;
-    int sim_wdir = ((int)std::lround(95 + std::sin(tick / 13.0) * 10) + 360) % 360;
-    double sim_depth = 6 + (1 - f) * 8 + std::sin(tick / 5.0) * 0.6;
+    double sim_lat = gLat, sim_lon = gLon, sim_wspd = 14, sim_depth = 0, legBrg = 0;
+    int sim_cog = 0, sim_hdg = 0, sim_wdir = 95; size_t li = 0;
+    if (have_route) {
+      along += sim_sog / 3600.0;
+      if (along >= total) { along = 0; lastLeg = 0; g_pRouteMan->ActivateRoute(r); g_pRouteMan->ActivateNextPoint(r, false); }
+      double acc = 0;
+      while (li + 1 < legLen.size() && acc + legLen[li] < along) { acc += legLen[li]; ++li; }
+      double f = legLen[li] ? (along - acc) / legLen[li] : 0;
+      const WP& A = route[li]; const WP& B = route[li + 1];
+      while (lastLeg < li) { g_pRouteMan->ActivateNextPoint(r, false); ++lastLeg; }
+      sim_lat = A.lat + (B.lat - A.lat) * f; sim_lon = A.lon + (B.lon - A.lon) * f;
+      double segNM; bd(B.lat, B.lon, A.lat, A.lon, &legBrg, &segNM);
+      sim_cog = (int)std::lround(legBrg);
+      sim_hdg = ((int)std::lround(legBrg) + (int)std::lround(std::sin(tick / 7.0) * 4) + 360) % 360;
+      sim_wspd = 14 + std::sin(tick / 11.0) * 3;
+      sim_wdir = ((int)std::lround(95 + std::sin(tick / 13.0) * 10) + 360) % 360;
+      sim_depth = 6 + (1 - f) * 8 + std::sin(tick / 5.0) * 0.6;
+    }
 
     double sog, depth, wspd; int cog, hdg, wdir;
     const char *src_pos, *src_sog, *src_cog, *src_hdg, *src_depth, *src_wind;
@@ -1625,36 +1665,44 @@ static void nav_loop(ix::HttpServer* server) {
       if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = g_real.pos_src; } else { gLat = sim_lat; gLon = sim_lon; src_pos = "simulated"; }
       if (fresh(g_real.sog.t)) { sog = g_real.sog.v; src_sog = g_real.sog.src; } else { sog = sim_sog; src_sog = "simulated"; }
       if (fresh(g_real.cog.t)) { cog = (int)std::lround(g_real.cog.v); src_cog = g_real.cog.src; } else { cog = sim_cog; src_cog = "simulated"; }
-      if (fresh(g_real.hdg.t)) { hdg = (int)std::lround(g_real.hdg.v); src_hdg = g_real.hdg.src; } else { hdg = sim_hdg; src_hdg = "simulated"; }
-      if (fresh(g_real.depth.t)) { depth = g_real.depth.v; src_depth = g_real.depth.src; } else { depth = sim_depth; src_depth = "simulated"; }
-      if (fresh(g_real.wspd.t)) { wspd = g_real.wspd.v; src_wind = g_real.wspd.src; } else { wspd = sim_wspd; src_wind = "simulated"; }
-      wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : sim_wdir;
+      if (fresh(g_real.hdg.t)) { hdg = (int)std::lround(g_real.hdg.v); src_hdg = g_real.hdg.src; } else if (g_sim) { hdg = sim_hdg; src_hdg = "simulated"; } else { hdg = 0; src_hdg = "missing"; }
+      if (fresh(g_real.depth.t)) { depth = g_real.depth.v; src_depth = g_real.depth.src; } else if (g_sim) { depth = sim_depth; src_depth = "simulated"; } else { depth = 0; src_depth = "missing"; }
+      if (fresh(g_real.wspd.t)) { wspd = g_real.wspd.v; src_wind = g_real.wspd.src; } else if (g_sim) { wspd = sim_wspd; src_wind = "simulated"; } else { wspd = 0; src_wind = "missing"; }
+      wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : (g_sim ? sim_wdir : 0);
     }
     gCog = (double)cog; gSog = sog;   // own-ship course/speed -> OpenCPN's UpdateOneCPA (gLat/gLon set above)
     track_record(gLat, gLon, src_pos);  // ownship breadcrumb trail (auto; resets on source change so sim→real doesn't draw across the ocean)
     alarm_eval(gLat, gLon, depth, src_depth);   // CONTRACT-10 producer: headless anchor-drag / depth watch (runs even with no client)
-    RoutePoint* act = g_pRouteMan->GetpActivePoint();
-    double brgW = 0, dtw = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
-    double dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
-    double brgAP, dAP; bd(gLat, gLon, A.lat, A.lon, &brgAP, &dAP);
-    double xteNM = std::fabs(std::asin(std::sin(dAP / 3440.065) * std::sin((brgAP - legBrg) * M_PI / 180.0)) * 3440.065);
-    double hoursToGo = dtg / std::max(0.1, sog);
-    std::time_t now = std::time(nullptr); std::time_t etaT = now + (std::time_t)(hoursToGo * 3600.0);
-    char etabuf[40]; std::strftime(etabuf, sizeof etabuf, "%I:%M %p \xC2\xB7 %a %d %b", std::localtime(&etaT));
-    std::string ttg = fmtDur(hoursToGo);
-    double vmg = sog * std::cos((brgW - cog) * M_PI / 180.0);
-    std::string actName = act ? std::string(act->GetName().ToUTF8()) : "—";
-    std::string nextShort = actName.substr(0, actName.find(" \xC2\xB7 "));
-    std::string legs = "[";
-    for (size_t k = li + 1; k < route.size() && k <= li + 2; ++k) {
-      const WP& from = (k == li + 1) ? WP{gLat, gLon, ""} : route[k - 1];
-      double lb, ld; bd(route[k].lat, route[k].lon, from.lat, from.lon, &lb, &ld);
-      char lbuf[160];
-      std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
-                    k == li + 1 ? "" : ",", json_escape(route[k].name).c_str(), std::lround(lb), k == li + 1 ? "true" : "false");
-      legs += lbuf;
+    // Route metrics (DTG/XTE/ETA/legs) only exist with an active route; default to none otherwise so
+    // a route-less boat still emits a valid position frame (no route line, no fabricated waypoint math).
+    std::time_t now = std::time(nullptr);
+    double dtg = 0, xteNM = 0, vmg = 0, dtw = 0;
+    char etabuf[40]; std::snprintf(etabuf, sizeof etabuf, "—");
+    std::string ttg = "—", legs = "[]", nextShort = "—";
+    if (have_route) {
+      RoutePoint* act = g_pRouteMan->GetpActivePoint();
+      double brgW = 0; if (act) bd(act->GetLatitude(), act->GetLongitude(), gLat, gLon, &brgW, &dtw);
+      dtg = dtw; for (size_t k = li + 1; k < legLen.size(); ++k) dtg += legLen[k];
+      double brgAP, dAP; bd(gLat, gLon, route[li].lat, route[li].lon, &brgAP, &dAP);
+      xteNM = std::fabs(std::asin(std::sin(dAP / 3440.065) * std::sin((brgAP - legBrg) * M_PI / 180.0)) * 3440.065);
+      double hoursToGo = dtg / std::max(0.1, sog);
+      std::time_t etaT = now + (std::time_t)(hoursToGo * 3600.0);
+      std::strftime(etabuf, sizeof etabuf, "%I:%M %p \xC2\xB7 %a %d %b", std::localtime(&etaT));
+      ttg = fmtDur(hoursToGo);
+      vmg = sog * std::cos((brgW - cog) * M_PI / 180.0);
+      std::string actName = act ? std::string(act->GetName().ToUTF8()) : "—";
+      nextShort = actName.substr(0, actName.find(" \xC2\xB7 "));
+      legs = "[";
+      for (size_t k = li + 1; k < route.size() && k <= li + 2; ++k) {
+        const WP& from = (k == li + 1) ? WP{gLat, gLon, ""} : route[k - 1];
+        double lb, ld; bd(route[k].lat, route[k].lon, from.lat, from.lon, &lb, &ld);
+        char lbuf[160];
+        std::snprintf(lbuf, sizeof lbuf, "%s{\"name\":\"%s\",\"brg\":\"%ld\xC2\xB0\",\"active\":%s}",
+                      k == li + 1 ? "" : ",", json_escape(route[k].name).c_str(), std::lround(lb), k == li + 1 ? "true" : "false");
+        legs += lbuf;
+      }
+      legs += "]";
     }
-    legs += "]";
 
     long seq = ++g_seq; double ts = (double)now; bool keyframe = (tick % 10 == 0);
     char snap[1700];

@@ -1002,10 +1002,16 @@
       ensureRouteActiveLayer();
     } catch (e) { /* style not ready this tick */ }
   }
-  map.on('mouseenter', 'ais-vessels', () => { map.getCanvas().style.cursor = 'pointer'; });
-  map.on('mouseleave', 'ais-vessels', () => { map.getCanvas().style.cursor = ''; });
-  map.on('click', 'ais-vessels', e => { if (measuring()) return;
-    new maplibregl.Popup().setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
+  // AIS tap -> rich detail card. Bound to the live vessel layers (collision.js renders vessels on
+  // helm-ais-vessel-tri now, SART/AtoN/base on helm-ais-symbol); 'ais-vessels' is the hidden legacy
+  // layer, kept only so an older style still works.
+  ['helm-ais-vessel-tri', 'helm-ais-symbol', 'ais-vessels'].forEach(layer => {
+    map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
+    map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
+    map.on('click', layer, e => { if (measuring()) return;
+      new maplibregl.Popup({ closeButton: true, maxWidth: '280px' })
+        .setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
+  });
 
   // ================= CHROME UI wiring =================
   // The shell's BUILT-IN drawers (the panels that shipped before the SHELL registration API).
@@ -1100,17 +1106,20 @@
     const set = (id, v) => { const e = document.getElementById(id); if (e && v != null) e.textContent = v; };
     function applyNav(s) {
       if (s.pos) window.__helmPos = { lat: s.pos.lat, lon: s.pos.lon };   // shared with community.js
-      set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', s.hdg);
-      set('nv-depth', (+s.depth).toFixed(1)); set('nv-wind', Math.round(s.wind.spd));
-      set('nv-winddir', Math.round(s.wind.dir));
-      set('nv-pos', s.posStr); set('nv-next', s.active.nextWp);
+      const miss = k => s.sources && s.sources[k] === 'missing';   // no real sensor → show '—', never a fabricated 0
+      set('nv-sog', (+s.sog).toFixed(1)); set('nv-cog', s.cog); set('nv-hdg', miss('hdg') ? '—' : s.hdg);
+      set('nv-depth', miss('depth') ? '—' : (+s.depth).toFixed(1)); set('nv-wind', miss('wind') ? '—' : Math.round(s.wind.spd));
+      set('nv-winddir', miss('wind') ? '—' : Math.round(s.wind.dir));
+      const hasRoute = !!(s.route && s.route.coords && s.route.coords.length >= 2);   // no active route → no route readouts/inspector
+      set('nv-pos', s.posStr); set('nv-next', hasRoute ? s.active.nextWp : '—');
       set('nv-eta', s.active.eta); set('nv-ttg', s.active.ttg); set('nv-vmg', s.active.vmg);
       set('nv-dtg', s.active.dtg); set('nv-xte', s.active.xte);
       // Suppress the route inspector when the active route clearly isn't being navigated here
       // (e.g. the engine still has the Key West demo route active while you're elsewhere — DTG
       // of hundreds/thousands of NM). Reappears the moment a real, nearby route is active.
       { const dtgNM = parseFloat(String(s.active.dtg).replace(/[^\d.]/g, '')), insp = document.querySelector('.insp');
-        if (insp) insp.style.display = (s.active.nextWp && isFinite(dtgNM) && dtgNM <= 500) ? '' : 'none'; }
+        // hasRoute (from above): no active route → hide the inspector (a 'Route to Marina' demo placeholder until a real route arrives)
+        if (insp) insp.style.display = (hasRoute && s.active.nextWp && isFinite(dtgNM) && dtgNM <= 500) ? '' : 'none'; }
       // per-field source kept truthful, but as an unobtrusive tooltip (no on-screen dots)
       const src = s.sources;
       const mark = (id, key) => { const e = document.getElementById(id); if (e && src) e.title = key.toUpperCase() + ' source: ' + src[key]; };

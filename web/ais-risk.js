@@ -1,33 +1,95 @@
 // HelmAisRisk — single source of truth for AIS collision-risk tiers + palette across the app.
 //
 // "Is this target dangerous?" was previously defined SIX different ways with three threshold
-// families: the CPA alarm (cpa<2.0 & tcpa<30), the tap-card popup and AIS list and moored-suppression
-// guard (cpa<0.5 / cpa<1.5), and the chart symbol colour (cpa-only <0.2 / <0.5). So one vessel the
-// CPA ALARM was firing on could read red on the chart-vector overlay, only "Caution" in the tap card
-// and list, and a plain BLUE symbol on the chart. On safety software that is unacceptable.
+// families: the CPA alarm, the tap-card popup/list/moored-suppression guard, and the chart symbol
+// colour. On safety software that is unacceptable: one vessel must not be red on one surface and
+// boring-blue on another.
 //
 // Now every surface routes through this module:
 //   • JS:        tier(t) / isDanger(t) / color(t)
-//   • MapLibre:  dangerExpr() / riskColorExpr()  (data-driven equivalents, built from the SAME
-//                constants so a chart layer can never drift from the JS sites)
-// DANGER == the CPA alarm's predicate EXACTLY (cpa < g_CPAWarn_NM && 0 < tcpa < g_TCPA_Max), so a
-// target the alarm fires on is red EVERYWHERE. CAUTION is a wider pre-alarm "watch" band; the engine
-// blesses neither caution nor normal — they are a UI gradient, not an engine assertion.
+//   • MapLibre:  dangerExpr() / riskColorExpr() / riskIconExpr()
+//
+// Cortex-style profiles: Vesper/Garmin's Cortex groups collision alarm settings into profiles that
+// change CPA, TCPA, and target-speed suppression together. We mirror that idea here: Harbor is noisy
+// and suppresses slow targets aggressively, Bay is the everyday middle ground, and Open ocean extends
+// the CPA/TCPA horizon. CAUTION is a wider pre-alarm "watch" band; DANGER is the active profile's CPA
+// alarm predicate exactly, so a target the alarm fires on is red EVERYWHERE.
 //
 // AUTHORITATIVE & FORWARD-COMPATIBLE: cpa/tcpa/cpaValid come from the engine and are never recomputed
 // here. If the engine ever emits a per-target `risk` string, tier() and the expressions PREFER it —
-// so the thresholds can later move into the core that already owns g_CPAWarn_NM/g_TCPA_Max without
-// touching a single client.
+// so the thresholds can later move into the core without touching a single client.
 (function (global) {
   'use strict';
 
-  var CPA_WARN = 2.0, TCPA_MAX = 30.0;          // == engine g_CPAWarn_NM / g_TCPA_Max (the alarm band)
-  var CPA_CAUTION = 4.0, TCPA_CAUTION = 60.0;   // pre-alarm "watch" band — 2x the alarm horizon
+  var PROFILE_KEY = 'helm.ais.risk.profile';
+  var DEFAULT_PROFILE = 'bay';
+  var PROFILES = {
+    harbor: { id: 'harbor', label: 'Harbor', cpa: 2.0, tcpa: 10.0, minTargetSog: 5.0 },
+    bay: { id: 'bay', label: 'Bay', cpa: 2.0, tcpa: 30.0, minTargetSog: 2.0 },   // DEFAULT — matches the engine's g_CPAWarn_NM/g_TCPA_Max (single source of truth)
+    ocean: { id: 'ocean', label: 'Open ocean', cpa: 4.0, tcpa: 60.0, minTargetSog: 0.5 }
+  };
+  var CAUTION_MULT = 2.0;                       // pre-alarm "watch" band — 2x the active profile
+  // Anchored auto-tighten: when OWN ship is effectively stationary, a target passing far off isn't
+  // closing on us, so cap the CPA/TCPA bands at Harbor-tight — never looser. Fed by the live ownship
+  // SOG (HelmShell.onNav, wired at the bottom). Close targets are still flagged (a boat could drift
+  // onto an anchored hull); only the distant "noise" is dropped.
+  var ANCHORED_KTS = 0.5;
+  var ownSog = null, anchored = false;
   // Canonical palette in ONE place. danger/caution/normal for the risk tiers; lost/sart for the
   // symbology overrides (a SART is always distress-pink; a lost/aged target is always grey).
-  var COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#5bc0ff', lost: '#7d8a98', sart: '#ff3b8b' };
+  var COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#43d17d', lost: '#7d8a98', sart: '#ff3b8b' };
 
   function n(v) { return (v == null || v === '') ? null : (isFinite(+v) ? +v : null); }
+  function clone(p) { return { id: p.id, label: p.label, cpa: p.cpa, tcpa: p.tcpa, minTargetSog: p.minTargetSog }; }
+  function loadProfile() {
+    try {
+      var id = global.localStorage && global.localStorage.getItem(PROFILE_KEY);
+      return PROFILES[id] ? id : DEFAULT_PROFILE;
+    } catch (e) { return DEFAULT_PROFILE; }
+  }
+  var activeProfile = loadProfile();
+  function baseProfile() { return PROFILES[activeProfile] || PROFILES[DEFAULT_PROFILE]; }
+  // The EFFECTIVE profile drives EVERY threshold (tier + all expressions). When anchored we cap to
+  // Harbor-tight so distant targets stop reading as a threat — but we keep the selected profile's id
+  // (for the UI) and target-speed gate.
+  function settings() {
+    var b = baseProfile();
+    if (!anchored) return b;
+    var h = PROFILES.harbor;
+    return { id: b.id, label: b.label, cpa: Math.min(b.cpa, h.cpa), tcpa: Math.min(b.tcpa, h.tcpa), minTargetSog: b.minTargetSog };
+  }
+  function profile() { var s = settings(); return { id: s.id, label: s.label, cpa: s.cpa, tcpa: s.tcpa, minTargetSog: s.minTargetSog, anchored: anchored }; }
+  function profiles() {
+    return Object.keys(PROFILES).map(function (id) { return clone(PROFILES[id]); });
+  }
+  function fireChanged() {
+    try { if (global.dispatchEvent && global.CustomEvent) global.dispatchEvent(new global.CustomEvent('helm:ais-risk-profile', { detail: profile() })); } catch (e) {}
+  }
+  function setProfile(id) {
+    if (!PROFILES[id]) return profile();
+    activeProfile = id;
+    try { if (global.localStorage) global.localStorage.setItem(PROFILE_KEY, id); } catch (e) {}
+    fireChanged();                              // selected profile changed → consumers re-apply
+    return profile();
+  }
+  // Live ownship speed → anchored detection. Crossing the threshold re-fires the change event so the
+  // STATIC chart colour/icon expressions get re-applied (collision.js listens); per-frame consumers
+  // (ais-vectors cones, the list) already re-read settings() each tick.
+  function setOwnSpeed(s) {
+    var v = n(s); var now = (v != null && v < ANCHORED_KTS);
+    if (now !== anchored) { anchored = now; fireChanged(); }
+  }
+  // Missing SOG stays alarm-eligible (fail safe). Known slow/stationary targets are suppressed by
+  // the active profile's target-speed threshold.
+  function targetSpeedOK(t, p) {
+    var sog = n(t && t.sog);
+    return sog == null || sog >= p.minTargetSog;
+  }
+  function targetSpeedOkExpr(p) {
+    return ['any',
+      ['!', ['has', 'sog']],
+      ['>=', ['coalesce', ['get', 'sog'], 999], p.minTargetSog]];
+  }
 
   // tier(t) → 'danger' | 'caution' | 'normal', from the engine's authoritative cpa/tcpa.
   function tier(t) {
@@ -35,50 +97,79 @@
     if (t.risk === 'danger' || t.risk === 'caution' || t.risk === 'normal') return t.risk;   // engine wins
     if (t.cpaValid === false || t.cpaValid === 'false') return 'normal';      // no valid CPA solution
     var cpa = n(t.cpa); if (cpa == null) return 'normal';
+    var p = settings();
+    if (!targetSpeedOK(t, p)) return 'normal';                                // profile speed gate
     var tcpa = n(t.tcpa);
-    if (tcpa == null) return cpa < CPA_WARN ? 'caution' : 'normal';           // no tcpa: can't assert closing → cap at caution
+    if (tcpa == null) return cpa < p.cpa ? 'caution' : 'normal';              // no tcpa: can't assert closing → cap at caution
     if (tcpa <= 0) return 'normal';                                           // opening / past CPA — not a threat
-    if (cpa < CPA_WARN && tcpa < TCPA_MAX) return 'danger';                  // == the CPA alarm exactly
-    if (cpa < CPA_CAUTION && tcpa < TCPA_CAUTION) return 'caution';
+    if (cpa < p.cpa && tcpa < p.tcpa) return 'danger';                        // == active profile's CPA alarm
+    if (cpa < p.cpa * CAUTION_MULT && tcpa < p.tcpa * CAUTION_MULT) return 'caution';
     return 'normal';
   }
   function isDanger(t) { return tier(t) === 'danger'; }
   function color(t) { return COL[tier(t)] || COL.normal; }
 
-  // ---- MapLibre data-driven expressions, built from the SAME constants (read raw feature props) ----
+  // ---- MapLibre data-driven expressions, built from the SAME active profile (raw feature props) ----
   // Boolean: is this feature in the danger band? Mirrors isDanger() / the alarm.
   function dangerExpr() {
+    var p = settings();
+    var localDanger = ['all',
+      ['!=', ['get', 'cpaValid'], false],
+      targetSpeedOkExpr(p),
+      ['<', ['coalesce', ['get', 'cpa'], 99], p.cpa],
+      ['>', ['coalesce', ['get', 'tcpa'], -999], 0],
+      ['<', ['coalesce', ['get', 'tcpa'], 99], p.tcpa]];
+    // Top-level 'any': engine risk='danger', OR (when the engine emits no risk field) the local
+    // geometry falls inside the active profile's danger band. Engine caution/normal still wins —
+    // the local clause is gated on the risk field being ABSENT — preserving engine authority.
     return ['any',
       ['==', ['get', 'risk'], 'danger'],
-      ['all',
-        ['!=', ['get', 'cpaValid'], false],
-        ['<', ['coalesce', ['get', 'cpa'], 99], CPA_WARN],
-        ['>', ['coalesce', ['get', 'tcpa'], -999], 0],
-        ['<', ['coalesce', ['get', 'tcpa'], 99], TCPA_MAX]]];
+      ['all', ['!', ['has', 'risk']], localDanger]];
+  }
+  function tierExprValue(dangerValue, cautionValue, normalValue) {
+    var p = settings();
+    var cpa = ['coalesce', ['get', 'cpa'], 99];
+    var tcpa = ['coalesce', ['get', 'tcpa'], -999];
+    var speedOK = targetSpeedOkExpr(p);
+    var danger = ['all', speedOK, ['<', cpa, p.cpa], ['>', tcpa, 0], ['<', tcpa, p.tcpa]];
+    var caution = ['all', speedOK, ['<', cpa, p.cpa * CAUTION_MULT], ['>', tcpa, 0], ['<', tcpa, p.tcpa * CAUTION_MULT]];
+    var cautionNoTcpa = ['all', speedOK, ['!', ['has', 'tcpa']], ['<', cpa, p.cpa]];
+    return ['case',
+      ['==', ['get', 'risk'], 'danger'], dangerValue,
+      ['==', ['get', 'risk'], 'caution'], cautionValue,
+      ['==', ['get', 'risk'], 'normal'], normalValue,
+      ['==', ['get', 'cpaValid'], false], normalValue,
+      ['!', ['has', 'cpa']], normalValue,
+      danger, dangerValue,
+      caution, cautionValue,
+      cautionNoTcpa, cautionValue,
+      normalValue];
   }
   // Colour expression mirroring tier()→color for the danger/caution/normal tiers. Callers layer
   // SART / lost overrides on top (those are symbology concepts, not risk tiers).
   function riskColorExpr() {
-    var cpa = ['coalesce', ['get', 'cpa'], 99];
-    var tcpa = ['coalesce', ['get', 'tcpa'], -999];
-    var danger = ['all', ['<', cpa, CPA_WARN], ['>', tcpa, 0], ['<', tcpa, TCPA_MAX]];
-    var caution = ['all', ['<', cpa, CPA_CAUTION], ['>', tcpa, 0], ['<', tcpa, TCPA_CAUTION]];
-    var cautionNoTcpa = ['all', ['!', ['has', 'tcpa']], ['<', cpa, CPA_WARN]];
-    return ['case',
-      ['==', ['get', 'risk'], 'danger'], COL.danger,
-      ['==', ['get', 'risk'], 'caution'], COL.caution,
-      ['==', ['get', 'risk'], 'normal'], COL.normal,
-      ['==', ['get', 'cpaValid'], false], COL.normal,
-      ['!', ['has', 'cpa']], COL.normal,
-      danger, COL.danger,
-      caution, COL.caution,
-      cautionNoTcpa, COL.caution,
-      COL.normal];
+    return tierExprValue(COL.danger, COL.caution, COL.normal);
+  }
+  // Icon expression mirroring tier() for layers that use generated ship icons instead of text colour.
+  function riskIconExpr(icon) {
+    icon = icon || {};
+    return tierExprValue(icon.danger || '', icon.caution || '', icon.normal || '');
   }
 
   global.HelmAisRisk = {
     tier: tier, isDanger: isDanger, color: color,
-    dangerExpr: dangerExpr, riskColorExpr: riskColorExpr,
-    CPA_WARN: CPA_WARN, TCPA_MAX: TCPA_MAX, CPA_CAUTION: CPA_CAUTION, TCPA_CAUTION: TCPA_CAUTION, COL: COL
+    dangerExpr: dangerExpr, riskColorExpr: riskColorExpr, riskIconExpr: riskIconExpr,
+    profile: profile, profiles: profiles, setProfile: setProfile, setOwnSpeed: setOwnSpeed,
+    PROFILE_KEY: PROFILE_KEY, DEFAULT_PROFILE: DEFAULT_PROFILE, CAUTION_MULT: CAUTION_MULT, COL: COL,
+    // Compatibility aliases for older callers. They reflect the active profile at load time only;
+    // new code should call profile(), dangerExpr(), riskColorExpr(), or riskIconExpr().
+    CPA_WARN: settings().cpa, TCPA_MAX: settings().tcpa,
+    CPA_CAUTION: settings().cpa * CAUTION_MULT, TCPA_CAUTION: settings().tcpa * CAUTION_MULT
   };
+
+  // Auto-feed the live ownship SOG so "anchored" is detected with no caller wiring. ais-risk.js loads
+  // after shell.js, so HelmShell.onNav is available; each nav frame carries the ownship sog.
+  try {
+    if (global.HelmShell && global.HelmShell.onNav) global.HelmShell.onNav(function (s) { if (s) setOwnSpeed(s.sog); });
+  } catch (e) {}
 })(typeof window !== 'undefined' ? window : this);

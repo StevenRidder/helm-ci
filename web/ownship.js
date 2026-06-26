@@ -76,10 +76,28 @@
 
     const el = document.createElement('div');
     el.className = 'ownship';
-    el.style.cssText = 'width:0;height:0;border-left:9px solid transparent;border-right:9px solid transparent;' +
-      'border-bottom:22px solid var(--accent,#5bc0ff);filter:drop-shadow(0 0 6px rgba(91,192,255,.9));';
+    el.setAttribute('aria-label', 'Your boat');
+    el.style.cssText = 'width:46px;height:46px;position:relative;pointer-events:none;will-change:transform;' +
+      'filter:drop-shadow(0 0 7px rgba(91,192,255,.72)) drop-shadow(0 2px 2px rgba(0,0,0,.72));';
+    el.innerHTML =
+      '<div style="position:absolute;left:50%;top:3px;width:0;height:0;margin-left:-13px;' +
+        'border-left:13px solid transparent;border-right:13px solid transparent;border-bottom:34px solid #06121d;' +
+        'filter:drop-shadow(0 2px 2px rgba(0,0,0,.65));"></div>' +
+      '<div style="position:absolute;left:50%;top:7px;width:0;height:0;margin-left:-9px;' +
+        'border-left:9px solid transparent;border-right:9px solid transparent;border-bottom:26px solid #fff;"></div>' +
+      '<div style="position:absolute;left:50%;top:11px;width:3px;height:18px;margin-left:-1.5px;' +
+        'background:#06121d;border-radius:2px;opacity:.9;"></div>' +
+      '<div style="position:absolute;left:50%;top:29px;width:13px;height:5px;margin-left:-6.5px;' +
+        'background:#f5c451;border:1px solid #06121d;border-radius:4px;"></div>';
     const marker = new maplibregl.Marker({ element: el, rotationAlignment: 'map' });
-    let added = false;
+    const label = document.createElement('div');
+    label.className = 'ownship-label';
+    label.textContent = 'YOU';
+    label.style.cssText = 'pointer-events:none;padding:2px 5px;border-radius:999px;background:rgba(5,12,20,.88);' +
+      'border:1px solid rgba(255,255,255,.95);box-shadow:0 0 0 2px rgba(91,192,255,.65),0 2px 8px rgba(0,0,0,.45);' +
+      'color:#fff;font:800 9px/1 system-ui,-apple-system,Segoe UI,sans-serif;letter-spacing:.08em;text-shadow:0 1px 1px #000;';
+    const labelMarker = new maplibregl.Marker({ element: label, anchor: 'bottom', offset: [0, -28] });
+    let added = false, labelAdded = false;
 
     // --- range rings + predictor vector: one GeoJSON source we keep refreshed -----------------
     const SRC = 'helm-ownship-overlay';
@@ -199,8 +217,10 @@
       disp.hdg = easeAngle(disp.hdg, target.hdg, k);
       try {
         if (!added) { marker.setLngLat([disp.lon, disp.lat]).addTo(map); added = true; }
+        if (!labelAdded) { labelMarker.setLngLat([disp.lon, disp.lat]).addTo(map); labelAdded = true; }
         // The marker always points where the BOAT points (heading if we have it, else COG).
         marker.setLngLat([disp.lon, disp.lat]).setRotation(disp.hdg != null ? disp.hdg : disp.cog);
+        labelMarker.setLngLat([disp.lon, disp.lat]);   // the "YOU" label rides upright above the boat
         redrawOverlay();
 
         // ORIENTATION — ease the chart bearing toward the target (course-up: COG, head-up: heading).

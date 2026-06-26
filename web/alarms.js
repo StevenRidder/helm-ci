@@ -527,8 +527,8 @@ window.HelmAlarms = function (map, opts) {
     positionBanner();                    // track collision.js's CPA banner so the two never overlap
     const src = s.sources || {};
 
-    // depth (only on a REAL depth feed — never alarm on the simulated fill; hysteresis avoids flapping)
-    if (typeof s.depth === 'number' && src.depth && src.depth !== 'simulated' && src.depth !== 'sim') {
+    // depth (only on a REAL depth feed — never alarm on the simulated fill or a 'missing' 0.0; hysteresis avoids flapping)
+    if (typeof s.depth === 'number' && src.depth && src.depth !== 'simulated' && src.depth !== 'sim' && src.depth !== 'missing') {
       if (s.depth < depthLimit) fire('depth', 'warning', 'Shallow water — ' + s.depth.toFixed(1) + ' m (limit ' + depthLimit.toFixed(1) + ' m)');
       else if (s.depth >= depthClear) clear('depth');
     } else { clear('depth'); }
@@ -562,8 +562,11 @@ window.HelmAlarms = function (map, opts) {
       } else { guardBreachSince = null; clear('guard'); }
     }
 
-    // off-course (XTE) + arrival — only while plausibly navigating a real route (guards a stale demo route)
-    if (s.active && s.active.nextWp) {
+    // off-course (XTE) + arrival — only while a REAL route is active and plausibly being navigated.
+    // No active route → no route metrics, so a dtg=0 default must not fire a phantom 'Arriving'
+    // (and a stale far-away demo route is still guarded by the ONROUTE_NM distance gate below).
+    const navRoute = s.route && Array.isArray(s.route.coords) && s.route.coords.length >= 2;
+    if (navRoute && s.active && s.active.nextWp) {
       const dtgNM = num(s.active.dtg), xteM = num(s.active.xte);
       if (isFinite(dtgNM) && dtgNM < ONROUTE_NM) {
         if (isFinite(dtgNM) && dtgNM <= arrivalNM) fire('arrival', 'warning', 'Arriving — ' + s.active.nextWp);

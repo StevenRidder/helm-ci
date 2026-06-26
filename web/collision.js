@@ -205,8 +205,9 @@
       // table + tap card carry the A/B label. point-style kinds (AtoN/base/SART) don't rotate;
       // vessels (A/B/lost) point along COG.
       const rotates = ['all', ['!', isSart], ['!', isAton], ['!', isBase]];
-      // glyph per kind
-      const glyph = ['case', isSart, '✚', isAton, '◆', isBase, '◉', '▲'];
+      // glyph per kind — vessels (the ▲ case) now render as a directional triangle ICON layer below
+      // (so heading is legible); only SART/AtoN/base keep a text glyph here.
+      const glyph = ['case', isSart, '✚', isAton, '◆', isBase, '◉', ''];
       // colour: SART distress pink → lost grey → risk-tier colour (HelmAisRisk, == the alarm).
       const cpaCol = HelmAisRisk.riskColorExpr();
       const color = ['case', isSart, sart, isLost, lost, cpaCol];
@@ -227,20 +228,55 @@
       // not (SART or dangerous). When suppression is off, this collapses to "show all".
       function visibleFilter() {
         if (!suppressOn) return null;
-        return ['any', ['!', mooredExpr()], isSart, isDanger];
+        return ['any', ['!', mooredExpr()], isSart, HelmAisRisk.dangerExpr()];   // fresh: danger band tracks the active profile / anchored state
       }
       function applyFilters() {
         const v = visibleFilter();
+        try { if (map.getLayer('helm-ais-vessel-tri')) map.setFilter('helm-ais-vessel-tri', v ? ['all', rotates, v] : rotates); } catch (e) { console.error('[AIS] suppression filter (vessel-tri) failed:', e && e.message); }
         try { if (map.getLayer('helm-ais-symbol')) map.setFilter('helm-ais-symbol', v); } catch (e) { console.error('[AIS] suppression filter (symbol) failed:', e && e.message); }
         // lost layer already filters on isLost — AND it with visibility so suppressed lost targets vanish too.
         try { if (map.getLayer('helm-ais-lost')) map.setFilter('helm-ais-lost', v ? ['all', isLost, v] : isLost); } catch (e) { console.error('[AIS] suppression filter (lost) failed:', e && e.message); }
       }
 
+      let building = false;   // re-entrancy guard: map.addImage() below fires 'styledata', which re-enters add()
       function add() {
-        if (!map.getSource(SRC) || map.getLayer('helm-ais-symbol')) return;
+        if (building || !map.getSource(SRC) || map.getLayer('helm-ais-symbol')) return;
+        building = true;
+        try {
         // hide the legacy generic triangle — our richer layer replaces it (label layer stays).
         if (map.getLayer('ais-vessels')) { try { map.setLayoutProperty('ais-vessels', 'visibility', 'none'); } catch (e) {} }
         const anchor = map.getLayer('ais-label') ? 'ais-label' : undefined;   // draw symbols under the existing labels
+
+        // Directional vessel triangles: an ELONGATED triangle (longer toward the bow) so heading reads
+        // at a glance, rotated to COG, recoloured per risk tier via HelmAisRisk.riskIconExpr (green
+        // safe / yellow caution / red danger — the SAME thresholds as the CPA alarm). SART/AtoN/base
+        // keep their text glyphs in the layer below; vessels draw here instead of the old ▲.
+        const TRI = { normal: 'helm-tri-normal', caution: 'helm-tri-caution', danger: 'helm-tri-danger' };
+        (function makeTris() {
+          function tri(id, fill) {
+            if (map.hasImage && map.hasImage(id)) return;                       // cleared + rebuilt after a basemap switch
+            const px = Math.max(2, Math.round(window.devicePixelRatio || 2));
+            const W = 20, H = 32, cv = document.createElement('canvas');
+            cv.width = W * px; cv.height = H * px;
+            const g = cv.getContext('2d'); g.scale(px, px);
+            g.beginPath(); g.moveTo(W / 2, 1.5); g.lineTo(W - 2, H - 2); g.lineTo(2, H - 2); g.closePath();
+            g.lineJoin = 'round'; g.fillStyle = fill; g.fill();
+            g.lineWidth = 1.6; g.strokeStyle = 'rgba(8,16,24,0.92)'; g.stroke();
+            try { map.addImage(id, g.getImageData(0, 0, cv.width, cv.height), { pixelRatio: px }); } catch (e) {}
+          }
+          tri('helm-tri-normal', C.normal); tri('helm-tri-caution', C.caution);
+          tri('helm-tri-danger', C.danger); tri('helm-tri-lost', C.lost);
+        })();
+        map.addLayer({
+          id: 'helm-ais-vessel-tri', type: 'symbol', source: SRC,
+          filter: ['all', rotates, visibleFilter() || ['literal', true]],
+          layout: {
+            'icon-image': ['case', isLost, 'helm-tri-lost', HelmAisRisk.riskIconExpr(TRI)],
+            'icon-rotate': ['coalesce', ['get', 'cog'], 0], 'icon-rotation-alignment': 'map',
+            'icon-size': 0.92, 'icon-allow-overlap': true, 'icon-ignore-placement': true
+          },
+          paint: { 'icon-opacity': ['case', isLost, 0.6, 1] }
+        }, anchor);
         map.addLayer({
           id: 'helm-ais-symbol', type: 'symbol', source: SRC,
           filter: visibleFilter() || ['literal', true],
@@ -264,6 +300,7 @@
           paint: { 'text-color': '#ff6b6b', 'text-halo-color': 'rgba(13,19,27,0.9)', 'text-halo-width': 1.2 }
         }, anchor);
         applyFilters();
+        } finally { building = false; }
       }
       // The map may already be loaded when HelmCollision() is constructed, or not yet — handle both,
       // and re-add after any style reload (basemap switch fires 'styledata').
@@ -272,6 +309,21 @@
       function ensure() { try { add(); } catch (e) { console.error('[AIS] symbology layer build failed — targets may be unsymbolised:', e && e.message); } }
       if (map.isStyleLoaded && map.isStyleLoaded()) ensure(); else map.on('load', ensure);
       map.on('styledata', ensure);
+      // Re-apply the risk-driven chart colours when the collision profile (or anchored auto-tighten)
+      // changes — the symbol icon/colour expressions are STATIC once set, so HelmAisRisk fires
+      // 'helm:ais-risk-profile' and we rebuild them from the now-current profile. (The cone overlay
+      // and the list re-read the profile every frame, so they need no nudge.)
+      function recolor() {
+        var TRI = { normal: 'helm-tri-normal', caution: 'helm-tri-caution', danger: 'helm-tri-danger' };
+        try {
+          if (map.getLayer('helm-ais-vessel-tri'))
+            map.setLayoutProperty('helm-ais-vessel-tri', 'icon-image', ['case', isLost, 'helm-tri-lost', HelmAisRisk.riskIconExpr(TRI)]);
+          if (map.getLayer('helm-ais-symbol'))
+            map.setPaintProperty('helm-ais-symbol', 'text-color', ['case', isSart, sart, isLost, lost, HelmAisRisk.riskColorExpr()]);
+          applyFilters();                        // suppression danger-override tracks the new band
+        } catch (e) { console.warn('[AIS] recolour on profile change failed:', e && e.message); }
+      }
+      try { window.addEventListener('helm:ais-risk-profile', recolor); } catch (e) {}
       return {
         ensure,
         setMooredSuppress(on, kts) { suppressOn = !!on; if (kts != null) suppressKts = +kts; applyFilters(); },
