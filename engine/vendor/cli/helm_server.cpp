@@ -1166,6 +1166,8 @@ struct ClientCfg {
   std::set<std::string> channels{ "nav", "route", "alarms", "ais", "track", "conns" };  // default: ALL
   int rate = 1;                                  // effective Hz (1..NAV_SOURCE_HZ)
   long lastSentTick = -1000;                     // last nav tick sent to this client (rate pacing)
+  bool forceSnapshot = false;                    // CONTRACT-6: next frame must be a fresh snapshot (re-baseline)
+  long lastSeq = 0;                              // CONTRACT-6: client's last-seen seq from hello (advisory)
   bool hasBbox = false;                          // CONTRACT-8: cull the 'ais' channel to a viewport bbox
   double bw = 0, bs = 0, be = 0, bn = 0;         // west, south, east, north (deg)
   // 'ais'-channel viewport test ONLY — nav core / alarms / route / track / conns are never bbox-filtered.
@@ -1219,7 +1221,13 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
     { std::lock_guard<std::mutex> lk(g_client_cfg_mtx);
       ClientCfg& cfg = g_client_cfg[ws.get()];
       parse_sub(d, cfg);
-      if (t == "hello") cfg.lastSentTick = -1000;            // due immediately for the first frame
+      if (t == "hello") {                                     // CONTRACT-6: (re)connect → re-baseline with a fresh snapshot
+        cfg.lastSentTick = -1000;                             // due immediately for the first frame
+        cfg.forceSnapshot = true;                             // deliberately a full snapshot, NOT a delta-replay (safety: the
+                                                              // client refuses a delta with no baseline; keyframes make a
+                                                              // reconnect snapshot near-free, so delta-since isn't worth the risk)
+        if (d.HasMember("lastSeq") && d["lastSeq"].IsNumber()) cfg.lastSeq = (long)d["lastSeq"].GetDouble();
+      }
       ack = sub_ack_msg(cfg); }
     ws->send(ack);
     return;
@@ -1577,7 +1585,8 @@ static void nav_loop(ix::HttpServer* server) {
       for (auto& c : clients) {
         ix::WebSocket* key = c.get();
         ClientCfg& cfg = g_client_cfg[key];                 // hello-less clients default to ALL channels @ 1 Hz
-        const bool isNew = !g_seen.count(key);
+        const bool isNew = !g_seen.count(key) || cfg.forceSnapshot;   // CONTRACT-6: hello/lastSeq forces a snapshot
+        cfg.forceSnapshot = false;
         int everyN = NAV_SOURCE_HZ / (cfg.rate < 1 ? 1 : cfg.rate); if (everyN < 1) everyN = 1;
         if (!isNew && cfg.lastSentTick >= 0 && (tick - cfg.lastSentTick) < everyN) continue;   // rate pacing
         cfg.lastSentTick = tick;
@@ -1635,11 +1644,21 @@ static void nav_loop(ix::HttpServer* server) {
 // ===========================================================================
 static void bonjour_advertise(int port) {
   static DNSServiceRef ref = nullptr;
+  // CONTRACT-13: TXT record so a discovering client (e.g. native NWBrowser) can label the boat and
+  // decide transport before connecting. v=protocol version, name=human boat name. tls=0 is emitted
+  // honestly while plaintext; CONTRACT-12 (one TLS origin) flips it to tls=1 and adds fp=<cert sha256>.
+  const char* nmEnv = std::getenv("HELM_NAME");
+  std::string name = (nmEnv && *nmEnv) ? nmEnv : "Helm Engine";
+  TXTRecordRef txt; TXTRecordCreate(&txt, 0, nullptr);
+  TXTRecordSetValue(&txt, "v", 1, "1");
+  TXTRecordSetValue(&txt, "name", (uint8_t)std::min(name.size(), (size_t)255), name.c_str());
+  TXTRecordSetValue(&txt, "tls", 1, "0");
   DNSServiceErrorType err = DNSServiceRegister(
-    &ref, 0, 0, "Helm Engine", "_helm._tcp", nullptr, nullptr, htons((uint16_t)port),
-    0, nullptr, nullptr, nullptr);
+    &ref, 0, 0, name.c_str(), "_helm._tcp", nullptr, nullptr, htons((uint16_t)port),
+    TXTRecordGetLength(&txt), TXTRecordGetBytesPtr(&txt), nullptr, nullptr);
+  TXTRecordDeallocate(&txt);
   if (err != kDNSServiceErr_NoError) { std::fprintf(stderr, "Bonjour: register failed (%d) — discovery off\n", err); return; }
-  std::printf("Bonjour: advertising _helm._tcp on %d as \"Helm Engine\"\n", port);
+  std::printf("Bonjour: advertising _helm._tcp on %d as \"%s\" (v=1 tls=0)\n", port, name.c_str());
   std::thread([] { for (;;) { if (DNSServiceProcessResult(ref) != kDNSServiceErr_NoError) break; } }).detach();
 }
 
@@ -1745,11 +1764,14 @@ public:
         }
         if (req->uri == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
-        if (req->uri == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11: real loaded-cell inventory
+        if (req->uri == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
           int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
-          char cb[300]; std::snprintf(cb, sizeof cb,
-            "{\"cells\":[{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"bbox\":[%.6f,%.6f,%.6f,%.6f]}],\"count\":1}",
-            g_cell_name.c_str(), g_native_scale, band, g_ext.WLON, g_ext.SLAT, g_ext.ELON, g_ext.NLAT);
+          std::string edtn, eddate;                                             // CONTRACT-5b: cell edition from the loaded chart
+          if (g_chart) { edtn = std::string(g_chart->GetSE().ToUTF8());
+            wxDateTime ed = g_chart->GetEditionDate(); if (ed.IsValid()) eddate = std::string(ed.FormatISODate().ToUTF8()); }
+          char cb[420]; std::snprintf(cb, sizeof cb,
+            "{\"cells\":[{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"edition\":\"%s\",\"editionDate\":\"%s\",\"bbox\":[%.6f,%.6f,%.6f,%.6f]}],\"count\":1}",
+            g_cell_name.c_str(), g_native_scale, band, json_escape(edtn).c_str(), eddate.c_str(), g_ext.WLON, g_ext.SLAT, g_ext.ELON, g_ext.NLAT);
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string(cb)); }
         // static UI (the page is served from the engine → same origin → no ?server=)
         std::string body, mime;
