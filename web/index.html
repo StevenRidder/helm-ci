@@ -745,6 +745,7 @@
 <script src="ais-pins.js"></script><!-- pin multiple AIS targets into a live right-hand column (tap a vessel -> Pin) -->
 <script src="tides.js"></script><!-- TIDES: Tides rail panel + tide-station markers + tap card (HelmShell drop-in) -->
 <script src="ui-text.js"></script><!-- global text legibility: muted-text shade (--cdim) + card text-scale, mounted into Settings -->
+<script src="ais-advisor.js"></script><!-- AIS-12: evasion advisor — quantitative "what to do" on danger targets (reuses HelmColregs); toggleable -->
 <script src="ais-select.js"></script><!-- CLIENT-7: tap a vessel / list row -> feature-state selection highlight (uses CLIENT-5's promoteId) -->
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
@@ -1145,6 +1146,29 @@
     const pinBtn = '<button onclick="window.aisPinFromCard&&window.aisPinFromCard(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
       + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';
 
+    // AIS-12: evasion advisor — quantitative "what to do" on a danger target (toggleable; reuses HelmColregs + a relative-motion solve).
+    let avoid = '';
+    if (_rt === 'danger' && window.HelmAisAdvisor && HelmAisAdvisor.isEnabled && HelmAisAdvisor.isEnabled()) {
+      const ad = HelmAisAdvisor.adviceFor(p);
+      if (ad) {
+        let line;
+        if (ad.side === 'hold') line = 'Hold course &amp; speed — be ready to act.';
+        else if (ad.turnDeg != null && ad.achievable) line = '↻ ≥' + ad.turnDeg + '° to ' + ad.side + ' to clear ' + ad.limit + ' NM'
+          + (ad.newCourse != null ? ' — steer ' + Math.round(ad.newCourse) + '°' : '')
+          + (ad.slowToKn != null ? ', or slow to ' + ad.slowToKn + ' kn' : '');
+        else if (ad.turnDeg != null) line = 'Best out: ↻ ' + ad.turnDeg + '° to ' + ad.side + ' → ' + ad.clearBy + ' NM (can\'t reach ' + ad.limit + ' NM — she\'s too close)'
+          + (ad.slowToKn != null ? '; or slow to ' + ad.slowToKn + ' kn' : '');
+        else if (ad.slowToKn != null) line = 'Slow to ' + ad.slowToKn + ' kn to clear.';
+        else line = 'No course or speed change clears — reduce speed and verify visually.';
+        avoid = sec('Avoid')
+          + '<div style="background:rgba(255,90,82,.10);border:1px solid #ff5a5240;border-radius:9px;padding:8px 10px">'
+          + (ad.action ? '<div style="font-size:12.5px;color:#ffd0cc;margin-bottom:4px">' + aisEsc(ad.action) + (ad.rule ? ' <span style="color:var(--cdim)">· ' + aisEsc(ad.rule) + '</span>' : '') + '</div>' : '')
+          + '<div style="font-size:13.5px;font-weight:600;color:#ff9a93">' + line + '</div>'
+          + '<div style="font-size:10px;color:var(--cdim);margin-top:5px">Advisory — keep a lookout; you remain responsible under the Rules.</div>'
+          + '</div>';
+      }
+    }
+
     return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
       + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
       +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:1.15em;line-height:1;vertical-align:-1px">' + fl + '</span>' : '') + '</span>'
@@ -1156,6 +1180,7 @@
       +   stat('CPA', cpa, 'NM') + stat('TCPA', tcpa, 'min', tcpaOpening ? '<div style="font-size:10.5px;color:#5dd0b0">opening</div>' : '')
       + '</div>'
       + '<div style="font-size:12.5px;font-weight:600;color:' + toneCol + ';margin:0 0 2px">' + riskLabel + '</div>'
+      + avoid
       + weather
       + sec('Motion') + motion
       + voyage + size

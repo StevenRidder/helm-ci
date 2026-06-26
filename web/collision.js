@@ -44,6 +44,8 @@
     // …target on your PORT bow → you are the stand-on vessel.
     return { type: 'Crossing', role: 'stand-on', rule: 'Rule 17', action: 'She is on your PORT — you are stand-on. Hold course & speed, but be ready to act if she does not give way.' };
   }
+  // Expose the COLREGS classifier so the evasion advisor (ais-advisor.js) reuses the SAME role/rule/action.
+  window.HelmColregs = classify;
 
   // The alarm trigger IS the HelmAisRisk danger tier — one source of truth, no duplicate fallback.
   const dangerous = t => HelmAisRisk.isDanger(t);

@@ -1,0 +1,120 @@
+// HelmAisAdvisor — AIS-12: the "what do I DO about it" advisor for dangerous targets.
+//
+// The COLREGS brain already exists (collision.js classify → role/rule/action, exposed as window.
+// HelmColregs). This module adds the QUANTITY collision.js doesn't: HOW MUCH to turn (or slow) to
+// lift the closest approach back to your active CPA limit — so you stop nudging 10° and re-reading.
+//
+// It's a relative-motion sweep: rotate your own course in small steps at constant speed, recompute
+// CPA each step, and find the smallest change on each side that clears. The SAME sweep will drive the
+// map "safe-course sector" (AIS-13). The engine's cpa/tcpa stay authoritative for ALARM/colour; this
+// is a derived what-if (AIS-14 promotes the what-if into the core so it can never disagree).
+//
+// ADVISORY ONLY — never an autopilot command. Toggleable (some skippers won't want it); default ON.
+(function () {
+  'use strict';
+  var KEY = 'helm.ais.advisor.on';
+  var enabled = load(KEY, true);
+  var own = null;                                   // latest ownship {cog, sog} from the nav stream
+
+  function load(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function save() { try { localStorage.setItem(KEY, JSON.stringify(enabled)); } catch (e) {} }
+  function num(v) { return (v == null || v === '' || !isFinite(+v)) ? null : +v; }
+  function norm(d) { d %= 360; return d < 0 ? d + 360 : d; }
+
+  // ---- relative-motion geometry (NM + kn + hours). [east, north] components. ----
+  function vec(courseDeg, speed) { var r = courseDeg * Math.PI / 180; return [speed * Math.sin(r), speed * Math.cos(r)]; }
+  function cpaTcpa(P, Vrel) {
+    var v2 = Vrel[0] * Vrel[0] + Vrel[1] * Vrel[1];
+    if (v2 < 1e-9) return { cpa: Math.hypot(P[0], P[1]), tcpa: 0 };
+    var tcpa = -(P[0] * Vrel[0] + P[1] * Vrel[1]) / v2;
+    if (tcpa <= 0) return { cpa: Math.hypot(P[0], P[1]), tcpa: tcpa };   // opening — closest is now
+    return { cpa: Math.hypot(P[0] + Vrel[0] * tcpa, P[1] + Vrel[1] * tcpa), tcpa: tcpa };
+  }
+
+  // adviceFor(targetProps) → null if not actionable, else the advisory object.
+  function adviceFor(t, ownOverride) {
+    var o = ownOverride || own;
+    if (!enabled || !o || !t) return null;
+    var cog = num(o.cog), sog = num(o.sog);
+    var tcog = num(t.cog), tsog = num(t.sog), rng = num(t.range), brg = num(t.brg);
+    if (cog == null || sog == null || tcog == null || tsog == null || rng == null || brg == null) return null;
+    if (sog < 0.2) return null;                     // dead in the water — a course change does nothing
+
+    var limit = (window.HelmAisRisk && HelmAisRisk.profile) ? HelmAisRisk.profile().cpa : 1.0;
+    var P = [rng * Math.sin(brg * Math.PI / 180), rng * Math.cos(brg * Math.PI / 180)];   // own→target
+    var Vt = vec(tcog, tsog);
+    function cpaAtCourse(c) { var Vo = vec(c, sog); return cpaTcpa(P, [Vt[0] - Vo[0], Vt[1] - Vo[1]]); }
+
+    var nowCpa = cpaAtCourse(cog).cpa;              // our reconstruction of the current CPA (sanity vs engine)
+    var col = window.HelmColregs ? window.HelmColregs({ cog: cog, sog: sog }, t) : null;
+
+    // Per side: the smallest turn that REACHES the limit (sustained), AND the turn that MAXIMISES CPA —
+    // so when the target is already inside the limit (limit unreachable) we still give the best way out.
+    function scan(dir) {
+      var reached = null, bestDeg = 0, bestScore = -1, bestCpa = nowCpa;
+      for (var d = 2; d <= 120; d += 2) {
+        var a = cpaAtCourse(norm(cog + dir * d)), open = a.tcpa <= 0, score = open ? 999 : a.cpa;
+        if (score > bestScore) { bestScore = score; bestDeg = d; bestCpa = a.cpa; }
+        if (reached == null && (a.cpa >= limit || open)) {
+          var c2 = cpaAtCourse(norm(cog + dir * (d + 6)));
+          if (c2.cpa >= limit * 0.97 || c2.tcpa <= 0) reached = d;
+        }
+      }
+      return { reached: reached, bestDeg: bestDeg, bestCpa: Math.round(bestCpa * 100) / 100 };
+    }
+    var S = scan(+1), Pt = scan(-1);
+
+    // speed lever: slowest speed on the current course that reaches the limit
+    var slowTo = null;
+    for (var s = sog - 0.5; s >= 0; s -= 0.5) {
+      var Vo = vec(cog, s), r = cpaTcpa(P, [Vt[0] - Vo[0], Vt[1] - Vo[1]]);
+      if (r.cpa >= limit || r.tcpa <= 0) { slowTo = Math.round(s * 10) / 10; break; }
+    }
+
+    // recommend: stand-on holds; else prefer starboard (COLREGS) unless port clearly reaches with much less.
+    var side = 'hold', turnDeg = null, achievable = false, clearBy = null;
+    if (!col || col.role !== 'stand-on') {
+      var pick;
+      if (S.reached != null && (Pt.reached == null || S.reached <= Pt.reached + 12)) pick = { side: 'starboard', s: S };
+      else if (Pt.reached != null) pick = { side: 'port', s: Pt };
+      else pick = (S.bestCpa >= Pt.bestCpa - 0.05) ? { side: 'starboard', s: S } : { side: 'port', s: Pt };
+      side = pick.side;
+      achievable = pick.s.reached != null;
+      turnDeg = achievable ? pick.s.reached : pick.s.bestDeg;
+      clearBy = achievable ? limit : pick.s.bestCpa;
+    }
+    var newCourse = (side !== 'hold' && turnDeg != null) ? norm(cog + (side === 'starboard' ? 1 : -1) * turnDeg) : null;
+
+    return {
+      type: col && col.type, role: col && col.role, rule: col && col.rule, action: col && col.action,
+      side: side, turnDeg: turnDeg, newCourse: newCourse, achievable: achievable, clearBy: clearBy,
+      slowToKn: slowTo, limit: limit, nowCpa: Math.round(nowCpa * 100) / 100
+    };
+  }
+
+  function setEnabled(v) {
+    enabled = !!v; save();
+    try { if (window.dispatchEvent && window.CustomEvent) window.dispatchEvent(new CustomEvent('helm:ais-advisor', { detail: { on: enabled } })); } catch (e) {}
+  }
+
+  // best-effort toggle in the AIS hub header (works regardless; the flag persists either way)
+  function mountToggle() {
+    if (document.getElementById('helm-advisor-toggle')) return;
+    var hd = document.querySelector('#helm-ais .aish-hd'); if (!hd) return;   // header element; wait if not rendered yet
+    try {
+      var lab = document.createElement('label');
+      lab.id = 'helm-advisor-toggle';
+      lab.style.cssText = 'display:flex;align-items:center;gap:6px;font-size:11px;color:var(--cdim);cursor:pointer;margin-left:auto;white-space:nowrap';
+      var cb = document.createElement('input'); cb.type = 'checkbox'; cb.checked = enabled;
+      cb.style.cssText = 'width:13px;height:13px;accent-color:#5dd0b0';
+      cb.addEventListener('change', function () { setEnabled(cb.checked); });
+      lab.appendChild(cb); lab.appendChild(document.createTextNode('Evasion advisor'));
+      hd.appendChild(lab);
+    } catch (e) { /* hub mid-render — a later retry catches it */ }
+  }
+  if (window.HelmShell && HelmShell.onNav) HelmShell.onNav(function (s) { if (s) own = { cog: s.cog, sog: s.sog, lat: s.lat, lon: s.lon }; });
+  if (document.readyState !== 'loading') mountToggle(); else document.addEventListener('DOMContentLoaded', mountToggle);
+  setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
+
+  window.HelmAisAdvisor = { adviceFor: adviceFor, isEnabled: function () { return enabled; }, setEnabled: setEnabled };
+})();
