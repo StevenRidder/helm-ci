@@ -1656,15 +1656,19 @@
   // (feature modules called these from their own files during load) and wire them live. From
   // here on, registrations apply immediately. This is the moment the SHELL API goes "hot".
   if (window.HelmShell) HelmShell.boot({ map: map, railEl: document.querySelector('.rail') });
-  // Registered panels append their rail icon at the bottom; place the AIS (ship) icon just ABOVE
-  // the Routes icon so the boat/targets control sits with the navigation group, not at the end.
+  // Registered panels append their rail icon at the bottom; fix the order so functional icons sit
+  // with their group and Lab + Settings stay pinned to the very bottom (Settings last).
   (function () {
     try {
       const rail = document.querySelector('.rail');
-      const ais = rail && rail.querySelector('.ri[data-rail="helm-ais"]');
-      const routes = rail && rail.querySelector('.ri[data-rail="routes"]');
-      if (ais && routes) rail.insertBefore(ais, routes);
-    } catch (e) { console.warn('rail: could not reposition the AIS icon:', e && e.message); }
+      if (!rail) return;
+      const q = s => rail.querySelector(s);
+      const ais = q('.ri[data-rail="helm-ais"]'), routes = q('.ri[data-rail="routes"]');
+      if (ais && routes) rail.insertBefore(ais, routes);   // AIS (ship) just above Routes
+      const lab = q('.ri[data-rail="lab"]'), settings = q('.ri[data-rail="settings"]');
+      if (lab) rail.appendChild(lab);                       // Lab → bottom group…
+      if (settings) rail.appendChild(settings);             // …Settings last of all
+    } catch (e) { console.warn('rail: could not reorder icons:', e && e.message); }
   })();
 
   // ================= SHELL-3: ⌘K command palette =================
