@@ -1117,6 +1117,77 @@
       + '</div>'
       + '</div>';
   }
+  // AIS detail card — a FREE, draggable inspector (not map-anchored). It opens beside the tapped
+  // vessel but is always clamped fully on-screen (never under the top bar / left rail / bottom HUD),
+  // and you can drag it anywhere by its header. Static snapshot — pin it (HelmAisPins) to watch it
+  // live. One card at a time. Replaces the old maplibregl.Popup, which could spawn half off-screen
+  // and couldn't be moved.
+  var _aisCard = null;
+  var AIS_CARD_SAFE = { top: 54, left: 58, bottom: 70, pad: 8 };   // keep clear of the chrome
+  function closeAisCard() { if (_aisCard) { _aisCard.remove(); _aisCard = null; } }
+  function clampAisCard(el, x, y) {
+    var s = AIS_CARD_SAFE, w = el.offsetWidth, h = el.offsetHeight;
+    var maxX = window.innerWidth - w - s.pad, maxY = window.innerHeight - s.bottom - h;
+    x = Math.max(s.left, Math.min(x, Math.max(s.left, maxX)));
+    y = Math.max(s.top, Math.min(y, Math.max(s.top, maxY)));
+    el.style.left = Math.round(x) + 'px'; el.style.top = Math.round(y) + 'px';
+  }
+  function makeAisCardDraggable(card, handle) {
+    var sx, sy, ox, oy, dragging = false;
+    function move(e) {
+      if (!dragging) return;
+      var pt = e.touches ? e.touches[0] : e;
+      clampAisCard(card, ox + (pt.clientX - sx), oy + (pt.clientY - sy));
+      if (e.cancelable) e.preventDefault();
+    }
+    function up() {
+      dragging = false;
+      document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up);
+      document.removeEventListener('touchmove', move); document.removeEventListener('touchend', up);
+    }
+    function down(e) {
+      if (e.target.closest('button')) return;                 // never start a drag from a button
+      dragging = true;
+      var pt = e.touches ? e.touches[0] : e;
+      sx = pt.clientX; sy = pt.clientY;
+      ox = parseFloat(card.style.left) || 0; oy = parseFloat(card.style.top) || 0;
+      document.addEventListener('mousemove', move); document.addEventListener('mouseup', up);
+      document.addEventListener('touchmove', move, { passive: false }); document.addEventListener('touchend', up);
+      e.preventDefault();
+    }
+    handle.addEventListener('mousedown', down);
+    handle.addEventListener('touchstart', down, { passive: false });
+  }
+  function openAisCard(props, point) {
+    closeAisCard();
+    var card = document.createElement('div');
+    card.className = 'helm-ais-card';
+    card.style.cssText = 'position:fixed;z-index:20;width:min(92vw,340px);max-height:78vh;overflow-y:auto;'
+      + 'background:rgba(13,23,34,.97);border:1px solid rgba(255,255,255,.14);border-radius:14px;'
+      + 'box-shadow:0 18px 50px -16px rgba(0,0,0,.9);color:#e6eef5;-webkit-overflow-scrolling:touch';
+    var head = document.createElement('div');
+    head.style.cssText = 'display:flex;align-items:center;justify-content:space-between;cursor:move;'
+      + 'padding:7px 11px 1px;touch-action:none;user-select:none;-webkit-user-select:none';
+    head.innerHTML = '<span style="font-size:10.5px;letter-spacing:.12em;color:var(--cdim)">⠿ DRAG</span>'
+      + '<button data-close aria-label="Close" title="Close" style="border:none;background:transparent;'
+      + 'color:#9bb0c0;font-size:21px;line-height:1;cursor:pointer;padding:0 2px 2px">×</button>';
+    var body = document.createElement('div');
+    body.style.cssText = 'padding:2px 13px 13px';
+    body.innerHTML = aisPopupHTML(props);
+    card.appendChild(head); card.appendChild(body);
+    document.body.appendChild(card);
+    var x = (point && point.x != null) ? point.x + 16 : (window.innerWidth - card.offsetWidth) / 2;
+    var y = (point && point.y != null) ? point.y + 16 : 96;
+    clampAisCard(card, x, y);
+    head.querySelector('[data-close]').addEventListener('click', closeAisCard);
+    makeAisCardDraggable(card, head);
+    _aisCard = card;
+    return card;
+  }
+  // A rotate/resize must never strand the card off-screen; Esc dismisses it.
+  window.addEventListener('resize', function () { if (_aisCard) clampAisCard(_aisCard, parseFloat(_aisCard.style.left) || 0, parseFloat(_aisCard.style.top) || 0); });
+  window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAisCard(); });
+  window.openAisCard = openAisCard; window.closeAisCard = closeAisCard;   // debug/automation hook (like window.map)
   // AIS targets → the `ais` source. The source carries promoteId:'mmsi' (CLIENT-5) so each target's
   // feature.id == its MMSI — a stable id for tap hit-testing and future incremental updates.
   function updateAisFromEngine(list) {
@@ -1166,9 +1237,7 @@
   ['helm-ais-vessel-tri', 'helm-ais-symbol', 'ais-vessels'].forEach(layer => {
     map.on('mouseenter', layer, () => { map.getCanvas().style.cursor = 'pointer'; });
     map.on('mouseleave', layer, () => { map.getCanvas().style.cursor = ''; });
-    map.on('click', layer, e => { if (measuring()) return;
-      new maplibregl.Popup({ closeButton: true, maxWidth: 'min(92vw, 340px)' })
-        .setLngLat(e.lngLat).setHTML(aisPopupHTML(e.features[0].properties)).addTo(map); });
+    map.on('click', layer, e => { if (measuring()) return; openAisCard(e.features[0].properties, e.point); });
   });
 
   // ================= CHROME UI wiring =================
