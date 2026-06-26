@@ -238,11 +238,15 @@ export async function enableWxTiles(map, ctx) {
   const frame = ctx.frame | 0;
   const opacity = Math.max(0, Math.min(1, ctx.opacity == null ? 0.82 : ctx.opacity));
   disableWxTiles(map, true);
-  map.addSource(WX_SRC, {
+  var srcDef = {
     type: 'raster', tiles: ['helmwx://' + setId + '/' + frame + '/{z}/{x}/{y}'],
-    tileSize: 256, minzoom: cfg.minzoom || 0, maxzoom: cfg.maxzoom || 7, bounds: cfg.bbox,
+    tileSize: 256, minzoom: cfg.minzoom || 0, maxzoom: cfg.maxzoom || 7,
     attribution: 'Helm value-encoded weather · ' + (cfg.model || cfg.source),
-  });
+  };
+  // A regional pack restricts requests to its bbox; a GLOBAL source (the helm-wx gateway) must NOT set
+  // bounds, or MapLibre clips world-copy wrapping at the antimeridian — the dateline gap right at Fiji.
+  if (cfg.bbox && !cfg.global) srcDef.bounds = cfg.bbox;
+  map.addSource(WX_SRC, srcDef);
   map.addLayer({
     id: WX_LYR, type: 'raster', source: WX_SRC,
     paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 },

@@ -51,9 +51,22 @@ uvicorn app:app --port 8091
 # point the client at  http://<host>:8091/{layer}/manifest.json
 ```
 
+### Open-Meteo API key (commercial)
+
+The free tier is non-commercial + daily-capped. For production / heavy use, set a commercial key — the
+service then uses `customer-api.open-meteo.com` (1M+ calls/mo, no daily cap). Put it in a **gitignored**
+`services/wx/.env` (never commit it):
+
+```
+HELM_WX_OPENMETEO_KEY=your-key-here
+```
+
+`app.py` loads `.env` on startup (real env vars override it). Without a key it falls back to the free host.
+
 Env knobs: `HELM_WX_CACHE` (dir), `HELM_WX_TTL` (s, default 1800), `HELM_WX_COOLDOWN` (s after a 429,
-default 300), `HELM_WX_DATA_Z` (finest source-grid zoom, default 7), `HELM_WX_GRID_N` (source-grid
-resolution, default 24).
+default 300), `HELM_WX_DATA_Z` (manifest maxzoom, default 7), `HELM_WX_FETCH_Z` (coarse source-grid zoom,
+default 5), `HELM_WX_GRID_N` (source-grid resolution, default 12), `HELM_WX_CONCURRENCY` / `HELM_WX_MIN_INTERVAL`
+(outbound throttle).
 
 ## Test
 

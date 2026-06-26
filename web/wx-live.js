@@ -221,7 +221,9 @@
   }
 
   function applyTile(val) {
-    renderField(st.map, val.field);         // sets st.field + paints the colourised image over the (snapped) area
+    // particlesOnly: the FIELD comes from the helm-wx service tiles (cog.js); wx-live only drives the
+    // animated particles. Otherwise (service down / fallback) wx-live paints its own colourised field.
+    if (!st.particlesOnly) renderField(st.map, val.field);   // sets st.field + paints over the (snapped) area
     if (window.__helmWind) {
       if (val.vel) { window.__helmWind.setData(val.vel); window.__helmWind.setVisible(true); }
       else window.__helmWind.setVisible(false);   // scalar layers (temp/pressure/…) have no particles
@@ -288,6 +290,8 @@
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
     st.notify = opts.notify || st.notify; st.onState = opts.onState || null; st.on = true; st.lastKey = '';
+    st.particlesOnly = !!opts.particlesOnly;             // field handled by helm-wx service tiles; we do particles
+    if (st.particlesOnly && st.map) clearLayer(st.map);  // drop any wx-live image; the service layer owns the field
     if (!st.handler) { st.handler = onMove; map.on('moveend', st.handler); }
     refresh().catch(function () {});
   }

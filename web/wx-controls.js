@@ -13,6 +13,11 @@
   var cogP = null;
   function cog() { return cogP || (cogP = import('./integrations/cog.js')); }
   var S = { map: null, resolution: 'live', model: 'single', els: {}, probeT: null };  // Live (fill-the-view) is the default — Windy-style
+  // The helm-wx tile gateway (services/wx). Default: same host, port 8091. Override with window.HELM_WX_SERVICE.
+  var WX_SERVICE = (typeof window !== 'undefined' && window.HELM_WX_SERVICE) ||
+                   (location.protocol + '//' + location.hostname + ':8091');
+  function wxOpacity() { var s = document.getElementById('wxopacity'); return s ? Math.max(0, Math.min(1, (100 - (+s.value)) / 100)) : 0.82; }
+  function particlesOn() { var p = document.getElementById('particles'); return p ? !!p.checked : true; }
 
   function activeLayer() { return window.__activeWx || 'wind'; }
   function notify(msg, level) {
@@ -54,12 +59,29 @@
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
-      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
-        // Live owns the field (helm-wx-live) + drives the particles. NEVER show the legacy static box —
-        // on failure Live serves cached coverage or clears the field (particles carry on); the tiny
-        // fixed-bbox box at extreme zoom-out is exactly what we're getting rid of.
-        showLegacy(false);
+      showLegacy(false);
+      // WORLD-CLASS PATH — the FIELD is server-baked value tiles from the helm-wx gateway: a proper
+      // Web-Mercator XYZ source (overzoom, HTTP+ETag cached, fetch-once-serve-many), so it fills the
+      // screen at every zoom with no box and never rate-limits the client. Animated particles ride on
+      // top for wind (the Windy combo). If the gateway is unreachable we fall back to direct Open-Meteo.
+      var cfg = null;
+      try {
+        cfg = await m.enableWxTiles(map, {
+          maplibregl: window.maplibregl, manifestUrl: WX_SERVICE + '/' + layer + '/manifest.json',
+          beforeId: 'route-line', opacity: wxOpacity(), notify: function () {},
+        });
+      } catch (e) { cfg = null; }
+      if (cfg) {
+        if (window.HelmWxLive && layer === 'wind' && particlesOn()) {
+          window.HelmWxLive.enable(map, { layer: layer, notify: function () {}, particlesOnly: true });
+        } else if (window.HelmWxLive) {
+          window.HelmWxLive.disable(map);
+        }
+        notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
+      } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        // gateway down/not started -> direct Open-Meteo (field image + particles), still client-cached
         window.HelmWxLive.enable(map, { layer: layer, notify: notify });
+        notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
       } else {
         showLegacy(true);                                  // marine layers (waves/swell/sst/current) — static for now
         notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');

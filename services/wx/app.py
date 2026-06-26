@@ -33,29 +33,59 @@ import asyncio
 import json
 import math
 import os
+import hashlib
 import struct
 import time
 import zlib
 from typing import Dict, List, Optional, Tuple
 
 import httpx
-from fastapi import FastAPI, Response
+from fastapi import FastAPI, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse, PlainTextResponse
 
 # ------------------------------------------------------------------ config
 VMAX24 = 0xFFFFFF
 ENCODING = "helm-wxv1"
-FORECAST = "https://api.open-meteo.com/v1/forecast"
+
+
+def _load_dotenv():
+    """Load services/wx/.env (gitignored) into the environment if present — so the API key lives in a
+    local secret file, never in source/git. Real env vars win (setdefault)."""
+    p = os.path.join(os.path.dirname(__file__), ".env")
+    try:
+        with open(p) as f:
+            for line in f:
+                line = line.strip()
+                if line and not line.startswith("#") and "=" in line:
+                    k, v = line.split("=", 1)
+                    os.environ.setdefault(k.strip(), v.strip().strip('"').strip("'"))
+    except OSError:
+        pass
+
+
+_load_dotenv()
+# Open-Meteo endpoint. With a commercial key (HELM_WX_OPENMETEO_KEY in the ENV/.env — never in source/git)
+# we use the customer host + &apikey (1M calls/mo, no daily cap); otherwise the free, daily-capped host.
+OPENMETEO_KEY = os.environ.get("HELM_WX_OPENMETEO_KEY", "").strip()
+FORECAST = ("https://customer-api.open-meteo.com/v1/forecast" if OPENMETEO_KEY
+            else "https://api.open-meteo.com/v1/forecast")
 CACHE_DIR = os.environ.get("HELM_WX_CACHE", os.path.join(os.path.dirname(__file__), "cache"))
 TTL = int(os.environ.get("HELM_WX_TTL", "1800"))            # a fetched grid / baked tile is reusable for 30 min
 COOLDOWN = int(os.environ.get("HELM_WX_COOLDOWN", "300"))   # after a 429 we serve cache only for 5 min
-DATA_Z_MAX = int(os.environ.get("HELM_WX_DATA_Z", "7"))     # finest zoom we fetch SOURCE grids at; tiles above overzoom
+DATA_Z_MAX = int(os.environ.get("HELM_WX_DATA_Z", "7"))     # manifest maxzoom — the client overzooms (scales) beyond
+# We fetch SOURCE grids at this COARSE zoom and bake every finer tile from them, so a whole viewport is
+# 1–few grid fetches, not one-per-tile ("fetch once, serve many"). Coarser => fewer Open-Meteo calls but
+# a softer field; the animated particles carry the fine detail. (The truly world-class fix is GRIB model
+# ingestion — one download per run, full resolution, zero per-tile calls — see README "Phase 2".)
+FETCH_Z = int(os.environ.get("HELM_WX_FETCH_Z", "5"))
 GRID_N = int(os.environ.get("HELM_WX_GRID_N", "12"))        # source-grid resolution per coarse cell (GRID_N x GRID_N pts)
 # NOTE: GRID_N**2 points go in ONE Open-Meteo GET; >~150 points overflows the URI (HTTP 414). 12x12=144
-# is the safe max (matches web/wx-live.js). Finer detail comes from a finer DATA_Z (smaller cells), not N.
+# is the safe max (matches web/wx-live.js). Finer detail comes from a finer FETCH_Z (smaller cells), not N.
 TILE_MEM_MAX = int(os.environ.get("HELM_WX_TILE_MEM", "400"))
 TIMEOUT = float(os.environ.get("HELM_WX_TIMEOUT", "12"))
+CONCURRENCY = int(os.environ.get("HELM_WX_CONCURRENCY", "2"))     # max concurrent Open-Meteo calls (be polite)
+MIN_INTERVAL = float(os.environ.get("HELM_WX_MIN_INTERVAL", "0.2"))  # min seconds between Open-Meteo calls
 USER_AGENT = "helm-wx/0.1 (+https://github.com/StevenRidder/Helm; marine chartplotter, cached client)"
 
 # Per-layer config. scale/offset are FIXED per layer (from a sensible physical [vmin,vmax]) so colours
@@ -179,6 +209,8 @@ _grid_locks: Dict[str, asyncio.Lock] = {}
 _tiles: "OrderedTileCache" = None  # set below
 _cooldown_until = 0.0
 _stats = {"openmeteo_calls": 0, "grid_hits": 0, "tile_hits": 0, "bakes": 0, "cooldowns": 0}
+_om_sem: Optional[asyncio.Semaphore] = None       # bounds concurrent Open-Meteo calls (lazy: needs a loop)
+_om_last = 0.0                                     # timestamp of the last call (for MIN_INTERVAL spacing)
 
 
 class OrderedTileCache:
@@ -226,11 +258,12 @@ _tiles = OrderedTileCache(TILE_MEM_MAX)
 
 
 def _coarse_cell(z: int, x: int, y: int) -> Tuple[int, int, int]:
-    """The source-grid cell a tile is baked from: itself at/below DATA_Z_MAX, else its ancestor there."""
-    if z <= DATA_Z_MAX:
+    """The source-grid cell a tile bakes from — its ancestor at the COARSE FETCH_Z, so many tiles share
+    one grid fetch ("fetch once, serve many"). At z <= FETCH_Z the tile is its own cell."""
+    if z <= FETCH_Z:
         return z, x, y
-    d = z - DATA_Z_MAX
-    return DATA_Z_MAX, x >> d, y >> d
+    d = z - FETCH_Z
+    return FETCH_Z, x >> d, y >> d
 
 
 async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
@@ -256,11 +289,23 @@ async def _fetch_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
         "longitude": ",".join(str(v) for v in qlon),
         "current": cfg["v"],
     }
+    if OPENMETEO_KEY:
+        params["apikey"] = OPENMETEO_KEY
     if layer in ("wind", "gust"):
         params["wind_speed_unit"] = "kn"
-    _stats["openmeteo_calls"] += 1
-    async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
-        r = await client.get(FORECAST, params=params)
+    # Be a polite client: cap concurrency + space calls, so a viewport's burst of cell-fetches doesn't
+    # hammer Open-Meteo (what tripped the 429s before caching+throttling).
+    global _om_sem, _om_last
+    if _om_sem is None:
+        _om_sem = asyncio.Semaphore(CONCURRENCY)
+    async with _om_sem:
+        gap = MIN_INTERVAL - (time.time() - _om_last)
+        if gap > 0:
+            await asyncio.sleep(gap)
+        _om_last = time.time()
+        _stats["openmeteo_calls"] += 1
+        async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
+            r = await client.get(FORECAST, params=params)
     if r.status_code == 429:
         _cooldown_until = time.time() + COOLDOWN
         _stats["cooldowns"] += 1
@@ -316,13 +361,18 @@ async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
     scale, offset = layer_scale_offset(cfg)
     cz, cx, cy = _coarse_cell(z, x, y)
     grid = await get_grid(layer, cz, cx, cy)
+    # Precompute the per-column lon and per-row lat ONCE (512 mercator unprojects) instead of per pixel
+    # (65 536 — each with a sinh/atan). ~100x fewer trig calls; turns a multi-second bake into ~tens of ms.
+    lons = [pixel_to_lonlat(z, x, y, px + 0.5, 0.0)[0] for px in range(256)]
+    lats = [pixel_to_lonlat(z, x, y, 0.0, py + 0.5)[1] for py in range(256)]
     buf = bytearray(256 * 256 * 4)
     i = 0
     any_valid = False
+    sample = grid.sample
     for py in range(256):
+        lat = lats[py]
         for px in range(256):
-            lon, lat = pixel_to_lonlat(z, x, y, px + 0.5, py + 0.5)
-            val = grid.sample(lon, lat)
+            val = sample(lons[px], lat)
             if val is None:
                 buf[i + 3] = 0                        # transparent NODATA — never faked
                 i += 4
@@ -347,6 +397,7 @@ def manifest_for(layer: str) -> dict:
         "scale": scale, "offset": offset, "nodata_alpha": 0, "has_alpha": True,
         "minzoom": 0, "maxzoom": DATA_Z_MAX,
         "bbox": [-180.0, -85.0, 180.0, 85.0],         # global — the gateway serves anywhere
+        "global": True,                                # tells cog.js NOT to set source bounds (wrap across the dateline)
         "vmin": cfg["vmin"], "vmax": cfg["vmax"], "ramp": cfg["stops"],
         "source": "open-meteo", "model": MODEL_NAME,
         "fetchedAt": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
@@ -385,7 +436,7 @@ def manifest(layer: str):
 
 
 @app.get("/{layer}/{z}/{x}/{y}.png")
-async def tile(layer: str, z: int, x: int, y: int):
+async def tile(layer: str, z: int, x: int, y: int, request: Request):
     if layer not in LAYERS:
         return PlainTextResponse("unknown layer", status_code=404)
     if z < 0 or z > 22 or x < 0 or y < 0 or x >= 2 ** z or y >= 2 ** z:
@@ -395,6 +446,11 @@ async def tile(layer: str, z: int, x: int, y: int):
     except Exception as e:
         # honest failure: no cache + rate-limited/offline. The client's own fallback handles it.
         return PlainTextResponse("weather unavailable: %s" % e, status_code=503)
-    return Response(content=png, media_type="image/png",
-                    headers={"Cache-Control": "public, max-age=%d" % TTL,
-                             "X-Helm-Encoding": ENCODING})
+    # Mapbox-grade HTTP caching: strong ETag + conditional 304 so the browser/CDN revalidate cheaply
+    # (no re-transfer of the ~200 KB PNG when the tile is unchanged) on top of max-age.
+    etag = 'W/"%s"' % hashlib.md5(png).hexdigest()
+    headers = {"Cache-Control": "public, max-age=%d" % TTL, "ETag": etag, "X-Helm-Encoding": ENCODING}
+    inm = request.headers.get("if-none-match")
+    if inm and etag in [t.strip() for t in inm.split(",")]:
+        return Response(status_code=304, headers=headers)
+    return Response(content=png, media_type="image/png", headers=headers)
