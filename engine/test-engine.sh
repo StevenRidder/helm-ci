@@ -148,6 +148,7 @@ TCDATA="${HELM_TCDATA_DIR:-${HELM_OCPN_DIR:-/tmp/helm-opencpn}/data/tcdata}"
 NOAA_PREDICTION_FIXTURE="$HERE/test/fixtures/noaa-coops/1612340-2026-06-26-predictions.json"
 FIJI_CALENDAR_FIXTURE="$HERE/test/fixtures/fiji-met/suva-2026-calendar.csv"
 TIDE_ACQUISITION_POINTS="$HERE/test/fixtures/tides-acquisition-points.csv"
+TIDE_HONOLULU_ROUTE="$HERE/test/fixtures/tides-honolulu-route.gpx"
 TIDE_CACHE_GENERATED="$(mktemp -d)"
 if [ ! -x "$BIN/helm-tides-smoke" ]; then
   F "helm-tides-smoke missing at $BIN — run engine/bootstrap.sh after the TIDES-1 target lands"
@@ -256,6 +257,26 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-server.log 2>/dev/null || true
   fi
   kill $TIDE_SERVER_PID 2>/dev/null; wait $TIDE_SERVER_PID 2>/dev/null; rm -rf "$TIDE_SERVER_CONFIG"
+
+  TIDE_RUNNER_CACHE="$(mktemp -d)"
+  TIDE_RUNNER_PORT="$(free_port)"
+  TIDE_RUNNER_RELAY="$(free_port)"
+  TIDE_RUNNER_CONFIG="$(mktemp -d)"
+  HELM_BIND=127.0.0.1 HELM_PORT=$TIDE_RUNNER_PORT HELM_RELAY_PORT=$TIDE_RUNNER_RELAY HELM_ROUTE="$TIDE_HONOLULU_ROUTE" HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$TIDE_RUNNER_CONFIG" HELM_TIDES_CACHE_DIR="$TIDE_RUNNER_CACHE" HELM_TIDES_ACQUISITION=1 HELM_TIDES_ACQUISITION_INTERVAL_SEC=30 HELM_TIDES_ACQUISITION_DATE=2026-06-26 HELM_TIDES_LOOKAHEAD_DAYS=1 HELM_TIDES_MAX_LIVE_FETCHES=1 HELM_TIDES_NOAA_FIXTURE="$NOAA_PREDICTION_FIXTURE" \
+    "$BIN/helm-server" >/tmp/te-tides-runner-server.log 2>&1 &
+  TIDE_RUNNER_PID=$!
+  tide_runner_shape=0
+  for _ in $(seq 1 12); do
+    if curl -fsS "http://127.0.0.1:$TIDE_RUNNER_PORT/tides/acquisition/status" >/tmp/te-tides-runner-status.json 2>/tmp/te-tides-runner-status.err; then
+      tide_runner_shape=$(python3 -c 'import json,os,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("enabled") is True and o.get("run_count",0)>=1 and o.get("last_executed")==1 and o.get("last_failed")==0 and o.get("request_mode")=="active-route" and o.get("route_name")=="Honolulu Tide Acquisition" and o.get("last_pending_fetch")==1 and os.path.exists(o.get("last_cache_path","")) and os.path.exists(o.get("last_data_path",""))))' /tmp/te-tides-runner-status.json 2>/dev/null || echo 0)
+      [ "$tide_runner_shape" = 1 ] && break
+    fi
+    sleep 1
+  done
+  [ "$tide_runner_shape" = 1 ] \
+    && P "helm-server background tide acquisition runner executes eligible NOAA cache fetch from active route (TIDES-9)" \
+    || { F "helm-server background tide acquisition runner did not populate NOAA cache:"; sed 's/^/        /' /tmp/te-tides-runner-status.json 2>/dev/null || true; sed 's/^/        /' /tmp/te-tides-runner-status.err 2>/dev/null || true; sed 's/^/        /' /tmp/te-tides-runner-server.log 2>/dev/null || true; }
+  kill $TIDE_RUNNER_PID 2>/dev/null; wait $TIDE_RUNNER_PID 2>/dev/null; rm -rf "$TIDE_RUNNER_CONFIG" "$TIDE_RUNNER_CACHE"
 
   if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("fiji_prediction_cached") is True and o.get("official_request_action")=="use-cache" and o.get("fiji_request_action")=="use-cache" and o.get("remote_request_action")=="configure-subscription" and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
