@@ -53,6 +53,9 @@ On all satellite / satellite-derived-bathymetry layers, permanently:
 
 > **Supplemental aid — NOT for primary navigation. Cross-reference official charts.**
 
+Use the fuller project-wide safety language in [SAFETY.md](../SAFETY.md) for
+README text, release notes, demos, and tester-facing material.
+
 (Clouds and imagery can hide or paint-out reefs; SDB accuracy ≈ IHO ZOC-C, ~1.9–10 m.)
 
 ## Attribution checklist

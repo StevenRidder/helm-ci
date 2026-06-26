@@ -1,6 +1,8 @@
 # ADR-0003 — License posture: open now, sellable later
 
-- **Status:** Proposed
+- **Status:** Superseded for public-alpha distribution by
+  [ADR-0010](0010-distribution-and-packaging-posture.md); retained as the
+  original posture note.
 - **Date:** 2026-06-23
 
 ## Context
@@ -10,7 +12,7 @@ sentence has a hard technical consequence: if Helm's own code is GPL (e.g. by fo
 OpenCPN into the core), it can never become a closed commercial product. To keep both
 doors open, the core must stay **GPL-free**.
 
-## Decision (proposed)
+## Decision (superseded)
 
 - **Helm's own code:** **Business Source License (BSL) 1.1** — source-available now,
   permits use/modification/self-host, restricts competing commercial hosting, and
@@ -29,7 +31,10 @@ doors open, the core must stay **GPL-free**.
   community accordingly (it still converts to true open source on the change-date).
 - Dependencies stay permissive (GDAL/PROJ = MIT/X-style; MapLibre = BSD).
 
-## Open
+## Resolution
 
-- Pick the BSL change-date and "additional use grant" wording, or commit to Apache-2.0.
-  Defer until there's code to license; commit a `LICENSE` before the repo goes public.
+- Public-alpha default: root [LICENSE](../../LICENSE) +
+  [LICENSE.BSL](../../LICENSE.BSL), with the Additional Use Grant and change date
+  recorded in [ADR-0010](0010-distribution-and-packaging-posture.md).
+- Still open before any paid distribution: IP-counsel sign-off on the BSL wording,
+  GPL boundary, and data-source attribution/register.
