@@ -1524,11 +1524,13 @@ static void handle_command(const std::string& msg, const std::shared_ptr<ix::Web
   if (t == "route.create" && d.HasMember("points") && d["points"].IsArray()) {   // create/replace the active route
     std::vector<WP> pts;
     for (auto& p : d["points"].GetArray())
-      if (p.IsArray() && p.Size() >= 2 && p[0].IsNumber() && p[1].IsNumber())
-        pts.push_back({ p[0].GetDouble(), p[1].GetDouble(), "" });               // [lat, lon]
+      if (p.IsArray() && p.Size() >= 2 && p[0].IsNumber() && p[1].IsNumber()) {
+        std::string wn = (p.Size() >= 3 && p[2].IsString()) ? p[2].GetString() : "";   // optional 3rd element: [lat, lon, name]
+        pts.push_back({ p[0].GetDouble(), p[1].GetDouble(), wn });
+      }
     if (pts.size() < 2) { ws->send("{\"t\":\"route.ack\",\"ok\":false,\"error\":\"need >=2 points\"}"); return; }
     std::string name = (d.HasMember("name") && d["name"].IsString() && *d["name"].GetString()) ? d["name"].GetString() : "Route";
-    for (size_t i = 0; i < pts.size(); ++i) { char b[16]; std::snprintf(b, sizeof b, "WP%zu", i + 1); pts[i].name = b; }
+    for (size_t i = 0; i < pts.size(); ++i) if (pts[i].name.empty()) { char b[16]; std::snprintf(b, sizeof b, "WP%zu", i + 1); pts[i].name = b; }   // auto-name only UNnamed points; custom waypoint names preserved (OpenCPN RoutePoint::m_MarkName)
     Route* nr = build_route(pts, name);
     NavObj_dB::GetInstance().InsertRoute(nr);   // persist to navobj.db (route + points + links). nr then leaked (rare; see rebuild_route)
     { std::lock_guard<std::mutex> lk(g_route_mtx); ROUTE = pts; g_route_name = name; }
