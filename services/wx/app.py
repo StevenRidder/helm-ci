@@ -435,6 +435,95 @@ def manifest(layer: str):
     return manifest_for(layer)
 
 
+# ---- wind VELOCITY for the animated particle layer (leaflet-velocity u/v) — keyed + cached ----------
+# The GPU particle layer (web/wind-layer.js) needs u/v, not a scalar tile. We fetch wind speed+direction
+# over the (snapped) viewport server-side with the KEY, build u/v, and cache — so particles are live and
+# animated everywhere WITHOUT the client ever touching the rate-capped free API or holding the key.
+_vel: Dict[str, Tuple[list, float]] = {}
+_vel_locks: Dict[str, asyncio.Lock] = {}
+
+
+def _snap(w, s, e, n, step=2.0):
+    fl = lambda x: math.floor(x / step) * step
+    ce = lambda x: math.ceil(x / step) * step
+    return fl(w), max(-84.0, fl(s)), ce(e), min(84.0, ce(n))
+
+
+async def _fetch_velocity(w, s, e, n, gn):
+    global _cooldown_until, _om_last, _om_sem
+    D2R = math.pi / 180.0
+    lats = [n - (n - s) * j / (gn - 1) for j in range(gn)]
+    lons = [w + (e - w) * i / (gn - 1) for i in range(gn)]
+    qlat, qlon = [], []
+    for la in lats:
+        for lo in lons:
+            qlat.append(round(la, 3))
+            qlon.append(round(((lo + 180) % 360 + 360) % 360 - 180, 3))
+    params = {"latitude": ",".join(str(v) for v in qlat), "longitude": ",".join(str(v) for v in qlon),
+              "current": "wind_speed_10m,wind_direction_10m", "wind_speed_unit": "kn"}
+    if OPENMETEO_KEY:
+        params["apikey"] = OPENMETEO_KEY
+    if _om_sem is None:
+        _om_sem = asyncio.Semaphore(CONCURRENCY)
+    async with _om_sem:
+        gap = MIN_INTERVAL - (time.time() - _om_last)
+        if gap > 0:
+            await asyncio.sleep(gap)
+        _om_last = time.time()
+        _stats["openmeteo_calls"] += 1
+        async with httpx.AsyncClient(timeout=TIMEOUT, headers={"User-Agent": USER_AGENT}) as client:
+            r = await client.get(FORECAST, params=params)
+    if r.status_code == 429:
+        _cooldown_until = time.time() + COOLDOWN
+        raise RuntimeError("open-meteo 429")
+    r.raise_for_status()
+    nodes = r.json()
+    if not isinstance(nodes, list):
+        nodes = [nodes]
+    us, vs = [], []
+    for node in nodes:
+        cur = (node or {}).get("current") or {}
+        spd = cur.get("wind_speed_10m")
+        dr = cur.get("wind_direction_10m")
+        spd = float(spd) if isinstance(spd, (int, float)) else 0.0
+        dr = float(dr) if isinstance(dr, (int, float)) else 0.0
+        us.append(-spd * math.sin(dr * D2R))            # FROM-direction -> motion vector (negated)
+        vs.append(-spd * math.cos(dr * D2R))
+    hdr = {"nx": gn, "ny": gn, "lo1": lons[0], "la1": lats[0], "lo2": lons[-1], "la2": lats[-1],
+           "dx": (lons[-1] - lons[0]) / (gn - 1), "dy": (lats[0] - lats[-1]) / (gn - 1)}
+    return [{"header": dict(parameterNumber=2, **hdr), "data": us},
+            {"header": dict(parameterNumber=3, **hdr), "data": vs}]
+
+
+@app.get("/velocity/{layer}")
+async def velocity(layer: str, w: float, s: float, e: float, n: float):
+    if layer != "wind":
+        return JSONResponse({"error": True, "reason": "velocity is wind-only (phase 1)"}, status_code=404)
+    if e < w:
+        e += 360.0                                       # continuous across the antimeridian
+    sw, ss, se, sn = _snap(w, s, e, n)                   # snap so nearby pans/zooms reuse one fetch
+    key = "vel|%.2f,%.2f,%.2f,%.2f" % (sw, ss, se, sn)
+    now = time.time()
+    hit = _vel.get(key)
+    if hit and now - hit[1] <= TTL:
+        return hit[0]
+    if now < _cooldown_until and hit:
+        return hit[0]
+    lock = _vel_locks.setdefault(key, asyncio.Lock())
+    async with lock:
+        hit = _vel.get(key)
+        if hit and time.time() - hit[1] <= TTL:
+            return hit[0]
+        try:
+            vel = await _fetch_velocity(sw, ss, se, sn, GRID_N)
+        except Exception:
+            if hit:
+                return hit[0]
+            return JSONResponse({"error": True, "reason": "velocity unavailable"}, status_code=503)
+        _vel[key] = (vel, time.time())
+        return vel
+
+
 @app.get("/{layer}/{z}/{x}/{y}.png")
 async def tile(layer: str, z: int, x: int, y: int, request: Request):
     if layer not in LAYERS:

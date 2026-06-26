@@ -19,6 +19,35 @@
   function wxOpacity() { var s = document.getElementById('wxopacity'); return s ? Math.max(0, Math.min(1, (100 - (+s.value)) / 100)) : 0.82; }
   function particlesOn() { var p = document.getElementById('particles'); return p ? !!p.checked : true; }
 
+  // LIVE animated wind particles, fed by the helm-wx gateway's /velocity endpoint (keyed server-side,
+  // cached) — NOT the rate-capped free API and never the client holding a key. Refetches on pan/zoom and
+  // feeds the existing GPU particle layer (window.__helmWind). This is what makes the wind "alive".
+  var PD = { on: false, key: '', t: null, handler: null, cache: {} };
+  function pdBbox(map) {
+    var b = map.getBounds(), w = b.getWest(), e = b.getEast(), s = b.getSouth(), n = b.getNorth();
+    if (e < w) e += 360;
+    var mw = (e - w) * 0.4, mh = (n - s) * 0.4;
+    return [w - mw, Math.max(-84, s - mh), e + mw, Math.min(84, n + mh)];
+  }
+  async function pdRefresh() {
+    var map = S.map; if (!PD.on || !map || !window.__helmWind) return;
+    var bb = pdBbox(map), key = bb.map(function (x) { return x.toFixed(1); }).join(',');
+    if (key === PD.key) return; PD.key = key;
+    var cached = PD.cache[key];
+    if (cached) { window.__helmWind.setData(cached); window.__helmWind.setVisible(true); return; }
+    try {
+      var u = WX_SERVICE + '/velocity/wind?w=' + bb[0].toFixed(3) + '&s=' + bb[1].toFixed(3) +
+              '&e=' + bb[2].toFixed(3) + '&n=' + bb[3].toFixed(3);
+      var vel = await fetch(u).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
+      PD.cache[key] = vel;
+      if (!PD.on) return;
+      window.__helmWind.setData(vel); window.__helmWind.setVisible(true);
+    } catch (e) { /* keep whatever particles are already on screen */ }
+  }
+  function pdMove() { clearTimeout(PD.t); PD.t = setTimeout(function () { pdRefresh().catch(function () {}); }, 400); }
+  function startParticles(map) { PD.on = true; if (!PD.handler) { PD.handler = pdMove; map.on('moveend', PD.handler); } pdRefresh().catch(function () {}); }
+  function stopParticles(map) { PD.on = false; if (PD.handler) { map.off('moveend', PD.handler); PD.handler = null; } PD.key = ''; }
+
   function activeLayer() { return window.__activeWx || 'wind'; }
   function notify(msg, level) {
     var n = document.getElementById('wx-notice'); if (!n) return;
@@ -40,7 +69,7 @@
     var map = S.map; if (!map) return;                  // guard: setWeather()'s hook can fire before build() sets S.map
     var layer = activeLayer(), m = await cog();
     if (window.HelmWxLive) window.HelmWxLive.disable(map);
-    m.disableEnsemble(map); m.disableWxTiles(map);
+    m.disableEnsemble(map); m.disableWxTiles(map); stopParticles(map);
     if (layer === 'off') { showLegacy(false); setProbe(''); return; }
 
     if (S.model === 'ensemble') {
@@ -59,32 +88,31 @@
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
-      showLegacy(false);
-      // WORLD-CLASS PATH — the FIELD is server-baked value tiles from the helm-wx gateway: a proper
-      // Web-Mercator XYZ source (overzoom, HTTP+ETag cached, fetch-once-serve-many), so it fills the
-      // screen at every zoom with no box and never rate-limits the client. Animated particles ride on
-      // top for wind (the Windy combo). If the gateway is unreachable we fall back to direct Open-Meteo.
-      var cfg = null;
-      try {
-        cfg = await m.enableWxTiles(map, {
-          maplibregl: window.maplibregl, manifestUrl: WX_SERVICE + '/' + layer + '/manifest.json',
-          beforeId: 'route-line', opacity: wxOpacity(), notify: function () {},
-        });
-      } catch (e) { cfg = null; }
-      if (cfg) {
-        if (window.HelmWxLive && layer === 'wind' && particlesOn()) {
-          window.HelmWxLive.enable(map, { layer: layer, notify: function () {}, particlesOnly: true });
-        } else if (window.HelmWxLive) {
-          window.HelmWxLive.disable(map);
+      if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        // GATEWAY LAYER (wind/gust/temp/pressure/rain/clouds/cape): the FIELD is server-baked value tiles
+        // — a proper Web-Mercator XYZ source (overzoom, ETag-cached, fetch-once-serve-many), fills at
+        // every zoom, no box, no client rate-limit. Wind also gets LIVE animated particles from the
+        // gateway's /velocity endpoint (the Windy combo). Gateway down -> direct Open-Meteo fallback.
+        var cfg = null;
+        try {
+          cfg = await m.enableWxTiles(map, { maplibregl: window.maplibregl,
+            manifestUrl: WX_SERVICE + '/' + layer + '/manifest.json',
+            beforeId: 'route-line', opacity: wxOpacity(), notify: function () {} });
+        } catch (e) { cfg = null; }
+        if (cfg) {
+          showLegacy(false);
+          if (layer === 'wind' && particlesOn()) startParticles(map); else stopParticles(map);
+          notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
+        } else {
+          window.HelmWxLive.enable(map, { layer: layer, notify: notify });   // gateway offline -> direct
+          notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
         }
-        notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
-      } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
-        // gateway down/not started -> direct Open-Meteo (field image + particles), still client-cached
-        window.HelmWxLive.enable(map, { layer: layer, notify: notify });
-        notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
       } else {
-        showLegacy(true);                                  // marine layers (waves/swell/sst/current) — static for now
-        notify(layer + ' is a marine layer — Live not wired yet; showing Standard.', 'warn');
+        // MARINE / special layer (current/sst/waves/swell): NOT a gateway layer. Leave it entirely to the
+        // shell's legacy field + particle path (setWeather already loaded them) — no tile request (no 404),
+        // no confusing notice.
+        showLegacy(true);
+        var mn = document.getElementById('wx-notice'); if (mn) mn.style.display = 'none';
       }
     } else {
       showLegacy(true);                                   // Standard + Single → the legacy field handles it
