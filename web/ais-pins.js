@@ -39,13 +39,13 @@
     return '<div style="display:flex;align-items:center;gap:7px;margin-bottom:4px">'
       + '<span style="width:9px;height:9px;border-radius:50%;background:' + c + ';flex:0 0 auto"></span>'
       + '<span style="flex:1;font-size:14.5px;font-weight:600;color:#eef4f9;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + name + '</span>'
-      + '<button data-act="flash" data-mmsi="' + mmsi + '" title="Flash on chart" aria-label="Flash on chart" style="border:none;background:transparent;color:#9bb0c0;font-size:15px;cursor:pointer;padding:2px 4px">⌖</button>'
-      + '<button data-act="unpin" data-mmsi="' + mmsi + '" title="Unpin" aria-label="Unpin" style="border:none;background:transparent;color:#9bb0c0;font-size:17px;cursor:pointer;padding:2px 4px;line-height:1">×</button>'
+      + '<button data-act="flash" data-mmsi="' + mmsi + '" title="Flash on chart" aria-label="Flash on chart" style="border:none;background:transparent;color:var(--cdim);font-size:15px;cursor:pointer;padding:2px 4px">⌖</button>'
+      + '<button data-act="unpin" data-mmsi="' + mmsi + '" title="Unpin" aria-label="Unpin" style="border:none;background:transparent;color:var(--cdim);font-size:17px;cursor:pointer;padding:2px 4px;line-height:1">×</button>'
       + '</div>'
       + '<div style="display:flex;gap:12px;font-size:15px;font-weight:600;color:' + (t === 'normal' ? '#dbe6ee' : c) + ';margin-bottom:3px">'
-      + '<span>CPA ' + (valid ? num(p.cpa, 1) : '—') + '<span style="font-size:11px;color:#8aa0b2"> NM</span></span>'
-      + '<span>TCPA ' + (valid && p.tcpa != null ? (+p.tcpa).toFixed(0) : '—') + '<span style="font-size:11px;color:#8aa0b2"> min</span></span></div>'
-      + '<div style="font-size:12.5px;color:#a9bcc8;margin-bottom:6px">RNG ' + num(p.range, 1) + ' NM · BRG ' + num(p.brg, 0) + '° · SOG ' + num(p.sog, 1) + ' kn</div>'
+      + '<span>CPA ' + (valid ? num(p.cpa, 1) : '—') + '<span style="font-size:11px;color:var(--cdim2)"> NM</span></span>'
+      + '<span>TCPA ' + (valid && p.tcpa != null ? (+p.tcpa).toFixed(0) : '—') + '<span style="font-size:11px;color:var(--cdim2)"> min</span></span></div>'
+      + '<div style="font-size:12.5px;color:var(--cdim);margin-bottom:6px">RNG ' + num(p.range, 1) + ' NM · BRG ' + num(p.brg, 0) + '° · SOG ' + num(p.sog, 1) + ' kn</div>'
       + '<div style="display:flex;gap:5px;flex-wrap:wrap">' + fresh + srcChip + '</div>';
   }
 
