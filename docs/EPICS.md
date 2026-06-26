@@ -8,7 +8,7 @@
 
 ## Board at a glance
 
-- **19 epics** · **191 tasks** — 🟢 60 done · 🟡 23 in-progress · 🔴 0 blocked · ⚪ 108 to-do
+- **20 epics** · **209 tasks** — 🟢 60 done · 🟡 23 in-progress · 🔴 0 blocked · ⚪ 126 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit)_
 
 | Wave | Theme | Epics | Tasks done |
 |---|---|---|---|
@@ -16,6 +16,7 @@
 | **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 29/78 |
 | **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 6/47 |
 | **4** | Native + commercial (last) | NATIVE | 0/15 |
+| **✚** | Cross-cutting · web-client hardening | CLIENT | 0/18 |
 
 ## How to run it (parallel streams)
 
@@ -453,6 +454,43 @@ _The user's explicit rule: native comes LAST, after the web contract is locked a
 - [ ] ⚪ **NATIVE-13** — Notarized macOS DMG distribution (non-App-Store, VLC-problem sidestep)  ↳ NATIVE-12, NATIVE-4
 - [ ] ⚪ **NATIVE-14** — Three-tier packaging (Free/Cloud/Appliance) + plugin SDK / layer probe contract  ↳ NATIVE-11, AI-5
 - [ ] ⚪ **NATIVE-15** — Certified reference-hardware list + DC-DC UPS appliance + parallel sea-trial alongside OpenCPN  ↳ NATIVE-13
+
+---
+
+# Cross-cutting — Web-client hardening (front-end best-practices audit)
+
+_Not wave-gated. A **2026-06-26 multi-agent audit** measured the MapLibre web client against current best practices (**MapLibre GL JS 5.24.0** — the latest release; **deck.gl 9.3.x**). Verdict: the stack and versions are current, and the nav **ingress** path is already best-practice — rAF latest-wins coalescing (`nav-client.js:277`), ownship dead-reckoning between fixes (`ownship.js:196`), gesture-guarded follow (`ownship.js:59-73`), and solid WebSocket backoff/resume/watchdog. The gaps cluster in three places: the **egress render path** (every dynamic layer updates via full-FeatureCollection `setData`; `feature-state`/`updateData` and `promoteId` are used nowhere), the **offline/PWA story** (no service worker or web-app manifest despite the offline-first charter — the shell can't survive an offline reload), and **observability + supply-chain** (no global error surface, no dependency lockfile/audit, web tests not wired to CI)._
+
+_`CLIENT` is deliberately **cross-cutting**: it OWNS the genuinely-new infra files (service worker, PWA manifest, vendor lockfile, web test runner, shared logger + weather ramp) and **coordinates** the in-place perf fixes inside each owner epic's files (named per task, edited through that epic's seam — it does not seize OWNSHIP/AIS/WX/CONTRACT files). Start anywhere: `CLIENT-1..4` are isolated, cheap, high-payoff; `CLIENT-5` (`promoteId`) unblocks the whole data-path tier. Companion notes in [FEATURE-TRACKER.md](FEATURE-TRACKER.md)._
+
+## ⚪ `CLIENT` — Web-client hardening — MapLibre render path, offline/PWA, observability, supply-chain
+
+**Cross-cutting · not-started · 0/18 done · ⚡ parallel-safe (new infra) + ⛓ coordinates on owner epics**
+
+> Bring the MapLibre web client fully onto best practices: kill the real-time render-path churn (the ~60 fps ownship-overlay re-serialize, the O(n²) track rebuild, full-`setData` everywhere), adopt `promoteId` + `updateData`/`feature-state`, bound AIS to the viewport, ship a real offline-first PWA (service worker + manifest + OPFS PMTiles), consolidate the five weather renderers off the main thread, and close the engineering-hygiene gaps (dependency lockfile + CVE audit, web tests in CI, global error surface, CSP, one persistence layer, a11y). Every change is verified against `helm-server` in the preview and must not regress the honesty / fail-loud rules.
+
+- **Owns (new files):** `web/sw.js`, `web/manifest.webmanifest`, `web/vendor/package.json` (+ lockfile), `web/test/run.mjs` (web smoke/unit runner), `web/log.js` (leveled logger), `web/wx-ramp.js` (one shared weather color-ramp + sampler)
+- **Coordinates (in-place fixes — owner epic in parens, edit via their seam):** `web/ownship.js`,`web/track.js` (OWNSHIP) · `web/integrations/ais-deck.js`,`web/collision.js` (AIS) · `web/index.html`, style fragments (SHELL) · `web/nav-client.js` (CONTRACT) · `web/wind-layer.js`,`web/field-layer.js`,`web/isobars.js`,`web/wx-live.js`,`web/integrations/*` (WX) · `web/integrations/pmtiles.js`,`web/vendor/*` (OFFLINE) · `web/persist.js` (TOOLS)
+- **Done =** real-time updates run via `updateData`/`feature-state` keyed by stable feature ids, with the ownship overlay + track no longer re-serializing every frame and AIS bounded to the viewport; the app shell + glyphs/sprite + tiles survive an offline reload as an installable PWA; the five weather renderers share one ramp/sampler and rasterize off the main thread; the vendor bundle carries a lockfile + CVE audit, the web smoke/unit tests run in CI, and a global error surface + CSP + single persistence layer close the safety/hygiene gaps. Each task carries its own acceptance check.
+
+- [ ] ⚪ **CLIENT-1** — Stop the ~60 fps ownship-overlay re-serialize — gate `redrawOverlay()` on actual movement, not every rAF frame (`web/ownship.js:204`) · _coord OWNSHIP_
+- [ ] ⚪ **CLIENT-2** — Cap + Douglas–Peucker-simplify the ownship track; kill the O(n²) full-LineString `setData` per fix (`web/track.js:22,27`) · _coord OWNSHIP_
+- [ ] ⚪ **CLIENT-3** — Fix the deck.gl `MapboxOverlay` leak on Lab disable — `removeControl` + null the ref; handle the re-add-after-remove gotcha (`web/integrations/ais-deck.js:73`) · _coord AIS; feeds AIS-8_
+- [ ] ⚪ **CLIENT-4** — Global error surface — `window.onerror` + `unhandledrejection` + `map.on('error')` + bootstrap `try/catch` + a visible "degraded" banner (`web/index.html:669`) ⛔ · _coord SHELL_
+- [ ] ⚪ **CLIENT-5** — Add `promoteId`/`generateId` (MMSI + stable ids) to every dynamic GeoJSON source — the prerequisite for diff-updates + feature-state (`web/style.json:91`) ⛔ · _coord SHELL/AIS/PLACES/CHART_
+- [ ] ⚪ **CLIENT-6** — Migrate AIS/track/route live updates from full `setData` to `updateData(GeoJSONSourceDiff)` (`web/index.html:966`, `web/track.js:22`)  ↳ CLIENT-5
+- [ ] ⚪ **CLIENT-7** — Move selection/hover/alarm-highlight restyles to `setFeatureState` (+ `['feature-state',…]` paint) — no `setData` for pure style changes  ↳ CLIENT-5
+- [ ] ⚪ **CLIENT-8** — Wire the client bbox AIS cull (`client.setBbox`) to a debounced map `moveend`/`zoomend` — bound target count to the viewport (`web/nav-client.js:429`)  ↳ CONTRACT-8 · _coord CONTRACT_
+- [ ] ⚪ **CLIENT-9** — Replace the per-frame `JSON.parse(JSON.stringify())` deep clone in `mergeState` with a targeted merge (`web/nav-client.js:92`) · _coord CONTRACT_
+- [ ] ⚪ **CLIENT-10** — Set source `maxzoom:12` + `cluster` on dense point GeoJSON (soundings/POIs); long-term move soundings/depth-areas to vector tiles (xref CHART-13) · _coord CHART/PLACES_
+- [ ] ⚪ **CLIENT-11** — Service worker (Workbox): precache the app shell (index.html + ~33 JS + vendor + CSS) **+ glyphs/sprite** + runtime-cache same-origin chart/sat tiles → offline-reload-survivable ⛔ · _coord OFFLINE_
+- [ ] ⚪ **CLIENT-12** — Web-app manifest (`manifest.webmanifest`, `display:standalone`, icons, `viewport-fit`) → installable PWA; document iOS PWA storage caps  ↳ CLIENT-11 · _coord OFFLINE_
+- [ ] ⚪ **CLIENT-13** — Generalize PMTiles to OPFS-stored downloadable packs (near-native read, no IndexedDB overhead) → charts/sat fully offline (`web/integrations/pmtiles.js`)  ↳ CLIENT-11, OFFLINE-5
+- [ ] ⚪ **CLIENT-14** — Consolidate the five scalar-weather renderers + unify the three divergent color ramps + one `sample()` signature (`web/index.html:763`, `web/wx-live.js:19`, `web/wind-layer.js:47`) · _coord WX_
+- [ ] ⚪ **CLIENT-15** — Move weather rasterization off the main thread — `OffscreenCanvas`→`ImageBitmap` (drop synchronous `toDataURL`) + isobars marching-squares in a Web Worker (`web/field-layer.js:69`, `web/wx-live.js:97`, `web/isobars.js`)  ↳ CLIENT-14 · _coord WX_
+- [ ] ⚪ **CLIENT-16** — Vendor `package.json` + lockfile pinning every vendored lib + CI `npm audit`/Dependabot + make `build.mjs` repo-relative (drop the hard-coded home path) (`web/vendor/build.mjs:4`, `web/vendor/README.md`) · _coord OFFLINE_
+- [ ] ⚪ **CLIENT-17** — Wire the web smoke tests into CI (`engine/test-engine.sh` or a `test` script) + add unit tests for collision/CPA, ais-risk tiers, ais-guard, true-wind, wx-value-codec (`web/persist.smoke.js`, `web/alarms.smoke.js` + new)
+- [ ] ⚪ **CLIENT-18** — Hardening: CSP + `innerHTML` audit; route all persistence through `HelmStore` (`ais-guard.js`/`ais-vectors.js`/`server-endpoint.js` bypass it); leveled logger gating the 137 `console.*`; a11y labels + opt-in `tsc --checkJs` · _coord TOOLS/SHELL_
 
 ---
 

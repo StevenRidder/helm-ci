@@ -62,6 +62,9 @@ const windowStub = { AudioContext: FakeAudioContext, webkitAudioContext: FakeAud
 // ---- fake maplibre map (only the seams alarms.js touches at construction) ----
 const mapStub = {
   getSource: () => null, addSource() {}, addLayer() {}, getLayer: () => null, addControl() {},
+  // #66 (ALARM/CONTRACT-10) added anchor-ring radius dragging — alarms.js enableRadiusDrag() now
+  // wires pointer handlers + cursor at construction, so the stub must mock these seams too.
+  on() {}, off() {}, dragPan: { enable() {}, disable() {} }, getCanvas: () => ({ style: {} }),
 };
 
 // ---- sandbox + load alarms.js ----
