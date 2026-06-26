@@ -252,6 +252,41 @@
     help.style.cssText = 'font-size:10.5px;color:var(--cdim,#8aa);line-height:1.3;margin:-1px 2px 9px';
     box.appendChild(help); S.els.help = help;
 
+    box.appendChild(label('Provider'));
+    var providerRow = document.createElement('div');
+    providerRow.id = 'wx-provider';
+    providerRow.dataset.testid = 'wx-provider';
+    providerRow.style.cssText = 'display:flex;align-items:center;gap:8px;background:rgba(255,255,255,.03);border:.5px solid var(--line,#345);border-radius:8px;padding:7px 8px;margin:0 0 9px';
+    var providerText = document.createElement('div');
+    providerText.style.cssText = 'flex:1;min-width:0;font-size:11.5px;color:var(--ctext,#dce7ef);white-space:nowrap;overflow:hidden;text-overflow:ellipsis';
+    var providerBtn = document.createElement('button');
+    providerBtn.type = 'button';
+    providerBtn.textContent = 'Manage';
+    providerBtn.style.cssText = 'font-size:11px;padding:5px 8px;border:.5px solid var(--line,#345);border-radius:7px;background:rgba(255,255,255,.06);color:var(--ctext,#dce7ef);cursor:pointer';
+    providerRow.appendChild(providerText);
+    providerRow.appendChild(providerBtn);
+    box.appendChild(providerRow);
+    S.els.providerText = providerText;
+    function paintProvider() {
+      if (!providerText) return;
+      var p = window.HelmServices && HelmServices.publicWeatherProvider ? HelmServices.publicWeatherProvider() : null;
+      providerText.textContent = p ? (p.label + (p.hasApiKey ? ' · key ' + p.apiKeyMask : ' · no key')) : 'Open-Meteo Free · no key';
+    }
+    providerBtn.addEventListener('click', function () {
+      var btn = document.querySelector('.ri[data-rail="settings"]');
+      if (btn) btn.click();
+      else {
+        var weather = document.getElementById('drawer-weather'), settings = document.getElementById('drawer-settings');
+        if (weather) weather.hidden = true;
+        if (settings) settings.hidden = false;
+      }
+      setTimeout(function () {
+        if (window.HelmServiceSettings && HelmServiceSettings.focusWeather) HelmServiceSettings.focusWeather();
+      }, 120);
+    });
+    window.addEventListener('helm-services-changed', paintProvider);
+    paintProvider();
+
     box.appendChild(label('Offline detail'));
     var detailSeg = segctl([
       { val: 'standard', txt: 'Standard' },
