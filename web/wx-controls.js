@@ -42,7 +42,11 @@
       PD.cache[key] = vel;
       if (!PD.on) return;
       window.__helmWind.setData(vel); window.__helmWind.setVisible(true);
-    } catch (e) { /* keep whatever particles are already on screen */ }
+    } catch (e) {
+      // FAIL LOUD: surface the broken live-particle feed rather than silently freezing stale particles.
+      if (window.console) console.warn('[helm-wx] live particle velocity fetch failed (' + PD.layer + '):', e && e.message);
+      notify('Live ' + PD.layer + ' particles: live feed unavailable (field still cached)', 'warn');
+    }
   }
   function pdMove() { clearTimeout(PD.t); PD.t = setTimeout(function () { pdRefresh().catch(function () {}); }, 400); }
   function startParticles(map, layer) { PD.layer = layer || 'wind'; PD.on = true; if (!PD.handler) { PD.handler = pdMove; map.on('moveend', PD.handler); } pdRefresh().catch(function () {}); }

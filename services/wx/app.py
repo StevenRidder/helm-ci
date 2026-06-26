@@ -131,6 +131,7 @@ LAYERS: Dict[str, dict] = {
                  "stops": [[0, [60, 110, 180, 0.15]], [1, [70, 150, 200, 0.6]], [2.5, [90, 190, 160, 0.8]],
                            [4, [230, 200, 80, 0.85]], [6, [230, 120, 60, 0.9]], [8, [200, 50, 70, 0.95]]]},
     "current":  {"v": "ocean_current_velocity", "dir": "ocean_current_direction", "vector": True, "conv": "kmh2kn",
+                 "dir_to": True,                            # ocean-current direction is TOWARD (oceanographic), unlike wind (FROM)
                  "marine": True, "unit": "kn", "vmin": 0.0, "vmax": 3.0,   # ocean currents are weak (0–2 kn); vmax 3 + a
                  "stops": [[0, [60, 120, 200, 0.4]], [0.3, [70, 175, 200, 0.65]], [0.8, [90, 200, 150, 0.8]],
                            [1.5, [240, 210, 70, 0.88]], [2.2, [240, 130, 50, 0.92]], [3, [215, 50, 60, 0.95]]]},  # visible low end like Windy
@@ -397,8 +398,15 @@ def _bake_np(grid: "Grid", lons, lats, scale: float, offset: float):
     X0, Y0 = np.meshgrid(x0, y0); X1, Y1 = np.meshgrid(x1, y1)
     GX, GY = np.meshgrid(gx, gy)
     v00 = gv[Y0, X0]; v10 = gv[Y0, X1]; v01 = gv[Y1, X0]; v11 = gv[Y1, X1]
-    val = (v00 * (1 - GX) + v10 * GX) * (1 - GY) + (v01 * (1 - GX) + v11 * GX) * GY
-    valid = ~np.isnan(val)
+    # NaN-aware bilinear: a NODATA corner (land for an ocean layer) contributes 0 weight, so ocean pixels
+    # next to the coast still render from the valid corners; only an all-NODATA cell stays transparent.
+    w00 = (1 - GX) * (1 - GY) * (~np.isnan(v00)); w10 = GX * (1 - GY) * (~np.isnan(v10))
+    w01 = (1 - GX) * GY * (~np.isnan(v01)); w11 = GX * GY * (~np.isnan(v11))
+    den = w00 + w10 + w01 + w11
+    num = (np.nan_to_num(v00) * w00 + np.nan_to_num(v10) * w10
+           + np.nan_to_num(v01) * w01 + np.nan_to_num(v11) * w11)
+    valid = den > 0
+    val = num / np.where(valid, den, 1.0)
     s = scale if scale > 0 else 1.0
     n = np.clip(np.round((np.nan_to_num(val) - offset) / s), 0, VMAX24).astype(np.uint32)
     rgba = np.empty((256, 256, 4), dtype=np.uint8)
@@ -497,6 +505,7 @@ async def _fetch_velocity(layer, w, s, e, n, gn):
     cfg = LAYERS[layer]
     spd_var, dir_var, conv = cfg["v"], cfg["dir"], cfg.get("conv")
     endpoint = MARINE if cfg.get("marine") else FORECAST
+    sign = 1.0 if cfg.get("dir_to") else -1.0             # TOWARD (current) -> motion = +dir; FROM (wind) -> negate
     D2R = math.pi / 180.0
     lats = [n - (n - s) * j / (gn - 1) for j in range(gn)]
     lons = [w + (e - w) * i / (gn - 1) for i in range(gn)]
@@ -537,8 +546,8 @@ async def _fetch_velocity(layer, w, s, e, n, gn):
         dr = float(dr) if isinstance(dr, (int, float)) else 0.0
         if conv == "kmh2kn":
             spd *= KMH2KN
-        us.append(-spd * math.sin(dr * D2R))            # FROM/heading-direction -> motion vector (negated)
-        vs.append(-spd * math.cos(dr * D2R))
+        us.append(sign * spd * math.sin(dr * D2R))      # wind: FROM (sign=-1); current: TOWARD (sign=+1)
+        vs.append(sign * spd * math.cos(dr * D2R))
     hdr = {"nx": gn, "ny": gn, "lo1": lons[0], "la1": lats[0], "lo2": lons[-1], "la2": lats[-1],
            "dx": (lons[-1] - lons[0]) / (gn - 1), "dy": (lats[0] - lats[-1]) / (gn - 1)}
     return [{"header": dict(parameterNumber=2, **hdr), "data": us},
