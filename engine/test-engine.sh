@@ -169,6 +169,41 @@ elif "$BIN/helm-tides-fetch" --input-json "$NOAA_PREDICTION_FIXTURE" --cache-dir
     sed 's/^/        /' /tmp/te-tides-fetch-fiji.json 2>/dev/null || true
   fi
 
+  if "$BIN/helm-tides-fetch" --resolve-lat 21.3069 --resolve-lon -157.8583 --cache-dir "$TIDE_CACHE_GENERATED" --date 2026-06-26 >/tmp/te-tides-plan-noaa.json 2>/tmp/te-tides-plan-noaa.err; then
+    tide_plan_noaa_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); r=o.get("request",{}); print(int(o.get("ok") is True and o.get("mode")=="request-plan" and o.get("executed") is False and r.get("provider_region_id")=="noaa-coops-us" and r.get("station_id")=="1612340" and r.get("action")=="use-cache" and r.get("cached") is True and r.get("time_zone")=="GMT"))' /tmp/te-tides-plan-noaa.json 2>/dev/null || echo 0)
+    [ "$tide_plan_noaa_shape" = 1 ] \
+      && P "helm-tides-fetch resolves GPS point to cached NOAA official request plan (TIDES-9)" \
+      || { F "NOAA request-plan JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-plan-noaa.json; }
+  else
+    F "helm-tides-fetch NOAA request-plan failed:"
+    sed 's/^/        /' /tmp/te-tides-plan-noaa.err
+    sed 's/^/        /' /tmp/te-tides-plan-noaa.json 2>/dev/null || true
+  fi
+
+  if "$BIN/helm-tides-fetch" --resolve-lat -15.0 --resolve-lon -147.0 --cache-dir "$TIDE_CACHE_GENERATED" --date 2026-06-26 >/tmp/te-tides-plan-shom.json 2>/tmp/te-tides-plan-shom.err; then
+    tide_plan_shom_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); r=o.get("request",{}); print(int(o.get("ok") is True and o.get("mode")=="request-plan" and o.get("executed") is False and o.get("blocked") is True and r.get("provider_region_id")=="shom-spm-refmar-fr-polynesia" and r.get("action")=="configure-subscription" and r.get("requires_subscription") is True))' /tmp/te-tides-plan-shom.json 2>/dev/null || echo 0)
+    [ "$tide_plan_shom_shape" = 1 ] \
+      && P "helm-tides-fetch reports blocked SHOM subscription request plan for Tuamotu waters (TIDES-9)" \
+      || { F "SHOM request-plan JSON shape changed:"; sed 's/^/        /' /tmp/te-tides-plan-shom.json; }
+  else
+    F "helm-tides-fetch SHOM request-plan failed:"
+    sed 's/^/        /' /tmp/te-tides-plan-shom.err
+    sed 's/^/        /' /tmp/te-tides-plan-shom.json 2>/dev/null || true
+  fi
+
+  TIDE_PLAN_CACHE="$(mktemp -d)"
+  if "$BIN/helm-tides-fetch" --resolve-lat 21.3069 --resolve-lon -157.8583 --cache-dir "$TIDE_PLAN_CACHE" --date 2026-06-26 --execute-request --input-json "$NOAA_PREDICTION_FIXTURE" >/tmp/te-tides-plan-execute.json 2>/tmp/te-tides-plan-execute.err; then
+    tide_plan_execute_shape=$(python3 -c 'import json,os,sys; o=json.load(open(sys.argv[1])); r=o.get("request",{}); c=o.get("cache",{}); print(int(o.get("ok") is True and o.get("mode")=="request-plan" and o.get("executed") is True and r.get("provider_region_id")=="noaa-coops-us" and r.get("station_id")=="1612340" and r.get("action")=="fetch-live" and c.get("sample_count")==24 and os.path.exists(c.get("cache_path","")) and os.path.exists(c.get("data_path",""))))' /tmp/te-tides-plan-execute.json 2>/dev/null || echo 0)
+    [ "$tide_plan_execute_shape" = 1 ] \
+      && P "helm-tides-fetch executes unresolved NOAA request plan into source-tagged cache (TIDES-9)" \
+      || { F "NOAA request-plan execution JSON/cache shape changed:"; sed 's/^/        /' /tmp/te-tides-plan-execute.json; }
+  else
+    F "helm-tides-fetch NOAA request-plan execution failed:"
+    sed 's/^/        /' /tmp/te-tides-plan-execute.err
+    sed 's/^/        /' /tmp/te-tides-plan-execute.json 2>/dev/null || true
+  fi
+  rm -rf "$TIDE_PLAN_CACHE"
+
   if "$BIN/helm-tides-smoke" --regression --official-cache-dir "$TIDE_CACHE_GENERATED" "$TCDATA" >/tmp/te-tides.json 2>/tmp/te-tides.err; then
   tide_shape=$(python3 -c 'import json,sys; o=json.load(open(sys.argv[1])); print(int(o.get("ok") is True and o.get("regression") is True and o.get("source")=="harmonics-dwf-20210110-free.tcd" and o.get("official_reference")=="FJ-SUVA-WHARF" and o.get("resolver_offline_ready") is True and o.get("official_prediction_cached") is True and o.get("fiji_prediction_cached") is True and o.get("official_request_action")=="use-cache" and o.get("fiji_request_action")=="use-cache" and o.get("remote_request_action")=="configure-subscription" and o.get("resolver_remote_tier") in ("low","very_low") and o.get("provider_catalog_count",0) >= 3 and o.get("resolver_remote_provider_region")=="shom-spm-refmar-fr-polynesia" and o.get("next_event",{}).get("kind")=="low_water"))' /tmp/te-tides.json 2>/dev/null || echo 0)
   [ "$tide_shape" = 1 ] \

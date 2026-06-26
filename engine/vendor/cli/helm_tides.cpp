@@ -871,6 +871,59 @@ bool TideEngine::CachedOfficialPrediction(
   return true;
 }
 
+OfficialPredictionRequest TideEngine::PlanOfficialPredictionRequest(
+    double lat, double lon, std::time_t utc, double ready_radius_nm) const {
+  OfficialPredictionRequest request;
+  if (!std::isfinite(lat) || !std::isfinite(lon) || lat < -90.0 ||
+      lat > 90.0 || lon < -180.0 || lon > 180.0) {
+    request.blocked = true;
+    request.action = "invalid-coordinate";
+    request.status = "invalid coordinate";
+    return request;
+  }
+  if (utc == 0) utc = std::time(nullptr);
+  if (!std::isfinite(ready_radius_nm) || ready_radius_nm <= 0.0) {
+    ready_radius_nm = 60.0;
+  }
+
+  std::vector<TideProviderRegion> provider_regions =
+      ProviderRegionsForPoint(lat, lon);
+  OfficialTideReference official;
+  if (NearestOfficialReference(lat, lon, utc, &official)) {
+    const TideProviderRegion *official_region =
+        FindRegion(impl_->provider_regions, official.provider_region_id);
+    OfficialPredictionCacheInfo cache;
+    const bool cached = CachedOfficialPrediction(official, utc, &cache);
+
+    bool official_matches_provider_region = provider_regions.empty();
+    for (const TideProviderRegion &region : provider_regions) {
+      if (region.id == official.provider_region_id) {
+        official_matches_provider_region = true;
+        break;
+      }
+    }
+    if (!official_matches_provider_region &&
+        official.distance_nm > ready_radius_nm && !provider_regions.empty()) {
+      return BuildOfficialPredictionRequest(
+          nullptr, &provider_regions[0], utc, impl_->official_prediction_cache_dir,
+          nullptr);
+    }
+
+    return BuildOfficialPredictionRequest(
+        &official, official_region, utc, impl_->official_prediction_cache_dir,
+        cached ? &cache : nullptr);
+  }
+
+  if (!provider_regions.empty()) {
+    return BuildOfficialPredictionRequest(
+        nullptr, &provider_regions[0], utc, impl_->official_prediction_cache_dir,
+        nullptr);
+  }
+
+  request.status = "no official provider or station reference matched";
+  return request;
+}
+
 TideConfidence TideEngine::AssessConfidence(double lat, double lon,
                                             std::time_t utc,
                                             const TideStation &station) const {

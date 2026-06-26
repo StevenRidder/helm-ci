@@ -284,6 +284,9 @@ public:
   bool CachedOfficialPrediction(const OfficialTideReference &reference,
                                 std::time_t utc,
                                 OfficialPredictionCacheInfo *out) const;
+  OfficialPredictionRequest PlanOfficialPredictionRequest(
+      double lat, double lon, std::time_t utc,
+      double ready_radius_nm = 60.0) const;
   TideConfidence AssessConfidence(double lat, double lon, std::time_t utc,
                                   const TideStation &station) const;
   TidePrediction Predict(int station_index, std::time_t utc) const;
