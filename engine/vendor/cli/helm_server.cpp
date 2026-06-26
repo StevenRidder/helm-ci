@@ -364,6 +364,7 @@ static std::vector<WP> ROUTE;                 // the ACTIVE route the sim follow
 static std::string g_route_name = "Route";
 static std::mutex g_route_mtx;                 // guards ROUTE + g_route_name (swapped at runtime by route.create)
 static std::atomic<long> g_route_version{0};   // bumped on swap so nav_loop rebuilds the active route
+static std::atomic<bool> g_have_fix{false};    // true only with a fresh real GPS fix; used by nav/AIS/tide resolver
 
 // Built-in sample (inside US5FL96M) used when no HELM_ROUTE is given, so the server still
 // runs out of the box. Real GPX data parsed by the same loader as a user file.
@@ -430,15 +431,18 @@ static std::string tide_source_json(const helm::tides::TideSourceInfo& s) {
 
 static std::string tide_official_reference_json(
     const helm::tides::OfficialTideReference& r) {
-  char nums[256];   // was 160 — overflowed (~167 chars) → truncated JSON ("valid_for_time":tru)
-  std::snprintf(nums, sizeof nums,
-    "\"lat\":%.6f,\"lon\":%.6f,\"distance_nm\":%.6f,"
-    "\"official\":%s,\"prediction_calendar\":%s,"
-    "\"observed_water_level_available\":%s,\"valid_for_time\":%s",
-    r.lat, r.lon, r.distance_nm, r.official ? "true" : "false",
-    r.prediction_calendar ? "true" : "false",
-    r.observed_water_level_available ? "true" : "false",
-    r.valid_for_time ? "true" : "false");
+  std::ostringstream nums;
+  nums.setf(std::ios::fixed);
+  nums.precision(6);
+  nums << "\"lat\":" << r.lat << ",\"lon\":" << r.lon
+       << ",\"distance_nm\":" << r.distance_nm
+       << ",\"official\":" << (r.official ? "true" : "false")
+       << ",\"prediction_calendar\":"
+       << (r.prediction_calendar ? "true" : "false")
+       << ",\"observed_water_level_available\":"
+       << (r.observed_water_level_available ? "true" : "false")
+       << ",\"valid_for_time\":"
+       << (r.valid_for_time ? "true" : "false");
   return "{\"provider\":\"" + json_escape(r.provider) +
          "\",\"product\":\"" + json_escape(r.product) +
          "\",\"station_id\":\"" + json_escape(r.station_id) +
@@ -451,7 +455,7 @@ static std::string tide_official_reference_json(
          "\",\"valid_start_utc\":\"" + json_escape(r.valid_start_utc) +
          "\",\"valid_end_utc\":\"" + json_escape(r.valid_end_utc) +
          "\",\"interpolation_method\":\"" +
-         json_escape(r.interpolation_method) + "\"," + nums + "}";
+         json_escape(r.interpolation_method) + "\"," + nums.str() + "}";
 }
 
 static std::string tide_confidence_json(
@@ -515,7 +519,264 @@ static std::string tide_event_json(const helm::tides::TideEvent& e) {
          "\",\"value_m\":" + b + "}";
 }
 
+static std::string string_array_json(const std::vector<std::string>& values) {
+  std::string out = "[";
+  for (size_t i = 0; i < values.size(); ++i) {
+    if (i) out += ",";
+    out += "\"" + json_escape(values[i]) + "\"";
+  }
+  out += "]";
+  return out;
+}
+
+static std::string tide_resolve_point_json(
+    const helm::tides::TideResolvePoint& p) {
+  char nums[160];
+  std::snprintf(nums, sizeof nums, "\"lat\":%.6f,\"lon\":%.6f",
+                p.lat, p.lon);
+  return "{\"id\":\"" + json_escape(p.id) +
+         "\",\"name\":\"" + json_escape(p.name) +
+         "\",\"role\":\"" + json_escape(p.role) +
+         "\"," + nums +
+         ",\"eta_utc\":" +
+         (p.eta_utc ? ("\"" + helm::tides::FormatUtcIso8601(p.eta_utc) + "\"")
+                    : std::string("null")) + "}";
+}
+
+static std::string tide_resolved_point_json(
+    const helm::tides::TideResolvedPoint& p) {
+  return "{\"point\":" + tide_resolve_point_json(p.point) +
+         ",\"offline_ready\":" + (p.offline_ready ? "true" : "false") +
+         ",\"cache_status\":\"" + json_escape(p.cache_status) +
+         "\",\"cache\":{\"harmonic_offline_available\":" +
+         (p.harmonic_offline_available ? "true" : "false") +
+         ",\"official_metadata_available\":" +
+         (p.official_metadata_available ? "true" : "false") +
+         ",\"official_prediction_cached\":" +
+         (p.official_prediction_cached ? "true" : "false") +
+         ",\"observed_feed_available\":" +
+         (p.observed_feed_available ? "true" : "false") + "}" +
+         ",\"station\":" +
+         (p.has_harmonic_station ? tide_station_json(p.harmonic_station)
+                                 : std::string("null")) +
+         ",\"official_reference\":" +
+         (p.has_official_reference
+              ? tide_official_reference_json(p.official_reference)
+              : std::string("null")) +
+         ",\"confidence\":" + tide_confidence_json(p.confidence) +
+         ",\"warnings\":" + string_array_json(p.warnings) + "}";
+}
+
+static std::string tide_resolution_json(
+    const helm::tides::TideSourceResolution& r,
+    const std::string& mode,
+    const std::string& route_name,
+    const std::string& source_policy,
+    const std::vector<std::string>& request_warnings) {
+  if (!r.ok) {
+    std::vector<std::string> warnings = request_warnings;
+    if (!r.error.empty()) warnings.push_back(r.error);
+    return "{\"ok\":false,\"engine\":\"opencpn-tcmgr\",\"mode\":\"" +
+           json_escape(mode) + "\",\"error\":\"" + json_escape(r.error) +
+           "\",\"warnings\":" + string_array_json(warnings) + "}";
+  }
+  char nums[256];
+  std::snprintf(nums, sizeof nums,
+    "\"corridor_nm\":%.1f,\"min_confidence_score\":%.3f,"
+    "\"max_harmonic_station_distance_nm\":%.6f,"
+    "\"max_official_station_distance_nm\":%.6f",
+    r.corridor_nm, r.min_confidence_score,
+    r.max_harmonic_station_distance_nm,
+    r.max_official_station_distance_nm);
+
+  std::string warnings = "[";
+  bool first_warning = true;
+  auto add_warning = [&](const std::string& w) {
+    if (!first_warning) warnings += ",";
+    first_warning = false;
+    warnings += "\"" + json_escape(w) + "\"";
+  };
+  for (const std::string& w : request_warnings) add_warning(w);
+  for (const std::string& w : r.warnings) add_warning(w);
+  warnings += "]";
+
+  std::string sources = "[";
+  for (size_t i = 0; i < r.loaded_sources.size(); ++i) {
+    if (i) sources += ",";
+    sources += tide_source_json(r.loaded_sources[i]);
+  }
+  sources += "]";
+
+  std::string points = "[";
+  for (size_t i = 0; i < r.points.size(); ++i) {
+    if (i) points += ",";
+    points += tide_resolved_point_json(r.points[i]);
+  }
+  points += "]";
+
+  return "{\"ok\":true,\"engine\":\"" + json_escape(r.engine) +
+         "\",\"mode\":\"" + json_escape(mode) +
+         "\",\"route_name\":\"" + json_escape(route_name) +
+         "\",\"source_policy\":\"" + json_escape(source_policy) +
+         "\",\"generated_utc\":\"" +
+         helm::tides::FormatUtcIso8601(r.generated_utc) +
+         "\"," + nums +
+         ",\"offline_ready\":" + (r.offline_ready ? "true" : "false") +
+         ",\"official_coverage_ready\":" +
+         (r.official_coverage_ready ? "true" : "false") +
+         ",\"needs_attention\":" +
+         (r.needs_attention || !request_warnings.empty() ? "true" : "false") +
+         ",\"confidence_tier\":\"" + json_escape(r.confidence_tier) +
+         "\",\"summary\":\"" + json_escape(r.summary) +
+         "\",\"cache_summary\":\"" + json_escape(r.cache_summary) +
+         "\",\"warnings\":" + warnings +
+         ",\"loaded_sources\":" + sources +
+         ",\"points\":" + points + "}";
+}
+
 static std::mutex g_tide_mtx;  // TCMgr is OpenCPN-global state; keep HTTP workers out of each other.
+
+static void tide_add_point(std::vector<helm::tides::TideResolvePoint>& points,
+                           const std::string& id,
+                           const std::string& name,
+                           const std::string& role,
+                           double lat,
+                           double lon,
+                           std::time_t eta_utc) {
+  helm::tides::TideResolvePoint p;
+  p.id = id;
+  p.name = name;
+  p.role = role;
+  p.lat = lat;
+  p.lon = lon;
+  p.eta_utc = eta_utc;
+  points.push_back(p);
+}
+
+static std::string tide_resolve_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  const bool all = query_param(uri, "all") == "1";
+  const std::string source_policy = all ? "all-local" : "redistributable-only";
+  std::string iso = query_param(uri, "time");
+  std::time_t utc = 0;
+  if (iso.empty()) {
+    utc = std::time(nullptr);
+  } else if (!helm::tides::ParseUtcIso8601(iso, &utc)) {
+    return "{\"ok\":false,\"error\":\"bad UTC time; use YYYY-MM-DDTHH:MM:SSZ\"}";
+  }
+  double corridor_nm = query_double_or(uri, "corridor_nm", 25.0);
+  if (corridor_nm < 1.0) corridor_nm = 1.0;
+  if (corridor_nm > 250.0) corridor_nm = 250.0;
+
+  std::vector<helm::tides::TideResolvePoint> points;
+  std::vector<std::string> warnings;
+  std::vector<std::string> mode_parts;
+  std::string route_name;
+
+  const std::string lat_s = query_param(uri, "lat");
+  const std::string lon_s = query_param(uri, "lon");
+  if (!lat_s.empty() && !lon_s.empty()) {
+    tide_add_point(points, "query-1", "Query position", "query",
+                   query_double_or(uri, "lat", 0.0),
+                   query_double_or(uri, "lon", 0.0), utc);
+    mode_parts.push_back("query");
+  }
+
+  std::string raw_points = query_param(uri, "points");
+  if (!raw_points.empty()) {
+    std::replace(raw_points.begin(), raw_points.end(), '|', ';');
+    std::stringstream ss(raw_points);
+    std::string item;
+    int n = 0;
+    while (std::getline(ss, item, ';')) {
+      if (item.empty()) continue;
+      double lat = 0.0, lon = 0.0;
+      if (std::sscanf(item.c_str(), "%lf,%lf", &lat, &lon) == 2) {
+        char id[32]; std::snprintf(id, sizeof id, "point-%d", ++n);
+        tide_add_point(points, id, id, "explicit", lat, lon, utc);
+      } else {
+        warnings.push_back("ignored malformed points entry: " + item);
+      }
+      if (n >= 128) {
+        warnings.push_back("points list capped at 128 entries");
+        break;
+      }
+    }
+    if (n > 0) mode_parts.push_back("points");
+  }
+
+  std::string bbox = query_param(uri, "bbox");
+  if (!bbox.empty()) {
+    double w = 0.0, s = 0.0, e = 0.0, n = 0.0;
+    if (std::sscanf(bbox.c_str(), "%lf,%lf,%lf,%lf", &w, &s, &e, &n) == 4) {
+      tide_add_point(points, "bbox-center", "Viewport center", "viewport",
+                     (s + n) / 2.0, (w + e) / 2.0, utc);
+      tide_add_point(points, "bbox-sw", "Viewport SW", "viewport-corner",
+                     s, w, utc);
+      tide_add_point(points, "bbox-ne", "Viewport NE", "viewport-corner",
+                     n, e, utc);
+      mode_parts.push_back("viewport");
+    } else {
+      warnings.push_back("ignored malformed bbox; expected w,s,e,n");
+    }
+  }
+
+  std::string route_mode = query_param(uri, "route");
+  if (route_mode == "active" || route_mode == "1" || route_mode == "true") {
+    std::vector<WP> route;
+    { std::lock_guard<std::mutex> lk(g_route_mtx);
+      route = ROUTE;
+      route_name = g_route_name;
+    }
+    if (route.empty()) {
+      warnings.push_back("route=active requested, but no active route is loaded");
+    } else {
+      for (size_t i = 0; i < route.size() && i < 128; ++i) {
+        char id[32]; std::snprintf(id, sizeof id, "route-%zu", i + 1);
+        tide_add_point(points, id,
+                       route[i].name.empty() ? id : route[i].name,
+                       "route-waypoint", route[i].lat, route[i].lon, utc);
+      }
+      if (route.size() > 128) warnings.push_back("active route capped at 128 waypoints");
+      mode_parts.push_back("active-route");
+    }
+  }
+
+  const bool want_gps = query_param(uri, "gps") == "1" ||
+                        query_param(uri, "position") == "1";
+  if (want_gps || points.empty()) {
+    if (g_have_fix.load()) {
+      tide_add_point(points, "gps", "Current GPS position", "gps", gLat, gLon, utc);
+      mode_parts.push_back("gps");
+    } else if (want_gps || points.empty()) {
+      warnings.push_back(
+          "no fresh GPS fix available; pass lat/lon, points, bbox, or route=active");
+    }
+  }
+
+  std::string mode;
+  for (size_t i = 0; i < mode_parts.size(); ++i) {
+    if (i) mode += "+";
+    mode += mode_parts[i];
+  }
+  if (mode.empty()) mode = "unresolved";
+
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy =
+      all ? helm::tides::TideSourcePolicy::kAllLocal
+          : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error))
+    return "{\"ok\":false,\"mode\":\"" + json_escape(mode) +
+           "\",\"error\":\"" + json_escape(error) +
+           "\",\"warnings\":" + string_array_json(warnings) + "}";
+
+  helm::tides::TideSourceResolution resolution =
+      engine.ResolveSources(points, utc, corridor_nm);
+  return tide_resolution_json(resolution, mode, route_name, source_policy, warnings);
+}
 
 static std::string tide_summary_json(const std::string& uri) {
   std::lock_guard<std::mutex> lock(g_tide_mtx);
@@ -849,7 +1110,6 @@ static RealFeed g_real;
 // it's emitted (e.g. 180 for a reciprocal/backwards-mounted compass). It's a compass-alignment offset,
 // not fabricated data — the source tag stays truthful (nmea/nmea2000/signalk). Default 0 (no change).
 static int g_hdg_offset = []{ const char* s = std::getenv("HELM_HDG_OFFSET"); int v = s ? std::atoi(s) : 0; v %= 360; if (v < 0) v += 360; return v; }();
-static std::atomic<bool> g_have_fix{false};   // true only with a fresh real GPS fix (pos+SOG+COG); gates AIS CPA validity
 
 // AIS — OpenCPN's real AisDecoder driven headless (decode + CPA/TCPA stay in its code). We
 // snapshot the decoded targets into our own set at decode time and age on our own clock.
@@ -2444,6 +2704,8 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
         if (path == "/tides/summary") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_summary_json(req->uri)); }
+        if (path == "/tides/resolve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-8: GPS/route/viewport source resolver + offline readiness
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_resolve_json(req->uri)); }
         if (path == "/tides/curve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: batched 24h curve + events in one call
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_curve_json(req->uri)); }
         if (path == "/tides/stations") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: station markers (GeoJSON)

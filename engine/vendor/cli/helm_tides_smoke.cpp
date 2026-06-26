@@ -349,6 +349,61 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
     return false;
   }
 
+  helm::tides::TideResolvePoint honolulu_point;
+  honolulu_point.id = "gps";
+  honolulu_point.name = "Honolulu regression point";
+  honolulu_point.role = "gps";
+  honolulu_point.lat = kLat;
+  honolulu_point.lon = kLon;
+  honolulu_point.eta_utc = search;
+  helm::tides::TideSourceResolution honolulu_resolution =
+      engine->ResolveSources({honolulu_point}, search, 25.0);
+  if (!Check(honolulu_resolution.ok, "resolver failed for Honolulu", error)) {
+    return false;
+  }
+  if (!Check(honolulu_resolution.offline_ready,
+             "Honolulu resolver should be offline-ready", error)) {
+    return false;
+  }
+  if (!Check(honolulu_resolution.official_coverage_ready,
+             "Honolulu resolver should have official coverage", error)) {
+    return false;
+  }
+  if (!Check(honolulu_resolution.confidence_tier == "high",
+             "Honolulu resolver tier changed: " +
+                 honolulu_resolution.confidence_tier,
+             error)) {
+    return false;
+  }
+
+  helm::tides::TideResolvePoint remote_point;
+  remote_point.id = "remote-pass";
+  remote_point.name = "Remote off-grid pass";
+  remote_point.role = "route-waypoint";
+  remote_point.lat = -15.0;
+  remote_point.lon = -147.0;
+  remote_point.eta_utc = search;
+  helm::tides::TideSourceResolution remote_resolution =
+      engine->ResolveSources({remote_point}, search, 25.0);
+  if (!Check(remote_resolution.ok, "resolver failed for remote point", error)) {
+    return false;
+  }
+  if (!Check(!remote_resolution.offline_ready,
+             "remote resolver should not claim offline-ready coverage", error)) {
+    return false;
+  }
+  if (!Check(remote_resolution.needs_attention,
+             "remote resolver should require attention", error)) {
+    return false;
+  }
+  if (!Check(remote_resolution.confidence_tier == "very_low" ||
+                 remote_resolution.confidence_tier == "low",
+             "remote resolver did not downgrade confidence: " +
+                 remote_resolution.confidence_tier,
+             error)) {
+    return false;
+  }
+
   std::cout << std::fixed << std::setprecision(6)
             << "{\"ok\":true,\"regression\":true"
             << ",\"station\":\"" << JsonEscape(station.name) << "\""
@@ -356,8 +411,12 @@ bool RunRegression(helm::tides::TideEngine *engine, std::string *error) {
             << "\""
             << ",\"official_reference\":\""
             << JsonEscape(suva_ref.station_id) << "\""
+            << ",\"resolver_offline_ready\":"
+            << (honolulu_resolution.offline_ready ? "true" : "false")
+            << ",\"resolver_remote_tier\":\""
+            << JsonEscape(remote_resolution.confidence_tier) << "\""
             << ",\"checks\":"
-            << (static_cast<int>(sizeof(goldens) / sizeof(goldens[0])) + 12)
+            << (static_cast<int>(sizeof(goldens) / sizeof(goldens[0])) + 19)
             << ",\"next_event\":";
   PrintEvent(event);
   std::cout << "}\n";

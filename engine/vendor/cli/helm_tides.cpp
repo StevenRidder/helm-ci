@@ -435,6 +435,158 @@ TideEvent TideEngine::NextHighLowEventNearest(double lat, double lon,
   return event;
 }
 
+TideSourceResolution TideEngine::ResolveSources(
+    const std::vector<TideResolvePoint> &points,
+    std::time_t fallback_utc,
+    double corridor_nm) const {
+  TideSourceResolution resolution;
+  resolution.generated_utc = std::time(nullptr);
+  resolution.corridor_nm = corridor_nm > 0.0 ? corridor_nm : 25.0;
+  resolution.loaded_sources = LoadedSources();
+  if (!impl_->loaded) {
+    resolution.error = "tide engine has not loaded harmonic sources";
+    return resolution;
+  }
+  if (points.empty()) {
+    resolution.error = "no GPS, route, viewport, or explicit tide-resolve points supplied";
+    return resolution;
+  }
+
+  const double ready_radius_nm = std::max(60.0, resolution.corridor_nm);
+  resolution.ok = true;
+  resolution.offline_ready = true;
+  resolution.official_coverage_ready = true;
+  resolution.min_confidence_score = 1.0;
+
+  for (const TideResolvePoint &point : points) {
+    TideResolvedPoint out;
+    out.point = point;
+    std::time_t utc = point.eta_utc != 0 ? point.eta_utc : fallback_utc;
+    if (utc == 0) utc = resolution.generated_utc;
+
+    if (!std::isfinite(point.lat) || !std::isfinite(point.lon) ||
+        point.lat < -90.0 || point.lat > 90.0 ||
+        point.lon < -180.0 || point.lon > 180.0) {
+      out.warnings.push_back("invalid coordinate; no tide source resolved");
+      out.confidence.tier = "very_low";
+      out.confidence.summary = "invalid coordinate";
+      resolution.offline_ready = false;
+      resolution.official_coverage_ready = false;
+      resolution.needs_attention = true;
+      resolution.min_confidence_score = 0.0;
+      resolution.points.push_back(out);
+      continue;
+    }
+
+    TideStation station;
+    if (NearestTideStation(point.lat, point.lon, &station)) {
+      out.has_harmonic_station = true;
+      out.harmonic_station = station;
+      out.harmonic_offline_available = true;
+      out.confidence = AssessConfidence(point.lat, point.lon, utc, station);
+      out.cache_status = "local harmonic fallback available";
+
+      if (!station.source_redistribution_cleared) {
+        out.warnings.push_back(
+            "nearest harmonic source is local/opt-in and needs license review");
+      }
+      if (station.distance_nm > ready_radius_nm) {
+        out.offline_ready = false;
+        out.warnings.push_back(
+            "nearest harmonic tide station is outside the offline-ready radius");
+      } else if (out.confidence.score < 0.35) {
+        out.offline_ready = false;
+        out.warnings.push_back("harmonic fallback confidence is very low");
+      } else {
+        out.offline_ready = true;
+      }
+      if (station.distance_nm > resolution.max_harmonic_station_distance_nm)
+        resolution.max_harmonic_station_distance_nm = station.distance_nm;
+    } else {
+      out.cache_status = "no local harmonic fallback";
+      out.warnings.push_back("no usable local harmonic tide station found");
+      out.confidence.tier = "very_low";
+      out.confidence.summary = "no local harmonic tide station";
+      out.confidence.score = 0.0;
+      out.offline_ready = false;
+    }
+
+    OfficialTideReference official;
+    if (NearestOfficialReference(point.lat, point.lon, utc, &official)) {
+      out.has_official_reference = true;
+      out.official_reference = official;
+      out.official_metadata_available = true;
+      out.observed_feed_available = official.observed_water_level_available;
+      if (!official.valid_for_time) {
+        out.warnings.push_back(
+            "nearest official tide reference is outside its validity window");
+      }
+      if (official.distance_nm > ready_radius_nm) {
+        out.warnings.push_back(
+            "nearest official tide reference is outside the offline-ready radius");
+      }
+      if (official.distance_nm > resolution.max_official_station_distance_nm)
+        resolution.max_official_station_distance_nm = official.distance_nm;
+    } else {
+      out.warnings.push_back("no official/government tide reference matched");
+    }
+
+    if (!out.has_official_reference || !out.official_reference.valid_for_time ||
+        out.official_reference.distance_nm > ready_radius_nm) {
+      resolution.official_coverage_ready = false;
+    }
+    if (!out.offline_ready) resolution.offline_ready = false;
+    if (!out.warnings.empty() || out.confidence.score < 0.55)
+      resolution.needs_attention = true;
+    resolution.min_confidence_score =
+        std::min(resolution.min_confidence_score, out.confidence.score);
+
+    resolution.points.push_back(out);
+  }
+
+  if (resolution.points.empty()) {
+    resolution.ok = false;
+    resolution.error = "no tide-source coverage points could be evaluated";
+    resolution.offline_ready = false;
+    resolution.official_coverage_ready = false;
+    resolution.min_confidence_score = 0.0;
+    return resolution;
+  }
+
+  if (resolution.min_confidence_score >= 0.80) {
+    resolution.confidence_tier = "high";
+  } else if (resolution.min_confidence_score >= 0.55) {
+    resolution.confidence_tier = "medium";
+  } else if (resolution.min_confidence_score >= 0.35) {
+    resolution.confidence_tier = "low";
+  } else {
+    resolution.confidence_tier = "very_low";
+  }
+
+  if (resolution.offline_ready) {
+    resolution.cache_summary =
+        "local harmonic tide fallback is cached for every requested point";
+  } else {
+    resolution.cache_summary =
+        "one or more requested points need source download, closer station data, or local observations before relying offline";
+    resolution.warnings.push_back(
+        "route/area is not fully offline-ready for tide guidance");
+  }
+
+  if (resolution.official_coverage_ready) {
+    resolution.summary =
+        "official tide reference metadata and local harmonic fallback cover the requested route/area";
+  } else if (resolution.offline_ready) {
+    resolution.summary =
+        "local harmonic fallback is available, but official coverage is incomplete or remote";
+  } else {
+    resolution.summary =
+        "tide source coverage is incomplete; verify visually and cache better regional data";
+  }
+
+  return resolution;
+}
+
 TideSourceInfo ClassifySourcePath(const std::string &path) {
   TideSourceInfo info;
   info.path = path;
