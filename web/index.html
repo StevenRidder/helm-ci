@@ -41,6 +41,21 @@
      dusk & night so bright soundings/route/labels don't glare; UI chrome (z>=6) stays above it */
   #night-film{position:absolute;inset:0;z-index:4;pointer-events:none;background:transparent;transition:background .4s ease}
 
+  /* TOOLS-5 — whole-shell NIGHT palette: a class on <html> swaps every colour var to black + low-saturation
+     red/amber (zero white/blue), so all chrome that uses the vars (toolbar, rail, drawers, instruments,
+     labels) goes dark together. Transient inline-coloured popups (e.g. the AIS card) are a known follow-up. */
+  :root.theme-night{
+    --glass:rgba(8,3,1,.86);--glass2:rgba(22,9,4,.74);
+    --line:rgba(224,112,58,.18);--line2:rgba(224,112,58,.08);
+    --ctext:#d2843a;--cdim:#a85f2c;--cdim2:#7a431f;
+    --accent:#e0703a;--mag:#b04a78;--ok:#b5642a;--danger:#ff5a52;--warn:#d98a3e;
+  }
+  :root.theme-night, :root.theme-night body{background:#000}
+  #bril-wrap{display:flex;align-items:center;gap:7px;margin-left:8px;padding:0 4px}
+  #bril-wrap[hidden]{display:none}
+  #bril-wrap .ico{font-size:13px;color:var(--cdim)}
+  #bril-wrap input[type=range]{width:84px}
+
   /* ---- shared glass ---- */
   .glass{background:var(--glass);backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);
     border:.5px solid var(--line);box-shadow:0 18px 60px -24px rgba(0,0,0,.85)}
@@ -397,6 +412,10 @@
   </div>
   <div class="seg" id="theme-seg">
     <span class="on" data-theme="day">Day</span><span data-theme="dusk">Dusk</span><span data-theme="night">Night</span>
+  </div>
+  <div id="bril-wrap" hidden title="Night brilliance — dim the chart toward black for night vision">
+    <span class="ico" aria-hidden="true">◐</span>
+    <input id="bril" type="range" min="0" max="100" value="45" aria-label="Night brilliance">
   </div>
 </div>
 
@@ -1189,23 +1208,48 @@
     }));
   })();
 
-  // Day / Dusk / Night — reskin the raster basemap (satellite + NOAA charts).
+  // Day / Dusk / Night (TOOLS-5) — a real night display: dim+desaturate EVERY raster basemap, swap the
+  // whole UI shell to a black/red night palette (zero white/blue), and a brilliance control that takes the
+  // chart toward black for night vision. A raster chart's white background can't truly reach black by
+  // dimming (it's a flat image) — the red film does the rest of the darkening + the tint.
   (function () {
     const film = document.createElement('div'); film.id = 'night-film'; document.body.appendChild(film);
+    // NIGHT: hard dim + full desaturate + NO hue shift. (The old 205° pushed the chart toward BLUE — the
+    // single worst colour for both night vision and melatonin. brightness-max is then driven by brilliance.)
     const THEMES = {
-      day:   { 'raster-brightness-max': 1,    'raster-saturation': 0,     'raster-contrast': 0,    'raster-hue-rotate': 0 },
-      dusk:  { 'raster-brightness-max': 0.74, 'raster-saturation': -0.18, 'raster-contrast': 0.06, 'raster-hue-rotate': 18 },
-      night: { 'raster-brightness-max': 0.4,  'raster-saturation': -0.5,  'raster-contrast': 0.14, 'raster-hue-rotate': 205 }
+      day:   { 'raster-brightness-min': 0, 'raster-brightness-max': 1,    'raster-saturation': 0,     'raster-contrast': 0,     'raster-hue-rotate': 0 },
+      dusk:  { 'raster-brightness-min': 0, 'raster-brightness-max': 0.72, 'raster-saturation': -0.2,  'raster-contrast': 0.04,  'raster-hue-rotate': 0 },
+      night: { 'raster-brightness-min': 0, 'raster-brightness-max': 0.3,  'raster-saturation': -0.85, 'raster-contrast': -0.05, 'raster-hue-rotate': 0 }
     };
-    // warm dim laid over the whole chart so vector overlays (soundings/route/labels) dim too — night vision
-    const FILM = { day: 'transparent', dusk: 'rgba(92,44,10,0.13)', night: 'rgba(44,9,3,0.40)' };
+    const NIGHT_TINT = '24,6,3';                 // deep-red film (rgb); opacity comes from brilliance
+    const seg = document.querySelectorAll('#theme-seg span');
+    const brilWrap = document.getElementById('bril-wrap');
+    const bril = document.getElementById('bril');
+    let cur = 'day';
+
+    // Apply a raster recipe to EVERY raster layer in the style (navionics / sat / google / bing / arcgis /
+    // charts / enc) — NOT a hardcoded id list, so whatever basemap you're on actually dims.
+    function paintRasters(p) {
+      try { (map.getStyle().layers || []).forEach(l => { if (l.type === 'raster')
+        Object.keys(p).forEach(k => { try { map.setPaintProperty(l.id, k, p[k]); } catch (e) {} }); }); } catch (e) {}
+    }
+    // brilliance v∈[0..1] (night only): one slider drives basemap brightness + red-film opacity together,
+    // from "dim" to "near-black red". Persisted via HelmStore so it survives a reload.
+    function applyBrilliance() {
+      if (cur !== 'night') { film.style.background = (cur === 'dusk') ? 'rgba(92,44,10,0.13)' : 'transparent'; return; }
+      const v = (window.HelmStore ? +HelmStore.get('ui.nightBrilliance', 45) : 45) / 100;
+      paintRasters({ 'raster-brightness-max': 0.55 - 0.45 * v });           // 0.55 (dimmer) → 0.10 (darkest)
+      film.style.background = 'rgba(' + NIGHT_TINT + ',' + (0.18 + 0.62 * v).toFixed(2) + ')';   // 0.18 → 0.80
+    }
     function applyTheme(t) {
       const p = THEMES[t]; if (!p) return;
-      ['satellite', 'charts', 'enc-chart'].forEach(id => { if (map.getLayer(id)) Object.keys(p).forEach(k => map.setPaintProperty(id, k, p[k])); });
-      film.style.background = FILM[t] || 'transparent';
+      cur = t;
+      paintRasters(p);
+      document.documentElement.classList.toggle('theme-night', t === 'night');   // swaps every colour var
+      document.documentElement.classList.toggle('theme-dusk', t === 'dusk');
+      if (brilWrap) brilWrap.hidden = (t !== 'night');
+      applyBrilliance();
     }
-    // TOOLS-7: theme survives reload via HelmStore (defaults to 'day' if unset / storage unavailable).
-    const seg = document.querySelectorAll('#theme-seg span');
     function selectTheme(t, persist) {
       if (!THEMES[t]) t = 'day';
       seg.forEach(o => o.classList.toggle('on', o.dataset.theme === t));
@@ -1213,9 +1257,13 @@
       if (persist && window.HelmStore) HelmStore.set('ui.theme', t);
     }
     seg.forEach(s => s.addEventListener('click', () => selectTheme(s.dataset.theme, true)));
+    if (bril) {
+      bril.value = window.HelmStore ? HelmStore.get('ui.nightBrilliance', 45) : 45;
+      bril.addEventListener('input', () => { if (window.HelmStore) HelmStore.set('ui.nightBrilliance', +bril.value); applyBrilliance(); });
+    }
     const restore = () => selectTheme(window.HelmStore ? HelmStore.get('ui.theme', 'day') : 'day', false);
-    restore();                                  // set the segment + film NOW (don't depend on the load-event race)
-    if (!map.isStyleLoaded()) map.once('load', restore);   // re-apply the raster paint once the layers exist
+    restore();                                  // set the segment + paint NOW (don't depend on the load race)
+    if (!map.isStyleLoaded()) map.once('load', restore);   // re-apply once the raster layers exist
   })();
 
   // make the route box draggable by its title bar
