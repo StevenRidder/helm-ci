@@ -94,6 +94,43 @@
       pins + nowEl + '</svg>';
   }
 
+  // ---------- confidence + official-source surfacing ----------
+  // The engine already computes a trust verdict (tier/score/why) and an official government reference
+  // on /tides/summary.confidence — we render it honestly (engine's own captions, no invented safety text).
+  function tierClass(t) { t = String(t || '').toLowerCase(); return t === 'high' ? 'ok' : ((t === 'moderate' || t === 'medium') ? 'mod' : 'warn'); }
+  // glance verdict — shown in the panel AND the map tap card, right under the licensing chips
+  function confLine(sum) {
+    var c = sum && sum.confidence; if (!c || !c.tier) return '';
+    return '<div class="t-conf-line"><span class="t-conf-pill ' + tierClass(c.tier) + '">' + esc(String(c.tier).toUpperCase()) + '</span>' +
+      '<span class="t-conf-cap">' + esc(c.summary || c.basis || '') + '</span></div>';
+  }
+  // deep-dive (panel only): the "why" audit trail + the official government reference card
+  function confidenceDetail(sum) {
+    var c = sum && sum.confidence; if (!c) return '';
+    var why = (c.factors && c.factors.length)
+      ? '<div class="t-conf"><div class="lbl">Why this confidence</div><ul class="t-why">' +
+        c.factors.map(function (f) { return '<li>' + esc(f) + '</li>'; }).join('') + '</ul></div>'
+      : '';
+    return why + officialRefCard(c);
+  }
+  function officialRefCard(c) {
+    var o = c && c.official_reference; if (!o || !(o.station_name || o.provider)) return '';
+    var meta = [];
+    if (typeof o.distance_nm === 'number' && o.distance_nm >= 0) meta.push(Math.round(o.distance_nm) + ' nm');
+    if (o.datum_name) meta.push('datum: ' + esc(o.datum_name));
+    if (o.valid_for_time) meta.push('valid now');
+    else if (o.valid_start_utc) meta.push('valid ' + esc(String(o.valid_start_utc).slice(0, 10)) + '→' + esc(String(o.valid_end_utc || '').slice(0, 10)));
+    var obs = o.observed_water_level_available ? '<span class="t-chip ok">observed feed</span>' : '<span class="t-chip">no live obs</span>';
+    return '<div class="t-oref">' +
+      '<div class="t-oref-h">Official reference' + (o.official ? '<span class="t-chip ok">official</span>' : '') + '</div>' +
+      '<div class="t-oref-n">' + esc(o.station_name || '—') + '</div>' +
+      (o.provider ? '<div class="t-oref-m">' + esc(o.provider) + '</div>' : '') +
+      (o.product ? '<div class="t-oref-m t-oref-p">' + esc(o.product) + '</div>' : '') +
+      (meta.length ? '<div class="t-oref-m">' + meta.join(' · ') + '</div>' : '') +
+      '<div class="t-oref-c">' + obs + '</div>' +
+      '</div>';
+  }
+
   // ---------- the tide card body (shared by the panel + the map tap popup) ----------
   function cardHTML(sum, curve) {
     var st = (sum && sum.station) || {};
@@ -114,6 +151,7 @@
         '<div class="t-meta">' + (st.distance_nm >= 0 ? (Math.round(st.distance_nm * 10) / 10) + ' nm to station · ' : '') +
         (st.has_datum ? 'datum ' + fmtM(st.datum_m) + ' m' : 'no datum') + '</div>' +
         '<div class="t-chips">' + chips + '</div></div>' +
+      confLine(sum) +
       farHint +
       next +
       (curve ? '<div class="t-curvewrap">' + curveSVG(curve) + '</div>' : '');
@@ -144,6 +182,23 @@
       '.t-seg button.on{background:var(--accent);color:#04121c;font-weight:600}' +
       '.t-hint{font-size:10px;color:var(--warn);margin:10px 0;padding:8px 9px;border:.5px solid rgba(255,192,106,.3);border-radius:8px;background:rgba(255,192,106,.08);line-height:1.4}' +
       '.t-hint b{color:var(--ctext)}' +
+      '.t-conf-line{display:flex;align-items:flex-start;gap:8px;margin:10px 0;padding-top:10px;border-top:.5px solid var(--line2)}' +
+      '.t-conf-pill{flex:0 0 auto;font-size:9.5px;font-weight:600;letter-spacing:.5px;padding:2px 8px;border-radius:999px;border:.5px solid;height:fit-content}' +
+      '.t-conf-pill.warn{color:var(--warn);border-color:rgba(255,192,106,.45);background:rgba(255,192,106,.09)}' +
+      '.t-conf-pill.mod{color:var(--accent);border-color:rgba(91,192,255,.45);background:rgba(91,192,255,.09)}' +
+      '.t-conf-pill.ok{color:var(--ok);border-color:rgba(70,224,160,.45);background:rgba(70,224,160,.09)}' +
+      '.t-conf-cap{font-size:10.5px;color:var(--cdim);line-height:1.4}' +
+      '.t-conf{margin-top:12px;padding-top:10px;border-top:.5px solid var(--line2)}' +
+      '.t-why{margin:6px 0 0;padding:0;list-style:none}' +
+      '.t-why li{position:relative;font-size:10px;color:var(--cdim);line-height:1.5;padding-left:12px}' +
+      '.t-why li:before{content:"";position:absolute;left:3px;top:7px;width:3px;height:3px;border-radius:50%;background:var(--cdim2)}' +
+      '.t-oref{margin-top:10px;padding:9px 10px;border:.5px solid var(--line);border-radius:10px;background:var(--glass2)}' +
+      '.t-oref-h{font-size:9px;text-transform:uppercase;letter-spacing:.6px;color:var(--cdim2);display:flex;align-items:center;gap:6px;margin-bottom:4px}' +
+      '.t-oref-n{font-size:12.5px;color:var(--ctext)}' +
+      '.t-oref-m{font-size:10px;color:var(--cdim);margin-top:1px;font-variant-numeric:tabular-nums}' +
+      '.t-oref-p{color:var(--cdim2);font-style:italic}' +
+      '.t-oref-c{margin-top:6px}' +
+      '.t-chip.mod{color:var(--accent);border-color:rgba(91,192,255,.35)}' +
       '</style>';
   }
 
@@ -156,7 +211,7 @@
     Promise.all([getJSON('/tides/summary' + q + pol()), getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; })])
       .then(function (r) {
         var sum = r[0], curve = r[1];
-        el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + sourceLedger(sum);
+        el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + confidenceDetail(sum) + sourceLedger(sum);
       })
       .catch(function (e) { el.querySelector('.t-body').innerHTML = '<div class="t-empty" style="color:var(--danger)">tides: ' + esc(e.message) + '</div>'; });
   }
