@@ -57,6 +57,7 @@
 #include "ocpn_region.h"
 #include "ocpn_pixel.h"
 #include "color_types.h"
+#include "helm_tides.h"
 #include "s52plib.h"
 #include "chartsymbols.h"
 #include "s57registrar_mgr.h"
@@ -389,6 +390,269 @@ static std::string json_escape(const std::string& s) {
     }
   }
   return o;
+}
+
+static std::string query_param(const std::string& uri, const std::string& key) {
+  const size_t q = uri.find('?');
+  if (q == std::string::npos) return "";
+  const std::string needle = key + "=";
+  for (size_t p = q + 1; p < uri.size();) {
+    size_t e = uri.find('&', p);
+    if (e == std::string::npos) e = uri.size();
+    if (uri.compare(p, needle.size(), needle) == 0)
+      return url_decode(uri.substr(p + needle.size(), e - p - needle.size()));
+    p = e + 1;
+  }
+  return "";
+}
+
+static double query_double_or(const std::string& uri, const std::string& key,
+                              double fallback) {
+  std::string v = query_param(uri, key);
+  if (v.empty()) return fallback;
+  char* end = nullptr;
+  double d = std::strtod(v.c_str(), &end);
+  return end && *end == '\0' ? d : fallback;
+}
+
+static std::string tide_source_json(const helm::tides::TideSourceInfo& s) {
+  return "{\"path\":\"" + json_escape(s.path) +
+         "\",\"basename\":\"" + json_escape(s.basename) +
+         "\",\"license\":\"" + json_escape(s.license) +
+         "\",\"provenance\":\"" + json_escape(s.provenance) +
+         "\",\"redistribution_status\":\"" +
+         json_escape(s.redistribution_status) +
+         "\",\"redistribution_cleared\":" +
+         (s.redistribution_cleared ? "true" : "false") +
+         ",\"enabled_by_default\":" +
+         (s.enabled_by_default ? "true" : "false") + "}";
+}
+
+static std::string tide_official_reference_json(
+    const helm::tides::OfficialTideReference& r) {
+  char nums[160];
+  std::snprintf(nums, sizeof nums,
+    "\"lat\":%.6f,\"lon\":%.6f,\"distance_nm\":%.6f,"
+    "\"official\":%s,\"prediction_calendar\":%s,"
+    "\"observed_water_level_available\":%s,\"valid_for_time\":%s",
+    r.lat, r.lon, r.distance_nm, r.official ? "true" : "false",
+    r.prediction_calendar ? "true" : "false",
+    r.observed_water_level_available ? "true" : "false",
+    r.valid_for_time ? "true" : "false");
+  return "{\"provider\":\"" + json_escape(r.provider) +
+         "\",\"product\":\"" + json_escape(r.product) +
+         "\",\"station_id\":\"" + json_escape(r.station_id) +
+         "\",\"station_name\":\"" + json_escape(r.station_name) +
+         "\",\"country\":\"" + json_escape(r.country) +
+         "\",\"source_url\":\"" + json_escape(r.source_url) +
+         "\",\"observed_url\":\"" + json_escape(r.observed_url) +
+         "\",\"datum_name\":\"" + json_escape(r.datum_name) +
+         "\",\"issue_date\":\"" + json_escape(r.issue_date) +
+         "\",\"valid_start_utc\":\"" + json_escape(r.valid_start_utc) +
+         "\",\"valid_end_utc\":\"" + json_escape(r.valid_end_utc) +
+         "\",\"interpolation_method\":\"" +
+         json_escape(r.interpolation_method) + "\"," + nums + "}";
+}
+
+static std::string tide_confidence_json(
+    const helm::tides::TideConfidence& c) {
+  char nums[320];
+  std::snprintf(nums, sizeof nums,
+    "\"score\":%.3f,\"harmonic_station_distance_nm\":%.6f,"
+    "\"official_station_distance_nm\":%.6f,"
+    "\"has_official_reference\":%s,"
+    "\"official_reference_valid_for_time\":%s,"
+    "\"live_observation_available\":%s",
+    c.score, c.harmonic_station_distance_nm, c.official_station_distance_nm,
+    c.has_official_reference ? "true" : "false",
+    c.official_reference_valid_for_time ? "true" : "false",
+    c.live_observation_available ? "true" : "false");
+  std::string factors = "[";
+  for (size_t i = 0; i < c.factors.size(); ++i) {
+    if (i) factors += ",";
+    factors += "\"" + json_escape(c.factors[i]) + "\"";
+  }
+  factors += "]";
+  return "{\"tier\":\"" + json_escape(c.tier) +
+         "\"," + nums +
+         ",\"summary\":\"" + json_escape(c.summary) +
+         "\",\"basis\":\"" + json_escape(c.basis) +
+         "\",\"factors\":" + factors +
+         ",\"official_reference\":" +
+         (c.has_official_reference
+              ? tide_official_reference_json(c.official_reference)
+              : std::string("null")) + "}";
+}
+
+static std::string tide_station_json(const helm::tides::TideStation& s) {
+  char b[320];
+  std::snprintf(b, sizeof b,
+    "\"index\":%d,\"type\":\"%c\",\"lat\":%.6f,\"lon\":%.6f,"
+    "\"distance_nm\":%.6f,\"datum_m\":%.6f,\"has_datum\":%s,"
+    "\"source_redistribution_cleared\":%s,\"source_enabled_by_default\":%s",
+    s.index, s.type, s.lat, s.lon, s.distance_nm, s.datum_m,
+    s.has_datum ? "true" : "false",
+    s.source_redistribution_cleared ? "true" : "false",
+    s.source_enabled_by_default ? "true" : "false");
+  return "{\"name\":\"" + json_escape(s.name) +
+         "\",\"reference\":\"" + json_escape(s.reference_name) +
+         "\",\"source\":\"" + json_escape(s.source) +
+         "\",\"source_license\":\"" + json_escape(s.source_license) +
+         "\",\"source_provenance\":\"" + json_escape(s.source_provenance) +
+         "\",\"source_redistribution_status\":\"" +
+         json_escape(s.source_redistribution_status) +
+         "\",\"unit\":\"" + json_escape(s.unit) + "\"," + b + "}";
+}
+
+static std::string tide_event_json(const helm::tides::TideEvent& e) {
+  if (!e.ok) return "{\"ok\":false,\"error\":\"" + json_escape(e.error) + "\"}";
+  char b[96];
+  std::snprintf(b, sizeof b, "%.6f", e.value_m);
+  return "{\"ok\":true,\"kind\":\"" + json_escape(e.kind) +
+         "\",\"search_start_utc\":\"" +
+         helm::tides::FormatUtcIso8601(e.search_start_utc) +
+         "\",\"event_utc\":\"" + helm::tides::FormatUtcIso8601(e.event_utc) +
+         "\",\"value_m\":" + b + "}";
+}
+
+static std::mutex g_tide_mtx;  // TCMgr is OpenCPN-global state; keep HTTP workers out of each other.
+
+static std::string tide_summary_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  const bool all = query_param(uri, "all") == "1";
+  const double lat = query_double_or(uri, "lat", all ? -18.1248 : 21.3069);
+  const double lon = query_double_or(uri, "lon", all ? 178.4501 : -157.8583);
+  std::string iso = query_param(uri, "time");
+  std::time_t utc = 0;
+  if (iso.empty()) {
+    utc = std::time(nullptr);
+    iso = helm::tides::FormatUtcIso8601(utc);
+  } else if (!helm::tides::ParseUtcIso8601(iso, &utc)) {
+    return "{\"ok\":false,\"error\":\"bad UTC time; use YYYY-MM-DDTHH:MM:SSZ\"}";
+  }
+
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy =
+      all ? helm::tides::TideSourcePolicy::kAllLocal
+          : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error))
+    return "{\"ok\":false,\"error\":\"" + json_escape(error) + "\"}";
+
+  helm::tides::TidePrediction p = engine.PredictNearest(lat, lon, utc);
+  if (!p.ok) return "{\"ok\":false,\"error\":\"" + json_escape(p.error) + "\"}";
+  helm::tides::TideEvent next = engine.NextHighLowEvent(p.station.index, utc);
+
+  char nums[256];
+  std::snprintf(nums, sizeof nums,
+    "\"lat\":%.6f,\"lon\":%.6f,\"value_m\":%.6f,\"has_direction\":%s",
+    lat, lon, p.value_m, p.has_direction ? "true" : "false");
+
+  std::string sources = "[";
+  std::vector<helm::tides::TideSourceInfo> loaded = engine.LoadedSources();
+  for (size_t i = 0; i < loaded.size(); ++i) {
+    if (i) sources += ",";
+    sources += tide_source_json(loaded[i]);
+  }
+  sources += "]";
+
+  return "{\"ok\":true,\"engine\":\"opencpn-tcmgr\",\"source_policy\":\"" +
+         std::string(all ? "all-local" : "redistributable-only") +
+         "\",\"time_utc\":\"" + helm::tides::FormatUtcIso8601(utc) +
+         "\"," + nums +
+         ",\"direction_deg\":" +
+         (p.has_direction ? std::to_string(p.direction_deg) : "null") +
+         ",\"station\":" + tide_station_json(p.station) +
+         ",\"loaded_sources\":" + sources +
+         ",\"confidence\":" + tide_confidence_json(p.confidence) +
+         ",\"next_event\":" + tide_event_json(next) + "}";
+}
+
+// TIDES (UI spec): the whole 24h curve in ONE request — load the engine + resolve the station once,
+// then Predict() each sample + walk the high/low events in-window, all under the single tide lock.
+// Replaces the dashboard's N serial /tides/summary round-trips (each of which reloaded the engine).
+static std::string tide_curve_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  const bool all = query_param(uri, "all") == "1";
+  const double lat = query_double_or(uri, "lat", all ? -18.1248 : 21.3069);
+  const double lon = query_double_or(uri, "lon", all ? 178.4501 : -157.8583);
+  std::string iso = query_param(uri, "start");
+  std::time_t start = 0;
+  if (iso.empty()) start = std::time(nullptr);
+  else if (!helm::tides::ParseUtcIso8601(iso, &start)) return "{\"ok\":false,\"error\":\"bad start time; use YYYY-MM-DDTHH:MM:SSZ\"}";
+  double hours = query_double_or(uri, "hours", 24.0); if (hours < 1) hours = 1; if (hours > 96) hours = 96;
+  double stepmin = query_double_or(uri, "step", 30.0); if (stepmin < 10) stepmin = 10;
+  const std::time_t step_s = (std::time_t)(stepmin * 60.0);
+  const std::time_t end = start + (std::time_t)(hours * 3600.0);
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy = all ? helm::tides::TideSourcePolicy::kAllLocal : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error)) return "{\"ok\":false,\"error\":\"" + json_escape(error) + "\"}";
+  helm::tides::TidePrediction p0 = engine.PredictNearest(lat, lon, start);
+  if (!p0.ok) return "{\"ok\":false,\"error\":\"" + json_escape(p0.error) + "\"}";
+  const int idx = p0.station.index;
+  std::string samples = "["; bool sf = true;
+  for (std::time_t t = start; t <= end; t += step_s) {
+    helm::tides::TidePrediction p = engine.Predict(idx, t);
+    if (!p.ok) continue;
+    char b[112]; std::snprintf(b, sizeof b, "{\"t_utc\":\"%s\",\"value_m\":%.6f}", helm::tides::FormatUtcIso8601(t).c_str(), p.value_m);
+    if (!sf) samples += ","; sf = false; samples += b;
+  }
+  samples += "]";
+  std::string events = "["; bool ef = true; std::time_t cursor = start;
+  for (int guard = 0; guard < 64; ++guard) {
+    helm::tides::TideEvent ev = engine.NextHighLowEvent(idx, cursor);
+    if (!ev.ok || ev.event_utc > end) break;
+    char b[176]; std::snprintf(b, sizeof b, "{\"kind\":\"%s\",\"event_utc\":\"%s\",\"value_m\":%.6f}", ev.kind.c_str(), helm::tides::FormatUtcIso8601(ev.event_utc).c_str(), ev.value_m);
+    if (!ef) events += ","; ef = false; events += b;
+    cursor = ev.event_utc + 60;
+  }
+  events += "]";
+  char meta[96]; std::snprintf(meta, sizeof meta, "\"step_min\":%.0f,\"datum_m\":%.6f", stepmin, p0.station.datum_m);
+  return "{\"ok\":true,\"engine\":\"opencpn-tcmgr\",\"source_policy\":\"" + std::string(all ? "all-local" : "redistributable-only") +
+         "\",\"start_utc\":\"" + helm::tides::FormatUtcIso8601(start) + "\"," + std::string(meta) +
+         ",\"unit\":\"meters\",\"station\":" + tide_station_json(p0.station) +
+         ",\"samples\":" + samples + ",\"events\":" + events + "}";
+}
+
+// TIDES (UI spec): enumerate usable TIDE stations in a bbox as GeoJSON, for the chart-marker layer.
+// The C++ engine has Stations(); this is the first HTTP exposure of it.
+static std::string tide_stations_json(const std::string& uri) {
+  std::lock_guard<std::mutex> lock(g_tide_mtx);
+  const bool all = query_param(uri, "all") == "1";
+  std::string bbox = query_param(uri, "bbox");
+  double w = -180, s = -90, e = 180, n = 90; bool have_bbox = false;
+  if (!bbox.empty() && std::sscanf(bbox.c_str(), "%lf,%lf,%lf,%lf", &w, &s, &e, &n) == 4) have_bbox = true;
+  int limit = (int)query_double_or(uri, "limit", 200.0); if (limit < 1) limit = 1; if (limit > 1000) limit = 1000;
+  const char* tcenv = std::getenv("HELM_TCDATA_DIR");
+  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  helm::tides::TideSourcePolicy policy = all ? helm::tides::TideSourcePolicy::kAllLocal : helm::tides::TideSourcePolicy::kRedistributableOnly;
+  helm::tides::TideEngine engine;
+  std::string error;
+  if (!engine.LoadDefaultSources(tcdata, policy, &error)) return "{\"type\":\"FeatureCollection\",\"error\":\"" + json_escape(error) + "\",\"features\":[]}";
+  std::vector<helm::tides::TideStation> stations = engine.Stations();
+  std::string feats = "["; bool first = true; int count = 0;
+  for (const auto& st : stations) {
+    if (!st.is_tide() || !st.usable) continue;
+    if (have_bbox && (st.lon < w || st.lon > e || st.lat < s || st.lat > n)) continue;
+    if (count >= limit) break;
+    ++count;
+    char geo[80]; std::snprintf(geo, sizeof geo, "[%.6f,%.6f]", st.lon, st.lat);
+    char pr[224]; std::snprintf(pr, sizeof pr,
+      "\"index\":%d,\"type\":\"%c\",\"datum_m\":%.6f,\"has_datum\":%s,\"source_redistribution_cleared\":%s,\"source_enabled_by_default\":%s",
+      st.index, st.type, st.datum_m, st.has_datum ? "true" : "false",
+      st.source_redistribution_cleared ? "true" : "false", st.source_enabled_by_default ? "true" : "false");
+    if (!first) feats += ","; first = false;
+    feats += "{\"type\":\"Feature\",\"geometry\":{\"type\":\"Point\",\"coordinates\":" + std::string(geo) +
+             "},\"properties\":{\"name\":\"" + json_escape(st.name) + "\",\"source_license\":\"" + json_escape(st.source_license) + "\"," + std::string(pr) + "}}";
+  }
+  feats += "]";
+  return "{\"type\":\"FeatureCollection\",\"source_policy\":\"" + std::string(all ? "all-local" : "redistributable-only") +
+         "\",\"count\":" + std::to_string(count) + ",\"features\":" + feats + "}";
 }
 
 // CHART-10: S-57 object query at a tapped point. Runs ONLY from the main-thread job loop (it touches
@@ -2178,6 +2442,12 @@ public:
         }
         if (path == "/health") { h["Content-Type"] = "application/json";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
+        if (path == "/tides/summary") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_summary_json(req->uri)); }
+        if (path == "/tides/curve") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: batched 24h curve + events in one call
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_curve_json(req->uri)); }
+        if (path == "/tides/stations") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: station markers (GeoJSON)
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_stations_json(req->uri)); }
         if (path == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
           int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
           std::string edtn, eddate;                                             // CONTRACT-5b: cell edition from the loaded chart

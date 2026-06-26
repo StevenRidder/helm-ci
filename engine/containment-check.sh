@@ -48,7 +48,7 @@ if [ -d "$BIN" ]; then
   else
     ok "no .dylib/.so/.framework emitted — the GPL engine ships only inside executables"
   fi
-  for b in helm-engine helm-server helm-tiles chart-spike; do
+  for b in helm-engine helm-server helm-tiles chart-spike helm-tides-smoke; do
     [ -e "$BIN/$b" ] || continue
     if file -b "$BIN/$b" | grep -q 'executable'; then
       ok "$b is a standalone Mach-O executable (the GPL stays a process)"

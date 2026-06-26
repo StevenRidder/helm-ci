@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,127 @@ if (APPLE)
+@@ -90,3 +90,153 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -96,6 +96,32 @@ index 1909f44..ae59f3e 100644
 +set_property(TARGET chart-spike PROPERTY ENABLE_EXPORTS ON)
 +target_link_libraries(chart-spike PRIVATE ocpn::chart-render)
 +
++# ---- Helm tides: OpenCPN harmonic tide/current engine behind a headless wrapper ----
++set(HELM_TIDES_GUI_SRC
++  ${PROJECT_SOURCE_DIR}/gui/src/tcmgr.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/tc_data_source.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/tc_data_factory.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/tcds_ascii_harmonic.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/tcds_binary_harmonic.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/station_data.cpp
++  ${PROJECT_SOURCE_DIR}/gui/src/idx_entry.cpp
++  ${PROJECT_SOURCE_DIR}/model/src/logger.cpp
++)
++add_library(helm-tides STATIC ${HELM_TIDES_GUI_SRC} helm_tides.cpp helm_tides_stubs.cpp)
++target_include_directories(helm-tides PUBLIC
++  ${PROJECT_SOURCE_DIR}/include
++  ${PROJECT_SOURCE_DIR}/model/include
++  ${PROJECT_SOURCE_DIR}/gui/include
++  ${PROJECT_SOURCE_DIR}/gui/include/gui
++  ${PROJECT_SOURCE_DIR}/resources)
++target_compile_definitions(helm-tides PUBLIC USE_MOCK_DEFS OCPN_HEADLESS)
++target_link_libraries(helm-tides PUBLIC ${wxWidgets_LIBRARIES})
++add_library(ocpn::tides ALIAS helm-tides)
++
++add_executable(helm-tides-smoke helm_tides_smoke.cpp)
++set_property(TARGET helm-tides-smoke PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-tides-smoke PRIVATE ocpn::tides)
++
 +# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
 +add_executable(helm-engine helm_engine.cpp api_shim.cpp)
 +set_property(TARGET helm-engine PROPERTY ENABLE_EXPORTS ON)
@@ -129,4 +155,4 @@ index 1909f44..ae59f3e 100644
 +add_executable(helm-server helm_server.cpp)
 +set_property(TARGET helm-server PROPERTY ENABLE_EXPORTS ON)
 +target_include_directories(helm-server PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
-+target_link_libraries(helm-server PRIVATE ocpn::chart-render ixwebsocket)
++target_link_libraries(helm-server PRIVATE ocpn::chart-render ocpn::tides ixwebsocket)
