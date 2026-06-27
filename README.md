@@ -147,9 +147,14 @@ code plus safe sample/public data.
 For real charting, provide your own local chart data at runtime:
 
 - point `HELM_ENC` at an OpenCPN-compatible ENC `.000` file for S-52 rendering;
+- generate or copy user-owned depth overlay GeoJSON into `~/.helm/data`, or set
+  `HELM_USER_DATA_ROOT` to another local data directory;
 - serve your own MBTiles/raster basemap packs locally if you want chart or
   imagery underlays;
 - keep private chart packs, downloaded imagery, and runtime caches outside Git.
+
+The app serves that local data directory at same-origin `/user-data/` and
+prefers those user-owned overlays over the bundled `web/data` demo fixtures.
 
 The optional `Online fill` layer is an internet/cache underlay for filling gaps
 beneath local/user-owned charts. It is off by default and is not a replacement

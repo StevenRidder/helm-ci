@@ -1145,22 +1145,23 @@
     const tcpaOpening = valid && p.tcpa != null && (+p.tcpa) < 0;
     const stale = p.ageSec != null && p.ageSec > 120;
 
-    // big two-up safety stat (the two numbers that decide a threat), colored to the risk tier
-    const stat = (l, v, u, extra) => '<div style="flex:1;background:rgba(255,255,255,.04);border:1px solid ' + toneCol + '55;border-radius:11px;padding:8px 11px">'
+    // big stat box. CPA/TCPA are the THREAT pair → tinted to the risk tier. SOG/Range are CONTEXT →
+    // pass neutral=true so they read big but never alarm-coloured (range/speed aren't a tier signal).
+    const stat = (l, v, u, extra, neutral) => '<div style="flex:1;background:rgba(255,255,255,.04);border:1px solid ' + (neutral ? 'rgba(255,255,255,.10)' : toneCol + '55') + ';border-radius:11px;padding:8px 11px">'
       + '<div style="font-size:11.5px;letter-spacing:.05em;color:var(--cdim)">' + l + '</div>'
-      + '<div style="font-size:23px;font-weight:600;color:' + (tone === 'ok' ? '#e6eef5' : toneCol) + ';line-height:1.1">' + v
+      + '<div style="font-size:23px;font-weight:600;color:' + ((neutral || tone === 'ok') ? '#e6eef5' : toneCol) + ';line-height:1.1">' + v
       + '<span style="font-size:12.5px;color:var(--cdim)"> ' + u + '</span></div>' + (extra || '') + '</div>';
 
     const row = (l, v) => '<div style="display:flex;justify-content:space-between;gap:14px;font-size:14px;padding:2px 0">'
       + '<span style="color:var(--cdim)">' + l + '</span><span style="font-variant-numeric:tabular-nums">' + v + '</span></div>';
     const sec = t => '<div style="font-size:10.5px;letter-spacing:.07em;color:var(--cdim);text-transform:uppercase;margin:10px 0 3px">' + t + '</div>';
 
+    // SOG + Range are promoted to the big-stat grid above; Motion keeps the directional detail.
     const motion = [
-      row('SOG', aisNum(p.sog, 1) + ' kn'), row('COG', aisNum(p.cog, 0) + '°'),
+      row('COG', aisNum(p.cog, 0) + '°'),
       (p.hdg != null && p.hdg < 360) ? row('HDG', aisNum(p.hdg, 0) + '°') : '',
       (meta.rot && meta.rot(p.rot) != null) ? row('ROT', meta.rot(p.rot)) : '',
       (p.altitude != null && +p.altitude > 0) ? row('Altitude', Math.round(p.altitude) + ' m') : '',   // SAR aircraft (AIS msg 9)
-      (p.range != null) ? row('Range', aisNum(p.range, 2) + ' NM') : '',
       (p.brg != null) ? row('Bearing', aisNum(p.brg, 0) + '°') : ''
     ].join('');
 
@@ -1261,6 +1262,9 @@
       + badge
       + '<div style="display:flex;gap:8px;margin:8px 0 4px">'
       +   stat('CPA', cpa, 'NM') + stat('TCPA', tcpa, 'min', tcpaOpening ? '<div style="font-size:10.5px;color:#5dd0b0">opening</div>' : '')
+      + '</div>'
+      + '<div style="display:flex;gap:8px;margin:0 0 4px">'
+      +   stat('SOG', aisNum(p.sog, 1), 'kn', '', true) + stat('Range', aisNum(p.range, 2), 'NM', '', true)
       + '</div>'
       + '<div style="font-size:12.5px;font-weight:600;color:' + toneCol + ';margin:0 0 2px">' + riskLabel + '</div>'
       + avoid
