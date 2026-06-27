@@ -1,112 +1,132 @@
 # Architecture
 
-> Distilled from the architecture agent + adversarial feasibility review. Decisions are
-> tracked as ADRs in [decisions/](decisions/).
+Helm is a local-first marine chartplotter system, not a single monolithic app.
+The public alpha has four intentional parts:
 
-## Shape
-
-```
-┌──────────────────────────────────────────────────────────────┐
-│  Native Apple front-ends  (not a port, not a cross-UI toolkit) │
-│   macOS  SwiftUI + AppKit   │  iPad  SwiftUI+Metal │ iPhone …   │
-└───────────────┬──────────────────────────────────────────────┘
-                │  (thin platform glue)
-┌───────────────▼──────────────────────────────────────────────┐
-│  Shared C++ nav core  (one codebase, all three targets)        │
-│   chart access + quilting + chart groups                       │
-│   S-57/S-52/CM93 ENC engine  (contained GPL OR GDAL rebuild)   │
-│   GRIB 1/2 parse + weather rendering                           │
-│   isochrone router + polar handling                            │
-│   AIS + CPA/TCPA + guard zones + SART + MOB                    │
-│   tides/currents harmonics                                     │
-│   SignalK / NMEA0183 connection manager + normalization        │
-│   GPX / ENC / mbtiles / polar / GRIB I/O                       │
-└───────────────┬──────────────────────────────────────────────┘
-                │
-┌───────────────▼──────────────┐   ┌──────────────────────────┐
-│  Hybrid renderer (Metal)      │   │  On-demand tiler          │
-│   MapLibre Native:            │   │  (server / edge, NOT       │
-│     raster · satellite ·      │   │   on-device)               │
-│     weather · quilted mbtiles │   │  bbox → tiles → mbtiles    │
-│   + S-52 ENC engine           │   │  see CHART-PIPELINE.md     │
-│     composited on top         │   └──────────────────────────┘
-└──────────────────────────────┘
+```text
+                 browser / tablet / cockpit displays
+                               |
+                               v
+                    web/ MapLibre cockpit UI
+                               |
+                  HTTP + WebSocket, one local origin
+                               |
+                               v
+        engine/ helm-server, a headless OpenCPN-derived boat server
+             |                 |                    |
+             v                 v                    v
+      local charts       boat data feeds       optional services
+      ENC / MBTiles      NMEA / SignalK        weather / basemap fill
+             |
+             v
+      pipeline/ local data generation and import tools
 ```
 
-## Why this stack
+This split can look like "several apps" at first glance. It is really a
+boat-server architecture: the C++ process owns navigation-critical computation
+and chart rendering, while the web client is a thin, fast cockpit surface that
+can run on the same machine or another display on the boat LAN.
 
-**Shared C++ core + native Apple UIs** — not a UI toolkit, not a port.
+## Current Runnable Shape
 
-- **Rejected: fork OpenCPN / wxWidgets.** Desktop mouse toolkit; no iOS path; drags 20
-  years of legacy onto a touchscreen.
-- **Rejected: React Native.** JS-bridge overhead is wrong for a 60fps chart canvas.
-- **Rejected: Flutter.** Non-native widgets undercut the "native macOS" goal and still
-  need C++ FFI for the engine.
-- **Acceptable fallback only: Qt** — C++-native but desktop-first ergonomics on iOS.
-- **Chosen:** the platform-agnostic engine is C++ (chart math, GRIB, routing, AIS,
-  S-52); each OS gets a native front-end (SwiftUI/AppKit on macOS, SwiftUI+Metal on
-  iOS/iPadOS). This is how Aqua Map / qtVlm proved native iOS chartplotters work.
+The normal public-alpha path is the one-origin `helm-server`:
 
-## The two-renderer design (load-bearing)
+- serves the browser UI from `web/`;
+- streams navigation state over `/nav`;
+- renders chart tiles at `/chart/{z}/{x}/{y}.png`;
+- exposes chart metadata at `/catalog`;
+- exposes health at `/health`;
+- reads user-owned chart and depth data from local runtime paths.
 
-**MapLibre Native cannot render S-52.** It uses the Mapbox Style Spec and has no concept
-of IHO symbology, safety contours, or Day/Dusk/Night palettes. So:
+The server is built from `engine/vendor/cli/helm_server.cpp` by
+`engine/bootstrap.sh`. The browser is the reference client today. Native desktop
+or mobile packaging is a future distribution layer, not the thing you need in
+order to test the alpha.
 
-- **MapLibre Native (Metal)** handles everything raster: satellite, NOAA raster (NCDS),
-  quilted mbtiles, and the weather heatmap/particle layers.
-- **A dedicated S-52/S-57 engine** renders true vector ENC and is composited on top.
+## Why These Parts Exist
 
-NOAA **NCDS raster mbtiles** let Phase 1 ship real charts *before* the S-52 engine
-exists; live S-52 rendering is deferred to Phase 2.
+### `engine/`
 
-## Connectivity (network-first on iOS)
+The engine is the boat-side safety core. It reuses OpenCPN `model/` navigation
+logic and the S-52/S-57 renderer headlessly, behind an HTTP/WebSocket boundary.
+That keeps OpenCPN-derived code in a contained server process and lets the
+client stay thin.
 
-iOS has **no serial/USB** for NMEA. Boat data is ingested over the network:
+### `web/`
 
-- **SignalK** (WebSocket) — primary.
-- **NMEA 0183 over TCP/UDP** (port 10110) — fallback.
-- **BLE** — handheld GPS.
-- **Internal GPS** — phone/tablet.
-- **Autopilot output** goes over the network on iOS.
-- **Serial/USB** — macOS only.
+The browser cockpit is the main user interface. It uses MapLibre for the
+interactive map and composes Helm's layers: chart tiles, satellite/basemap
+underlays, weather, AIS, routes, tracks, alarms, depth overlays, and instrument
+state.
 
-Proven by Aqua Map, NMEAremote, qtVlm.
+### `services/`
 
-## Boat server ↔ thin displays (the iOS path)
+Services are optional local helpers. They are not required to understand the
+core product. For example, `services/basemap-fill/` can provide an optional
+cache-first online underlay beneath local charts.
 
-The engine is a **network server**; every screen — macOS, iPad, iPhone, cockpit — is a thin
-client over the boat LAN, not a host of the engine. This is how iOS works *on the GPL engine*
-without a clean-room rebuild and without shipping GPL through the App Store (network use ≠
-distribution; an arm's-length protocol client ≠ a derivative work). It also keeps `wxWidgets`,
-the C++ core, and serial ingest **on the server**, off the phone. The Phase 2 engine is
-already this server, just bound to `127.0.0.1` instead of the LAN. Rationale and the GPL
-reasoning: [ADR-0006](decisions/0006-server-client-thin-display.md).
+### `pipeline/`
 
-The stream quality *is* the iOS product surface, so it gets its own spec — one TLS origin
-(`wss://helm.local/nav` + `https://helm.local/chart/…`), Bonjour discovery, snapshot+delta
-framing with always-visible staleness, reconnect/resume over flaky WiFi, an alarm reliability
-tier (APNs critical alerts for anchor/MOB), immutable tile caching over HTTP/2, and TOFU
-pairing. See **[STREAMING-API.md](STREAMING-API.md)**.
+The pipeline contains local data tools: chart/depth extraction, demo data
+generation, and weather-layer preparation. Real chart packs, private imagery,
+MBTiles, and runtime caches stay outside Git.
 
-## The GPL boundary (critical)
+## Data Boundary
 
-OpenCPN is **GPLv2-or-later**. You cannot statically link GPL source into a closed
-App Store binary (GPL is non-transferable vs. App Store terms — the "VLC problem").
+Helm does not ship chart packs. Users bring their own local data, like they do
+with OpenCPN:
 
-Two compliant options for the ENC engine, gated on IP counsel:
+- `HELM_ENC` can point at an OpenCPN-compatible ENC `.000` cell for S-52 tiles;
+- `HELM_USER_DATA_ROOT`, `HELM_CONFIG/data`, or `~/.helm/data` can hold
+  generated depth overlays such as `depare.geojson`, `depcnt.geojson`, and
+  `soundg.geojson`;
+- user-owned MBTiles or raster packs can be served by a local basemap service;
+- online fill is optional, off by default, and not a replacement for local
+  chart data.
 
-1. **Arm's-length contained GPL component** behind a stable interface (firewalls the
-   copyleft), or
-2. **Rebuild S-52 on permissive GDAL/OGR + PROJ + a custom symbology layer** (clean IP).
+The public repo may include small demo fixtures. It should not include private
+chart libraries, private satellite packs, downloaded chart blobs, or generated
+gigabytes of data.
 
-Because the posture is "open now, maybe sell later," option 2 is favored — it keeps the
-core relicensable. See [ADR-0002](decisions/0002-enc-engine.md), [LEGAL](LEGAL.md), and
-root [LICENSE](../LICENSE) / [LICENSE.BSL](../LICENSE.BSL). **No OpenCPN code in the core
-until counsel signs off.**
+## Collaboration Boundaries
 
-## Offline-first / sync
+The repo is organized so contributors can work in one area without needing to
+understand all of Helm:
 
-- Charts and GRIB cache to device permanently once downloaded.
-- Optional route/waypoint cloud sync (CloudKit or own backend) — but **imported
-  PredictWind routes/GRIB are excluded** from any sync/share path (license-bound;
-  device-local only). See [LEGAL](LEGAL.md).
+| Area | Good contribution examples |
+|---|---|
+| `web/` | UI polish, MapLibre layers, AIS/route/track panels, accessibility, tests |
+| `engine/` | build fixes, protocol behavior, chart rendering, NMEA/SignalK ingest, smoke tests |
+| `services/` | optional local helpers, cache behavior, clear failure modes |
+| `pipeline/` | import tools, data transforms, reproducible sample generation |
+| `docs/` | setup guides, diagrams, examples, platform notes |
+| `.github/` | issue templates, CI, contribution workflow |
+
+The most useful pull requests are small, reproducible, and tied to one boundary.
+For example: "make the web client surface stale AIS state", "document Linux
+build blockers", or "add a smoke test for `/catalog`" are easier to review than
+a broad rewrite across engine, web, and services.
+
+## Safety Boundary
+
+Helm is pre-alpha supplemental navigation software. The architecture is built
+to preserve data provenance and stale/missing-data honesty, but it is not
+certified, not type-approved ECDIS, and not a primary navigation system. See
+[SAFETY.md](../SAFETY.md).
+
+Safety-sensitive changes should include a test or a clear manual verification
+recipe, especially for heading, position, depth, AIS, alarms, route progress,
+and chart rendering.
+
+## Future Direction
+
+The long-term product direction is still a modern chartplotter that fuses
+charts, satellite, weather, AIS, instruments, and routing into one offline-first
+screen. The near-term open collaboration goal is more basic and more important:
+
+- make the alpha easy to build and run;
+- make the repo understandable to new contributors;
+- keep the bring-your-own chart model clean;
+- improve platform coverage;
+- harden the engine/client contract with tests;
+- package the system without hiding the safety caveats.

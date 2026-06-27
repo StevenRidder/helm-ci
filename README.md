@@ -68,6 +68,10 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 | Doc | What it is |
 |-----|------------|
 | [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How humans can contribute: scope, PR rules, safety/data boundaries |
+| [docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md) | What works today, what is alpha, and where help is wanted |
+| [docs/REPO-MAP.md](docs/REPO-MAP.md) | Quick orientation to the directories and contribution areas |
+| [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Contributor workflow, ports, tests, local data rules |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Headless C++ boat server + browser/mobile client boundary |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
@@ -113,6 +117,18 @@ the part you are running.
 | Runtime chart data | NOAA ENC `.000` cells, pointed to with `HELM_ENC` |
 | Runtime basemap data | User-owned MBTiles/raster packs served locally, outside Git |
 | Runtime boat data | NMEA 0183, SignalK, or configured connection input |
+
+## Contributing
+
+The public alpha is being shaped into a contributor-friendly project. If you
+want to help, start with [CONTRIBUTING.md](CONTRIBUTING.md),
+[docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md), and
+[docs/REPO-MAP.md](docs/REPO-MAP.md).
+
+Useful first contributions include setup reports, build fixes, docs, web-client
+tests, platform notes, chart-data onboarding examples, and small UI improvements.
+Please keep private chart packs, private basemaps, credentials, generated
+caches, and vessel-sensitive data out of issues and pull requests.
 
 ## Quick Start (macOS)
 
