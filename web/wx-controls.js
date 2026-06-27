@@ -13,9 +13,12 @@
   var cogP = null;
   function cog() { return cogP || (cogP = import('./integrations/cog.js')); }
   var S = { map: null, resolution: 'live', model: 'single', els: {}, probeT: null };  // Live (fill-the-view) is the default — Windy-style
-  // The helm-wx tile gateway (services/wx). Default: same host, port 8091. Override with window.HELM_WX_SERVICE.
+  // The helm-wx tile gateway (services/wx). Default: same host, port 8093. Override with window.HELM_WX_SERVICE.
+  // NOTE: :8091 is the offline mbtiles BASEMAP server (pipeline/mbtiles_server.py — navionics/googlesat/…);
+  // the weather gateway must NOT use it. Squatting :8091 made the navionics basemap 404, exposing the dark
+  // depth-area fills as "black ovals". Weather lives on :8093.
   var WX_SERVICE = (typeof window !== 'undefined' && window.HELM_WX_SERVICE) ||
-                   (location.protocol + '//' + location.hostname + ':8091');
+                   (location.protocol + '//' + location.hostname + ':8093');
   function wxOpacity() { var s = document.getElementById('wxopacity'); return s ? Math.max(0, Math.min(1, (100 - (+s.value)) / 100)) : 0.82; }
   function particlesOn() { var p = document.getElementById('particles'); return p ? !!p.checked : true; }
 
