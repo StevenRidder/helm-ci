@@ -145,7 +145,9 @@ main() {
     gh repo create "$PUBLIC_REPO" --public --description "Clean public mirror of Helm marine navigation alpha"
   fi
 
-  git clone --depth 1 "$PUBLIC_REMOTE_URL" "$PUBLIC_CLONE"
+  mkdir -p "$PUBLIC_CLONE"
+  git -C "$PUBLIC_CLONE" init -b main
+  git -C "$PUBLIC_CLONE" remote add origin "$PUBLIC_REMOTE_URL"
   rsync -a --delete --exclude '.git/' "${EXPORT_DIR}/" "${PUBLIC_CLONE}/"
 
   echo "Checking public mirror runtime basemap contract..."
@@ -157,12 +159,14 @@ main() {
   (
     cd "$PUBLIC_CLONE"
     git add -A
-    if git diff --cached --quiet; then
-      echo "Public mirror already matches sanitized export; nothing to publish."
-      exit 0
-    fi
     git -c user.name=StevenRidder -c user.email=steve@6elementlabs.com commit -m "$COMMIT_MESSAGE"
-    git push origin main
+    local current_public_ref
+    current_public_ref="$(git ls-remote "$PUBLIC_REMOTE_URL" refs/heads/main | awk '{print $1}')"
+    if [ -n "$current_public_ref" ]; then
+      git push --force-with-lease=refs/heads/main:"$current_public_ref" origin main
+    else
+      git push origin main
+    fi
   )
 
   echo "Published ${PUBLIC_REPO} from ${SOURCE_REF}."
