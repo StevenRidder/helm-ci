@@ -21,7 +21,8 @@ test.describe('tack assist — opposite-tack maneuver, instrument-only', () => {
     });
     expect(r.enabled).toBe(true);
     expect(r.hasWind, 'real wind detected').toBe(true);
-    expect(r.maneuver, 'broad reach → gybe').toBe('gybe');
+    expect(r.recommend, 'broad reach → recommend gybe').toBe('gybe');
+    expect(r.tack.turn + r.gybe.turn, 'both options offered, turns sum to 360').toBe(360);
     expect(r.lineDrawn, 'opposite-tack line drawn from the boat').toBe(true);
 
     // no wind instrument → honest empty (no maneuver, no line) — no forecast/manual fallback
@@ -31,7 +32,7 @@ test.describe('tack assist — opposite-tack maneuver, instrument-only', () => {
       return window.HelmTactics._last();
     });
     expect(r2.hasWind, 'no wind instrument → no wind').toBe(false);
-    expect(r2.maneuver).toBe(null);
+    expect(r2.recommend).toBe(null);
     expect(r2.lineDrawn, 'line cleared when no wind').toBe(false);
   });
 });
