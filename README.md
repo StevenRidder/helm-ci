@@ -76,7 +76,6 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 | [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md) | Read OpenCPN file-by-file: reuse its nav core; the new plan |
 | [docs/CHART-QUILTING.md](docs/CHART-QUILTING.md) | Multi-cell S-52 tiler → quilting; where OpenCPN's quilt code falls short vs ours |
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | **Build & run on macOS** — bootstrap the engine, run the stack, feature-by-feature verification checklist |
-| [docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md) | Public-alpha release gate, licensing posture, and Cruisers Forum sharing plan |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
 | [TRACER-BULLET.md](TRACER-BULLET.md) | **The first code** — run the pipeline + prototype |
 | [pipeline/](pipeline/) | Reusable engine: tiler · depth · wind |
@@ -175,9 +174,8 @@ core then *emerges from working code* rather than upfront architecture.
 
 ## License
 
-Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL),
-[docs/LEGAL.md](docs/LEGAL.md), and
-[ADR-0010](docs/decisions/0010-distribution-and-packaging-posture.md).
+Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL), and
+[docs/LEGAL.md](docs/LEGAL.md).
 
 - **OpenCPN-derived engine work:** GPLv2-or-later, source-visible, and kept in a
   separate boat-server process behind the HTTP/WebSocket protocol boundary.
@@ -189,5 +187,4 @@ Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL),
   service before the BSL change date.
 
 BSL is source-available, not OSI open source. The paid/commercial distribution
-path is still gated on IP counsel; see [docs/LEGAL.md](docs/LEGAL.md) and
-[docs/PUBLIC-ALPHA-CHECKLIST.md](docs/PUBLIC-ALPHA-CHECKLIST.md).
+path is still gated on IP counsel; see [docs/LEGAL.md](docs/LEGAL.md).

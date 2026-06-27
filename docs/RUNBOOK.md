@@ -255,5 +255,5 @@ Helm is pre-alpha navigation software. It is not type-approved ECDIS, not a
 primary navigation system, and not a substitute for official charts,
 instruments, watchkeeping, or seamanship. See [SAFETY.md](../SAFETY.md),
 [LEGAL.md](LEGAL.md), [CLIENT-LICENSE-REGISTER.md](CLIENT-LICENSE-REGISTER.md),
-and [PUBLIC-ALPHA-CHECKLIST.md](PUBLIC-ALPHA-CHECKLIST.md) before distributing
-a public build.
+root [LICENSE](../LICENSE), and [LICENSE.BSL](../LICENSE.BSL) before
+distributing a public build.
