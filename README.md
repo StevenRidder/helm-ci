@@ -2,9 +2,16 @@
 
 **One screen for everything on the water.**
 
-Helm is a modern, cross-platform marine chartplotter — a successor to [OpenCPN](https://opencpn.org)
-that carries its full feature set forward onto macOS, iPad, and iPhone, and fuses the
-data a sailor currently juggles across four apps into a single situational picture:
+Helm is a source-available, pre-alpha marine chartplotter experiment. Today it
+is **not** a packaged macOS app, Windows installer, Linux package, or mobile
+app. The current runnable shape is a local C++ `helm-server` that reuses
+[OpenCPN](https://opencpn.org)'s `model/` navigation core and S-52/S-57 renderer
+headlessly, serves a browser client from `web/`, and exposes `/nav`, `/chart`,
+`/catalog`, and `/health` on one localhost port.
+
+The long-term direction is a modern, cross-platform chartplotter that carries
+OpenCPN's feature set forward and fuses the data a sailor currently juggles
+across four apps into a single situational picture:
 
 > charts + satellite imagery + Windy-class weather layers + PredictWind routing +
 > AIS + instruments — composited on one chart, offline-first.
@@ -15,15 +22,30 @@ chart itself). Nothing on the market shows it all on one screen. **That is the p
 
 ## Status
 
-Pre-alpha. Holds the product definition, architecture, research, the canonical UI, and the
-**first real code** — a reusable data pipeline + a MapLibre prototype
-(see [TRACER-BULLET.md](TRACER-BULLET.md)). **Phase 1 of the build plan is proven** — *both* reuse halves run headless on a Mac: OpenCPN's
-`model/` nav core ([spike/opencpn-headless/](spike/opencpn-headless/)) **and** its S-52 ENC renderer
-([spike/opencpn-headless/chart-render/](spike/opencpn-headless/chart-render/), which rendered a real
-NOAA cell to a PNG with no GUI). **Phase 2 is underway**: the [Helm Engine](engine/) drives OpenCPN's real `Routeman` headless and streams
-nav state over a WebSocket the cockpit consumes, **and** serves real S-52 ENC chart tiles over HTTP that
-render in the UI — so the web app now shows OpenCPN's actual charts under live, OpenCPN-computed nav.
-See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
+Pre-alpha source release. The documented build/run path is **macOS from
+source**: build `helm-server`, run it on a private local port, then open
+`http://127.0.0.1:9001/` in a browser. There is no native SwiftUI/iOS client yet.
+
+Linux and Windows are not packaged or documented yet. The browser client is
+portable, but the headless OpenCPN engine build currently assumes the macOS
+toolchain, Homebrew paths, wxWidgets 3.2, and Helm's bootstrap script.
+
+The current code includes a reusable data pipeline + MapLibre browser client,
+plus a one-origin [Helm Engine](engine/) that drives OpenCPN's real `Routeman`
+headlessly and serves S-52 ENC chart tiles over HTTP. The web app can show
+OpenCPN-rendered charts under OpenCPN-computed navigation state when you provide
+chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
+
+## What You Can Run Today
+
+| Path | Status |
+|---|---|
+| macOS source build | Documented path. Build `helm-server`, run it locally, open the browser UI. |
+| Browser UI | Reference client. Served by `helm-server`; can also be served as a static demo with `web/serve.py`. |
+| Charts | Real S-52 tiles require NOAA ENC `.000` files or other configured chart data. Without charts, the UI still loads but chart tiles are empty/unavailable. |
+| Boat data | Live movement requires NMEA 0183, SignalK, or another configured input. The server does not silently invent live boat data. |
+| Linux / Windows | Not a one-command supported path yet. Expect porting/dependency work. |
+| Native desktop/mobile app | Not shipped yet. |
 
 ## The three differentiators
 
@@ -45,7 +67,7 @@ See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | Doc | What it is |
 |-----|------------|
 | [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
-| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Shared C++ core + native Apple UIs + hybrid renderer |
+| [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Headless C++ boat server + browser/mobile client boundary |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
@@ -74,7 +96,23 @@ supplemental evaluation tool only.
 Read [SAFETY.md](SAFETY.md) before running Helm, sharing screenshots, posting a
 demo, or inviting testers.
 
-## Quick Start
+## Requirements
+
+There is intentionally no root `requirements.txt`: Helm is not one Python app.
+It is a mixed C++/browser/Python/Node source tree, so dependencies are scoped to
+the part you are running.
+
+| Area | Requirements |
+|---|---|
+| Main macOS runtime | Xcode CLT, Homebrew, `wxwidgets@3.2`, `gpatch`, `cmake`, `gdal`, `node`, `python3` |
+| C++ engine | Built by `engine/bootstrap.sh`; see [docs/RUNBOOK.md](docs/RUNBOOK.md) |
+| Optional backend agent service | `backend/requirements.txt` |
+| Optional weather service | `services/wx/requirements.txt` |
+| Web tests | `web/test/package.json` |
+| Runtime chart data | NOAA ENC `.000` cells, pointed to with `HELM_ENC` |
+| Runtime boat data | NMEA 0183, SignalK, or configured connection input |
+
+## Quick Start (macOS)
 
 The current public-alpha path is the one-origin `helm-server`: it serves the
 browser UI, `/nav`, `/chart`, `/catalog`, and `/health` on one private port.
