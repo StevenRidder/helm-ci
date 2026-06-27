@@ -13,9 +13,12 @@
 (function () {
   'use strict';
   var KEY = 'helm.ais.advisor.on', K_SAIL = 'helm.sail.underSail', K_WIND = 'helm.sail.windFrom', K_KINDS = 'helm.ais.kinds';
+  var K_SET = 'helm.water.setDeg', K_DRIFT = 'helm.water.driftKn';
   var enabled = load(KEY, true);
   var ownUnderSail = load(K_SAIL, false);          // skipper's own propulsion mode — default POWER (safe: no sail assumption until opted in; a sailboat motoring IS power-driven)
   var windFrom = load(K_WIND, null);               // skipper-set true-wind FROM° (this boat has no wind instrument)
+  var setDeg = load(K_SET, null);                  // current SET — compass direction the water flows TOWARD (°); manual (no current source on this boat)
+  var driftKn = load(K_DRIFT, null);               // current DRIFT — its speed (kn)
   var kinds = load(K_KINDS, {}) || {};             // per-MMSI VISUAL propulsion override (sail|power) — your eyes beat the AIS registry
   var own = null, lastNav = null;                  // latest ownship {cog, sog} + full nav frame (for WX-13 true wind)
 
@@ -40,6 +43,29 @@
     var tcpa = -(P[0] * Vrel[0] + P[1] * Vrel[1]) / v2;
     if (tcpa <= 0) return { cpa: Math.hypot(P[0], P[1]), tcpa: tcpa };   // opening — closest is now
     return { cpa: Math.hypot(P[0] + Vrel[0] * tcpa, P[1] + Vrel[1] * tcpa), tcpa: tcpa };
+  }
+
+  // ---- set & drift → course-to-steer (AIS-14) ----
+  // A uniform current CANCELS in the relative CPA: both boats ride the same water, and AIS COG/SOG are
+  // already ground-referenced — so set & drift never moves the THREAT. It moves STEERING. The sweep's
+  // recommended course is a COURSE OVER GROUND; to MAKE THAT GROUND TRACK GOOD you steer a heading that
+  // leans into the set. courseToSteer solves the current triangle for that heading (and the resulting SMG).
+  function courseToSteer(desiredCog, ownCog, ownSog, set, drift) {
+    var g = vec(ownCog, ownSog), c = vec(set, drift);
+    var Vw = Math.hypot(g[0] - c[0], g[1] - c[1]);      // |ground − current| = own speed THROUGH THE WATER
+    if (Vw < 0.1) return null;                          // no way through the water to aim a heading
+    var rel = (set - desiredCog) * Math.PI / 180;
+    var arg = -drift * Math.sin(rel) / Vw;              // cross-track set the helm must cancel, as a fraction of Vw
+    if (arg > 1 || arg < -1) return null;               // set too strong to make this track good at this speed
+    var off = Math.asin(arg);
+    var smg = Vw * Math.cos(off) + drift * Math.cos(rel);            // speed made good along the desired track
+    return { heading: norm(desiredCog + off * 180 / Math.PI), smg: Math.round(smg * 10) / 10, waterSpeed: Math.round(Vw * 10) / 10 };
+  }
+  // current set & drift, only when BOTH are present and valid — else null (advice falls back to plain COG)
+  function sdNow() {
+    var s = (setDeg != null && isFinite(setDeg)) ? norm(setDeg) : null;
+    var d = (driftKn != null && isFinite(driftKn) && driftKn > 0) ? +driftKn : null;
+    return (s != null && d != null) ? { setDeg: s, driftKn: d } : null;
   }
 
   // adviceFor(targetProps) → null if not actionable, else the advisory object.
@@ -96,11 +122,18 @@
     }
     var newCourse = (side !== 'hold' && turnDeg != null) ? norm(cog + (side === 'starboard' ? 1 : -1) * turnDeg) : null;
 
+    // AIS-14: newCourse is a COURSE OVER GROUND. If the skipper entered set & drift, solve the current
+    // triangle for the heading to steer to make that ground track good (null = set too strong at this speed).
+    var sd = sdNow();
+    var steer = (newCourse != null && sd) ? courseToSteer(newCourse, cog, sog, sd.setDeg, sd.driftKn) : null;
+
     return {
       type: col && col.type, role: col && col.role, rule: col && col.rule, action: col && col.action,
       sail: !!(col && col.sail), needWind: !!(col && col.needWind),
       side: side, turnDeg: turnDeg, newCourse: newCourse, achievable: achievable, clearBy: clearBy,
-      slowToKn: slowTo, limit: limit, nowCpa: Math.round(nowCpa * 100) / 100
+      slowToKn: slowTo, limit: limit, nowCpa: Math.round(nowCpa * 100) / 100,
+      setDrift: sd, steerHeading: steer ? steer.heading : null, steerSmg: steer ? steer.smg : null,
+      makeGoodUnreachable: !!(sd && newCourse != null && !steer)
     };
   }
 
@@ -154,6 +187,11 @@
   }
   function setUnderSail(v) { ownUnderSail = !!v; saveKey(K_SAIL, ownUnderSail); }
   function setWind(deg) { windFrom = (deg == null || deg === '' || !isFinite(+deg)) ? null : norm(+deg); saveKey(K_WIND, windFrom); }
+  function setSetDrift(s, d) {
+    setDeg = (s == null || s === '' || !isFinite(+s)) ? null : norm(+s);
+    driftKn = (d == null || d === '' || !isFinite(+d) || +d < 0) ? null : +d;
+    saveKey(K_SET, setDeg); saveKey(K_DRIFT, driftKn);
+  }
   window.HelmSailCtx = sailCtx;
 
   // best-effort toggle in the AIS hub header (works regardless; the flag persists either way)
@@ -182,7 +220,19 @@
       wi.title = 'True wind FROM direction (°) for the sailing rules — auto from a wind instrument if you have one';
       wi.addEventListener('change', function () { setWind(wi.value); });
       wlab.appendChild(document.createTextNode('Wind')); wlab.appendChild(wi);
-      hd.appendChild(sail); hd.appendChild(wlab);
+      // Set & drift (AIS-14) — manual current; turns the advised ground track into a heading to steer.
+      var sdlab = document.createElement('label');
+      sdlab.style.cssText = 'display:flex;align-items:center;gap:3px;font-size:11px;color:var(--cdim);white-space:nowrap';
+      var si = document.createElement('input'); si.type = 'number'; si.min = '0'; si.max = '359'; si.placeholder = 'set°'; si.value = (setDeg != null ? setDeg : '');
+      si.style.cssText = 'width:40px;font-size:11px;padding:2px 4px;border:1px solid rgba(255,255,255,.16);border-radius:5px;background:transparent;color:var(--ctext)';
+      si.title = 'Current SET — the compass direction the water flows TOWARD (°)';
+      var di = document.createElement('input'); di.type = 'number'; di.min = '0'; di.step = '0.1'; di.placeholder = 'kn'; di.value = (driftKn != null ? driftKn : '');
+      di.style.cssText = 'width:38px;font-size:11px;padding:2px 4px;border:1px solid rgba(255,255,255,.16);border-radius:5px;background:transparent;color:var(--ctext)';
+      di.title = 'Current DRIFT — its speed (kn). With set, gives the heading to steer to make the advised ground track good.';
+      function pushSD() { setSetDrift(si.value, di.value); }
+      si.addEventListener('change', pushSD); di.addEventListener('change', pushSD);
+      sdlab.appendChild(document.createTextNode('Set')); sdlab.appendChild(si); sdlab.appendChild(di);
+      hd.appendChild(sail); hd.appendChild(wlab); hd.appendChild(sdlab);
     } catch (e) { /* hub mid-render — a later retry catches it */ }
   }
   if (window.HelmShell && HelmShell.onNav) HelmShell.onNav(function (s) { if (s) { lastNav = s; own = { cog: s.cog, sog: s.sog, lat: s.lat, lon: s.lon }; } });
@@ -190,6 +240,6 @@
   setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
 
   window.HelmAisAdvisor = { adviceFor: adviceFor, safeSector: safeSector, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
-    setUnderSail: setUnderSail, setWind: setWind, sailCtx: sailCtx,
+    setUnderSail: setUnderSail, setWind: setWind, setSetDrift: setSetDrift, getSetDrift: sdNow, sailCtx: sailCtx,
     getTargetKind: getTargetKind, setTargetKind: setTargetKind };
 })();

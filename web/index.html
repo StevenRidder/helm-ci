@@ -1196,12 +1196,19 @@
         if (ad.needWind) line = 'Set the wind (in the AIS panel) for the give-way call.';
         else if (ad.side === 'hold') line = 'Hold course &amp; speed — be ready to act.';
         else if (ad.turnDeg != null && ad.achievable) line = '↻ ≥' + ad.turnDeg + '° to ' + ad.side + ' to clear ' + ad.limit + ' NM'
-          + (ad.newCourse != null ? ' — steer ' + Math.round(ad.newCourse) + '°' : '')
+          + (ad.newCourse != null ? ' — make good ' + Math.round(ad.newCourse) + '° over ground' : '')
           + (ad.slowToKn != null ? ', or slow to ' + ad.slowToKn + ' kn' : '');
         else if (ad.turnDeg != null) line = 'Best out: ↻ ' + ad.turnDeg + '° to ' + ad.side + ' → ' + ad.clearBy + ' NM (can\'t reach ' + ad.limit + ' NM — she\'s too close)'
           + (ad.slowToKn != null ? '; or slow to ' + ad.slowToKn + ' kn' : '');
         else if (ad.slowToKn != null) line = 'Slow to ' + ad.slowToKn + ' kn to clear.';
         else line = 'No course or speed change clears — reduce speed and verify visually.';
+        // AIS-14: the advised course is a ground track. If set & drift are entered, give the heading to steer.
+        let steerLine = '';
+        if (ad.newCourse != null && ad.setDrift) {
+          const sDeg = Math.round(ad.setDrift.setDeg), dKn = ad.setDrift.driftKn;
+          if (ad.steerHeading != null) steerLine = 'Steer ~' + Math.round(ad.steerHeading) + '° to make that track good through the ' + dKn + ' kn set (' + sDeg + '°)';
+          else if (ad.makeGoodUnreachable) steerLine = 'The ' + dKn + ' kn set (' + sDeg + '°) is too strong to hold that ground track at your speed — open the range another way.';
+        }
         // Visual propulsion override — your eyes beat the AIS registry (a "sailing" vessel can be motoring).
         const kind = window.HelmColregsKind ? HelmColregsKind(p) : null;
         let kindRow = '';
@@ -1219,6 +1226,7 @@
           + '<div style="background:rgba(255,90,82,.10);border:1px solid #ff5a5240;border-radius:9px;padding:8px 10px">'
           + (ad.action ? '<div style="font-size:12.5px;color:#ffd0cc;margin-bottom:4px">' + aisEsc(ad.action) + (ad.rule ? ' <span style="color:var(--cdim)">· ' + aisEsc(ad.rule) + '</span>' : '') + '</div>' : '')
           + '<div style="font-size:13.5px;font-weight:600;color:#ff9a93">' + line + '</div>'
+          + (steerLine ? '<div style="font-size:11.5px;color:#cdd9e3;margin-top:3px">⊕ ' + steerLine + '</div>' : '')
           + kindRow
           + (caveat ? '<div style="font-size:10px;color:#f0c98a;margin-top:6px">⚠ ' + caveat + '</div>' : '')
           + '<div style="font-size:10px;color:var(--cdim);margin-top:5px">Advisory — keep a lookout; you remain responsible under the Rules.</div>'
