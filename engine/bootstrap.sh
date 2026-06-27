@@ -145,6 +145,21 @@ BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
 ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-server} 2>/dev/null | sed 's/^/  /'
 [ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
+
+# ---- install the DURABLE runtime (so a fresh install / reboot can COLD-START) ----------------
+# The engine resolves the S-52 presentation library from HELM_S57_DATA (default ~/.helm/runtime/
+# s57data) — NOT /tmp, which is wiped on reboot. (The old binary hardcoded /tmp/opencpn/data/s57data,
+# a path bootstrap never created, so a fresh build failed "s52plib load FAILED" on first run.) Copy
+# it out of the clone here so `helm-server` just works. Charts (ENC .000) stay user-provided via
+# HELM_ENC — Helm ships no chart packs.
+RUNTIME="${HELM_RUNTIME_DIR:-$HOME/.helm/runtime}"
+if [ -d "$OCPN_DIR/data/s57data" ]; then
+  mkdir -p "$RUNTIME"
+  rm -rf "$RUNTIME/s57data" && cp -R "$OCPN_DIR/data/s57data" "$RUNTIME/s57data"
+  say "installed S-52 presentation library -> $RUNTIME/s57data (durable; override with HELM_S57_DATA)"
+else
+  say "WARN: $OCPN_DIR/data/s57data not found — set HELM_S57_DATA or helm-server will fail 's52plib load'"
+fi
 # assert the Step-6 seam invariant survived the reproducible build
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)
 echo "  seam check: top_frame::Get symbols in libhelm-chartrender.a = ${syms:-?} (want 0)"

@@ -113,10 +113,27 @@ void EnsureHeadlessGlobals();
 // ===========================================================================
 // Tile rendering (S-52) — from helm_tiles.cpp, unchanged behavior.
 // ===========================================================================
-static const wxString kDataDir = wxT("/tmp/opencpn/data/");
-static const wxString kS57Data = wxT("/tmp/opencpn/data/s57data/");
-static const wxString kPLibRLE = wxT("/tmp/opencpn/data/s57data/S52RAZDS.RLE");
-static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
+// DURABLE runtime paths for the S-52 presentation library (s57data) + the SENC cache. Resolved at
+// startup from the environment, defaulting under ~/.helm/runtime — NEVER /tmp, so the engine boots
+// after a reboot or on a fresh install (engine/bootstrap.sh installs the s57data there). The old
+// hardcoded /tmp/opencpn paths were wiped on every reboot, which made cold-starting impossible.
+// Override with HELM_S57_DATA (the s57data dir) / HELM_SENC_DIR (the regenerable SENC cache).
+static wxString kDataDir, kS57Data, kPLibRLE, kSencDir;
+static void resolve_runtime_paths() {
+  std::string home = std::getenv("HOME") ? std::getenv("HOME") : "/tmp";
+  wxString s57;
+  if (const char* e = std::getenv("HELM_S57_DATA")) if (*e) s57 = wxString::FromUTF8(e);
+  if (s57.IsEmpty()) s57 = wxString::FromUTF8((home + "/.helm/runtime/s57data").c_str());
+  if (!s57.EndsWith(wxT("/"))) s57 += wxT("/");
+  kS57Data = s57;
+  kPLibRLE = s57 + wxT("S52RAZDS.RLE");
+  { wxString d = s57; d.RemoveLast(); kDataDir = d.BeforeLast('/') + wxT("/"); }   // data/ = parent of s57data/
+  wxString senc;
+  if (const char* e = std::getenv("HELM_SENC_DIR")) if (*e) senc = wxString::FromUTF8(e);
+  if (senc.IsEmpty()) senc = wxString::FromUTF8((home + "/.helm/runtime/senc").c_str());
+  if (!senc.EndsWith(wxT("/"))) senc += wxT("/");
+  kSencDir = senc;
+}
 
 static s57chart* g_chart = nullptr;
 static Extent    g_ext;
@@ -262,12 +279,18 @@ static std::string make_blank() {
 
 static bool init_chart(const wxString& enc_path) {
   setvbuf(stdout, nullptr, _IONBF, 0);
+  resolve_runtime_paths();   // durable, env-overridable s57data / SENC paths (never /tmp)
   wxImage::AddHandler(new wxPNGHandler);
   EnsureHeadlessGlobals();
   ::wxFileName::Mkdir(kSencDir, 0755, wxPATH_MKDIR_FULL);
   g_SENCPrefix = kSencDir; g_csv_locn = kS57Data; g_SData_Locn = kDataDir;
   ps52plib = new s52plib(kPLibRLE, false);
-  if (!ps52plib || !ps52plib->m_bOK) { printf("s52plib load FAILED\n"); return false; }
+  if (!ps52plib || !ps52plib->m_bOK) {
+    printf("s52plib load FAILED — missing S-52 presentation library at %s\n"
+           "  fix: run engine/bootstrap.sh (installs it to ~/.helm/runtime/s57data), or set HELM_S57_DATA\n",
+           (const char*)kPLibRLE.ToUTF8());
+    return false;
+  }
   ps52plib->SetPLIBColorScheme(GLOBAL_COLOR_SCHEME_DAY, ChartCtx(false, 0));
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
   // CHART-12: if the cell is S-63 encrypted, decrypt it to a plain S-57 temp and load THAT (the
@@ -286,7 +309,12 @@ static bool init_chart(const wxString& enc_path) {
   }
   g_chart = new s57chart();
   g_chart->DisableBackgroundSENC();
-  if (g_chart->Init(load_path, FULL_INIT) != INIT_OK) { printf("chart Init FAILED\n"); return false; }
+  if (g_chart->Init(load_path, FULL_INIT) != INIT_OK) {
+    printf("chart Init FAILED — could not load ENC cell %s\n"
+           "  fix: set HELM_ENC to a valid .000 cell (bootstrap installs a baseline cell in ~/.helm/runtime/enc)\n",
+           (const char*)load_path.ToUTF8());
+    return false;
+  }
   g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
   if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return false; }
   int ns = g_chart->GetNativeScale();
