@@ -16,6 +16,37 @@ PUBLIC_CLONE="${WORK_ROOT}/public"
 HIDDEN_PATH_RE='^(PRD\.md|docs/(ROADMAP|FEATURE-AUDIT|FEATURE-TRACKER|EPICS|LABS|VISION|SPACETIME-PROBE|WEATHER-ROUTING|BRIEFINGS|PUBLIC-ALPHA-CHECKLIST|HANDOFF-TESTING|TIDES_UI_SPEC)\.md|docs/posts/|docs/mockups/|docs/integrations/awesome-maplibre-STATUS\.md|docs/decisions/(0003-license-posture|0006-destination-dossier-and-briefings|0007-spacetime-probe|0010-distribution-and-packaging-posture)\.md|scripts/publish-public-mirror\.sh|\.gitattributes$)'
 HIDDEN_TEXT_RE='PRD\.md|ROADMAP\.md|FEATURE-AUDIT\.md|FEATURE-TRACKER\.md|EPICS\.md|LABS\.md|VISION\.md|SPACETIME-PROBE\.md|WEATHER-ROUTING\.md|BRIEFINGS\.md|PUBLIC-ALPHA-CHECKLIST\.md|HANDOFF-TESTING\.md|TIDES_UI_SPEC\.md|docs/mockups|docs/posts|0003-license-posture|0010-distribution-and-packaging-posture|0006-destination-dossier-and-briefings|0007-spacetime-probe|awesome-maplibre-STATUS|BUSINESS-MODEL|COMPETITIVE|BUILD-PLAN-COMMUNITY-LLM|nfl-outreach-draft|CLAUDE\.md|AGENTS\.md'
 HARD_SECRET_RE='(/Users/steveridder|Dropbox|PM_MCP_TOKEN|taikun-plan|plan\.taikunai|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY)'
+RUNTIME_GUARD_FILES=(
+  web/index.html
+  web/style.json
+  web/style/helm-chart-basemaps.json
+  web/server-endpoint.js
+  services/basemap-fill/README.md
+  services/basemap-fill/run.sh
+  services/basemap-fill/server.py
+)
+RUNTIME_REQUIRED_TEXT=(
+  'Online fill'
+  'helm-chart-online-fill'
+  'data-layer="helm-chart-online-fill"'
+  'Navionics chart'
+  'Google satellite'
+  'Bing satellite'
+  'ArcGIS satellite'
+  'data-base="navionics" checked'
+  'ui.onlineFill'
+  'basemap/eox'
+  '8095'
+  '~/.helm/basemap-fill-cache'
+)
+RUNTIME_FORBIDDEN_TEXT=(
+  'NOAA public chart'
+  'Sentinel-2 sample'
+  'BYO chart pack'
+  'BYO imagery A'
+  'BYO imagery B'
+  'BYO imagery C'
+)
 
 die() {
   echo "publish-public-mirror: $*" >&2
@@ -54,6 +85,23 @@ scan_tree() {
   rm -f /tmp/helm-public-hard-secrets.$$
 }
 
+scan_runtime_contract() {
+  local tree_dir="$1"
+  local term
+
+  for term in "${RUNTIME_REQUIRED_TEXT[@]}"; do
+    if ! (cd "$tree_dir" && rg -F -q -- "$term" "${RUNTIME_GUARD_FILES[@]}"); then
+      die "runtime guard failed: expected '$term' in private/live UI or basemap-fill files"
+    fi
+  done
+
+  for term in "${RUNTIME_FORBIDDEN_TEXT[@]}"; do
+    if (cd "$tree_dir" && rg -F -n -- "$term" web/index.html web/style.json web/style/helm-chart-basemaps.json); then
+      die "runtime guard failed: public placeholder label '$term' is present in live UI/style"
+    fi
+  done
+}
+
 main() {
   command -v git >/dev/null || die "git is required"
   command -v gh >/dev/null || die "GitHub CLI gh is required"
@@ -67,6 +115,9 @@ main() {
   git archive --format=tar --output="$ARCHIVE" "$SOURCE_REF"
   tar -xf "$ARCHIVE" -C "$EXPORT_DIR"
 
+  echo "Checking private/live runtime basemap contract..."
+  scan_runtime_contract "$EXPORT_DIR"
+
   echo "Scanning sanitized export..."
   scan_tree "$EXPORT_DIR"
 
@@ -76,6 +127,9 @@ main() {
 
   git clone "$PUBLIC_REMOTE_URL" "$PUBLIC_CLONE"
   rsync -a --delete --exclude '.git/' "${EXPORT_DIR}/" "${PUBLIC_CLONE}/"
+
+  echo "Checking public mirror runtime basemap contract..."
+  scan_runtime_contract "$PUBLIC_CLONE"
 
   echo "Scanning public mirror working tree..."
   scan_tree "$PUBLIC_CLONE"
