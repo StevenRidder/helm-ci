@@ -145,7 +145,7 @@ main() {
     gh repo create "$PUBLIC_REPO" --public --description "Clean public mirror of Helm marine navigation alpha"
   fi
 
-  git clone "$PUBLIC_REMOTE_URL" "$PUBLIC_CLONE"
+  git clone --depth 1 "$PUBLIC_REMOTE_URL" "$PUBLIC_CLONE"
   rsync -a --delete --exclude '.git/' "${EXPORT_DIR}/" "${PUBLIC_CLONE}/"
 
   echo "Checking public mirror runtime basemap contract..."
