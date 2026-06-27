@@ -52,7 +52,7 @@
   function startParticles(map, layer) { PD.layer = layer || 'wind'; PD.on = true; if (!PD.handler) { PD.handler = pdMove; map.on('moveend', PD.handler); } pdRefresh().catch(function () {}); }
   function stopParticles(map) { PD.on = false; if (PD.handler) { map.off('moveend', PD.handler); PD.handler = null; } PD.key = ''; }
 
-  function activeLayer() { return window.__activeWx || 'wind'; }
+  function activeLayer() { return window.__activeWx || 'off'; }   // weather defaults OFF until the user picks a layer
   function notify(msg, level) {
     var n = document.getElementById('wx-notice'); if (!n) return;
     n.textContent = msg; n.style.display = 'block';
@@ -153,12 +153,11 @@
     }
     function paintSeg(w, on) { Array.prototype.forEach.call(w.children, function (b) { var sel = b.dataset.val === on; b.dataset.sel = sel ? '1' : ''; b.style.background = sel ? 'var(--accent,#39c2c9)' : 'transparent'; b.style.color = sel ? '#05121d' : 'var(--cdim,#8aa)'; b.style.fontWeight = sel ? '600' : '400'; }); }
 
-    box.appendChild(label('Resolution'));
+    // Resolution + Model controls are hidden for now — hardcoded to Live (fills view) + Single via the S
+    // defaults. The segments are still built (just not appended) so the paint/handler lines below stay
+    // valid; to expose the toggles again, re-append resSeg/modSeg here.
     var resSeg = segctl([{ val: 'standard', txt: 'Standard' }, { val: 'live', txt: 'Live · fills view' }]);
-    box.appendChild(resSeg);
-    box.appendChild(label('Model'));
     var modSeg = segctl([{ val: 'single', txt: 'Single' }, { val: 'ensemble', txt: 'Ensemble spread' }]);
-    box.appendChild(modSeg);
 
     var probe = document.createElement('div');
     probe.style.cssText = 'font-size:12px;background:rgba(255,255,255,.03);border:.5px solid var(--line,#345);border-radius:8px;padding:8px 10px;margin-bottom:10px;min-height:16px';
@@ -184,10 +183,10 @@
     setProbe('');
 
     // Transparency slider drives the SERVICE TILES too (index.html only wired it to the legacy field).
-    // Default to nearly-opaque like Windy (its overlays fully cover the basemap).
+    // Keep index.html's lighter default (slider 28 ≈ 0.72 opacity) so the chart reads through — forcing a
+    // Windy-opaque 0.92 here loaded too "thick" over the chart.
     var op = document.getElementById('wxopacity');
     if (op) {
-      op.value = 8;                                       // (100-8)/100 = 0.92 opacity — Windy-opaque default
       var applyTileOpacity = function () { cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, wxOpacity()); }).catch(function () {}); };
       op.addEventListener('input', applyTileOpacity);
     }

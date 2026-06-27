@@ -1051,7 +1051,7 @@
 
   map.on('load', () => {
     if (map.getLayer('wind-arrows')) map.setLayoutProperty('wind-arrows', 'visibility', 'none'); // replaced by particles
-    setWeather('wind');
+    setWeather('off');   // weather defaults OFF — user opts in by picking a layer (which then uses Live · fills view)
   });
 
   // click popups (suppressed while the measure tool is active — a click then drops a ruler point)
