@@ -2322,10 +2322,6 @@ struct RField { double v = 0; std::time_t t = 0; const char* src = "nmea"; int p
 struct RealFeed { std::mutex m; double lat = 0, lon = 0; std::time_t pos_t = 0; const char* pos_src = "nmea"; int pos_prio = 0;
                   RField sog, cog, hdg, depth, wspd, wdir; };
 static RealFeed g_real;
-// HELM_HDG_OFFSET — per-boat heading-alignment correction in degrees, added to the REAL heading before
-// it's emitted (e.g. 180 for a reciprocal/backwards-mounted compass). It's a compass-alignment offset,
-// not fabricated data — the source tag stays truthful (nmea/nmea2000/signalk). Default 0 (no change).
-static int g_hdg_offset = []{ const char* s = std::getenv("HELM_HDG_OFFSET"); int v = s ? std::atoi(s) : 0; v %= 360; if (v < 0) v += 360; return v; }();
 
 // AIS — OpenCPN's real AisDecoder driven headless (decode + CPA/TCPA stay in its code). We
 // snapshot the decoded targets into our own set at decode time and age on our own clock.
@@ -3480,7 +3476,7 @@ static void nav_loop(ix::HttpServer* server) {
       if (fresh(g_real.pos_t)) { gLat = g_real.lat; gLon = g_real.lon; src_pos = g_real.pos_src; } else { gLat = sim_lat; gLon = sim_lon; src_pos = "simulated"; }
       if (fresh(g_real.sog.t)) { sog = g_real.sog.v; src_sog = g_real.sog.src; } else { sog = sim_sog; src_sog = "simulated"; }
       if (fresh(g_real.cog.t)) { cog = (int)std::lround(g_real.cog.v); src_cog = g_real.cog.src; } else { cog = sim_cog; src_cog = "simulated"; }
-      if (fresh(g_real.hdg.t)) { hdg = ((int)std::lround(g_real.hdg.v) + g_hdg_offset) % 360; src_hdg = g_real.hdg.src; } else if (g_sim) { hdg = sim_hdg; src_hdg = "simulated"; } else { hdg = 0; src_hdg = "missing"; }
+      if (fresh(g_real.hdg.t)) { hdg = (int)std::lround(g_real.hdg.v) % 360; src_hdg = g_real.hdg.src; } else if (g_sim) { hdg = sim_hdg; src_hdg = "simulated"; } else { hdg = 0; src_hdg = "missing"; }
       if (fresh(g_real.depth.t)) { depth = g_real.depth.v; src_depth = g_real.depth.src; } else if (g_sim) { depth = sim_depth; src_depth = "simulated"; } else { depth = 0; src_depth = "missing"; }
       if (fresh(g_real.wspd.t)) { wspd = g_real.wspd.v; src_wind = g_real.wspd.src; } else if (g_sim) { wspd = sim_wspd; src_wind = "simulated"; } else { wspd = 0; src_wind = "missing"; }
       wdir = fresh(g_real.wdir.t) ? (int)std::lround(g_real.wdir.v) : (g_sim ? sim_wdir : 0);
