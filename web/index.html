@@ -822,6 +822,22 @@
 // at top level), so its contract is preserved.
 (async function main() {
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
+  async function helmResourceExists(url) {
+    try {
+      const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      return !!(r && r.ok);
+    } catch (e) { return false; }
+  }
+  async function preferUserDepthData(style) {
+    if (!style || !style.sources) return;
+    const files = { depare: 'depare.geojson', depcnt: 'depcnt.geojson', soundg: 'soundg.geojson' };
+    await Promise.all(Object.keys(files).map(async (id) => {
+      const src = style.sources[id];
+      if (!src || src.type !== 'geojson') return;
+      const url = 'user-data/' + files[id];
+      if (await helmResourceExists(url)) src.data = url;
+    }));
+  }
   // Assemble the merged style from the per-domain fragments (SHELL-2). If shell.js somehow didn't
   // load, fall back to the monolithic style.json so the map still draws (degraded, no registration API).
   let style;
@@ -829,6 +845,7 @@
     style = window.HelmShell
       ? await HelmShell.buildStyle({ styleDir: 'style', fallback: 'style.json' })
       : await (await fetch('style.json')).json();
+    await preferUserDepthData(style);
   } catch (e) {
     // The map can't be built without a style — surface it explicitly instead of a silent blank page.
     if (window.__helmDegrade) window.__helmDegrade('Chart failed to load', (e && e.message) || e);

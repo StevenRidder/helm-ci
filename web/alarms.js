@@ -445,11 +445,23 @@ window.HelmAlarms = function (map, opts) {
   // the operator assume shoal-warning coverage they don't have. Behaviour is unchanged (the check is
   // simply unavailable without data) — only the silence is removed.
   (function loadContours() {
+    const urls = ['user-data/depcnt.geojson', 'data/depcnt.geojson'];
+    function fetchFirst(i) {
+      const url = urls[i];
+      return fetch(url, { cache: 'no-store' })
+        .then(r => {
+          if (!r.ok) throw new Error(url + ' HTTP ' + r.status);
+          return r.json();
+        })
+        .catch(e => {
+          if (i + 1 < urls.length) return fetchFirst(i + 1);
+          throw e;
+        });
+    }
     try {
-      fetch('data/depcnt.geojson')
-        .then(r => { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); })
+      fetchFirst(0)
         .then(j => ingestContours(j))
-        .catch(e => { contourState = 'unavailable'; console.warn('HelmAlarms: safety-contour data (data/depcnt.geojson) failed to load — the safety-contour alarm (ALARM-8) is INACTIVE until it loads:', e && e.message); });
+        .catch(e => { contourState = 'unavailable'; console.warn('HelmAlarms: safety-contour data failed to load from user-data/ or data/ — the safety-contour alarm (ALARM-8) is INACTIVE until it loads:', e && e.message); });
     } catch (e) { contourState = 'unavailable'; console.warn('HelmAlarms: could not start the safety-contour data load — ALARM-8 INACTIVE:', e && e.message); }
   })();
   // local-metres geometry (equirectangular about the query point — exact enough at chart scales)

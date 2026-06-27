@@ -2,10 +2,11 @@
 """Synthesize the S-52 "depth on satellite" layers from the baked DEM bathymetry, so the
 depth-area fill / depth contours / soundings work for regions with NO NOAA ENC cell.
 
-Outputs (S-57 attribute names the style reads):
-  web/data/depare.geojson  depth-area fill polygons   (DRVAL1 = shallow depth of the band)
-  web/data/depcnt.geojson  depth contour lines        (VALDCO = contour depth)
-  web/data/soundg.geojson  spot soundings (points)    (DEPTH  = sounding depth)
+Outputs under HELM_USER_DATA_ROOT, HELM_CONFIG/data, or ~/.helm/data
+(S-57 attribute names the style reads):
+  depare.geojson  depth-area fill polygons   (DRVAL1 = shallow depth of the band)
+  depcnt.geojson  depth contour lines        (VALDCO = contour depth)
+  soundg.geojson  spot soundings (points)    (DEPTH  = sounding depth)
 
 Depths are positive metres below datum (S-57 convention); DEM water = negative elevation.
 """
@@ -15,7 +16,10 @@ from PIL import Image
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 DEM_DIR = os.path.join(HERE, "..", "web", "data", "dem")
-OUT_DIR = os.path.join(HERE, "..", "web", "data")
+OUT_DIR = (
+    os.environ.get("HELM_USER_DATA_ROOT")
+    or os.path.join(os.environ.get("HELM_CONFIG", os.path.expanduser("~/.helm")), "data")
+)
 Z = 12
 BLUR = 1.8
 BANDS = [2, 5, 10, 20, 40]                  # DRVAL1 thresholds (m): real nearshore bathymetry only
@@ -75,6 +79,7 @@ def mosaic(W, S, E, N):
 
 
 def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
     W, S, E, N = region()
     elev, x0, y0 = mosaic(W, S, E, N)
     depth = -gaussian2d(elev, BLUR)            # positive = deeper; land is negative

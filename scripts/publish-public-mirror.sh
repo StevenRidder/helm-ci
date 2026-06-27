@@ -22,6 +22,11 @@ RUNTIME_GUARD_FILES=(
   web/style.json
   web/style/helm-chart-basemaps.json
   web/server-endpoint.js
+  web/alarms.js
+  web/depth-contours.js
+  engine/vendor/cli/helm_server.cpp
+  pipeline/extract_depth.sh
+  docs/RUNBOOK.md
   services/basemap-fill/README.md
   services/basemap-fill/run.sh
   services/basemap-fill/server.py
@@ -42,6 +47,9 @@ RUNTIME_REQUIRED_TEXT=(
   'basemap/eox'
   '8095'
   '~/.helm/basemap-fill-cache'
+  'HELM_USER_DATA_ROOT'
+  '/user-data/'
+  '~/.helm/data'
 )
 RUNTIME_FORBIDDEN_TEXT=(
   'NOAA public chart'

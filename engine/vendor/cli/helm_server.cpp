@@ -316,6 +316,7 @@ static void warmup_render() {
 // resolved origin == the engine. (No ?server= override needed.)
 // ===========================================================================
 static std::string g_webroot;
+static std::string g_user_data_root;
 static const char* mime_for(const std::string& path) {
   auto ends = [&](const char* s){ size_t n=strlen(s); return path.size()>=n && path.compare(path.size()-n,n,s)==0; };
   if (ends(".html")) return "text/html; charset=utf-8";
@@ -329,6 +330,14 @@ static const char* mime_for(const std::string& path) {
   if (ends(".ico"))  return "image/x-icon";
   return "text/plain; charset=utf-8";
 }
+
+static std::string helm_config_dir() {
+  if (const char* c = std::getenv("HELM_CONFIG")) if (*c) return c;
+  const char* home = std::getenv("HOME");
+  std::string d = (home && *home) ? home : ".";
+  return d + "/.helm";
+}
+
 // returns false if the path escapes the root or the file is missing
 // Percent-decode a request path so files with spaces/UTF-8 resolve (e.g. the glyph dir
 // "fonts/Noto Sans Regular/" arrives as fonts/Noto%20Sans%20Regular/ — without this it 404s
@@ -349,6 +358,20 @@ static bool serve_static(const std::string& uri, std::string& body, std::string&
   if (p == "/" || p.empty()) p = "/index.html";
   if (p.find("..") != std::string::npos) return false;           // no path traversal (checked AFTER decode)
   std::string full = g_webroot + p;
+  std::ifstream f(full, std::ios::binary);
+  if (!f) return false;
+  std::ostringstream ss; ss << f.rdbuf();
+  body = ss.str(); mime = mime_for(p);
+  return true;
+}
+
+static bool serve_user_data(const std::string& uri, std::string& body, std::string& mime) {
+  std::string p = uri;
+  size_t q = p.find('?'); if (q != std::string::npos) p = p.substr(0, q);
+  p = url_decode(p);
+  while (!p.empty() && p.front() == '/') p.erase(p.begin());
+  if (p.empty() || p.find("..") != std::string::npos) return false;
+  std::string full = g_user_data_root + "/" + p;
   std::ifstream f(full, std::ios::binary);
   if (!f) return false;
   std::ostringstream ss; ss << f.rdbuf();
@@ -3785,6 +3808,8 @@ public:
 
     const char* webroot = std::getenv("HELM_WEB_ROOT");
     g_webroot = webroot && *webroot ? webroot : "web";
+    const char* userDataRoot = std::getenv("HELM_USER_DATA_ROOT");
+    g_user_data_root = userDataRoot && *userDataRoot ? userDataRoot : helm_config_dir() + "/data";
 
     const char* bindHost = std::getenv("HELM_BIND"); if (!bindHost || !*bindHost) bindHost = "127.0.0.1";
     int port = 8080;
@@ -3923,6 +3948,17 @@ public:
             "{\"cells\":[{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"edition\":\"%s\",\"editionDate\":\"%s\",\"bbox\":[%.6f,%.6f,%.6f,%.6f]}],\"count\":1}",
             g_cell_name.c_str(), g_native_scale, band, json_escape(edtn).c_str(), eddate.c_str(), g_ext.WLON, g_ext.SLAT, g_ext.ELON, g_ext.NLAT);
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string(cb)); }
+        if (path.rfind("/user-data/", 0) == 0) {   // user-owned chart/depth/weather overlays live under HELM_USER_DATA_ROOT or HELM_CONFIG/data
+          std::string body, mime;
+          if (serve_user_data(path.substr(std::strlen("/user-data/")), body, mime)) {
+            h["Content-Type"] = mime;
+            h["Cache-Control"] = "no-cache, must-revalidate";
+            return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body);
+          }
+          h["Content-Type"] = "text/plain";
+          h["Cache-Control"] = "no-store";
+          return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string("not found\n"));
+        }
         // static UI (the page is served from the engine → same origin → no ?server=)
         std::string body, mime;
         if (serve_static(path, body, mime)) { h["Content-Type"] = mime;

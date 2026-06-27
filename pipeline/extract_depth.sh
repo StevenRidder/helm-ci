@@ -10,7 +10,8 @@
 set -euo pipefail
 
 ENC="${1:?usage: extract_depth.sh <ENC .000 cell> [outdir]}"
-OUT="${2:-../web/data}"
+DEFAULT_OUT="${HELM_USER_DATA_ROOT:-${HELM_CONFIG:-${HOME:-.}/.helm}/data}"
+OUT="${2:-$DEFAULT_OUT}"
 mkdir -p "$OUT"
 
 # SPLIT_MULTIPOINT + ADD_SOUNDG_DEPTH => each sounding is its own point carrying DEPTH.

@@ -17,6 +17,16 @@
 const SRC = 'helm-depth-contours';
 const LINE = 'helm-depth-contour-line', LBL = 'helm-depth-contour-label';
 
+async function firstAvailable(urls) {
+  for (const url of urls) {
+    try {
+      const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+      if (r && r.ok) return url;
+    } catch (e) {}
+  }
+  return urls[urls.length - 1];
+}
+
 export async function enable(map, ctx = {}) {
   const beforeId = (ctx.beforeId && map.getLayer(ctx.beforeId)) ? ctx.beforeId : undefined;
 
@@ -28,7 +38,8 @@ export async function enable(map, ctx = {}) {
   if (!map.getSource(SRC)) {
     // MapLibre loads this (its own loader resolves the relative URL fine) and tiles it
     // internally, so the smooth lines over-zoom natively to any display zoom.
-    map.addSource(SRC, { type: 'geojson', data: 'data/depth-contours.geojson' });
+    const data = await firstAvailable(['user-data/depth-contours.geojson', 'data/depth-contours.geojson']);
+    map.addSource(SRC, { type: 'geojson', data });
   }
 
   map.addLayer({

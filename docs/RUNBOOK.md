@@ -106,9 +106,20 @@ Optional overlay extraction:
 pipeline/extract_depth.sh /tmp/ENC_ROOT/US5FL96M/US5FL96M.000
 ```
 
-This writes generated GeoJSON under `web/data/`. Without these files, the
-browser depth overlays are empty; the S-52 engine tiles still render if `HELM_ENC`
-points at a valid cell.
+This writes generated GeoJSON under `HELM_USER_DATA_ROOT`, `HELM_CONFIG/data`,
+or `~/.helm/data` by default. Helm serves that directory at same-origin
+`/user-data/` and prefers those user-owned files over the bundled `web/data/`
+demo fixtures. Without user data, the browser falls back to the public demo
+GeoJSON; the S-52 engine tiles still render if `HELM_ENC` points at a valid cell.
+
+Expected local depth overlay filenames:
+
+```text
+~/.helm/data/depare.geojson
+~/.helm/data/depcnt.geojson
+~/.helm/data/soundg.geojson
+~/.helm/data/depth-contours.geojson
+```
 
 ### Weather
 

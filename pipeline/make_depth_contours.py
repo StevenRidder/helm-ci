@@ -9,7 +9,8 @@ the same here, once, offline:
 
   mosaic the local z12 terrarium DEM tiles  ->  gaussian-smooth the bathymetry surface
   ->  matplotlib contour at navigation depth levels  ->  Chaikin-smooth each polyline
-  ->  web/data/depth-contours.geojson  (LineString features: {depth, major})
+  ->  HELM_USER_DATA_ROOT/depth-contours.geojson, HELM_CONFIG/data/depth-contours.geojson,
+      or ~/.helm/data/depth-contours.geojson  (LineString features: {depth, major})
 
 The app renders that as a MapLibre line layer — smooth at ANY zoom (vector geometry),
 offline, no worker. Resolution is DEM-limited (free global bathymetry is coarse over reef),
@@ -36,7 +37,11 @@ def gaussian2d(a, sigma):
     return a
 
 HERE = os.path.dirname(__file__)
-OUT = os.path.join(HERE, "..", "web", "data", "depth-contours.geojson")
+OUT_DIR = (
+    os.environ.get("HELM_USER_DATA_ROOT")
+    or os.path.join(os.environ.get("HELM_CONFIG", os.path.expanduser("~/.helm")), "data")
+)
+OUT = os.path.join(OUT_DIR, "depth-contours.geojson")
 DEM_DIR = os.path.join(HERE, "..", "web", "data", "dem")
 Z = 12                                  # mosaic the finest baked DEM zoom
 BLUR = 1.8                              # gaussian radius (px) — de-stair without smearing the coast
@@ -88,6 +93,7 @@ def chaikin(pts, iters):
 
 
 def main():
+    os.makedirs(OUT_DIR, exist_ok=True)
     W, S, E, N = bbox()
     x0, y1 = deg2tile(W, S, Z)
     x1, y0 = deg2tile(E, N, Z)
