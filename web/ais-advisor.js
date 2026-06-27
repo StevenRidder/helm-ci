@@ -238,6 +238,22 @@
   if (window.HelmShell && HelmShell.onNav) HelmShell.onNav(function (s) { if (s) { lastNav = s; own = { cog: s.cog, sog: s.sog, lat: s.lat, lon: s.lon }; } });
   if (document.readyState !== 'loading') mountToggle(); else document.addEventListener('DOMContentLoaded', mountToggle);
   setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
+  // The AIS hub header (#helm-ais .aish-hd) renders LAZILY — it doesn't exist until the hub panel first
+  // opens, which is almost always AFTER the early timers above. So those eager attempts find no header
+  // and bail, and the controls never appear. Fix: watch the DOM and (re)mount the moment the header
+  // shows up — and again if the hub is rebuilt on a later open. mountToggle is idempotent (it returns
+  // early once #helm-advisor-toggle exists), so the observer settles to a cheap O(1) no-op after mount.
+  try {
+    var _mtPending = false;
+    var _mtObs = new MutationObserver(function () {
+      if (_mtPending || document.getElementById('helm-advisor-toggle')) return;   // mounted or queued → skip
+      if (!document.querySelector('#helm-ais .aish-hd')) return;                   // header not up yet
+      _mtPending = true; setTimeout(function () { _mtPending = false; mountToggle(); }, 60);
+    });
+    _mtObs.observe(document.documentElement, { childList: true, subtree: true });
+  } catch (e) {
+    for (var _t = 4000; _t <= 24000; _t += 4000) setTimeout(mountToggle, _t);      // no MutationObserver → longer polling fallback
+  }
 
   window.HelmAisAdvisor = { adviceFor: adviceFor, safeSector: safeSector, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
     setUnderSail: setUnderSail, setWind: setWind, setSetDrift: setSetDrift, getSetDrift: sdNow, sailCtx: sailCtx,
