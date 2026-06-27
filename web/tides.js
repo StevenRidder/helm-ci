@@ -255,6 +255,10 @@
       '.t-oref-p{color:var(--cdim2);font-style:italic}' +
       '.t-oref-c{margin-top:6px}' +
       '.t-chip.mod{color:var(--accent);border-color:rgba(91,192,255,.35)}' +
+      '.t-secthead{display:flex;align-items:center;justify-content:space-between;gap:8px}' +
+      '.t-prov{margin-top:8px;padding:8px 9px;border:.5px solid var(--line);border-radius:9px;background:var(--glass2)}' +
+      '.t-prov-h{display:flex;align-items:center;justify-content:space-between;gap:8px}' +
+      '.t-prov-n{font-size:11.5px;color:var(--ctext)}' +
       '</style>';
   }
 
@@ -264,13 +268,50 @@
     var qp = queryPoint(map); lastQP = qp;
     el.querySelector('.t-body').innerHTML = '<div class="t-empty">loading tides…</div>';
     var q = '?lat=' + qp.lat.toFixed(4) + '&lon=' + qp.lon.toFixed(4);
-    Promise.all([getJSON('/tides/summary' + q + pol()), getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; })])
+    Promise.all([
+      getJSON('/tides/summary' + q + pol()),
+      getJSON('/tides/curve' + q + '&hours=24&step=30' + pol()).catch(function () { return null; }),
+      getJSON('/tides/resolve' + q + pol()).catch(function () { return null; }),   // route/GPS coverage + offline-readiness
+      getJSON('/tides/providers').catch(function () { return null; })              // official-source catalog (position-independent)
+    ])
       .then(function (r) {
-        var sum = r[0], curve = r[1];
-        el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + confidenceDetail(sum) + sourceLedger(sum);
+        var sum = r[0], curve = r[1], res = r[2], prov = r[3];
+        el.querySelector('.t-body').innerHTML = cardHTML(sum, curve) + confidenceDetail(sum) +
+          resolveHTML(res) + providersHTML(prov) + sourceLedger(sum);
         wireScrubber(el, curve);
       })
       .catch(function (e) { el.querySelector('.t-body').innerHTML = '<div class="t-empty" style="color:var(--danger)">tides: ' + esc(e.message) + '</div>'; });
+  }
+  // ---------- passage readiness (/tides/resolve) + provider catalog (/tides/providers) ----------
+  // Route/GPS coverage + offline-readiness, and the official-source catalog. Read-only, offline-safe.
+  function resolveHTML(res) {
+    if (!res || res.ok === false) return '';
+    var badge = res.needs_attention ? '<span class="t-chip warn">needs attention</span>' : '<span class="t-chip ok">ready</span>';
+    var chips =
+      '<span class="t-chip ' + (res.offline_ready ? 'ok' : 'warn') + '">offline ' + (res.offline_ready ? '✓' : '—') + '</span>' +
+      '<span class="t-chip ' + (res.official_coverage_ready ? 'ok' : 'warn') + '">official ' + (res.official_coverage_ready ? '✓' : '⚠') + '</span>';
+    var seen = {}, wlist = [];
+    (res.points || []).forEach(function (p) { (p.warnings || []).forEach(function (w) { if (!seen[w]) { seen[w] = 1; wlist.push(w); } }); });
+    (res.warnings || []).forEach(function (w) { if (!seen[w]) { seen[w] = 1; wlist.push(w); } });
+    var why = wlist.length ? '<ul class="t-why">' + wlist.map(function (w) { return '<li>' + esc(w) + '</li>'; }).join('') + '</ul>' : '';
+    return '<div class="t-conf"><div class="t-secthead"><span class="lbl">Passage readiness</span>' + badge + '</div>' +
+      '<div class="t-chips" style="margin-top:7px">' + chips + '</div>' +
+      (res.summary ? '<div class="t-conf-cap" style="margin-top:7px">' + esc(res.summary) + '</div>' : '') +
+      why + '</div>';
+  }
+  function providersHTML(prov) {
+    var list = prov && prov.providers;
+    if (!list || !list.length) return '';
+    function adClass(s) { s = String(s || ''); return s.indexOf('ready') >= 0 ? 'ok' : (s ? 'warn' : ''); }
+    var rows = list.map(function (p) {
+      return '<div class="t-prov">' +
+        '<div class="t-prov-h"><span class="t-prov-n">' + esc(p.provider || p.id) + '</span>' +
+        (p.adapter_status ? '<span class="t-chip ' + adClass(p.adapter_status) + '">' + esc(p.adapter_status) + '</span>' : '') + '</div>' +
+        '<div class="t-oref-m">' + esc(p.region_name || p.country || '') + (p.datum_name ? ' · ' + esc(p.datum_name) : '') + '</div>' +
+        (p.license ? '<div class="t-oref-m t-oref-p">' + esc(p.license) + '</div>' : '') +
+        '</div>';
+    }).join('');
+    return '<div class="t-conf"><div class="lbl">Tide sources · ' + list.length + '</div>' + rows + '</div>';
   }
   function sourceLedger(sum) {
     var src = (sum && sum.loaded_sources) || [];
