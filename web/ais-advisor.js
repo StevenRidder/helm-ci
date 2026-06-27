@@ -12,11 +12,19 @@
 // ADVISORY ONLY — never an autopilot command. Toggleable (some skippers won't want it); default ON.
 (function () {
   'use strict';
-  var KEY = 'helm.ais.advisor.on', K_SAIL = 'helm.sail.underSail', K_WIND = 'helm.sail.windFrom';
+  var KEY = 'helm.ais.advisor.on', K_SAIL = 'helm.sail.underSail', K_WIND = 'helm.sail.windFrom', K_KINDS = 'helm.ais.kinds';
   var enabled = load(KEY, true);
   var ownUnderSail = load(K_SAIL, false);          // skipper's own propulsion mode — default POWER (safe: no sail assumption until opted in; a sailboat motoring IS power-driven)
   var windFrom = load(K_WIND, null);               // skipper-set true-wind FROM° (this boat has no wind instrument)
+  var kinds = load(K_KINDS, {}) || {};             // per-MMSI VISUAL propulsion override (sail|power) — your eyes beat the AIS registry
   var own = null, lastNav = null;                  // latest ownship {cog, sog} + full nav frame (for WX-13 true wind)
+
+  function getTargetKind(mmsi) { var k = kinds[String(mmsi)]; return (k === 'sail' || k === 'power') ? k : null; }
+  function setTargetKind(mmsi, kind) {
+    var key = String(mmsi);
+    if (kind === 'sail' || kind === 'power') kinds[key] = kind; else delete kinds[key];
+    saveKey(K_KINDS, kinds);
+  }
 
   function load(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
   function saveKey(k, v) { try { localStorage.setItem(k, JSON.stringify(v)); } catch (e) {} }
@@ -182,5 +190,6 @@
   setTimeout(mountToggle, 1000); setTimeout(mountToggle, 2500);
 
   window.HelmAisAdvisor = { adviceFor: adviceFor, safeSector: safeSector, isEnabled: function () { return enabled; }, setEnabled: setEnabled,
-    setUnderSail: setUnderSail, setWind: setWind, sailCtx: sailCtx };
+    setUnderSail: setUnderSail, setWind: setWind, sailCtx: sailCtx,
+    getTargetKind: getTargetKind, setTargetKind: setTargetKind };
 })();

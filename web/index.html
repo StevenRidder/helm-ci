@@ -1164,13 +1164,25 @@
           + (ad.slowToKn != null ? '; or slow to ' + ad.slowToKn + ' kn' : '');
         else if (ad.slowToKn != null) line = 'Slow to ' + ad.slowToKn + ' kn to clear.';
         else line = 'No course or speed change clears — reduce speed and verify visually.';
-        const caveat = ad.sail ? ('Sailing rule — assumes she is under sail (AIS type/status); if she is motoring, power rules apply.'
+        // Visual propulsion override — your eyes beat the AIS registry (a "sailing" vessel can be motoring).
+        const kind = window.HelmColregsKind ? HelmColregsKind(p) : null;
+        let kindRow = '';
+        if (kind && (kind.ais === 'sail' || ad.sail || kind.override)) {
+          const eff = kind.override || (kind.ais === 'unknown' ? null : kind.ais), src = kind.override ? 'you set' : 'from AIS';
+          const kbtn = (k, lbl) => { const sel = (k === 'auto') ? !kind.override : (eff === k);
+            return '<button type="button" onclick="window.aisSetKind&&aisSetKind(' + (p.mmsi || 0) + ',\'' + k + '\')" '
+              + 'style="cursor:pointer;font-size:11px;padding:3px 9px;border-radius:7px;border:1px solid ' + (sel ? '#5dd0b0' : 'rgba(255,255,255,.18)') + ';background:' + (sel ? 'rgba(95,208,176,.18)' : 'transparent') + ';color:var(--ctext)">' + lbl + '</button>'; };
+          kindRow = '<div style="font-size:10.5px;color:var(--cdim);margin-top:7px">Her propulsion: <span style="color:#cdd9e3">' + (eff || 'unknown') + '</span> <span style="opacity:.7">(' + src + ')</span> — what do you actually see?</div>'
+            + '<div style="display:flex;gap:5px;margin-top:4px">' + kbtn('sail', 'Sailing') + kbtn('power', 'Motoring') + kbtn('auto', 'AIS') + '</div>';
+        }
+        const caveat = ad.sail ? ('Based on her AIS type unless you set it above — a registered sailing vessel can be motoring (then power rules apply).'
           + (ad.rule === 'Rule 12' ? ' Her tack is inferred from her course and the wind.' : '')) : '';
         avoid = sec('Avoid')
           + '<div style="background:rgba(255,90,82,.10);border:1px solid #ff5a5240;border-radius:9px;padding:8px 10px">'
           + (ad.action ? '<div style="font-size:12.5px;color:#ffd0cc;margin-bottom:4px">' + aisEsc(ad.action) + (ad.rule ? ' <span style="color:var(--cdim)">· ' + aisEsc(ad.rule) + '</span>' : '') + '</div>' : '')
           + '<div style="font-size:13.5px;font-weight:600;color:#ff9a93">' + line + '</div>'
-          + (caveat ? '<div style="font-size:10px;color:#f0c98a;margin-top:5px">⚠ ' + caveat + '</div>' : '')
+          + kindRow
+          + (caveat ? '<div style="font-size:10px;color:#f0c98a;margin-top:6px">⚠ ' + caveat + '</div>' : '')
           + '<div style="font-size:10px;color:var(--cdim);margin-top:5px">Advisory — keep a lookout; you remain responsible under the Rules.</div>'
           + '</div>';
       }
@@ -1201,7 +1213,7 @@
   // and you can drag it anywhere by its header. Static snapshot — pin it (HelmAisPins) to watch it
   // live. One card at a time. Replaces the old maplibregl.Popup, which could spawn half off-screen
   // and couldn't be moved.
-  var _aisCard = null;
+  var _aisCard = null, _aisCardBody = null, _aisCardProps = null;
   var AIS_CARD_SAFE = { top: 54, left: 58, bottom: 70, pad: 8 };   // keep clear of the chrome
   function closeAisCard() { if (_aisCard) { _aisCard.remove(); _aisCard = null; } }
   function clampAisCard(el, x, y) {
@@ -1260,9 +1272,14 @@
     clampAisCard(card, x, y);
     head.querySelector('[data-close]').addEventListener('click', closeAisCard);
     makeAisCardDraggable(card, head);
-    _aisCard = card;
+    _aisCard = card; _aisCardBody = body; _aisCardProps = props;
     return card;
   }
+  // Visual propulsion override (Rule 12/18 honesty): your eyes correct the AIS registry — re-render live.
+  window.aisSetKind = function (mmsi, kind) {
+    if (window.HelmAisAdvisor && HelmAisAdvisor.setTargetKind) HelmAisAdvisor.setTargetKind(mmsi, kind);
+    if (_aisCardBody && _aisCardProps && +_aisCardProps.mmsi === +mmsi) _aisCardBody.innerHTML = aisPopupHTML(_aisCardProps);
+  };
   // A rotate/resize must never strand the card off-screen; Esc dismisses it.
   window.addEventListener('resize', function () { if (_aisCard) clampAisCard(_aisCard, parseFloat(_aisCard.style.left) || 0, parseFloat(_aisCard.style.top) || 0); });
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAisCard(); });

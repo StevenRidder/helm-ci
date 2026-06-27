@@ -20,12 +20,16 @@
   // AIS ship-type / nav-status → 'sail' | 'power' | 'unknown' (for Rules 12 & 18). 36 = sailing,
   // nav-status 8 = under-way-sailing. Clear power categories (fishing/HSC/special/passenger/cargo/
   // tanker) → power. Everything else (incl. 37 pleasure, unset) is unknown — we never assume.
-  function vesselKind(t) {
+  function aisKind(t) {                                        // pure AIS-registry reading: sail | power | unknown
     var st = +t.shipType, ns = +t.navStatus;
     if (st === 36 || ns === 8) return 'sail';
     if ((st >= 30 && st <= 35) || (st >= 40 && st <= 89)) return 'power';
     return 'unknown';
   }
+  function ovKind(mmsi) { try { return (window.HelmAisAdvisor && HelmAisAdvisor.getTargetKind) ? HelmAisAdvisor.getTargetKind(mmsi) : null; } catch (e) { return null; } }
+  // Effective kind — the skipper's VISUAL override wins over the AIS registry. A boat squawking "sailing"
+  // with her sails down under engine IS power-driven; only you, with eyes on her, can call that.
+  function vesselKind(t) { var ov = ovKind(t && t.mmsi); return (ov === 'sail' || ov === 'power') ? ov : aisKind(t); }
   function tackOf(course, windFrom) { return norm(windFrom - course) < 180 ? 'starboard' : 'port'; }   // wind over which side
   function ownIsWindward(t, windFrom) {                       // own at origin; target by bearing+range
     var pe = (t.range || 1) * Math.sin(t.brg * Math.PI / 180), pn = (t.range || 1) * Math.cos(t.brg * Math.PI / 180);
@@ -56,22 +60,22 @@
 
     // Rule 18 — a power-driven vessel keeps clear of a sailing vessel (no wind needed).
     if (ownSail && tk === 'power')
-      return { type: 'Sail vs power', role: 'stand-on', rule: 'Rule 18', sail: true, action: 'You are under sail; she is power-driven — she must keep clear (Rule 18). Hold course & speed; be ready if she does not.' };
+      return { type: 'Sail vs power', role: 'stand-on', rule: 'Rule 18', sail: true, action: 'Power keeps clear of sail (Rule 18) — she gives way. Hold course & speed; watch her and be ready if she doesn\'t.' };
     if (!ownSail && tk === 'sail')
-      return { type: 'Power vs sail', role: 'give-way', rule: 'Rule 18', sail: true, action: 'She is under sail; you are power-driven — keep clear (Rule 18). Alter early and pass well clear.' };
+      return { type: 'Power vs sail', role: 'give-way', rule: 'Rule 18', sail: true, action: 'Give way to the sailing vessel (Rule 18) — alter early and pass well clear.' };
 
     // Rule 12 — between two sailing vessels (needs the wind direction).
     if (ownSail && tk === 'sail') {
       if (wind == null)
-        return { type: 'Both sailing', role: 'monitor', rule: 'Rule 12', sail: true, needWind: true, action: 'Both under sail — set the wind direction so I can tell who gives way (tack / windward).' };
+        return { type: 'Both sailing', role: 'monitor', rule: 'Rule 12', sail: true, needWind: true, action: 'Both under sail — set the wind so I can work out the tacks (Rule 12).' };
       const ot = tackOf(own.cog, wind), tt = tackOf(t.cog, wind);
       if (ot !== tt)
         return ot === 'port'
-          ? { type: 'Opposite tacks', role: 'give-way', rule: 'Rule 12', sail: true, action: 'You are on PORT tack, she is on starboard — you keep clear (Rule 12). Bear away and pass astern.' }
-          : { type: 'Opposite tacks', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'You are on STARBOARD tack — hold (Rule 12); the port-tack boat keeps clear. Watch her.' };
+          ? { type: 'Opposite tacks', role: 'give-way', rule: 'Rule 12', sail: true, action: 'You\'re on PORT tack — give way to the starboard-tack boat (Rule 12). Bear away and pass astern.' }
+          : { type: 'Opposite tacks', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'You\'re on STARBOARD tack — stand on (Rule 12); the port-tack boat keeps clear. Watch her.' };
       return ownIsWindward(t, wind)
-        ? { type: 'Same tack', role: 'give-way', rule: 'Rule 12', sail: true, action: 'Same tack — you are to WINDWARD, she is to leeward — you keep clear (Rule 12). Bear away to pass clear.' }
-        : { type: 'Same tack', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'Same tack — you are to LEEWARD — hold (Rule 12); the windward boat keeps clear.' };
+        ? { type: 'Same tack', role: 'give-way', rule: 'Rule 12', sail: true, action: 'Same tack — you\'re to windward — give way (Rule 12). Bear away to pass clear.' }
+        : { type: 'Same tack', role: 'stand-on', rule: 'Rule 12', sail: true, action: 'Same tack — you\'re to leeward — stand on (Rule 12); the windward boat keeps clear.' };
     }
 
     // Power vs power (or unknown vessel type) — Rule 14 / 15 / 17.
@@ -83,6 +87,9 @@
   }
   // Expose the COLREGS classifier so the evasion advisor (ais-advisor.js) reuses the SAME role/rule/action.
   window.HelmColregs = classify;
+  // What the card shows + lets you correct: the AIS-registry reading, your visual override, and the
+  // effective kind the rules actually use.
+  window.HelmColregsKind = function (t) { return { ais: aisKind(t || {}), override: ovKind(t && t.mmsi), effective: vesselKind(t || {}) }; };
 
   // The alarm trigger IS the HelmAisRisk danger tier — one source of truth, no duplicate fallback.
   const dangerous = t => HelmAisRisk.isDanger(t);
