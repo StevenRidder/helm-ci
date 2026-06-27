@@ -1,2 +1,12 @@
 .gitattributes export-ignore
 scripts/publish-public-mirror.sh export-ignore
+docs/AUDIT-2026-06-26.md export-ignore
+docs/BUSINESS-MODEL.md export-ignore
+docs/EPICS.md export-ignore
+docs/FEATURE-TRACKER.md export-ignore
+docs/LABS.md export-ignore
+docs/PUBLIC-ALPHA-CHECKLIST.md export-ignore
+docs/TIDES_UI_SPEC.md export-ignore
+docs/posts/ export-ignore
+docs/decisions/0003-license-posture.md export-ignore
+docs/decisions/0010-distribution-and-packaging-posture.md export-ignore
