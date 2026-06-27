@@ -42,7 +42,8 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 |---|---|
 | macOS source build | Documented path. Build `helm-server`, run it locally, open the browser UI. |
 | Browser UI | Reference client. Served by `helm-server`; can also be served as a static demo with `web/serve.py`. |
-| Charts | Real S-52 tiles require NOAA ENC `.000` files or other configured chart data. Without charts, the UI still loads but chart tiles are empty/unavailable. |
+| Charts | Helm does not include chart packs. Real S-52 tiles require user-provided OpenCPN-compatible charts such as NOAA ENC `.000` cells, pointed to with `HELM_ENC`. |
+| Local basemaps | User-owned MBTiles/raster packs stay local and are served at runtime; do not commit chart packs or private imagery to Git. |
 | Boat data | Live movement requires NMEA 0183, SignalK, or another configured input. The server does not silently invent live boat data. |
 | Linux / Windows | Not a one-command supported path yet. Expect porting/dependency work. |
 | Native desktop/mobile app | Not shipped yet. |
@@ -110,6 +111,7 @@ the part you are running.
 | Optional weather service | `services/wx/requirements.txt` |
 | Web tests | `web/test/package.json` |
 | Runtime chart data | NOAA ENC `.000` cells, pointed to with `HELM_ENC` |
+| Runtime basemap data | User-owned MBTiles/raster packs served locally, outside Git |
 | Runtime boat data | NMEA 0183, SignalK, or configured connection input |
 
 ## Quick Start (macOS)
@@ -134,6 +136,23 @@ open http://127.0.0.1:9001/
 Use [docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input,
 and end-to-end verification. In the shared development environment, do not use
 `:8080`; use a private development port instead.
+
+## Bring Your Own Charts
+
+Helm does not ship Steve's private charts, private satellite packs, `~/.helm`
+runtime data, or generated gigabytes of chart/cache output. The public repo is
+code plus safe sample/public data.
+
+For real charting, provide your own local chart data at runtime:
+
+- point `HELM_ENC` at an OpenCPN-compatible ENC `.000` file for S-52 rendering;
+- serve your own MBTiles/raster basemap packs locally if you want chart or
+  imagery underlays;
+- keep private chart packs, downloaded imagery, and runtime caches outside Git.
+
+The optional `Online fill` layer is an internet/cache underlay for filling gaps
+beneath local/user-owned charts. It is off by default and is not a replacement
+for proper local chart data.
 
 ## The tracer bullet (first code)
 

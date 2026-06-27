@@ -13,7 +13,8 @@ ARCHIVE="${WORK_ROOT}/source.tar"
 EXPORT_DIR="${WORK_ROOT}/export"
 PUBLIC_CLONE="${WORK_ROOT}/public"
 
-HIDDEN_PATH_RE='^(PRD\.md|docs/(ROADMAP|FEATURE-AUDIT|FEATURE-TRACKER|EPICS|LABS|VISION|SPACETIME-PROBE|WEATHER-ROUTING|BRIEFINGS|PUBLIC-ALPHA-CHECKLIST|HANDOFF-TESTING|TIDES_UI_SPEC)\.md|docs/posts/|docs/mockups/|docs/integrations/awesome-maplibre-STATUS\.md|docs/decisions/(0003-license-posture|0006-destination-dossier-and-briefings|0007-spacetime-probe|0010-distribution-and-packaging-posture)\.md|scripts/publish-public-mirror\.sh|\.gitattributes$)'
+HIDDEN_PATH_RE='^(PRD\.md|docs/(ROADMAP|FEATURE-AUDIT|FEATURE-TRACKER|EPICS|LABS|VISION|SPACETIME-PROBE|WEATHER-ROUTING|BRIEFINGS|PUBLIC-ALPHA-CHECKLIST|HANDOFF-TESTING|TIDES_UI_SPEC)\.md|docs/posts/|docs/mockups/|docs/integrations/awesome-maplibre-STATUS\.md|docs/decisions/(0003-license-posture|0006-destination-dossier-and-briefings|0007-spacetime-probe|0010-distribution-and-packaging-posture)\.md|scripts/publish-public-mirror\.sh|\.gitattributes$|.*\.(mbtiles|kap|000|s57|S57|s63|S63|senc|SENC|grb|grb2|grib2|zip)$|charts/|cache/|chart-packs/|basemaps/|tiles/|\.helm/|web/data/charts/|web/data/sat/|web/data/wxtiles/|pipeline/region\.env$)'
+PUBLIC_SAMPLE_PATH_ALLOW_RE='^web/data/predictwind-demo\.grb2$'
 HIDDEN_TEXT_RE='PRD\.md|ROADMAP\.md|FEATURE-AUDIT\.md|FEATURE-TRACKER\.md|EPICS\.md|LABS\.md|VISION\.md|SPACETIME-PROBE\.md|WEATHER-ROUTING\.md|BRIEFINGS\.md|PUBLIC-ALPHA-CHECKLIST\.md|HANDOFF-TESTING\.md|TIDES_UI_SPEC\.md|docs/mockups|docs/posts|0003-license-posture|0010-distribution-and-packaging-posture|0006-destination-dossier-and-briefings|0007-spacetime-probe|awesome-maplibre-STATUS|BUSINESS-MODEL|COMPETITIVE|BUILD-PLAN-COMMUNITY-LLM|nfl-outreach-draft|CLAUDE\.md|AGENTS\.md'
 HARD_SECRET_RE='(/Users/steveridder|Dropbox|PM_MCP_TOKEN|taikun-plan|plan\.taikunai|sk-[A-Za-z0-9_-]{20,}|ghp_[A-Za-z0-9_]{20,}|BEGIN (RSA |OPENSSH |EC |DSA )?PRIVATE KEY)'
 RUNTIME_GUARD_FILES=(
@@ -29,11 +30,14 @@ RUNTIME_REQUIRED_TEXT=(
   'Online fill'
   'helm-chart-online-fill'
   'data-layer="helm-chart-online-fill"'
-  'Navionics chart'
-  'Google satellite'
-  'Bing satellite'
-  'ArcGIS satellite'
   'data-base="navionics" checked'
+  'data-base="googlesat"'
+  'data-base="bingsat"'
+  'data-base="arcgis"'
+  'localhost:8091/navionics'
+  'localhost:8091/googlesat'
+  'localhost:8091/bingsat'
+  'localhost:8091/arcgis'
   'ui.onlineFill'
   'basemap/eox'
   '8095'
@@ -63,7 +67,7 @@ scan_tree() {
   local rel_files
   rel_files="$(cd "$tree_dir" && find . -type f -not -path './.git/*' | sed 's#^\./##' | LC_ALL=C sort)"
 
-  if printf '%s\n' "$rel_files" | rg -n "$HIDDEN_PATH_RE" >/tmp/helm-public-hidden-paths.$$; then
+  if printf '%s\n' "$rel_files" | rg -n "$HIDDEN_PATH_RE" | rg -v "$PUBLIC_SAMPLE_PATH_ALLOW_RE" >/tmp/helm-public-hidden-paths.$$; then
     cat /tmp/helm-public-hidden-paths.$$
     rm -f /tmp/helm-public-hidden-paths.$$
     die "hidden private paths are present in export"
@@ -94,6 +98,22 @@ scan_runtime_contract() {
       die "runtime guard failed: expected '$term' in private/live UI or basemap-fill files"
     fi
   done
+
+  if ! (cd "$tree_dir" && rg -q 'Navionics chart|Local chart pack' web/index.html); then
+    die "runtime guard failed: expected a local/user-owned chart-pack label in web/index.html"
+  fi
+
+  if ! (cd "$tree_dir" && rg -q 'Google satellite|Local imagery A' web/index.html); then
+    die "runtime guard failed: expected first local/user-owned imagery slot in web/index.html"
+  fi
+
+  if ! (cd "$tree_dir" && rg -q 'Bing satellite|Local imagery B' web/index.html); then
+    die "runtime guard failed: expected second local/user-owned imagery slot in web/index.html"
+  fi
+
+  if ! (cd "$tree_dir" && rg -q 'ArcGIS satellite|Local imagery C' web/index.html); then
+    die "runtime guard failed: expected third local/user-owned imagery slot in web/index.html"
+  fi
 
   for term in "${RUNTIME_FORBIDDEN_TEXT[@]}"; do
     if (cd "$tree_dir" && rg -F -n -- "$term" web/index.html web/style.json web/style/helm-chart-basemaps.json); then

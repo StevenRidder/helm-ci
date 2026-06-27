@@ -64,6 +64,11 @@ something is missing.
 
 ## 2. Chart and Weather Data
 
+Helm does not include chart packs. Bring your own local charts/basemaps at
+runtime, the same general posture as OpenCPN: the repo supplies code and safe
+sample/public data, while user-owned ENC cells, MBTiles, private satellite
+packs, `~/.helm` runtime data, and generated caches stay outside Git.
+
 ### NOAA ENC Cells
 
 Free US ENC cells are available from NOAA:
@@ -81,6 +86,17 @@ mkdir -p /tmp/ENC_ROOT
 `/tmp/ENC_ROOT/US5FL96M/US5FL96M.000`. If no ENC is present, the server still
 starts and the UI still loads, but chart tiles for that demo cell will be empty
 or unavailable.
+
+### Local Basemap Packs
+
+The browser UI has local/user-owned chart and imagery slots. In Steve's local
+cockpit those are served from local packs on `:8091`; another user can point the
+same slots at their own local MBTiles/raster service or configure equivalent
+local basemap sources. Do not commit MBTiles, ENC bundles, private imagery, or
+generated chart caches to this repo.
+
+`Online fill` is an optional underlay/cache on `:8095`. It can help fill gaps
+under local charts, but it is off by default and is not the primary chart source.
 
 ### Depth-on-Satellite GeoJSON
 
