@@ -439,9 +439,15 @@ async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: f
     vals: List[Optional[float]] = [None] * (nx * ny)
     us = [0.0] * (nx * ny); vs = [0.0] * (nx * ny)
     BATCH = 140
+    failed = 0
 
     async def do_batch(chunk):
-        nodes = await _fetch_points(layer, [lats[j] for (j, i) in chunk], [lons[i] for (j, i) in chunk])
+        nonlocal failed
+        try:
+            nodes = await _fetch_points(layer, [lats[j] for (j, i) in chunk], [lons[i] for (j, i) in chunk])
+        except Exception:
+            failed += 1            # one bad batch (e.g. a transient 429 on a cold-start burst) must NOT
+            return                 # sink the whole region warm — leave its points NODATA, keep the rest
         for k, (j, i) in enumerate(chunk):
             c = (nodes[k] or {}).get("current") or {}
             v = c.get(cfg["v"])
@@ -453,7 +459,9 @@ async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: f
                     us[j * nx + i] = sign * vv * math.sin(d * D2R)
                     vs[j * nx + i] = sign * vv * math.cos(d * D2R)
 
-    await asyncio.gather(*[do_batch(pts[b:b + BATCH]) for b in range(0, len(pts), BATCH)])
+    batches = [pts[b:b + BATCH] for b in range(0, len(pts), BATCH)]
+    await asyncio.gather(*[do_batch(c) for c in batches])
+    valid = sum(1 for v in vals if v is not None)
     reg = {"bbox": (w, s, e, n), "grid": Grid(nx, ny, lons[0], lats[-1], lons[-1], lats[0], vals), "t": time.time()}
     if cfg.get("vector"):
         hdr = {"nx": nx, "ny": ny, "lo1": lons[0], "la1": lats[0], "lo2": lons[-1], "la2": lats[-1],
@@ -469,7 +477,8 @@ async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: f
     shutil.rmtree(os.path.join(CACHE_DIR, "tiles", layer), ignore_errors=True)
     for k in [k for k in list(_vel) if k.startswith("vel|" + layer + "|")]:
         _vel.pop(k, None)
-    return {"layer": layer, "nx": nx, "ny": ny, "points": nx * ny, "res_deg": res, "bbox": [w, s, e, n]}
+    return {"layer": layer, "nx": nx, "ny": ny, "points": nx * ny, "valid": valid,
+            "failed_batches": failed, "batches": len(batches), "res_deg": res, "bbox": [w, s, e, n]}
 
 
 async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
@@ -714,16 +723,32 @@ async def _startup_warm():
     except Exception:
         return
     layers = [x.strip() for x in os.environ.get("HELM_WX_WARM_LAYERS", "current,wind").split(",") if x.strip()]
+    print(f"[helm-wx] auto-warm scheduled: layers={layers} bbox=({w},{s},{e},{n}) refresh={REGION_TTL}s", flush=True)
+
+    async def warm_once(L):
+        # Retry transient cold-start failures (e.g. a 429 burst) with backoff instead of silently going
+        # coarse for a whole REGION_TTL. valid==0 means every batch failed (do_batch swallows per-batch).
+        for attempt in range(1, 5):
+            try:
+                async with _region_lock:
+                    r = await warm_region(L, w, s, e, n)
+                if r.get("valid", 0) > 0:
+                    note = f" ({r['failed_batches']}/{r['batches']} batches failed)" if r.get("failed_batches") else ""
+                    print(f"[helm-wx] warmed {L}: {r['valid']}/{r['points']} cells{note}", flush=True)
+                    return True
+                print(f"[helm-wx] warm {L} attempt {attempt}: 0 cells (all batches failed) — retrying", flush=True)
+            except Exception as ex:
+                print(f"[helm-wx] warm {L} attempt {attempt} FAILED: {ex!r} — retrying", flush=True)
+            await asyncio.sleep(min(30, 5 * attempt))
+        print(f"[helm-wx] warm {L}: gave up after retries — that layer stays coarse until next refresh", flush=True)
+        return False
 
     async def loop():
+        await asyncio.sleep(2)   # let the app finish starting before the cold-start fetch burst
         while True:
-            async with _region_lock:
-                for L in layers:
-                    if L in LAYERS:
-                        try:
-                            await warm_region(L, w, s, e, n)
-                        except Exception:
-                            pass
+            for L in layers:
+                if L in LAYERS:
+                    await warm_once(L)
             await asyncio.sleep(REGION_TTL)
     asyncio.create_task(loop())
 
