@@ -51,4 +51,23 @@ test.describe('TOOLS-1 — measure: keepable, editable, persisted lines', () => 
     expect(await count(page)).toBe(0);
     expect(await stored(page)).toBe(0);
   });
+
+  test('EDIT mode: tap selects a line, Delete removes it; an edit-mode tap never draws', async ({ page }) => {
+    await boot(page);
+    await page.evaluate(() => { window.HelmStore.set('measure.lines', []); window.map.jumpTo({ center: [0, 0], zoom: 6 }); window.__helmMeasure.setActive(true); });
+    // Draw is the default mode — lay two lines
+    await tap(page, 0.10, 0.10); await tap(page, 0.30, 0.10); await page.keyboard.press('Enter');
+    await tap(page, 0.10, -0.20); await tap(page, 0.30, -0.20); await page.keyboard.press('Enter');
+    expect(await count(page)).toBe(2);
+
+    await page.evaluate(() => window.__helmMeasure.setMode('edit'));
+    expect(await page.evaluate(() => window.__helmMeasure.mode())).toBe('edit');
+    await tap(page, 0.80, 0.80);                                      // empty space
+    expect(await count(page), 'an edit-mode tap must NOT draw a new line').toBe(2);
+
+    await tap(page, 0.20, 0.10);                                      // midpoint of line 1
+    expect(await page.evaluate(() => window.__helmMeasure.selected()), 'tap selects the line under it').not.toBeNull();
+    await page.evaluate(() => window.__helmMeasure.deleteSel());      // Delete button
+    expect(await count(page), 'the selected line is deleted').toBe(1);
+  });
 });
