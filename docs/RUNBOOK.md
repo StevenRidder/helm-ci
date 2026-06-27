@@ -97,6 +97,9 @@ generated chart caches to this repo.
 
 `Online fill` is an optional underlay/cache on `:8095`. It can help fill gaps
 under local charts, but it is off by default and is not the primary chart source.
+The online-fill toggle in the UI persists its on/off state, and on a LAN it
+rewrites the basemap-fill host to the serving machine's address so other devices
+on the network reach the same `:8095` proxy.
 
 ### Depth-on-Satellite GeoJSON
 
@@ -251,5 +254,6 @@ It starts private test instances and verifies:
 Helm is pre-alpha navigation software. It is not type-approved ECDIS, not a
 primary navigation system, and not a substitute for official charts,
 instruments, watchkeeping, or seamanship. See [SAFETY.md](../SAFETY.md),
-[LEGAL.md](LEGAL.md), and [CLIENT-LICENSE-REGISTER.md](CLIENT-LICENSE-REGISTER.md)
-before distributing a public build.
+[LEGAL.md](LEGAL.md), [CLIENT-LICENSE-REGISTER.md](CLIENT-LICENSE-REGISTER.md),
+and [PUBLIC-ALPHA-CHECKLIST.md](PUBLIC-ALPHA-CHECKLIST.md) before distributing
+a public build.

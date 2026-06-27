@@ -137,6 +137,8 @@ say "build helm targets (-j$JOBS)"
 # on ONE port, default 8080) that helm_server.cpp implements and that .claude/run-helm-server.sh
 # + .claude/launch.json exec. It is built by default here (ENGINE-12) so the reproducible build
 # produces build/cli/helm-server and one-origin launchers work with no manual extra step.
+# helm-tides / helm-tides-smoke / helm-tides-fetch are the OpenCPN tide engine, its smoke check,
+# and the tide-catalog fetch helper; building them by default keeps the tide stack reproducible too.
 cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-tiles helm-engine helm-server -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"

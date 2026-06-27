@@ -76,6 +76,10 @@ docs/decisions/0006-destination-dossier-and-briefings.md
 docs/decisions/0007-spacetime-probe.md
 docs/decisions/0010-distribution-and-packaging-posture.md
 
+# Generated design archives can embed local paths; commit expanded assets instead.
+docs/design/app-icons/*.zip
+docs/Helm Icons/Official Icons/*.zip
+
 # Secrets / API keys (Windy, etc.)
 .env
 .env.*
