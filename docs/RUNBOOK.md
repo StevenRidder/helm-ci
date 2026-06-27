@@ -82,10 +82,12 @@ mkdir -p /tmp/ENC_ROOT
 # /tmp/ENC_ROOT/US5FL96M/US5FL96M.000
 ```
 
-`helm-server` reads a single ENC from `HELM_ENC`, defaulting to
-`/tmp/ENC_ROOT/US5FL96M/US5FL96M.000`. If no ENC is present, the server still
-starts and the UI still loads, but chart tiles for that demo cell will be empty
-or unavailable.
+`helm-server` reads a single ENC from `HELM_ENC` — a user-provided NOAA `.000`
+cell (Helm ships no chart packs). It needs a valid cell to boot today, so point
+`HELM_ENC` at one. The S-52 **presentation library** it renders with is installed
+durably by `bootstrap.sh` into `~/.helm/runtime/s57data` (override with
+`HELM_S57_DATA`) — no manual `/tmp` setup, and it survives a reboot. *(Booting with
+no ENC at all — basemap-only — is a planned follow-up.)*
 
 ### Local Basemap Packs
 
