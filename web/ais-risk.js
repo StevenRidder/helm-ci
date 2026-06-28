@@ -35,6 +35,18 @@
   // onto an anchored hull); only the distant "noise" is dropped.
   var ANCHORED_KTS = 0.5;
   var ownSog = null, anchored = false;
+  // Hard-CPA floor (SAFETY): a near-certain hit must read DANGER even when it's OUTSIDE the active
+  // profile's TCPA window. Anchored auto-tightening caps the window at 10 min, so an 8 kn boat dead-on
+  // at 0.02 NM but 14 min out would otherwise read only "caution". Below HIT_CPA_NM and still closing
+  // within HIT_TCPA_MAX we escalate to danger regardless of the band — and regardless of an engine
+  // 'caution'/'normal' (a stricter CLIENT policy on the engine's authoritative cpa/tcpa; never a downgrade).
+  var HIT_CPA_NM = 0.1, HIT_TCPA_MAX = 30.0;
+  // Underway override: the anchored auto-tighten assumes "stationary == safely parked" — wrong for
+  // hove-to / drifting / fishing, where you want the WIDER bands + earlier warning. This lets the
+  // skipper say "treat me as underway" so a low SOG no longer tightens the profile.
+  var UNDERWAY_KEY = 'helm.ais.risk.underway';
+  function loadUnderway() { try { return !!(global.localStorage && global.localStorage.getItem(UNDERWAY_KEY) === '1'); } catch (e) { return false; } }
+  var underwayOverride = loadUnderway();
   // Canonical palette in ONE place. danger/caution/normal for the risk tiers; lost/sart for the
   // symbology overrides (a SART is always distress-pink; a lost/aged target is always grey).
   var COL = { danger: '#ff5a52', caution: '#f5c451', normal: '#43d17d', lost: '#7d8a98', sart: '#ff3b8b' };
@@ -54,11 +66,11 @@
   // (for the UI) and target-speed gate.
   function settings() {
     var b = baseProfile();
-    if (!anchored) return b;
+    if (!anchored || underwayOverride) return b;      // hove-to/drifting: skipper kept the wide bands
     var h = PROFILES.harbor;
     return { id: b.id, label: b.label, cpa: Math.min(b.cpa, h.cpa), tcpa: Math.min(b.tcpa, h.tcpa), minTargetSog: b.minTargetSog };
   }
-  function profile() { var s = settings(); return { id: s.id, label: s.label, cpa: s.cpa, tcpa: s.tcpa, minTargetSog: s.minTargetSog, anchored: anchored }; }
+  function profile() { var s = settings(); return { id: s.id, label: s.label, cpa: s.cpa, tcpa: s.tcpa, minTargetSog: s.minTargetSog, anchored: anchored, underway: underwayOverride, tightened: anchored && !underwayOverride }; }
   function profiles() {
     return Object.keys(PROFILES).map(function (id) { return clone(PROFILES[id]); });
   }
@@ -82,6 +94,15 @@
     fireChanged();                              // selected profile changed → consumers re-apply
     return profile();
   }
+  // "Treat me as underway" — disable the anchored auto-tighten for hove-to / drifting / fishing.
+  function setUnderwayOverride(v) {
+    var nv = !!v;
+    if (nv === underwayOverride) return profile();
+    underwayOverride = nv;
+    try { if (global.localStorage) global.localStorage.setItem(UNDERWAY_KEY, nv ? '1' : '0'); } catch (e) {}
+    fireChanged();                              // tightening toggled → re-band engine + re-apply chart exprs
+    return profile();
+  }
   // Live ownship speed → anchored detection. Crossing the threshold re-fires the change event so the
   // STATIC chart colour/icon expressions get re-applied (collision.js listens); per-frame consumers
   // (ais-vectors cones, the list) already re-read settings() each tick.
@@ -100,16 +121,28 @@
       ['!', ['has', 'sog']],
       ['>=', ['coalesce', ['get', 'sog'], 999], p.minTargetSog]];
   }
+  // Hard-CPA floor as a MapLibre predicate (chart symbol/cone parity with tier()'s floor).
+  function hardHitExpr(p) {
+    return ['all',
+      ['!=', ['get', 'cpaValid'], false],
+      targetSpeedOkExpr(p),
+      ['<', ['coalesce', ['get', 'cpa'], 99], HIT_CPA_NM],
+      ['>', ['coalesce', ['get', 'tcpa'], -999], 0],
+      ['<', ['coalesce', ['get', 'tcpa'], 99], HIT_TCPA_MAX]];
+  }
 
   // tier(t) → 'danger' | 'caution' | 'normal', from the engine's authoritative cpa/tcpa.
   function tier(t) {
     if (!t) return 'normal';
-    if (t.risk === 'danger' || t.risk === 'caution' || t.risk === 'normal') return t.risk;   // engine wins
+    var cpa = n(t.cpa), tcpa = n(t.tcpa), p = settings();
+    // Hard-CPA floor FIRST: a near-certain hit still closing within the window is DANGER, overriding an
+    // engine/profile 'caution'/'normal'. Uses the engine's authoritative cpa/tcpa; never a downgrade.
+    if ((t.cpaValid !== false && t.cpaValid !== 'false') && targetSpeedOK(t, p)
+        && cpa != null && cpa < HIT_CPA_NM && tcpa != null && tcpa > 0 && tcpa < HIT_TCPA_MAX) return 'danger';
+    if (t.risk === 'danger' || t.risk === 'caution' || t.risk === 'normal') return t.risk;   // engine wins (below the hard floor)
     if (t.cpaValid === false || t.cpaValid === 'false') return 'normal';      // no valid CPA solution
-    var cpa = n(t.cpa); if (cpa == null) return 'normal';
-    var p = settings();
+    if (cpa == null) return 'normal';
     if (!targetSpeedOK(t, p)) return 'normal';                                // profile speed gate
-    var tcpa = n(t.tcpa);
     if (tcpa == null) return cpa < p.cpa ? 'caution' : 'normal';              // no tcpa: can't assert closing → cap at caution
     if (tcpa <= 0) return 'normal';                                           // opening / past CPA — not a threat
     if (cpa < p.cpa && tcpa < p.tcpa) return 'danger';                        // == active profile's CPA alarm
@@ -134,6 +167,7 @@
     // the local clause is gated on the risk field being ABSENT — preserving engine authority.
     return ['any',
       ['==', ['get', 'risk'], 'danger'],
+      hardHitExpr(p),                                            // hard-CPA floor — escalates over an engine downgrade
       ['all', ['!', ['has', 'risk']], localDanger]];
   }
   function tierExprValue(dangerValue, cautionValue, normalValue) {
@@ -145,6 +179,7 @@
     var caution = ['all', speedOK, ['<', cpa, p.cpa * CAUTION_MULT], ['>', tcpa, 0], ['<', tcpa, p.tcpa * CAUTION_MULT]];
     var cautionNoTcpa = ['all', speedOK, ['!', ['has', 'tcpa']], ['<', cpa, p.cpa]];
     return ['case',
+      hardHitExpr(p), dangerValue,                              // hard-CPA floor first — overrides an engine downgrade
       ['==', ['get', 'risk'], 'danger'], dangerValue,
       ['==', ['get', 'risk'], 'caution'], cautionValue,
       ['==', ['get', 'risk'], 'normal'], normalValue,
@@ -169,7 +204,7 @@
   global.HelmAisRisk = {
     tier: tier, isDanger: isDanger, color: color,
     dangerExpr: dangerExpr, riskColorExpr: riskColorExpr, riskIconExpr: riskIconExpr,
-    profile: profile, profiles: profiles, setProfile: setProfile, setOwnSpeed: setOwnSpeed,
+    profile: profile, profiles: profiles, setProfile: setProfile, setOwnSpeed: setOwnSpeed, setUnderwayOverride: setUnderwayOverride,
     PROFILE_KEY: PROFILE_KEY, DEFAULT_PROFILE: DEFAULT_PROFILE, CAUTION_MULT: CAUTION_MULT, COL: COL,
     // Compatibility aliases for older callers. They reflect the active profile at load time only;
     // new code should call profile(), dangerExpr(), riskColorExpr(), or riskIconExpr().

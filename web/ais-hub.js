@@ -126,12 +126,22 @@
       ml.appendChild(mlt); ml.appendChild(anch); mode.appendChild(ml);
       var seg = document.createElement('div'); seg.className = 'aish-seg'; mode.appendChild(seg);
       var sub = document.createElement('div'); sub.className = 'aish-msub'; mode.appendChild(sub);
+      // Underway override — shown only when the boat reads as anchored. Lets a hove-to / drifting skipper
+      // keep the WIDE bands instead of the auto-tighten (their stationary SOG isn't "safely parked").
+      var uwLab = document.createElement('label');
+      uwLab.style.cssText = 'display:none;align-items:center;gap:5px;font-size:10.5px;color:var(--cdim,#9bb0c0);cursor:pointer;margin-top:5px';
+      var uwCb = document.createElement('input'); uwCb.type = 'checkbox'; uwCb.style.cssText = 'width:13px;height:13px;accent-color:#5dd0b0';
+      uwCb.addEventListener('change', function () { HelmAisRisk.setUnderwayOverride(uwCb.checked); });   // paint() re-runs via the risk-profile event
+      uwLab.appendChild(uwCb); uwLab.appendChild(document.createTextNode('Treat as underway (hove-to / drifting)'));
+      mode.appendChild(uwLab);
       function trim(x) { return (Math.round(x * 10) / 10).toString().replace(/\.0$/, ''); }
       function paint() {
         var cur = HelmAisRisk.profile();           // effective (anchored-aware); .id = selected
         Array.prototype.forEach.call(seg.children, function (b) { b.classList.toggle('on', b.getAttribute('data-id') === cur.id); });
         sub.textContent = 'CPA ' + trim(cur.cpa) + ' NM · ' + Math.round(cur.tcpa) + ' min · vessels ≥ ' + trim(cur.minTargetSog) + ' kn';
-        anch.textContent = cur.anchored ? '⚓ anchored → tightened' : '';
+        anch.textContent = cur.tightened ? '⚓ anchored → tightened' : (cur.anchored ? '⚓ anchored · treated as underway' : '');
+        uwLab.style.display = cur.anchored ? 'flex' : 'none';
+        uwCb.checked = !!cur.underway;
       }
       HelmAisRisk.profiles().forEach(function (p) {
         var b = document.createElement('button'); b.type = 'button'; b.setAttribute('data-id', p.id); b.textContent = p.label; b.title = 'Collision-risk profile: ' + p.label;
