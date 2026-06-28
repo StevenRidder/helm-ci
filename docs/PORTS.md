@@ -29,5 +29,13 @@ HELM_MBTILES_DIR="$HOME/Charts/mbtiles" \
   python3 pipeline/mbtiles_server.py 8091
 ```
 
+If MBTiles are temporarily on another Mac, use the cache-backed proxy instead
+of a thin one-hop proxy:
+
+```bash
+HELM_BASEMAP_UPSTREAM="http://192.168.1.137:8091" \
+  scripts/start-helm.sh --port 8080 --weather --basemap-proxy --fill
+```
+
 Commercial, proprietary, or personally acquired chart packs must stay local and
 must not be committed to this repository.

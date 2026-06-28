@@ -104,6 +104,23 @@ same slots at their own local MBTiles/raster service or configure equivalent
 local basemap sources. Do not commit MBTiles, ENC bundles, private imagery, or
 generated chart caches to this repo.
 
+Best performance comes from copying the owned MBTiles packs to the machine that
+is serving the UI and starting the local basemap helper:
+
+```bash
+HELM_MBTILES_DIR="$HOME/.helm/basemaps/fiji-tcl2407" \
+  scripts/start-helm.sh --port 8080 --weather --basemap --fill
+```
+
+If the packs live on another Mac temporarily, use the cache-backed proxy rather
+than a thin forwarding proxy. The first view still warms from the upstream Mac,
+but repeated zoom/pan serves from `~/.helm/basemap-proxy-cache`:
+
+```bash
+HELM_BASEMAP_UPSTREAM="http://192.168.1.137:8091" \
+  scripts/start-helm.sh --port 8080 --weather --basemap-proxy --fill
+```
+
 `Online fill` is an optional underlay/cache on `:8095`. It can help fill gaps
 under local charts, but it is off by default and is not the primary chart source.
 The online-fill toggle in the UI persists its on/off state, and on a LAN it

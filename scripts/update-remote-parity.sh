@@ -35,6 +35,8 @@ Options:
 
 Env:
   HELM_ALLOW_DIRTY=1   Allow running from a checkout with local source changes
+  HELM_BASEMAP_UPSTREAM=http://host:8091
+                       Start cache-backed basemap proxy on :8091
 EOF
 }
 
@@ -127,9 +129,14 @@ ENC="$(HELM_SAMPLE_ENC_CELL=US5FL4CR scripts/install-sample-enc.sh | tail -n 1)"
 [ -f "$ENC" ] || { echo "update-remote-parity: expected ENC missing: $ENC" >&2; exit 1; }
 
 if [ "$START" = 1 ]; then
+  BASEMAP_ARGS=()
   stop_port "$PORT"
+  if [ -n "${HELM_BASEMAP_UPSTREAM:-}" ]; then
+    stop_port 8091
+    BASEMAP_ARGS=(--basemap-proxy)
+  fi
   stop_port 8093
   stop_port 8095
   echo "update-remote-parity: starting Helm on :$PORT with weather :8093, fill :8095, and $ENC"
-  exec env HELM_ENC="$ENC" scripts/start-helm.sh --port "$PORT" --weather --fill
+  exec env HELM_ENC="$ENC" scripts/start-helm.sh --port "$PORT" --weather "${BASEMAP_ARGS[@]}" --fill
 fi

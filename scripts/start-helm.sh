@@ -10,13 +10,15 @@
 #    scripts/start-helm.sh                 # core only (UI + nav + S-52 charts)
 #    scripts/start-helm.sh --all           # core + every helper whose deps/data are present
 #    scripts/start-helm.sh --weather --fill # core + chosen helpers
+#    HELM_BASEMAP_UPSTREAM=http://192.168.1.137:8091 scripts/start-helm.sh --basemap-proxy
 #
-#  Flags:  --weather  weather value-tile gateway (services/wx) on :8093
-#          --basemap  offline MBTiles basemap server (pipeline) on :8091
-#          --fill     online basemap-fill cache proxy on :8095
-#          --backend  AI/places/community backend on :8090
-#          --all      all of the above (each still skipped if its deps are missing)
-#          --port N   helm-server port (default 8080; use a private port on shared boats)
+#  Flags:  --weather        weather value-tile gateway (services/wx) on :8093
+#          --basemap        offline MBTiles basemap server (pipeline) on :8091
+#          --basemap-proxy  cache-backed proxy to HELM_BASEMAP_UPSTREAM on :8091
+#          --fill           online basemap-fill cache proxy on :8095
+#          --backend        AI/places/community backend on :8090
+#          --all            all except --basemap-proxy (each still skipped if deps/data are missing)
+#          --port N         helm-server port (default 8080; use a private port on shared boats)
 #
 #  Key env (all overridable):
 #    HELM_PORT          core port (default 8080)
@@ -25,7 +27,8 @@
 #    HELM_WEB_ROOT      web/ dir (default: this repo's web/)
 #    HELM_CONFIG        durable config/runtime dir (default ~/.helm/config)
 #    HELM_ENC           NOAA ENC .000 cell for real S-52 charts
-#    HELM_MBTILES_DIR   dir of *.mbtiles for --basemap (optional; else demo web/data)
+#    HELM_MBTILES_DIR       dir of *.mbtiles for --basemap (optional; else demo web/data)
+#    HELM_BASEMAP_UPSTREAM  upstream :8091 URL for --basemap-proxy (example: http://192.168.1.137:8091)
 #
 #  Ctrl-C stops everything this script started.
 # ============================================================================
@@ -42,11 +45,12 @@ HELM_WEB_ROOT="${HELM_WEB_ROOT:-$REPO_ROOT/web}"
 HELM_CONFIG="${HELM_CONFIG:-$HOME/.helm/config}"
 HELM_SAMPLE_ENC="${HELM_SAMPLE_ENC:-$HELM_RUNTIME_DIR/enc/US5FL4CR/US5FL4CR.000}"
 
-WANT_WEATHER=0; WANT_BASEMAP=0; WANT_FILL=0; WANT_BACKEND=0
+WANT_WEATHER=0; WANT_BASEMAP=0; WANT_BASEMAP_PROXY=0; WANT_FILL=0; WANT_BACKEND=0
 while [ $# -gt 0 ]; do
   case "$1" in
     --weather) WANT_WEATHER=1 ;;
     --basemap) WANT_BASEMAP=1 ;;
+    --basemap-proxy) WANT_BASEMAP_PROXY=1 ;;
     --fill)    WANT_FILL=1 ;;
     --backend) WANT_BACKEND=1 ;;
     --all)     WANT_WEATHER=1; WANT_BASEMAP=1; WANT_FILL=1; WANT_BACKEND=1 ;;
@@ -59,7 +63,7 @@ done
 
 die() { echo "start-helm: $*" >&2; exit 1; }
 have_py() { python3 -c "import $1" >/dev/null 2>&1; }
-port_busy() { curl -sf -o /dev/null --max-time 2 "http://127.0.0.1:$1/health" 2>/dev/null; }
+port_busy() { lsof -tiTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1 || curl -sf -o /dev/null --max-time 2 "http://127.0.0.1:$1/health" 2>/dev/null; }
 wx_python() {
   if [ -x "$REPO_ROOT/services/wx/.venv/bin/python" ]; then
     echo "$REPO_ROOT/services/wx/.venv/bin/python"
@@ -127,6 +131,19 @@ if [ "$WANT_BASEMAP" = 1 ]; then
       bash -c "exec python3 '$REPO_ROOT/pipeline/mbtiles_server.py' 8091"
   else
     SKIPPED+=("mbtiles-basemap :8091 — pipeline/mbtiles_server.py not found")
+  fi
+fi
+
+if [ "$WANT_BASEMAP_PROXY" = 1 ]; then
+  if [ "$WANT_BASEMAP" = 1 ]; then
+    SKIPPED+=("basemap-proxy :8091 — skipped because --basemap already requested :8091")
+  elif [ -z "${HELM_BASEMAP_UPSTREAM:-}" ]; then
+    SKIPPED+=("basemap-proxy :8091 — HELM_BASEMAP_UPSTREAM unset (example: http://192.168.1.137:8091)")
+  elif [ -f "$REPO_ROOT/services/basemap-proxy-cache/server.py" ]; then
+    start_bg "basemap-proxy-cache" 8091 \
+      bash -c "exec python3 '$REPO_ROOT/services/basemap-proxy-cache/server.py' 8091"
+  else
+    SKIPPED+=("basemap-proxy :8091 — services/basemap-proxy-cache/server.py not found")
   fi
 fi
 
