@@ -73,13 +73,18 @@ require_clean_tree() {
 
 git_pull_main() {
   if [ -f "$GIT_SSH_KEY" ]; then
-    echo "update-remote-parity: pulling main with $GIT_SSH_KEY"
+    echo "update-remote-parity: pulling main over SSH ($GIT_SSH_KEY)"
     env GIT_SSH_COMMAND="ssh -i $GIT_SSH_KEY -o IdentitiesOnly=yes" git fetch "$GIT_REMOTE_URL" main
-    git merge --ff-only FETCH_HEAD
   else
-    echo "update-remote-parity: pulling main with configured origin"
-    git pull --ff-only origin main
+    # No dedicated SSH key (a cloud agent, or a Mac whose key dropped) — pull over HTTPS so the machine
+    # can STILL sync instead of dead-ending on an SSH origin. Works with gh's git credential helper
+    # (`gh auth setup-git`) or a token embedded in HELM_GIT_HTTPS_URL. Removes the hard SSH-key
+    # dependency that otherwise blocks a keyless machine from ever reaching the latest main.
+    local url="${HELM_GIT_HTTPS_URL:-https://github.com/StevenRidder/Helm.git}"
+    echo "update-remote-parity: no SSH key — pulling main over HTTPS ($url)"
+    git fetch "$url" main
   fi
+  git merge --ff-only FETCH_HEAD
 }
 
 stop_port() {
