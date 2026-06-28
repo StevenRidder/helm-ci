@@ -157,7 +157,7 @@
     }
     function stopPulse() { if (pulse) { clearInterval(pulse); pulse = null; } }
 
-    function render(own, t, others) {
+    function render(own, t, others, cautionCount) {
       const c = classify(own, t);
       const roleClass = c.role === 'give-way' ? 'give' : c.role === 'stand-on' ? 'stand' : 'mon';
       const roleLabel = c.role === 'give-way' ? 'GIVE-WAY' : c.role === 'stand-on' ? 'STAND-ON' : 'MONITOR';
@@ -173,14 +173,20 @@
           '<div class="cpa-tgt">' + esc(name) + ' · CPA ' + fmtNM(t.cpa) + ' in ' + Math.round(t.tcpa) + ' min · ' +
             (t.brg != null ? Math.round(t.brg) + '° / ' + fmtNM(t.range != null ? t.range : 0) : '') + '</div>' +
           '<div class="cpa-act">▸ ' + esc(c.action) + ' <span class="cpa-rule">' + c.rule + '</span></div>' +
-          (others > 0 ? '<div class="cpa-more">+' + others + ' other target' + (others > 1 ? 's' : '') + ' at risk</div>' : '') +
+          // Risk summary matched to the chart's two tiers (AIS-16): danger = red cones/bold lines,
+          // caution = amber early-warning lines. So the count you read maps to what you see.
+          ((others > 0 || cautionCount > 0) ? '<div class="cpa-more">' +
+            (others > 0 ? '+' + others + ' other' + (others > 1 ? 's' : '') + ' at risk' : '') +
+            (others > 0 && cautionCount > 0 ? ' · ' : '') +
+            (cautionCount > 0 ? '<span style="color:#f5c451">' + cautionCount + ' in caution</span>' : '') +
+            '</div>' : '') +
           '<div class="cpa-disc">COLREGs guidance, power-driven & in sight — you are responsible. Keep a lookout; verify visually.</div>' +
         '</div>' +
         '<div class="cpa-btns">' +
           '<div class="cpa-btn" data-act="mute" title="Mute sound">' + (muted ? '🔇' : '🔔') + '</div>' +
           '<div class="cpa-btn" data-act="ack" title="Acknowledge">✕</div>' +
         '</div>';
-      el.querySelector('[data-act="mute"]').onclick = () => { muted = !muted; render(own, t, others); };
+      el.querySelector('[data-act="mute"]').onclick = () => { muted = !muted; render(own, t, others, cautionCount); };
       el.querySelector('[data-act="ack"]').onclick = () => { ackMmsi = t.mmsi; el.hidden = true; highlight(own, null); };
       el.hidden = false;
     }
@@ -208,11 +214,14 @@
       const threats = arr.filter(dangerous)
         .sort((a, b) => (a.tcpa - b.tcpa) || (a.cpa - b.cpa));   // most imminent first
       if (!threats.length) { el.hidden = true; highlight(own, null); ackMmsi = null; lastAlarmMmsi = null; return; }
+      // Caution-tier targets get an amber predictor on the chart (AIS-16) but are not an alarm; surface
+      // their count beside the danger count so the banner's risk picture matches what's drawn.
+      const cautionCount = arr.filter(t => HelmAisRisk.tier(t) === 'caution').length;
       const worst = threats[0];
       if (worst.mmsi === ackMmsi) { highlight(own, null); return; }   // acknowledged — stay quiet until it changes
       if (worst.mmsi !== lastAlarmMmsi) { beep(); lastAlarmMmsi = worst.mmsi; }   // new threat → one alert
       highlight(own, worst);
-      render(own, worst, threats.length - 1);
+      render(own, worst, threats.length - 1, cautionCount);
     }
 
     // Watchdog: the engine going fully silent (no nav frames at all) also means no monitoring.
