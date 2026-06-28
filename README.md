@@ -164,7 +164,9 @@ browser UI, `/nav`, `/chart`, `/catalog`, and `/health` on one private port.
 brew install wxwidgets@3.2 gpatch cmake gdal node python3
 engine/bootstrap.sh
 scripts/install-sample-enc.sh
-scripts/start-helm.sh --port 8080 --fill
+python3 -m venv services/wx/.venv
+services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
+scripts/start-helm.sh --port 8080 --weather --fill
 
 open http://127.0.0.1:8080/
 ```

@@ -19,7 +19,7 @@ machine, boat server, or demo process is safe to stop or replace.
 Run examples on a private port:
 
 ```bash
-scripts/start-helm.sh --port 8080 --fill
+scripts/start-helm.sh --port 8080 --weather --fill
 ```
 
 For BYO MBTiles, point the helper at a local directory:

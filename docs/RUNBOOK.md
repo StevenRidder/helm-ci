@@ -30,10 +30,14 @@ engine/bootstrap.sh
 # 3. Optional but recommended: install a free NOAA ENC sample into ~/.helm/runtime/enc.
 scripts/install-sample-enc.sh
 
-# 4. Run a private one-origin server.
-scripts/start-helm.sh --port 8080 --fill
+# 4. Set up the weather gateway venv, once.
+python3 -m venv services/wx/.venv
+services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
 
-# 5. Open the client.
+# 5. Run a private one-origin server plus weather and online-fill helpers.
+scripts/start-helm.sh --port 8080 --weather --fill
+
+# 6. Open the client.
 open http://127.0.0.1:8080/
 ```
 
@@ -172,7 +176,7 @@ engine/bootstrap.sh --smoke
 ## 4. Run the One-Origin Server
 
 ```bash
-scripts/start-helm.sh --port 8080 --fill
+scripts/start-helm.sh --port 8080 --weather --fill
 ```
 
 Open:

@@ -29,7 +29,7 @@ Options:
   --no-pull            Do not git pull
   --no-build           Do not run engine/bootstrap.sh
   --verify-only        Only run Playwright verification against the live server
-  --replace-running    Stop processes listening on :PORT and :8095 before start
+  --replace-running    Stop processes listening on :PORT, :8093, and :8095 before start
   -h, --help           Show this help
 EOF
 }
@@ -80,6 +80,18 @@ stop_port() {
   sleep 1
 }
 
+ensure_wx_venv() {
+  local py="services/wx/.venv/bin/python"
+  if [ ! -x "$py" ]; then
+    echo "update-remote-parity: creating services/wx/.venv for weather gateway"
+    python3 -m venv services/wx/.venv
+  fi
+  if ! "$py" -c "import uvicorn, fastapi, httpx, numpy" >/dev/null 2>&1; then
+    echo "update-remote-parity: installing weather gateway deps"
+    "$py" -m pip install -r services/wx/requirements.txt
+  fi
+}
+
 if [ "$VERIFY_ONLY" = 1 ]; then
   exec scripts/verify-live-ui.sh "http://127.0.0.1:$PORT" "$HASH"
 fi
@@ -92,12 +104,15 @@ if [ "$BUILD" = 1 ]; then
   engine/bootstrap.sh
 fi
 
+ensure_wx_venv
+
 ENC="$(HELM_SAMPLE_ENC_CELL=US5FL4CR scripts/install-sample-enc.sh | tail -n 1)"
 [ -f "$ENC" ] || { echo "update-remote-parity: expected ENC missing: $ENC" >&2; exit 1; }
 
 if [ "$START" = 1 ]; then
   stop_port "$PORT"
+  stop_port 8093
   stop_port 8095
-  echo "update-remote-parity: starting Helm on :$PORT with $ENC"
-  exec env HELM_ENC="$ENC" scripts/start-helm.sh --port "$PORT" --fill
+  echo "update-remote-parity: starting Helm on :$PORT with weather :8093, fill :8095, and $ENC"
+  exec env HELM_ENC="$ENC" scripts/start-helm.sh --port "$PORT" --weather --fill
 fi

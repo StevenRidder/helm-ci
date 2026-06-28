@@ -20,8 +20,8 @@ Options:
   -h, --help           Show this help
 
 Everything after -- is passed to scripts/update-remote-parity.sh.
-The updater is run with --replace-running so the old :8080/:8095 listeners are
-stopped before the verified stack starts.
+The updater is run with --replace-running so the old :8080/:8093/:8095 listeners
+are stopped before the verified stack starts.
 EOF
 }
 

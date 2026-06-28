@@ -60,6 +60,13 @@ done
 die() { echo "start-helm: $*" >&2; exit 1; }
 have_py() { python3 -c "import $1" >/dev/null 2>&1; }
 port_busy() { curl -sf -o /dev/null --max-time 2 "http://127.0.0.1:$1/health" 2>/dev/null; }
+wx_python() {
+  if [ -x "$REPO_ROOT/services/wx/.venv/bin/python" ]; then
+    echo "$REPO_ROOT/services/wx/.venv/bin/python"
+  else
+    echo python3
+  fi
+}
 
 # pid -> "label@port" for the status summary + cleanup
 declare -a PIDS=() ; declare -a STARTED=() ; declare -a SKIPPED=()
@@ -104,11 +111,12 @@ PIDS+=("$!"); STARTED+=("helm-server (core) :$HELM_PORT  (pid $!)")
 
 # ---- HELPERS (opt-in, prerequisite-checked) -------------------------------
 if [ "$WANT_WEATHER" = 1 ]; then
-  if have_py uvicorn && [ -f "$REPO_ROOT/services/wx/app.py" ]; then
+  WX_PY="$(wx_python)"
+  if "$WX_PY" -c "import uvicorn, fastapi, httpx, numpy" >/dev/null 2>&1 && [ -f "$REPO_ROOT/services/wx/app.py" ]; then
     start_bg "weather-gateway (services/wx)" 8093 \
-      bash -c "cd '$REPO_ROOT/services/wx' && exec python3 -m uvicorn app:app --port 8093"
+      bash -c "cd '$REPO_ROOT/services/wx' && exec '$WX_PY' -m uvicorn app:app --port 8093"
   else
-    SKIPPED+=("weather-gateway :8093 — deps missing: pip install -r services/wx/requirements.txt")
+    SKIPPED+=("weather-gateway :8093 — deps missing: python3 -m venv services/wx/.venv && services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt")
   fi
 fi
 

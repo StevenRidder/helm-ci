@@ -9,3 +9,4 @@ ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 cd "$ROOT/web/test"
 HELM_VERIFY_CHART=1 HELM_E2E_URL="$URL" HELM_E2E_HASH="$HASH" npm run test:e2e -- e2e/verified-chart-view.spec.js
 HELM_E2E_URL="$URL" npm run test:e2e -- e2e/verified-local-ui.spec.js
+HELM_E2E_URL="$URL" npm run test:e2e -- e2e/verified-weather-gateway.spec.js

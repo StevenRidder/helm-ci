@@ -47,7 +47,9 @@ The build creates:
 
 ```bash
 scripts/install-sample-enc.sh
-scripts/start-helm.sh --port 8080 --fill
+python3 -m venv services/wx/.venv
+services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
+scripts/start-helm.sh --port 9001 --weather --fill
 ```
 
 Then open:
