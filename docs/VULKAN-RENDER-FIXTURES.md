@@ -32,11 +32,18 @@ chart-1/
   expected.ppm           # tiny dependency-free golden image placeholder
 ```
 
-The fixture checker is:
+The fixture checker is a C++ CLI:
 
 ```bash
-python3 scripts/vulkan-render-fixture-check.py
+c++ -std=c++11 -O2 -Wall -Wextra \
+  engine/vendor/cli/helm_vulkan_fixture_check.cpp \
+  -o /tmp/helm-vulkan-fixture-check
+/tmp/helm-vulkan-fixture-check --print-hashes
 ```
+
+The same source is also built by `engine/bootstrap.sh` as the
+`helm-vulkan-fixture-check` target, so the checker can run inside the normal
+OpenCPN/Helm C++ build without introducing a scripting dependency.
 
 It validates fixture shape, canonical JSON hashes, provenance references,
 required command types, and expected image hashes.

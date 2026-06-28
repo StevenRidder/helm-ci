@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,159 @@ if (APPLE)
+@@ -90,3 +90,163 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -162,3 +162,7 @@ index 1909f44..ae59f3e 100644
 +set_property(TARGET helm-server PROPERTY ENABLE_EXPORTS ON)
 +target_include_directories(helm-server PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
 +target_link_libraries(helm-server PRIVATE ocpn::chart-render ocpn::tides ixwebsocket)
++
++# ---- Vulkan renderer fixture checker: standalone C++ command/golden harness ----
++add_executable(helm-vulkan-fixture-check helm_vulkan_fixture_check.cpp)
++set_property(TARGET helm-vulkan-fixture-check PROPERTY ENABLE_EXPORTS ON)

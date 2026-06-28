@@ -404,7 +404,7 @@ stream before attempting full S-52 coverage.
 
 The initial committed fixture corpus and checker live under
 `engine/test/fixtures/vulkan-render/` and
-`scripts/vulkan-render-fixture-check.py`; see
+`engine/vendor/cli/helm_vulkan_fixture_check.cpp`; see
 [VULKAN-RENDER-FIXTURES.md](VULKAN-RENDER-FIXTURES.md).
 
 ## Open Questions For Implementation
