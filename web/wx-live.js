@@ -120,7 +120,10 @@
     cx.putImageData(img, 0, 0);
     var urlData = cv.toDataURL('image/png');
     var coords = [[field.west, field.north], [field.east, field.north], [field.east, field.south], [field.west, field.south]];
-    if (map.getSource(SRC)) map.getSource(SRC).updateImage({ url: urlData, coordinates: coords });
+    if (map.getSource(SRC)) {
+      map.getSource(SRC).updateImage({ url: urlData, coordinates: coords });
+      if (map.getLayer(LYR)) map.setPaintProperty(LYR, 'raster-opacity', st.opacity);
+    }
     else {
       map.addSource(SRC, { type: 'image', url: urlData, coordinates: coords });
       map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': st.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
@@ -289,6 +292,7 @@
   function enable(map, opts) {
     opts = opts || {};
     st.map = map; st.layer = opts.layer || st.layer; st.model = opts.model || 'gfs_seamless';
+    if (opts.opacity != null) setOpacity(map, opts.opacity);
     st.notify = opts.notify || st.notify; st.onState = opts.onState || null; st.on = true; st.lastKey = '';
     st.particlesOnly = !!opts.particlesOnly;             // field handled by helm-wx service tiles; we do particles
     if (st.particlesOnly && st.map) clearLayer(st.map);  // drop any wx-live image; the service layer owns the field
@@ -303,10 +307,10 @@
   }
   function setLayer(layer) { st.layer = layer; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
   function setModel(model) { st.model = model; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
-  function setOpacity(map, o) {
-    st.opacity = Math.max(0, Math.min(1, o));
+  function setOpacity(map, opacity) {
+    st.opacity = Math.max(0, Math.min(1, opacity == null ? st.opacity : opacity));
     var m = map || st.map;
-    if (m && m.getLayer(LYR)) m.setPaintProperty(LYR, 'raster-opacity', st.opacity);
+    if (m && m.getLayer && m.getLayer(LYR)) m.setPaintProperty(LYR, 'raster-opacity', st.opacity);
   }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;

@@ -130,8 +130,10 @@
   /* ---- drawers (hold the existing controls) ---- */
   .drawer{position:absolute;left:72px;top:68px;width:230px;z-index:6;border-radius:14px;
     padding:13px 14px;box-sizing:border-box;color:var(--ctext);max-height:calc(100% - 160px);overflow-y:auto;
-    transform-origin:left center;
+    overscroll-behavior:contain;-webkit-overflow-scrolling:touch;touch-action:pan-y;transform-origin:left center;
     transition:opacity .26s ease, transform .42s cubic-bezier(.22,1.1,.36,1)}
+  .drawer::-webkit-scrollbar{width:8px}
+  .drawer::-webkit-scrollbar-thumb{background:rgba(255,255,255,.22);border-radius:999px;border:2px solid transparent;background-clip:padding-box}
   /* keep it in layout so it can fade/slide instead of popping (display:none can't transition) */
   .drawer[hidden]{display:block;opacity:0;transform:translateX(-12px) scale(.96);pointer-events:none}
   .drawer h2{font-size:12px;font-weight:600;margin:0 0 4px;letter-spacing:.02em}
@@ -509,7 +511,7 @@
   <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="checkbox" data-layer="enc-chart" checked> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
+  <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
@@ -855,18 +857,16 @@
   }
   const map = new maplibregl.Map({
     container: 'map', style: style, hash: true,
-    // ENC tiles (:8090 default), owned mbtiles basemaps (:8091), and the online-fill cache (:8095,
-    // CHART-16) ship localhost placeholders. Rewrite before the FIRST request so the iPad/phone on
-    // the boat WiFi loads tiles from THIS Mac. Helper ports are preserved; the old ENC placeholder
-    // port is rewritten to the resolved one-origin engine port (usually :8080).
+    // Owned mbtiles basemaps (:8091) + the online-fill cache (:8095, CHART-16) ship localhost
+    // placeholders. Rewrite the HOST to the page host so the iPad/phone on the boat WiFi loads
+    // tiles from THIS Mac. The port is preserved (8091 stays 8091, 8095 stays 8095).
     // BEFORE the request goes out — including the FIRST tile. A setTiles-in-'load' rewrite loses that race:
     // the initial batch fires against the placeholder, fatal on a remote device (localhost = the phone).
     // Port stays 8091 — a ?server= override only relocates the host. Everything else passes through.
     transformRequest: (url) => {
       if (window.HelmEndpoint) {
-        var m = url.match(/\/\/[^/]+:(8090|8091|8095)\//);
-        if (m) return { url: url.replace(/\/\/[^/]+:(8090|8091|8095)\//,
-          function (_all, port) { return '//' + HelmEndpoint.host() + ':' + (port === '8090' ? HelmEndpoint.port() : port) + '/'; }) };
+        var m = url.match(/\/\/[^/]+:(8091|8095)\//);
+        if (m) return { url: url.replace(/\/\/[^/]+:(8091|8095)\//, '//' + HelmEndpoint.host() + ':' + m[1] + '/') };
       }
       return { url };
     }
@@ -1065,6 +1065,7 @@
     const o = (100 - (+opSlider.value)) / 100;     // slider right = more transparent
     if (field) field.setOpacity(o);
     if (wind) wind.setOpacity(Math.max(0.04, o * 0.7));
+    if (window.HelmWxLive && HelmWxLive.setOpacity) HelmWxLive.setOpacity(map, o);
   }
   opSlider.addEventListener('input', applyOpacity);
   applyOpacity();
@@ -1449,6 +1450,34 @@
     // only the built-in rail buttons — registered panels wire their OWN click handler in shell.js
     const builtinKeys = new Set(Object.keys(drawers).concat(['ais', 'places', 'measure', 'chart']));
     const rail = Array.from(document.querySelectorAll('.ri[data-rail]')).filter(b => builtinKeys.has(b.dataset.rail));
+    function activeDrawerFrom(target) {
+      const d = target && target.closest && target.closest('.drawer');
+      return d && !d.hidden && d.scrollHeight > d.clientHeight ? d : null;
+    }
+    function wheelPixels(e, d) {
+      const unit = e.deltaMode === 1 ? 16 : (e.deltaMode === 2 ? d.clientHeight : 1);
+      return e.deltaY * unit;
+    }
+    document.addEventListener('wheel', e => {
+      const d = activeDrawerFrom(e.target);
+      if (!d) return;
+      const before = d.scrollTop;
+      d.scrollTop = Math.max(0, Math.min(d.scrollHeight - d.clientHeight, before + wheelPixels(e, d)));
+      if (d.scrollTop !== before) { e.preventDefault(); e.stopPropagation(); }
+    }, { capture: true, passive: false });
+    let drawerTouch = null;
+    document.addEventListener('touchstart', e => {
+      const d = activeDrawerFrom(e.target);
+      drawerTouch = d && e.touches && e.touches.length === 1 ? { d, y: e.touches[0].clientY } : null;
+    }, { capture: true, passive: true });
+    document.addEventListener('touchmove', e => {
+      if (!drawerTouch || !e.touches || e.touches.length !== 1) return;
+      const y = e.touches[0].clientY, d = drawerTouch.d, before = d.scrollTop;
+      d.scrollTop = Math.max(0, Math.min(d.scrollHeight - d.clientHeight, before + (drawerTouch.y - y)));
+      drawerTouch.y = y;
+      if (d.scrollTop !== before) { e.preventDefault(); e.stopPropagation(); }
+    }, { capture: true, passive: false });
+    document.addEventListener('touchend', () => { drawerTouch = null; }, { capture: true, passive: true });
     function closeDrawers() { Object.values(drawers).forEach(id => { const d = document.getElementById(id); if (d) d.hidden = true; }); }
     if (window.HelmShell) HelmShell.setLegacyCloser(() => { closeDrawers(); rail.forEach(r => r.classList.remove('on')); });
     function setActive(btn) { rail.forEach(r => r.classList.toggle('on', r === btn)); }

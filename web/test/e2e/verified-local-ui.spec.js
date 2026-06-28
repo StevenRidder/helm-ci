@@ -39,8 +39,7 @@ test.beforeEach(async ({ page }) => {
       sessionStorage.clear();
     } catch (e) {}
   });
-  await page.route('http://localhost:8093/**', route => route.fulfill({ status: 503, body: 'weather gateway intentionally offline in test' }));
-  await page.route('http://127.0.0.1:8093/**', route => route.fulfill({ status: 503, body: 'weather gateway intentionally offline in test' }));
+  await page.route(/https?:\/\/[^/]+:8093\/.*/, route => route.fulfill({ status: 503, body: 'weather gateway intentionally offline in test' }));
   await page.route('https://api.open-meteo.com/**', route => route.fulfill({
     status: 200,
     headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' },
@@ -68,27 +67,49 @@ test('settings rail opens the drawer and the drawer scrolls on the live app', as
   expect(await hit.jsonValue()).toMatchObject({ clear: true });
 
   await clickRail(page, 'settings');
+  const drawerBox = await page.locator('#drawer-settings').boundingBox();
+  expect(drawerBox, 'settings drawer has a visible box').toBeTruthy();
+  await page.mouse.move(drawerBox.x + drawerBox.width / 2, drawerBox.y + drawerBox.height / 2);
+  await page.mouse.wheel(0, 900);
+  await page.waitForTimeout(150);
+
   const drawerState = await page.evaluate(() => {
     const d = document.querySelector('#drawer-settings');
-    d.scrollTop = 0;
-    d.scrollBy(0, 700);
     return {
       hidden: d.hidden,
       scrollTop: d.scrollTop,
       scrollHeight: d.scrollHeight,
       clientHeight: d.clientHeight,
+      text: d.innerText,
     };
   });
 
   expect(drawerState.hidden).toBe(false);
   expect(drawerState.scrollHeight).toBeGreaterThan(drawerState.clientHeight);
   expect(drawerState.scrollTop).toBeGreaterThan(100);
+  expect(drawerState.text).toContain('Card text size');
 });
 
 test('weather transparency changes the live weather layer opacity', async ({ page }) => {
   await boot(page);
 
   await clickRail(page, 'weather');
+  const scrubberState = await page.evaluate(() => {
+    const time = document.querySelector('#time');
+    const slider = document.querySelector('#tslider');
+    const label = document.querySelector('#tlabel');
+    return {
+      display: getComputedStyle(time).display,
+      max: slider.max,
+      label: label.textContent,
+      text: document.querySelector('#drawer-weather').innerText,
+    };
+  });
+  expect(scrubberState.display).toBe('none');
+  expect(scrubberState.max).toBe('0');
+  expect(scrubberState.label).toBe('');
+  expect(scrubberState.text).not.toContain('Thu 12:00 PM');
+
   await page.locator('#wx button[data-wx="wind"]').click();
   await page.waitForFunction(
     () => window.map && window.map.getLayer && window.map.getLayer('helm-wx-live'),
