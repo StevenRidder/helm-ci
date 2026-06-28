@@ -179,7 +179,8 @@ This document does not decide:
   paused REPO lane;
 - the command-stream schema fields; that is `SEAM-2` and is drafted in
   [VULKAN-RENDER-COMMAND-STREAM.md](VULKAN-RENDER-COMMAND-STREAM.md);
-- the detailed adapter APIs for OpenCPN and Helm; that is `SEAM-3`;
+- the detailed adapter APIs for OpenCPN and Helm; that is `SEAM-3` and is
+  drafted in [VULKAN-RENDER-ADAPTERS.md](VULKAN-RENDER-ADAPTERS.md);
 - fixture corpus and image-regression harness details; that is `SEAM-4`;
 - commercial relicensing or App Store posture.
 
