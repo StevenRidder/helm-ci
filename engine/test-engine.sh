@@ -59,6 +59,10 @@ echo "binaries: $BIN"
 hdr "A. One-origin server  (ENGINE-9 merge · ENGINE-12 build · CHART-3 tiles)"
 ST="$(mktemp -d)"
 HELM_BIND=127.0.0.1 HELM_PORT=$SPORT HELM_RELAY_PORT=$RPORT HELM_TILES_NO_WARMUP=1 HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$ST" \
+  HELM_CHART_RENDERER_QUERY_OVERRIDE=1 \
+  HELM_VULKAN_RENDERER_BIN="$REPO/scripts/vulkan-render-fixture" \
+  HELM_VULKAN_FIXTURE_DIR="$REPO/engine/test/fixtures/vulkan-render/chart-1" \
+  HELM_VULKAN_RENDERER_SHA="${HELM_VULKAN_RENDERER_SHA:-local-fixture}" \
   "$BIN/helm-server" >/tmp/te-server.log 2>&1 &
 SPID=$!; sleep 3
 # live-data-only engine (the simulator was removed): feed a continuous real fix into the seeded
@@ -77,7 +81,7 @@ fi
 h=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SPORT/health" || echo ERR)
 [ "$h" = 200 ] && P "GET /health → 200 (liveness)" || F "GET /health → $h"
 # real S-52 tile render off the Key West ENC, with immutable caching + 304 revalidation
-curl -s -D /tmp/te-th -o /tmp/te-tile.png "http://127.0.0.1:$SPORT/chart/12/1120/1756.png"
+curl -s -D /tmp/te-th -o /tmp/te-tile.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png"
 tcode=$(awk 'NR==1{print $2}' /tmp/te-th 2>/dev/null); tsz=$(wc -c </tmp/te-tile.png 2>/dev/null | tr -d ' ')
 ctype=$(grep -i '^content-type:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
 { [ "$tcode" = 200 ] && echo "${ctype:-}" | grep -qi 'image/png' && [ "${tsz:-0}" -gt 1000 ]; } \
@@ -87,9 +91,30 @@ grep -qi 'cache-control:.*immutable' /tmp/te-th 2>/dev/null \
   && P "tile: Cache-Control immutable (offline-friendly caching)" || F "tile not immutable-cached"
 etag=$(grep -i '^etag:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
 if [ -n "${etag:-}" ]; then
-  c304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "http://127.0.0.1:$SPORT/chart/12/1120/1756.png" || echo ERR)
+  c304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "http://127.0.0.1:$SPORT/chart/12/1117/1760.png" || echo ERR)
   [ "$c304" = 304 ] && P "tile: If-None-Match → 304 (cache revalidation works)" || F "If-None-Match → $c304"
 else F "tile missing ETag"; fi
+vurl="http://127.0.0.1:$SPORT/chart/12/1117/1760.png?renderer=vulkan"
+curl -s -D /tmp/te-vulkan-th -o /tmp/te-vulkan-tile.png "$vurl"
+vcode=$(awk 'NR==1{print $2}' /tmp/te-vulkan-th 2>/dev/null); vsz=$(wc -c </tmp/te-vulkan-tile.png 2>/dev/null | tr -d ' ')
+vrenderer=$(grep -i '^x-helm-renderer:' /tmp/te-vulkan-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
+vetag=$(grep -i '^etag:' /tmp/te-vulkan-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
+vcache=$(grep -i '^x-helm-renderer-cache-key:' /tmp/te-vulkan-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
+vout=$(grep -i '^x-helm-renderer-output-sha:' /tmp/te-vulkan-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
+vsha=$(python3 -c 'import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],"rb").read()).hexdigest())' /tmp/te-vulkan-tile.png 2>/dev/null || echo "?")
+{ [ "$vcode" = 200 ] && [ "$vrenderer" = vulkan ] && [ "${vsz:-0}" -gt 1000 ] && echo "${vetag:-}" | grep -q '^"vulkan:' && [ "$vout" = "$vsha" ] && [ "${#vcache}" -eq 64 ]; } \
+  && P "GET /chart?renderer=vulkan → shared offscreen PNG with renderer/provenance/cache headers (REPO-4)" \
+  || F "Vulkan tile route shape changed: code=$vcode renderer=${vrenderer:-?} bytes=${vsz:-?} etag=${vetag:-?} cache=${vcache:-?} out=${vout:-?} sha=$vsha"
+curl -s -D /tmp/te-vulkan-th2 -o /tmp/te-vulkan-tile2.png "$vurl"
+vetag2=$(grep -i '^etag:' /tmp/te-vulkan-th2 2>/dev/null | tr -d '\r' | awk '{print $2}')
+vsha2=$(python3 -c 'import hashlib,sys;print(hashlib.sha256(open(sys.argv[1],"rb").read()).hexdigest())' /tmp/te-vulkan-tile2.png 2>/dev/null || echo "?")
+{ [ "$vcode" = 200 ] && [ -n "${vetag:-}" ] && [ "$vetag2" = "$vetag" ] && [ "$vsha2" = "$vsha" ]; } \
+  && P "Vulkan tile is deterministic across repeated renders (REPO-4)" \
+  || F "Vulkan tile not deterministic: etag $vetag → ${vetag2:-?}, sha $vsha → $vsha2"
+if [ -n "${vetag:-}" ]; then
+  v304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $vetag" "$vurl" || echo ERR)
+  [ "$v304" = 304 ] && P "Vulkan tile: If-None-Match → 304 with shared-renderer ETag (REPO-4)" || F "Vulkan If-None-Match → $v304"
+else F "Vulkan tile missing ETag"; fi
 cat=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SPORT/catalog" || echo ERR)
 [ "$cat" = 200 ] && P "GET /catalog → 200 (chart-cell catalog)" || F "GET /catalog → $cat"
 ui=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SPORT/" || echo ERR)

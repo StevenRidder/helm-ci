@@ -25,6 +25,20 @@ During development, `?renderer=legacy|vulkan` may override the process default
 on private ports only. The live Helm screen must continue using the default
 configured process path.
 
+The Helm REPO-4 adapter uses these support knobs:
+
+```text
+HELM_CHART_RENDERER_QUERY_OVERRIDE=1       # enable ?renderer= on private ports
+HELM_VULKAN_RENDERER_BIN=/path/to/renderer # shared offscreen renderer command
+HELM_VULKAN_FIXTURE_DIR=/path/to/fixture   # POC fixture input while the shared API matures
+HELM_VULKAN_RENDERER_SHA=<commit>          # pinned OpenCPN renderer commit for headers/cache
+HELM_VULKAN_FALLBACK=legacy                # explicit fallback; never silent
+```
+
+If `HELM_VULKAN_RENDERER_BIN` is unset, the development default is
+`scripts/vulkan-render-fixture`. Production-like verification should point this
+at the OpenCPN-branch offscreen renderer binary.
+
 ## Tile To Render View
 
 For a 256 px XYZ tile:
@@ -119,6 +133,8 @@ X-Helm-Renderer: vulkan
 X-Helm-Renderer-Sha: <pinned OpenCPN commit>
 X-Helm-Scene-Schema: <schema version>
 X-Helm-Chart-Epoch: <source epoch>
+X-Helm-Renderer-Cache-Key: <sha256(normalized cache key)>
+X-Helm-Renderer-Output-Sha: <sha256(encoded PNG)>
 ```
 
 When the shared renderer returns diagnostics, Helm should log the structured
@@ -151,6 +167,9 @@ X-Helm-Renderer-Fallback: vulkan-render-failed
 
 Silent fallback is not allowed in verification runs because it hides renderer
 regressions.
+
+Fallback is explicit through `HELM_VULKAN_FALLBACK=legacy` or, on private ports
+with query overrides enabled, `?fallback=legacy`.
 
 ## REPO-4 Implementation Checklist
 

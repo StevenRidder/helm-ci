@@ -41,6 +41,9 @@
 #include <sstream>
 #include <atomic>
 #include <algorithm>
+#include <array>
+#include <cstdint>
+#include <iomanip>
 
 #include <wx/app.h>
 #include <wx/bitmap.h>
@@ -2241,6 +2244,286 @@ static bool read_file(const char* path, std::string& out) {
   out.assign(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
   return true;
 }
+
+// REPO-4: Helm consumes the shared renderer as an adapter boundary. The code
+// below owns only HTTP/runtime policy: feature flag selection, render command
+// invocation, cache keys, ETags, and diagnostics. Renderer semantics stay in
+// the OpenCPN-shaped renderer command stream/offscreen renderer.
+class TileSha256 {
+ public:
+  TileSha256() {
+    h_[0] = 0x6a09e667u; h_[1] = 0xbb67ae85u; h_[2] = 0x3c6ef372u; h_[3] = 0xa54ff53au;
+    h_[4] = 0x510e527fu; h_[5] = 0x9b05688cu; h_[6] = 0x1f83d9abu; h_[7] = 0x5be0cd19u;
+  }
+  void update(const unsigned char* data, std::size_t len) {
+    bit_len_ += static_cast<std::uint64_t>(len) * 8u;
+    for (std::size_t i = 0; i < len; ++i) {
+      buffer_[buffer_len_++] = data[i];
+      if (buffer_len_ == 64) { transform(buffer_.data()); buffer_len_ = 0; }
+    }
+  }
+  void update(const std::string& data) {
+    update(reinterpret_cast<const unsigned char*>(data.data()), data.size());
+  }
+  std::string hex_digest() {
+    const std::uint64_t input_bits = bit_len_;
+    buffer_[buffer_len_++] = 0x80u;
+    if (buffer_len_ > 56) {
+      while (buffer_len_ < 64) buffer_[buffer_len_++] = 0;
+      transform(buffer_.data());
+      buffer_len_ = 0;
+    }
+    while (buffer_len_ < 56) buffer_[buffer_len_++] = 0;
+    for (int i = 7; i >= 0; --i)
+      buffer_[buffer_len_++] = static_cast<unsigned char>((input_bits >> (i * 8)) & 0xffu);
+    transform(buffer_.data());
+    std::ostringstream out;
+    out << std::hex << std::setfill('0');
+    for (std::uint32_t word : h_) out << std::setw(8) << word;
+    return out.str();
+  }
+
+ private:
+  static std::uint32_t rotr(std::uint32_t v, std::uint32_t n) { return (v >> n) | (v << (32 - n)); }
+  static std::uint32_t ch(std::uint32_t x, std::uint32_t y, std::uint32_t z) { return (x & y) ^ (~x & z); }
+  static std::uint32_t maj(std::uint32_t x, std::uint32_t y, std::uint32_t z) { return (x & y) ^ (x & z) ^ (y & z); }
+  static std::uint32_t big0(std::uint32_t x) { return rotr(x, 2) ^ rotr(x, 13) ^ rotr(x, 22); }
+  static std::uint32_t big1(std::uint32_t x) { return rotr(x, 6) ^ rotr(x, 11) ^ rotr(x, 25); }
+  static std::uint32_t small0(std::uint32_t x) { return rotr(x, 7) ^ rotr(x, 18) ^ (x >> 3); }
+  static std::uint32_t small1(std::uint32_t x) { return rotr(x, 17) ^ rotr(x, 19) ^ (x >> 10); }
+  void transform(const unsigned char block[64]) {
+    static const std::uint32_t k[64] = {
+      0x428a2f98u, 0x71374491u, 0xb5c0fbcfu, 0xe9b5dba5u, 0x3956c25bu, 0x59f111f1u,
+      0x923f82a4u, 0xab1c5ed5u, 0xd807aa98u, 0x12835b01u, 0x243185beu, 0x550c7dc3u,
+      0x72be5d74u, 0x80deb1feu, 0x9bdc06a7u, 0xc19bf174u, 0xe49b69c1u, 0xefbe4786u,
+      0x0fc19dc6u, 0x240ca1ccu, 0x2de92c6fu, 0x4a7484aau, 0x5cb0a9dcu, 0x76f988dau,
+      0x983e5152u, 0xa831c66du, 0xb00327c8u, 0xbf597fc7u, 0xc6e00bf3u, 0xd5a79147u,
+      0x06ca6351u, 0x14292967u, 0x27b70a85u, 0x2e1b2138u, 0x4d2c6dfcu, 0x53380d13u,
+      0x650a7354u, 0x766a0abbu, 0x81c2c92eu, 0x92722c85u, 0xa2bfe8a1u, 0xa81a664bu,
+      0xc24b8b70u, 0xc76c51a3u, 0xd192e819u, 0xd6990624u, 0xf40e3585u, 0x106aa070u,
+      0x19a4c116u, 0x1e376c08u, 0x2748774cu, 0x34b0bcb5u, 0x391c0cb3u, 0x4ed8aa4au,
+      0x5b9cca4fu, 0x682e6ff3u, 0x748f82eeu, 0x78a5636fu, 0x84c87814u, 0x8cc70208u,
+      0x90befffau, 0xa4506cebu, 0xbef9a3f7u, 0xc67178f2u };
+    std::uint32_t w[64];
+    for (std::size_t i = 0; i < 16; ++i)
+      w[i] = (static_cast<std::uint32_t>(block[i * 4]) << 24) |
+             (static_cast<std::uint32_t>(block[i * 4 + 1]) << 16) |
+             (static_cast<std::uint32_t>(block[i * 4 + 2]) << 8) |
+             static_cast<std::uint32_t>(block[i * 4 + 3]);
+    for (std::size_t i = 16; i < 64; ++i) w[i] = small1(w[i - 2]) + w[i - 7] + small0(w[i - 15]) + w[i - 16];
+    std::uint32_t a = h_[0], b = h_[1], c = h_[2], d = h_[3], e = h_[4], f = h_[5], g = h_[6], hh = h_[7];
+    for (std::size_t i = 0; i < 64; ++i) {
+      const std::uint32_t t1 = hh + big1(e) + ch(e, f, g) + k[i] + w[i];
+      const std::uint32_t t2 = big0(a) + maj(a, b, c);
+      hh = g; g = f; f = e; e = d + t1; d = c; c = b; b = a; a = t1 + t2;
+    }
+    h_[0] += a; h_[1] += b; h_[2] += c; h_[3] += d; h_[4] += e; h_[5] += f; h_[6] += g; h_[7] += hh;
+  }
+  std::array<std::uint32_t, 8> h_{};
+  std::array<unsigned char, 64> buffer_{};
+  std::uint64_t bit_len_ = 0;
+  std::size_t buffer_len_ = 0;
+};
+
+static std::string sha256_hex(const std::string& data) {
+  TileSha256 sha;
+  sha.update(data);
+  return sha.hex_digest();
+}
+
+static std::string lower_ascii(std::string s) {
+  for (char& c : s) c = static_cast<char>(std::tolower(static_cast<unsigned char>(c)));
+  return s;
+}
+
+static bool env_true(const char* name, bool fallback = false) {
+  const char* value = std::getenv(name);
+  if (!value || !*value) return fallback;
+  std::string v = lower_ascii(value);
+  return v == "1" || v == "true" || v == "yes" || v == "on";
+}
+
+static std::string env_or(const char* name, const std::string& fallback) {
+  const char* value = std::getenv(name);
+  return value && *value ? std::string(value) : fallback;
+}
+
+static std::string shell_quote(const std::string& s) {
+  std::string out = "'";
+  for (char c : s) out += c == '\'' ? "'\\''" : std::string(1, c);
+  out += "'";
+  return out;
+}
+
+static std::string header_safe(std::string s) {
+  for (char& c : s) if (c == '\r' || c == '\n' || static_cast<unsigned char>(c) < 0x20) c = ' ';
+  if (s.size() > 180) s.resize(180);
+  return s;
+}
+
+static bool png_signature_ok(const std::string& bytes) {
+  static const unsigned char sig[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n'};
+  return bytes.size() >= sizeof(sig) &&
+         std::memcmp(bytes.data(), sig, sizeof(sig)) == 0;
+}
+
+enum class ChartRendererChoice { Legacy, Vulkan };
+
+struct VulkanTileMeta {
+  std::string renderer_branch;
+  std::string renderer_sha;
+  std::string scene_schema;
+  std::string chart_epoch;
+  std::string palette;
+  std::string category;
+  std::string bbox;
+  std::string scale_denom;
+  std::string overscan_px;
+  std::string cache_key;
+  std::string cache_key_hash;
+};
+
+static ChartRendererChoice chart_renderer_default() {
+  const std::string value = lower_ascii(env_or("HELM_CHART_RENDERER", "legacy"));
+  return value == "vulkan" ? ChartRendererChoice::Vulkan : ChartRendererChoice::Legacy;
+}
+
+static bool chart_renderer_query_override_enabled() {
+  return env_true("HELM_CHART_RENDERER_QUERY_OVERRIDE", false);
+}
+
+static ChartRendererChoice chart_renderer_for_request(const std::string& uri) {
+  if (chart_renderer_query_override_enabled()) {
+    const std::string q = lower_ascii(query_param(uri, "renderer"));
+    if (q == "legacy") return ChartRendererChoice::Legacy;
+    if (q == "vulkan") return ChartRendererChoice::Vulkan;
+  }
+  return chart_renderer_default();
+}
+
+static bool vulkan_fallback_to_legacy_requested(const std::string& uri) {
+  const std::string q = lower_ascii(query_param(uri, "fallback"));
+  return q == "legacy" || lower_ascii(env_or("HELM_VULKAN_FALLBACK", "")) == "legacy";
+}
+
+static std::string fixed_double(double v, int precision = 8) {
+  std::ostringstream out;
+  out << std::fixed << std::setprecision(precision) << v;
+  return out.str();
+}
+
+static VulkanTileMeta make_vulkan_tile_meta(int z, long x, long y, ColorScheme pal, DisCat cat) {
+  const double west = tile_lon(x, z), east = tile_lon(x + 1, z);
+  const double north = tile_lat(y, z), south = tile_lat(y + 1, z);
+  const double center_lat = (north + south) / 2.0;
+  VulkanTileMeta meta;
+  meta.renderer_branch = env_or("HELM_VULKAN_RENDERER_BRANCH", "vulkan/render-core-poc");
+  meta.renderer_sha = env_or("HELM_VULKAN_RENDERER_SHA", env_or("HELM_OPENCPN_RENDERER_SHA", "unknown"));
+  meta.scene_schema = env_or("HELM_VULKAN_SCENE_SCHEMA", "vulkan.render_scene.v0");
+  meta.chart_epoch = env_or("HELM_VULKAN_CHART_EPOCH",
+                            g_cell_name + ".s" + std::to_string(g_native_scale));
+  meta.palette = palette_name(pal);
+  meta.category = cat_name(cat);
+  meta.bbox = fixed_double(west) + "," + fixed_double(south) + "," +
+              fixed_double(east) + "," + fixed_double(north);
+  meta.scale_denom = fixed_double(display_scale(z, center_lat), 3);
+  meta.overscan_px = env_or("HELM_VULKAN_OVERSCAN_PX", "16");
+
+  std::ostringstream key;
+  key << "renderer=vulkan\n"
+      << "renderer_branch=" << meta.renderer_branch << "\n"
+      << "renderer_sha=" << meta.renderer_sha << "\n"
+      << "scene_schema=" << meta.scene_schema << "\n"
+      << "chart_epoch=" << meta.chart_epoch << "\n"
+      << "z=" << z << "\n"
+      << "x=" << x << "\n"
+      << "y=" << y << "\n"
+      << "bbox=" << meta.bbox << "\n"
+      << "tile_size=" << TS << "\n"
+      << "scale_denom=" << meta.scale_denom << "\n"
+      << "palette=" << meta.palette << "\n"
+      << "category=" << meta.category << "\n"
+      << "safety=" << env_or("HELM_CHART_SAFETY_DEPTHS", "default") << "\n"
+      << "text=" << env_or("HELM_CHART_TEXT", "default") << "\n"
+      << "soundings=" << env_or("HELM_CHART_SOUNDINGS", "default") << "\n"
+      << "overscan=" << meta.overscan_px << "\n"
+      << "target=offscreen-rgba8\n";
+  meta.cache_key = key.str();
+  meta.cache_key_hash = sha256_hex(meta.cache_key);
+  return meta;
+}
+
+static bool run_vulkan_renderer_command(int z, long x, long y, const VulkanTileMeta& meta,
+                                        const std::string& output_path, std::string* error) {
+  const std::string renderer = env_or(
+      "HELM_VULKAN_RENDERER_BIN",
+      env_or("HELM_VULKAN_RENDER_FIXTURE_BIN", "scripts/vulkan-render-fixture"));
+  const std::string fixture_dir = env_or(
+      "HELM_VULKAN_FIXTURE_DIR", "engine/test/fixtures/vulkan-render/chart-1");
+  const std::string log_path = output_path + ".log";
+  std::ostringstream cmd;
+  cmd << "HELM_RENDER_VIEW_PROJECTION=web_mercator_tile "
+      << "HELM_TILE_Z=" << z << " "
+      << "HELM_TILE_X=" << x << " "
+      << "HELM_TILE_Y=" << y << " "
+      << "HELM_TILE_SIZE=" << TS << " "
+      << "HELM_TILE_BBOX=" << shell_quote(meta.bbox) << " "
+      << "HELM_DISPLAY_PALETTE=" << shell_quote(meta.palette) << " "
+      << "HELM_DISPLAY_CATEGORY=" << shell_quote(meta.category) << " "
+      << "HELM_RENDER_CACHE_KEY_SHA256=" << shell_quote(meta.cache_key_hash) << " "
+      << shell_quote(renderer) << " " << shell_quote(fixture_dir)
+      << " --tile-size " << TS
+      << " --format png --output " << shell_quote(output_path)
+      << " > " << shell_quote(log_path) << " 2>&1";
+  const int rc = std::system(cmd.str().c_str());
+  if (rc != 0) {
+    std::string log;
+    read_file(log_path.c_str(), log);
+    if (error) *error = "shared renderer command failed: " + header_safe(log.empty() ? cmd.str() : log);
+    ::unlink(log_path.c_str());
+    return false;
+  }
+  ::unlink(log_path.c_str());
+  return true;
+}
+
+static TileStatus render_vulkan_tile(int z, long x, long y, const VulkanTileMeta& meta,
+                                     std::string& out_png, std::string& out_error) {
+  if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
+    out_error = "invalid tile coordinates";
+    return TileStatus::BadRequest;
+  }
+  const std::string tmpdir = env_or("TMPDIR", "/tmp");
+  std::string tmpl = tmpdir + "/helm-vulkan-tile-XXXXXX";
+  std::vector<char> path(tmpl.begin(), tmpl.end());
+  path.push_back('\0');
+  int fd = ::mkstemp(path.data());
+  if (fd < 0) {
+    out_error = "could not create temporary Vulkan tile output";
+    return TileStatus::RenderFailed;
+  }
+  ::close(fd);
+  const std::string output_path(path.data());
+  if (!run_vulkan_renderer_command(z, x, y, meta, output_path, &out_error)) {
+    ::unlink(output_path.c_str());
+    return TileStatus::RenderFailed;
+  }
+  if (!read_file(output_path.c_str(), out_png)) {
+    out_error = "shared renderer produced no readable PNG output";
+    ::unlink(output_path.c_str());
+    return TileStatus::RenderFailed;
+  }
+  ::unlink(output_path.c_str());
+  if (!png_signature_ok(out_png)) {
+    out_error = "shared renderer output was not PNG";
+    return TileStatus::RenderFailed;
+  }
+  return TileStatus::Ok;
+}
+
+static std::string vulkan_etag(const VulkanTileMeta& meta, const std::string& output_sha) {
+  return "\"vulkan:" + sha256_hex(meta.cache_key + "output_sha=" + output_sha + "\n") + "\"";
+}
 // Parse the first <rte> of a GPX doc into ROUTE + the route name (pugixml, namespace-tolerant).
 static bool load_gpx_route(const std::string& xml, std::vector<WP>& out, std::string& routeName) {
   pugi::xml_document doc;
@@ -3890,30 +4173,80 @@ public:
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
           const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
-          char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), g_native_scale);
-          const std::string etag(et);
-          h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
-          if (header_ci(req->headers, "If-None-Match") == etag)
-            return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
-          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
-          { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
-          g_jobs_cv.notify_one();
-          { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
-          switch (job.status) {
-            case TileStatus::Ok: h["Content-Type"] = "image/png";
-              // CHART-9: overzoom warning — viewing finer than the cell's survey scale (SCAMIN hides detail).
-              { double ds = display_scale(z, tile_lat(y + 0.5, z));
-                if (g_native_scale > 0 && ds > 0 && (double)g_native_scale / ds >= 2.0) {
-                  char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", (double)g_native_scale / ds);
-                  h["X-Helm-Overzoom"] = oz; } }
-              return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
-            case TileStatus::NoCoverage: h["Content-Type"] = "image/png";
-              return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
-            case TileStatus::BadRequest: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+          auto serve_legacy_tile = [&](const char* fallback_reason) -> ix::HttpResponsePtr {
+            h.erase("X-Helm-Renderer-Sha");
+            h.erase("X-Helm-Scene-Schema");
+            h.erase("X-Helm-Chart-Epoch");
+            h.erase("X-Helm-Renderer-Cache-Key");
+            h.erase("X-Helm-Renderer-Output-Sha");
+            h.erase("X-Helm-Renderer-Error");
+            h["X-Helm-Renderer"] = "legacy";
+            if (fallback_reason && *fallback_reason) h["X-Helm-Renderer-Fallback"] = fallback_reason;
+            else h.erase("X-Helm-Renderer-Fallback");
+            char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), g_native_scale);
+            const std::string etag(et);
+            h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+            if (header_ci(req->headers, "If-None-Match") == etag)
+              return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
+            Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
+            { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
+            g_jobs_cv.notify_one();
+            { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
+            switch (job.status) {
+              case TileStatus::Ok: h["Content-Type"] = "image/png";
+                // CHART-9: overzoom warning — viewing finer than the cell's survey scale (SCAMIN hides detail).
+                { double ds = display_scale(z, tile_lat(y + 0.5, z));
+                  if (g_native_scale > 0 && ds > 0 && (double)g_native_scale / ds >= 2.0) {
+                    char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", (double)g_native_scale / ds);
+                    h["X-Helm-Overzoom"] = oz; } }
+                return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
+              case TileStatus::NoCoverage: h["Content-Type"] = "image/png";
+                return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
+              case TileStatus::BadRequest: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+                return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
+              default: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+                return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h, std::string("S-52 tile render failed; see server log\n"));
+            }
+          };
+
+          if (chart_renderer_for_request(req->uri) == ChartRendererChoice::Vulkan) {
+            if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
+              h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+              h["X-Helm-Renderer"] = "vulkan";
               return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
-            default: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
-              return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h, std::string("S-52 tile render failed; see server log\n"));
+            }
+            const VulkanTileMeta meta = make_vulkan_tile_meta(z, x, y, pal, cat);
+            h["X-Helm-Renderer"] = "vulkan";
+            h["X-Helm-Renderer-Sha"] = header_safe(meta.renderer_sha);
+            h["X-Helm-Scene-Schema"] = header_safe(meta.scene_schema);
+            h["X-Helm-Chart-Epoch"] = header_safe(meta.chart_epoch);
+            h["X-Helm-Renderer-Cache-Key"] = meta.cache_key_hash;
+            std::string png, error;
+            const TileStatus vst = render_vulkan_tile(z, x, y, meta, png, error);
+            if (vst == TileStatus::Ok) {
+              const std::string output_sha = sha256_hex(png);
+              const std::string etag = vulkan_etag(meta, output_sha);
+              h["Content-Type"] = "image/png";
+              h["Cache-Control"] = "public, max-age=31536000, immutable";
+              h["ETag"] = etag;
+              h["X-Helm-Renderer-Output-Sha"] = output_sha;
+              if (header_ci(req->headers, "If-None-Match") == etag)
+                return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
+              return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, png);
+            }
+            if (vst == TileStatus::BadRequest) {
+              h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+              h["X-Helm-Renderer-Error"] = header_safe(error);
+              return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
+            }
+            h["X-Helm-Renderer-Error"] = header_safe(error);
+            if (vulkan_fallback_to_legacy_requested(req->uri))
+              return serve_legacy_tile("vulkan-render-failed");
+            h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
+            return std::make_shared<ix::HttpResponse>(500, "Render Failed", ix::HttpErrorCode::Ok, h,
+              std::string("Vulkan tile render failed; see server log\n"));
           }
+          return serve_legacy_tile(nullptr);
         }
         if (req->uri.rfind("/query", 0) == 0) {   // CHART-10: GET /query?lat=&lon=[&z=][&radius=][&p=][&cat=] (worker thread: parse + marshal ONLY)
           const std::string& u = req->uri;
