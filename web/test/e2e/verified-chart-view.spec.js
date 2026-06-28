@@ -79,6 +79,9 @@ test('current view has visible chart or basemap backing', async ({ page, request
     mbtilesTiles.some(t => t.status === 200 && t.bytes > 1000);
   const usable = usableEnc || usableFill || usableMbtiles;
 
+  expect(Math.abs(state.center.lat - center.lat), `map latitude honors ${HASH}`).toBeLessThan(0.15);
+  expect(Math.abs(state.center.lon - center.lon), `map longitude honors ${HASH}`).toBeLessThan(0.15);
+  expect(Math.abs(state.center.zoom - center.zoom), `map zoom honors ${HASH}`).toBeLessThan(0.75);
   expect(usable, [
     `No visible map backing for ${HASH}.`,
     `Center in loaded ENC catalog: ${centerInCatalog}.`,
