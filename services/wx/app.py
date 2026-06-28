@@ -27,7 +27,10 @@ CONTRACT (mirrors web/wx-value-codec.js + pipeline/make_value_tiles.py — "helm
 HONESTY: never fabricates a value to fill a gap (NODATA stays transparent). On a provider 429/outage
 we serve stale cache if we have it, else fail honestly — we do NOT invent weather. NOT FOR NAVIGATION.
 
-Run:  uvicorn app:app --port 8091      (deps: pip install -r requirements.txt)
+Run:  uvicorn app:app --port 8093      (deps: pip install -r requirements.txt)
+      Use :8093 — :8091 is the offline basemap MBTiles server; binding :8091 here
+      collides with it (WX-15) and broke live Navionics. The web client already
+      targets :8093 for weather.
 """
 import asyncio
 import json

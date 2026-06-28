@@ -47,9 +47,13 @@ Layers: `wind, gust, temp, pressure, rain, clouds, cape` (forecast API) + `sst, 
 
 ```bash
 pip install -r requirements.txt
-uvicorn app:app --port 8091
-# point the client at  http://<host>:8091/{layer}/manifest.json
+uvicorn app:app --port 8093
+# point the client at  http://<host>:8093/{layer}/manifest.json
 ```
+
+Use **:8093**, not :8091 — `:8091` is the offline basemap MBTiles server, and
+binding the weather gateway there collides with it (WX-15). The web client already
+expects weather on :8093.
 
 ### Open-Meteo API key (commercial)
 
