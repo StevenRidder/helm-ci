@@ -1,11 +1,11 @@
 // HelmAisVectors — AIS-4: CPA vector cone / tactical overlay + speed-scaled predictor on targets.
 //
-// OpenCPN draws a COG/SOG "predictor" off every moving AIS target — a line along the target's
-// course whose LENGTH encodes speed (how far she travels in N minutes) — and colours dangerous
-// targets red. This module reproduces that, plus a per-target "CPA cone": a wedge from the target
-// out to her predicted closest-approach position, dropped only on the targets the engine flags as
-// a collision risk. It answers, at a glance: where is she going, how fast, and where/when is she
-// closest to me.
+// OpenCPN draws a COG/SOG "predictor" off every moving AIS target at the SAME weight — which becomes
+// an unreadable hairball in a crowded anchorage. We draw the same speed-scaled predictor (LENGTH =
+// distance run in N minutes), but TIER IT BY RISK (AIS-16): danger is bold + carries a CPA cone,
+// caution is a lighter early-warning line, ambient fast traffic is a faint hairline, and moored/slow
+// boats draw nothing — with a density dial (Threats · +Caution · +Traffic) to set how far down we go.
+// The eye sorts urgent/developing/ambient at a glance instead of hunting two threats among ninety lines.
 //
 // IN-LANE / DECOUPLED BY DESIGN: this is a standalone module. It reads the SAME live `ais` map
 // source that index.html drives from the engine (querySourceFeatures — no edits to index.html's
@@ -41,16 +41,31 @@
   // ---- persisted user prefs (module-level so the SHELL panel + the map instance share them) ----
   var PREF = {
     on:    load('helm.ais.vectors.on', true),
-    min:   load('helm.ais.vectors.min', 6),        // predictor length, minutes (3/6/12/30)
-    scope: load('helm.ais.vectors.scope', 'danger') // cone scope: 'danger' | 'all' (all warned)
+    min:   load('helm.ais.vectors.min', 6),               // predictor length, minutes (3/6/12/30)
+    density: load('helm.ais.vectors.density', 'caution')  // 'threats' | 'caution' | 'all' (+ fast traffic)
   };
   function load(k, d) { try { var v = localStorage.getItem(k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
   function persist() {
     try {
       localStorage.setItem('helm.ais.vectors.on', JSON.stringify(PREF.on));
       localStorage.setItem('helm.ais.vectors.min', JSON.stringify(PREF.min));
-      localStorage.setItem('helm.ais.vectors.scope', JSON.stringify(PREF.scope));
+      localStorage.setItem('helm.ais.vectors.density', JSON.stringify(PREF.density));
     } catch (e) { /* private mode — keep running with in-memory prefs */ }
+  }
+
+  // ---- AIS-16: tiered vector weighting — threats POP, developing shows lighter, ambient stays faint ----
+  // OpenCPN draws every moving target's predictor at the SAME weight → a hairball you can't read in a
+  // crowded anchorage. Instead we weight by risk so the eye sorts urgent/developing/ambient instantly,
+  // and the density dial controls how far down the tiers we draw at all.
+  var FAST_KN = 4;               // a "normal" (green) target needs at least this much way on to earn a faint line
+  var TRAFFIC_COL = '#9bb0c0';   // ambient (non-threat) traffic — neutral, deliberately NOT a tier colour
+  // Per-tier line weight, or null when the active density says "don't draw this one".
+  //   density 'threats' → danger only · 'caution' → + caution · 'all' → + fast-moving normal traffic
+  function vectorStyle(tier, sog) {
+    if (tier === 'danger')  return { width: 2.6, opacity: 0.95, col: COL().danger };
+    if (tier === 'caution' && PREF.density !== 'threats') return { width: 1.5, opacity: 0.8, col: COL().caution };
+    if (tier === 'normal'  && PREF.density === 'all' && sog >= FAST_KN) return { width: 0.85, opacity: 0.42, col: TRAFFIC_COL };
+    return null;
   }
 
   // ---- geometry: move a point distanceNM along a true bearing (local equirectangular) ----
@@ -100,7 +115,7 @@
         paint: { 'line-color': ['get', 'color'], 'line-width': 1.4, 'line-opacity': 0.7, 'line-dasharray': [2, 1.5] } }, before);
       add({ id: 'helm-ais-predictor', type: 'line', source: SRC, filter: ['==', ['get', 'kind'], 'predictor'],
         layout: { 'line-cap': 'round' },
-        paint: { 'line-color': ['get', 'color'], 'line-width': 1.7, 'line-opacity': ['get', 'opacity'] } }, before);
+        paint: { 'line-color': ['get', 'color'], 'line-width': ['get', 'width'], 'line-opacity': ['get', 'opacity'] } }, before);
       add({ id: 'helm-ais-cpa-marker', type: 'circle', source: SRC, filter: ['==', ['get', 'kind'], 'cpa'],
         paint: { 'circle-radius': 5, 'circle-color': 'rgba(0,0,0,0)', 'circle-stroke-color': ['get', 'color'], 'circle-stroke-width': 2 } }, before);
       add({ id: 'helm-ais-cpa-label', type: 'symbol', source: SRC, filter: ['==', ['get', 'kind'], 'cpa'],
@@ -146,22 +161,24 @@
         var t = list[i];
         if (t.cog == null || t.sog == null || t.sog < MIN_SOG_KN) continue;   // moored / no course → no vector
         var tier = tierOf(t);
+        var sty = vectorStyle(tier, t.sog);
+        if (!sty) continue;                                              // density dial draws nothing for this tier → skip
         var stale = t.ageSec != null && t.ageSec > STALE_SEC;
-        var color = stale ? STALE_COL : (COL()[tier] || COL().normal);   // stale → grey, never a live tier colour
-        var opacity = stale ? 0.35 : 0.9;
+        var color = stale ? STALE_COL : sty.col;                         // stale → grey, never a live tier colour
+        var opacity = stale ? 0.3 : sty.opacity;
+        var width = stale ? Math.min(sty.width, 1.2) : sty.width;        // a stale track never carries a bold live weight
         var apex = [t.lon, t.lat];
 
         // speed-scaled predictor (factual: solid line, length = distance run in PREF.min at this SOG).
-        // Direction reads from the vessel triangle at the apex; no separate arrowhead glyph needed.
+        // Direction reads from the vessel triangle at the apex; weight reads from the risk tier (above).
         var tip = project(t.lon, t.lat, t.cog, t.sog * (PREF.min / 60));
-        out.push(feat(lineG([apex, tip]), { kind: 'predictor', mmsi: t.mmsi, color: color, opacity: opacity }));
+        out.push(feat(lineG([apex, tip]), { kind: 'predictor', mmsi: t.mmsi, color: color, opacity: opacity, width: width }));
 
-        // CPA cone (predicted: dashed) — only for warned targets with a valid future CPA, not stale.
-        // The ±8° half-angle is a FIXED COSMETIC sector for legibility — NOT a positional-uncertainty
-        // estimate (the engine provides no error term). Apex at the target, fanning to the predicted
-        // closest-approach position (target dead-reckoned along COG by sog·tcpa).
-        var warned = PREF.scope === 'all' ? tier !== 'normal' : tier === 'danger';
-        if (warned && !stale && t.tcpa != null && t.tcpa > 0) {
+        // CPA cone (predicted: dashed) — the URGENT treatment, DANGER only (caution gets a lighter line but
+        // no cone, by design). The ±8° half-angle is a FIXED COSMETIC sector for legibility — NOT a
+        // positional-uncertainty estimate (the engine provides no error term). Apex at the target, fanning
+        // to the predicted closest-approach position (target dead-reckoned along COG by sog·tcpa).
+        if (tier === 'danger' && !stale && t.tcpa != null && t.tcpa > 0) {
           var cpaDist = t.sog * (t.tcpa / 60);
           var cpaPos = project(t.lon, t.lat, t.cog, cpaDist);
           var left = project(t.lon, t.lat, t.cog - 8, cpaDist);
@@ -206,9 +223,9 @@
     return {
       setOn: function (v) { PREF.on = !!v; persist(); if (built) { applyVisibility(); schedule(); } },
       setMin: function (v) { PREF.min = +v; persist(); schedule(); },
-      setScope: function (v) { PREF.scope = v; persist(); schedule(); },
+      setDensity: function (v) { PREF.density = v; persist(); schedule(); },
       toggle: function () { this.setOn(!PREF.on); return PREF.on; },
-      prefs: function () { return { on: PREF.on, min: PREF.min, scope: PREF.scope }; },
+      prefs: function () { return { on: PREF.on, min: PREF.min, density: PREF.density }; },
       refresh: schedule
     };
   };
@@ -234,14 +251,14 @@
       icon: '➢',
       render: function (body) {
         body.innerHTML =
-          '<div class="sub" style="margin-bottom:10px;color:var(--cdim,#8aa)">Speed-scaled COG predictor on every moving target, plus a CPA cone to the predicted closest-approach point on the targets the engine flags as a risk. Engine CPA/TCPA are authoritative — geometry only is drawn here.</div>' +
+          '<div class="sub" style="margin-bottom:10px;color:var(--cdim,#8aa)">Tiered course predictors — threats bold (+ CPA cone), caution lighter, ambient traffic faint — so the dangerous targets pop instead of drowning in lines. Engine CPA/TCPA are authoritative; geometry only is drawn here.</div>' +
           '<label class="row" style="display:flex;align-items:center;gap:8px;margin:8px 0">' +
             '<input type="checkbox" id="aisv-on"> <b>Show vector overlay</b></label>' +
           '<div class="lbl" style="margin:10px 0 4px;font-size:11px;letter-spacing:.04em;color:var(--cdim,#8aa)">PREDICTOR LENGTH</div>' +
           '<div id="aisv-min" class="seg" style="display:flex;gap:4px"></div>' +
-          '<div class="lbl" style="margin:12px 0 4px;font-size:11px;letter-spacing:.04em;color:var(--cdim,#8aa)">SHOW CPA CONE FOR</div>' +
-          '<div id="aisv-scope" class="seg" style="display:flex;gap:4px"></div>' +
-          '<div class="sub" style="margin-top:12px;font-size:10.5px;color:var(--cdim2,#678)">Moored / &lt;0.5 kn targets show no vector. Cones need a valid future TCPA.</div>';
+          '<div class="lbl" style="margin:12px 0 4px;font-size:11px;letter-spacing:.04em;color:var(--cdim,#8aa)">VECTOR DETAIL</div>' +
+          '<div id="aisv-density" class="seg" style="display:flex;gap:4px"></div>' +
+          '<div class="sub" style="margin-top:12px;font-size:10.5px;color:var(--cdim2,#678)">Red threats: bold line + CPA cone. Caution: thin amber early-warning line. Traffic: faint line for fast (&ge;4 kn) normal targets. Moored / &lt;0.5 kn never draw a line.</div>';
 
         var mkSeg = function (host, opts, getCur, onPick) {
           host.innerHTML = '';
@@ -270,13 +287,13 @@
           [{ label: '3', val: 3 }, { label: '6', val: 6 }, { label: '12', val: 12 }, { label: '30 min', val: 30 }],
           function () { return inst() ? inst().prefs().min : PREF.min; },
           function (v) { if (inst()) inst().setMin(v); });
-        var paintScope = mkSeg(body.querySelector('#aisv-scope'),
-          [{ label: 'Dangerous', val: 'danger' }, { label: 'All warned', val: 'all' }],
-          function () { return inst() ? inst().prefs().scope : PREF.scope; },
-          function (v) { if (inst()) inst().setScope(v); });
+        var paintDensity = mkSeg(body.querySelector('#aisv-density'),
+          [{ label: 'Threats', val: 'threats' }, { label: '+ Caution', val: 'caution' }, { label: '+ Traffic', val: 'all' }],
+          function () { return inst() ? inst().prefs().density : PREF.density; },
+          function (v) { if (inst()) inst().setDensity(v); });
         // Re-sync controls to the live prefs on every open — they can change via ⌘K or another path
         // while the panel is closed (render() runs once; onOpen runs every open).
-        body._aisvSync = function () { var pr = inst() ? inst().prefs() : PREF; on.checked = !!pr.on; paintMin(); paintScope(); };
+        body._aisvSync = function () { var pr = inst() ? inst().prefs() : PREF; on.checked = !!pr.on; paintMin(); paintDensity(); };
         body._aisvSync();
       },
       onOpen: function (body) { if (body._aisvSync) body._aisvSync(); }
