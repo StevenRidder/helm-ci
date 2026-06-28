@@ -20,6 +20,31 @@ Today a cruiser bounces between Windy (for some weather layers), PredictWind (fo
 routing), a separate weather app (for the rest), and a charting/nav app (for the
 chart itself). Nothing on the market shows it all on one screen. **That is the product.**
 
+## How it fits together
+
+Helm is **one system, not several loose apps**: a headless boat server with thin
+clients around it. If the directory layout looks like "a few projects in different
+languages," this is the hierarchy that ties them together.
+
+| Part | Language | Role |
+|---|---|---|
+| **`engine/` → `helm-server`** | C++ | The safety core. A headless OpenCPN-derived navigation + S-52 chart engine that serves `/nav`, `/chart`, `/catalog`, and `/health` on one local origin. |
+| **`web/`** | Browser / MapLibre | The cockpit UI — a thin client over the server. Runs on the same machine or another display on the boat LAN. |
+| **`services/`** | Python | Optional local helpers (e.g. basemap fill). Not required to understand the core. |
+| **`pipeline/`** | Python / shell | Tools to generate and import *your own* local chart, depth, and weather data. No chart packs are bundled. |
+
+```text
+   web/ cockpit  ──HTTP+WebSocket──▶  engine/ helm-server (C++)  ──▶  local charts + boat data
+  (browser/tablet)   one local origin      OpenCPN nav core            ENC/MBTiles · NMEA/SignalK
+                                                  ▲
+                                   optional  services/ · pipeline/
+```
+
+The C++ process owns navigation-critical computation and chart rendering; everything
+else orbits it behind the HTTP/WebSocket boundary. That split is what lets Helm grow
+toward browser, mobile, and native clients later. Full detail in
+[docs/ARCHITECTURE.md](docs/ARCHITECTURE.md).
+
 ## Status
 
 Pre-alpha source release. The documented build/run path is **macOS from

@@ -4,6 +4,24 @@ Helm is a public pre-alpha source release. It is useful for experimentation,
 review, and contribution, but it is not a packaged chartplotter app and it is
 not a primary navigation system.
 
+## How Helm Is Being Built
+
+Helm began as an AI-accelerated solo build around a real cruising need: one screen
+that fuses charts, weather, routing, AIS, and instruments instead of four separate
+apps. That moved a working headless-engine + browser-cockpit prototype onto the water
+quickly.
+
+The goal is **not** an AI-only project. The phase that matters now is turning a working
+prototype into a legible open technical project — clear module boundaries (engine,
+client, services, data pipeline), real build/run docs, issue structure, and a review
+bar that applies to every change. The ask to the community is not "merge a large thing
+into OpenCPN." It is: here is an experimental web-first chartplotter built on OpenCPN's
+core ideas — help test, critique, port, document, package, and harden specific parts.
+
+Every contribution, AI-assisted or not, is held to the same bar: human-readable intent,
+reproducible behavior, tests or a verification recipe, and review. See
+[CONTRIBUTING.md](../CONTRIBUTING.md).
+
 ## What Helm Is Today
 
 Today Helm is:
