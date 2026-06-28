@@ -182,6 +182,14 @@
   #play{font-size:12px;color:#cdd9e3;background:rgba(255,255,255,.06);border:.5px solid var(--line);
     border-radius:8px;padding:4px 11px;cursor:pointer}
   #tslider{flex:1;accent-color:var(--accent)}
+  #wxopacity{--wx-fill:28%;-webkit-appearance:none;appearance:none;height:18px;background:transparent}
+  #wxopacity::-webkit-slider-runnable-track{height:5px;border-radius:999px;border:.5px solid rgba(255,255,255,.24);
+    background:linear-gradient(90deg,var(--accent) 0 var(--wx-fill),rgba(255,255,255,.16) var(--wx-fill) 100%)}
+  #wxopacity::-webkit-slider-thumb{-webkit-appearance:none;appearance:none;width:18px;height:18px;margin-top:-7px;
+    border-radius:50%;border:0;background:var(--accent);box-shadow:0 1px 4px rgba(0,0,0,.45);cursor:pointer}
+  #wxopacity::-moz-range-track{height:5px;border-radius:999px;border:.5px solid rgba(255,255,255,.24);background:rgba(255,255,255,.16)}
+  #wxopacity::-moz-range-progress{height:5px;border-radius:999px;background:var(--accent)}
+  #wxopacity::-moz-range-thumb{width:18px;height:18px;border-radius:50%;border:0;background:var(--accent);cursor:pointer}
   #tlabel{font-size:10px;color:var(--cdim);text-align:center;margin-top:4px}
 
   .hint{font-size:11px;color:var(--cdim);margin-top:14px;line-height:1.45;
@@ -1062,6 +1070,7 @@
 
   const opSlider = document.getElementById('wxopacity');
   function applyOpacity() {
+    opSlider.style.setProperty('--wx-fill', opSlider.value + '%');
     const o = (100 - (+opSlider.value)) / 100;     // slider right = more transparent
     if (field) field.setOpacity(o);
     if (wind) wind.setOpacity(Math.max(0.04, o * 0.7));

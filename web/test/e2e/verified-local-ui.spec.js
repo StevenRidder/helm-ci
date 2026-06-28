@@ -23,6 +23,20 @@ async function clickRail(page, rail) {
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 
+async function wxOpacityStyle(page) {
+  return page.evaluate(() => {
+    const el = document.querySelector('#wxopacity');
+    const cs = getComputedStyle(el);
+    return {
+      appearance: cs.appearance,
+      webkitAppearance: cs.webkitAppearance,
+      fill: cs.getPropertyValue('--wx-fill').trim(),
+      accentColor: cs.accentColor,
+      height: el.getBoundingClientRect().height,
+    };
+  });
+}
+
 function mockedWeatherNodes(urlText) {
   const u = new URL(urlText);
   const latCount = (u.searchParams.get('latitude') || '').split(',').filter(Boolean).length || 144;
@@ -94,6 +108,12 @@ test('weather transparency changes the live weather layer opacity', async ({ pag
   await boot(page);
 
   await clickRail(page, 'weather');
+  await expect.poll(async () => wxOpacityStyle(page)).toMatchObject({
+    appearance: 'none',
+    webkitAppearance: 'none',
+    fill: '28%',
+  });
+
   const scrubberState = await page.evaluate(() => {
     const time = document.querySelector('#time');
     const slider = document.querySelector('#tslider');
@@ -124,7 +144,32 @@ test('weather transparency changes the live weather layer opacity', async ({ pag
     el.value = '80';
     el.dispatchEvent(new Event('input', { bubbles: true }));
   });
+  await expect.poll(async () => (await wxOpacityStyle(page)).fill).toBe('80%');
 
   await expect.poll(async () => page.evaluate(() => window.map.getPaintProperty('helm-wx-live', 'raster-opacity')))
     .toBeCloseTo(0.20, 2);
+});
+
+test.describe('mobile chromium', () => {
+  test.use({
+    viewport: { width: 390, height: 844 },
+    userAgent: 'Mozilla/5.0 (Linux; Android 14; Pixel 8) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0 Mobile Safari/537.36',
+  });
+
+  test('weather transparency slider keeps the explicit filled track on Android-style browsers', async ({ page }) => {
+    await boot(page);
+    await clickRail(page, 'weather');
+
+    await expect.poll(async () => wxOpacityStyle(page)).toMatchObject({
+      appearance: 'none',
+      webkitAppearance: 'none',
+      fill: '28%',
+    });
+
+    await page.locator('#wxopacity').evaluate((el) => {
+      el.value = '80';
+      el.dispatchEvent(new Event('input', { bubbles: true }));
+    });
+    await expect.poll(async () => (await wxOpacityStyle(page)).fill).toBe('80%');
+  });
 });
