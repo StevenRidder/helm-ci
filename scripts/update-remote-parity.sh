@@ -13,6 +13,7 @@ PORT="${HELM_PORT:-8080}"
 HASH="${HELM_VERIFY_HASH:-#11/24.52/-81.77}"
 GIT_REMOTE_URL="${HELM_GIT_REMOTE_URL:-git@github.com:StevenRidder/Helm.git}"
 GIT_SSH_KEY="${HELM_GIT_SSH_KEY:-$HOME/.ssh/id_ed25519_github_helm}"
+ALLOW_DIRTY="${HELM_ALLOW_DIRTY:-0}"
 PULL=1
 BUILD=1
 START=1
@@ -31,6 +32,9 @@ Options:
   --verify-only        Only run Playwright verification against the live server
   --replace-running    Stop processes listening on :PORT, :8093, and :8095 before start
   -h, --help           Show this help
+
+Env:
+  HELM_ALLOW_DIRTY=1   Allow running from a checkout with local source changes
 EOF
 }
 
@@ -52,6 +56,17 @@ cd "$ROOT"
 
 pids_on_port() {
   lsof -tiTCP:"$1" -sTCP:LISTEN 2>/dev/null || true
+}
+
+require_clean_tree() {
+  [ "$ALLOW_DIRTY" = 1 ] && return 0
+  local dirty
+  dirty="$(git status --porcelain)"
+  [ -z "$dirty" ] && return 0
+  echo "update-remote-parity: checkout has local changes; refusing to mix local drift with GitHub main." >&2
+  echo "$dirty" >&2
+  echo "Commit/stash/remove these changes, or set HELM_ALLOW_DIRTY=1 if you really mean to run from a dirty tree." >&2
+  exit 21
 }
 
 git_pull_main() {
@@ -95,6 +110,8 @@ ensure_wx_venv() {
 if [ "$VERIFY_ONLY" = 1 ]; then
   exec scripts/verify-live-ui.sh "http://127.0.0.1:$PORT" "$HASH"
 fi
+
+require_clean_tree
 
 if [ "$PULL" = 1 ]; then
   git_pull_main
