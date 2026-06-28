@@ -78,6 +78,12 @@ So **A preserves true IHO S-52 correctness in weeks**, vs B rebuilding the hard 
 symbology, color schemes, safety contours, text placement) from scratch. B stays the optional
 north-star (esp. for iOS, where OpenCPN can't go).
 
+For the Vulkan renderer POC, the first boundary is the shared seam: rendering semantics, normalized
+chart objects, command-stream construction, Vulkan backend behavior, and golden fixtures are shared;
+OpenCPN owns the interactive wx/swapchain adapter, and Helm owns the headless `/chart` tile adapter.
+See [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md) for the current ownership contract. Repository
+layout and standalone extraction remain separate REPO-lane decisions.
+
 ## The new architecture
 
 ```
