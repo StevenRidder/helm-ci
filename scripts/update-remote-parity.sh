@@ -11,6 +11,8 @@ set -euo pipefail
 ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 PORT="${HELM_PORT:-8080}"
 HASH="${HELM_VERIFY_HASH:-#11/24.52/-81.77}"
+GIT_REMOTE_URL="${HELM_GIT_REMOTE_URL:-git@github.com:StevenRidder/Helm.git}"
+GIT_SSH_KEY="${HELM_GIT_SSH_KEY:-$HOME/.ssh/id_ed25519_github_helm}"
 PULL=1
 BUILD=1
 START=1
@@ -52,6 +54,17 @@ pids_on_port() {
   lsof -tiTCP:"$1" -sTCP:LISTEN 2>/dev/null || true
 }
 
+git_pull_main() {
+  if [ -f "$GIT_SSH_KEY" ]; then
+    echo "update-remote-parity: pulling main with $GIT_SSH_KEY"
+    env GIT_SSH_COMMAND="ssh -i $GIT_SSH_KEY -o IdentitiesOnly=yes" git fetch "$GIT_REMOTE_URL" main
+    git merge --ff-only FETCH_HEAD
+  else
+    echo "update-remote-parity: pulling main with configured origin"
+    git pull --ff-only origin main
+  fi
+}
+
 stop_port() {
   local port="$1" pids
   pids="$(pids_on_port "$port")"
@@ -72,7 +85,7 @@ if [ "$VERIFY_ONLY" = 1 ]; then
 fi
 
 if [ "$PULL" = 1 ]; then
-  git pull --ff-only origin main
+  git_pull_main
 fi
 
 if [ "$BUILD" = 1 ]; then
