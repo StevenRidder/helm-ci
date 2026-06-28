@@ -177,7 +177,8 @@ This document does not decide:
 
 - exact filesystem layout or standalone repository timing; that stays with the
   paused REPO lane;
-- the command-stream schema fields; that is `SEAM-2`;
+- the command-stream schema fields; that is `SEAM-2` and is drafted in
+  [VULKAN-RENDER-COMMAND-STREAM.md](VULKAN-RENDER-COMMAND-STREAM.md);
 - the detailed adapter APIs for OpenCPN and Helm; that is `SEAM-3`;
 - fixture corpus and image-regression harness details; that is `SEAM-4`;
 - commercial relicensing or App Store posture.
