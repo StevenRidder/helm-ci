@@ -163,15 +163,10 @@ browser UI, `/nav`, `/chart`, `/catalog`, and `/health` on one private port.
 ```bash
 brew install wxwidgets@3.2 gpatch cmake gdal node python3
 engine/bootstrap.sh
+scripts/install-sample-enc.sh
+scripts/start-helm.sh --port 8080 --fill
 
-export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-  /tmp/helm-opencpn/build/cli/helm-server
-
-open http://127.0.0.1:9001/
+open http://127.0.0.1:8080/
 ```
 
 Use [docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input,

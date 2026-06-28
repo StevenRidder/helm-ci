@@ -14,7 +14,7 @@
 #   engine/bootstrap.sh [--dir <clone-dir>] [--jobs N] [--smoke] [--clean]
 #
 # Env overrides:
-#   HELM_OCPN_DIR   clone/build dir (default: /tmp/helm-opencpn)
+#   HELM_OCPN_DIR   clone/build dir (default: ~/.helm/build/helm-opencpn)
 #   WX_CONFIG       wx-config executable (default: homebrew wxwidgets@3.2)
 #
 set -euo pipefail
@@ -24,8 +24,9 @@ REPO="$(cd "$HERE/.." && pwd)"
 PATCHES="$HERE/patches"
 OVERLAY="$HERE/vendor/cli"
 REF_FILE="$HERE/vendor/OPENCPN_REF"
+BUILD_TMP="${HELM_BUILD_TMP:-$HOME/.helm/build/tmp}"
 
-OCPN_DIR="${HELM_OCPN_DIR:-/tmp/helm-opencpn}"
+OCPN_DIR="${HELM_OCPN_DIR:-$HOME/.helm/build/helm-opencpn}"
 WX_CONFIG="${WX_CONFIG:-/opt/homebrew/opt/wxwidgets@3.2/bin/wx-config-3.2}"
 JOBS="$(sysctl -n hw.ncpu 2>/dev/null || nproc 2>/dev/null || echo 4)"
 DO_SMOKE=0; DO_CLEAN=0
@@ -57,7 +58,8 @@ command -v cmake >/dev/null || die "cmake not found"
 # macOS BSD patch fails. Require GNU patch (gpatch) ahead of BSD patch on PATH.
 if patch --version 2>/dev/null | grep -qi 'GNU'; then :; else
   command -v gpatch >/dev/null || die "GNU patch required (OpenCPN's ShapefileCpp build patch). brew install gpatch."
-  GNUBIN="$(mktemp -d)/gnubin"; mkdir -p "$GNUBIN"
+  mkdir -p "$BUILD_TMP"
+  GNUBIN="$BUILD_TMP/gnubin.$$"; mkdir -p "$GNUBIN"
   ln -sf "$(command -v gpatch)" "$GNUBIN/patch"   # expose GNU patch as 'patch' for OpenCPN's configure
   export PATH="$GNUBIN:$PATH"
 fi
@@ -148,7 +150,7 @@ ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fet
 
 # ---- install the DURABLE runtime (so a fresh install / reboot can COLD-START) ----------------
 # The engine resolves the S-52 presentation library from HELM_S57_DATA (default ~/.helm/runtime/
-# s57data) — NOT /tmp, which is wiped on reboot. (The old binary hardcoded /tmp/opencpn/data/s57data,
+# s57data), which survives reboot/fresh install. (The old binary hardcoded transient paths,
 # a path bootstrap never created, so a fresh build failed "s52plib load FAILED" on first run.) Copy
 # it out of the clone here so `helm-server` just works. Charts (ENC .000) stay user-provided via
 # HELM_ENC — Helm ships no chart packs.
@@ -159,6 +161,13 @@ if [ -d "$OCPN_DIR/data/s57data" ]; then
   say "installed S-52 presentation library -> $RUNTIME/s57data (durable; override with HELM_S57_DATA)"
 else
   say "WARN: $OCPN_DIR/data/s57data not found — set HELM_S57_DATA or helm-server will fail 's52plib load'"
+fi
+if [ -d "$OCPN_DIR/data/tcdata" ]; then
+  mkdir -p "$RUNTIME"
+  rm -rf "$RUNTIME/tcdata" && cp -R "$OCPN_DIR/data/tcdata" "$RUNTIME/tcdata"
+  say "installed tide/current data -> $RUNTIME/tcdata (durable; override with HELM_TCDATA_DIR)"
+else
+  say "WARN: $OCPN_DIR/data/tcdata not found — set HELM_TCDATA_DIR for tide/current endpoints"
 fi
 # assert the Step-6 seam invariant survived the reproducible build
 syms=$(nm "$BIN/libhelm-chartrender.a" 2>/dev/null | grep -c 'top_frame3Get' || true)
@@ -176,21 +185,27 @@ if [ "$DO_SMOKE" = 1 ]; then
   # exercised too when an ENC cell is present. Runs on a private port so it never
   # collides with a dev server on :8080.
   say "smoke: helm-server one-origin (/health + S-52 tile)"
-  ENC="${HELM_ENC:-/tmp/ENC_ROOT/US5FL96M/US5FL96M.000}"
+  ENC="${HELM_ENC:-$RUNTIME/enc/US5FL4CR/US5FL4CR.000}"
   export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
-  SMOKE_TMP="$(mktemp -d)"
+  SMOKE_ROOT="$RUNTIME/smoke"
+  mkdir -p "$SMOKE_ROOT"
+  SMOKE_TMP="$SMOKE_ROOT/config.$$"
+  SMOKE_LOG="$SMOKE_ROOT/helm-server-smoke.log"
+  HEALTH_JSON="$SMOKE_ROOT/helm-health.json"
+  TILE_PNG="$SMOKE_ROOT/helm-server-tile.png"
+  mkdir -p "$SMOKE_TMP"
   HELM_BIND=127.0.0.1 HELM_PORT=8088 HELM_TILES_NO_WARMUP=1 \
     HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$SMOKE_TMP" HELM_ENC="$ENC" \
-    "$BIN/helm-server" >/tmp/helm-server-smoke.log 2>&1 &
+    "$BIN/helm-server" >"$SMOKE_LOG" 2>&1 &
   pid=$!; sleep 3
-  fail() { kill "$pid" 2>/dev/null || true; rm -rf "$SMOKE_TMP"; sed 's/^/    /' /tmp/helm-server-smoke.log; die "$1"; }
-  hcode=$(curl -s -o /tmp/helm-health.json -w '%{http_code}' "http://127.0.0.1:8088/health"  || echo ERR)
+  fail() { kill "$pid" 2>/dev/null || true; rm -rf "$SMOKE_TMP"; sed 's/^/    /' "$SMOKE_LOG"; die "$1"; }
+  hcode=$(curl -s -o "$HEALTH_JSON" -w '%{http_code}' "http://127.0.0.1:8088/health"  || echo ERR)
   ccode=$(curl -s -o /dev/null            -w '%{http_code}' "http://127.0.0.1:8088/catalog" || echo ERR)
   echo "  /health -> http=$hcode   /catalog -> http=$ccode"
   [ "$hcode" = 200 ] || fail "helm-server /health did not return 200 — the one-origin binary is not serving"
   if [ -f "$ENC" ]; then
-    tcode=$(curl -s -o /tmp/helm-server-tile.png -w '%{http_code}' "http://127.0.0.1:8088/chart/12/1120/1756.png" || echo ERR)
-    tsz=$(wc -c < /tmp/helm-server-tile.png 2>/dev/null | tr -d ' ')
+    tcode=$(curl -s -o "$TILE_PNG" -w '%{http_code}' "http://127.0.0.1:8088/chart/12/1120/1756.png" || echo ERR)
+    tsz=$(wc -c < "$TILE_PNG" 2>/dev/null | tr -d ' ')
     echo "  /chart/12/1120/1756.png -> http=$tcode bytes=$tsz"
     [ "${tsz:-0}" -gt 1000 ] || fail "helm-server S-52 tile render produced no chart content"
     echo "  ✓ one-origin server rendered S-52 chart content"

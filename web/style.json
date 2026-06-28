@@ -152,9 +152,6 @@
       "id": "enc-chart",
       "type": "raster",
       "source": "enc",
-      "layout": {
-        "visibility": "none"
-      },
       "paint": {
         "raster-opacity": 1.0
       }

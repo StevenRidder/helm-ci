@@ -26,7 +26,7 @@
   };
   function supports(layer) { return !!LAYERS[layer]; }
 
-  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, notify: function () {}, onState: null, handler: null, debounce: null, lastKey: '' };
+  var st = { map: null, on: false, layer: 'wind', token: 0, field: null, opacity: 0.72, notify: function () {}, onState: null, handler: null, debounce: null, lastKey: '' };
 
   function codec() { return window.HelmWxCodec; }
 
@@ -123,7 +123,7 @@
     if (map.getSource(SRC)) map.getSource(SRC).updateImage({ url: urlData, coordinates: coords });
     else {
       map.addSource(SRC, { type: 'image', url: urlData, coordinates: coords });
-      map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': 0.72, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
+      map.addLayer({ id: LYR, type: 'raster', source: SRC, paint: { 'raster-opacity': st.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } },
         map.getLayer('route-line') ? 'route-line' : undefined);
     }
   }
@@ -303,6 +303,11 @@
   }
   function setLayer(layer) { st.layer = layer; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
   function setModel(model) { st.model = model; st.lastKey = ''; if (st.on) refresh().catch(function () {}); }
+  function setOpacity(map, o) {
+    st.opacity = Math.max(0, Math.min(1, o));
+    var m = map || st.map;
+    if (m && m.getLayer(LYR)) m.setPaintProperty(LYR, 'raster-opacity', st.opacity);
+  }
   function sampleAt(lat, lon) {
     var f = st.field, C = codec(); if (!f || !C) return null;
     if (lon < f.west || lon > f.east || lat < f.south || lat > f.north) return { value: null, source: 'open', note: 'outside live view' };
@@ -311,7 +316,7 @@
     return { layer: f.layer, value: (v == null || !isFinite(v)) ? null : Math.round(v * 100) / 100, unit: f.unit, source: 'open', sourceRef: { title: 'Open-Meteo (live)' } };
   }
 
-  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel, sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField, _viewBbox: viewBbox, _grid: grid,
+  window.HelmWxLive = { enable: enable, disable: disable, setLayer: setLayer, setModel: setModel, setOpacity: setOpacity, sampleAt: sampleAt, renderField: renderField, supports: supports, _toField: toField, _viewBbox: viewBbox, _grid: grid,
     _stats: function () { return { apiCalls: apiCalls, cached: tiles.size, inflight: inflight.size, cooldown: cooldownUntil > nowMs() }; },
     _snapBbox: snapBbox, _seedTile: function (key, field, vel) { putTile(key, { field: field, vel: vel }); },
     _forceCooldown: function (ms) { cooldownUntil = nowMs() + (ms || 300000); } };

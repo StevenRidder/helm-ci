@@ -58,10 +58,30 @@ void EnsureHeadlessGlobals();
 
 // GetpSharedDataLocation() is provided by the chart-render library (chart_stubs.cpp).
 
-static const wxString kDataDir = wxT("/tmp/opencpn/data/");
-static const wxString kS57Data = wxT("/tmp/opencpn/data/s57data/");
-static const wxString kPLibRLE = wxT("/tmp/opencpn/data/s57data/S52RAZDS.RLE");
-static const wxString kSencDir = wxT("/tmp/ocpn_senc/");
+static std::string helm_home_dir() {
+  const char* home = std::getenv("HOME");
+  return home && *home ? home : ".";
+}
+
+static std::string helm_runtime_path(const std::string& rel) {
+  return helm_home_dir() + "/.helm/runtime/" + rel;
+}
+
+static wxString kDataDir, kS57Data, kPLibRLE, kSencDir;
+static void resolve_runtime_paths() {
+  wxString s57;
+  if (const char* e = std::getenv("HELM_S57_DATA")) if (*e) s57 = wxString::FromUTF8(e);
+  if (s57.IsEmpty()) s57 = wxString::FromUTF8(helm_runtime_path("s57data").c_str());
+  if (!s57.EndsWith(wxT("/"))) s57 += wxT("/");
+  kS57Data = s57;
+  kPLibRLE = s57 + wxT("S52RAZDS.RLE");
+  { wxString d = s57; d.RemoveLast(); kDataDir = d.BeforeLast('/') + wxT("/"); }
+  wxString senc;
+  if (const char* e = std::getenv("HELM_SENC_DIR")) if (*e) senc = wxString::FromUTF8(e);
+  if (senc.IsEmpty()) senc = wxString::FromUTF8(helm_runtime_path("senc").c_str());
+  if (!senc.EndsWith(wxT("/"))) senc += wxT("/");
+  kSencDir = senc;
+}
 
 // One loaded ENC cell. The tiler is multi-cell: it loads a whole folder of cells (a region's
 // worth, across usage bands / scales) and picks the best one per tile by zoom — the tile-layer
@@ -317,8 +337,9 @@ static bool load_one_cell(const wxString& path) {
     static s63::Decoder s63dec = s63::Decoder::from_env();
     std::string cn = std::string((const char*)wxFileName(path).GetName().ToUTF8()), err;
     if (!s63dec.enabled()) { fprintf(stderr, "  skip (S-63 encrypted, set HELM_S63_PERMIT + HELM_S63_HWID): %s\n", p); return false; }
-    ::wxFileName::Mkdir(wxT("/tmp/helm-s63"), 0755, wxPATH_MKDIR_FULL);
-    std::string tmp = "/tmp/helm-s63/" + cn + ".000";
+    std::string s63_dir = helm_runtime_path("s63");
+    ::wxFileName::Mkdir(wxString::FromUTF8(s63_dir.c_str()), 0755, wxPATH_MKDIR_FULL);
+    std::string tmp = s63_dir + "/" + cn + ".000";
     if (!s63dec.decrypt_to_file(std::string(p), cn, tmp, err)) { fprintf(stderr, "  skip (S-63 decrypt %s: %s)\n", cn.c_str(), err.c_str()); return false; }
     fprintf(stderr, "  S-63 decrypted %s\n", cn.c_str());
     load_path = wxString::FromUTF8(tmp.c_str());
@@ -400,11 +421,12 @@ public:
   ix::HttpServer* server = nullptr;
   bool OnInit() override {
     SetAppName(wxT("opencpn"));
+    resolve_runtime_paths();
     // arg or $HELM_ENC_ROOT: a folder of ENC cells (multi-cell quilt) or a single .000 file.
     wxString root;
     if (argc >= 2) root = wxString(argv[1]);
     else if (const wxChar* env = wxGetenv(wxT("HELM_ENC_ROOT"))) root = wxString(env);
-    else root = wxString(wxT("/tmp/ENC_ROOT"));
+    else root = wxString::FromUTF8(helm_runtime_path("enc").c_str());
     if (!init_charts(root)) return false;
     g_charts_version = charts_version_stamp();   // CHART-14: stamp the loaded chart set for immutable ETags
 

@@ -28,14 +28,14 @@ engine/bootstrap.sh
 ```
 
 The bootstrap is the source of truth. It clones the pinned OpenCPN commit into
-`/tmp/helm-opencpn`, applies `engine/patches/`, overlays `engine/vendor/cli/`,
+`~/.helm/build/helm-opencpn`, applies `engine/patches/`, overlays `engine/vendor/cli/`,
 and builds the Helm targets:
 
 ```text
-/tmp/helm-opencpn/build/cli/helm-server
-/tmp/helm-opencpn/build/cli/helm-engine
-/tmp/helm-opencpn/build/cli/helm-tiles
-/tmp/helm-opencpn/build/cli/helm-tides-smoke
+~/.helm/build/helm-opencpn/build/cli/helm-server
+~/.helm/build/helm-opencpn/build/cli/helm-engine
+~/.helm/build/helm-opencpn/build/cli/helm-tiles
+~/.helm/build/helm-opencpn/build/cli/helm-tides-smoke
 ```
 
 It also runs the GPL containment guard. A clean bootstrap should produce
@@ -45,17 +45,11 @@ engine build posture.
 ## Run
 
 ```bash
-export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
-
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-HELM_ENC=/tmp/ENC_ROOT/US5FL96M/US5FL96M.000 \
-  /tmp/helm-opencpn/build/cli/helm-server
+scripts/install-sample-enc.sh
+scripts/start-helm.sh --port 8080 --fill
 ```
 
-Open `http://127.0.0.1:9001/`.
+Open `http://127.0.0.1:8080/`.
 
 The UI loads without live data. To see movement, feed NMEA/SignalK or configure
 connections. First-run config seeds a local NMEA TCP relay on `127.0.0.1:10110`:
@@ -79,8 +73,8 @@ containment, and tide smoke coverage.
 These targets still exist for lower-level debugging:
 
 ```bash
-/tmp/helm-opencpn/build/cli/helm-engine   # nav-only WebSocket server
-/tmp/helm-opencpn/build/cli/helm-tiles    # chart-tile HTTP server
+~/.helm/build/helm-opencpn/build/cli/helm-engine   # nav-only WebSocket server
+~/.helm/build/helm-opencpn/build/cli/helm-tiles    # chart-tile HTTP server
 ```
 
 They are not the public-alpha default. Use `helm-server` unless you are

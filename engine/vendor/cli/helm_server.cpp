@@ -16,7 +16,7 @@
 //   HELM_BIND      bind address (default 127.0.0.1; 0.0.0.0 to serve the LAN)
 //   HELM_PORT      one origin port (default 8080)
 //   HELM_WEB_ROOT  static UI directory (default ./web)
-//   HELM_ENC       ENC cell .000 (default /tmp/ENC_ROOT/US5FL96M/US5FL96M.000)
+//   HELM_ENC       ENC cell .000 (default ~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000)
 //
 // Links ocpn::chart-render (which pulls in model-src) + ixwebsocket — the helm-tiles
 // line. Bonjour uses the system dns_sd (libSystem on macOS, no extra link).
@@ -114,23 +114,31 @@ void EnsureHeadlessGlobals();
 // Tile rendering (S-52) — from helm_tiles.cpp, unchanged behavior.
 // ===========================================================================
 // DURABLE runtime paths for the S-52 presentation library (s57data) + the SENC cache. Resolved at
-// startup from the environment, defaulting under ~/.helm/runtime — NEVER /tmp, so the engine boots
+// startup from the environment, defaulting under ~/.helm/runtime, so the engine boots
 // after a reboot or on a fresh install (engine/bootstrap.sh installs the s57data there). The old
-// hardcoded /tmp/opencpn paths were wiped on every reboot, which made cold-starting impossible.
+// hardcoded transient paths were wiped on every reboot, which made cold-starting impossible.
 // Override with HELM_S57_DATA (the s57data dir) / HELM_SENC_DIR (the regenerable SENC cache).
+static std::string helm_home_dir() {
+  const char* home = std::getenv("HOME");
+  return home && *home ? home : ".";
+}
+
+static std::string helm_runtime_path(const std::string& rel) {
+  return helm_home_dir() + "/.helm/runtime/" + rel;
+}
+
 static wxString kDataDir, kS57Data, kPLibRLE, kSencDir;
 static void resolve_runtime_paths() {
-  std::string home = std::getenv("HOME") ? std::getenv("HOME") : "/tmp";
   wxString s57;
   if (const char* e = std::getenv("HELM_S57_DATA")) if (*e) s57 = wxString::FromUTF8(e);
-  if (s57.IsEmpty()) s57 = wxString::FromUTF8((home + "/.helm/runtime/s57data").c_str());
+  if (s57.IsEmpty()) s57 = wxString::FromUTF8(helm_runtime_path("s57data").c_str());
   if (!s57.EndsWith(wxT("/"))) s57 += wxT("/");
   kS57Data = s57;
   kPLibRLE = s57 + wxT("S52RAZDS.RLE");
   { wxString d = s57; d.RemoveLast(); kDataDir = d.BeforeLast('/') + wxT("/"); }   // data/ = parent of s57data/
   wxString senc;
   if (const char* e = std::getenv("HELM_SENC_DIR")) if (*e) senc = wxString::FromUTF8(e);
-  if (senc.IsEmpty()) senc = wxString::FromUTF8((home + "/.helm/runtime/senc").c_str());
+  if (senc.IsEmpty()) senc = wxString::FromUTF8(helm_runtime_path("senc").c_str());
   if (!senc.EndsWith(wxT("/"))) senc += wxT("/");
   kSencDir = senc;
 }
@@ -279,7 +287,7 @@ static std::string make_blank() {
 
 static bool init_chart(const wxString& enc_path) {
   setvbuf(stdout, nullptr, _IONBF, 0);
-  resolve_runtime_paths();   // durable, env-overridable s57data / SENC paths (never /tmp)
+  resolve_runtime_paths();   // durable, env-overridable s57data / SENC paths
   wxImage::AddHandler(new wxPNGHandler);
   EnsureHeadlessGlobals();
   ::wxFileName::Mkdir(kSencDir, 0755, wxPATH_MKDIR_FULL);
@@ -301,8 +309,9 @@ static bool init_chart(const wxString& enc_path) {
     static s63::Decoder s63dec = s63::Decoder::from_env();
     std::string cn = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8()), err;
     if (!s63dec.enabled()) { printf("S-63 encrypted cell %s but no permit/HW_ID (set HELM_S63_PERMIT + HELM_S63_HWID)\n", cn.c_str()); return false; }
-    ::wxFileName::Mkdir(wxT("/tmp/helm-s63"), 0755, wxPATH_MKDIR_FULL);
-    std::string tmp = "/tmp/helm-s63/" + cn + ".000";
+    std::string s63_dir = helm_runtime_path("s63");
+    ::wxFileName::Mkdir(wxString::FromUTF8(s63_dir.c_str()), 0755, wxPATH_MKDIR_FULL);
+    std::string tmp = s63_dir + "/" + cn + ".000";
     if (!s63dec.decrypt_to_file(s63_src, cn, tmp, err)) { printf("S-63 decrypt FAILED for %s: %s\n", cn.c_str(), err.c_str()); return false; }
     printf("S-63: decrypted %s -> plain S-57\n", cn.c_str());
     load_path = wxString::FromUTF8(tmp.c_str());
@@ -1016,7 +1025,7 @@ static std::string tide_resolve_json(const std::string& uri) {
     return "{\"ok\":false,\"error\":\"" + json_escape(ctx.error) + "\"}";
 
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy =
       ctx.all ? helm::tides::TideSourcePolicy::kAllLocal
               : helm::tides::TideSourcePolicy::kRedistributableOnly;
@@ -1289,7 +1298,7 @@ static TideAcquisitionPlan tide_build_acquisition_plan(
   plan.points = tide_expand_points(plan.ctx.points, plan.lookahead_days);
 
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy =
       plan.ctx.all ? helm::tides::TideSourcePolicy::kAllLocal
                    : helm::tides::TideSourcePolicy::kRedistributableOnly;
@@ -2005,7 +2014,7 @@ static std::string tide_currents_json(const std::string& uri) {
   }
 
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy =
       all ? helm::tides::TideSourcePolicy::kAllLocal
           : helm::tides::TideSourcePolicy::kRedistributableOnly;
@@ -2037,7 +2046,7 @@ static std::string tide_summary_json(const std::string& uri) {
   }
 
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy =
       all ? helm::tides::TideSourcePolicy::kAllLocal
           : helm::tides::TideSourcePolicy::kRedistributableOnly;
@@ -2092,7 +2101,7 @@ static std::string tide_curve_json(const std::string& uri) {
   const std::time_t step_s = (std::time_t)(stepmin * 60.0);
   const std::time_t end = start + (std::time_t)(hours * 3600.0);
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy = all ? helm::tides::TideSourcePolicy::kAllLocal : helm::tides::TideSourcePolicy::kRedistributableOnly;
   helm::tides::TideEngine engine;
   std::string error;
@@ -2134,7 +2143,7 @@ static std::string tide_stations_json(const std::string& uri) {
   if (!bbox.empty() && std::sscanf(bbox.c_str(), "%lf,%lf,%lf,%lf", &w, &s, &e, &n) == 4) have_bbox = true;
   int limit = (int)query_double_or(uri, "limit", 200.0); if (limit < 1) limit = 1; if (limit > 1000) limit = 1000;
   const char* tcenv = std::getenv("HELM_TCDATA_DIR");
-  std::string tcdata = tcenv && *tcenv ? tcenv : "/tmp/helm-opencpn/data/tcdata";
+  std::string tcdata = tcenv && *tcenv ? tcenv : helm_runtime_path("tcdata");
   helm::tides::TideSourcePolicy policy = all ? helm::tides::TideSourcePolicy::kAllLocal : helm::tides::TideSourcePolicy::kRedistributableOnly;
   helm::tides::TideEngine engine;
   std::string error;
@@ -3826,7 +3835,7 @@ public:
   bool OnInit() override {
     SetAppName(wxT("opencpn"));
     const char* enc = std::getenv("HELM_ENC");
-    wxString encPath = enc && *enc ? wxString::FromUTF8(enc) : wxT("/tmp/ENC_ROOT/US5FL96M/US5FL96M.000");
+    wxString encPath = enc && *enc ? wxString::FromUTF8(enc) : wxString::FromUTF8(helm_runtime_path("enc/US5FL4CR/US5FL4CR.000").c_str());
     if (!init_chart(encPath)) return false;
     if (!std::getenv("HELM_TILES_NO_WARMUP")) warmup_render();
 

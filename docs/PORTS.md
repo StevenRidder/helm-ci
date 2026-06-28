@@ -19,11 +19,7 @@ machine, boat server, or demo process is safe to stop or replace.
 Run examples on a private port:
 
 ```bash
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-  /tmp/helm-opencpn/build/cli/helm-server
+scripts/start-helm.sh --port 8080 --fill
 ```
 
 For BYO MBTiles, point the helper at a local directory:

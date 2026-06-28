@@ -8,6 +8,7 @@ const { defineConfig, devices } = require('@playwright/test');
 const path = require('path');
 
 const PORT = process.env.HELM_E2E_PORT || 8077;
+const BASE_URL = process.env.HELM_E2E_URL || `http://localhost:${PORT}`;
 
 module.exports = defineConfig({
   testDir: path.join(__dirname, 'e2e'),
@@ -17,14 +18,14 @@ module.exports = defineConfig({
   expect: { timeout: 10000 },
   reporter: [['list']],
   use: {
-    baseURL: `http://localhost:${PORT}`,
+    baseURL: BASE_URL,
     headless: true,
     actionTimeout: 10000,
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
     command: `python3 ${path.join(__dirname, '..', 'serve.py')} ${PORT}`,
-    url: `http://localhost:${PORT}/`,
+    url: BASE_URL,
     reuseExistingServer: !process.env.CI,
     timeout: 30000,
   },

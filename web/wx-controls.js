@@ -110,6 +110,7 @@
         if ((layer === 'wind' || layer === 'current') && particlesOn()) startParticles(map, layer); else stopParticles(map);
         notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
       } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
+        window.HelmWxLive.setOpacity(map, wxOpacity());
         window.HelmWxLive.enable(map, { layer: layer, notify: notify });   // gateway down -> direct Open-Meteo
         notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
       } else {
@@ -190,7 +191,11 @@
     // Windy-opaque 0.92 here loaded too "thick" over the chart.
     var op = document.getElementById('wxopacity');
     if (op) {
-      var applyTileOpacity = function () { cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, wxOpacity()); }).catch(function () {}); };
+      var applyTileOpacity = function () {
+        var o = wxOpacity();
+        if (window.HelmWxLive && window.HelmWxLive.setOpacity) window.HelmWxLive.setOpacity(S.map, o);
+        cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, o); }).catch(function () {});
+      };
       op.addEventListener('input', applyTileOpacity);
     }
 

@@ -27,31 +27,25 @@ sudo xcodebuild -license accept
 # 2. Build the one-origin engine. First run may take 10-20 minutes.
 engine/bootstrap.sh
 
-# 3. Optional but recommended: put a NOAA ENC cell where the default demo expects it.
-mkdir -p /tmp/ENC_ROOT
-# unzip a free NOAA ENC so you have, for example:
-# /tmp/ENC_ROOT/US5FL96M/US5FL96M.000
+# 3. Optional but recommended: install a free NOAA ENC sample into ~/.helm/runtime/enc.
+scripts/install-sample-enc.sh
 
 # 4. Run a private one-origin server.
-export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-  /tmp/helm-opencpn/build/cli/helm-server
+scripts/start-helm.sh --port 8080 --fill
 
 # 5. Open the client.
-open http://127.0.0.1:9001/
+open http://127.0.0.1:8080/
 ```
 
 **Shortcut:** after the one-time build (step 2), `scripts/start-helm.sh` launches the
 core on its canonical port for you (add `--weather`/`--basemap`/`--fill`/`--backend`,
 or `--all`, to also bring up the opt-in helper services on the ports in
 [PORTS.md](PORTS.md); each is skipped with a clear reason if its deps/data are absent).
-Set `HELM_ENC` first for real S-52 charts. Ctrl-C stops everything it started.
+The sample ENC is used automatically if it exists at `~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000`.
+Ctrl-C stops everything it started.
 
 ```bash
-HELM_ENC=/tmp/ENC_ROOT/US5FL96M/US5FL96M.000 scripts/start-helm.sh --port 9001 --all
+scripts/start-helm.sh --port 8080 --all
 ```
 
 The UI will load even without live vessel data. To see live movement, feed NMEA or
@@ -84,19 +78,18 @@ packs, `~/.helm` runtime data, and generated caches stay outside Git.
 Free US ENC cells are available from NOAA:
 <https://www.charts.noaa.gov/ENCs/ENCs.shtml>
 
-Unzip one or more cells under `/tmp/ENC_ROOT`, for example:
+Install the default sample cell into Helm's durable runtime directory:
 
 ```bash
-mkdir -p /tmp/ENC_ROOT
-# unzip US5FL96M.zip so this exists:
-# /tmp/ENC_ROOT/US5FL96M/US5FL96M.000
+scripts/install-sample-enc.sh
+# ~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000
 ```
 
 `helm-server` reads a single ENC from `HELM_ENC` — a user-provided NOAA `.000`
 cell (Helm ships no chart packs). It needs a valid cell to boot today, so point
 `HELM_ENC` at one. The S-52 **presentation library** it renders with is installed
 durably by `bootstrap.sh` into `~/.helm/runtime/s57data` (override with
-`HELM_S57_DATA`) — no manual `/tmp` setup, and it survives a reboot. *(Booting with
+`HELM_S57_DATA`) and survives a reboot. *(Booting with
 no ENC at all — basemap-only — is a planned follow-up.)*
 
 ### Local Basemap Packs
@@ -118,7 +111,7 @@ on the network reach the same `:8095` proxy.
 Optional overlay extraction:
 
 ```bash
-pipeline/extract_depth.sh /tmp/ENC_ROOT/US5FL96M/US5FL96M.000
+pipeline/extract_depth.sh ~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000
 ```
 
 This writes generated GeoJSON under `HELM_USER_DATA_ROOT`, `HELM_CONFIG/data`,
@@ -150,15 +143,15 @@ This builds demo/public-data weather layers into `web/data/`.
 engine/bootstrap.sh
 ```
 
-The bootstrap clones the pinned OpenCPN source into `/tmp/helm-opencpn`, applies
+The bootstrap clones the pinned OpenCPN source into `~/.helm/build/helm-opencpn`, applies
 Helm's maintained patch series, overlays Helm's new CLI sources, and builds the
 Helm targets, including:
 
 ```text
-/tmp/helm-opencpn/build/cli/helm-server
-/tmp/helm-opencpn/build/cli/helm-engine
-/tmp/helm-opencpn/build/cli/helm-tiles
-/tmp/helm-opencpn/build/cli/helm-tides-smoke
+~/.helm/build/helm-opencpn/build/cli/helm-server
+~/.helm/build/helm-opencpn/build/cli/helm-engine
+~/.helm/build/helm-opencpn/build/cli/helm-tiles
+~/.helm/build/helm-opencpn/build/cli/helm-tides-smoke
 ```
 
 `helm-server` is the normal product path. `helm-engine` and `helm-tiles` remain
@@ -179,20 +172,13 @@ engine/bootstrap.sh --smoke
 ## 4. Run the One-Origin Server
 
 ```bash
-export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
-
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-HELM_ENC=/tmp/ENC_ROOT/US5FL96M/US5FL96M.000 \
-  /tmp/helm-opencpn/build/cli/helm-server
+scripts/start-helm.sh --port 8080 --fill
 ```
 
 Open:
 
 ```bash
-open http://127.0.0.1:9001/
+open http://127.0.0.1:8080/
 ```
 
 Sanity checks:
@@ -200,7 +186,8 @@ Sanity checks:
 ```bash
 curl -s http://127.0.0.1:9001/health
 curl -s http://127.0.0.1:9001/catalog
-curl -s -o /tmp/helm-tile.png -w '%{http_code}\n' \
+mkdir -p ~/.helm/runtime/smoke
+curl -s -o ~/.helm/runtime/smoke/helm-tile.png -w '%{http_code}\n' \
   http://127.0.0.1:9001/chart/12/1120/1756.png
 ```
 

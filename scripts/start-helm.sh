@@ -20,11 +20,11 @@
 #
 #  Key env (all overridable):
 #    HELM_PORT          core port (default 8080)
-#    HELM_OCPN_DIR      build dir (default /tmp/helm-opencpn)
+#    HELM_OCPN_DIR      build dir (default ~/.helm/build/helm-opencpn)
 #    HELM_SERVER_BIN    helm-server binary (default $HELM_OCPN_DIR/build/cli/helm-server)
 #    HELM_WEB_ROOT      web/ dir (default: this repo's web/)
 #    HELM_CONFIG        durable config/runtime dir (default ~/.helm/config)
-#    HELM_ENC           NOAA ENC .000 cell for real S-52 charts (optional)
+#    HELM_ENC           NOAA ENC .000 cell for real S-52 charts
 #    HELM_MBTILES_DIR   dir of *.mbtiles for --basemap (optional; else demo web/data)
 #
 #  Ctrl-C stops everything this script started.
@@ -35,10 +35,12 @@ REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
 # ---- config ---------------------------------------------------------------
 HELM_PORT="${HELM_PORT:-8080}"
-HELM_OCPN_DIR="${HELM_OCPN_DIR:-/tmp/helm-opencpn}"
+HELM_RUNTIME_DIR="${HELM_RUNTIME_DIR:-$HOME/.helm/runtime}"
+HELM_OCPN_DIR="${HELM_OCPN_DIR:-$HOME/.helm/build/helm-opencpn}"
 HELM_SERVER_BIN="${HELM_SERVER_BIN:-$HELM_OCPN_DIR/build/cli/helm-server}"
 HELM_WEB_ROOT="${HELM_WEB_ROOT:-$REPO_ROOT/web}"
 HELM_CONFIG="${HELM_CONFIG:-$HOME/.helm/config}"
+HELM_SAMPLE_ENC="${HELM_SAMPLE_ENC:-$HELM_RUNTIME_DIR/enc/US5FL4CR/US5FL4CR.000}"
 
 WANT_WEATHER=0; WANT_BASEMAP=0; WANT_FILL=0; WANT_BACKEND=0
 while [ $# -gt 0 ]; do
@@ -82,12 +84,16 @@ start_bg() { # $1=label  $2=port  shift 2; rest = command
 [ -d "$HELM_WEB_ROOT" ]   || die "web root not found: $HELM_WEB_ROOT (set HELM_WEB_ROOT)."
 mkdir -p "$HELM_CONFIG"
 
+if [ -z "${HELM_ENC:-}" ] && [ -f "$HELM_SAMPLE_ENC" ]; then
+  HELM_ENC="$HELM_SAMPLE_ENC"
+fi
+
 # macOS: helm-server links wxWidgets 3.2 from Homebrew at runtime.
 if [ "$(uname)" = "Darwin" ]; then
   export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib:${DYLD_LIBRARY_PATH:-}"
 fi
 
-[ -n "${HELM_ENC:-}" ] || SKIPPED+=("charts — no HELM_ENC set; UI + basemaps load, but no real S-52 ENC tiles")
+[ -n "${HELM_ENC:-}" ] || die "no ENC chart found. Run scripts/install-sample-enc.sh or set HELM_ENC to a .000 chart cell."
 
 echo "start-helm: launching core helm-server on :$HELM_PORT (web=$HELM_WEB_ROOT)…"
 port_busy "$HELM_PORT" && die "port $HELM_PORT already serving /health — core not started (use --port N for a private port)."

@@ -2,7 +2,7 @@
  * safety-dock.js — Movable MOB / anchor-watch / guard safety pill (CHART).
  *
  * Keeps the EXISTING MOB/anchor-watch/guard pill exactly as it was. Only:
- *   - DEFAULT lower-left, left-aligned with the nav rail (left:12 / bottom:92)
+ *   - DEFAULT lower-left, clear of the nav rail (left:74 / bottom:92)
  *   - FREE-FORM draggable (mouse + touch) — drag anywhere, NO snap
  *   - a real drag never fires a button (small move = tap, larger = drag)
  *   - PERSIST it EDGE-RELATIVE (px from the nearest corner), not absolute px, so it
@@ -14,7 +14,7 @@
 (function () {
   'use strict';
   var KEY = 'helm.mobPill.anchor';
-  var DEFAULT = { hx: 'l', vy: 'b', ox: 12, oy: 92 };   // lower-left, aligned with the rail
+  var DEFAULT = { hx: 'l', vy: 'b', ox: 74, oy: 92 };   // lower-left, clear of the rail
   var EDGE = 4;                                          // min gap from the screen edge
 
   function vw() { return window.innerWidth || document.documentElement.clientWidth || 1024; }
@@ -22,6 +22,7 @@
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
   function loadAnchor() { try { var a = JSON.parse(localStorage.getItem(KEY)); return (a && 'ox' in a) ? a : null; } catch (e) { return null; } }
   function saveAnchor(a) { try { localStorage.setItem(KEY, JSON.stringify(a)); } catch (e) {} }
+  function overlaps(a, b) { return a.left < b.right && a.right > b.left && a.top < b.bottom && a.bottom > b.top; }
 
   // turn the current rendered box into an edge-relative anchor (nearest corner + px offsets)
   function anchorFromRect(pill) {
@@ -45,6 +46,19 @@
     pill.style.top = a.vy === 't' ? oy + 'px' : 'auto';
     pill.style.bottom = a.vy === 'b' ? oy + 'px' : 'auto';
     pill.__anchor = a;
+    avoidRail(pill);
+  }
+
+  function avoidRail(pill) {
+    var rail = document.querySelector('.rail');
+    if (!rail) return;
+    var pr = pill.getBoundingClientRect(), rr = rail.getBoundingClientRect();
+    if (!overlaps(pr, rr)) return;
+    var w = pill.offsetWidth || pr.width || 40, W = vw();
+    pill.style.left = clamp(rr.right + 12, EDGE, W - w - EDGE) + 'px';
+    pill.style.right = 'auto';
+    pill.__anchor = anchorFromRect(pill);
+    saveAnchor(pill.__anchor);
   }
 
   function findPill() {

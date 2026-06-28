@@ -36,9 +36,9 @@ engine/bootstrap.sh
 The build creates:
 
 ```text
-/tmp/helm-opencpn/build/cli/helm-server
-/tmp/helm-opencpn/build/cli/helm-engine
-/tmp/helm-opencpn/build/cli/helm-tiles
+~/.helm/build/helm-opencpn/build/cli/helm-server
+~/.helm/build/helm-opencpn/build/cli/helm-engine
+~/.helm/build/helm-opencpn/build/cli/helm-tiles
 ```
 
 `helm-server` is the normal product path.
@@ -46,13 +46,8 @@ The build creates:
 ## Run The Server
 
 ```bash
-export DYLD_LIBRARY_PATH=/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib
-
-HELM_PORT=9001 \
-HELM_WEB_ROOT="$PWD/web" \
-HELM_CONFIG="$(mktemp -d)" \
-HELM_TILES_NO_WARMUP=1 \
-  /tmp/helm-opencpn/build/cli/helm-server
+scripts/install-sample-enc.sh
+scripts/start-helm.sh --port 8080 --fill
 ```
 
 Then open:
