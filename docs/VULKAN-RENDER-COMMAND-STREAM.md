@@ -402,6 +402,11 @@ The fixture must include at least:
 This is enough for OpenCPN and Helm to prove they consume the same command
 stream before attempting full S-52 coverage.
 
+The initial committed fixture corpus and checker live under
+`engine/test/fixtures/vulkan-render/` and
+`scripts/vulkan-render-fixture-check.py`; see
+[VULKAN-RENDER-FIXTURES.md](VULKAN-RENDER-FIXTURES.md).
+
 ## Open Questions For Implementation
 
 - whether the C++ in-memory form should mirror the fixture JSON exactly or use

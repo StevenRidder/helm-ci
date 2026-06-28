@@ -181,7 +181,8 @@ This document does not decide:
   [VULKAN-RENDER-COMMAND-STREAM.md](VULKAN-RENDER-COMMAND-STREAM.md);
 - the detailed adapter APIs for OpenCPN and Helm; that is `SEAM-3` and is
   drafted in [VULKAN-RENDER-ADAPTERS.md](VULKAN-RENDER-ADAPTERS.md);
-- fixture corpus and image-regression harness details; that is `SEAM-4`;
+- fixture corpus and image-regression harness details; that is `SEAM-4` and is
+  drafted in [VULKAN-RENDER-FIXTURES.md](VULKAN-RENDER-FIXTURES.md);
 - commercial relicensing or App Store posture.
 
 ## Acceptance Checklist
