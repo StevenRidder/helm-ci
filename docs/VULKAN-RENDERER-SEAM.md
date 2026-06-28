@@ -33,6 +33,33 @@ During the POC, keep the shared renderer upstream-shaped:
 Those branch names are coordination anchors, not permission for Helm to copy the
 renderer core or for the renderer core to depend on Helm.
 
+## Standalone Repository Extraction Gate
+
+A future `opencpn-chart-renderer` repository becomes appropriate only after all
+of these gates are satisfied with linked evidence:
+
+- Both the OpenCPN interactive adapter and Helm headless tile adapter consume the
+  same renderer core and the same render command stream. Helm may wrap the core
+  for HTTP tiles, but it must not carry a copied or forked renderer semantics
+  path.
+- The Chart 1 fixture and contour/depth golden regression tests pass against
+  that shared command stream, with stable command-stream hashes, pixel hashes,
+  and source/provenance ids available for failure reports.
+- The renderer core builds as a C++/CMake, OpenCPN-native library or target
+  without hidden wx canvas, wx event-loop, GUI swapchain, plugin-global, Helm
+  HTTP, MapLibre, or web-client dependencies. Host-specific wiring stays in the
+  adapters.
+- OpenCPN maintainers and the Helm architecture owner agree that separate
+  versioning and release cadence would reduce review and integration burden
+  compared with keeping the renderer POC in the OpenCPN tree.
+- The GPL/upstream contribution boundary is documented for the extracted shape,
+  including provenance for OpenCPN-derived code and the arm's-length
+  boat-server/client boundary Helm relies on.
+
+Until every gate is satisfied, `vulkan/render-core-poc` remains the canonical
+home for shared renderer semantics, and Helm consumes it through a pinned
+adapter integration instead of becoming the renderer's source of truth.
+
 ## Shared Core
 
 The shared renderer core owns:
@@ -178,8 +205,9 @@ The detailed contribution and distribution boundary is recorded in
 
 This document does not decide:
 
-- exact filesystem layout or standalone repository timing; that stays with the
-  paused REPO lane;
+- exact filesystem layout or standalone repository timing; this document defines
+  the extraction gate, but extraction timing stays deferred until the gate is
+  satisfied;
 - the command-stream schema fields; that is `SEAM-2` and is drafted in
   [VULKAN-RENDER-COMMAND-STREAM.md](VULKAN-RENDER-COMMAND-STREAM.md);
 - the detailed adapter APIs for OpenCPN and Helm; that is `SEAM-3` and is
@@ -201,5 +229,7 @@ This document does not decide:
   upstream-shaped adapter?
 - Are MBTiles/PMTiles treated as interchange/debug caches rather than the final
   GPU-hot-path contract?
-- Are REPO-lane extraction decisions still deferred until dual-adapter and
-  golden-image proof exists?
+- Does a proposed standalone repository satisfy the extraction gate, including
+  dual-adapter command-stream consumption, Chart 1 and contour/depth golden
+  regressions, a GUI-free core build, maintainer agreement, and a documented
+  GPL/upstream boundary?
