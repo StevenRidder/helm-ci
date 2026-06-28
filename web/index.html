@@ -780,6 +780,7 @@
 <script src="ais-advisor.js"></script><!-- AIS-12: evasion advisor — quantitative "what to do" on danger targets (reuses HelmColregs); toggleable -->
 <script src="ais-sector.js"></script><!-- AIS-13: safe-course sector — green/red heading ring around ownship (HelmAisAdvisor.safeSector); shares the advisor toggle -->
 <script src="ais-select.js"></script><!-- CLIENT-7: tap a vessel / list row -> feature-state selection highlight (uses CLIENT-5's promoteId) -->
+<script src="ais-buddy.js"></script><!-- AIS-9: buddy / named-MMSI tagging — cyan ring + name on tagged vessels, ★ in the card; client-side localStorage list -->
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <script src="tactics.js"></script>        <!-- opposite-tack assist: tack/gybe + line, on WX-13 true wind (instrument-only) -->
@@ -1217,6 +1218,15 @@
     const pinned = !!(window.HelmAisPins && HelmAisPins.has && HelmAisPins.has(p.mmsi));
     const pinBtn = '<button onclick="window.aisPinFromCard&&window.aisPinFromCard(' + (p.mmsi || 0) + ')" title="' + (pinned ? 'Unpin' : 'Pin this target') + '" '
       + 'style="border:1px solid rgba(255,255,255,.2);background:' + (pinned ? 'rgba(95,208,176,.2)' : 'transparent') + ';color:' + (pinned ? '#5dd0b0' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">📌</button>';
+    // AIS-9: buddy / named-MMSI tag — ★ toggles a client-side known-vessel tag (cyan ring + name on chart).
+    const isBud = !!(window.HelmAisBuddy && HelmAisBuddy.isBuddy && HelmAisBuddy.isBuddy(p.mmsi));
+    const buddyBtn = '<button onclick="window.aisToggleBuddy&&window.aisToggleBuddy(' + (p.mmsi || 0) + ')" title="' + (isBud ? 'Remove buddy tag' : 'Tag as buddy') + '" '
+      + 'style="border:1px solid ' + (isBud ? 'rgba(55,199,255,.5)' : 'rgba(255,255,255,.2)') + ';background:' + (isBud ? 'rgba(55,199,255,.18)' : 'transparent') + ';color:' + (isBud ? '#37c7ff' : '#cdd9e3') + ';font-size:15px;border-radius:9px;width:36px;height:36px;cursor:pointer;flex:0 0 auto">' + (isBud ? '★' : '☆') + '</button>';
+    const buddyRow = isBud ? '<div style="display:flex;align-items:center;gap:6px;margin:0 0 6px">'
+      + '<span style="color:#37c7ff;font-size:12px;white-space:nowrap">★ Buddy</span>'
+      + '<input value="' + aisEsc(HelmAisBuddy.name(p.mmsi) || '') + '" placeholder="name (optional)" maxlength="40" '
+      + 'oninput="window.aisSetBuddyName&&aisSetBuddyName(' + (p.mmsi || 0) + ',this.value)" '
+      + 'style="flex:1;min-width:0;font-size:12px;padding:3px 8px;border:1px solid rgba(55,199,255,.3);border-radius:6px;background:transparent;color:var(--ctext)"></div>' : '';
 
     // AIS-12: evasion advisor — quantitative "what to do" on a danger target (toggleable; reuses HelmColregs + a relative-motion solve).
     let avoid = '';
@@ -1268,9 +1278,10 @@
     return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
       + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
       +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:1.15em;line-height:1;vertical-align:-1px">' + fl + '</span>' : '') + '</span>'
-      +   pinBtn
+      +   buddyBtn + pinBtn
       + '</div>'
       + (subline ? '<div style="font-size:12px;color:var(--cdim);margin-bottom:6px">' + subline + '</div>' : '')
+      + buddyRow
       + badge
       + '<div style="display:flex;gap:8px;margin:8px 0 4px">'
       +   stat('CPA', cpa, 'NM') + stat('TCPA', tcpa, 'min', tcpaOpening ? '<div style="font-size:10.5px;color:#5dd0b0">opening</div>' : '')
@@ -1360,6 +1371,13 @@
     if (window.HelmAisAdvisor && HelmAisAdvisor.setTargetKind) HelmAisAdvisor.setTargetKind(mmsi, kind);
     if (_aisCardBody && _aisCardProps && +_aisCardProps.mmsi === +mmsi) _aisCardBody.innerHTML = aisPopupHTML(_aisCardProps);
   };
+  // AIS-9: buddy tag — toggle re-renders the card (flips the ★ + shows the name row); name edit does NOT
+  // re-render (would lose input focus mid-type — the chart ring/label update via the helm:ais-buddy event).
+  window.aisToggleBuddy = function (mmsi) {
+    if (window.HelmAisBuddy) HelmAisBuddy.toggle(mmsi);
+    if (_aisCardBody && _aisCardProps && +_aisCardProps.mmsi === +mmsi) _aisCardBody.innerHTML = aisPopupHTML(_aisCardProps);
+  };
+  window.aisSetBuddyName = function (mmsi, name) { if (window.HelmAisBuddy) HelmAisBuddy.set(mmsi, name); };
   // Live-refresh the open detail card every nav frame (mirrors the pinned cards) so SOG/CPA/TCPA/range
   // AND the red→amber→green tier colour track the engine instead of freezing at tap time. Fed the SAME
   // normalised feature props the map source gets (so sentinels stay desentineled). Skips mid-drag and
@@ -1367,6 +1385,10 @@
   // this frame, keeps the last render rather than blanking.
   function refreshAisCard(feats) {
     if (!_aisCard || !_aisCardBody || !_aisCardProps || _aisCardDragging) return;
+    // Don't yank the card out from under an active edit (e.g. the buddy-name field) — the innerHTML swap
+    // would drop focus + the half-typed value. Resume next frame once focus leaves the input.
+    var ae = document.activeElement;
+    if (ae && _aisCard.contains(ae) && /^(INPUT|TEXTAREA|SELECT)$/.test(ae.tagName || '')) return;
     var mmsi = +_aisCardProps.mmsi;
     if (!mmsi || !Array.isArray(feats)) return;          // non-MMSI cards (some weather/base stations) → leave static
     var fresh = null;
