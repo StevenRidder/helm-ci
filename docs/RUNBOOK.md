@@ -44,6 +44,16 @@ HELM_TILES_NO_WARMUP=1 \
 open http://127.0.0.1:9001/
 ```
 
+**Shortcut:** after the one-time build (step 2), `scripts/start-helm.sh` launches the
+core on its canonical port for you (add `--weather`/`--basemap`/`--fill`/`--backend`,
+or `--all`, to also bring up the opt-in helper services on the ports in
+[PORTS.md](PORTS.md); each is skipped with a clear reason if its deps/data are absent).
+Set `HELM_ENC` first for real S-52 charts. Ctrl-C stops everything it started.
+
+```bash
+HELM_ENC=/tmp/ENC_ROOT/US5FL96M/US5FL96M.000 scripts/start-helm.sh --port 9001 --all
+```
+
 The UI will load even without live vessel data. To see live movement, feed NMEA or
 configure a SignalK/NMEA connection as described below.
 
