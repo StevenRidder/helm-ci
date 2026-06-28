@@ -8,6 +8,7 @@ the shared Vulkan renderer seam. It builds on:
 - [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md)
 - [VULKAN-RENDER-COMMAND-STREAM.md](VULKAN-RENDER-COMMAND-STREAM.md)
 - [VULKAN-RENDER-ADAPTERS.md](VULKAN-RENDER-ADAPTERS.md)
+- [VULKAN-DEPTH-FIXTURES.md](VULKAN-DEPTH-FIXTURES.md)
 
 The goal is to catch semantic drift before pixel drift: command stream hashes
 must be stable for a known source/view/display tuple, and image hashes must be
@@ -67,6 +68,9 @@ The first real ENC capture targets should be downloaded at runtime:
 US5FL4CR  Key West sample cell used by scripts/install-sample-enc.sh
 US5FL96M  historical headless-render proof cell, if still publicly available
 ```
+
+For depth, shoreline, and safety-contour coverage, the selected DEPTH-1 cells
+and capture order are in [VULKAN-DEPTH-FIXTURES.md](VULKAN-DEPTH-FIXTURES.md).
 
 Record NOAA source URL, edition/update metadata, and downloaded cell hash in the
 fixture manifest, but keep the raw cell outside Git.
