@@ -13,6 +13,9 @@ colour (correct, not a failure). Rebuild + cache-clear → **byte-identical** 54
 
 ![proof](proof-US5FL96M.png)
 
+For the Vulkan renderer POC acceptance rubric, stakeholder evidence, and
+explicit non-goals, see [POC-ACCEPTANCE.md](POC-ACCEPTANCE.md).
+
 ## What it does (`chart_spike.cpp`, ~240 lines)
 Headless: `wxInitializer` + PNG handler → construct `s52plib` directly from `data/s57data`
 (DAY scheme) → `s57RegistrarMgr` → `s57chart::Init(US5FL96M.000, FULL_INIT)` builds the SENC
