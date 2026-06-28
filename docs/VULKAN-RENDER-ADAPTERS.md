@@ -6,6 +6,8 @@ This document defines the thin adapter contracts for consuming the shared
 Vulkan renderer from OpenCPN and Helm. It builds on
 [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md): the shared core owns chart
 semantics and render commands; adapters own integration with their host app.
+The license/upstream contribution boundary is recorded in
+[VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md).
 
 ## Contract Rule
 

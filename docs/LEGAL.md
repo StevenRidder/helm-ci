@@ -46,6 +46,11 @@
 - **IP counsel must sign off before any OpenCPN source is embedded.**
 - Helm's own license terms are in root [LICENSE](../LICENSE) and
   [LICENSE.BSL](../LICENSE.BSL): BSL 1.1 → Apache-2.0 for Helm-authored components.
+- Vulkan renderer POC boundaries are tracked in
+  [VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md):
+  shared OpenCPN-derived renderer semantics stay on the GPL-compatible engine
+  side, while Helm web/mobile clients consume tiles and nav data over protocol
+  boundaries.
 
 ## Mandatory user-facing disclaimer
 

@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,163 @@ if (APPLE)
+@@ -90,3 +90,174 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -127,6 +127,18 @@ index 1909f44..ae59f3e 100644
 +set_property(TARGET helm-tides-fetch PROPERTY ENABLE_EXPORTS ON)
 +target_include_directories(helm-tides-fetch PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
 +target_link_libraries(helm-tides-fetch PRIVATE ocpn::tides ixwebsocket)
++
++# ---- Helm S-52 atlas builder: deterministic symbol/pattern/line-style assets ----
++add_library(helm-s52-atlas STATIC helm_s52_atlas.cpp)
++target_compile_features(helm-s52-atlas PUBLIC cxx_std_11)
++
++add_executable(helm-s52-atlas-builder helm_s52_atlas_builder.cpp)
++set_property(TARGET helm-s52-atlas-builder PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-s52-atlas-builder PRIVATE helm-s52-atlas)
++
++add_executable(helm-s52-atlas-smoke helm_s52_atlas_smoke.cpp)
++set_property(TARGET helm-s52-atlas-smoke PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-s52-atlas-smoke PRIVATE helm-s52-atlas)
 +
 +# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
 +add_executable(helm-engine helm_engine.cpp api_shim.cpp)

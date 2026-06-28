@@ -171,6 +171,9 @@ Do not move GPL-derived renderer code into web/mobile clients. Do not present th
 Vulkan POC as a clean-room renderer unless the OpenCPN-derived conversion and
 semantic code has been replaced and reviewed separately.
 
+The detailed contribution and distribution boundary is recorded in
+[VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md).
+
 ## Deferred Decisions
 
 This document does not decide:

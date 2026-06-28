@@ -96,21 +96,37 @@ Notes:
 DisplayState
   palette              # day, dusk, night, etc.
   display_category     # base, standard, all, mariner
+  symbol_style         # simplified or paper_chart point symbols
+  boundary_style       # plain or symbolized area boundaries
   safety_depth_m
   shallow_contour_m
   safety_contour_m
   deep_contour_m
   show_text
+  show_important_text_only
+  show_national_text
+  show_aton_text
+  show_light_descriptions
   show_soundings
   show_lights
+  show_meta
+  show_quality_of_data
   simplified_symbols
   two_shade_depth
+  use_scamin
+  use_super_scamin
+  chart_zoom_modifier_vector
   language
   units
 ```
 
 If a field changes pixels, it belongs in `DisplayState` or a command-specific
 override. If it only changes adapter scheduling or network behavior, it does not.
+
+SCAMIN defaults are semantic inputs, not backend policy: `use_scamin` is on for
+normal S-52 output, `use_super_scamin` is off unless a fixture explicitly covers
+it, and `chart_zoom_modifier_vector` records any transition-band behavior used
+by the command builder.
 
 ## Resource Table
 
@@ -154,6 +170,35 @@ CommandGroup
 `chart_priority` and `quilt_rank` make multi-chart composition inspectable.
 OpenCPN and Helm may render different target sizes, but the same group ordering
 must produce the same visual semantics.
+
+Commands that come from S-52/S-57 features carry a stable semantic envelope:
+
+```text
+s52_semantics
+  source_object_id
+  object_class
+  display_category
+  display_priority
+  lup_type
+  render_pass
+  source_sequence
+  native_scale
+  scamin_max_scale
+  safety_class | contour_role | danger_class
+  order_key[]
+```
+
+`order_key[]` is the already-resolved deterministic ordering tuple. Its current
+fixture form is `[chart_priority, quilt_rank, display_priority, render_pass_rank,
+source_sequence]`; later implementations may add child-rule or text-pass fields
+as long as the schema version changes. The backend may batch commands only when
+the semantic order remains equivalent.
+
+Visible commands are the normal output. Culled S-52 objects do not become
+backend commands, but debug fixtures may record a `semantic.culled` diagnostic
+with `source_object_id`, `reason`, and relevant scale/category metadata so
+category, SCAMIN, and mariner-visibility decisions can be tested without making
+the backend re-run S-52 rules.
 
 ## Coordinate Spaces
 
@@ -359,6 +404,7 @@ Diagnostic
 Examples:
 
 - `overzoom.native_scale_exceeded`;
+- `semantic.culled`;
 - `source.unsupported_object_class`;
 - `quilt.coverage_gap`;
 - `text.decluttered`;

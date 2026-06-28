@@ -83,6 +83,8 @@ chart objects, command-stream construction, Vulkan backend behavior, and golden 
 OpenCPN owns the interactive wx/swapchain adapter, and Helm owns the headless `/chart` tile adapter.
 See [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md) for the current ownership contract. Repository
 layout and standalone extraction remain separate REPO-lane decisions.
+The upstream/GPL boundary for that POC is tracked in
+[VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md).
 
 ## The new architecture
 

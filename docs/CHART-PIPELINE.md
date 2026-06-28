@@ -89,3 +89,11 @@ shippable.
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
 > A permanent "cross-reference official charts" disclaimer is mandatory on these layers.
+
+## Shared Vulkan renderer adapter
+
+The Vulkan POC keeps Helm's public tile contract stable while replacing the
+server-side renderer behind a feature flag. See
+[VULKAN-HEADLESS-TILE-ADAPTER.md](VULKAN-HEADLESS-TILE-ADAPTER.md) for the
+Helm `/chart/{z}/{x}/{y}.png` adapter sketch: viewport math, offscreen target,
+cache keys, ETags, diagnostics, fallback, and MapLibre composition.
