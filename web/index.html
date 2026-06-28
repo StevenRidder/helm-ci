@@ -1281,7 +1281,7 @@
   // and you can drag it anywhere by its header. Static snapshot — pin it (HelmAisPins) to watch it
   // live. One card at a time. Replaces the old maplibregl.Popup, which could spawn half off-screen
   // and couldn't be moved.
-  var _aisCard = null, _aisCardBody = null, _aisCardProps = null;
+  var _aisCard = null, _aisCardBody = null, _aisCardProps = null, _aisCardDragging = false;
   var AIS_CARD_SAFE = { top: 54, left: 58, bottom: 70, pad: 8 };   // keep clear of the chrome
   function closeAisCard() { if (_aisCard) { _aisCard.remove(); _aisCard = null; } }
   function clampAisCard(el, x, y) {
@@ -1300,13 +1300,13 @@
       if (e.cancelable) e.preventDefault();
     }
     function up() {
-      dragging = false;
+      dragging = false; _aisCardDragging = false;
       document.removeEventListener('mousemove', move); document.removeEventListener('mouseup', up);
       document.removeEventListener('touchmove', move); document.removeEventListener('touchend', up);
     }
     function down(e) {
       if (e.target.closest('button')) return;                 // never start a drag from a button
-      dragging = true;
+      dragging = true; _aisCardDragging = true;
       var pt = e.touches ? e.touches[0] : e;
       sx = pt.clientX; sy = pt.clientY;
       ox = parseFloat(card.style.left) || 0; oy = parseFloat(card.style.top) || 0;
@@ -1348,6 +1348,23 @@
     if (window.HelmAisAdvisor && HelmAisAdvisor.setTargetKind) HelmAisAdvisor.setTargetKind(mmsi, kind);
     if (_aisCardBody && _aisCardProps && +_aisCardProps.mmsi === +mmsi) _aisCardBody.innerHTML = aisPopupHTML(_aisCardProps);
   };
+  // Live-refresh the open detail card every nav frame (mirrors the pinned cards) so SOG/CPA/TCPA/range
+  // AND the red→amber→green tier colour track the engine instead of freezing at tap time. Fed the SAME
+  // normalised feature props the map source gets (so sentinels stay desentineled). Skips mid-drag and
+  // preserves the card's scroll position across the innerHTML swap; if the target dropped from the feed
+  // this frame, keeps the last render rather than blanking.
+  function refreshAisCard(feats) {
+    if (!_aisCard || !_aisCardBody || !_aisCardProps || _aisCardDragging) return;
+    var mmsi = +_aisCardProps.mmsi;
+    if (!mmsi || !Array.isArray(feats)) return;          // non-MMSI cards (some weather/base stations) → leave static
+    var fresh = null;
+    for (var i = 0; i < feats.length; i++) { var p = feats[i].properties; if (p && +p.mmsi === mmsi) { fresh = p; break; } }
+    if (!fresh) return;
+    _aisCardProps = fresh;
+    var sc = _aisCard.scrollTop;                          // the card div is the scroll container (overflow-y:auto)
+    _aisCardBody.innerHTML = aisPopupHTML(fresh);
+    _aisCard.scrollTop = sc;
+  }
   // A rotate/resize must never strand the card off-screen; Esc dismisses it.
   window.addEventListener('resize', function () { if (_aisCard) clampAisCard(_aisCard, parseFloat(_aisCard.style.left) || 0, parseFloat(_aisCard.style.top) || 0); });
   window.addEventListener('keydown', function (e) { if (e.key === 'Escape') closeAisCard(); });
@@ -1367,7 +1384,7 @@
     if (!Array.isArray(list)) return;
     try {
       const src = map.getSource('ais'); if (!src) return;
-      src.setData({ type: 'FeatureCollection', features: list
+      const feats = list
         .filter(t => t && isFinite(t.lon) && isFinite(t.lat))
         .map(t => ({ type: 'Feature', id: t.mmsi, geometry: { type: 'Point', coordinates: [t.lon, t.lat] },
                      // Normalise the AIS "not available" sentinels to null so we never render them as
@@ -1376,7 +1393,9 @@
                      // speed/course must read "—", not a fake value.
                      properties: { ...t, name: aisName(t.name),
                        sog: (t.sog != null && +t.sog <= 102.2) ? t.sog : null,
-                       cog: (t.cog != null && +t.cog < 360) ? t.cog : null } })) });   // strip '@' padding for the map label too
+                       cog: (t.cog != null && +t.cog < 360) ? t.cog : null } }));   // strip '@' padding for the map label too
+      src.setData({ type: 'FeatureCollection', features: feats });
+      refreshAisCard(feats);   // keep the open detail card live (SOG/CPA/TCPA/range + tier colour) — same normalised props
     } catch (e) { /* style not ready this tick */ }
   }
   // ---- live route line: drive the `route` source from the engine's route geometry, and highlight
