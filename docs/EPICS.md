@@ -8,13 +8,13 @@
 
 ## Board at a glance
 
-- **21 epics** · **218 tasks** — 🟢 63 done · 🟡 22 in-progress · 🔴 0 blocked · ⚪ 133 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit; +`LABS`: 7 experimental pro-maritime features from the 2026-06-26 cruise/military/commercial-charting survey — see [LABS.md](LABS.md))_
+- **22 epics** · **225 tasks** — 🟢 63 done · 🟡 22 in-progress · 🔴 0 blocked · ⚪ 140 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit; +`LABS`: 7 experimental pro-maritime features from the 2026-06-26 cruise/military/commercial-charting survey — see [LABS.md](LABS.md))_
 
 | Wave | Theme | Epics | Tasks done |
 |---|---|---|---|
 | **1** | Foundations & unblockers | BACKEND, CHART, CONTRACT, ENGINE, SHELL | 25/51 |
 | **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 29/78 |
-| **3** | Higher-order capabilities | AI, BOARD, PLACES, ROUTING, TIDES | 9/49 |
+| **3** | Higher-order capabilities | AI, BOARD, PILOT, PLACES, ROUTING, TIDES | 9/56 |
 | **4** | Native + commercial (last) | NATIVE | 0/15 |
 | **✚** | Cross-cutting · web-client hardening | CLIENT | 0/18 |
 | **🧪** | Experimental · pro-maritime survey (Labs) | LABS | 0/7 |
@@ -145,7 +145,7 @@ _Foundations that are largely DONE plus the two load-bearing un-blockers. ENGINE
 
 # Wave 2 — Reference-client capabilities
 
-_Reference-client capabilities that consume the locked contract, live in their OWN module files, and append to the shell via SHELL's registration API — the cleanest parallelism in the project. AIS (collision.js/ais-meta.js), ALARM (alarms.js), WX (wind/field/isobars/radar/cog/temporal + pipeline), OFFLINE (pipeline + pmtiles/draw/lab harness), CONN (connections.js) barely touch each other. OWNSHIP, ROUTE (now with its own route-edit.js), and TOOLS still register panels through SHELL but serialize on shared shell edits, so they are NOT parallelSafe with each other. ROUTE-3 (direct-manipulation route editing — the flagged single biggest gap) is the highest-value start once SHELL-1 lands. BOAT-1 (under TOOLS) must land this wave — it gates wave-3 ROUTING-1/ROUTING-9._
+_Reference-client capabilities that consume the locked contract, live in their OWN module files, and append to the shell via SHELL's registration API — the cleanest parallelism in the project. AIS (collision.js/ais-meta.js), ALARM (alarms.js), WX (wind/field/isobars/radar/cog/temporal + pipeline), OFFLINE (pipeline + pmtiles/draw/lab harness), CONN (connections.js) barely touch each other. OWNSHIP, ROUTE (now with its own route-edit.js), and TOOLS still register panels through SHELL but serialize on shared shell edits, so they are NOT parallelSafe with each other. ROUTE-3 (direct-manipulation route editing — the flagged single biggest gap) is the highest-value start once SHELL-1 lands. BOAT-1 (under TOOLS) must land this wave — it gates wave-3 ROUTING-1/ROUTING-9 and the skipper-specific autopilot guardrails in PILOT._
 
 
 ## 🟡 `AIS` — AIS display — symbology, target card, list, guard zone, SART/DSC
@@ -365,7 +365,28 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - [ ] ⚪ **BOARD-4** — Per-tile threshold alarms (notification + haptic + sound, on CONTRACT-10 schema)  ↳ BOARD-2, ALARM-1, CONTRACT-10
 - [ ] ⚪ **BOARD-5** — Context-switching boards by mode (Underway/Anchor/Racing/Night/Docking)  ↳ BOARD-1
 - [ ] ⚪ **BOARD-6** — Automation rule builder (trigger→condition→action)  ↳ BOARD-4, BOARD-5
-- [ ] ⚪ **BOARD-7** — Autopilot output over network (steer-to-waypoint, command-plane)  ↳ BOARD-6, CONTRACT-1
+- [ ] ⚪ **BOARD-7** — Pilot dashboard tile / automation surface for already-safe PILOT actions (not command semantics)  ↳ BOARD-6, PILOT-2
+
+## ⚪ `PILOT` — Autopilot control — state, guarded commands, adapters, approval
+
+**Wave 3 · not-started · 0/7 done · ⚡ parallel-safe**
+
+> Skipper-approved autopilot control: read pilot state first; define a guarded owner-only command
+> contract; emit standard SignalK/NMEA route or heading output; spike B&G/Navico proprietary
+> +/-1 and +/-10 commands only from captured hardware traffic; bridge AIS maneuver advice into a
+> manual approval flow. AIS/AI may advise, but only PILOT commands, and only after skipper approval.
+
+- **Owns (collision boundary):** `web/pilot.js`, `docs/AUTOPILOT.md`
+- **Coordinates (does not seize ownership):** command-plane/auth through CONTRACT, connection/output adapters through CONN, route data through ROUTE/ENGINE, maneuver recommendations through AIS.
+- **Done =** Read-only pilot state widget; canonical `pilot.*` command contract with owner-role checks, ACK/NACK, stale-source rejection, and audit log; standard SignalK/NMEA output adapter for route/heading intent; B&G/Navico +/-1/+/-10 spike hardware-validated before any live enablement; route-follow approval UI; AIS/CPA maneuver approval bridge; self-test/interlocks. BOARD may render tiles/prompts, but does not own actuation semantics.
+
+- [ ] ⚪ **PILOT-1** — Read-only autopilot status model + widget (mode, heading, target, rudder, source, freshness)  ↳ CONN-5, CONN-8, CONTRACT-2, CONTRACT-3
+- [ ] ⚪ **PILOT-2** — Guarded pilot command contract (`pilot.setMode`, `pilot.setHeading`, `pilot.adjustHeading`, `pilot.followRoute`, `pilot.cancel`, `pilot.approveManeuver`)  ↳ CONTRACT-1, CONTRACT-10, CONTRACT-15, AI-13
+- [ ] ⚪ **PILOT-3** — Standard SignalK/NMEA route and heading output adapter  ↳ PILOT-2, CONN-1, CONN-2, CONN-5, CONN-8, ENGINE-3, ROUTE-2, ROUTE-3
+- [ ] ⚪ **PILOT-4** — B&G/Navico proprietary +/-1/+/-10 course-change spike (feature-flagged, hardware-capture driven)  ↳ PILOT-1, PILOT-2, CONN-7, CONN-8, CONTRACT-15
+- [ ] ⚪ **PILOT-5** — Route-follow / steer-to-waypoint approval UI  ↳ PILOT-2, PILOT-3, ROUTE-4, ALARM-3, ALARM-4
+- [ ] ⚪ **PILOT-6** — AIS/CPA maneuver approval bridge (AIS suggests; PILOT stages; skipper confirms)  ↳ PILOT-2, AIS-12, AIS-13, AIS-14, ALARM-5, ENGINE-13, AI-13
+- [ ] ⚪ **PILOT-7** — Safety interlocks, audit log, and self-test  ↳ PILOT-2, CONTRACT-3, CONTRACT-10, CONTRACT-15, TOOLS-7
 
 ## 🟡 `PLACES` — Places & community — overlay, cards, saved pins, give-back
 

@@ -33,7 +33,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 | 10 | GPX import/export UI round-trip + waypoint properties | 🟡 later |
 | 11 | Tides & currents (tcmgr.cpp gui→core) + current arrows | ⚪ Phase 2 |
 | 12 | Weather routing: isochrone router + polars on free NOAA GRIB (+ laylines) | ⚪ Phase 2 |
-| 13 | Native Apple clients + autopilot output + cloud sync + AI copilot | ⚪ Phase 1+/F |
+| 13 | Native Apple clients + PILOT autopilot control + cloud sync + AI copilot | ⚪ Phase 1+/F |
 
 ---
 
@@ -48,7 +48,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - 🟢 NMEA 0183 over TCP/UDP (RMC/DPT/DBT/MWV/HDT) · 🟢 SignalK input (still `HELM_SIGNALK` env — fold into the connections UI)
 - 🟡 NMEA 2000 (only via SignalK gateway; direct N2K-over-IP via OpenCPN `comm_drv` deferred — engine pumps no wx event loop)
 - 🟡 Source-priority / filtering UI (engine has per-field freshness; no control) · 🔴 NMEA debug/monitor view
-- ⚪ Internal GPS (native) · ⚪ Autopilot output (Phase 1 network / Phase 3 full) · ⚪ BLE
+- ⚪ Internal GPS (native) · ⚪ PILOT autopilot control (read-only state → guarded route/heading output → hardware-validated B&G/Navico +/-10 spike) · ⚪ BLE
 
 ### Charts & display
 - 🟢 Satellite + NOAA RNC raster · 🟢 True S-52 vector ENC (headless) · 🟢 Multi-cell quilting (transparent NODTA)
@@ -124,7 +124,7 @@ These are real features competitors ship or OpenCPN parity demands, easy to forg
 - **Weather routing (isochrone + polars)** — a defining competitive axis (Orca, Savvy Navvy, PredictWind). Distinct from the weather *display* stack already shipped.
 - **Dock-to-dock / point-to-point auto-routing** — "Google Maps for boats" (Savvy Navvy's signature); depth/hazard-aware = Vision Phase A.
 - **Configurable dashboard / Smart Board** — fixed instrument bar today; composable gauges core to the business model.
-- **Autopilot output** (steer-to-waypoint; net on iOS, serial on macOS; Watch control) — OpenCPN parity; the command-plane is the natural rail.
+- **PILOT autopilot control** — read-only pilot state first; guarded owner-only route/heading output over SignalK/NMEA; B&G/Navico +/-1/+/-10 command spike only after hardware capture/bench validation; AIS/AI may advise, but skipper approval is required before actuation.
 - **Chart groups / region sets** · **Cloud sync of routes/marks** (monetization engine) · **Plugin SDK** (radar_pi/climatology/oTCurrent).
 - **MOB drift estimate** (project search area from set/drift) · **Apple Watch app + CarPlay** (open lane — only Orca has Watch).
 - **AI copilot / passage briefings / watchkeeper narration** — a whole product pillar + revenue driver; spacetime probe is the only partial piece.
