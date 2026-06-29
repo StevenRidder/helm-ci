@@ -491,11 +491,36 @@ async def bake_tile(layer: str, z: int, x: int, y: int) -> bytes:
     return await _bake_tile_impl(layer, z, x, y)
 
 
+SMOOTH_PASSES = int(os.environ.get("HELM_WX_SMOOTH", "2"))   # display-only field blur (0 = off) — Windy-style silk
+
+
+def _blur_grid_np(gv, passes):
+    """NaN-aware separable [1,2,1] blur (~Gaussian), `passes` times — DISPLAY-ONLY smoothing so the
+    coarse ~11km field reads silky (Windy-like) instead of showing grid cells. NODATA contributes 0
+    weight; edges replicate (no dateline wrap). The value PROBE uses the RAW grid, never this."""
+    m = (~np.isnan(gv)).astype(np.float64)
+    v = np.where(np.isnan(gv), 0.0, gv) * m
+    for _ in range(passes):
+        for ax in (0, 1):
+            pad = [(0, 0), (0, 0)]; pad[ax] = (1, 1)
+            vp = np.pad(v, pad, mode='edge'); mp = np.pad(m, pad, mode='edge')
+            lo = [slice(None), slice(None)]; hi = [slice(None), slice(None)]
+            lo[ax] = slice(0, -2); hi[ax] = slice(2, None)
+            v = vp[tuple(lo)] + 2.0 * v + vp[tuple(hi)]
+            m = mp[tuple(lo)] + 2.0 * m + mp[tuple(hi)]
+    out = np.full(gv.shape, np.nan)
+    nz = m > 1e-9
+    out[nz] = v[nz] / m[nz]
+    return out
+
+
 def _bake_np(grid: "Grid", lons, lats, scale: float, offset: float):
     """Vectorised bilinear sample + helm-wxv1 encode of a 256x256 tile. Returns (rgba_bytes, any_valid).
     NaN (NODATA — land for ocean layers, gaps) -> alpha 0; never faked."""
     nx, ny = grid.nx, grid.ny
     gv = np.array([np.nan if v is None else v for v in grid.values], dtype=np.float64).reshape(ny, nx)
+    if SMOOTH_PASSES and nx > 2 and ny > 2:
+        gv = _blur_grid_np(gv, SMOOTH_PASSES)   # smooth the field for display (Windy-style); probe uses raw grid
     ew = (grid.east - grid.west) or 1.0
     ns = (grid.north - grid.south) or 1.0
     fx = np.clip((lons - grid.west) / ew * (nx - 1), 0, nx - 1)
