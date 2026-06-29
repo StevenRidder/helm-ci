@@ -275,7 +275,47 @@
   }
   function disable() { stopParticles(); remove(); }
 
+  // ---- time-scrub: switch the active valid-time frame (reuses cached tiles; no upstream fetch) ----
+  function setValidTime(isoTime) {
+    if (!state.manifest || !state.layer) return Promise.resolve(null);
+    return enable(state.map, { region: state.region, layer: state.layer, isoTime: isoTime, opacity: state.opacity });
+  }
+
+  // ---- probe / sample (helm.layer.sample.v1): read the active layer's value at a point from the bundle ----
+  function invFrame(manifest, vtId) {                 // validTimeId -> ISO valid time
+    var fm = (manifest && manifest.run && manifest.run.frameIdByValidTime) || {};
+    for (var iso in fm) if (fm.hasOwnProperty(iso) && fm[iso] === vtId) return iso;
+    return null;
+  }
+  function sample(lat, lon) {
+    var m = state.map, manifest = state.manifest, layer = state.layer, C = codec();
+    if (!manifest || !layer) return Promise.resolve(null);
+    var L = layerCfg(manifest, layer), lod = lodRange(manifest, layer);
+    var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m ? m.getZoom() : lod.maxzoom)));
+    var so = scaleOffsetFor(manifest, layer);
+    var tpl = svc() + ((L.fieldTiles && L.fieldTiles.urlTemplate) || '').replace('{validTimeId}', state.validTimeId);
+    var p = C.lonLatToPixel(lon, lat, z, 256);
+    var url = tpl.replace('{z}', z).replace('{x}', p.x).replace('{y}', p.y);
+    return fetchValueTile(url, so.scale, so.offset).then(function (g) {
+      var v = g ? C.bilinear(g.vals, g.w, g.h, p.px, p.py) : null;
+      if (v == null || v !== v) v = null;             // NaN -> honest nodata
+      var run = manifest.run || {}, gen = manifest.generatedAt || run.runTime || null;
+      var ttl = (manifest.cachePolicy && manifest.cachePolicy.refreshCadenceSeconds) || 0, stale = false;
+      try { if (gen && ttl) stale = (Date.now() - Date.parse(gen)) > ttl * 1000; } catch (e) {}
+      return {
+        schema: 'helm.layer.sample.v1', layer: layer,
+        value: (v == null ? null : Math.round(v * 10) / 10), unit: L.unit || '',
+        sourceRef: { title: (manifest.title || 'environmental bundle'), model: (run.model || ''), bundleId: manifest.bundleId || null },
+        freshness: { generatedAt: gen, validTime: invFrame(manifest, state.validTimeId), ttlSeconds: ttl, stale: stale },
+        confidence: null,
+        coverage: (v == null ? 'nodata' : 'in'),
+        advisory: true, notForNavigation: true        // advisory met-ocean — never for navigation
+      };
+    });
+  }
+
   global.HelmWxScene = {
-    enable: enable, enableScalar: enableScalar, disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
+    enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample,
+    disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
   };
 })(typeof window !== 'undefined' ? window : this);
