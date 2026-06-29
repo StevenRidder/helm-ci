@@ -128,19 +128,22 @@ def load_frames(data_dir, layer):
     fc_path = os.path.join(data_dir, "forecast.json")
     t0 = os.path.join(data_dir, f"field-{layer}-t0.json")
     if os.path.exists(fc_path) and os.path.exists(t0):
-        fc = json.load(open(fc_path))
+        with open(fc_path) as f:
+            fc = json.load(f)
         hours = fc.get("hours") or len(fc.get("times") or [])
         frames = []
         for i in range(hours):
             fp = os.path.join(data_dir, f"field-{layer}-t{i}.json")
             if not os.path.exists(fp):
                 break
-            frames.append(Grid(json.load(open(fp))))
+            with open(fp) as f:
+                frames.append(Grid(json.load(f)))
         if frames:
             return frames, (fc.get("times") or [])[:len(frames)]
     single = os.path.join(data_dir, f"field-{layer}.json")
     if os.path.exists(single):
-        return [Grid(json.load(open(single)))], None
+        with open(single) as f:
+            return [Grid(json.load(f))], None
     return [], None
 
 
@@ -234,7 +237,8 @@ def bake_frames(out_root, layer, frames, times, zmin, zmax, mask_below, mask_abo
         "disclaimer": "Forecast — cross-reference official sources. NOT FOR NAVIGATION.",
     }
     os.makedirs(layer_dir, exist_ok=True)
-    json.dump(manifest, open(os.path.join(layer_dir, "manifest.json"), "w"))
+    with open(os.path.join(layer_dir, "manifest.json"), "w") as f:
+        json.dump(manifest, f)
     nframes = len(frames)
     print(f"  ✓ {layer}: {total_tiles} tiles  z{zmin}-{zmax} ×{nframes} frame(s)  "
           f"[{vmin:.2f}..{vmax:.2f} {g0.unit}]  scale={scale:.3e}  src={source}")
@@ -341,7 +345,8 @@ def main():
             if len(members) == 2:
                 pairs[layer] = {"unit": "kn" if layer == "wind" else "hPa", "members": members,
                                 "frames": DEMO_HOURS}
-        json.dump({"encoding": ENCODING, "pairs": pairs}, open(os.path.join(out_root, "ensemble.json"), "w"))
+        with open(os.path.join(out_root, "ensemble.json"), "w") as f:
+            json.dump({"encoding": ENCODING, "pairs": pairs}, f)
         print(f"done — {len(pairs)} ensemble pair(s); ensemble.json lists them for the spread display.")
         return 0
 
@@ -362,7 +367,8 @@ def main():
                             "minzoom": m["minzoom"], "maxzoom": m["maxzoom"],
                             "frames": len(m["times"]) if m["times"] else 1,
                             "manifest": f"{layer}/manifest.json"}
-    json.dump({"encoding": ENCODING, "layers": index}, open(os.path.join(out_root, "index.json"), "w"))
+    with open(os.path.join(out_root, "index.json"), "w") as f:
+        json.dump({"encoding": ENCODING, "layers": index}, f)
     print(f"done — {len(index)} layer(s); index.json lists them for the UI picker.")
 
 
