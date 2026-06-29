@@ -3,6 +3,10 @@
 This guide is for contributors working on the source tree. For an operator-style
 build/run recipe, see [RUNBOOK.md](RUNBOOK.md).
 
+For multi-agent work, start with [AGENT-BOOTSTRAP.md](AGENT-BOOTSTRAP.md). It explains how any
+runtime enlists with Switchboard, claims work, stays inside epic ownership boundaries, and reports
+review-ready evidence.
+
 ## Mental Model
 
 Helm has a boat-side server and thin clients:

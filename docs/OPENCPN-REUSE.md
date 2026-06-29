@@ -82,7 +82,10 @@ For the Vulkan renderer POC, the first boundary is the shared seam: rendering se
 chart objects, command-stream construction, Vulkan backend behavior, and golden fixtures are shared;
 OpenCPN owns the interactive wx/swapchain adapter, and Helm owns the headless `/chart` tile adapter.
 See [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md) for the current ownership contract. Repository
-layout and standalone extraction remain separate REPO-lane decisions.
+layout and standalone extraction remain separate REPO-lane decisions. The upstream-shaped branch
+structure is tracked in [VULKAN-RENDERER-STRUCTURE.md](VULKAN-RENDERER-STRUCTURE.md): OpenCPN owns the
+shared render command stream and VulkanSceneGraph backend on a `vulkan/render-core-poc` branch, while
+Helm consumes that commit through a thin `vulkan/consume-render-core` headless tile adapter.
 The upstream/GPL boundary for that POC is tracked in
 [VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md).
 

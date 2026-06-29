@@ -28,7 +28,8 @@ already points. LABS is where we prove the cruiser-grade version of each.
 
 ## 2. Ownership (collision boundary)
 
-Per [CLAUDE.md] / [EPICS.md](EPICS.md), each epic owns its files so parallel agents don't fight.
+Per [AGENT-BOOTSTRAP.md](AGENT-BOOTSTRAP.md) / [EPICS.md](EPICS.md), each epic owns its files so
+parallel agents don't fight.
 **LABS owns an isolated namespace:**
 
 - `web/labs/**` — all Lab UI, layers, and views (mounted only via the lazy-isolated Lab loader)
