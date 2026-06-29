@@ -2,15 +2,23 @@
 """
 Helm — pipeline/make_pmtiles.py
 --------------------------------------------------------------------------
-Pack a directory of raster {z}/{x}/{y}.png tiles into a single PMTiles v3
-archive, with no external tools (the canonical path uses `pmtiles convert`
-from an .mbtiles — see make_pmtiles.sh — but that toolchain isn't always
-present). Pure stdlib: Hilbert tile-id ordering + the v3 header/directory
-byte layout per https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md
+Pack raster tiles into a single PMTiles v3 archive with no external tools
+(the off-the-shelf path is `pmtiles convert` from an .mbtiles — see
+make_pmtiles.sh — but that toolchain isn't always present). Pure stdlib:
+Hilbert tile-id ordering + the v3 header/directory byte layout per
+https://github.com/protomaps/PMTiles/blob/main/spec/v3/spec.md
 
-Usage: python3 pipeline/make_pmtiles.py web/data/relief web/data/key-west-sat.pmtiles
+Two inputs, auto-detected:
+  • an .mbtiles file  → tiles + bounds + format are read straight from it
+        (TMS y-rows are flipped back to XYZ on the way out)
+  • a directory of {z}/{x}/{y}.png tiles
+
+Usage:
+  python3 pipeline/make_pmtiles.py web/data/fiji-sat.mbtiles web/data/fiji-sat.pmtiles
+  python3 pipeline/make_pmtiles.py web/data/relief web/data/key-west-sat.pmtiles
+  python3 pipeline/make_pmtiles.py <src> <out> --bbox W,S,E,N   # override header bounds
 """
-import os, sys, glob, struct, gzip, json, math
+import os, sys, glob, struct, gzip, json, sqlite3
 
 # ---- varint (unsigned LEB128) ------------------------------------------
 def uvarint(n):
@@ -66,21 +74,50 @@ def serialize_directory(entries):
 def gz(b):
     return gzip.compress(b, mtime=0)
 
-def main(src, out):
+# ---- tile sources -------------------------------------------------------
+def _load_dir(src):
+    """Directory of {z}/{x}/{y}.png — returns (tiles, zset, bounds=None, fmt='png')."""
     paths = glob.glob(os.path.join(src, '*', '*', '*.png'))
     if not paths:
         print('no tiles under', src); sys.exit(1)
-    tiles = []
-    zs = set()
+    tiles, zs = [], set()
     for p in paths:
         z = int(os.path.basename(os.path.dirname(os.path.dirname(p))))
         x = int(os.path.basename(os.path.dirname(p)))
         y = int(os.path.splitext(os.path.basename(p))[0])
         zs.add(z)
         tiles.append((zxy_to_tileid(z, x, y), z, x, y, open(p, 'rb').read()))
+    return tiles, zs, None, 'png'
+
+def _load_mbtiles(src):
+    """.mbtiles (SQLite) — reads tiles, flips TMS y→XYZ, and lifts bounds+format from metadata."""
+    con = sqlite3.connect(src); con.row_factory = sqlite3.Row
+    meta = {r[0]: r[1] for r in con.execute('SELECT name, value FROM metadata')}
+    fmt = (meta.get('format') or 'png').lower()
+    tiles, zs = [], set()
+    for r in con.execute('SELECT zoom_level z, tile_column x, tile_row ty, tile_data d FROM tiles'):
+        z, x, ty = r['z'], r['x'], r['ty']
+        y = (2 ** z - 1) - ty          # mbtiles stores TMS (y=0 south); PMTiles wants XYZ (y=0 north)
+        zs.add(z)
+        tiles.append((zxy_to_tileid(z, x, y), z, x, y, bytes(r['d'])))
+    con.close()
+    bounds = None
+    if meta.get('bounds'):
+        try:
+            bounds = tuple(float(v) for v in meta['bounds'].split(','))
+        except ValueError:
+            bounds = None
+    return tiles, zs, bounds, ('jpg' if fmt in ('jpg', 'jpeg') else fmt)
+
+def main(src, out, bbox=None):
+    tiles, zs, bounds, fmt = (_load_mbtiles(src) if src.endswith('.mbtiles') else _load_dir(src))
+    if bbox:
+        bounds = bbox
+    if not tiles:
+        print('no tiles in', src); sys.exit(1)
     tiles.sort(key=lambda t: t[0])
 
-    # concat tile data, dedup identical blobs
+    # concat tile data, dedup identical blobs (ocean tiles repeat hugely)
     data = bytearray()
     seen = {}
     entries = []
@@ -96,7 +133,7 @@ def main(src, out):
 
     root = gz(serialize_directory(entries))
     meta = gz(json.dumps({'name': os.path.basename(out),
-                          'attribution': 'Helm offline relief pack — NOT FOR NAVIGATION'}).encode())
+                          'attribution': 'Helm offline raster pack — NOT FOR NAVIGATION'}).encode())
 
     HEADER = 127
     root_off = HEADER
@@ -106,9 +143,13 @@ def main(src, out):
     data_off = leaf_off + leaf_len
 
     minz, maxz = min(zs), max(zs)
-    # bounds from generator region (E7)
-    minlon, minlat, maxlon, maxlat = -81.95, 24.38, -81.55, 24.66
-    clon, clat = -81.77, 24.52
+    if bounds and len(bounds) == 4:
+        minlon, minlat, maxlon, maxlat = bounds
+    else:
+        print('WARN: no bounds in source — defaulting to Key West; pass --bbox to set them')
+        minlon, minlat, maxlon, maxlat = -81.95, 24.38, -81.55, 24.66
+    clon, clat = (minlon + maxlon) / 2.0, (minlat + maxlat) / 2.0
+    tile_type = 3 if fmt in ('jpg', 'jpeg') else 2     # PMTiles v3: 2=png, 3=jpeg
 
     h = bytearray(HEADER)
     h[0:7] = b'PMTiles'
@@ -124,10 +165,10 @@ def main(src, out):
     struct.pack_into('<Q', h, 72, len(tiles))      # addressed tiles
     struct.pack_into('<Q', h, 80, len(entries))    # tile entries
     struct.pack_into('<Q', h, 88, len(seen))       # tile contents (unique)
-    h[96] = 1   # clustered
-    h[97] = 2   # internal compression: gzip
-    h[98] = 1   # tile compression: none (PNG already compressed)
-    h[99] = 2   # tile type: png
+    h[96] = 1            # clustered
+    h[97] = 2            # internal compression: gzip
+    h[98] = 1            # tile compression: none (png/jpg already compressed)
+    h[99] = tile_type
     h[100] = minz
     h[101] = maxz
     struct.pack_into('<i', h, 102, int(minlon * 1e7))
@@ -140,10 +181,15 @@ def main(src, out):
 
     with open(out, 'wb') as f:
         f.write(bytes(h)); f.write(root); f.write(meta); f.write(bytes(data))
-    print(f'wrote {out}: {len(tiles)} tiles ({len(seen)} unique), z{minz}-{maxz}, '
+    print(f'wrote {out}: {len(tiles)} tiles ({len(seen)} unique), z{minz}-{maxz}, fmt={fmt}, '
+          f'bounds={minlon},{minlat},{maxlon},{maxlat}, '
           f'{(HEADER+len(root)+len(meta)+len(data))/1024:.0f} KB')
 
 if __name__ == '__main__':
-    src = sys.argv[1] if len(sys.argv) > 1 else 'web/data/relief'
-    out = sys.argv[2] if len(sys.argv) > 2 else 'web/data/key-west-sat.pmtiles'
-    main(src, out)
+    args = [a for a in sys.argv[1:] if not a.startswith('--')]
+    src = args[0] if len(args) > 0 else 'web/data/relief'
+    out = args[1] if len(args) > 1 else 'web/data/key-west-sat.pmtiles'
+    bbox = None
+    if '--bbox' in sys.argv:
+        bbox = tuple(float(v) for v in sys.argv[sys.argv.index('--bbox') + 1].split(','))
+    main(src, out, bbox)

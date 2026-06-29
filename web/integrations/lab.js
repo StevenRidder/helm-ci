@@ -16,9 +16,9 @@
   'use strict';
 
   const region = {
-    name: 'key-west',
-    center: [-81.77, 24.52],
-    bbox: [-81.86, 24.44, -81.68, 24.60],
+    name: 'fiji',                       // OFFLINE: ships the Fiji (Viti Levu) offline pack — see pipeline/fiji.env
+    center: [177.4, -17.8],
+    bbox: [176.9, -18.3, 178.0, -17.2],
   };
 
   // ---- lightweight toast so integrations can speak without a console ----
