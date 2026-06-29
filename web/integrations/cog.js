@@ -100,9 +100,17 @@ async function decodeImageData(blob) {
 }
 async function transparentTile() {
   if (_transparent) return _transparent;
-  const cv = makeCanvas(256, 256);     // a fully-transparent tile (no data here)
-  _transparent = await createImageBitmap(cv);
+  try { _transparent = await createImageBitmap(makeCanvas(256, 256)); }     // a fully-transparent tile (no data here)
+  catch (e) { try { _transparent = await createImageBitmap(makeCanvas(1, 1)); } catch (e2) { /* terminal memory — let MapLibre retry */ } }
   return _transparent;
+}
+let _bmpWarned = 0;
+// A single tile we can't rasterise (e.g. "ImageBitmap could not be allocated" under memory
+// pressure, or a zero-dimension tile) must DEGRADE to transparent — never bubble up as a
+// chart-wide error (MapLibre map.on('error') -> the "Chart error" surface). Log the first few with
+// size + url so a real recurrence is diagnosable (memory vs bad tile) instead of a silent crash.
+function bmpFail(e, w, h, url) {
+  if (_bmpWarned++ < 3) { try { console.warn('[helmwx] tile rasterise failed (' + w + 'x' + h + '), using transparent: ' + (e && e.message) + (url ? ' @ ' + url : '')); } catch (_) {} }
 }
 function effFrame(cfg, frame) {                 // the clamped, in-range frame index (used for BOTH key + path)
   if (!cfg.times || !cfg.times.length) return null;
@@ -170,16 +178,22 @@ async function wxProtocol(params, abortController) {
   catch (e) { if (e && e.name === 'AbortError') throw e; return { data: await transparentTile() }; }
   if (!tile) return { data: await transparentTile() };
   const C = codec(), ramp = set.cfg.ramp, vals = tile.values;
-  const cv = makeCanvas(tile.w, tile.h), cx = cv.getContext('2d');
-  const img = cx.createImageData(tile.w, tile.h), d = img.data;
-  for (let i = 0; i < vals.length; i++) {
-    const v = vals[i];
-    if (v == null || !isFinite(v)) { d[i * 4 + 3] = 0; continue; }   // NODATA -> transparent
-    const c = C.rampColor(ramp, v);
-    d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = c[3];
+  if (!tile.w || !tile.h) return { data: await transparentTile() };          // zero-dim / empty tile
+  try {
+    const cv = makeCanvas(tile.w, tile.h), cx = cv.getContext('2d');
+    const img = cx.createImageData(tile.w, tile.h), d = img.data;
+    for (let i = 0; i < vals.length; i++) {
+      const v = vals[i];
+      if (v == null || !isFinite(v)) { d[i * 4 + 3] = 0; continue; }   // NODATA -> transparent
+      const c = C.rampColor(ramp, v);
+      d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = c[3];
+    }
+    cx.putImageData(img, 0, 0);
+    return { data: await createImageBitmap(cv) };
+  } catch (e) {                                                              // e.g. ImageBitmap could not be allocated
+    bmpFail(e, tile.w, tile.h, params.url);
+    return { data: await transparentTile() };
   }
-  cx.putImageData(img, 0, 0);
-  return { data: await createImageBitmap(cv) };
 }
 
 function provenanceClass(source) {
@@ -336,17 +350,24 @@ async function ensProtocol(params, abortController) {
   catch (e) { if (e && e.name === 'AbortError') throw e; return { data: await transparentTile() }; }
   if (!ta || !tb) return { data: await transparentTile() };   // need BOTH members to assess spread
   const C = codec(), stops = st.spreadStops, w = ta.w, h = ta.h, va = ta.values, vb = tb.values;
-  const cv = makeCanvas(w, h), cx = cv.getContext('2d');
-  const img = cx.createImageData(w, h), d = img.data;
-  for (let i = 0; i < va.length; i++) {
-    const a = va[i], b = vb[i];
-    if (a == null || !isFinite(a) || b == null || !isFinite(b)) { d[i * 4 + 3] = 0; continue; }
-    const c = C.rampColor(stops, Math.abs(a - b));
-    d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = c[3];
+  if (!w || !h) return { data: await transparentTile() };                    // zero-dim / empty tile
+  try {
+    const cv = makeCanvas(w, h), cx = cv.getContext('2d');
+    const img = cx.createImageData(w, h), d = img.data;
+    for (let i = 0; i < va.length; i++) {
+      const a = va[i], b = vb[i];
+      if (a == null || !isFinite(a) || b == null || !isFinite(b)) { d[i * 4 + 3] = 0; continue; }
+      const c = C.rampColor(stops, Math.abs(a - b));
+      d[i * 4] = c[0]; d[i * 4 + 1] = c[1]; d[i * 4 + 2] = c[2]; d[i * 4 + 3] = c[3];
+    }
+    cx.putImageData(img, 0, 0);
+    return { data: await createImageBitmap(cv) };
+  } catch (e) {                                                              // e.g. ImageBitmap could not be allocated
+    bmpFail(e, w, h, params.url);
+    return { data: await transparentTile() };
   }
-  cx.putImageData(img, 0, 0);
-  return { data: await createImageBitmap(cv) };
 }
+
 
 // PUBLIC — enable the ensemble spread layer. ctx: { maplibregl, manifestA, manifestB, labelA?,
 // labelB?, layer?, beforeId?, opacity?, frame?, notify? }. Returns ensState (or null on failure).
