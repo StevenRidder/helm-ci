@@ -229,8 +229,9 @@ marketplace. Aligning now means official layers and marketplace layers travel on
 becomes the first *consumer* chartplotter surfacing S-100 layers to cruisers.
 
 **Deps:** `LABS-1`, `CHART-3`, `AI-5`, `AI-17`, `TIDES-2`, `WX-1`. **Effort:** M (spike).
-**Status:** Not Started. **Output:** an ADR in `docs/decisions/` + a sample S-102/S-104 dataset
-rendered through the Lab loader; no production UI claim until a real dataset renders.
+**Status:** Board-tracked. **Output:** [ADR-0011](decisions/0011-s100-layer-ingestion-spike.md) +
+an executable fixture inventory/probe path in `backend/labs/s100_spike.py`; no production parser
+or UI claim until a real dataset renders.
 
 **Competitive implications (why this spike matters beyond the feature).**
 
