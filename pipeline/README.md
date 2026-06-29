@@ -45,4 +45,7 @@ http://localhost:8080.
   The server exposes allow-listed source/license/freshness/coverage fields plus an
   explicit `inspection` policy, so raster taps can show pack metadata honestly
   without pretending pixels are S-57/S-101 objects.
+- `mbtiles_server.py` also exposes `GET /prefetch` for route-corridor or bbox tile
+  manifests, e.g. `/prefetch?route=178.0,-18.0;178.3,-17.7&radius_nm=2&minzoom=8&maxzoom=12`.
+  It is an advisory manifest for warming caches; it does not download or mutate packs.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.

@@ -34,6 +34,8 @@ import threading
 from typing import Optional, Tuple
 import urllib.parse
 
+from prefetch_manifest import PrefetchError, build_prefetch_manifest
+
 BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
 
 PMTILE_TYPES = {
@@ -724,6 +726,24 @@ class H(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _json_response(self, code: int, payload: dict):
+        body = json.dumps(payload, sort_keys=True).encode("utf-8")
+        self.send_response(code)
+        self.send_header("Content-Type", "application/json")
+        self._cors()
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _prefetch_response(self, query: dict):
+        try:
+            payload = build_prefetch_manifest(_catalog(_origin(self)), query)
+        except PrefetchError as e:
+            self._json_response(400, {"error": "bad_prefetch_request", "message": str(e)})
+            return
+        self._json_response(200, payload)
+
     def _serve_mbtiles(self, name: str, parts: list[str]):
         if len(parts) != 4 or name not in CONNS:
             self._empty(404)
@@ -808,9 +828,13 @@ class H(http.server.BaseHTTPRequestHandler):
         self._empty(404)
 
     def do_GET(self):
-        path = urllib.parse.urlparse(self.path).path.strip("/")
+        parsed = urllib.parse.urlparse(self.path)
+        path = parsed.path.strip("/")
         if path == "catalog":
             self._catalog_response()
+            return
+        if path == "prefetch":
+            self._prefetch_response(urllib.parse.parse_qs(parsed.query))
             return
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])

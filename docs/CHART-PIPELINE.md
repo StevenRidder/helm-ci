@@ -128,6 +128,25 @@ exposes only the sidecar filename, never the local directory path. A sidecar may
 say "show these curated hints first," but it must not claim that raster pixels are
 native S-57/S-101 objects.
 
+### Route-corridor prefetch manifests
+
+The local pack server also exposes `GET /prefetch` for passage planning cache
+warm-up. It does not download tiles by itself; it returns a deterministic manifest
+the client/native app can use to warm HTTP, PMTiles, browser, or device caches.
+
+Examples:
+
+```text
+/prefetch?route=178.0,-18.0;178.3,-17.7&radius_nm=2&minzoom=8&maxzoom=12&packs=chart,sat
+/prefetch?bbox=178.0,-18.0,179.0,-17.0&minzoom=8&maxzoom=12
+```
+
+The response includes the expanded corridor bbox, selected packs, effective zoom
+range per pack, tile coordinates, tile URLs, truncation status, and rough byte
+estimates when the pack has enough metadata. This is the route/passage-corridor
+piece. General viewport overscan, no-blank-edge panning, and adjacent-zoom warming
+belong to the client-side cache scheduler work.
+
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
 > A permanent "cross-reference official charts" disclaimer is mandatory on these layers.
