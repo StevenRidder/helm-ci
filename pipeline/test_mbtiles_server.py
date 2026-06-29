@@ -41,6 +41,13 @@ def write_mbtiles(path):
             ("minzoom", "0"),
             ("maxzoom", "1"),
             ("attribution", "test fixture"),
+            ("helm_pack_schema", "helm.offline.region.v1"),
+            ("pack_role", "s52-chart"),
+            ("renderer", "s52"),
+            ("palette", "day"),
+            ("display_category", "std"),
+            ("chart_edition", "fixture-edition-1"),
+            ("render_date", "2026-06-29T00:00:00Z"),
         ],
     )
     conn.execute("INSERT INTO tiles VALUES (0, 0, 0, ?)", (b"\x89PNG\r\n\x1a\nfixture",))
@@ -58,6 +65,13 @@ def write_pmtiles(path):
                 "minzoom": 0,
                 "maxzoom": 2,
                 "attribution": "test fixture",
+                "helm_pack_schema": "helm.offline.region.v1",
+                "pack_role": "s52-chart",
+                "renderer": "s52",
+                "palette": "night",
+                "display_category": "std",
+                "chart_edition": "fixture-edition-2",
+                "render_date": "2026-06-29T00:00:00Z",
             }
         ).encode("utf-8")
     )
@@ -136,8 +150,14 @@ class PackServerTest(unittest.TestCase):
         self.assertEqual(status, 200)
         self.assertEqual(catalog["chart"]["container"], "mbtiles")
         self.assertEqual(catalog["chart"]["tile_url"], f"http://127.0.0.1:{self.port}/chart/{{z}}/{{x}}/{{y}}.png")
+        self.assertEqual(catalog["chart"]["renderer"], "s52")
+        self.assertEqual(catalog["chart"]["palette"], "day")
+        self.assertEqual(catalog["chart"]["chart_edition"], "fixture-edition-1")
         self.assertEqual(catalog["sat"]["container"], "pmtiles")
         self.assertTrue(catalog["sat"]["range"])
+        self.assertEqual(catalog["sat"]["renderer"], "s52")
+        self.assertEqual(catalog["sat"]["palette"], "night")
+        self.assertEqual(catalog["sat"]["chart_edition"], "fixture-edition-2")
         self.assertEqual(catalog["sat"]["pmtiles_url"], f"http://127.0.0.1:{self.port}/sat.pmtiles")
         self.assertEqual(catalog["sat"]["protocol_url"], f"pmtiles://http://127.0.0.1:{self.port}/sat.pmtiles")
         self.assertNotIn(self.tmp.name, json.dumps(catalog))

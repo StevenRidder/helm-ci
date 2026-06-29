@@ -7,6 +7,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 | Script | Does | Needs |
 |---|---|---|
 | `fetch_tiles.py` | lasso bbox → XYZ tiles → offline `.mbtiles` (TMS Y-flip handled) | python3 (stdlib) |
+| `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
 | `fetch_wind.py` | gridded wind → `wind.json` (particles) + `wind_points.geojson` (arrows) | python3 (stdlib) |
 | `extract_depth.sh` | NOAA ENC S-57 → `depare`/`depcnt`/`soundg` GeoJSON (depth-on-satellite) | GDAL (`brew install gdal`) |
 
@@ -24,6 +25,7 @@ python3 fetch_wind.py  --bbox="$WIND_BBOX" --nx="$WIND_NX" --ny="$WIND_NY" --out
 python3 fetch_places.py
 python3 fetch_tiles.py --source "$SRC_CHART" --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-charts.mbtiles --name "NOAA"
 python3 fetch_tiles.py --source "$SRC_SAT" --fmt jpg --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-sat.mbtiles --name "Sentinel-2"
+python3 bake_s52_region_pack.py --source "http://127.0.0.1:9001/chart/{z}/{x}/{y}.png" --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --palette day --edition "source-edition" --out ../web/data/$REGION_NAME-s52-day.pmtiles
 ./extract_depth.sh ~/Downloads/US5FLxxx.000 ../web/data   # needs GDAL
 ```
 
@@ -35,4 +37,6 @@ http://localhost:8080.
 - Sentinel-2 cloudless (EOX): CC-BY-4.0 — attribute "Sentinel-2 cloudless by EOX".
 - Open-Meteo: free for non-commercial; production swaps to GFS/ECMWF GRIB (same output format).
 - Be polite: `fetch_tiles.py` sleeps between requests; cap zoom for big areas (size grows ~4× per zoom).
+- S-52 region packs are point-in-time rendered snapshots. Bake separate packs for day/dusk/night if
+  offline palette switching matters, and stamp the source chart edition so the UI can warn later.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.

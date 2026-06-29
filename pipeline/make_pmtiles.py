@@ -18,7 +18,7 @@ Usage:
   python3 pipeline/make_pmtiles.py web/data/relief web/data/key-west-sat.pmtiles
   python3 pipeline/make_pmtiles.py <src> <out> --bbox W,S,E,N   # override header bounds
 """
-import os, sys, glob, struct, gzip, json, sqlite3
+import argparse, glob, gzip, hashlib, json, os, sqlite3, struct, sys
 
 # ---- varint (unsigned LEB128) ------------------------------------------
 def uvarint(n):
@@ -76,7 +76,7 @@ def gz(b):
 
 # ---- tile sources -------------------------------------------------------
 def _load_dir(src):
-    """Directory of {z}/{x}/{y}.png — returns (tiles, zset, bounds=None, fmt='png')."""
+    """Directory of {z}/{x}/{y}.png — returns (tiles, zset, bounds=None, fmt='png', metadata)."""
     paths = glob.glob(os.path.join(src, '*', '*', '*.png'))
     if not paths:
         print('no tiles under', src); sys.exit(1)
@@ -87,7 +87,7 @@ def _load_dir(src):
         y = int(os.path.splitext(os.path.basename(p))[0])
         zs.add(z)
         tiles.append((zxy_to_tileid(z, x, y), z, x, y, open(p, 'rb').read()))
-    return tiles, zs, None, 'png'
+    return tiles, zs, None, 'png', {}
 
 def _load_mbtiles(src):
     """.mbtiles (SQLite) — reads tiles, flips TMS y→XYZ, and lifts bounds+format from metadata."""
@@ -107,10 +107,66 @@ def _load_mbtiles(src):
             bounds = tuple(float(v) for v in meta['bounds'].split(','))
         except ValueError:
             bounds = None
-    return tiles, zs, bounds, ('jpg' if fmt in ('jpg', 'jpeg') else fmt)
+    return tiles, zs, bounds, ('jpg' if fmt in ('jpg', 'jpeg') else fmt), meta
 
-def main(src, out, bbox=None):
-    tiles, zs, bounds, fmt = (_load_mbtiles(src) if src.endswith('.mbtiles') else _load_dir(src))
+def _metadata_value(value):
+    if value is None:
+        return None
+    if isinstance(value, (bool, int, float, list, dict)):
+        return value
+    text = str(value)
+    stripped = text.strip()
+    if stripped == "":
+        return text
+    if stripped.lower() in ("true", "false"):
+        return stripped.lower() == "true"
+    for parser in (int, float):
+        try:
+            if parser is int and any(c in stripped for c in ".eE"):
+                continue
+            return parser(stripped)
+        except ValueError:
+            pass
+    if (stripped.startswith("{") and stripped.endswith("}")) or (stripped.startswith("[") and stripped.endswith("]")):
+        try:
+            return json.loads(stripped)
+        except json.JSONDecodeError:
+            pass
+    return text
+
+def _load_extra_metadata(path=None, raw=None):
+    merged = {}
+    if path:
+        with open(path, 'r', encoding='utf-8') as f:
+            loaded = json.load(f)
+        if not isinstance(loaded, dict):
+            print('metadata file must contain a JSON object', file=sys.stderr); sys.exit(2)
+        merged.update(loaded)
+    if raw:
+        loaded = json.loads(raw)
+        if not isinstance(loaded, dict):
+            print('--metadata-json must be a JSON object', file=sys.stderr); sys.exit(2)
+        merged.update(loaded)
+    return merged
+
+def _bounds_list(bounds):
+    if not bounds or len(bounds) != 4:
+        return None
+    return [float(v) for v in bounds]
+
+def _tile_type(fmt):
+    return {
+        'mvt': 1,
+        'pbf': 1,
+        'png': 2,
+        'jpg': 3,
+        'jpeg': 3,
+        'webp': 4,
+        'avif': 5,
+    }.get(fmt, 2)
+
+def main(src, out, bbox=None, extra_metadata=None):
+    tiles, zs, bounds, fmt, src_meta = (_load_mbtiles(src) if src.endswith('.mbtiles') else _load_dir(src))
     if bbox:
         bounds = bbox
     if not tiles:
@@ -122,7 +178,7 @@ def main(src, out, bbox=None):
     seen = {}
     entries = []
     for tid, z, x, y, blob in tiles:
-        key = hash(blob)
+        key = hashlib.sha256(blob).digest()
         if key in seen:
             off, ln = seen[key]
         else:
@@ -132,16 +188,17 @@ def main(src, out, bbox=None):
         entries.append({'tile_id': tid, 'offset': off, 'length': ln, 'run_length': 1})
 
     root = gz(serialize_directory(entries))
-    meta = gz(json.dumps({'name': os.path.basename(out),
-                          'attribution': 'Helm offline raster pack — NOT FOR NAVIGATION'}).encode())
+    meta_obj = {k: _metadata_value(v) for k, v in src_meta.items()}
+    meta_obj.update({k: _metadata_value(v) for k, v in (extra_metadata or {}).items()})
+    meta_obj.setdefault('name', os.path.basename(out))
+    meta_obj.setdefault('type', 'raster')
+    meta_obj['format'] = fmt
+    meta_obj['minzoom'] = min(zs)
+    meta_obj['maxzoom'] = max(zs)
+    meta_obj.setdefault('attribution', 'Helm offline raster pack - NOT FOR NAVIGATION')
 
     HEADER = 127
     root_off = HEADER
-    meta_off = root_off + len(root)
-    leaf_off = meta_off + len(meta)
-    leaf_len = 0
-    data_off = leaf_off + leaf_len
-
     minz, maxz = min(zs), max(zs)
     if bounds and len(bounds) == 4:
         minlon, minlat, maxlon, maxlat = bounds
@@ -149,7 +206,15 @@ def main(src, out, bbox=None):
         print('WARN: no bounds in source — defaulting to Key West; pass --bbox to set them')
         minlon, minlat, maxlon, maxlat = -81.95, 24.38, -81.55, 24.66
     clon, clat = (minlon + maxlon) / 2.0, (minlat + maxlat) / 2.0
-    tile_type = 3 if fmt in ('jpg', 'jpeg') else 2     # PMTiles v3: 2=png, 3=jpeg
+    meta_obj['bounds'] = _bounds_list((minlon, minlat, maxlon, maxlat))
+    meta_obj['center'] = [clon, clat, (minz + maxz) // 2]
+    meta = gz(json.dumps(meta_obj, sort_keys=True, separators=(',', ':')).encode())
+
+    meta_off = root_off + len(root)
+    leaf_off = meta_off + len(meta)
+    leaf_len = 0
+    data_off = leaf_off + leaf_len
+    tile_type = _tile_type(fmt)
 
     h = bytearray(HEADER)
     h[0:7] = b'PMTiles'
@@ -186,10 +251,12 @@ def main(src, out, bbox=None):
           f'{(HEADER+len(root)+len(meta)+len(data))/1024:.0f} KB')
 
 if __name__ == '__main__':
-    args = [a for a in sys.argv[1:] if not a.startswith('--')]
-    src = args[0] if len(args) > 0 else 'web/data/relief'
-    out = args[1] if len(args) > 1 else 'web/data/key-west-sat.pmtiles'
-    bbox = None
-    if '--bbox' in sys.argv:
-        bbox = tuple(float(v) for v in sys.argv[sys.argv.index('--bbox') + 1].split(','))
-    main(src, out, bbox)
+    ap = argparse.ArgumentParser()
+    ap.add_argument('src', nargs='?', default='web/data/relief')
+    ap.add_argument('out', nargs='?', default='web/data/key-west-sat.pmtiles')
+    ap.add_argument('--bbox', help='W,S,E,N override for PMTiles header and metadata')
+    ap.add_argument('--metadata-file', help='JSON object merged into PMTiles metadata')
+    ap.add_argument('--metadata-json', help='JSON object merged into PMTiles metadata')
+    a = ap.parse_args()
+    bbox = tuple(float(v) for v in a.bbox.split(',')) if a.bbox else None
+    main(a.src, a.out, bbox, _load_extra_metadata(a.metadata_file, a.metadata_json))

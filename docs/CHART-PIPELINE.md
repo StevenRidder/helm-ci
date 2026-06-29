@@ -86,6 +86,12 @@ piloting with depth" — the holy grail for thin water and poorly-charted atolls
 All public-domain (NOAA ENC) over a clean base (Sentinel-2) → fully offline, fully
 shippable.
 
+For offline S-52 chart snapshots, `pipeline/bake_s52_region_pack.py` drives the
+same live `/chart/{z}/{x}/{y}.png` renderer over a selected XYZ pyramid and emits
+a PMTiles pack. The pack is stamped with the renderer, palette, display category,
+source chart edition/epoch, render date, bbox, z-range, and tile counts so later
+client work can warn about stale or out-of-coverage chart pixels.
+
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
 > A permanent "cross-reference official charts" disclaimer is mandatory on these layers.

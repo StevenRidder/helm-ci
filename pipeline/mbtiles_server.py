@@ -55,6 +55,23 @@ CONTENT_TYPES = {
     "pmtiles": "application/vnd.pmtiles",
 }
 
+PACK_METADATA_KEYS = (
+    "helm_pack_schema",
+    "pack_role",
+    "renderer",
+    "palette",
+    "display_category",
+    "chart_edition",
+    "chart_epoch",
+    "render_date",
+    "z_range",
+    "tile_count",
+    "tile_count_expected",
+    "no_coverage_tile_count",
+    "missing_tile_count",
+    "generated_by",
+)
+
 
 def _pack_map() -> dict[str, str]:
     raw = os.environ.get("HELM_MBTILES_PACKS", "").strip()
@@ -186,7 +203,7 @@ def _parse_pmtiles_metadata(path: str) -> dict:
                 metadata = {}
 
     fmt, pack_type = PMTILE_TYPES.get(tile_type, ("bin", "raster"))
-    return {
+    parsed = {
         "version": version,
         "format": fmt,
         "type": metadata.get("type") or pack_type,
@@ -202,6 +219,10 @@ def _parse_pmtiles_metadata(path: str) -> dict:
         "tile_entries": tile_entries,
         "tile_contents": tile_contents,
     }
+    for key in PACK_METADATA_KEYS + ("kind", "source", "license"):
+        if metadata.get(key) is not None:
+            parsed[key] = metadata[key]
+    return parsed
 
 
 def _base_record(name: str, path: str, fmt: str, pack_type: str, title: str, metadata: dict) -> dict:
@@ -213,8 +234,8 @@ def _base_record(name: str, path: str, fmt: str, pack_type: str, title: str, met
         "format": fmt,
         "extension": "jpg" if fmt == "jpeg" else fmt,
         "type": pack_type,
-        "kind": _kind_for(name, title or name, fmt, pack_type),
-        "source": "local",
+        "kind": metadata.get("kind") or _kind_for(name, title or name, fmt, pack_type),
+        "source": metadata.get("source") or "local",
         "size_bytes": os.path.getsize(path),
         "modified": _mtime_iso(path),
         "modified_epoch": int(os.path.getmtime(path)),
@@ -223,7 +244,7 @@ def _base_record(name: str, path: str, fmt: str, pack_type: str, title: str, met
     if bounds_arr:
         rec["bounds_array"] = bounds_arr
         rec["bounds"] = _bounds_string(bounds_arr)
-    for key in ("minzoom", "maxzoom", "attribution", "description", "center", "scheme"):
+    for key in ("minzoom", "maxzoom", "attribution", "description", "center", "scheme") + PACK_METADATA_KEYS:
         if metadata.get(key) is not None:
             rec[key] = metadata[key]
     return rec
@@ -249,14 +270,15 @@ def _build_pack_records():
                 fmt = "jpg"
             pack_type = "vector" if fmt in ("pbf", "mvt") else "raster"
             title = m.get("name") or name
-            metadata = {
+            metadata = dict(m)
+            metadata.update({
                 "bounds": m.get("bounds"),
                 "minzoom": _safe_int(m.get("minzoom"), 0),
                 "maxzoom": _safe_int(m.get("maxzoom"), 17),
                 "attribution": m.get("attribution"),
                 "description": m.get("description"),
                 "scheme": m.get("scheme", "tms"),
-            }
+            })
             rec = _base_record(name, path, fmt, pack_type, title, metadata)
             rec["container"] = "mbtiles"
             rec["_path"] = path

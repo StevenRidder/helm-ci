@@ -118,6 +118,26 @@ MBTiles remain available as XYZ tile endpoints. PMTiles are advertised in
 MapLibre clients can load single-file local packs without inventing per-pack
 tile URL templates.
 
+To pre-bake an S-52 chart region from a private chart-tile origin into a local
+PMTiles pack, first run `helm-server` or `helm-tiles` on a private port, then
+batch the same `/chart/{z}/{x}/{y}.png` renderer over the chosen bbox:
+
+```bash
+python3 pipeline/bake_s52_region_pack.py \
+  --source "http://127.0.0.1:9001/chart/{z}/{x}/{y}.png" \
+  --bbox "176.8,-19.2,180.0,-16.0" \
+  --minzoom 7 --maxzoom 12 \
+  --palette day \
+  --display-category std \
+  --edition "source-chart-edition-or-update-chain" \
+  --out "$HOME/.helm/basemaps/fiji-tcl2407/fiji-s52-day.pmtiles"
+```
+
+The output PMTiles metadata includes the Helm pack schema, renderer, palette,
+display category, chart edition/epoch, render date, bbox, z-range, and tile
+counts. Bake dusk/night as separate packs when offline palette fidelity matters.
+Do not bake against the shared live `:8080` screen.
+
 For a direct local acceptance run, start only the local pack helper and open the
 Chart Packs panel in the browser. The UI discovers `/catalog`, lists each local
 pack, and activates the selected pack as the MapLibre raster/PMTiles source.
