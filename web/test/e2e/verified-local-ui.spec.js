@@ -37,6 +37,13 @@ async function wxOpacityStyle(page) {
   });
 }
 
+async function wxLiveOpacity(page) {
+  return page.evaluate(() => {
+    if (!window.map || !window.map.getLayer || !window.map.getLayer('helm-wx-live')) return null;
+    return window.map.getPaintProperty('helm-wx-live', 'raster-opacity');
+  });
+}
+
 function mockedWeatherNodes(urlText) {
   const u = new URL(urlText);
   const latCount = (u.searchParams.get('latitude') || '').split(',').filter(Boolean).length || 144;
@@ -137,7 +144,7 @@ test('weather transparency changes the live weather layer opacity', async ({ pag
     { timeout: 20000 }
   );
 
-  await expect.poll(async () => page.evaluate(() => window.map.getPaintProperty('helm-wx-live', 'raster-opacity')))
+  await expect.poll(async () => wxLiveOpacity(page))
     .toBeCloseTo(0.72, 2);
 
   await page.locator('#wxopacity').evaluate((el) => {
@@ -146,7 +153,7 @@ test('weather transparency changes the live weather layer opacity', async ({ pag
   });
   await expect.poll(async () => (await wxOpacityStyle(page)).fill).toBe('80%');
 
-  await expect.poll(async () => page.evaluate(() => window.map.getPaintProperty('helm-wx-live', 'raster-opacity')))
+  await expect.poll(async () => wxLiveOpacity(page))
     .toBeCloseTo(0.20, 2);
 });
 

@@ -47,7 +47,7 @@
     let sog = 0;                                    // latest speed over ground (kn) for the predictor
     let follow = (opts.follow != null) ? !!opts.follow : false;   // ⌖ engages continuous follow
     let orient = 0;                                 // 0 = north-up, 1 = course-up (COG), 2 = head-up (heading)
-    let active = true, framedOnce = false;          // active=false → frozen (stale feed); framedOnce → FIRST fix frames the boat
+    let active = true, framedOnce = opts.frameOnFirstFix === false; // active=false → frozen; framedOnce → FIRST fix frames the boat
     let dispBearing = 0;                            // eased chart bearing we drive toward
     let showRings = (opts.rings != null) ? !!opts.rings : false;
 

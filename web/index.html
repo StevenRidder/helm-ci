@@ -519,7 +519,7 @@
   <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="checkbox" data-layer="enc-chart"> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
+  <label class="row"><input type="checkbox" data-layer="enc-chart" checked> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
   <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
@@ -834,6 +834,27 @@
 // at top level), so its contract is preserved.
 (async function main() {
   const __initialHash = location.hash;   // capture BEFORE maplibre's hash:true overwrites it with the style default
+  function helmHashView(hash) {
+    const m = String(hash || '').match(/^#(?:map=)?([0-9.]+)\/(-?[0-9.]+)\/(-?[0-9.]+)(?:\/(-?[0-9.]+))?(?:\/(-?[0-9.]+))?$/);
+    if (!m) return null;
+    const zoom = Number(m[1]), lat = Number(m[2]), lon = Number(m[3]);
+    const bearing = m[4] == null ? null : Number(m[4]);
+    const pitch = m[5] == null ? null : Number(m[5]);
+    if (!Number.isFinite(zoom) || !Number.isFinite(lat) || !Number.isFinite(lon)) return null;
+    if (lat < -90 || lat > 90 || lon < -180 || lon > 180) return null;
+    const view = { zoom: zoom, center: [lon, lat] };
+    if (Number.isFinite(bearing)) view.bearing = bearing;
+    if (Number.isFinite(pitch)) view.pitch = pitch;
+    return view;
+  }
+  const __initialView = helmHashView(__initialHash);
+  function helmHashString(map) {
+    const c = map.getCenter();
+    const z = Math.round(map.getZoom() * 100) / 100;
+    const lat = Math.round(c.lat * 100000) / 100000;
+    const lon = Math.round(c.lng * 100000) / 100000;
+    return '#' + z + '/' + lat + '/' + lon;
+  }
   async function helmResourceExists(url) {
     try {
       const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
@@ -864,8 +885,8 @@
     else console.error('[helm] style load failed:', e);
     return;
   }
-  const map = new maplibregl.Map({
-    container: 'map', style: style, hash: true,
+  const mapOptions = Object.assign({
+    container: 'map', style: style, hash: false,
     // Owned mbtiles basemaps (:8091) + the online-fill cache (:8095, CHART-16) ship localhost
     // placeholders. Rewrite the HOST to the page host so the iPad/phone on the boat WiFi loads
     // tiles from THIS Mac. The port is preserved (8091 stays 8091, 8095 stays 8095).
@@ -874,13 +895,47 @@
     // Port stays 8091 — a ?server= override only relocates the host. Everything else passes through.
     transformRequest: (url) => {
       if (window.HelmEndpoint) {
+        var chart = url.match(/\/\/[^/]+:8090\/chart\/(.+)$/);
+        if (chart) {
+          var chartUrl = HelmEndpoint.origin() + '/chart/' + chart[1];
+          var token = HelmEndpoint.token && HelmEndpoint.token();
+          if (token) chartUrl += (chartUrl.indexOf('?') >= 0 ? '&' : '?') + 'token=' + encodeURIComponent(token);
+          return { url: chartUrl };
+        }
         var m = url.match(/\/\/[^/]+:(8091|8095)\//);
         if (m) return { url: url.replace(/\/\/[^/]+:(8091|8095)\//, '//' + HelmEndpoint.host() + ':' + m[1] + '/') };
       }
       return { url };
     }
-  });
+  }, __initialView || {});
+  const map = new maplibregl.Map(mapOptions);
   window.map = map;   // debug/automation hook
+  let __hashSyncing = false;
+  function syncHashFromMap() {
+    if (__hashSyncing) return;
+    const next = helmHashString(map);
+    if (location.hash !== next) history.replaceState(null, '', next);
+  }
+  function syncMapFromHash() {
+    const view = helmHashView(location.hash);
+    if (!view) return;
+    __hashSyncing = true;
+    map.jumpTo(view);
+    __hashSyncing = false;
+  }
+  function applyInitialHashView() {
+    if (!__initialView) return;
+    __hashSyncing = true;
+    map.jumpTo(__initialView);
+    __hashSyncing = false;
+  }
+  applyInitialHashView();
+  map.once('load', function () {
+    applyInitialHashView();
+    syncHashFromMap();
+    map.on('moveend', syncHashFromMap);
+  });
+  window.addEventListener('hashchange', syncMapFromHash);
   if (map.setMaxPitch) map.setMaxPitch(0);          // a chart is flat — no accidental 3D tilt
   if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
   // Surface real map failures (style/source/layer) on the degraded banner; stay quiet on benign
@@ -904,7 +959,7 @@
   });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
   map.addControl(new maplibregl.ScaleControl({ unit: 'nautical' }), 'bottom-left');
-  const ownship = HelmOwnship(map, { follow: !__initialHash });  window.__ownship = ownship;   // follow on unless a view was pinned in the URL
+  const ownship = HelmOwnship(map, { follow: !__initialView, frameOnFirstFix: !__initialView });  window.__ownship = ownship;   // follow/frame on unless a view was pinned in the URL
   const alarms = HelmAlarms(map, { onAnchor: (set, pos, radius) =>     // CONTRACT-10: push the anchor watch to the ENGINE so it keeps watch headless
     { if (window.__navClient && __navClient.send) __navClient.send(set ? { t: 'anchor.set', lat: pos.lat, lon: (pos.lon != null ? pos.lon : pos.lng), radius } : { t: 'anchor.clear' }); } });
   window.__alarms = alarms;   // depth / anchor / MOB safety alarms + banner (alarms.js)
