@@ -47,25 +47,46 @@
     (log.warn || console.warn).call(log, '[wx-scene] tile colourise failed; transparent fallback: ' + ((e && e.message) || e));
   }
 
-  // ---- helm-wxv1 value tile -> colourised ImageBitmap (per-pixel decode + shared ramp) ------------
+  // ---- helm-wxv1 value tile -> colourised ImageBitmap (decode + shared ramp) ----------------------
+  // WebGPU path (phase 4) decodes + colourises on the GPU when available; else the CPU path. Either
+  // way MapLibre composites the colourised raster (correct z-order under chart symbols + per-tile LOD).
+  function rampDomain(layer) {
+    var R = ramp(), st = (R && R.stopsFor) ? R.stopsFor(layer) : null;
+    if (!st || !st.length) return [0, 1];
+    return [st[0][0], st[st.length - 1][0]];
+  }
+  function useGPU() { return global.HELM_WX_WEBGPU !== false && global.HelmWxSceneGPU && global.HelmWxSceneGPU.supported(); }
+
+  function colorizeCPU(img, layer, scale, offset) {
+    var w = img.width || 256, h = img.height || 256;
+    var cv = makeCanvas(w, h), ctx = cv.getContext('2d', { willReadFrequently: true });
+    ctx.drawImage(img, 0, 0);
+    var src;
+    try { src = ctx.getImageData(0, 0, w, h); } catch (e) { return transparentBitmap(); }
+    var out = ctx.createImageData(w, h), sd = src.data, od = out.data, C = codec(), R = ramp();
+    for (var i = 0; i < sd.length; i += 4) {
+      var v = C.decodeRGBA(sd[i], sd[i + 1], sd[i + 2], sd[i + 3], scale, offset);
+      if (v == null) { od[i + 3] = 0; continue; }        // NODATA -> transparent (honest gap, never invented)
+      var c = R.rampColor(layer, v);
+      od[i] = c[0]; od[i + 1] = c[1]; od[i + 2] = c[2]; od[i + 3] = c[3];
+    }
+    ctx.putImageData(out, 0, 0);
+    return createImageBitmap(cv).then(function (bmp) { return { data: bmp }; });
+  }
+
   function colorize(buf, layer, scale, offset) {
     return createImageBitmap(new Blob([buf], { type: 'image/png' })).then(function (img) {
       var w = img.width || 256, h = img.height || 256;
       if (!w || !h) return transparentBitmap();
-      var cv = makeCanvas(w, h), ctx = cv.getContext('2d', { willReadFrequently: true });
-      ctx.drawImage(img, 0, 0);
-      if (img.close) try { img.close(); } catch (e) {}
-      var src;
-      try { src = ctx.getImageData(0, 0, w, h); } catch (e) { return transparentBitmap(); }
-      var out = ctx.createImageData(w, h), sd = src.data, od = out.data, C = codec(), R = ramp();
-      for (var i = 0; i < sd.length; i += 4) {
-        var v = C.decodeRGBA(sd[i], sd[i + 1], sd[i + 2], sd[i + 3], scale, offset);
-        if (v == null) { od[i + 3] = 0; continue; }      // NODATA -> transparent (honest gap, never invented)
-        var c = R.rampColor(layer, v);
-        od[i] = c[0]; od[i + 1] = c[1]; od[i + 2] = c[2]; od[i + 3] = c[3];
+      if (useGPU()) {
+        var rng = rampDomain(layer);
+        return global.HelmWxSceneGPU.colorizeBitmap(img, layer, scale, offset, rng[0], rng[1])
+          .then(function (bmp) { if (img.close) try { img.close(); } catch (e) {} return { data: bmp }; })
+          .catch(function () { return colorizeCPU(img, layer, scale, offset); });   // GPU failed -> CPU path
       }
-      ctx.putImageData(out, 0, 0);
-      return createImageBitmap(cv).then(function (bmp) { return { data: bmp }; });
+      var r = colorizeCPU(img, layer, scale, offset);
+      if (img.close) try { img.close(); } catch (e) {}
+      return r;
     });
   }
 
