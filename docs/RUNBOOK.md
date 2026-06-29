@@ -35,21 +35,21 @@ python3 -m venv services/wx/.venv
 services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
 
 # 5. Run a private one-origin server plus weather and online-fill helpers.
-scripts/start-helm.sh --port 8080 --weather --fill
+scripts/start-helm.sh --port 9001 --weather --fill
 
 # 6. Open the client.
-open http://127.0.0.1:8080/
+open http://127.0.0.1:9001/
 ```
 
 **Shortcut:** after the one-time build (step 2), `scripts/start-helm.sh` launches the
-core on its canonical port for you (add `--weather`/`--basemap`/`--fill`/`--backend`,
+core on the port you choose (add `--weather`/`--basemap`/`--fill`/`--backend`,
 or `--all`, to also bring up the opt-in helper services on the ports in
 [PORTS.md](PORTS.md); each is skipped with a clear reason if its deps/data are absent).
 The sample ENC is used automatically if it exists at `~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000`.
 Ctrl-C stops everything it started.
 
 ```bash
-scripts/start-helm.sh --port 8080 --all
+scripts/start-helm.sh --port 9001 --all
 ```
 
 The UI will load even without live vessel data. To see live movement, feed NMEA or
@@ -109,7 +109,7 @@ is serving the UI and starting the local basemap helper:
 
 ```bash
 HELM_MBTILES_DIR="$HOME/.helm/basemaps/fiji-tcl2407" \
-  scripts/start-helm.sh --port 8080 --weather --basemap --fill
+  scripts/start-helm.sh --port 9001 --weather --basemap --fill
 ```
 
 If the packs live on another Mac temporarily, use the cache-backed proxy rather
@@ -118,7 +118,7 @@ but repeated zoom/pan serves from `~/.helm/basemap-proxy-cache`:
 
 ```bash
 HELM_BASEMAP_UPSTREAM="http://192.168.1.137:8091" \
-  scripts/start-helm.sh --port 8080 --weather --basemap-proxy --fill
+  scripts/start-helm.sh --port 9001 --weather --basemap-proxy --fill
 ```
 
 `Online fill` is an optional underlay/cache on `:8095`. It can help fill gaps
@@ -193,13 +193,13 @@ engine/bootstrap.sh --smoke
 ## 4. Run the One-Origin Server
 
 ```bash
-scripts/start-helm.sh --port 8080 --weather --fill
+scripts/start-helm.sh --port 9001 --weather --fill
 ```
 
 Open:
 
 ```bash
-open http://127.0.0.1:8080/
+open http://127.0.0.1:9001/
 ```
 
 Sanity checks:

@@ -113,6 +113,25 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 | [docs/LEGAL.md](docs/LEGAL.md) | Source licensing tiers — **read before touching a tile** |
 | [docs/decisions/](docs/decisions/) | Architecture decision records (ADRs) |
 
+## Reviewer Path In 10 Minutes
+
+For a skeptical first pass, use the public docs in this order:
+
+1. Read [docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md) and
+   [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) to see what Helm is, what works
+   today, and what is still pre-alpha.
+2. Read [SAFETY.md](SAFETY.md) before treating any screenshot or demo as a
+   navigation claim.
+3. Build and run from [docs/RUNBOOK.md](docs/RUNBOOK.md). Use a private local
+   port such as `9001`, provide your own chart data, and verify `/health`,
+   `/catalog`, and a sample `/chart/{z}/{x}/{y}.png` tile.
+4. Run `engine/test-engine.sh` after a build to exercise the one-origin server,
+   chart route, navigation behavior, containment checks, and smoke coverage.
+5. For the renderer proof context, read
+   [docs/VULKAN-HELM-WEBGPU-PROOF.md](docs/VULKAN-HELM-WEBGPU-PROOF.md) and the
+   OpenCPN proof branch it links to. Helm is the WebGPU-first consumer path;
+   VSG/Vulkan is the OpenCPN/native proof backend.
+
 Internal business strategy, product requirements, feature audits, roadmap/epic plans,
 release-post drafts, UI mockups, raw research artifacts, live-machine notes, and local
 operator configuration are intentionally kept out of the public repository.
@@ -167,9 +186,9 @@ engine/bootstrap.sh
 scripts/install-sample-enc.sh
 python3 -m venv services/wx/.venv
 services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
-scripts/start-helm.sh --port 8080 --weather --fill
+scripts/start-helm.sh --port 9001 --weather --fill
 
-open http://127.0.0.1:8080/
+open http://127.0.0.1:9001/
 ```
 
 Use [docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input,
