@@ -90,7 +90,9 @@ Names are provisional. What matters is the boundary:
 
 ### 1. `helm-packd`: local pack service
 
-Port `pipeline/mbtiles_server.py` into a C++ runtime service first.
+Port the runtime contract from `pipeline/mbtiles_server.py` into a C++ service.
+`mbtiles_server.py` remains the Python reference/oracle for manifest evolution;
+the boat runtime should use `helm-packd`.
 
 Required contract:
 
@@ -99,6 +101,9 @@ Required contract:
 - expose `/catalog`;
 - expose `/layers` maritime layer inventory;
 - expose `/prefetch` route/bbox cache-warming manifests;
+- expose `/bundle` region-bundle manifests;
+- expose OFFLINE-15 environmental bundle visibility from `HELM_ENV_BUNDLE_MANIFESTS`;
+- preserve sidecar/source/freshness/coverage/inspection metadata allow-listing;
 - preserve the bring-your-own-pack and local-filesystem privacy model;
 - never require internet to show installed packs.
 
@@ -107,6 +112,7 @@ Suggested C++ shape:
 - `pack_index` discovers configured packs and reads allow-listed metadata.
 - `mbtiles_store` owns SQLite tile lookup and TMS/XYZ conversion.
 - `pmtiles_store` owns archive metadata and byte-range serving.
+- `pack_manifest`/equivalent owns catalog, layer inventory, prefetch, and bundle JSON shaping.
 - `pack_http` owns only request parsing, response headers, and error mapping.
 - `pack_fixtures` compare C++ responses against the existing Python helper for small MBTiles/PMTiles
   fixtures.

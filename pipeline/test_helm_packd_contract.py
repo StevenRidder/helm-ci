@@ -1,9 +1,9 @@
 #!/usr/bin/env python3
-"""Contract tests for the OFFLINE-16 C++ helm-packd daemon.
+"""Contract tests for the OFFLINE-16/17 C++ helm-packd daemon.
 
 The Python pack server remains the broad reference/oracle. These tests pin the
-first C++ parity slice: health, catalog privacy/URL shape, MBTiles XYZ->TMS
-serving, and PMTiles HEAD/Range behavior.
+runtime C++ parity slice: health, catalog privacy/URL shape, MBTiles XYZ->TMS,
+PMTiles HEAD/Range, and OFFLINE-17 `/layers`/`/prefetch`/`/bundle` metadata.
 
 Set HELM_PACKD_BIN to the built binary, for example:
 
@@ -29,6 +29,7 @@ import urllib.request
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
+ENV_FIXTURE = ROOT / "services" / "wx" / "fixtures" / "fiji-env-bundle-v1.json"
 
 
 def free_port() -> int:
@@ -97,6 +98,39 @@ def write_pmtiles(path: Path) -> None:
     path.write_bytes(bytes(header) + metadata + b"tile-data")
 
 
+def write_sidecar(path: Path) -> None:
+    """Write public pack metadata plus one private field that must not leak."""
+
+    path.write_text(
+        json.dumps(
+            {
+                "renderer": "s52",
+                "palette": "day",
+                "display_category": "std",
+                "chart_edition": "FJ-2026",
+                "render_date": "2026-06-29T00:00:00Z",
+                "staleness_status": "fresh",
+                "tile_count": 1,
+                "tile_count_expected": 2,
+                "no_coverage_tile_count": 1,
+                "coverage_status": "partial",
+                "coverage_warning": "Fixture coverage gap.",
+                "source_id": "FJ-FIXTURE",
+                "source_updated": "2026-06-01T00:00:00Z",
+                "source_confidence": "fixture",
+                "inspection": {
+                    "mode": "raster_metadata",
+                    "semantic_objects": "unavailable",
+                    "tap_action": "show_pack_source_metadata",
+                    "private_path": "/private/tmp/should-not-leak",
+                },
+                "private_path": "/private/tmp/should-not-leak",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def request_json(url: str) -> tuple[int, dict]:
     with urllib.request.urlopen(url, timeout=2) as resp:
         return resp.status, json.loads(resp.read().decode("utf-8"))
@@ -111,10 +145,12 @@ class HelmPackdContractTest(unittest.TestCase):
         self.tmp = tempfile.TemporaryDirectory()
         self.tmp_path = Path(self.tmp.name)
         write_mbtiles(self.tmp_path / "chart.mbtiles")
+        write_sidecar(self.tmp_path / "chart.metadata.json")
         write_pmtiles(self.tmp_path / "sat.pmtiles")
         self.port = free_port()
         env = os.environ.copy()
         env["HELM_MBTILES_DIR"] = self.tmp.name
+        env["HELM_ENV_BUNDLE_MANIFESTS"] = str(ENV_FIXTURE)
         env["HELM_BIND"] = "127.0.0.1"
         self.proc = subprocess.Popen(
             [str(self.bin), str(self.port)],
@@ -174,6 +210,21 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(catalog["sat"]["pmtiles_url"], f"http://127.0.0.1:{self.port}/sat.pmtiles")
         self.assertNotIn(self.tmp.name, json.dumps(catalog))
 
+    def test_catalog_applies_sidecar_metadata_without_private_paths(self) -> None:
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+        chart = catalog["chart"]
+        self.assertEqual(chart["renderer"], "s52")
+        self.assertEqual(chart["palette"], "day")
+        self.assertEqual(chart["source_info"]["id"], "FJ-FIXTURE")
+        self.assertEqual(chart["coverage"]["status"], "partial")
+        self.assertEqual(chart["staleness"]["status"], "fresh")
+        self.assertEqual(chart["inspection"]["mode"], "raster_metadata")
+        self.assertEqual(chart["inspection"]["chart_object_query"], "use_live_CHART_10_query_when_source_ENC_is_mounted")
+        self.assertEqual(chart["warnings"][0]["code"], "pack_out_of_coverage")
+        self.assertNotIn("private_path", json.dumps(chart))
+        self.assertNotIn("/private/tmp/should-not-leak", json.dumps(chart))
+
     def test_mbtiles_tile_endpoint_serves_xyz_with_tms_flip(self) -> None:
         with urllib.request.urlopen(f"http://127.0.0.1:{self.port}/chart/0/0/0.png", timeout=2) as resp:
             self.assertEqual(resp.status, 200)
@@ -196,6 +247,52 @@ class HelmPackdContractTest(unittest.TestCase):
             self.assertEqual(resp.status, 200)
             self.assertGreater(int(resp.headers.get("Content-Length", "0")), 127)
             self.assertEqual(resp.read(), b"")
+
+    def test_offline17_layers_prefetch_and_bundle_endpoints(self) -> None:
+        status, layers = request_json(
+            f"http://127.0.0.1:{self.port}/layers?"
+            "bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(layers["schema"], "helm.maritime_layer_inventory.v1")
+        self.assertIn("weather.bundle", layers["summary"]["sample_handles"])
+        chart_layer = next(layer for layer in layers["layers"] if layer.get("component_id") == "pack:chart")
+        self.assertEqual(chart_layer["product_identifier"], "S-52")
+        self.assertEqual(chart_layer["sample"]["status"], "unavailable")
+        self.assertEqual(chart_layer["inspection"]["mode"], "raster_metadata")
+        env_bundle = next(layer for layer in layers["layers"] if layer["role"] == "environmental_bundle")
+        self.assertEqual(env_bundle["product_identifier"], "helm.env.bundle.v1")
+        self.assertFalse(env_bundle["environmental_bundle"]["upstreamFetchesAllowedDuringGesture"])
+        wind = next(layer for layer in layers["layers"] if layer["id"].endswith(":wind"))
+        self.assertEqual(wind["sample"]["probe_handle"], "weather.wind")
+        current = next(layer for layer in layers["layers"] if layer["id"].endswith(":current"))
+        self.assertEqual(current["product_identifier"], "S-111")
+        self.assertNotIn(self.tmp.name, json.dumps(layers))
+        self.assertNotIn("/private/tmp/should-not-leak", json.dumps(layers))
+
+        status, prefetch = request_json(
+            f"http://127.0.0.1:{self.port}/prefetch?"
+            "bbox=178.0,-18.0,178.2,-17.8&minzoom=0&maxzoom=1&packs=chart,sat&env_layers=wind,current"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(prefetch["schema"], "helm.prefetch.manifest.v1")
+        self.assertEqual(prefetch["totals"]["packs"], 2)
+        self.assertEqual(prefetch["totals"]["environmental_layers"], 2)
+        self.assertEqual(prefetch["packs"][0]["tiles"][0]["url"], f"http://127.0.0.1:{self.port}/chart/0/0/0.png")
+        self.assertFalse(prefetch["environmental_bundles"][0]["upstream_fetches_allowed_during_gesture"])
+        self.assertNotIn(self.tmp.name, json.dumps(prefetch))
+
+        status, bundle = request_json(
+            f"http://127.0.0.1:{self.port}/bundle?"
+            "bundle_id=fiji&bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(bundle["schema"], "helm.region_bundle.manifest.v1")
+        chart_component = next(component for component in bundle["components"] if component["id"] == "pack:chart")
+        self.assertIn("out_of_coverage", chart_component["status"]["states"])
+        self.assertEqual(len(chart_component["fingerprint"]), 64)
+        self.assertNotIn(self.tmp.name, json.dumps(bundle))
+        self.assertNotIn("/private/tmp/should-not-leak", json.dumps(bundle))
 
 
 if __name__ == "__main__":

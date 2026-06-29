@@ -174,7 +174,7 @@ index 1909f44..ae59f3e 100644
 +set_property(TARGET helm-packd PROPERTY ENABLE_EXPORTS ON)
 +target_compile_features(helm-packd PRIVATE cxx_std_17)
 +target_include_directories(helm-packd PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
-+target_link_libraries(helm-packd PRIVATE ixwebsocket ocpn::sqlite)
++target_link_libraries(helm-packd PRIVATE ixwebsocket ocpn::sqlite ocpn::rapidjson)
 +
 +# ---- Helm one-origin server: nav WS + S-52 tile HTTP + static UI on ONE port ----
 +add_executable(helm-server helm_server.cpp)

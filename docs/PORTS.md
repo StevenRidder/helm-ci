@@ -9,7 +9,7 @@ machine, boat server, or demo process is safe to stop or replace.
 |------|---------|-------|
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
 | 8090 | Optional backend service | Weather, places, and community/LLM prototype endpoints. |
-| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by `pipeline/mbtiles_server.py` today; OFFLINE-16 is introducing the C++ `helm-packd` replacement behind the same contract. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
+| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by C++ `helm-packd`; `pipeline/mbtiles_server.py` remains the Python reference/oracle. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
 | 8093 | Optional weather gateway | `services/wx` value-tile gateway (Open-Meteo). Must use :8093, never :8091 (WX-15). |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
 | 9001+ | Private development servers | Recommended for local agent/test runs. |
@@ -26,12 +26,13 @@ For BYO MBTiles or PMTiles, point the helper at a local directory:
 
 ```bash
 HELM_MBTILES_DIR="$HOME/Charts/local-packs" \
-  python3 pipeline/mbtiles_server.py 8091
+  /path/to/build/cli/helm-packd 8091
 ```
 
-OFFLINE-16 is moving this runtime helper to C++ as `helm-packd`. Until parity is
-complete, treat `pipeline/mbtiles_server.py` as the reference/oracle and run
-`helm-packd` only on a private test port:
+OFFLINE-16/17 moved the runtime helper to C++ as `helm-packd`: MBTiles/PMTiles
+serving, `/catalog`, `/layers`, `/prefetch`, `/bundle`, and public
+sidecar/freshness/coverage/inspection metadata. Treat `pipeline/mbtiles_server.py`
+as the reference/oracle and use private test ports for agent runs:
 
 ```bash
 HELM_OCPN_DIR=/private/tmp/helm-offline16-ocpn \
@@ -47,7 +48,8 @@ helper exposes `GET /prefetch` for route-corridor or bbox tile manifests that a
 client can use to warm its local cache without mutating the packs. `GET /layers`
 exposes the local maritime layer inventory: chart/basemap/depth/weather/places/S-100-style
 metadata with coverage, freshness, source, confidence, and sample/probe handles for client
-inspection without leaking private filesystem paths.
+inspection without leaking private filesystem paths. `GET /bundle` groups those
+packs plus the prefetch advice into a `helm.region_bundle.manifest.v1` response.
 
 If packs are temporarily on another Mac, use the cache-backed proxy instead
 of a thin one-hop proxy:

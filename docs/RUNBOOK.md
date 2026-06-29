@@ -141,15 +141,19 @@ Do not bake against the shared live `:8080` screen.
 For a direct local acceptance run, start only the local pack helper and open the
 Chart Packs panel in the browser. The UI discovers `/catalog`, lists each local
 pack, and activates the selected pack as the MapLibre raster/PMTiles source.
-Use `basemapPort` when the helper is not on the default `:8091`:
+Use C++ `helm-packd` for runtime checks and `basemapPort` when the helper is not
+on the default `:8091`:
 
 ```bash
 HELM_MBTILES_DIR="$HOME/.helm/basemaps/fiji-tcl2407" \
-  python3 pipeline/mbtiles_server.py 9120
+  /private/tmp/helm-offline/build/cli/helm-packd 9120
 
 python3 web/serve.py 9100
 # open http://127.0.0.1:9100/?basemapPort=9120
 ```
+
+`pipeline/mbtiles_server.py` remains the Python reference/oracle for manifest
+evolution and quick stdlib-only checks.
 
 The same helper can describe the whole local offline region without touching
 client storage:

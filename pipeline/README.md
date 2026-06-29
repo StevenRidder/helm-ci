@@ -10,7 +10,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 | `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
 | `region_bundle.py` | `/catalog` JSON + route/bbox → region bundle manifest + delta plan | python3 (stdlib) |
 | `layer_inventory.py` | `/catalog` + optional env bundles → boat-local chart/weather/depth/place inventory | python3 (stdlib) |
-| `mbtiles_server.py` | Current Python reference/oracle for BYO MBTiles/PMTiles local serving while OFFLINE-16 ports runtime serving to C++ `helm-packd` | python3 (stdlib) |
+| `mbtiles_server.py` | Python reference/oracle for BYO MBTiles/PMTiles local serving; runtime serving is moving to C++ `helm-packd` | python3 (stdlib) |
 | `fetch_wind.py` | gridded wind → `wind.json` (particles) + `wind_points.geojson` (arrows) | python3 (stdlib) |
 | `extract_depth.sh` | NOAA ENC S-57 → `depare`/`depcnt`/`soundg` GeoJSON (depth-on-satellite) | GDAL (`brew install gdal`) |
 
@@ -45,13 +45,13 @@ http://localhost:8080.
 - Be polite: `fetch_tiles.py` sleeps between requests; cap zoom for big areas (size grows ~4× per zoom).
 - S-52 region packs are point-in-time rendered snapshots. Repeat `--palette` to bake day/dusk/night
   sibling PMTiles in one run. The baker stamps source edition, render date, freshness window,
-  requested-vs-baked tile counts, coverage gaps, and palette group metadata; `mbtiles_server.py`
+  requested-vs-baked tile counts, coverage gaps, and palette group metadata; `helm-packd`
   exposes those as `/catalog` `staleness`, `coverage`, and `warnings` fields for the UI.
 - Local MBTiles/PMTiles may also have a sibling `*.metadata.json` or `*.sidecar.json`.
   The server exposes allow-listed source/license/freshness/coverage fields plus an
   explicit `inspection` policy, so raster taps can show pack metadata honestly
   without pretending pixels are S-57/S-101 objects.
-- `mbtiles_server.py` also exposes `GET /prefetch` for route-corridor or bbox tile
+- The local pack service exposes `GET /prefetch` for route-corridor or bbox tile
   manifests, e.g. `/prefetch?route=178.0,-18.0;178.3,-17.7&radius_nm=2&minzoom=8&maxzoom=12`.
   It is an advisory manifest for warming caches; it does not download or mutate packs.
 - `HELM_ENV_BUNDLE_MANIFESTS=/path/to/manifest.json[,/path/to/other.json]` lets the
@@ -59,12 +59,12 @@ http://localhost:8080.
   in `GET /layers` and `GET /prefetch`. The JSON response contains public manifest
   facts, coverage, valid times, freshness/cache-only policy, layer list, and sample
   handles, but never the private source file path.
-- OFFLINE-16 introduces `helm-packd`, a small C++ replacement for the runtime
-  portions of `mbtiles_server.py`. The first C++ slice serves `/health`,
-  `/catalog`, MBTiles XYZ tile URLs, and PMTiles `HEAD`/HTTP `Range` from the
-  same local pack directory. Keep `mbtiles_server.py` as the broad oracle until
-  the C++ daemon has full parity; use `engine/test-packd.sh` for the C++ fixture
-  smoke once `engine/bootstrap.sh` has built `build/cli/helm-packd`.
+- OFFLINE-16 introduced `helm-packd`, a small C++ replacement for the runtime
+  portions of `mbtiles_server.py`. OFFLINE-17 extends it with `/layers`,
+  `/prefetch`, `/bundle`, sidecar/source/freshness/coverage/inspection metadata,
+  and environmental-bundle visibility. Keep `mbtiles_server.py` as the broad
+  oracle/reference for manifest evolution; use `engine/test-packd.sh` for the
+  C++ fixture smoke once `engine/bootstrap.sh` has built `build/cli/helm-packd`.
 - `region_bundle.py` and `GET /bundle` publish `helm.region_bundle.manifest.v1`:
   catalog metadata, route/bbox prefetch advice, chart/basemap/depth/places components,
   per-component fingerprints, stale/out-of-coverage status, and a delta-plan helper for
