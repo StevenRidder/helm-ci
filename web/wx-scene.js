@@ -163,9 +163,119 @@
     });
   }
   function setOpacity(o) { state.opacity = o; try { if (state.map && state.map.getLayer(LYR)) state.map.setPaintProperty(LYR, 'raster-opacity', o); } catch (e) {} }
-  function disable() { remove(); }
+
+  // ============================ PHASE 2: vector particles =========================================
+  // Animate wind/current particles from the PREPARED bundle uv tiles (not the gesture-fetching
+  // /velocity endpoint) — same bundle/time/coverage as the scalar colour field. We decode the uv
+  // component tiles and sample them onto a regular lat/lon grid (mercator-correct: we sample at
+  // lat/lon points, reading the right mercator pixel), then feed the existing GPU particle engine
+  // (window.__helmWind). Colour stays on the scalar field (Windy-style: coloured field + pale streaks).
+  var VGRID_NX = 80, VGRID_NY = 60;             // velocity sample-grid resolution over the viewport
+  var pState = { on: false, layer: null, moveHandler: null, debounce: null, token: 0 };
+  var valueTileCache = {};                      // url -> Promise<{w,h,vals(Float32, NaN=NODATA)}|null>
+
+  function fetchValueTile(url, scale, offset) {
+    if (valueTileCache[url]) return valueTileCache[url];
+    var p = fetch(url).then(function (r) {
+      if (r.status === 404) return null;
+      if (!r.ok) throw new Error('uv tile HTTP ' + r.status);
+      return r.arrayBuffer().then(function (buf) {
+        return createImageBitmap(new Blob([buf], { type: 'image/png' })).then(function (img) {
+          var w = img.width || 256, h = img.height || 256, cv = makeCanvas(w, h), cx = cv.getContext('2d', { willReadFrequently: true });
+          cx.drawImage(img, 0, 0); if (img.close) try { img.close(); } catch (e) {}
+          var d = cx.getImageData(0, 0, w, h).data, vals = new Float32Array(w * h), C = codec();
+          for (var i = 0, j = 0; i < d.length; i += 4, j++) {
+            var v = C.decodeRGBA(d[i], d[i + 1], d[i + 2], d[i + 3], scale, offset);
+            vals[j] = (v == null ? NaN : v);     // honest NODATA -> NaN (not finite -> particle won't advect)
+          }
+          return { w: w, h: h, vals: vals };
+        });
+      });
+    }).catch(function () { return null; });
+    valueTileCache[url] = p; return p;
+  }
+  function sampleTileSet(tiles, lon, lat, z) {
+    var C = codec(), p = C.lonLatToPixel(lon, lat, z, 256), g = tiles[p.x + '/' + p.y];
+    if (!g || !g.vals) return NaN;
+    var v = C.bilinear(g.vals, g.w, g.h, p.px, p.py);
+    return (v == null ? NaN : v);
+  }
+  function assign(a, b) { for (var k in b) if (b.hasOwnProperty(k)) a[k] = b[k]; return a; }
+
+  // Assemble the GRIB-JSON velocity array (u,v components) the particle engine ingests.
+  function buildVelocity(layer) {
+    var m = state.map, manifest = state.manifest, C = codec();
+    var vf = layerCfg(manifest, layer).vectorField;
+    if (!m || !vf || !vf.u || !vf.v) return Promise.resolve(null);
+    var lod = lodRange(manifest, layer);
+    var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m.getZoom())));
+    var b = m.getBounds(), W = b.getWest(), E = b.getEast(), S = b.getSouth(), N = b.getNorth();
+    var cov = (manifest.coverage || {}).bbox;
+    if (cov && !cov.crossesAntimeridian) { W = Math.max(W, cov.west); E = Math.min(E, cov.east); S = Math.max(S, cov.south); N = Math.min(N, cov.north); }
+    if (!(E > W && N > S)) return Promise.resolve(null);          // viewport doesn't overlap coverage
+    var vt = state.validTimeId, list = C.tilesForBbox(z, [W, S, E, N]);
+    var uTpl = svc() + vf.u.urlTemplate.replace('{validTimeId}', vt);
+    var vTpl = svc() + vf.v.urlTemplate.replace('{validTimeId}', vt);
+    function url(tpl, t) { return tpl.replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y); }
+    function gather(tpl, so) {
+      return Promise.all(list.map(function (t) {
+        return fetchValueTile(url(tpl, t), so.scale, so.offset).then(function (g) { return { k: t.x + '/' + t.y, g: g }; });
+      })).then(function (rows) { var mp = {}; rows.forEach(function (r) { if (r.g) mp[r.k] = r.g; }); return mp; });
+    }
+    return Promise.all([gather(uTpl, vf.u), gather(vTpl, vf.v)]).then(function (sets) {
+      var uT = sets[0], vT = sets[1], NX = VGRID_NX, NY = VGRID_NY, us = new Array(NX * NY), vs = new Array(NX * NY), any = false;
+      for (var j = 0; j < NY; j++) {
+        var lat = N - (N - S) * (j / (NY - 1));
+        for (var i = 0; i < NX; i++) {
+          var lon = W + (E - W) * (i / (NX - 1));
+          var u = sampleTileSet(uT, lon, lat, z), v = sampleTileSet(vT, lon, lat, z);
+          us[j * NX + i] = u; vs[j * NX + i] = v;
+          if (u === u && v === v) any = true;                     // NaN !== NaN
+        }
+      }
+      if (!any) return null;
+      var hdr = { nx: NX, ny: NY, lo1: W, la1: N, lo2: E, la2: S, dx: (E - W) / (NX - 1), dy: (N - S) / (NY - 1) };
+      return [{ header: assign({ parameterNumber: 2 }, hdr), data: us }, { header: assign({ parameterNumber: 3 }, hdr), data: vs }];
+    });
+  }
+
+  function refreshParticles() {
+    var w = global.__helmWind; if (!pState.on || !w) return;
+    var tok = ++pState.token;
+    buildVelocity(pState.layer).then(function (vel) {
+      if (tok !== pState.token || !pState.on) return;             // a newer move superseded this build
+      if (!vel) { try { w.setVisible(false); } catch (e) {} return; }
+      w.setData(vel); w.setVisible(true);
+    }).catch(function (e) { if (log.warn) log.warn.call(log, '[wx-scene] particle build failed: ' + ((e && e.message) || e)); });
+  }
+  function onMove() { clearTimeout(pState.debounce); pState.debounce = setTimeout(refreshParticles, 300); }   // refetch from cache only — no upstream
+  function startParticles(map, layer) {
+    var w = global.__helmWind; if (!w) return Promise.resolve(false);
+    pState.on = true; pState.layer = layer;
+    if (!pState.moveHandler) { pState.moveHandler = onMove; map.on('moveend', pState.moveHandler); }
+    return buildVelocity(layer).then(function (vel) {
+      if (vel && pState.on) { w.setData(vel); w.setVisible(true); }
+      return !!vel;
+    }).catch(function () { return false; });
+  }
+  function stopParticles() {
+    pState.on = false; pState.layer = null; pState.token++;
+    var w = global.__helmWind; if (w) try { w.setVisible(false); } catch (e) {}
+    if (pState.moveHandler && state.map) { try { state.map.off('moveend', pState.moveHandler); } catch (e) {} pState.moveHandler = null; }
+  }
+
+  // Unified entry: scalar colour field + (vector layers) particles, all from the prepared bundle.
+  function enable(map, opts) {
+    opts = opts || {};
+    return enableScalar(map, opts).then(function (info) {
+      var L = layerCfg(state.manifest, info.layer);
+      if (L.vectorField || L.kind === 'vector') return startParticles(map, info.layer).then(function (ok) { info.particles = ok; return info; });
+      stopParticles(); return info;
+    });
+  }
+  function disable() { stopParticles(); remove(); }
 
   global.HelmWxScene = {
-    enableScalar: enableScalar, disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
+    enable: enable, enableScalar: enableScalar, disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
   };
 })(typeof window !== 'undefined' ? window : this);
