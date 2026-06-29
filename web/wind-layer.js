@@ -42,31 +42,12 @@
     minVisibleZoomStep: 0  // reserved
   };
 
-  // Speed color ramp (knots -> rgb). teal -> green -> amber -> red.
-  // Stops are [knots, [r,g,b]].
-  var RAMP = [
-    [0,  [ 56, 189, 248]],  // calm: light teal  (#38bdf8-ish)
-    [8,  [ 45, 212, 191]],  // teal/green
-    [16, [250, 204,  21]],  // amber
-    [24, [249, 115,  22]],  // orange
-    [34, [239,  68,  68]],  // red (near gale)
-    [48, [217,  33, 154]]   // magenta (storm) — matches route accent
-  ];
-
+  // Wind-speed colour (knots -> css) comes from the single shared ramp (web/wx-ramp.js) so the
+  // particles match the scalar field EXACTLY (CLIENT-14) — no local ramp copy to drift out of sync.
   function rampColor(spd) {
-    if (!(spd > 0)) spd = 0;
-    for (var i = 1; i < RAMP.length; i++) {
-      if (spd <= RAMP[i][0]) {
-        var a = RAMP[i - 1], b = RAMP[i];
-        var t = (spd - a[0]) / (b[0] - a[0] || 1);
-        var r = Math.round(a[1][0] + (b[1][0] - a[1][0]) * t);
-        var g = Math.round(a[1][1] + (b[1][1] - a[1][1]) * t);
-        var bl = Math.round(a[1][2] + (b[1][2] - a[1][2]) * t);
-        return 'rgb(' + r + ',' + g + ',' + bl + ')';
-      }
-    }
-    var last = RAMP[RAMP.length - 1][1];
-    return 'rgb(' + last[0] + ',' + last[1] + ',' + last[2] + ')';
+    var R = (typeof window !== 'undefined') && window.HelmWxRamp;
+    if (R) return R.rampCss('wind', spd > 0 ? spd : 0);
+    return 'rgb(255,255,255)';   // wx-ramp.js must load first; white reads as visibly-wrong, not silently off-palette
   }
 
   // Precompute a small palette of color buckets so we can batch strokes by

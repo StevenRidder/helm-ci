@@ -16,14 +16,17 @@
   // pipeline/fetch_weather.py so Live and the pipeline agree. Marine layers (waves/swell/sst/current)
   // use a different endpoint and stay on Standard for now.
   var LAYERS = {
-    wind:     { v: 'wind_speed_10m', dir: 'wind_direction_10m', vector: true, unit: 'kn', stops: [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],[22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]] },
-    gust:     { v: 'wind_gusts_10m', unit: 'kn', stops: [[0,[56,189,248]],[10,[45,212,191]],[20,[250,204,21]],[30,[249,115,22]],[42,[239,68,68]],[60,[217,33,154]]] },
-    rain:     { v: 'precipitation', unit: 'mm', stops: [[0,[80,160,220,0]],[0.2,[90,180,255,0.55]],[2,[40,120,235,0.8]],[6,[120,90,235,0.85]],[15,[175,60,200,0.9]]] },
-    temp:     { v: 'temperature_2m', unit: '°C', stops: [[-10,[70,90,200]],[0,[80,180,235]],[10,[70,200,130]],[20,[245,205,60]],[30,[240,120,40]],[42,[210,40,40]]] },
-    clouds:   { v: 'cloud_cover', unit: '%', stops: [[0,[150,170,190,0]],[40,[200,210,222,0.4]],[80,[235,240,246,0.75]],[100,[250,252,255,0.9]]] },
-    pressure: { v: 'pressure_msl', unit: 'hPa', stops: [[980,[120,80,200]],[1000,[80,160,230]],[1013,[120,205,140]],[1025,[240,200,80]],[1040,[230,110,55]]] },
-    cape:     { v: 'cape', unit: 'J/kg', stops: [[0,[56,160,200,0]],[300,[120,200,120,0.5]],[1000,[245,205,60,0.8]],[2500,[240,120,40,0.9]],[4000,[220,40,40,0.95]]] },
+    wind:     { v: 'wind_speed_10m', dir: 'wind_direction_10m', vector: true, unit: 'kn' },
+    gust:     { v: 'wind_gusts_10m', unit: 'kn' },
+    rain:     { v: 'precipitation', unit: 'mm' },
+    temp:     { v: 'temperature_2m', unit: '°C' },
+    clouds:   { v: 'cloud_cover', unit: '%' },
+    pressure: { v: 'pressure_msl', unit: 'hPa' },
+    cape:     { v: 'cape', unit: 'J/kg' },
   };
+  // Stops come from the single shared ramp (web/wx-ramp.js) -- not a local copy -- so Live and the
+  // particles agree by construction (CLIENT-14). Degrade to no-stops if wx-ramp.js is somehow absent.
+  Object.keys(LAYERS).forEach(function (k) { if (window.HelmWxRamp) LAYERS[k].stops = HelmWxRamp.stopsFor(k); });
   function supports(layer) { return !!LAYERS[layer]; }
 
   var st = { map: null, on: false, layer: 'wind', token: 0, field: null, opacity: 0.72, notify: function () {}, onState: null, handler: null, debounce: null, lastKey: '' };

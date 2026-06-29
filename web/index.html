@@ -737,6 +737,7 @@
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="offline-packs.js"></script><!-- OFFLINE-4: BYO MBTiles/PMTiles catalog + pack selector -->
 <script src="tooltip.js"></script><!-- fast custom hover tooltips (replaces the slow ~1.5s native title delay) -->
+<script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
 <script src="field-layer.js"></script>
 <script src="radar.js"></script>
@@ -1039,8 +1040,7 @@
   const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
-  const WINDY_WIND = [[0,[98,113,183]],[5,[57,131,168]],[10,[52,171,151]],[16,[123,183,80]],
-                      [22,[225,200,60]],[30,[232,130,50]],[40,[214,70,74]],[55,[150,60,150]]];
+  const WINDY_WIND = (window.HelmWxRamp ? HelmWxRamp.stopsFor('wind') : []);   // CLIENT-14: single shared ramp source (was a duplicated literal)
   const fieldOpts = n => n === 'wind' ? { stops: WINDY_WIND } : undefined;
   let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
   const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
