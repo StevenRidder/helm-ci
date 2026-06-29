@@ -45,6 +45,24 @@ stays device-local.
 | POST | `/giveback/nfl/push` | push own position to NFL (mock-first) |
 | POST | `/giveback/osm-note` | OSM Note give-back (scaffold-first) |
 
+## Probe contract
+
+`probe_contract.py` defines the backend `sample(lat, lon, t)` bar for probeable
+layers. A layer is not considered complete for the spacetime probe unless it
+registers a `ProbeLayer` and returns a validated `LayerSample` with:
+
+- `productId`, `datasetName`, `producer`, and trace/source metadata
+- freshness, confidence, coverage, horizon, and valid time where applicable
+- an explicit status: `ok`, `not_available`, `not_implemented`,
+  `out_of_coverage`, or `error`
+
+`probe_layers.py` registers the current backend faces for weather, climate,
+depth, AIS, and tides. The tides face is intentionally registered as
+`not_implemented`, so missing data is visible and testable instead of silently
+dropping from the fused context. `context.resolve_context` keeps its existing
+layer payload shape and adds a nested `sample` provenance envelope to each
+probeable layer.
+
 ## The ReAct agents ([agents.py](agents.py))
 
 A reason→act→observe tool-calling loop that **researches instead of hallucinating**. Tools:

@@ -12,19 +12,11 @@ single call. Every layer is tagged with its source and the NFL layer is explicit
 unless experimental/partnership — honesty preserved end to end.
 """
 import store
-from agents import get_weather
+from probe_contract import sample_metadata
+from probe_layers import build_default_registry
 
 
-def _valid_at(weather, t):
-    """Pick the forecast hour nearest the requested ISO time t from the weather tool's series."""
-    series = weather.get("next") or []
-    if not t or not series:
-        return weather.get("now"), None
-    # series 't' are ISO strings (same TZ from Open-Meteo): first hour at/after t, else the
-    # last available hour (clamped). We return that hour's REAL time so the slice card shows
-    # when the forecast is actually valid — never the requested time dressed up as a forecast.
-    chosen = next((h for h in series if h.get("t") and h["t"] >= t), series[-1])
-    return chosen, chosen.get("t")
+PROBES = build_default_registry()
 
 
 def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False, layers=None):
@@ -38,13 +30,9 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
     L, sources = {}, []
 
     if on("weather"):
-        weather = get_weather(lat, lon)                 # real (Open-Meteo) at runtime
-        wx_at, wx_time = _valid_at(weather, t)
-        L["weather"] = {"validAt": wx_time, "atTime": wx_at, "now": weather.get("now"),
-                        "sea": weather.get("sea"), "sst": weather.get("sst"),
-                        "current": weather.get("current"), "series": weather.get("next"),
-                        "horizon": "good ~0-7d; beyond is climatology",
-                        "error": weather.get("windError") or weather.get("seaError")}
+        sample = PROBES.sample("weather", lat, lon, t)
+        L["weather"] = dict(sample["value"], sample=sample_metadata(sample))
+        wx_time = sample.get("validTime")
         sources.append({"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"})
     else:
         wx_time = None
@@ -73,8 +61,8 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
             L["saved"] = saved_near
 
     if on("climate"):
-        L["climate"] = {"note": "Seasonal & cyclone context (climatology tier — stub).",
-                        "source": {"title": "NOAA climatology / pilot charts", "url": "https://www.noaa.gov", "kind": "open"}}
+        sample = PROBES.sample("climate", lat, lon, t)
+        L["climate"] = dict(sample["value"], sample=sample_metadata(sample))
         sources.append(L["climate"]["source"])
 
     if on("nfl"):
@@ -84,16 +72,16 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
                     {"available": True, "locked": False, "note": "NFL enrichment active"})
 
     if on("depth"):
-        nd = store.nearest_charted_depth(lat, lon)
-        L["depth"] = {"nearestChartedM": round(nd[1], 1) if nd else None,
-                      "nearFeature": nd[2] if nd else None,
-                      "note": "Charted-depth proxy; read exact soundings on the S-52 chart.",
-                      "source": {"title": "NOAA ENC (S-52)", "kind": "open"}}
+        sample = PROBES.sample("depth", lat, lon, t)
+        L["depth"] = dict(sample["value"], sample=sample_metadata(sample))
 
     if on("ais"):
-        targets = store.ais_near(lat, lon)
-        L["ais"] = {"count": len(targets), "targets": targets, "source": "sample",
-                    "note": "sample AIS — the engine provides real decode + CPA/TCPA"}
+        sample = PROBES.sample("ais", lat, lon, t)
+        L["ais"] = dict(sample["value"], sample=sample_metadata(sample))
+
+    if on("tides"):
+        sample = PROBES.sample("tides", lat, lon, t)
+        L["tides"] = {"sample": sample_metadata(sample), "note": sample.get("note")}
 
     if on("chart"):
         L["chart"] = {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",
@@ -107,4 +95,3 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
         "sources": sources,
         "disclaimer": "Fused from layered, cited sources. Supplemental — verify on official charts.",
     }
-

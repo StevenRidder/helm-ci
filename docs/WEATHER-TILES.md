@@ -103,9 +103,9 @@ invented numbers as a real forecast. `freshness` is **data-age** (when the model
 kept distinct from `validTime` (the forecast time being sampled).
 
 > **Argument order:** this honours the doc contract `sample(lat, lon, t)` — **lat first**. Note that
-> `web/wind-layer.js`'s particle sampler is `sample(lon, lat)` (lon first). AI-5/AI-17, when they
-> build the enforceable probe-contract base class, should standardise on the doc's lat-first order;
-> this layer already does.
+> `web/wind-layer.js`'s particle sampler is `sample(lon, lat)` (lon first). The backend
+> `probe_contract.py` / `probe_layers.py` contract standardises probe layers on this doc's
+> lat-first order; this layer already does.
 
 ROUTING-3 calls it per point along a worldline `W(P(t), t)`; AI-5 fuses it with the other layers'
 `sample()` faces. Because every sample carries `source` + `freshness` + `horizon`/`confidence`, a
