@@ -52,6 +52,9 @@ from fastapi.responses import JSONResponse, PlainTextResponse
 # ------------------------------------------------------------------ config
 VMAX24 = 0xFFFFFF
 ENCODING = "helm-wxv1"
+BUNDLE_SCHEMA = "helm.env.bundle.v1"
+BUNDLE_ID = "open-meteo/latest"
+BUNDLE_TITLE = "Open-Meteo live environmental bundle"
 
 
 def _load_dotenv():
@@ -144,6 +147,26 @@ LAYERS: Dict[str, dict] = {
 }
 MODEL_NAME = "Open-Meteo (GFS-seamless)"
 MARINE_MODEL = "Open-Meteo Marine"
+BUNDLE_LAYER_ORDER = [
+    "wind", "gust", "rain", "temp", "pressure", "clouds", "cape",
+    "waves", "swell", "current", "sst",
+]
+S100_LAYER_REFS = {
+    # S-41X weather/wave products are S-100-family overlays. Open-Meteo is NOT an official S-100
+    # source; these refs keep Helm's metadata/probe shape aligned so an official S-413/S-412
+    # adapter can swap in behind the same bundle contract later.
+    "wind":     {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "wind condition"},
+    "gust":     {"productIdentifier": "S-412", "productName": "Marine Weather Warnings", "role": "wind-gust hazard cue"},
+    "rain":     {"productIdentifier": "S-412", "productName": "Marine Weather Warnings", "role": "precipitation hazard cue"},
+    "temp":     {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "air-temperature condition"},
+    "pressure": {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "pressure condition"},
+    "clouds":   {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "cloud-cover condition"},
+    "cape":     {"productIdentifier": "S-412", "productName": "Marine Weather Warnings", "role": "convective hazard cue"},
+    "waves":    {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "wave-height condition"},
+    "swell":    {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "swell-height condition"},
+    "sst":      {"productIdentifier": "S-413", "productName": "Marine Weather and Wave Conditions", "role": "sea-surface-temperature condition"},
+    "current":  {"productIdentifier": "S-111", "productName": "Surface Currents", "role": "surface-current condition"},
+}
 
 
 def layer_scale_offset(cfg: dict) -> Tuple[float, float]:
@@ -596,6 +619,222 @@ def manifest_for(layer: str) -> dict:
     }
 
 
+def _now_iso() -> str:
+    return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _warm_region_hint() -> Optional[dict]:
+    raw = os.environ.get("HELM_WX_WARM_BBOX", "").strip()
+    if not raw:
+        return None
+    try:
+        w, s, e, n = [float(x) for x in raw.split(",")]
+    except Exception:
+        return None
+    return {
+        "bbox": [w, s, e, n],
+        "layers": [x.strip() for x in os.environ.get("HELM_WX_WARM_LAYERS", "current,wind").split(",") if x.strip()],
+        "resolutionDegrees": REGION_RES,
+        "ttlSeconds": REGION_TTL,
+    }
+
+
+def _registered_warm_regions() -> List[dict]:
+    out = []
+    now = time.time()
+    for layer, reg in sorted(_regions.items()):
+        w, s, e, n = reg["bbox"]
+        out.append({
+            "layer": layer,
+            "bbox": [w, s, e, n],
+            "ageSeconds": max(0, int(now - reg["t"])),
+            "ttlSeconds": REGION_TTL,
+            "grid": {"nx": reg["grid"].nx, "ny": reg["grid"].ny},
+            "hasVector": bool(reg.get("vel")),
+        })
+    return out
+
+
+def s100_ref_for(layer: str) -> dict:
+    ref = S100_LAYER_REFS.get(layer, {})
+    return {
+        "aligned": True,
+        "officialProduct": False,
+        "advisorySource": "open-meteo",
+        "productIdentifier": ref.get("productIdentifier"),
+        "productName": ref.get("productName"),
+        "role": ref.get("role"),
+        "posture": (
+            "Metadata is shaped for S-100-family adapters, but this Open-Meteo layer is not an "
+            "official S-100 dataset and must stay labelled advisory/not-for-navigation."
+        ),
+    }
+
+
+def bundle_layer_for(layer: str) -> dict:
+    cfg = LAYERS[layer]
+    scalar_manifest = manifest_for(layer)
+    layer_bundle = {
+        "id": layer,
+        "kind": "vector" if cfg.get("vector") else "scalar",
+        "unit": cfg["unit"],
+        "source": "open-meteo-marine" if cfg.get("marine") else "open-meteo-forecast",
+        "model": MARINE_MODEL if cfg.get("marine") else MODEL_NAME,
+        "providerVariable": cfg["v"],
+        "directionVariable": cfg.get("dir"),
+        "valueEncoding": {
+            "encoding": ENCODING,
+            "bits": scalar_manifest["bits"],
+            "scale": scalar_manifest["scale"],
+            "offset": scalar_manifest["offset"],
+            "nodataAlpha": scalar_manifest["nodata_alpha"],
+            "hasAlpha": scalar_manifest["has_alpha"],
+        },
+        "range": {"min": cfg["vmin"], "max": cfg["vmax"], "unit": cfg["unit"]},
+        "ramp": cfg["stops"],
+        "fieldTiles": {
+            "type": "value-raster-tile",
+            "tileMatrixSet": "WebMercatorQuad",
+            "tileSize": 256,
+            "minzoom": 0,
+            "maxzoom": DATA_Z_MAX,
+            "urlTemplate": f"/{layer}/{{z}}/{{x}}/{{y}}.png",
+            "relativeTemplate": f"{layer}/{{z}}/{{x}}/{{y}}.png",
+        },
+        "displayTiles": {
+            "optional": True,
+            "status": "not-materialized-yet",
+            "reason": "WX-19 should render colours/particles client-side from numeric field tiles.",
+        },
+        "s100": s100_ref_for(layer),
+        "probe": {
+            "sample": f"{layer}.sample(lon,lat,validTime)",
+            "returns": ["value", "unit", "sourceRef", "freshness", "confidence", "coverage"],
+        },
+        "disclaimer": "Forecast — cross-reference official sources. NOT FOR NAVIGATION.",
+    }
+    if cfg.get("vector"):
+        layer_bundle["vectorField"] = {
+            "type": "bbox-json-compatibility",
+            "components": ["u", "v"],
+            "speedUnit": cfg["unit"],
+            "directionConvention": "toward" if cfg.get("dir_to") else "from",
+            "urlTemplate": f"/velocity/{layer}?w={{west}}&s={{south}}&e={{east}}&n={{north}}",
+            "cacheKey": "snapped-bbox",
+            "preparedComponentTiles": {
+                "status": "planned-for-WX-18",
+                "type": "component-tiles",
+                "u": {
+                    "encoding": ENCODING,
+                    "range": {"min": -float(cfg["vmax"]), "max": float(cfg["vmax"])},
+                    "urlTemplate": f"layers/{layer}/vector/{{validTimeId}}/u/{{z}}/{{x}}/{{y}}.png",
+                },
+                "v": {
+                    "encoding": ENCODING,
+                    "range": {"min": -float(cfg["vmax"]), "max": float(cfg["vmax"])},
+                    "urlTemplate": f"layers/{layer}/vector/{{validTimeId}}/v/{{z}}/{{x}}/{{y}}.png",
+                },
+            },
+        }
+    return layer_bundle
+
+
+def environment_bundle_manifest() -> dict:
+    warm_hint = _warm_region_hint()
+    return {
+        "schema": BUNDLE_SCHEMA,
+        "bundleId": BUNDLE_ID,
+        "title": BUNDLE_TITLE,
+        "productFamily": "met-ocean",
+        "encoding": ENCODING,
+        "generatedAt": _now_iso(),
+        "source": {
+            "provider": "open-meteo",
+            "licensing": "caller must verify production/commercial terms separately",
+            "forecastEndpoint": FORECAST,
+            "marineEndpoint": MARINE,
+            "advisoryOnly": True,
+        },
+        "run": {
+            "mode": "latest-frame-compatibility",
+            "model": MODEL_NAME,
+            "marineModel": MARINE_MODEL,
+            "runTime": None,
+            "runLabel": "latest",
+            "validTimes": [],
+            "frames": 1,
+            "future": "WX-18 materializes real model-run times from prepared regional/global bundles.",
+        },
+        "coverage": {
+            "crs": "OGC:CRS84",
+            "bbox": [-180.0, -85.0, 180.0, 85.0],
+            "global": True,
+            "wrap": "antimeridian",
+            "defaultWarmRegion": warm_hint,
+            "registeredWarmRegions": _registered_warm_regions(),
+        },
+        "lod": {
+            "tileMatrixSet": "WebMercatorQuad",
+            "tileSize": 256,
+            "dataMaxZoom": DATA_Z_MAX,
+            "fetchZoom": FETCH_Z,
+            "levels": {
+                "overview": {"minzoom": 0, "maxzoom": min(2, DATA_Z_MAX), "purpose": "instant whole-ocean view"},
+                "basin": {"minzoom": 3, "maxzoom": min(FETCH_Z, DATA_Z_MAX), "purpose": "passage-scale planning"},
+                "regional": {"minzoom": min(FETCH_Z + 1, DATA_Z_MAX), "maxzoom": DATA_Z_MAX,
+                             "purpose": "boat-region native grid detail"},
+            },
+            "parentFallback": True,
+            "overzoom": "renderer may overzoom cached parent/native tiles beyond dataMaxZoom without upstream fetches",
+        },
+        "cachePolicy": {
+            "targetInvariant": "pan, zoom, scrub, and layer toggles read prepared local/cache data only",
+            "upstreamFetchesAllowedDuringGesture": False,
+            "refreshOnly": True,
+            "currentCompatibility": (
+                "Existing value-tile endpoints may fetch on cache miss until WX-18 moves upstream ingest "
+                "to a model-run bundle baker."
+            ),
+            "ttlSeconds": TTL,
+            "cooldownSeconds": COOLDOWN,
+            "regionTtlSeconds": REGION_TTL,
+            "regionResolutionDegrees": REGION_RES,
+            "gridPointsPerFetchCell": GRID_N,
+            "concurrency": CONCURRENCY,
+            "minIntervalSeconds": MIN_INTERVAL,
+        },
+        "renderPolicy": {
+            "renderer": "client-webgpu-or-webgl-field-scene",
+            "scalarColour": "colourise from numeric field tiles using fixed per-layer ramps",
+            "particles": "animate vector layers from uv-grid fields using the same bundle/time/coverage",
+            "displayTiles": "optional CDN/cache artifact, never the primary data contract",
+            "nodata": "alpha=0; never fabricate weather values",
+        },
+        "sampleContract": {
+            "schema": "helm.layer.sample.v1",
+            "requiredFields": ["value", "unit", "sourceRef", "freshness", "confidence", "coverage", "advisory"],
+            "routeWeather": "sample layer values along worldline W(position,time)",
+        },
+        "layers": {layer: bundle_layer_for(layer) for layer in BUNDLE_LAYER_ORDER if layer in LAYERS},
+        "disclaimer": "Forecast/advisory met-ocean data. Cross-reference official sources. NOT FOR NAVIGATION.",
+    }
+
+
+def bundle_index() -> dict:
+    return {
+        "schema": "helm.env.bundle.index.v1",
+        "generatedAt": _now_iso(),
+        "bundles": [{
+            "id": BUNDLE_ID,
+            "title": BUNDLE_TITLE,
+            "schema": BUNDLE_SCHEMA,
+            "manifest": "/bundles/open-meteo/latest/manifest.json",
+            "coverage": "global-with-regional-warm-cache",
+            "advisoryOnly": True,
+        }],
+    }
+
+
 # ------------------------------------------------------------------ FastAPI app
 app = FastAPI(title="helm-wx", version="0.1",
               description="Met-ocean / data-layer gateway — value-encoded weather tiles (helm-wxv1).")
@@ -610,10 +849,22 @@ def health():
 
 @app.get("/index.json")
 def index():
-    return {"encoding": ENCODING, "layers": {
+    return {"encoding": ENCODING, "bundles": {
+        BUNDLE_ID: "/bundles/open-meteo/latest/manifest.json",
+    }, "layers": {
         k: {"unit": v["unit"], "source": "open-meteo", "model": MARINE_MODEL if v.get("marine") else MODEL_NAME,
             "minzoom": 0, "maxzoom": DATA_Z_MAX, "frames": 1, "manifest": "%s/manifest.json" % k}
         for k, v in LAYERS.items()}}
+
+
+@app.get("/bundles/index.json")
+def bundles():
+    return bundle_index()
+
+
+@app.get("/bundles/open-meteo/latest/manifest.json")
+def bundle_manifest():
+    return environment_bundle_manifest()
 
 
 @app.get("/{layer}/manifest.json")

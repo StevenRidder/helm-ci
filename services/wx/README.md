@@ -14,11 +14,12 @@ It's the seam where map data layers enter Helm:
 
 - **Today** → Open-Meteo (free, no key).
 - **Next** → the **S-100 met-ocean** product specs plug in here unchanged for the client:
-  S-411 (wind/pressure), S-412 (waves), S-104 (water level), S-111 (surface currents) — sitting
-  beside the planned permissive **S-101** chart rebuild.
+  S-111 (surface currents) plus the S-412/S-413/S-414 weather/wave family — sitting beside the
+  planned permissive **S-101** chart rebuild.
 
-The client never changes — it just consumes `helm-wxv1` tiles over HTTP. Swap the fetcher behind
-the same tile contract and you've migrated a data layer off the legacy core.
+The client should not need product-specific branches — it consumes a bundle manifest, numeric field
+tiles, vector fields, source metadata, and a common probe contract. Swap the fetcher behind the same
+bundle contract and you've migrated a data layer off the legacy core.
 
 ## "Fetch once, serve many" (what Windy does)
 
@@ -32,8 +33,13 @@ serve stale cache if we have it, else fail honestly. **We never fabricate a valu
 
 ```
 GET /index.json                -> layer catalogue for the UI picker
+GET /bundles/index.json        -> environmental bundle catalogue
+GET /bundles/open-meteo/latest/manifest.json
+                              -> Windy-parity bundle contract (layers, LOD, cache, S-100 metadata)
 GET /{layer}/manifest.json     -> {encoding, scale, offset, ramp, bbox, minzoom, maxzoom, unit, ...}
 GET /{layer}/{z}/{x}/{y}.png   -> 256x256 RGBA; RGB = 24-bit value, A = NODATA mask (0 = no data)
+GET /velocity/{layer}?w=&s=&e=&n=
+                              -> u/v grids for vector layers (`wind`, `current`)
 GET /health
 ```
 
@@ -42,6 +48,37 @@ GET /health
 are **fixed per layer** so colours and values are comparable across every tile and session.
 
 Layers: `wind, gust, temp, pressure, rain, clouds, cape` (forecast API) + `sst, waves, swell, current` (Marine API).
+
+## Environmental bundles — `helm.env.bundle.v1` (WX-17)
+
+Full implementation contract: [`docs/ENVIRONMENTAL-BUNDLE-V1.md`](../../docs/ENVIRONMENTAL-BUNDLE-V1.md).
+
+The Windy-parity target is **model-run bundles**, not viewport-triggered API work:
+
+```text
+model: open-meteo / gfs / ecmwf / marine
+run:   explicit model run time (for real bundles) or "latest" compatibility mode
+times: t0..tN valid times
+layers: wind, gust, rain, temp, pressure, clouds, cape, waves, swell, current, sst
+tiles: numeric field tiles, vector uv fields, optional display tiles
+```
+
+`/bundles/open-meteo/latest/manifest.json` is the first executable contract for that shape. It
+advertises:
+
+- all met-ocean layers and their fixed value encodings/ramps;
+- scalar field-tile templates and vector u/v endpoints;
+- overview/basin/regional LOD with parent fallback and overzoom rules so world view and close zoom use
+  the same prepared data contract;
+- a cache invariant: **pan, zoom, scrub, and layer toggles read prepared local/cache data only**;
+- S-100 alignment metadata (`S-111` for currents, S-412/S-413/S-414 weather/wave family candidates)
+  without claiming Open-Meteo is an official S-100 dataset;
+- a `helm.layer.sample.v1` probe contract for route weather, pass advisors, AI explain-this, and future
+  native clients.
+
+Important honesty: the existing endpoints are still compatibility value tiles and may fetch on cache
+miss today. WX-18 moves ingest into an explicit baker/refresh path so the gesture path never hammers
+Open-Meteo. WX-19 consumes this bundle in the renderer instead of layering more raster hacks.
 
 ## Run
 

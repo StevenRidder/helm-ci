@@ -6,11 +6,14 @@ Validates the full bake -> PNG -> decode -> value round-trip, the manifest contr
     python3 test_wx.py
 """
 import asyncio
+import json
+from pathlib import Path
 import struct
 import sys
 import zlib
 
 import app
+from fastapi.testclient import TestClient
 
 
 def decode_png_rgba(png: bytes):
@@ -111,7 +114,44 @@ def main():
     check("scale" in m and "offset" in m and "ramp" in m, "manifest carries scale/offset/ramp")
     check("NOT FOR NAVIGATION" in m["disclaimer"], "manifest is honestly not-for-navigation")
 
-    # 5) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
+    # 5) environmental bundle contract: the root fix for Windy-parity cache/render work.
+    b = app.environment_bundle_manifest()
+    check(b["schema"] == "helm.env.bundle.v1", "bundle manifest uses helm.env.bundle.v1")
+    check(b["cachePolicy"]["upstreamFetchesAllowedDuringGesture"] is False,
+          "bundle contract forbids upstream API fetches during pan/zoom/scrub")
+    check(b["lod"]["parentFallback"] is True and "overzoom" in b["lod"],
+          "bundle contract defines all-zoom parent fallback/overzoom behaviour")
+    check(set(app.BUNDLE_LAYER_ORDER).issubset(set(b["layers"].keys())),
+          "bundle advertises the full met-ocean layer catalog")
+    wind = b["layers"]["wind"]
+    current = b["layers"]["current"]
+    check(wind["fieldTiles"]["urlTemplate"] == "/wind/{z}/{x}/{y}.png",
+          "wind scalar colour field remains a numeric field-tile contract")
+    check(wind["vectorField"]["type"] == "bbox-json-compatibility" and wind["vectorField"]["urlTemplate"].startswith("/velocity/wind"),
+          "wind particles use an explicit vector-field endpoint")
+    check(wind["vectorField"]["preparedComponentTiles"]["type"] == "component-tiles",
+          "wind bundle advertises the prepared vector component-tile target")
+    check(current["s100"]["productIdentifier"] == "S-111" and current["s100"]["officialProduct"] is False,
+          "surface currents align to S-111 metadata without claiming official S-100 authority")
+    check(b["layers"]["waves"]["s100"]["productIdentifier"] == "S-413",
+          "wave layers align to the S-413 weather/wave family")
+    idx = app.bundle_index()
+    check(idx["bundles"][0]["manifest"] == "/bundles/open-meteo/latest/manifest.json",
+          "bundle index points at the live Open-Meteo bundle manifest")
+    client = TestClient(app.app)
+    route_manifest = client.get("/bundles/open-meteo/latest/manifest.json")
+    route_index = client.get("/index.json")
+    check(route_manifest.status_code == 200 and route_manifest.json()["schema"] == "helm.env.bundle.v1",
+          "bundle manifest endpoint returns the bundle contract")
+    check(route_index.status_code == 200 and "bundles" in route_index.json(),
+          "legacy index advertises bundle discovery without breaking layer discovery")
+    fixture = json.loads((Path(__file__).parent / "fixtures" / "fiji-env-bundle-v1.json").read_text())
+    check(fixture["schema"] == "helm.env.bundle.v1" and fixture["coverage"]["bbox"]["crossesAntimeridian"] is True,
+          "Fiji/South Pacific fixture carries the bundle schema and antimeridian coverage")
+    check(set(app.BUNDLE_LAYER_ORDER).issubset(set(fixture["layers"].keys())),
+          "Fiji/South Pacific fixture includes the full met-ocean layer catalog")
+
+    # 6) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])
     check(empty.sample(0.5, 0.5) is None, "fully-missing grid samples to None (NODATA, not faked)")
 
