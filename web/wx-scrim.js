@@ -11,7 +11,7 @@
   'use strict';
   // Tuned for "rain pops, chart still legible". brightness-max darkens, saturation mutes the
   // colour competition (chart-blue vs rain-blue), a touch of negative contrast flattens it.
-  var DIM  = { 'raster-brightness-max': 0.55, 'raster-saturation': -0.5, 'raster-contrast': -0.08 };
+  var DIM  = { 'raster-brightness-max': 0.42, 'raster-saturation': -0.7, 'raster-contrast': -0.12 };
   var NORM = { 'raster-brightness-max': 1,    'raster-saturation': 0,    'raster-contrast': 0 };
   var WX_RASTER = { 'helm-wx-grib': 1, 'helm-radar': 1, 'helm-wx-live': 1 };  // never dim the weather itself
 

@@ -263,7 +263,7 @@ export async function enableWxTiles(map, ctx) {
   map.addSource(WX_SRC, srcDef);
   map.addLayer({
     id: WX_LYR, type: 'raster', source: WX_SRC,
-    paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 },
+    paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 280 },   // keep+crossfade old tiles while new zooms bake -> Windy-style "fills the screen", no blank flash
   }, (ctx.beforeId && map.getLayer(ctx.beforeId)) ? ctx.beforeId : undefined);
   ctx.notify && ctx.notify('Value-encoded ' + setId + ' tiles (' + (cfg.model || cfg.source) + ') — decoded client-side', 'ok');
   return cfg;
@@ -406,7 +406,7 @@ export async function enableEnsemble(map, ctx) {
   });
   map.addLayer({
     id: ENS_LYR, type: 'raster', source: ENS_SRC,
-    paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 },
+    paint: { 'raster-opacity': opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 280 },   // keep+crossfade old tiles while new zooms bake -> Windy-style "fills the screen", no blank flash
   }, (ctx.beforeId && map.getLayer(ctx.beforeId)) ? ctx.beforeId : undefined);
   ctx.notify && ctx.notify('Ensemble spread (' + ensState.labelA + ' vs ' + ensState.labelB + ') — red = models disagree', 'ok');
   return ensState;
