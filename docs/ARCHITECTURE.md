@@ -25,7 +25,10 @@ The public alpha has four intentional parts:
 This split can look like "several apps" at first glance. It is really a
 boat-server architecture: the C++ process owns navigation-critical computation
 and chart rendering, while the web client is a thin, fast cockpit surface that
-can run on the same machine or another display on the boat LAN.
+can run on the same machine or another display on the boat LAN. Optional helper
+services exist for data and cache seams, but the end state is **small C++
+runtime services plus Python tooling/prototypes**, not required Python daemons.
+See [RUNTIME-SERVICES.md](RUNTIME-SERVICES.md).
 
 ## Current Runnable Shape
 
@@ -63,7 +66,8 @@ state.
 
 Services are optional local helpers. They are not required to understand the
 core product. For example, `services/basemap-fill/` can provide an optional
-cache-first online underlay beneath local charts.
+cache-first online underlay beneath local charts. If a helper graduates into
+required boat runtime, it needs a frozen HTTP/file contract and a C++ port plan.
 
 ### `pipeline/`
 
