@@ -41,7 +41,7 @@ import struct
 import time
 import traceback
 import zlib
-from typing import Dict, List, Optional, Tuple
+from typing import Dict, List, Optional, Set, Tuple
 
 import httpx
 import numpy as np
@@ -55,6 +55,10 @@ ENCODING = "helm-wxv1"
 BUNDLE_SCHEMA = "helm.env.bundle.v1"
 BUNDLE_ID = "open-meteo/latest"
 BUNDLE_TITLE = "Open-Meteo live environmental bundle"
+BUNDLE_PROVIDER = "open-meteo"
+BUNDLE_MODEL_ID = "latest"
+BUNDLE_VALID_TIME_ID = "latest"
+DEFAULT_PREPARED_REGION = "fiji-south-pacific"
 
 
 def _load_dotenv():
@@ -260,7 +264,9 @@ _grids: Dict[str, Tuple[Grid, float]] = {}
 _grid_locks: Dict[str, asyncio.Lock] = {}
 _tiles: "OrderedTileCache" = None  # set below
 _cooldown_until = 0.0
-_stats = {"openmeteo_calls": 0, "grid_hits": 0, "tile_hits": 0, "bakes": 0, "cooldowns": 0}
+_stats = {"openmeteo_calls": 0, "grid_hits": 0, "tile_hits": 0, "bakes": 0, "cooldowns": 0,
+          "bundle_materializations": 0, "bundle_tiles_written": 0,
+          "bundle_replay_hits": 0, "bundle_replay_misses": 0}
 _om_sem: Optional[asyncio.Semaphore] = None       # bounds concurrent Open-Meteo calls (lazy: needs a loop)
 _om_last = 0.0                                     # timestamp of the last call (for MIN_INTERVAL spacing)
 
@@ -546,8 +552,12 @@ def _bake_np(grid: "Grid", lons, lats, scale: float, offset: float):
         gv = _blur_grid_np(gv, SMOOTH_PASSES)   # smooth the field for display (Windy-style); probe uses raw grid
     ew = (grid.east - grid.west) or 1.0
     ns = (grid.north - grid.south) or 1.0
-    fx = np.clip((lons - grid.west) / ew * (nx - 1), 0, nx - 1)
-    fy = np.clip((grid.north - lats) / ns * (ny - 1), 0, ny - 1)
+    fx_raw = (lons - grid.west) / ew * (nx - 1)
+    fy_raw = (grid.north - lats) / ns * (ny - 1)
+    inside_x = (fx_raw >= -0.001) & (fx_raw <= nx - 1 + 0.001)
+    inside_y = (fy_raw >= -0.001) & (fy_raw <= ny - 1 + 0.001)
+    fx = np.clip(fx_raw, 0, nx - 1)
+    fy = np.clip(fy_raw, 0, ny - 1)
     x0 = np.floor(fx).astype(np.intp); x1 = np.minimum(x0 + 1, nx - 1)
     y0 = np.floor(fy).astype(np.intp); y1 = np.minimum(y0 + 1, ny - 1)
     gx = fx - x0; gy = fy - y0
@@ -561,7 +571,7 @@ def _bake_np(grid: "Grid", lons, lats, scale: float, offset: float):
     den = w00 + w10 + w01 + w11
     num = (np.nan_to_num(v00) * w00 + np.nan_to_num(v10) * w10
            + np.nan_to_num(v01) * w01 + np.nan_to_num(v11) * w11)
-    valid = den > 0
+    valid = (den > 0) & inside_y[:, None] & inside_x[None, :]
     val = num / np.where(valid, den, 1.0)
     s = scale if scale > 0 else 1.0
     n = np.clip(np.round((np.nan_to_num(val) - offset) / s), 0, VMAX24).astype(np.uint32)
@@ -821,6 +831,7 @@ def environment_bundle_manifest() -> dict:
 
 
 def bundle_index() -> dict:
+    prepared = discover_prepared_bundles()
     return {
         "schema": "helm.env.bundle.index.v1",
         "generatedAt": _now_iso(),
@@ -831,8 +842,398 @@ def bundle_index() -> dict:
             "manifest": "/bundles/open-meteo/latest/manifest.json",
             "coverage": "global-with-regional-warm-cache",
             "advisoryOnly": True,
-        }],
+        }] + prepared,
     }
+
+
+def _safe_segment(value: str, default: str = "bundle") -> str:
+    text = "".join(ch.lower() if ch.isalnum() else "-" for ch in str(value or default))
+    text = "-".join(part for part in text.split("-") if part)
+    return text or default
+
+
+def _prepared_bundle_root(region_id: str) -> str:
+    return os.path.join(CACHE_DIR, "env", "bundles", BUNDLE_PROVIDER, BUNDLE_MODEL_ID,
+                        _safe_segment(region_id, DEFAULT_PREPARED_REGION))
+
+
+def _prepared_bundle_manifest_path(region_id: str) -> str:
+    return os.path.join(_prepared_bundle_root(region_id), "manifest.json")
+
+
+def _prepared_bundle_url(region_id: str) -> str:
+    rid = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
+    return f"/bundles/{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{rid}/manifest.json"
+
+
+def _coverage_bbox(w: float, s: float, e: float, n: float) -> dict:
+    return {
+        "west": float(w),
+        "south": float(s),
+        "east": float(e),
+        "north": float(n),
+        "crossesAntimeridian": float(e) < float(w),
+    }
+
+
+def _internal_bbox(w: float, s: float, e: float, n: float) -> Tuple[float, float, float, float]:
+    """Return a continuous-longitude bbox suitable for source grids."""
+    return float(w), float(s), (float(e) + 360.0 if float(e) < float(w) else float(e)), float(n)
+
+
+def _bbox_parts(w: float, s: float, e: float, n: float) -> List[Tuple[float, float, float, float]]:
+    if e < w:
+        return [(w, s, 180.0, n), (-180.0, s, e, n)]
+    return [(w, s, e, n)]
+
+
+def _tile_coords_for_bbox(z: int, w: float, s: float, e: float, n: float) -> Set[Tuple[int, int, int]]:
+    max_i = 2 ** z - 1
+    out: Set[Tuple[int, int, int]] = set()
+    for pw, ps, pe, pn in _bbox_parts(w, s, e, n):
+        x0, y0 = lonlat_to_tile(pw, pn, z)
+        x1, y1 = lonlat_to_tile(pe, ps, z)
+        xmin = max(0, min(max_i, int(math.floor(min(x0, x1)))))
+        xmax = max(0, min(max_i, int(math.ceil(max(x0, x1)) - 1)))
+        ymin = max(0, min(max_i, int(math.floor(min(y0, y1)))))
+        ymax = max(0, min(max_i, int(math.ceil(max(y0, y1)) - 1)))
+        for x in range(xmin, xmax + 1):
+            for y in range(ymin, ymax + 1):
+                out.add((z, x, y))
+    return out
+
+
+def _tile_axes_for_grid(z: int, x: int, y: int, grid: "Grid"):
+    lons = np.array([pixel_to_lonlat(z, x, y, px + 0.5, 0.0)[0] for px in range(256)])
+    if grid.east > 180.0:
+        # Continuous antimeridian regions are stored as e.g. 160..210. Shift negative tile longitudes
+        # into that frame so Fiji/South-Pacific prepared bundles do not vanish east of 180.
+        lons = np.where(lons < grid.west, lons + 360.0, lons)
+    lats = np.array([pixel_to_lonlat(z, x, y, 0.0, py + 0.5)[1] for py in range(256)])
+    return lons, lats
+
+
+def _bake_grid_tile(grid: "Grid", z: int, x: int, y: int, scale: float, offset: float) -> Tuple[bytes, bool]:
+    lons, lats = _tile_axes_for_grid(z, x, y, grid)
+    buf, any_valid = _bake_np(grid, lons, lats, scale, offset)
+    return write_png_bytes(buf, 256, alpha=True), any_valid
+
+
+def _vector_component_scale_offset(cfg: dict) -> Tuple[float, float]:
+    vmax = float(cfg["vmax"])
+    return (2.0 * vmax / VMAX24 if vmax > 0 else 1.0), -vmax
+
+
+def _vector_component_grid(reg: dict, component: str) -> Optional[Grid]:
+    idx = 0 if component == "u" else 1 if component == "v" else None
+    if idx is None or not reg.get("vel") or len(reg["vel"]) <= idx:
+        return None
+    item = reg["vel"][idx]
+    hdr = item["header"]
+    return Grid(int(hdr["nx"]), int(hdr["ny"]), float(hdr["lo1"]), float(hdr["la2"]),
+                float(hdr["lo2"]), float(hdr["la1"]), item["data"])
+
+
+def _write_bytes(path: str, data: bytes):
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    tmp = path + ".tmp"
+    with open(tmp, "wb") as f:
+        f.write(data)
+    os.replace(tmp, path)
+
+
+def _write_json(path: str, data: dict):
+    _write_bytes(path, (json.dumps(data, indent=2, sort_keys=True) + "\n").encode("utf-8"))
+
+
+def _read_json(path: str) -> Optional[dict]:
+    try:
+        with open(path, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except OSError:
+        return None
+
+
+def _prepared_tile_path(region_id: str, layer: str, family: str, valid_time_id: str,
+                        z: int, x: int, y: int, component: Optional[str] = None) -> str:
+    root = _prepared_bundle_root(region_id)
+    if family == "scalar":
+        return os.path.join(root, "layers", layer, "scalar", valid_time_id, str(z), str(x), f"{y}.png")
+    return os.path.join(root, "layers", layer, "vector", valid_time_id, component or "u", str(z), str(x), f"{y}.png")
+
+
+def _parse_layers(layers: str) -> List[str]:
+    out = []
+    for layer in [x.strip() for x in str(layers or "").split(",") if x.strip()]:
+        if layer not in LAYERS:
+            raise ValueError("unknown layer: " + layer)
+        if layer not in out:
+            out.append(layer)
+    return out or ["wind", "current"]
+
+
+def _parse_route_bbox(route: str, margin_deg: float) -> Optional[Tuple[float, float, float, float]]:
+    if not route:
+        return None
+    pts = []
+    for item in route.split(";"):
+        if not item.strip():
+            continue
+        parts = [p.strip() for p in item.split(",")]
+        if len(parts) != 2:
+            raise ValueError("route must be lon,lat;lon,lat")
+        pts.append((float(parts[0]), float(parts[1])))
+    if not pts:
+        return None
+    lons = [p[0] for p in pts]
+    lats = [p[1] for p in pts]
+    plain_span = max(lons) - min(lons)
+    shifted = [lon + 360.0 if lon < 0 else lon for lon in lons]
+    shifted_span = max(shifted) - min(shifted)
+    if shifted_span < plain_span:
+        w = min(shifted) - margin_deg
+        e = max(shifted) + margin_deg
+        if e > 180.0:
+            e -= 360.0
+        if w > 180.0:
+            w -= 360.0
+    else:
+        w = min(lons) - margin_deg
+        e = max(lons) + margin_deg
+    s = max(-85.0, min(lats) - margin_deg)
+    n = min(85.0, max(lats) + margin_deg)
+    return max(-180.0, w), s, min(180.0, e), n
+
+
+def _planned_tile_count(layers: List[str], w: float, s: float, e: float, n: float, minzoom: int, maxzoom: int) -> int:
+    coords = []
+    for z in range(minzoom, maxzoom + 1):
+        coords.extend(_tile_coords_for_bbox(z, w, s, e, n))
+    per_scalar = len(set(coords))
+    total = 0
+    for layer in layers:
+        total += per_scalar
+        if LAYERS[layer].get("vector"):
+            total += per_scalar * 2
+    return total
+
+
+def _prepared_layer_for(region_id: str, layer: str, minzoom: int, maxzoom: int) -> dict:
+    info = bundle_layer_for(layer)
+    base = f"/bundles/{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{_safe_segment(region_id, DEFAULT_PREPARED_REGION)}"
+    info["fieldTiles"] = {
+        "type": "value-raster-tile",
+        "tileMatrixSet": "WebMercatorQuad",
+        "tileSize": 256,
+        "minzoom": minzoom,
+        "maxzoom": maxzoom,
+        "urlTemplate": f"{base}/layers/{layer}/scalar/{{validTimeId}}/{{z}}/{{x}}/{{y}}.png",
+        "relativeTemplate": f"layers/{layer}/scalar/{{validTimeId}}/{{z}}/{{x}}/{{y}}.png",
+    }
+    if LAYERS[layer].get("vector"):
+        cfg = LAYERS[layer]
+        scale, offset = _vector_component_scale_offset(cfg)
+        info["vectorField"] = {
+            "type": "component-tiles",
+            "components": ["u", "v"],
+            "speedUnit": cfg["unit"],
+            "directionConvention": "toward" if cfg.get("dir_to") else "from",
+            "u": {"encoding": ENCODING, "scale": scale, "offset": offset, "unit": cfg["unit"],
+                  "range": {"min": offset, "max": -offset},
+                  "urlTemplate": f"{base}/layers/{layer}/vector/{{validTimeId}}/u/{{z}}/{{x}}/{{y}}.png"},
+            "v": {"encoding": ENCODING, "scale": scale, "offset": offset, "unit": cfg["unit"],
+                  "range": {"min": offset, "max": -offset},
+                  "urlTemplate": f"{base}/layers/{layer}/vector/{{validTimeId}}/v/{{z}}/{{x}}/{{y}}.png"},
+        }
+    return info
+
+
+def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
+                       minzoom: int, maxzoom: int, generated_at: str, tile_summary: dict,
+                       upstream_calls: int, route: str = "") -> dict:
+    region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
+    valid_time = generated_at
+    return {
+        "schema": BUNDLE_SCHEMA,
+        "bundleId": f"{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{region_slug}",
+        "title": f"Open-Meteo prepared environmental bundle · {region_slug}",
+        "productFamily": "met-ocean",
+        "encoding": ENCODING,
+        "generatedAt": generated_at,
+        "source": {
+            "provider": "open-meteo",
+            "modelAuthority": "advisory",
+            "forecastEndpoint": FORECAST,
+            "marineEndpoint": MARINE,
+            "advisoryOnly": True,
+            "notForNavigation": True,
+        },
+        "run": {
+            "mode": "model-run-cache",
+            "model": MODEL_NAME,
+            "marineModel": MARINE_MODEL,
+            "runTime": generated_at,
+            "runLabel": BUNDLE_MODEL_ID,
+            "validTimes": [valid_time],
+            "frameIdByValidTime": {valid_time: BUNDLE_VALID_TIME_ID},
+            "frames": 1,
+        },
+        "coverage": {
+            "crs": "OGC:CRS84",
+            "bbox": _coverage_bbox(w, s, e, n),
+            "polygon": None,
+            "global": False,
+            "wrap": "antimeridian" if e < w else "none",
+            "regionId": region_slug,
+            "route": route or None,
+        },
+        "lod": {
+            "tileMatrixSet": "WebMercatorQuad",
+            "tileSize": 256,
+            "dataMinZoom": minzoom,
+            "dataMaxZoom": maxzoom,
+            "levels": {
+                "overview": {"minzoom": minzoom, "maxzoom": min(2, maxzoom), "purpose": "instant overview"},
+                "basin": {"minzoom": min(maxzoom, 3), "maxzoom": min(maxzoom, 5), "purpose": "passage planning"},
+                "regional": {"minzoom": min(maxzoom, 6), "maxzoom": maxzoom, "purpose": "local detail"},
+            },
+            "parentFallback": True,
+            "overzoom": "renderer may overzoom prepared parent/native field tiles beyond dataMaxZoom",
+            "interpolation": "bilinear-in-field-space",
+        },
+        "cachePolicy": {
+            "targetInvariant": "pan, zoom, scrub, and layer toggles read prepared local/cache data only",
+            "upstreamFetchesAllowedDuringGesture": False,
+            "refreshOnly": True,
+            "cacheOnlyReplay": True,
+            "ttlSeconds": REGION_TTL,
+            "staleServing": True,
+            "staleMaxSeconds": max(REGION_TTL, TTL) * 8,
+            "providerBackoffSeconds": COOLDOWN,
+            "quotaPolicy": "batch-by-run-and-region",
+        },
+        "cacheState": {
+            "state": "fresh",
+            "materializedAt": generated_at,
+            "offlineReady": True,
+            "serveStale": True,
+        },
+        "renderPolicy": {
+            "renderer": "client-webgpu-or-webgl-field-scene",
+            "scalarColour": "colourise from numeric field tiles using fixed per-layer ramps",
+            "particles": "animate vector layers from component tiles using the same bundle/time/coverage",
+            "displayTiles": "optional",
+            "nodata": "alpha=0; never fabricate weather values",
+        },
+        "sampleContract": {
+            "schema": "helm.layer.sample.v1",
+            "requiredFields": ["value", "unit", "sourceRef", "freshness", "confidence", "coverage", "advisory"],
+            "routeWeather": "sample layer values along worldline W(position,time)",
+        },
+        "layers": {layer: _prepared_layer_for(region_slug, layer, minzoom, maxzoom) for layer in layers},
+        "telemetry": {
+            "tileSummary": tile_summary,
+            "tilesWritten": sum(v.get("scalar", 0) + v.get("vector", 0) for v in tile_summary.values()),
+            "upstreamCallsDuringMaterialize": upstream_calls,
+            "gesturePathUpstreamFetches": 0,
+            "replayMode": "cache-only",
+        },
+        "disclaimer": "Forecast/advisory met-ocean data. Cross-reference official sources. NOT FOR NAVIGATION.",
+    }
+
+
+def discover_prepared_bundles() -> List[dict]:
+    root = os.path.join(CACHE_DIR, "env", "bundles", BUNDLE_PROVIDER, BUNDLE_MODEL_ID)
+    out = []
+    try:
+        regions = sorted(os.listdir(root))
+    except OSError:
+        return out
+    for region in regions:
+        manifest = _read_json(os.path.join(root, region, "manifest.json"))
+        if not manifest:
+            continue
+        out.append({
+            "id": manifest.get("bundleId", f"{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{region}"),
+            "title": manifest.get("title", region),
+            "schema": manifest.get("schema", BUNDLE_SCHEMA),
+            "manifest": _prepared_bundle_url(region),
+            "coverage": manifest.get("coverage"),
+            "cacheState": manifest.get("cacheState"),
+            "advisoryOnly": True,
+            "offlineReady": bool((manifest.get("cacheState") or {}).get("offlineReady")),
+        })
+    return out
+
+
+async def materialize_environment_bundle(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
+                                         minzoom: int = 0, maxzoom: int = 3, res: float = REGION_RES,
+                                         route: str = "", tile_budget: int = 512) -> dict:
+    if minzoom < 0 or maxzoom < minzoom or maxzoom > 22:
+        raise ValueError("invalid zoom range")
+    iw, is_, ie, in_ = _internal_bbox(w, s, e, n)
+    planned = _planned_tile_count(layers, w, s, e, n, minzoom, maxzoom)
+    if planned > tile_budget:
+        raise ValueError(f"planned tile count {planned} exceeds tile_budget {tile_budget}")
+    calls0 = int(_stats["openmeteo_calls"])
+    region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
+    tile_summary: Dict[str, dict] = {}
+    for layer in layers:
+        warm = await warm_region(layer, iw, is_, ie, in_, res)
+        reg = _regions[layer]
+        coords: Set[Tuple[int, int, int]] = set()
+        for z in range(minzoom, maxzoom + 1):
+            coords.update(_tile_coords_for_bbox(z, w, s, e, n))
+        scale, offset = layer_scale_offset(LAYERS[layer])
+        scalar_count = 0
+        scalar_valid = 0
+        for z, x, y in sorted(coords):
+            png, any_valid = _bake_grid_tile(reg["grid"], z, x, y, scale, offset)
+            _write_bytes(_prepared_tile_path(region_slug, layer, "scalar", BUNDLE_VALID_TIME_ID, z, x, y), png)
+            scalar_count += 1
+            scalar_valid += 1 if any_valid else 0
+        vector_count = 0
+        vector_valid = 0
+        if LAYERS[layer].get("vector"):
+            vscale, voffset = _vector_component_scale_offset(LAYERS[layer])
+            for component in ("u", "v"):
+                grid = _vector_component_grid(reg, component)
+                if grid is None:
+                    continue
+                for z, x, y in sorted(coords):
+                    png, any_valid = _bake_grid_tile(grid, z, x, y, vscale, voffset)
+                    _write_bytes(_prepared_tile_path(region_slug, layer, "vector", BUNDLE_VALID_TIME_ID, z, x, y, component), png)
+                    vector_count += 1
+                    vector_valid += 1 if any_valid else 0
+        tile_summary[layer] = {"scalar": scalar_count, "scalarWithData": scalar_valid,
+                               "vector": vector_count, "vectorWithData": vector_valid,
+                               "warm": warm}
+    generated_at = _now_iso()
+    upstream_calls = int(_stats["openmeteo_calls"]) - calls0
+    manifest = _prepared_manifest(region_slug, layers, w, s, e, n, minzoom, maxzoom,
+                                  generated_at, tile_summary, upstream_calls, route=route)
+    _write_json(_prepared_bundle_manifest_path(region_slug), manifest)
+    _stats["bundle_materializations"] += 1
+    _stats["bundle_tiles_written"] += manifest["telemetry"]["tilesWritten"]
+    return manifest
+
+
+def _serve_prepared_file(path: str, request: Request, media_type: str):
+    if not os.path.exists(path):
+        _stats["bundle_replay_misses"] += 1
+        return PlainTextResponse("prepared bundle cache miss", status_code=404,
+                                 headers={"X-Helm-Bundle-Cache": "miss"})
+    data = open(path, "rb").read()
+    etag = 'W/"%s"' % hashlib.md5(data).hexdigest()
+    headers = {"Cache-Control": "public, max-age=%d, stale-while-revalidate=%d" % (REGION_TTL, REGION_TTL),
+               "ETag": etag, "X-Helm-Encoding": ENCODING, "X-Helm-Bundle-Cache": "hit",
+               "X-Helm-Upstream-Fetch": "0"}
+    inm = request.headers.get("if-none-match")
+    if inm and etag in [t.strip() for t in inm.split(",")]:
+        _stats["bundle_replay_hits"] += 1
+        return Response(status_code=304, headers=headers)
+    _stats["bundle_replay_hits"] += 1
+    return Response(content=data, media_type=media_type, headers=headers)
 
 
 # ------------------------------------------------------------------ FastAPI app
@@ -865,6 +1266,59 @@ def bundles():
 @app.get("/bundles/open-meteo/latest/manifest.json")
 def bundle_manifest():
     return environment_bundle_manifest()
+
+
+@app.get("/bundles/open-meteo/latest/materialize")
+async def materialize_bundle(region: str = DEFAULT_PREPARED_REGION, layers: str = "wind,current",
+                             w: float = 160.0, s: float = -35.0, e: float = -150.0, n: float = 5.0,
+                             minzoom: int = 0, maxzoom: int = 3, res: float = REGION_RES,
+                             route: str = "", route_margin: float = 1.0, tile_budget: int = 512):
+    """Explicit refresh/warm job for a prepared bundle.
+
+    This is the WX-18 boundary: provider calls happen here, not while a user pans/zooms/scrubs.
+    e.g. /bundles/open-meteo/latest/materialize?region=fiji&layers=wind,current&w=160&s=-35&e=-150&n=5
+    """
+    try:
+        picked_layers = _parse_layers(layers)
+        route_bbox = _parse_route_bbox(route, route_margin)
+        if route_bbox:
+            w, s, e, n = route_bbox
+        manifest = await materialize_environment_bundle(region, picked_layers, w, s, e, n,
+                                                        minzoom=minzoom, maxzoom=maxzoom, res=res,
+                                                        route=route, tile_budget=tile_budget)
+        return {"ok": True, "bundle": manifest, "manifest": _prepared_bundle_url(region)}
+    except ValueError as ex:
+        return JSONResponse({"error": True, "reason": str(ex)}, status_code=400)
+    except Exception as ex:
+        print("[helm-wx] bundle materialize failed: %r" % ex)
+        traceback.print_exc()
+        return JSONResponse({"error": True, "reason": str(ex)}, status_code=503)
+
+
+@app.get("/bundles/open-meteo/latest/{region_id}/manifest.json")
+def prepared_bundle_manifest(region_id: str):
+    manifest = _read_json(_prepared_bundle_manifest_path(region_id))
+    if not manifest:
+        return JSONResponse({"error": True, "reason": "unknown prepared bundle"}, status_code=404,
+                            headers={"X-Helm-Bundle-Cache": "miss", "X-Helm-Upstream-Fetch": "0"})
+    return JSONResponse(manifest, headers={"X-Helm-Bundle-Cache": "hit", "X-Helm-Upstream-Fetch": "0"})
+
+
+@app.get("/bundles/open-meteo/latest/{region_id}/layers/{layer}/scalar/{valid_time_id}/{z}/{x}/{y}.png")
+def prepared_scalar_tile(region_id: str, layer: str, valid_time_id: str, z: int, x: int, y: int, request: Request):
+    if layer not in LAYERS:
+        return PlainTextResponse("unknown layer", status_code=404)
+    return _serve_prepared_file(_prepared_tile_path(region_id, layer, "scalar", valid_time_id, z, x, y),
+                                request, "image/png")
+
+
+@app.get("/bundles/open-meteo/latest/{region_id}/layers/{layer}/vector/{valid_time_id}/{component}/{z}/{x}/{y}.png")
+def prepared_vector_tile(region_id: str, layer: str, valid_time_id: str, component: str,
+                         z: int, x: int, y: int, request: Request):
+    if layer not in LAYERS or not LAYERS[layer].get("vector") or component not in ("u", "v"):
+        return PlainTextResponse("unknown vector component", status_code=404)
+    return _serve_prepared_file(_prepared_tile_path(region_id, layer, "vector", valid_time_id, z, x, y, component),
+                                request, "image/png")
 
 
 @app.get("/{layer}/manifest.json")

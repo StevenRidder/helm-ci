@@ -36,6 +36,12 @@ GET /index.json                -> layer catalogue for the UI picker
 GET /bundles/index.json        -> environmental bundle catalogue
 GET /bundles/open-meteo/latest/manifest.json
                               -> Windy-parity bundle contract (layers, LOD, cache, S-100 metadata)
+GET /bundles/open-meteo/latest/materialize?...
+                              -> explicit WX-18 refresh job that writes a prepared local/cache bundle
+GET /bundles/open-meteo/latest/{region}/manifest.json
+GET /bundles/open-meteo/latest/{region}/layers/{layer}/scalar/{valid}/{z}/{x}/{y}.png
+GET /bundles/open-meteo/latest/{region}/layers/{layer}/vector/{valid}/{u|v}/{z}/{x}/{y}.png
+                              -> cache-only replay of prepared bundle files (no upstream fetch)
 GET /{layer}/manifest.json     -> {encoding, scale, offset, ramp, bbox, minzoom, maxzoom, unit, ...}
 GET /{layer}/{z}/{x}/{y}.png   -> 256x256 RGBA; RGB = 24-bit value, A = NODATA mask (0 = no data)
 GET /velocity/{layer}?w=&s=&e=&n=
@@ -79,6 +85,35 @@ advertises:
 Important honesty: the existing endpoints are still compatibility value tiles and may fetch on cache
 miss today. WX-18 moves ingest into an explicit baker/refresh path so the gesture path never hammers
 Open-Meteo. WX-19 consumes this bundle in the renderer instead of layering more raster hacks.
+
+### Prepared bundles — WX-18 baker/cache slice
+
+Provider fetches happen only through an explicit materialize/refresh job:
+
+```bash
+curl 'http://127.0.0.1:8093/bundles/open-meteo/latest/materialize?region=fiji-south-pacific&layers=wind,current&w=160&s=-35&e=-150&n=5&minzoom=0&maxzoom=3&tile_budget=512'
+```
+
+The service writes a durable bundle under:
+
+```text
+$HELM_WX_CACHE/env/bundles/open-meteo/latest/<region>/
+  manifest.json
+  layers/<layer>/scalar/latest/<z>/<x>/<y>.png
+  layers/<layer>/vector/latest/{u,v}/<z>/<x>/<y>.png    # vector layers
+```
+
+Replay endpoints serve only those prepared files and include:
+
+```text
+X-Helm-Bundle-Cache: hit|miss
+X-Helm-Upstream-Fetch: 0
+```
+
+That is the invariant WX-19 should depend on: pan/zoom/scrub/toggle/sample reads prepared local/cache
+data and never calls the provider. Use `route=lon,lat;lon,lat;...` plus `route_margin=` instead of
+`w/s/e/n` for a route-corridor prewarm. `tile_budget` intentionally fails closed before a refresh job
+can accidentally fan out into a giant upstream/provider burst.
 
 ## Run
 

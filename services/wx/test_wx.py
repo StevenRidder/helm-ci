@@ -151,7 +151,89 @@ def main():
     check(set(app.BUNDLE_LAYER_ORDER).issubset(set(fixture["layers"].keys())),
           "Fiji/South Pacific fixture includes the full met-ocean layer catalog")
 
-    # 6) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
+    # 6) WX-18 prepared bundle materialization + cache-only replay.
+    async def fake_fetch_points(layer, qlat, qlon):
+        cfg = app.LAYERS[layer]
+        mid = (cfg["vmin"] + cfg["vmax"]) / 2.0
+        nodes = []
+        for _ in qlat:
+            cur = {cfg["v"]: mid}
+            if cfg.get("dir"):
+                cur[cfg["dir"]] = 90.0
+            nodes.append({"current": cur})
+        return nodes
+
+    app._fetch_points = fake_fetch_points
+    route_bbox = app._parse_route_bbox("177,-18;-179,-17", 1.0)
+    check(route_bbox is not None and route_bbox[0] > route_bbox[2],
+          "route-corridor bbox handles antimeridian crossings")
+    materialized = asyncio.run(app.materialize_environment_bundle(
+        "fiji-test",
+        list(app.BUNDLE_LAYER_ORDER),
+        160.0, -35.0, -150.0, 5.0,
+        minzoom=0,
+        maxzoom=0,
+        res=20.0,
+        tile_budget=64,
+    ))
+    check(materialized["schema"] == "helm.env.bundle.v1", "materialized bundle writes helm.env.bundle.v1")
+    check(materialized["run"]["mode"] == "model-run-cache", "materialized bundle is model-run-cache, not viewport fetch")
+    check(materialized["coverage"]["bbox"]["crossesAntimeridian"] is True,
+          "materialized Fiji bundle preserves antimeridian coverage")
+    check(set(app.BUNDLE_LAYER_ORDER).issubset(set(materialized["layers"].keys())),
+          "materialized bundle includes the full met-ocean layer catalog")
+    check(materialized["layers"]["wind"]["vectorField"]["type"] == "component-tiles",
+          "materialized wind vector field uses prepared component tiles")
+    check(materialized["telemetry"]["gesturePathUpstreamFetches"] == 0,
+          "materialized bundle telemetry locks gesture-path upstream fetches to zero")
+    check(materialized["telemetry"]["tilesWritten"] >= len(app.BUNDLE_LAYER_ORDER),
+          "materialized bundle writes scalar/vector tile files")
+
+    async def exploding_fetch_async(*args, **kwargs):
+        raise AssertionError("prepared replay must not call provider/grid fetch")
+
+    app._fetch_grid = exploding_fetch_async
+    app._fetch_velocity = exploding_fetch_async
+    calls_before_replay = app._stats["openmeteo_calls"]
+    route_index = client.get("/bundles/index.json").json()
+    check(any(bun.get("manifest") == "/bundles/open-meteo/latest/fiji-test/manifest.json"
+              for bun in route_index["bundles"]),
+          "bundle index advertises the prepared Fiji test bundle")
+    prepared_manifest = client.get("/bundles/open-meteo/latest/fiji-test/manifest.json")
+    check(prepared_manifest.status_code == 200 and prepared_manifest.headers.get("x-helm-upstream-fetch") == "0",
+          "prepared manifest replays from cache only")
+    scalar_resp = client.get("/bundles/open-meteo/latest/fiji-test/layers/wind/scalar/latest/0/0/0.png")
+    vector_resp = client.get("/bundles/open-meteo/latest/fiji-test/layers/wind/vector/latest/u/0/0/0.png")
+    check(scalar_resp.status_code == 200 and scalar_resp.headers.get("x-helm-bundle-cache") == "hit",
+          "prepared scalar tile replays from cache")
+    check(vector_resp.status_code == 200 and vector_resp.headers.get("x-helm-upstream-fetch") == "0",
+          "prepared vector component tile replays from cache")
+    check(app._stats["openmeteo_calls"] == calls_before_replay,
+          "prepared manifest/tile replay makes zero upstream calls")
+    tw, th, tpx = decode_png_rgba(scalar_resp.content)
+    fx, fy = app.lonlat_to_tile(177.4, -17.6, 0)
+    px = max(0, min(255, int((fx - int(fx)) * 256)))
+    py = max(0, min(255, int((fy - int(fy)) * 256)))
+    wr, wg, wb, wa = tpx[py * tw + px]
+    wind_scale, wind_offset = app.layer_scale_offset(app.LAYERS["wind"])
+    wind_val = decode_value(wr, wg, wb, wa, wind_scale, wind_offset)
+    check(wind_val is not None and abs(wind_val - 40.0) < 0.1,
+          "prepared scalar tile decodes to the synthetic wind value")
+    _, _, upx = decode_png_rgba(vector_resp.content)
+    ur, ug, ub, ua = upx[py * tw + px]
+    uscale, uoffset = app._vector_component_scale_offset(app.LAYERS["wind"])
+    u_val = decode_value(ur, ug, ub, ua, uscale, uoffset)
+    check(u_val is not None and u_val < -30.0,
+          "prepared vector component tile decodes to wind-from eastward u component")
+    route_materialize = client.get(
+        "/bundles/open-meteo/latest/materialize"
+        "?region=route-test&layers=wind&route=177,-18;-179,-17&minzoom=0&maxzoom=0&res=20&tile_budget=8"
+    )
+    route_payload = route_materialize.json()
+    check(route_materialize.status_code == 200 and route_payload["bundle"]["coverage"]["bbox"]["crossesAntimeridian"] is True,
+          "materialize endpoint supports route-corridor prewarm across the antimeridian")
+
+    # 7) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])
     check(empty.sample(0.5, 0.5) is None, "fully-missing grid samples to None (NODATA, not faked)")
 
