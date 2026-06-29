@@ -29,6 +29,7 @@ Use this as the quick orientation guide for the public alpha.
 | Check alpha readiness | [docs/PROJECT-STATUS.md](PROJECT-STATUS.md) |
 | Work on chart data | [docs/CHART-PIPELINE.md](CHART-PIPELINE.md) |
 | Work on OpenCPN reuse | [docs/OPENCPN-REUSE.md](OPENCPN-REUSE.md) |
+| Review the Helm/WebGPU renderer path | [docs/VULKAN-HELM-WEBGPU-PROOF.md](VULKAN-HELM-WEBGPU-PROOF.md) |
 | Work on streaming clients | [docs/STREAMING-API.md](STREAMING-API.md) |
 | Check licensing boundaries | [docs/LEGAL.md](LEGAL.md) |
 

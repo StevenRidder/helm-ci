@@ -99,6 +99,7 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Contributor workflow, ports, tests, local data rules |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Headless C++ boat server + browser/mobile client boundary |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
+| [docs/VULKAN-HELM-WEBGPU-PROOF.md](docs/VULKAN-HELM-WEBGPU-PROOF.md) | Helm's WebGPU-first consumer path for the shared OpenCPN renderer proof |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
