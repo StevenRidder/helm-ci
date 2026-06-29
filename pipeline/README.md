@@ -10,6 +10,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 | `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
 | `region_bundle.py` | `/catalog` JSON + route/bbox → region bundle manifest + delta plan | python3 (stdlib) |
 | `layer_inventory.py` | `/catalog` + optional env bundles → boat-local chart/weather/depth/place inventory | python3 (stdlib) |
+| `mbtiles_server.py` | Current Python reference/oracle for BYO MBTiles/PMTiles local serving while OFFLINE-16 ports runtime serving to C++ `helm-packd` | python3 (stdlib) |
 | `fetch_wind.py` | gridded wind → `wind.json` (particles) + `wind_points.geojson` (arrows) | python3 (stdlib) |
 | `extract_depth.sh` | NOAA ENC S-57 → `depare`/`depcnt`/`soundg` GeoJSON (depth-on-satellite) | GDAL (`brew install gdal`) |
 
@@ -58,6 +59,12 @@ http://localhost:8080.
   in `GET /layers` and `GET /prefetch`. The JSON response contains public manifest
   facts, coverage, valid times, freshness/cache-only policy, layer list, and sample
   handles, but never the private source file path.
+- OFFLINE-16 introduces `helm-packd`, a small C++ replacement for the runtime
+  portions of `mbtiles_server.py`. The first C++ slice serves `/health`,
+  `/catalog`, MBTiles XYZ tile URLs, and PMTiles `HEAD`/HTTP `Range` from the
+  same local pack directory. Keep `mbtiles_server.py` as the broad oracle until
+  the C++ daemon has full parity; use `engine/test-packd.sh` for the C++ fixture
+  smoke once `engine/bootstrap.sh` has built `build/cli/helm-packd`.
 - `region_bundle.py` and `GET /bundle` publish `helm.region_bundle.manifest.v1`:
   catalog metadata, route/bbox prefetch advice, chart/basemap/depth/places components,
   per-component fingerprints, stale/out-of-coverage status, and a delta-plan helper for

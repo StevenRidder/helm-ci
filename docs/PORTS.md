@@ -9,7 +9,7 @@ machine, boat server, or demo process is safe to stop or replace.
 |------|---------|-------|
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
 | 8090 | Optional backend service | Weather, places, and community/LLM prototype endpoints. |
-| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by `pipeline/mbtiles_server.py`. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
+| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by `pipeline/mbtiles_server.py` today; OFFLINE-16 is introducing the C++ `helm-packd` replacement behind the same contract. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
 | 8093 | Optional weather gateway | `services/wx` value-tile gateway (Open-Meteo). Must use :8093, never :8091 (WX-15). |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
 | 9001+ | Private development servers | Recommended for local agent/test runs. |
@@ -27,6 +27,17 @@ For BYO MBTiles or PMTiles, point the helper at a local directory:
 ```bash
 HELM_MBTILES_DIR="$HOME/Charts/local-packs" \
   python3 pipeline/mbtiles_server.py 8091
+```
+
+OFFLINE-16 is moving this runtime helper to C++ as `helm-packd`. Until parity is
+complete, treat `pipeline/mbtiles_server.py` as the reference/oracle and run
+`helm-packd` only on a private test port:
+
+```bash
+HELM_OCPN_DIR=/private/tmp/helm-offline16-ocpn \
+  engine/bootstrap.sh --dir /private/tmp/helm-offline16-ocpn --jobs 4
+HELM_MBTILES_DIR="$HOME/Charts/local-packs" HELM_BIND=127.0.0.1 \
+  /private/tmp/helm-offline16-ocpn/build/cli/helm-packd 9120
 ```
 
 MBTiles packs are exposed as `/{pack}/{z}/{x}/{y}.{ext}` for existing raster

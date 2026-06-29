@@ -142,13 +142,15 @@ say "build helm targets (-j$JOBS)"
 # helm-tides / helm-tides-smoke / helm-tides-fetch are the OpenCPN tide engine, its smoke check,
 # and the tide-catalog fetch helper; building them by default keeps the tide stack reproducible too.
 # helm-s52-atlas-builder / helm-s52-atlas-smoke are dependency-free C++ S-52 asset pipeline
-# checks for Vulkan renderer symbols/patterns/line styles.
-cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-tiles helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
+# checks for Vulkan renderer symbols/patterns/line styles. helm-packd is the local MBTiles/PMTiles
+# pack daemon; it is independent of chart/nav so it can be tested without touching :8080.
+cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-tiles helm-packd helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
-ls -1 "$BIN"/{helm-tiles,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
+ls -1 "$BIN"/{helm-tiles,helm-packd,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
 [ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
+[ -x "$BIN/helm-packd" ] || die "helm-packd (local pack daemon) did not build despite being a default target (OFFLINE-16) — check the build log above"
 
 # ---- install the DURABLE runtime (so a fresh install / reboot can COLD-START) ----------------
 # The engine resolves the S-52 presentation library from HELM_S57_DATA (default ~/.helm/runtime/
