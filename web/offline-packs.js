@@ -157,12 +157,126 @@
     try { if (map.getSource(SOURCE_ID)) map.removeSource(SOURCE_ID); } catch (e) {}
   }
 
+  // ===== CLIENT-22: viewport prefetch + zoom/coverage policy =================
+  // No blank edges while panning/zooming inside an active offline pack:
+  //  - overzoom: source maxzoom = the pack's REAL max (below) so MapLibre scales the deepest
+  //    tile past it instead of requesting tiles that don't exist (404 -> blank).
+  //  - prefetch ring: on debounced moveend, warm a 1-tile margin around the viewport FROM THE
+  //    LOCAL PACK ONLY, budgeted + deduped, never outside pack bounds, never on the gesture path.
+  //  - coverage: when the viewport leaves pack bounds, show an explicit "outside coverage" badge
+  //    (the online-fill underlay covers it when present) instead of a silent blank.
+  // Reusable by WX-19's Environmental Scene (same overzoom / coverage discipline for the field).
+  var PREFETCH_MARGIN = 1;        // tiles of pan-ahead ring beyond the viewport
+  var PREFETCH_BUDGET = 96;       // hard cap on tiles warmed per moveend (runaway guard)
+  var PREFETCH_SEEN_CAP = 4000;   // cap the dedupe set so it can't grow unbounded
+  var prefetchSeen = Object.create(null);
+  var prefetchSeenN = 0;
+  var moveDebounce = null;
+  var moveHookBound = false;
+
+  function packMaxzoom(pack) {
+    var mz = Number(pack && pack.maxzoom);
+    if (isFinite(mz) && mz > 0) return mz;
+    // No maxzoom in the catalog: we can't know the pack's real depth. Fail loud + cap conservatively
+    // so we OVERZOOM past the cap rather than silently guessing 22 and 404-blanking on deep zoom.
+    if (log && log.warn) log.warn('pack "' + ((pack && (pack.id || pack.name)) || '?') + '" has no maxzoom; capping source at z16 for overzoom');
+    return 16;
+  }
+
+  function lon2tileX(lon, n) { return Math.floor((lon + 180) / 360 * n); }
+  function lat2tileY(lat, n) {
+    var r = lat * Math.PI / 180;
+    return Math.floor((1 - Math.log(Math.tan(r) + 1 / Math.cos(r)) / Math.PI) / 2 * n);
+  }
+  function tileX2lon(x, n) { return x / n * 360 - 180; }
+  function tileY2lat(y, n) { var t = Math.PI * (1 - 2 * y / n); return 180 / Math.PI * Math.atan(0.5 * (Math.exp(t) - Math.exp(-t))); }
+
+  function warmTile(url) { try { var img = new Image(); img.decoding = 'async'; img.src = url; } catch (e) {} }
+
+  function tileInBounds(x, y, n, b) {   // does tile (x,y)@n overlap pack bounds [W,S,E,N]?
+    if (!b) return true;
+    var w = tileX2lon(x, n), e = tileX2lon(x + 1, n), north = tileY2lat(y, n), south = tileY2lat(y + 1, n);
+    return !(e < b[0] || w > b[2] || north < b[1] || south > b[3]);
+  }
+
+  function prefetchViewport() {
+    var map = state.map || window.map;
+    var pack = activePack();
+    // PMTiles tiles arrive via the pmtiles:// range protocol from a LOCAL file; the browser's range
+    // cache already makes re-pan instant, so only XYZ/HTTP packs need URL prewarming.
+    if (!map || !pack || isPmtilesPack(pack)) return;
+    if (!(map.getLayer && map.getLayer(LAYER_ID))) return;
+    var bounds; try { bounds = map.getBounds(); } catch (e) { return; }
+    if (!bounds) return;
+    var minz = Number(pack.minzoom || 0), maxz = packMaxzoom(pack);
+    var baseZ = Math.round(map.getZoom());
+    if (baseZ < minz) baseZ = minz; else if (baseZ > maxz) baseZ = maxz;   // warm real tiles; overzoom covers deeper
+    var W = bounds.getWest(), E = bounds.getEast(), N = bounds.getNorth(), S = bounds.getSouth();
+    var pb = boundsArray(pack), tmpl = tileUrl(pack), budget = PREFETCH_BUDGET;
+    // Warm the current zoom first (priority), then the adjacent levels so a zoom in/out is also
+    // populated before it renders -- all within ONE shared tile budget (runaway guard).
+    var zooms = [baseZ];
+    if (baseZ + 1 <= maxz) zooms.push(baseZ + 1);
+    if (baseZ - 1 >= minz) zooms.push(baseZ - 1);
+    for (var zi = 0; zi < zooms.length && budget > 0; zi++) {
+      var z = zooms[zi], n = Math.pow(2, z);
+      var x0 = lon2tileX(W, n) - PREFETCH_MARGIN, x1 = lon2tileX(E, n) + PREFETCH_MARGIN;
+      var y0 = lat2tileY(N, n) - PREFETCH_MARGIN, y1 = lat2tileY(S, n) + PREFETCH_MARGIN;
+      for (var x = x0; x <= x1 && budget > 0; x++) {
+        var tx = ((x % n) + n) % n;                  // wrap longitude across the antimeridian
+        for (var y = y0; y <= y1 && budget > 0; y++) {
+          if (y < 0 || y >= n) continue;             // latitude does not wrap
+          if (!tileInBounds(tx, y, n, pb)) continue; // never warm outside declared coverage
+          var key = z + '/' + tx + '/' + y;
+          if (prefetchSeen[key]) continue;
+          prefetchSeen[key] = 1; prefetchSeenN++; budget--;
+          warmTile(tmpl.replace('{z}', z).replace('{x}', tx).replace('{y}', y));
+        }
+      }
+    }
+    if (prefetchSeenN > PREFETCH_SEEN_CAP) { prefetchSeen = Object.create(null); prefetchSeenN = 0; }
+  }
+
+  function renderCoverageBadge() {
+    var map = state.map || window.map, pack = activePack();
+    var el = document.getElementById('helm-coverage-badge');
+    var b = pack && boundsArray(pack), c = null;
+    if (map) { try { c = map.getCenter(); } catch (e) {} }
+    var inside = !b || !c || (c.lng >= b[0] && c.lng <= b[2] && c.lat >= b[1] && c.lat <= b[3]);
+    var onlineFill = false;
+    try { onlineFill = !!(map && map.getLayer('helm-chart-online-fill') && map.getLayoutProperty('helm-chart-online-fill', 'visibility') !== 'none'); } catch (e) {}
+    if (!pack || inside || onlineFill) { if (el) el.style.display = 'none'; return; }
+    if (!el) {
+      // Inline styles (not a stylesheet rule): the badge must render correctly even when the Chart
+      // Packs panel — which injects the module's <style> — has never opened.
+      el = document.createElement('div');
+      el.id = 'helm-coverage-badge';
+      el.textContent = 'Outside offline chart coverage';
+      el.style.cssText = 'position:fixed;top:92px;left:50%;transform:translateX(-50%);z-index:30;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.9);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
+      document.body.appendChild(el);
+    }
+    el.style.display = 'block';
+  }
+
+  function onMapMove() {
+    if (moveDebounce) clearTimeout(moveDebounce);
+    moveDebounce = setTimeout(function () { moveDebounce = null; prefetchViewport(); renderCoverageBadge(); }, 220);
+  }
+  // Bind moveend ONCE for the life of the map (panel-independent): prefetch + coverage must keep
+  // working after the Chart Packs panel is closed, and on page-load restore where it never opened.
+  function ensureMoveHook(map) {
+    if (moveHookBound || !map || !map.on) return;
+    moveHookBound = true;
+    map.on('moveend', onMapMove);
+  }
+  // ===== /CLIENT-22 =========================================================
+
   function sourceForPack(pack) {
     var src = {
       type: 'raster',
       tileSize: 256,
       minzoom: Number(pack.minzoom || 0),
-      maxzoom: Number(pack.maxzoom || 22),
+      maxzoom: packMaxzoom(pack),   // pack's REAL max -> MapLibre overzooms past it (scaled tiles, never a 404-blank)
       attribution: pack.attribution || ''
     };
     if (isPmtilesPack(pack)) src.tiles = [pmtilesTileUrl(pack)];
@@ -190,6 +304,8 @@
       }, beforeLayerId(map));
       applyCurrentThemeTone();
       hideStaticBasemaps();
+      ensureMoveHook(map);   // CLIENT-22: keep prefetch+coverage live even with the panel closed
+      onMapMove();           // CLIENT-22: warm the initial viewport ring + set coverage state
     } catch (e) {
       state.error = 'Could not load pack: ' + ((e && e.message) || e);
       if (log && log.warn) log.warn(state.error);
@@ -252,6 +368,7 @@
   function clearActiveFromStaticChoice() {
     persistActive(null);
     removeDynamicLayer();
+    var bd = document.getElementById('helm-coverage-badge'); if (bd) bd.style.display = 'none';   // CLIENT-22
     renderList();
   }
 
@@ -345,6 +462,7 @@
     var map = state.map;
     if (map && map.on) {
       map.on('moveend', renderList);
+      ensureMoveHook(map);   // CLIENT-22: debounced prefetch ring + coverage badge (bind-once)
       map.on('styledata', function () {
         if (state.activeId && !map.getLayer(LAYER_ID)) addDynamicLayer(activePack());
       });
@@ -404,6 +522,13 @@
 
   bindStaticBasemapFallback();
   register();
+  // CLIENT-22: bind the viewport prefetch/coverage hook as soon as the REAL map exists, independent
+  // of panel-render or pack-activation timing — both were unreliable (panel may be lazy; restore can
+  // run before window.map has .on, see other modules' "map.on is not a function" deferral).
+  (function waitForMap(attempt) {
+    if (window.map && typeof window.map.on === 'function') { ensureMoveHook(window.map); onMapMove(); return; }
+    if ((attempt || 0) < 150) setTimeout(function () { waitForMap((attempt || 0) + 1); }, 100);
+  })(0);
   window.HelmOfflinePacks = {
     refresh: fetchCatalog,
     activate: activate,
