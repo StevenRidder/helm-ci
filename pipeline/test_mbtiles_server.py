@@ -294,6 +294,22 @@ class PackServerTest(unittest.TestCase):
             self.assertGreater(int(resp.headers.get("Content-Length", "0")), 127)
             self.assertEqual(resp.read(), b"")
 
+    def test_bundle_endpoint_groups_catalog_and_prefetch_metadata(self):
+        status, bundle = request_json(
+            f"http://127.0.0.1:{self.port}/bundle?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(bundle["schema"], "helm.region_bundle.manifest.v1")
+        self.assertEqual(bundle["prefetch"]["schema"], "helm.prefetch.manifest.v1")
+        self.assertEqual(bundle["summary"]["roles"]["chart"], 1)
+        self.assertEqual(bundle["summary"]["roles"]["basemap"], 1)
+        self.assertEqual(bundle["summary"]["roles"]["depth"], 1)
+        self.assertEqual(bundle["corridor"]["bbox"], [178.0, -18.0, 178.5, -17.5])
+        chart = next(c for c in bundle["components"] if c["id"] == "pack:chart")
+        self.assertEqual(chart["source_info"]["id"], "US5FIXTURE")
+        self.assertIn("out_of_coverage", chart["status"]["states"])
+        self.assertNotIn(self.tmp.name, json.dumps(bundle))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

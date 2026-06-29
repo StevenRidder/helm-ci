@@ -35,6 +35,7 @@ from typing import Optional, Tuple
 import urllib.parse
 
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
+from region_bundle import BundleError, build_region_bundle
 
 BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
 
@@ -744,6 +745,14 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         self._json_response(200, payload)
 
+    def _bundle_response(self, query: dict):
+        try:
+            payload = build_region_bundle(_catalog(_origin(self)), query)
+        except BundleError as e:
+            self._json_response(400, {"error": "bad_bundle_request", "message": str(e)})
+            return
+        self._json_response(200, payload)
+
     def _serve_mbtiles(self, name: str, parts: list[str]):
         if len(parts) != 4 or name not in CONNS:
             self._empty(404)
@@ -835,6 +844,9 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         if path == "prefetch":
             self._prefetch_response(urllib.parse.parse_qs(parsed.query))
+            return
+        if path == "bundle":
+            self._bundle_response(urllib.parse.parse_qs(parsed.query))
             return
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])

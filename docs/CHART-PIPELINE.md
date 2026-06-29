@@ -147,6 +147,37 @@ estimates when the pack has enough metadata. This is the route/passage-corridor
 piece. General viewport overscan, no-blank-edge panning, and adjacent-zoom warming
 belong to the client-side cache scheduler work.
 
+### Region bundle manifests and delta plans
+
+`pipeline/region_bundle.py` builds `helm.region_bundle.manifest.v1`, the first
+bundle-level contract for the Fiji/local-pack proof:
+
+```text
+/catalog + route/bbox request
+  -> chart/basemap/depth/places component inventory
+  -> source/freshness/coverage/inspection status
+  -> route/bbox prefetch manifest
+  -> per-component fingerprints
+  -> bundle manifest
+```
+
+The local pack server exposes the same manifest through `GET /bundle`. With no
+`bbox` or `route`, the bundle uses the union of selected pack bounds. With a
+route or bbox, it embeds the `helm.prefetch.manifest.v1` advice for that corridor.
+
+Examples:
+
+```text
+/bundle?bbox=178.0,-18.0,179.0,-17.0&minzoom=8&maxzoom=12
+/bundle?route=178.0,-18.0;178.3,-17.7&radius_nm=2&packs=chart,sat
+```
+
+The companion diff helper compares an available bundle with an installed bundle
+and reports `missing`, `changed`, `stale`, and `out_of_coverage` components. It
+does not decide UI policy or mutate files. This keeps pack management backend
+state clear while the client-side OFFLINE work handles selector UI, viewport
+overscan, no-blank-edge panning, and local cache behavior.
+
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
 > A permanent "cross-reference official charts" disclaimer is mandatory on these layers.

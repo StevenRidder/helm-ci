@@ -8,6 +8,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 |---|---|---|
 | `fetch_tiles.py` | lasso bbox → XYZ tiles → offline `.mbtiles` (TMS Y-flip handled) | python3 (stdlib) |
 | `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
+| `region_bundle.py` | `/catalog` JSON + route/bbox → region bundle manifest + delta plan | python3 (stdlib) |
 | `fetch_wind.py` | gridded wind → `wind.json` (particles) + `wind_points.geojson` (arrows) | python3 (stdlib) |
 | `extract_depth.sh` | NOAA ENC S-57 → `depare`/`depcnt`/`soundg` GeoJSON (depth-on-satellite) | GDAL (`brew install gdal`) |
 
@@ -27,6 +28,9 @@ python3 fetch_tiles.py --source "$SRC_CHART" --bbox="$BBOX" --minzoom "$MINZOOM"
 python3 fetch_tiles.py --source "$SRC_SAT" --fmt jpg --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --out ../web/data/$REGION_NAME-sat.mbtiles --name "Sentinel-2"
 python3 bake_s52_region_pack.py --source "http://127.0.0.1:9001/chart/{z}/{x}/{y}.png" --bbox="$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --palette day --palette dusk --palette night --edition "source-edition" --out ../web/data/$REGION_NAME-s52-{palette}.pmtiles
 ./extract_depth.sh ~/Downloads/US5FLxxx.000 ../web/data   # needs GDAL
+
+# once a local pack helper is running, describe the whole offline region
+python3 region_bundle.py --catalog http://127.0.0.1:9120/catalog --bbox "$BBOX" --minzoom "$MINZOOM" --maxzoom "$MAXZOOM" --bundle-id "$REGION_NAME" --title "$REGION_NAME"
 ```
 
 Then serve the prototype: `cd ../web && python3 -m http.server 8080` → open
@@ -48,4 +52,9 @@ http://localhost:8080.
 - `mbtiles_server.py` also exposes `GET /prefetch` for route-corridor or bbox tile
   manifests, e.g. `/prefetch?route=178.0,-18.0;178.3,-17.7&radius_nm=2&minzoom=8&maxzoom=12`.
   It is an advisory manifest for warming caches; it does not download or mutate packs.
+- `region_bundle.py` and `GET /bundle` publish `helm.region_bundle.manifest.v1`:
+  catalog metadata, route/bbox prefetch advice, chart/basemap/depth/places components,
+  per-component fingerprints, stale/out-of-coverage status, and a delta-plan helper for
+  comparing an available bundle with an installed one. This is still read-only; clients
+  decide how to download, retain, or evict packs.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.

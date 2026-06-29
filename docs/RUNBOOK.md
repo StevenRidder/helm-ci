@@ -151,6 +151,28 @@ python3 web/serve.py 9100
 # open http://127.0.0.1:9100/?basemapPort=9120
 ```
 
+The same helper can describe the whole local offline region without touching
+client storage:
+
+```bash
+curl "http://127.0.0.1:9120/bundle?bbox=176.8,-19.2,180.0,-16.0&minzoom=7&maxzoom=12" \
+  | python3 -m json.tool
+
+python3 pipeline/region_bundle.py \
+  --catalog "http://127.0.0.1:9120/catalog" \
+  --bbox "176.8,-19.2,180.0,-16.0" \
+  --minzoom 7 --maxzoom 12 \
+  --bundle-id fiji \
+  --title "Fiji offline bundle"
+```
+
+That `helm.region_bundle.manifest.v1` output groups charts, basemap imagery,
+depth/places descriptors when present, source/freshness/coverage/inspection
+metadata, and route/bbox prefetch advice. Use
+`pipeline/region_bundle.py --diff-against installed-bundle.json` to produce a
+read-only update plan for missing, changed, stale, and out-of-coverage
+components.
+
 If the packs live on another Mac temporarily, use the cache-backed proxy rather
 than a thin forwarding proxy. The first view still warms from the upstream Mac,
 but repeated zoom/pan serves from `~/.helm/basemap-proxy-cache`:
