@@ -838,10 +838,19 @@ def bundle_index() -> dict:
         "bundles": [{
             "id": BUNDLE_ID,
             "title": BUNDLE_TITLE,
+            "kind": "environmental-bundle",
             "schema": BUNDLE_SCHEMA,
             "manifest": "/bundles/open-meteo/latest/manifest.json",
             "coverage": "global-with-regional-warm-cache",
+            "layers": list(BUNDLE_LAYER_ORDER),
+            "validTimes": [BUNDLE_VALID_TIME_ID],
+            "runTime": BUNDLE_VALID_TIME_ID,
+            "model": MODEL_NAME,
+            "cacheOnlyReplay": False,
+            "upstreamFetchesAllowedDuringGesture": False,
+            "sample": {"probeHandle": "weather.bundle", "contract": "sample(lat, lon, t)"},
             "advisoryOnly": True,
+            "offlineReady": False,
         }] + prepared,
     }
 
@@ -864,6 +873,17 @@ def _prepared_bundle_manifest_path(region_id: str) -> str:
 def _prepared_bundle_url(region_id: str) -> str:
     rid = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
     return f"/bundles/{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{rid}/manifest.json"
+
+
+def _dir_size(path: str) -> int:
+    total = 0
+    for root, _dirs, files in os.walk(path):
+        for name in files:
+            try:
+                total += os.path.getsize(os.path.join(root, name))
+            except OSError:
+                pass
+    return total
 
 
 def _coverage_bbox(w: float, s: float, e: float, n: float) -> dict:
@@ -1153,13 +1173,30 @@ def discover_prepared_bundles() -> List[dict]:
         manifest = _read_json(os.path.join(root, region, "manifest.json"))
         if not manifest:
             continue
+        run = manifest.get("run") if isinstance(manifest.get("run"), dict) else {}
+        cache = manifest.get("cacheState") if isinstance(manifest.get("cacheState"), dict) else {}
+        policy = manifest.get("cachePolicy") if isinstance(manifest.get("cachePolicy"), dict) else {}
+        layers = manifest.get("layers") if isinstance(manifest.get("layers"), dict) else {}
         out.append({
             "id": manifest.get("bundleId", f"{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{region}"),
             "title": manifest.get("title", region),
+            "kind": "environmental-bundle",
             "schema": manifest.get("schema", BUNDLE_SCHEMA),
             "manifest": _prepared_bundle_url(region),
             "coverage": manifest.get("coverage"),
+            "layers": sorted(layers.keys()),
+            "validTimes": run.get("validTimes") or [],
+            "runTime": run.get("runTime"),
+            "model": run.get("model"),
+            "sizeBytes": _dir_size(os.path.join(root, region)),
             "cacheState": manifest.get("cacheState"),
+            "freshness": {
+                "status": cache.get("state") or "unknown",
+                "materializedAt": cache.get("materializedAt") or manifest.get("generatedAt"),
+            },
+            "cacheOnlyReplay": bool(policy.get("cacheOnlyReplay", True)),
+            "upstreamFetchesAllowedDuringGesture": bool(policy.get("upstreamFetchesAllowedDuringGesture", False)),
+            "sample": {"probeHandle": "weather.bundle", "contract": "sample(lat, lon, t)"},
             "advisoryOnly": True,
             "offlineReady": bool((manifest.get("cacheState") or {}).get("offlineReady")),
         })

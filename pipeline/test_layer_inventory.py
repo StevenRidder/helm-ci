@@ -10,6 +10,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "pipeline" / "layer_inventory.py"
+ENV_FIXTURE = ROOT / "services" / "wx" / "fixtures" / "fiji-env-bundle-v1.json"
 sys.path.insert(0, str(ROOT / "pipeline"))
 sys.path.insert(0, str(ROOT / "backend"))
 
@@ -83,6 +84,7 @@ def sample_catalog():
 
 class LayerInventoryTest(unittest.TestCase):
     def test_builds_local_inventory_for_packs_and_domain_layers(self):
+        env_bundle = json.loads(ENV_FIXTURE.read_text(encoding="utf-8"))
         inventory = build_layer_inventory(
             sample_catalog(),
             {
@@ -116,6 +118,7 @@ class LayerInventoryTest(unittest.TestCase):
                 "confidence": "forecast",
                 "probe_handle": "weather",
             },
+            environmental_bundles=env_bundle,
             cruiser_layers={
                 "id": "fiji-pass-notes",
                 "title": "Fiji Pass Notes",
@@ -140,17 +143,32 @@ class LayerInventoryTest(unittest.TestCase):
         self.assertEqual(layers_by_product["S-111"]["target_contract"]["name"], "tides.current")
         self.assertEqual(layers_by_product["S-129"]["target_contract"]["name"], "pass.ukc")
         self.assertEqual(layers_by_product["weather.model-run"]["sample"]["probe_handle"], "weather")
+        env_bundle_layer = next(layer for layer in inventory["layers"] if layer["role"] == "environmental_bundle")
+        self.assertEqual(env_bundle_layer["product_identifier"], "helm.env.bundle.v1")
+        self.assertEqual(env_bundle_layer["coverage"]["bbox_object"]["crossesAntimeridian"], True)
+        self.assertEqual(env_bundle_layer["sample"]["probe_handle"], "weather.bundle")
+        self.assertFalse(env_bundle_layer["environmental_bundle"]["upstreamFetchesAllowedDuringGesture"])
+        env_wind = next(layer for layer in inventory["layers"] if layer["id"].endswith(":wind"))
+        self.assertEqual(env_wind["product_identifier"], "S-413")
+        self.assertEqual(env_wind["sample"]["probe_handle"], "weather.wind")
+        env_current = next(layer for layer in inventory["layers"] if layer["id"].endswith(":current"))
+        self.assertEqual(env_current["role"], "surface_current")
+        self.assertEqual(env_current["product_identifier"], "S-111")
         self.assertIn("s111.surface_current", inventory["summary"]["sample_handles"])
+        self.assertIn("weather.bundle", inventory["summary"]["sample_handles"])
         self.assertEqual(inventory["summary"]["products"]["S-124"], 1)
-        self.assertEqual(inventory["summary"]["roles"]["weather"], 1)
+        self.assertEqual(inventory["summary"]["roles"]["environmental_bundle"], 1)
+        self.assertEqual(inventory["summary"]["roles"]["weather"], 11)
 
     def test_cli_builds_inventory_from_catalog_and_s100_json(self):
         with tempfile.TemporaryDirectory() as tmp:
             tmp_path = Path(tmp)
             catalog_path = tmp_path / "catalog.json"
             s100_path = tmp_path / "s100.json"
+            env_path = tmp_path / "env.json"
             catalog_path.write_text(json.dumps(sample_catalog()), encoding="utf-8")
             s100_path.write_text(json.dumps(build_fixture_inventory()), encoding="utf-8")
+            env_path.write_text(ENV_FIXTURE.read_text(encoding="utf-8"), encoding="utf-8")
             proc = subprocess.run(
                 [
                     sys.executable,
@@ -167,6 +185,8 @@ class LayerInventoryTest(unittest.TestCase):
                     "7",
                     "--s100-json",
                     str(s100_path),
+                    "--env-bundle-json",
+                    str(env_path),
                 ],
                 cwd=str(ROOT),
                 text=True,
@@ -178,6 +198,7 @@ class LayerInventoryTest(unittest.TestCase):
             self.assertEqual(payload["schema"], LAYER_INVENTORY_SCHEMA)
             self.assertEqual(payload["id"], "fiji-layers")
             self.assertIn("S-102", payload["summary"]["products"])
+            self.assertIn("helm.env.bundle.v1", payload["summary"]["products"])
             self.assertNotIn(tmp, proc.stdout)
 
 

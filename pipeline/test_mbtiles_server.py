@@ -18,6 +18,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / "pipeline" / "mbtiles_server.py"
+ENV_FIXTURE = ROOT / "services" / "wx" / "fixtures" / "fiji-env-bundle-v1.json"
 
 
 def free_port():
@@ -186,6 +187,7 @@ class PackServerTest(unittest.TestCase):
         self.port = free_port()
         env = os.environ.copy()
         env["HELM_MBTILES_DIR"] = self.tmp.name
+        env["HELM_ENV_BUNDLE_MANIFESTS"] = str(ENV_FIXTURE)
         self.proc = subprocess.Popen(
             [sys.executable, str(SERVER), str(self.port)],
             cwd=str(ROOT),
@@ -320,6 +322,8 @@ class PackServerTest(unittest.TestCase):
         self.assertEqual(inventory["summary"]["roles"]["chart"], 1)
         self.assertEqual(inventory["summary"]["roles"]["basemap"], 1)
         self.assertEqual(inventory["summary"]["roles"]["depth"], 1)
+        self.assertEqual(inventory["summary"]["roles"]["environmental_bundle"], 1)
+        self.assertIn("weather.bundle", inventory["summary"]["sample_handles"])
         chart = next(layer for layer in inventory["layers"] if layer["component_id"] == "pack:chart")
         self.assertEqual(chart["product_identifier"], "S-52")
         self.assertEqual(chart["dataset_name"], "Demo Chart")
@@ -331,7 +335,13 @@ class PackServerTest(unittest.TestCase):
         sat = next(layer for layer in inventory["layers"] if layer["component_id"] == "pack:sat")
         self.assertEqual(sat["product_identifier"], "S-52")
         self.assertEqual(sat["freshness"]["status"], "stale")
+        env_bundle = next(layer for layer in inventory["layers"] if layer["role"] == "environmental_bundle")
+        self.assertEqual(env_bundle["product_identifier"], "helm.env.bundle.v1")
+        self.assertEqual(env_bundle["coverage"]["bbox_object"]["crossesAntimeridian"], True)
+        env_current = next(layer for layer in inventory["layers"] if layer["role"] == "surface_current")
+        self.assertEqual(env_current["product_identifier"], "S-111")
         self.assertNotIn(self.tmp.name, json.dumps(inventory))
+        self.assertNotIn(str(ENV_FIXTURE), json.dumps(inventory))
 
 
 if __name__ == "__main__":

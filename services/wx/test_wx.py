@@ -199,6 +199,14 @@ def main():
     check(any(bun.get("manifest") == "/bundles/open-meteo/latest/fiji-test/manifest.json"
               for bun in route_index["bundles"]),
           "bundle index advertises the prepared Fiji test bundle")
+    prepared_index = next(bun for bun in route_index["bundles"]
+                          if bun.get("manifest") == "/bundles/open-meteo/latest/fiji-test/manifest.json")
+    check(prepared_index["kind"] == "environmental-bundle" and "wind" in prepared_index["layers"],
+          "prepared bundle index exposes offline-pack layer metadata")
+    check(prepared_index["offlineReady"] is True and prepared_index["cacheOnlyReplay"] is True,
+          "prepared bundle index advertises offline/cache-only replay")
+    check(prepared_index["sample"]["probeHandle"] == "weather.bundle",
+          "prepared bundle index exposes weather bundle sample handle")
     prepared_manifest = client.get("/bundles/open-meteo/latest/fiji-test/manifest.json")
     check(prepared_manifest.status_code == 200 and prepared_manifest.headers.get("x-helm-upstream-fetch") == "0",
           "prepared manifest replays from cache only")

@@ -59,6 +59,7 @@ SAMPLE_BY_ROLE = {
     "under_keel_clearance": "pass.ukc",
     "cruiser": "cruiser.layers",
     "vector": "vector.features",
+    "environmental_bundle": "weather.bundle",
 }
 
 
@@ -130,6 +131,39 @@ def _bounds_array(value) -> Optional[List[float]]:
     if west >= east or south >= north:
         return None
     return [west, south, east, north]
+
+
+def _env_bbox(value) -> Optional[dict]:
+    """Parse helm.env.bundle.v1 bbox objects, including antimeridian spans."""
+    if isinstance(value, dict):
+        try:
+            west = float(value["west"])
+            south = float(value["south"])
+            east = float(value["east"])
+            north = float(value["north"])
+        except (KeyError, TypeError, ValueError):
+            return None
+        crosses = bool(value.get("crossesAntimeridian")) or west > east
+        return {
+            "west": west,
+            "south": south,
+            "east": east,
+            "north": north,
+            "crossesAntimeridian": crosses,
+            "crosses_antimeridian": crosses,
+        }
+    bbox = _bounds_array(value)
+    if not bbox:
+        return None
+    west, south, east, north = bbox
+    return {
+        "west": west,
+        "south": south,
+        "east": east,
+        "north": north,
+        "crossesAntimeridian": False,
+        "crosses_antimeridian": False,
+    }
 
 
 def _bbox_polygon(bbox: Optional[List[float]]) -> Optional[List[List[float]]]:
@@ -387,6 +421,233 @@ def _layer_from_s100_record(record: dict) -> dict:
     return layer
 
 
+def _env_bundle_manifests(value) -> list[dict]:
+    if value is None:
+        return []
+    if isinstance(value, list):
+        out = []
+        for item in value:
+            out.extend(_env_bundle_manifests(item))
+        return out
+    if not isinstance(value, dict):
+        return []
+    if value.get("schema") == "helm.env.bundle.v1":
+        return [value]
+    if isinstance(value.get("bundles"), list):
+        # Index entries are useful only when they carry an embedded manifest. A URL-only
+        # index is a discovery surface, not enough to build an offline inventory record.
+        out = []
+        for item in value["bundles"]:
+            if isinstance(item, dict):
+                out.extend(_env_bundle_manifests(item.get("manifestObject") or item.get("bundle") or item))
+        return out
+    return []
+
+
+def _env_bundle_id(manifest: dict) -> str:
+    return str(manifest.get("bundleId") or manifest.get("id") or "environmental-bundle")
+
+
+def _env_bundle_source(manifest: dict) -> dict:
+    source = manifest.get("source") if isinstance(manifest.get("source"), dict) else {}
+    run = manifest.get("run") if isinstance(manifest.get("run"), dict) else {}
+    return _drop_none(_public_json({
+        "label": source.get("provider") or source.get("label") or "environmental-model",
+        "id": source.get("provider") or source.get("id"),
+        "kind": "environmental-bundle",
+        "format": manifest.get("encoding"),
+        "license": source.get("license"),
+        "attribution": source.get("attribution"),
+        "updated": run.get("runTime") or manifest.get("generatedAt"),
+        "ref": manifest.get("bundleId"),
+        "confidence": "forecast-advisory",
+        "model": run.get("model"),
+        "marine_model": run.get("marineModel"),
+        "official_product": False,
+    }))
+
+
+def _env_bundle_coverage(manifest: dict) -> dict:
+    coverage = manifest.get("coverage") if isinstance(manifest.get("coverage"), dict) else {}
+    bbox = _env_bbox(coverage.get("bbox"))
+    if not bbox:
+        return {"status": "unknown"}
+    arr = [bbox["west"], bbox["south"], bbox["east"], bbox["north"]]
+    payload = {
+        "status": "area",
+        "bbox": arr,
+        "bbox_object": bbox,
+        "polygon": None if bbox["crossesAntimeridian"] else _bbox_polygon(arr),
+        "region": coverage.get("regionId") or coverage.get("homeWaters"),
+        "wrap": coverage.get("wrap") or ("antimeridian" if bbox["crossesAntimeridian"] else "none"),
+        "warning": coverage.get("warning"),
+    }
+    return _drop_none(_public_json(payload))
+
+
+def _env_bundle_z_range(manifest: dict) -> Optional[dict]:
+    lod = manifest.get("lod") if isinstance(manifest.get("lod"), dict) else {}
+    if lod.get("dataMinZoom") is not None or lod.get("dataMaxZoom") is not None:
+        return _drop_none({"min": lod.get("dataMinZoom"), "max": lod.get("dataMaxZoom")})
+    mins, maxs = [], []
+    levels = lod.get("levels") if isinstance(lod.get("levels"), dict) else {}
+    for level in levels.values():
+        if not isinstance(level, dict):
+            continue
+        if level.get("minzoom") is not None:
+            mins.append(level.get("minzoom"))
+        if level.get("maxzoom") is not None:
+            maxs.append(level.get("maxzoom"))
+    if not mins and not maxs:
+        return None
+    return _drop_none({"min": min(mins) if mins else None, "max": max(maxs) if maxs else None})
+
+
+def _env_bundle_time_range(manifest: dict) -> Optional[dict]:
+    run = manifest.get("run") if isinstance(manifest.get("run"), dict) else {}
+    valid = [str(v) for v in (run.get("validTimes") or [])]
+    payload = {
+        "start": valid[0] if valid else run.get("runTime"),
+        "end": valid[-1] if valid else run.get("runTime"),
+        "valid_times": valid,
+        "frames": run.get("frames"),
+        "run_time": run.get("runTime"),
+    }
+    return _drop_none(_public_json(payload)) or None
+
+
+def _env_bundle_freshness(manifest: dict) -> dict:
+    run = manifest.get("run") if isinstance(manifest.get("run"), dict) else {}
+    cache = manifest.get("cacheState") if isinstance(manifest.get("cacheState"), dict) else {}
+    state = str(cache.get("state") or "").lower()
+    if state in ("expired", "stale", "fresh", "refreshing", "partial"):
+        status = state
+    elif cache.get("offlineReady"):
+        status = "fresh"
+    elif manifest.get("generatedAt") or run.get("runTime"):
+        status = "unknown"
+    else:
+        status = "unknown"
+    return _drop_none(_public_json({
+        "status": status,
+        "render_date": cache.get("materializedAt") or manifest.get("generatedAt"),
+        "updated": run.get("runTime") or manifest.get("generatedAt"),
+        "stale_at": cache.get("staleAt"),
+        "warning": cache.get("warning"),
+    }))
+
+
+def _env_bundle_product_for_layer(name: str, layer: dict) -> str:
+    s100 = layer.get("s100") if isinstance(layer.get("s100"), dict) else {}
+    return str(s100.get("productIdentifier") or ("S-111" if name == "current" else "S-413"))
+
+
+def _env_bundle_record(manifest: dict, manifest_url: Optional[str]) -> dict:
+    bundle_id = _env_bundle_id(manifest)
+    run = manifest.get("run") if isinstance(manifest.get("run"), dict) else {}
+    policy = manifest.get("cachePolicy") if isinstance(manifest.get("cachePolicy"), dict) else {}
+    cache = manifest.get("cacheState") if isinstance(manifest.get("cacheState"), dict) else {}
+    layers = manifest.get("layers") if isinstance(manifest.get("layers"), dict) else {}
+    source = _env_bundle_source(manifest)
+    links = [{"rel": "manifest", "href": manifest_url}] if manifest_url else []
+    return _drop_none(_public_json({
+        "id": "env-bundle:%s" % _slug(bundle_id),
+        "component_id": bundle_id,
+        "role": "environmental_bundle",
+        "product_identifier": manifest.get("schema") or "helm.env.bundle.v1",
+        "product_id": manifest.get("schema") or "helm.env.bundle.v1",
+        "dataset_name": manifest.get("title") or bundle_id,
+        "dataset_edition": run.get("runLabel"),
+        "dataset_reference_date": run.get("runTime") or manifest.get("generatedAt"),
+        "producer_code": source.get("label"),
+        "source": source,
+        "links": links,
+        "coverage": _env_bundle_coverage(manifest),
+        "z_range": _env_bundle_z_range(manifest),
+        "time_range": _env_bundle_time_range(manifest),
+        "pack": {
+            "container": "environmental-bundle",
+            "schema": manifest.get("schema"),
+            "format": manifest.get("encoding"),
+            "size_bytes": manifest.get("sizeBytes") or manifest.get("size_bytes"),
+        },
+        "freshness": _env_bundle_freshness(manifest),
+        "confidence": "forecast-advisory",
+        "sample": _sample_contract("weather.bundle"),
+        "environmental_bundle": {
+            "bundleId": bundle_id,
+            "layers": sorted(layers.keys()),
+            "validTimes": run.get("validTimes") or [],
+            "model": run.get("model"),
+            "marineModel": run.get("marineModel"),
+            "cacheOnlyReplay": bool(policy.get("cacheOnlyReplay", True)),
+            "upstreamFetchesAllowedDuringGesture": bool(policy.get("upstreamFetchesAllowedDuringGesture", False)),
+            "offlineReady": bool(cache.get("offlineReady")),
+            "state": cache.get("state"),
+        },
+        "cachePolicy": policy,
+        "cacheState": cache,
+        "warnings": [],
+        "not_for_navigation": True,
+        "advisory_label": "Forecast/advisory met-ocean data. Cross-reference official sources.",
+    }))
+
+
+def _env_layer_record(manifest: dict, name: str, layer: dict, manifest_url: Optional[str]) -> dict:
+    bundle_id = _env_bundle_id(manifest)
+    source = _env_bundle_source(manifest)
+    product = _env_bundle_product_for_layer(name, layer)
+    role = "surface_current" if name == "current" else "weather"
+    links = [{"rel": "manifest", "href": manifest_url}] if manifest_url else []
+    return _drop_none(_public_json({
+        "id": "env:%s:%s" % (_slug(bundle_id), _slug(name)),
+        "component_id": bundle_id,
+        "role": role,
+        "product_identifier": product,
+        "product_id": product,
+        "dataset_name": "%s · %s" % (manifest.get("title") or bundle_id, name),
+        "dataset_edition": (manifest.get("run") or {}).get("runLabel") if isinstance(manifest.get("run"), dict) else None,
+        "dataset_reference_date": (manifest.get("run") or {}).get("runTime") if isinstance(manifest.get("run"), dict) else manifest.get("generatedAt"),
+        "producer_code": source.get("label"),
+        "source": source,
+        "links": links,
+        "coverage": _env_bundle_coverage(manifest),
+        "z_range": _env_bundle_z_range(manifest),
+        "time_range": _env_bundle_time_range(manifest),
+        "pack": {
+            "container": "environmental-bundle",
+            "schema": manifest.get("schema"),
+            "format": manifest.get("encoding"),
+        },
+        "freshness": _env_bundle_freshness(manifest),
+        "confidence": "forecast-advisory",
+        "sample": _sample_contract("weather.%s" % name),
+        "environmental_bundle": {
+            "bundleId": bundle_id,
+            "layer": name,
+            "kind": layer.get("kind"),
+            "unit": layer.get("unit"),
+            "fieldTiles": layer.get("fieldTiles"),
+            "vectorField": layer.get("vectorField"),
+        },
+        "s100": layer.get("s100") if isinstance(layer.get("s100"), dict) else None,
+        "not_for_navigation": True,
+        "advisory_label": "Forecast/advisory met-ocean data. Cross-reference official sources.",
+    }))
+
+
+def _layers_from_environmental_bundles(environmental_bundles) -> list[dict]:
+    out: list[dict] = []
+    for manifest in _env_bundle_manifests(environmental_bundles):
+        manifest_url = manifest.get("manifest") or manifest.get("manifest_url")
+        out.append(_env_bundle_record(manifest, manifest_url))
+        layers = manifest.get("layers") if isinstance(manifest.get("layers"), dict) else {}
+        for name, layer in sorted(layers.items()):
+            if isinstance(layer, dict):
+                out.append(_env_layer_record(manifest, str(name), layer, manifest_url))
+    return out
+
+
 def _summary(layers: list[dict]) -> dict:
     roles: Dict[str, int] = {}
     products: Dict[str, int] = {}
@@ -440,6 +701,7 @@ def build_layer_inventory(
     places: list[dict] | dict | None = None,
     depth: list[dict] | dict | None = None,
     weather: list[dict] | dict | None = None,
+    environmental_bundles: list[dict] | dict | None = None,
     cruiser_layers: list[dict] | dict | None = None,
     s100_inventory: dict | list | None = None,
 ) -> dict:
@@ -453,6 +715,7 @@ def build_layer_inventory(
 
     layers = [_layer_from_component(component) for component in bundle.get("components", [])]
     layers.extend(_layer_from_dataset(item, "weather", "weather.model-run") for item in _as_list(weather))
+    layers.extend(_layers_from_environmental_bundles(environmental_bundles))
     layers.extend(_layer_from_dataset(item, "cruiser", "cruiser.layer") for item in _as_list(cruiser_layers))
     layers.extend(_layer_from_s100_record(record) for record in _s100_records(s100_inventory))
     layers.sort(key=lambda item: (str(item.get("role")), str(item.get("id"))))
@@ -504,6 +767,12 @@ def _load_optional_json(path: Optional[str]):
     return _read_json_source(path) if path else None
 
 
+def _load_optional_json_many(paths: Optional[list[str]]):
+    if not paths:
+        return None
+    return [_read_json_source(path) for path in paths]
+
+
 def _query_from_args(args) -> dict:
     query = {
         "inventory_id": [args.inventory_id],
@@ -537,6 +806,8 @@ def main(argv: Optional[list[str]] = None) -> int:
     ap.add_argument("--places-json", help="Optional public places dataset descriptor JSON.")
     ap.add_argument("--depth-json", help="Optional public depth dataset descriptor JSON.")
     ap.add_argument("--weather-json", help="Optional public weather/model-run descriptor JSON.")
+    ap.add_argument("--env-bundle-json", action="append",
+                    help="Optional helm.env.bundle.v1 manifest JSON. May be repeated.")
     ap.add_argument("--cruiser-json", help="Optional public cruiser-layer descriptor JSON.")
     ap.add_argument("--s100-json", help="Optional S-100-style layer inventory JSON.")
     ap.add_argument("--output", help="Write JSON here instead of stdout.")
@@ -549,6 +820,7 @@ def main(argv: Optional[list[str]] = None) -> int:
             places=_load_optional_json(args.places_json),
             depth=_load_optional_json(args.depth_json),
             weather=_load_optional_json(args.weather_json),
+            environmental_bundles=_load_optional_json_many(args.env_bundle_json),
             cruiser_layers=_load_optional_json(args.cruiser_json),
             s100_inventory=_load_optional_json(args.s100_json),
         )

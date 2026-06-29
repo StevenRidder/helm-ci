@@ -34,12 +34,14 @@ import sys
 import threading
 from typing import Optional, Tuple
 import urllib.parse
+import urllib.request
 
 from layer_inventory import LayerInventoryError, build_layer_inventory
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
 
 BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
+ENV_BUNDLE_SOURCES = os.environ.get("HELM_ENV_BUNDLE_MANIFESTS", "").strip()
 
 PMTILE_TYPES = {
     1: ("mvt", "vector"),
@@ -264,6 +266,40 @@ def _json_object(value) -> Optional[dict]:
     except json.JSONDecodeError:
         return None
     return loaded if isinstance(loaded, dict) else None
+
+
+def _read_json_source(source: str) -> Optional[dict]:
+    try:
+        if source.startswith("http://") or source.startswith("https://"):
+            with urllib.request.urlopen(source, timeout=5) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+        else:
+            with open(os.path.expanduser(source), "r", encoding="utf-8") as f:
+                payload = json.load(f)
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+        print(f"warning: cannot read environmental bundle manifest {source!r}: {e}", file=sys.stderr)
+        return None
+    return payload if isinstance(payload, dict) else None
+
+
+def _load_environmental_bundles() -> list[dict]:
+    if not ENV_BUNDLE_SOURCES:
+        return []
+    manifests = []
+    for source in [p.strip() for p in ENV_BUNDLE_SOURCES.split(",") if p.strip()]:
+        expanded = os.path.expanduser(source)
+        candidates = []
+        if not source.startswith(("http://", "https://")) and os.path.isdir(expanded):
+            candidates.extend(sorted(glob.glob(os.path.join(expanded, "**", "manifest.json"), recursive=True)))
+        else:
+            candidates.append(source)
+        for candidate in candidates:
+            payload = _read_json_source(candidate)
+            if payload and payload.get("schema") == "helm.env.bundle.v1":
+                manifests.append(payload)
+            elif payload:
+                print(f"warning: environmental bundle manifest {candidate!r} has unsupported schema", file=sys.stderr)
+    return manifests
 
 
 def _inspection_override(value) -> Optional[dict]:
@@ -641,6 +677,7 @@ def _build_pack_records():
 
 
 PACKS, CONNS, LOCKS = _build_pack_records()
+ENV_BUNDLES = _load_environmental_bundles()
 
 
 def _origin(handler: http.server.BaseHTTPRequestHandler) -> str:
@@ -741,7 +778,7 @@ class H(http.server.BaseHTTPRequestHandler):
 
     def _prefetch_response(self, query: dict):
         try:
-            payload = build_prefetch_manifest(_catalog(_origin(self)), query)
+            payload = build_prefetch_manifest(_catalog(_origin(self)), query, environmental_bundles=ENV_BUNDLES)
         except PrefetchError as e:
             self._json_response(400, {"error": "bad_prefetch_request", "message": str(e)})
             return
@@ -757,7 +794,7 @@ class H(http.server.BaseHTTPRequestHandler):
 
     def _layers_response(self, query: dict):
         try:
-            payload = build_layer_inventory(_catalog(_origin(self)), query)
+            payload = build_layer_inventory(_catalog(_origin(self)), query, environmental_bundles=ENV_BUNDLES)
         except LayerInventoryError as e:
             self._json_response(400, {"error": "bad_layer_inventory_request", "message": str(e)})
             return
@@ -846,7 +883,10 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         if path == "layers":
             try:
-                body = json.dumps(build_layer_inventory(_catalog(_origin(self)), {}), sort_keys=True).encode("utf-8")
+                body = json.dumps(
+                    build_layer_inventory(_catalog(_origin(self)), {}, environmental_bundles=ENV_BUNDLES),
+                    sort_keys=True,
+                ).encode("utf-8")
             except LayerInventoryError:
                 self._empty(400)
                 return
@@ -900,4 +940,6 @@ if __name__ == "__main__":
     for k, v in PACKS.items():
         zoom = f"z{v.get('minzoom', 0)}-{v.get('maxzoom', 17)}"
         print(f"  {k}: {v['title']}  {v['container']}  {zoom}  {v['format']}")
+    if ENV_BUNDLES:
+        print(f"  environmental bundles: {len(ENV_BUNDLES)}")
     TS(("0.0.0.0", port), H).serve_forever()

@@ -9,6 +9,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 | `fetch_tiles.py` | lasso bbox → XYZ tiles → offline `.mbtiles` (TMS Y-flip handled) | python3 (stdlib) |
 | `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
 | `region_bundle.py` | `/catalog` JSON + route/bbox → region bundle manifest + delta plan | python3 (stdlib) |
+| `layer_inventory.py` | `/catalog` + optional env bundles → boat-local chart/weather/depth/place inventory | python3 (stdlib) |
 | `fetch_wind.py` | gridded wind → `wind.json` (particles) + `wind_points.geojson` (arrows) | python3 (stdlib) |
 | `extract_depth.sh` | NOAA ENC S-57 → `depare`/`depcnt`/`soundg` GeoJSON (depth-on-satellite) | GDAL (`brew install gdal`) |
 
@@ -52,6 +53,11 @@ http://localhost:8080.
 - `mbtiles_server.py` also exposes `GET /prefetch` for route-corridor or bbox tile
   manifests, e.g. `/prefetch?route=178.0,-18.0;178.3,-17.7&radius_nm=2&minzoom=8&maxzoom=12`.
   It is an advisory manifest for warming caches; it does not download or mutate packs.
+- `HELM_ENV_BUNDLE_MANIFESTS=/path/to/manifest.json[,/path/to/other.json]` lets the
+  local pack server expose prepared `helm.env.bundle.v1` weather/met-ocean bundles
+  in `GET /layers` and `GET /prefetch`. The JSON response contains public manifest
+  facts, coverage, valid times, freshness/cache-only policy, layer list, and sample
+  handles, but never the private source file path.
 - `region_bundle.py` and `GET /bundle` publish `helm.region_bundle.manifest.v1`:
   catalog metadata, route/bbox prefetch advice, chart/basemap/depth/places components,
   per-component fingerprints, stale/out-of-coverage status, and a delta-plan helper for

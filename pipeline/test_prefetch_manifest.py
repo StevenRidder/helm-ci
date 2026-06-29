@@ -17,6 +17,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 SERVER = ROOT / "pipeline" / "mbtiles_server.py"
+ENV_FIXTURE = ROOT / "services" / "wx" / "fixtures" / "fiji-env-bundle-v1.json"
 sys.path.insert(0, str(ROOT / "pipeline"))
 
 from prefetch_manifest import build_prefetch_manifest
@@ -61,6 +62,7 @@ def request_json(url):
 
 class PrefetchManifestTest(unittest.TestCase):
     def test_builds_bbox_manifest_for_mbtiles_and_pmtiles(self):
+        env_bundle = json.loads(ENV_FIXTURE.read_text(encoding="utf-8"))
         catalog = {
             "chart": {
                 "title": "Chart",
@@ -97,7 +99,9 @@ class PrefetchManifestTest(unittest.TestCase):
                 "minzoom": ["0"],
                 "maxzoom": ["1"],
                 "packs": ["chart,sat"],
+                "env_layers": ["wind,current"],
             },
+            environmental_bundles=env_bundle,
         )
         self.assertEqual(manifest["schema"], "helm.prefetch.manifest.v1")
         self.assertEqual(manifest["source"], "bbox")
@@ -112,6 +116,14 @@ class PrefetchManifestTest(unittest.TestCase):
         self.assertEqual(sat["tile_count"], 2)
         self.assertEqual(sat["tiles"][0]["url"], "pmtiles://http://boat.local/sat.pmtiles/0/0/0")
         self.assertGreater(manifest["totals"]["estimated_bytes"], 0)
+        self.assertEqual(manifest["totals"]["environmental_bundles"], 1)
+        self.assertEqual(manifest["totals"]["environmental_layers"], 2)
+        env = manifest["environmental_bundles"][0]
+        self.assertEqual(env["kind"], "environmental-bundle")
+        self.assertEqual(env["layers"], ["wind", "current"])
+        self.assertFalse(env["upstream_fetches_allowed_during_gesture"])
+        self.assertTrue(env["crosses_antimeridian"])
+        self.assertEqual(env["sample"]["probe_handle"], "weather.bundle")
 
     def test_skips_pack_when_corridor_is_outside_pack_bounds(self):
         manifest = build_prefetch_manifest(
@@ -142,6 +154,7 @@ class PrefetchManifestTest(unittest.TestCase):
             port = free_port()
             env = os.environ.copy()
             env["HELM_MBTILES_DIR"] = tmp
+            env["HELM_ENV_BUNDLE_MANIFESTS"] = str(ENV_FIXTURE)
             proc = subprocess.Popen(
                 [sys.executable, str(SERVER), str(port)],
                 cwd=str(ROOT),
@@ -178,6 +191,9 @@ class PrefetchManifestTest(unittest.TestCase):
                 self.assertEqual(manifest["corridor"]["route_points"], 2)
                 self.assertEqual(manifest["packs"][0]["tile_count"], 1)
                 self.assertEqual(manifest["packs"][0]["tiles"][0]["url"], f"http://127.0.0.1:{port}/chart/0/0/0.png")
+                self.assertEqual(manifest["totals"]["environmental_bundles"], 1)
+                self.assertIn("wind", manifest["environmental_bundles"][0]["layers"])
+                self.assertFalse(manifest["environmental_bundles"][0]["upstream_fetches_allowed_during_gesture"])
                 self.assertNotIn(tmp, json.dumps(manifest))
 
                 status, err = request_json(f"http://127.0.0.1:{port}/prefetch")
