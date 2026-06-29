@@ -420,6 +420,7 @@ async def get_grid(layer: str, cz: int, cx: int, cy: int) -> Grid:
 # region follows you (re-warm on a schedule). Same Open-Meteo data, no new deps, fits the keyed budget.
 REGION_TTL = int(os.environ.get("HELM_WX_REGION_TTL", "10800"))    # 3 h (fields change slowly)
 REGION_RES = float(os.environ.get("HELM_WX_REGION_RES", "0.1"))    # ~11 km sampling (~Copernicus native)
+BUNDLE_SOURCE_POINT_BUDGET = int(os.environ.get("HELM_WX_BUNDLE_SOURCE_POINT_BUDGET", "2048"))
 _regions: Dict[str, dict] = {}                                     # layer -> {bbox, grid, vel, t}
 _region_lock = asyncio.Lock()
 
@@ -901,6 +902,40 @@ def _internal_bbox(w: float, s: float, e: float, n: float) -> Tuple[float, float
     return float(w), float(s), (float(e) + 360.0 if float(e) < float(w) else float(e)), float(n)
 
 
+def _source_grid_shape(w: float, s: float, e: float, n: float, res: float) -> Tuple[int, int, int]:
+    if res <= 0:
+        raise ValueError("res must be > 0")
+    nx = max(2, int(round((float(e) - float(w)) / res)) + 1)
+    ny = max(2, int(round((float(n) - float(s)) / res)) + 1)
+    return nx, ny, nx * ny
+
+
+def _fit_source_resolution(w: float, s: float, e: float, n: float,
+                           requested_res: float, point_budget: int = BUNDLE_SOURCE_POINT_BUDGET) -> dict:
+    """Bound provider fan-out for explicit materialize jobs.
+
+    Tight regional bboxes keep the requested/native resolution. Wide overview bboxes, especially
+    Fiji/South-Pacific antimeridian coverage, are source-coarsened so a warm job cannot turn into
+    thousands of Open-Meteo requests while baking only a handful of low-zoom tiles.
+    """
+    requested = float(requested_res)
+    budget = max(4, int(point_budget))
+    nx, ny, points = _source_grid_shape(w, s, e, n, requested)
+    if points <= budget:
+        return {"requested": requested, "effective": requested, "nx": nx, "ny": ny,
+                "points": points, "pointBudget": budget, "adjusted": False}
+
+    span_lon = max(0.0, float(e) - float(w))
+    span_lat = max(0.0, float(n) - float(s))
+    effective = max(requested, math.sqrt(max(span_lon * span_lat, requested * requested) / budget))
+    nx, ny, points = _source_grid_shape(w, s, e, n, effective)
+    while points > budget:
+        effective *= 1.05
+        nx, ny, points = _source_grid_shape(w, s, e, n, effective)
+    return {"requested": requested, "effective": effective, "nx": nx, "ny": ny,
+            "points": points, "pointBudget": budget, "adjusted": True}
+
+
 def _bbox_parts(w: float, s: float, e: float, n: float) -> List[Tuple[float, float, float, float]]:
     if e < w:
         return [(w, s, 180.0, n), (-180.0, s, e, n)]
@@ -1038,6 +1073,19 @@ def _planned_tile_count(layers: List[str], w: float, s: float, e: float, n: floa
     return total
 
 
+def _planned_source_summary(layers: List[str], w: float, s: float, e: float, n: float, res: float) -> dict:
+    iw, is_, ie, in_ = _internal_bbox(w, s, e, n)
+    fit = _fit_source_resolution(iw, is_, ie, in_, res)
+    return {
+        "requestedResolutionDegrees": fit["requested"],
+        "effectiveResolutionDegrees": fit["effective"],
+        "sourcePointsPerLayer": fit["points"],
+        "sourcePointBudget": fit["pointBudget"],
+        "sourceResolutionAdjusted": fit["adjusted"],
+        "layers": len(layers),
+    }
+
+
 def _prepared_layer_for(region_id: str, layer: str, minzoom: int, maxzoom: int) -> dict:
     info = bundle_layer_for(layer)
     base = f"/bundles/{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{_safe_segment(region_id, DEFAULT_PREPARED_REGION)}"
@@ -1070,7 +1118,7 @@ def _prepared_layer_for(region_id: str, layer: str, minzoom: int, maxzoom: int) 
 
 def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
                        minzoom: int, maxzoom: int, generated_at: str, tile_summary: dict,
-                       upstream_calls: int, route: str = "") -> dict:
+                       upstream_calls: int, route: str = "", source_summary: Optional[dict] = None) -> dict:
     region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
     valid_time = generated_at
     return {
@@ -1157,6 +1205,7 @@ def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e:
             "upstreamCallsDuringMaterialize": upstream_calls,
             "gesturePathUpstreamFetches": 0,
             "replayMode": "cache-only",
+            "materializeSourceGrid": source_summary or _planned_source_summary(layers, w, s, e, n, REGION_RES),
         },
         "disclaimer": "Forecast/advisory met-ocean data. Cross-reference official sources. NOT FOR NAVIGATION.",
     }
@@ -1212,11 +1261,15 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
     planned = _planned_tile_count(layers, w, s, e, n, minzoom, maxzoom)
     if planned > tile_budget:
         raise ValueError(f"planned tile count {planned} exceeds tile_budget {tile_budget}")
+    source_fit = _fit_source_resolution(iw, is_, ie, in_, res)
     calls0 = int(_stats["openmeteo_calls"])
     region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
     tile_summary: Dict[str, dict] = {}
     for layer in layers:
-        warm = await warm_region(layer, iw, is_, ie, in_, res)
+        warm = await warm_region(layer, iw, is_, ie, in_, source_fit["effective"])
+        warm["requested_res_deg"] = source_fit["requested"]
+        warm["source_point_budget"] = source_fit["pointBudget"]
+        warm["source_resolution_adjusted"] = source_fit["adjusted"]
         reg = _regions[layer]
         coords: Set[Tuple[int, int, int]] = set()
         for z in range(minzoom, maxzoom + 1):
@@ -1247,8 +1300,17 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
                                "warm": warm}
     generated_at = _now_iso()
     upstream_calls = int(_stats["openmeteo_calls"]) - calls0
+    source_summary = {
+        "requestedResolutionDegrees": source_fit["requested"],
+        "effectiveResolutionDegrees": source_fit["effective"],
+        "sourcePointsPerLayer": source_fit["points"],
+        "sourcePointBudget": source_fit["pointBudget"],
+        "sourceResolutionAdjusted": source_fit["adjusted"],
+        "layers": len(layers),
+    }
     manifest = _prepared_manifest(region_slug, layers, w, s, e, n, minzoom, maxzoom,
-                                  generated_at, tile_summary, upstream_calls, route=route)
+                                  generated_at, tile_summary, upstream_calls, route=route,
+                                  source_summary=source_summary)
     _write_json(_prepared_bundle_manifest_path(region_slug), manifest)
     _stats["bundle_materializations"] += 1
     _stats["bundle_tiles_written"] += manifest["telemetry"]["tilesWritten"]

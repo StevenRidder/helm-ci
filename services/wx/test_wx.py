@@ -241,6 +241,37 @@ def main():
     check(route_materialize.status_code == 200 and route_payload["bundle"]["coverage"]["bbox"]["crossesAntimeridian"] is True,
           "materialize endpoint supports route-corridor prewarm across the antimeridian")
 
+    dateline_materialize = client.get(
+        "/bundles/open-meteo/latest/materialize"
+        "?region=dateline-test&layers=wind&w=160&s=-35&e=-150&n=5&minzoom=0&maxzoom=1&tile_budget=32"
+    )
+    dateline_payload = dateline_materialize.json()
+    dateline_bundle = dateline_payload.get("bundle", {})
+    source_grid = (dateline_bundle.get("telemetry") or {}).get("materializeSourceGrid") or {}
+    check(dateline_materialize.status_code == 200 and dateline_bundle.get("coverage", {}).get("bbox", {}).get("crossesAntimeridian") is True,
+          "materialize endpoint completes for Fiji/South-Pacific antimeridian bbox")
+    check(source_grid.get("sourceResolutionAdjusted") is True and
+          source_grid.get("sourcePointsPerLayer", 999999) <= source_grid.get("sourcePointBudget", 0),
+          "wide materialize jobs coarsen provider source grids before fan-out")
+    dateline_coords = app._tile_coords_for_bbox(1, 160.0, -35.0, -150.0, 5.0)
+    dateline_xs = {x for (_z, x, _y) in dateline_coords}
+    check(0 in dateline_xs and 1 in dateline_xs,
+          "antimeridian materialize plans tiles on both sides of 180")
+    east_tile = next((item for item in sorted(dateline_coords) if item[1] == 0), None)
+    west_tile = next((item for item in sorted(dateline_coords) if item[1] == 1), None)
+    east_resp = client.get(
+        f"/bundles/open-meteo/latest/dateline-test/layers/wind/scalar/latest/{east_tile[0]}/{east_tile[1]}/{east_tile[2]}.png"
+    ) if east_tile else None
+    west_resp = client.get(
+        f"/bundles/open-meteo/latest/dateline-test/layers/wind/scalar/latest/{west_tile[0]}/{west_tile[1]}/{west_tile[2]}.png"
+    ) if west_tile else None
+    check(east_resp is not None and east_resp.status_code == 200 and
+          east_resp.headers.get("x-helm-upstream-fetch") == "0",
+          "prepared tile east of 180 replays from cache")
+    check(west_resp is not None and west_resp.status_code == 200 and
+          west_resp.headers.get("x-helm-bundle-cache") == "hit",
+          "prepared tile west of 180 replays from cache")
+
     # 7) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])
     check(empty.sample(0.5, 0.5) is None, "fully-missing grid samples to None (NODATA, not faked)")

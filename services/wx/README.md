@@ -115,6 +115,12 @@ data and never calls the provider. Use `route=lon,lat;lon,lat;...` plus `route_m
 `w/s/e/n` for a route-corridor prewarm. `tile_budget` intentionally fails closed before a refresh job
 can accidentally fan out into a giant upstream/provider burst.
 
+Wide overview materializations also enforce a source-grid point budget before provider fetches. A
+large Fiji/South-Pacific bbox such as `w=160&e=-150` crosses the antimeridian and is internally held
+as a continuous `160..210` grid for sampling, but the baker coarsens the provider source grid when
+the requested resolution would create too many points. The bundle manifest records this under
+`telemetry.materializeSourceGrid`, and replay stays cache-only (`X-Helm-Upstream-Fetch: 0`).
+
 ## Run
 
 ```bash
