@@ -824,6 +824,19 @@
   var x = document.getElementById('dg-x');
   if (x) x.addEventListener('click', function () { var b = banner(); if (b) b.hidden = true; });
 })();
+// CLIENT-11: keep the app shell reloadable for LAN companion clients, while the
+// service worker itself keeps live nav/alarm/health endpoints network-only.
+(function () {
+  if (!('serviceWorker' in navigator)) return;
+  var host = location.hostname;
+  var local = host === 'localhost' || host === '127.0.0.1' || host === '[::1]' || host === '::1';
+  if (location.protocol !== 'https:' && !local) return;
+  window.addEventListener('load', function () {
+    navigator.serviceWorker.register(new URL('sw.js', location.href).href, { scope: './' }).catch(function (err) {
+      console.warn('[helm-sw] registration failed:', err && err.message);
+    });
+  });
+})();
 // The shell body runs inside an async bootstrap so the per-domain style fragments
 // (web/style/*.json) can be fetched + merged (SHELL-2) BEFORE the map is constructed.
 // HelmShell.buildStyle() falls back to the monolithic style.json if the split manifest is
