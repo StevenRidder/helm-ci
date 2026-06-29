@@ -11,7 +11,7 @@
   var STORE_KEY = 'offline.activePack';
   var DEFAULT_PORT = '8091';
   var STATIC_BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis', 'satellite', 'charts'];
-  var state = { body: null, map: null, packs: [], activeId: null, loading: false, error: '' };
+  var state = { body: null, map: null, packs: [], activeId: null, loading: false, error: '', lastInspect: null };
   var log = (window.HelmLog && HelmLog.scope) ? HelmLog.scope('offline-packs') : console;
   var pmtilesReady = null;
 
@@ -109,13 +109,23 @@
     return null;
   }
 
+  function lonInside(lon, w, e) {
+    if (w <= e) return lon >= w && lon <= e;
+    return lon >= w || lon <= e; // antimeridian-crossing coverage
+  }
+
+  function pointInBounds(lngLat, b) {
+    if (!lngLat || !b) return true;
+    return lonInside(lngLat.lng, b[0], b[2]) && lngLat.lat >= b[1] && lngLat.lat <= b[3];
+  }
+
   function viewStatus(pack) {
     var map = state.map || window.map;
     var b = boundsArray(pack);
     if (!map || !b) return '';
     try {
       var c = map.getCenter();
-      var inside = c.lng >= b[0] && c.lng <= b[2] && c.lat >= b[1] && c.lat <= b[3];
+      var inside = pointInBounds(c, b);
       return inside ? 'in view' : 'outside view';
     } catch (e) {
       return '';
@@ -132,6 +142,90 @@
     var vs = viewStatus(pack);
     if (vs) bits.push(vs);
     return bits.join(' | ');
+  }
+
+  function firstValue(pack, keys) {
+    for (var i = 0; i < keys.length; i++) {
+      var v = pack && pack[keys[i]];
+      if (v != null && v !== '') return v;
+    }
+    return '';
+  }
+
+  function nestedValue(obj, path) {
+    var cur = obj;
+    for (var i = 0; i < path.length; i++) {
+      if (!cur || cur[path[i]] == null) return '';
+      cur = cur[path[i]];
+    }
+    return cur == null ? '' : cur;
+  }
+
+  function inspectRow(label, value) {
+    if (value == null || value === '') return '';
+    return '<div><b>' + esc(label) + '</b><span>' + esc(value) + '</span></div>';
+  }
+
+  function inspectMessage(pack) {
+    return nestedValue(pack, ['inspection', 'message']) ||
+      'Raster packs contain pixels only; object inspection is unavailable unless a sidecar metadata layer is present.';
+  }
+
+  function popupAnchor(point) {
+    try {
+      var w = window.innerWidth || 1280;
+      return point && point.x > w * 0.55 ? 'right' : 'left';
+    } catch (e) {
+      return 'left';
+    }
+  }
+
+  function showRasterInspect(pack, lngLat, point) {
+    var map = state.map || window.map;
+    if (!map || !pack || !window.maplibregl || !lngLat) return;
+    installStyle();
+    var b = boundsArray(pack);
+    var inside = pointInBounds(lngLat, b);
+    var src = pack.source_info || {};
+    var fresh = pack.staleness || pack.freshness || {};
+    var coverage = pack.coverage || {};
+    var inspect = pack.inspection || {};
+    var sourceLabel = src.label || pack.source || pack.attribution || 'local pack';
+    var license = src.license || pack.license || 'unknown';
+    var modified = src.modified || pack.modified || firstValue(pack, ['render_date', 'created', 'updated']);
+    var bounds = b ? b.map(function (x) { return Number(x).toFixed(4); }).join(', ') : '';
+    var mode = inspect.mode || 'raster_metadata';
+    var semantic = inspect.semantic_objects || 'unavailable';
+    var html = [
+      '<div class="helm-raster-inspect">',
+      '<h3>' + esc(pack.title || pack.id || 'Local raster pack') + '</h3>',
+      '<p>' + esc(inside ? inspectMessage(pack) : 'This point is outside the selected offline pack coverage.') + '</p>',
+      '<div class="helm-raster-inspect-grid">',
+      inspectRow('Tap mode', mode),
+      inspectRow('Objects', semantic),
+      inspectRow('Source', sourceLabel),
+      inspectRow('License', license),
+      inspectRow('Freshness', fresh.status || 'unknown'),
+      inspectRow('Updated', modified),
+      inspectRow('Coverage', inside ? (coverage.status || 'inside declared bounds') : 'outside declared bounds'),
+      inspectRow('Zooms', 'z' + (pack.minzoom || 0) + '-' + packMaxzoom(pack)),
+      inspectRow('Bounds', bounds),
+      '</div>',
+      '</div>'
+    ].join('');
+    state.lastInspect = {
+      pack_id: pack.id || pack.name || '',
+      title: pack.title || '',
+      mode: mode,
+      semantic_objects: semantic,
+      inside_coverage: inside,
+      freshness: fresh.status || 'unknown',
+      source: sourceLabel
+    };
+    new maplibregl.Popup({ closeButton: true, closeOnClick: true, maxWidth: '340px', anchor: popupAnchor(point), offset: [10, 0] })
+      .setLngLat(lngLat)
+      .setHTML(html)
+      .addTo(map);
   }
 
   function hideStaticBasemaps() {
@@ -173,6 +267,7 @@
   var prefetchSeenN = 0;
   var moveDebounce = null;
   var moveHookBound = false;
+  var rasterTapHookBound = false;
 
   function packMaxzoom(pack) {
     var mz = Number(pack && pack.maxzoom);
@@ -242,7 +337,7 @@
     var el = document.getElementById('helm-coverage-badge');
     var b = pack && boundsArray(pack), c = null;
     if (map) { try { c = map.getCenter(); } catch (e) {} }
-    var inside = !b || !c || (c.lng >= b[0] && c.lng <= b[2] && c.lat >= b[1] && c.lat <= b[3]);
+    var inside = !b || !c || pointInBounds(c, b);
     var onlineFill = false;
     try { onlineFill = !!(map && map.getLayer('helm-chart-online-fill') && map.getLayoutProperty('helm-chart-online-fill', 'visibility') !== 'none'); } catch (e) {}
     if (!pack || inside || onlineFill) { if (el) el.style.display = 'none'; return; }
@@ -268,6 +363,24 @@
     if (moveHookBound || !map || !map.on) return;
     moveHookBound = true;
     map.on('moveend', onMapMove);
+  }
+
+  function ensureRasterTapHook(map) {
+    if (rasterTapHookBound || !map || !map.on) return;
+    rasterTapHookBound = true;
+    map.on('click', function (e) {
+      var pack = activePack();
+      if (!pack || !map.getLayer || !map.getLayer(LAYER_ID)) return;
+      try { if (window.__helmMeasure && window.__helmMeasure.active && window.__helmMeasure.active()) return; } catch (ignore) {}
+      try {
+        var hits = map.queryRenderedFeatures(e.point) || [];
+        for (var i = 0; i < hits.length; i++) {
+          var f = hits[i], lid = f && f.layer && f.layer.id;
+          if (lid && lid !== LAYER_ID) return; // AIS, places, soundings, route editing, etc. own their taps
+        }
+      } catch (ignore2) {}
+      showRasterInspect(pack, e.lngLat, e.point);
+    });
   }
   // ===== /CLIENT-22 =========================================================
 
@@ -305,6 +418,7 @@
       applyCurrentThemeTone();
       hideStaticBasemaps();
       ensureMoveHook(map);   // CLIENT-22: keep prefetch+coverage live even with the panel closed
+      ensureRasterTapHook(map); // OFFLINE-13: raster taps expose source/freshness/no-object honesty
       onMapMove();           // CLIENT-22: warm the initial viewport ring + set coverage state
     } catch (e) {
       state.error = 'Could not load pack: ' + ((e && e.message) || e);
@@ -485,7 +599,14 @@
       '.helm-pack-main b{font-size:12px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
       '.helm-pack-main i{font-size:10px;color:var(--cdim2);font-style:normal;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}',
       '.helm-pack-warn{margin-left:auto;font-size:9.5px;color:var(--warn)}',
-      '.helm-pack-empty{font-size:11px;color:var(--cdim);padding:10px 0}'
+      '.helm-pack-empty{font-size:11px;color:var(--cdim);padding:10px 0}',
+      '.helm-raster-inspect{min-width:250px;max-width:320px;color:var(--ctext,#e8edf2);font:12px/1.35 system-ui,-apple-system,sans-serif}',
+      '.helm-raster-inspect h3{font-size:13px;line-height:1.25;margin:0 0 5px;font-weight:700}',
+      '.helm-raster-inspect p{margin:0 0 8px;color:var(--cdim,#9ba8b5)}',
+      '.helm-raster-inspect-grid{display:grid;grid-template-columns:max-content 1fr;gap:4px 10px}',
+      '.helm-raster-inspect-grid div{display:contents}',
+      '.helm-raster-inspect-grid b{color:var(--cdim2,#7e8c99);font-weight:600}',
+      '.helm-raster-inspect-grid span{min-width:0;overflow-wrap:anywhere}'
     ].join('\n');
     document.head.appendChild(style);
   }
