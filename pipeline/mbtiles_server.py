@@ -80,6 +80,52 @@ PACK_METADATA_KEYS = (
     "generated_by",
 )
 
+SOURCE_METADATA_KEYS = (
+    "source_id",
+    "source_url",
+    "source_ref",
+    "source_format",
+    "source_created",
+    "source_updated",
+    "source_downloaded",
+    "source_freshness",
+    "source_confidence",
+    "edition",
+    "update",
+    "updated",
+    "created",
+    "coverage_note",
+)
+
+INSPECTION_METADATA_KEYS = (
+    "mode",
+    "semantic_objects",
+    "tap_action",
+    "message",
+    "chart_object_query",
+    "depth_source",
+    "confidence",
+    "source_ref",
+    "feature_layer",
+    "sidecar_metadata",
+    "sidecar_name",
+)
+
+SIDECAR_METADATA_KEYS = PACK_METADATA_KEYS + SOURCE_METADATA_KEYS + (
+    "name",
+    "title",
+    "kind",
+    "source",
+    "license",
+    "attribution",
+    "description",
+    "bounds",
+    "minzoom",
+    "maxzoom",
+    "center",
+    "inspection",
+)
+
 
 def _pack_map() -> dict[str, str]:
     raw = os.environ.get("HELM_MBTILES_PACKS", "").strip()
@@ -200,6 +246,59 @@ def _read_sqlite_metadata(conn: sqlite3.Connection) -> dict[str, str]:
         return {}
 
 
+def _json_object(value) -> Optional[dict]:
+    if isinstance(value, dict):
+        return value
+    if not isinstance(value, str):
+        return None
+    text = value.strip()
+    if not text.startswith("{") or not text.endswith("}"):
+        return None
+    try:
+        loaded = json.loads(text)
+    except json.JSONDecodeError:
+        return None
+    return loaded if isinstance(loaded, dict) else None
+
+
+def _inspection_override(value) -> Optional[dict]:
+    override = _json_object(value)
+    if not override:
+        return None
+    return {key: override[key] for key in INSPECTION_METADATA_KEYS if key in override}
+
+
+def _load_sidecar_metadata(path: str) -> dict:
+    base, _ = os.path.splitext(path)
+    candidates = (
+        f"{base}.metadata.json",
+        f"{base}.sidecar.json",
+        f"{path}.metadata.json",
+        f"{path}.sidecar.json",
+    )
+    for candidate in candidates:
+        if not os.path.exists(candidate):
+            continue
+        try:
+            with open(candidate, "r", encoding="utf-8") as f:
+                raw = json.load(f)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+            print(f"warning: cannot read pack metadata sidecar for {os.path.basename(path)!r}: {e}", file=sys.stderr)
+            return {}
+        if not isinstance(raw, dict):
+            print(f"warning: pack metadata sidecar for {os.path.basename(path)!r} is not a JSON object", file=sys.stderr)
+            return {}
+        public = {}
+        for key in SIDECAR_METADATA_KEYS:
+            if key not in raw:
+                continue
+            public[key] = _inspection_override(raw[key]) if key == "inspection" else raw[key]
+        public["sidecar_metadata"] = True
+        public["sidecar_name"] = os.path.basename(candidate)
+        return public
+    return {}
+
+
 def _parse_pmtiles_metadata(path: str) -> dict:
     with open(path, "rb") as f:
         header = f.read(127)
@@ -259,7 +358,7 @@ def _parse_pmtiles_metadata(path: str) -> dict:
         "tile_entries": tile_entries,
         "tile_contents": tile_contents,
     }
-    for key in PACK_METADATA_KEYS + ("kind", "source", "license"):
+    for key in PACK_METADATA_KEYS + SOURCE_METADATA_KEYS + ("kind", "source", "license", "inspection", "sidecar_metadata", "sidecar_name"):
         if metadata.get(key) is not None:
             parsed[key] = metadata[key]
     return parsed
@@ -284,9 +383,11 @@ def _base_record(name: str, path: str, fmt: str, pack_type: str, title: str, met
     if bounds_arr:
         rec["bounds_array"] = bounds_arr
         rec["bounds"] = _bounds_string(bounds_arr)
-    for key in ("minzoom", "maxzoom", "attribution", "description", "center", "scheme") + PACK_METADATA_KEYS:
+    for key in ("minzoom", "maxzoom", "attribution", "description", "center", "scheme", "sidecar_metadata", "sidecar_name") + PACK_METADATA_KEYS + SOURCE_METADATA_KEYS:
         if metadata.get(key) is not None:
             rec[key] = metadata[key]
+    if metadata.get("inspection") is not None:
+        rec["inspection"] = metadata["inspection"]
     return rec
 
 
@@ -378,8 +479,100 @@ def _enrich_pack_record(rec: dict) -> dict:
     staleness, staleness_warnings = _staleness_summary(rec)
     rec["coverage"] = coverage
     rec["staleness"] = staleness
+    rec["source_info"] = _source_summary(rec)
+    rec["inspection"] = _inspection_summary(rec)
     rec["warnings"] = coverage_warnings + staleness_warnings
     return rec
+
+
+def _source_summary(rec: dict) -> dict:
+    info = {
+        "label": rec.get("source") or "local",
+        "kind": rec.get("kind"),
+        "container": rec.get("container"),
+        "format": rec.get("format"),
+        "license": rec.get("license"),
+        "attribution": rec.get("attribution"),
+        "modified": rec.get("modified"),
+    }
+    fields = {
+        "id": "source_id",
+        "url": "source_url",
+        "ref": "source_ref",
+        "format": "source_format",
+        "created": "source_created",
+        "updated": "source_updated",
+        "downloaded": "source_downloaded",
+        "freshness": "source_freshness",
+        "confidence": "source_confidence",
+        "chart_edition": "chart_edition",
+        "chart_epoch": "chart_epoch",
+        "render_date": "render_date",
+        "edition": "edition",
+        "update": "update",
+        "coverage_note": "coverage_note",
+    }
+    for out_key, rec_key in fields.items():
+        if rec.get(rec_key) is not None:
+            info[out_key] = rec[rec_key]
+    if "created" not in info and rec.get("created") is not None:
+        info["created"] = rec["created"]
+    if "updated" not in info and rec.get("updated") is not None:
+        info["updated"] = rec["updated"]
+    return {k: v for k, v in info.items() if v is not None}
+
+
+def _inspection_summary(rec: dict) -> dict:
+    kind = str(rec.get("kind") or "").lower()
+    override = _inspection_override(rec.get("inspection"))
+    if override:
+        override.setdefault("sidecar_metadata", bool(rec.get("sidecar_metadata")))
+        if rec.get("sidecar_name") is not None:
+            override.setdefault("sidecar_name", rec.get("sidecar_name"))
+        if kind == "chart" and rec.get("renderer") == "s52":
+            override.setdefault("chart_object_query", "use_live_CHART_10_query_when_source_ENC_is_mounted")
+        return override
+
+    pack_type = str(rec.get("type") or "").lower()
+    fmt = str(rec.get("format") or "").lower()
+    is_vector = pack_type == "vector" or fmt in ("mvt", "pbf")
+    has_sidecar = bool(rec.get("sidecar_metadata"))
+
+    base = {
+        "sidecar_metadata": has_sidecar,
+        "sidecar_name": rec.get("sidecar_name"),
+    }
+    if kind == "depth":
+        base.update({
+            "mode": "depth_sample",
+            "semantic_objects": "depth_values",
+            "tap_action": "show_depth_source_confidence",
+            "message": "Depth packs may expose sampled value/source/confidence; they are not chart-object attributes.",
+        })
+    elif is_vector:
+        base.update({
+            "mode": "vector_features",
+            "semantic_objects": "available",
+            "tap_action": "query_vector_features",
+            "message": "Vector packs may expose feature attributes when the client layer supports picking.",
+        })
+    elif has_sidecar:
+        base.update({
+            "mode": "sidecar_metadata",
+            "semantic_objects": "sidecar",
+            "tap_action": "show_sidecar_then_pack_metadata",
+            "message": "Raster pixels are not semantic objects; sidecar metadata may provide curated object hints.",
+        })
+    else:
+        base.update({
+            "mode": "raster_metadata",
+            "semantic_objects": "unavailable",
+            "tap_action": "show_pack_source_metadata",
+            "message": "Raster packs contain pixels only; object inspection is unavailable unless a sidecar metadata layer is present.",
+        })
+    if kind == "chart" and rec.get("renderer") == "s52":
+        base["chart_object_query"] = "use_live_CHART_10_query_when_source_ENC_is_mounted"
+    return {k: v for k, v in base.items() if v is not None}
 
 
 def _build_pack_records():
@@ -403,12 +596,13 @@ def _build_pack_records():
             pack_type = "vector" if fmt in ("pbf", "mvt") else "raster"
             title = m.get("name") or name
             metadata = dict(m)
+            metadata.update(_load_sidecar_metadata(path))
             metadata.update({
                 "bounds": m.get("bounds"),
                 "minzoom": _safe_int(m.get("minzoom"), 0),
                 "maxzoom": _safe_int(m.get("maxzoom"), 17),
-                "attribution": m.get("attribution"),
-                "description": m.get("description"),
+                "attribution": metadata.get("attribution") or m.get("attribution"),
+                "description": metadata.get("description") or m.get("description"),
                 "scheme": m.get("scheme", "tms"),
             })
             rec = _base_record(name, path, fmt, pack_type, title, metadata)
@@ -423,6 +617,7 @@ def _build_pack_records():
             except (OSError, ValueError, struct.error, gzip.BadGzipFile) as e:
                 print(f"warning: cannot open PMTiles pack {name!r}: {e}", file=sys.stderr)
                 continue
+            pm.update(_load_sidecar_metadata(path))
             fmt = pm["format"]
             pack_type = "vector" if pm["type"] == "vector" or fmt == "mvt" else "raster"
             title = pm.get("name") or name

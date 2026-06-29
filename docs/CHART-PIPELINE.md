@@ -95,6 +95,39 @@ local pack server normalizes those stamps into `/catalog` `staleness`, `coverage
 and `warnings` fields so client work can warn about stale or out-of-coverage chart
 pixels without reimplementing pack metadata rules.
 
+### Local pack source and tap metadata
+
+`pipeline/mbtiles_server.py` keeps MBTiles and PMTiles packs read-only and publishes
+only public catalog metadata. Each `/catalog` entry includes:
+
+- `source_info`: source label/id/url/ref/format, license, attribution, modified time,
+  source created/updated/downloaded/freshness/confidence fields when the pack exposes
+  them, plus chart edition/epoch and render date for S-52 snapshots.
+- `coverage`, `staleness`, and `warnings`: normalized pack status for UI warnings.
+- `inspection`: the deterministic tap policy for the pack.
+
+Tap behavior is intentionally honest:
+
+- ENC/vector objects are queried through the live chart-object path when available.
+- Raster chart or satellite packs show pack/source metadata; raster pixels are not
+  semantic chart objects.
+- Depth packs may show depth/source/confidence, but they are still not chart-object
+  attributes.
+- AIS taps stay on the AIS target/card path.
+
+For future curated raster hints, place a JSON sidecar next to the pack:
+
+```text
+fiji-chart.pmtiles
+fiji-chart.metadata.json
+```
+
+The sidecar is allow-listed to public metadata fields such as source id/ref/url,
+license, attribution, coverage note, and a small `inspection` object. The server
+exposes only the sidecar filename, never the local directory path. A sidecar may
+say "show these curated hints first," but it must not claim that raster pixels are
+native S-57/S-101 objects.
+
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
 > A permanent "cross-reference official charts" disclaimer is mandatory on these layers.

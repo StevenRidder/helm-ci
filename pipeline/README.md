@@ -41,4 +41,8 @@ http://localhost:8080.
   sibling PMTiles in one run. The baker stamps source edition, render date, freshness window,
   requested-vs-baked tile counts, coverage gaps, and palette group metadata; `mbtiles_server.py`
   exposes those as `/catalog` `staleness`, `coverage`, and `warnings` fields for the UI.
+- Local MBTiles/PMTiles may also have a sibling `*.metadata.json` or `*.sidecar.json`.
+  The server exposes allow-listed source/license/freshness/coverage fields plus an
+  explicit `inspection` policy, so raster taps can show pack metadata honestly
+  without pretending pixels are S-57/S-101 objects.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.
