@@ -39,6 +39,7 @@ import os
 import hashlib
 import struct
 import time
+import traceback
 import zlib
 from typing import Dict, List, Optional, Tuple
 
@@ -766,6 +767,10 @@ async def tile(layer: str, z: int, x: int, y: int, request: Request):
         png = await bake_tile(layer, z, x, y)
     except Exception as e:
         # honest failure: no cache + rate-limited/offline. The client's own fallback handles it.
+        # Fail LOUD in the server log with the REAL cause — a bare "[Errno 2]" with no stack is
+        # what made the original outage undiagnosable. The 503 body to the client is unchanged.
+        print("[helm-wx] bake %s/%d/%d/%d failed: %r" % (layer, z, x, y, e))
+        traceback.print_exc()
         return PlainTextResponse("weather unavailable: %s" % e, status_code=503)
     # Mapbox-grade HTTP caching: strong ETag + conditional 304 so the browser/CDN revalidate cheaply
     # (no re-transfer of the ~200 KB PNG when the tile is unchanged) on top of max-age.
