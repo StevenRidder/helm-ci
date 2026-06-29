@@ -127,9 +127,10 @@
     return true;
   };
 
-  // Bilinear-interpolate [u, v] at lon/lat. Returns null if outside the grid.
-  // Writes into the provided 2-array `out` to avoid allocation.
-  WindField.prototype.sample = function (lon, lat, out) {
+  // Bilinear-interpolate [u, v] at lat/lon. Returns null if outside the grid. Writes into the
+  // provided 2-array `out` to avoid allocation. Arg order (lat, lon) is unified across all weather
+  // samplers -- cog.sampleWx(lat,lon,t), HelmWxLive.sampleAt(lat,lon) -- per CLIENT-14.
+  WindField.prototype.sample = function (lat, lon, out) {
     if (!this.valid) return null;
     // Fractional grid coordinates. Column increases eastward from lo1;
     // row increases southward from la1.
@@ -367,7 +368,7 @@
       if (p.age >= maxAge) { this._spawn(p, false); }
 
       // Sample wind at the particle's geographic position.
-      var s = this.field.sample(p.lon, p.lat, uv);
+      var s = this.field.sample(p.lat, p.lon, uv);   // CLIENT-14: unified (lat, lon) arg order
       // Out of field: respawn somewhere valid and skip drawing this frame.
       // (_spawn already zeroes age, so it lives a full life next frame.)
       if (!s) { this._spawn(p, false); continue; }

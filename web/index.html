@@ -739,7 +739,7 @@
 <script src="tooltip.js"></script><!-- fast custom hover tooltips (replaces the slow ~1.5s native title delay) -->
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
-<script src="field-layer.js"></script>
+<!-- CLIENT-14: field-layer.js (legacy fixed-bbox HelmField) retired — field is rendered by the Live path (wx-live.js / helmwx tiles); legend via wx-ramp.js -->
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
 <!-- WX weather — codec + GRIB2 reader (globals) + probe faces + engines. The UI (hi-res tiles,
@@ -1031,7 +1031,7 @@
   const wind = window.HelmWind ? HelmWind(map) : null;
   window.__helmWind = wind;                    // shared with Live (wx-live.js) to drive particles over the viewport
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
-  let field = null;
+  let field = null;   // CLIENT-14: legacy HelmField retired — stays null; Live owns the field, legend via HelmWxRamp. Residual `if (field)` guards below are vestigial no-ops (removed with the renderer rewrite in WX-19).
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
   const iso = window.HelmIsobars ? HelmIsobars(map, { beforeId: 'route-line' }) : null;  // smooth pressure isobars
   const measureBtn = document.querySelector('.ri[data-rail="measure"]');
@@ -1044,6 +1044,15 @@
   const fieldOpts = n => n === 'wind' ? { stops: WINDY_WIND } : undefined;
   let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
   const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
+  // CLIENT-14: build the legend from the single shared ramp (web/wx-ramp.js) so it matches the field
+  // + particles exactly — replaces reading stops off the retired legacy HelmField.
+  const WX_UNITS = { wind: 'kn', gust: 'kn', rain: 'mm', temp: '°C', clouds: '%', pressure: 'hPa', cape: 'J/kg', current: 'kn', waves: 'm', swell: 'm', sst: '°C' };
+  function legendFromRamp(name) {
+    if (!window.HelmWxRamp) return null;
+    const stops = HelmWxRamp.stopsFor(name);
+    if (!stops || !stops.length) return null;
+    return { vmin: stops[0][0], vmax: stops[stops.length - 1][0], stops, unit: WX_UNITS[name] || '', layer: name };
+  }
   const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
 
   let wxNoticeTimer = null;
@@ -1090,8 +1099,9 @@
     }
     if (radar) radar.setVisible(false);
     if (name === 'off') { if (field) field.setVisible(false); if (wind) wind.setVisible(false); buildLegend(null); return; }
-    if (!field && window.HelmField) field = HelmField(map, { beforeId: 'route-line', opacity: (100 - (+document.getElementById('wxopacity').value)) / 100 });
-    if (field) field.load(fieldUrl(name), fieldOpts(name)).then(f => { wxNoticeClear(); buildLegend(f); }).catch(() => wxNotice(name));
+    // CLIENT-14: legacy fixed-bbox HelmField retired. The Live path (HelmWxControls.apply, engaged
+    // above) renders the field from the gateway/Open-Meteo; the legend comes from the shared ramp.
+    wxNoticeClear(); buildLegend(legendFromRamp(name));
     const partOn = document.getElementById('particles').checked;
     if (wind) {
       if (VECTOR[name] && partOn) { wind.load(velUrl(name)); wind.setVisible(true); }

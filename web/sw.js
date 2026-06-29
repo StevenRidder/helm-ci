@@ -41,7 +41,7 @@ const APP_SHELL_URLS = [
   './offline-packs.js',
   './tooltip.js',
   './wind-layer.js',
-  './field-layer.js',
+  './wx-ramp.js',
   './radar.js',
   './isobars.js',
   './wx-value-codec.js',

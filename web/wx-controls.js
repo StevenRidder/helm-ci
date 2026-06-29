@@ -113,8 +113,8 @@
         window.HelmWxLive.enable(map, { layer: layer, opacity: wxOpacity(), notify: notify });   // gateway down -> direct Open-Meteo
         notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
       } else {
-        showLegacy(true);                                  // gateway down + non-atmospheric -> legacy field
-        var mn = document.getElementById('wx-notice'); if (mn) mn.style.display = 'none';
+        // CLIENT-14: legacy field retired. Gateway down + non-atmospheric layer -> no offline field; say so.
+        notify('Live ' + layer + ' needs the helm-wx gateway — start services/wx (no offline field for this layer)', 'warn');
       }
     } else {
       showLegacy(true);                                   // Standard + Single → the legacy field handles it
