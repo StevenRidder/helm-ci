@@ -268,12 +268,14 @@
   function enable(map, opts) {
     opts = opts || {};
     return enableScalar(map, opts).then(function (info) {
+      info.freshness = manifestFreshness(state.manifest);     // phase 4b: surface forecast age / staleness
+      renderStatusBadge(); startStaleWatch();
       var L = layerCfg(state.manifest, info.layer);
       if (L.vectorField || L.kind === 'vector') return startParticles(map, info.layer).then(function (ok) { info.particles = ok; return info; });
       stopParticles(); return info;
     });
   }
-  function disable() { stopParticles(); remove(); }
+  function disable() { stopParticles(); stopStaleWatch(); hideStatusBadge(); remove(); }
 
   // ---- time-scrub: switch the active valid-time frame (reuses cached tiles; no upstream fetch) ----
   function setValidTime(isoTime) {
@@ -314,8 +316,43 @@
     });
   }
 
+  // ---- phase 4b: freshness / stale indicator ----------------------------------------------------
+  // Weather is advisory + time-sensitive. Surface the forecast age + a STALE warning (manifest
+  // generatedAt vs cachePolicy.refreshCadenceSeconds) on a standalone, inline-styled map badge so the
+  // skipper always knows how current the field is. Honest: shows the age, flags stale, never hides it.
+  var staleTimer = null;
+  function manifestFreshness(manifest) {
+    var run = (manifest && manifest.run) || {};
+    var gen = (manifest && manifest.generatedAt) || run.runTime || null;
+    var ttl = (manifest && manifest.cachePolicy && manifest.cachePolicy.refreshCadenceSeconds) || 0;
+    var ageS = null, stale = false;
+    if (gen) { var t = Date.parse(gen); if (isFinite(t)) { ageS = Math.max(0, Math.round((Date.now() - t) / 1000)); if (ttl) stale = ageS > ttl; } }
+    return { generatedAt: gen, ageSeconds: ageS, ttlSeconds: ttl, stale: stale };
+  }
+  function status() {
+    if (!state.manifest || !state.layer) return { state: 'off' };
+    var f = manifestFreshness(state.manifest);
+    return { state: f.stale ? 'stale' : 'fresh', layer: state.layer, validTime: invFrame(state.manifest, state.validTimeId),
+             generatedAt: f.generatedAt, ageSeconds: f.ageSeconds, ttlSeconds: f.ttlSeconds };
+  }
+  function fmtAge(s) { if (s == null) return ''; if (s < 3600) return Math.round(s / 60) + ' min'; if (s < 86400) return Math.round(s / 3600) + ' h'; return Math.round(s / 86400) + ' d'; }
+  function renderStatusBadge() {
+    var el = document.getElementById('helm-wx-scene-status'), st = status();
+    if (!st || st.state !== 'stale') { if (el) el.style.display = 'none'; return; }   // show only when stale
+    if (!el) {
+      el = document.createElement('div'); el.id = 'helm-wx-scene-status';
+      el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:30;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.9);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
+      document.body.appendChild(el);
+    }
+    el.textContent = '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle';
+    el.style.display = 'block';
+  }
+  function hideStatusBadge() { var el = document.getElementById('helm-wx-scene-status'); if (el) el.style.display = 'none'; }
+  function startStaleWatch() { if (staleTimer) return; try { staleTimer = setInterval(renderStatusBadge, 60000); } catch (e) {} }
+  function stopStaleWatch() { if (staleTimer) { try { clearInterval(staleTimer); } catch (e) {} staleTimer = null; } }
+
   global.HelmWxScene = {
-    enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample,
+    enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample, status: status,
     disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
   };
 })(typeof window !== 'undefined' ? window : this);
