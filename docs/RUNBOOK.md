@@ -90,11 +90,13 @@ scripts/install-sample-enc.sh
 ```
 
 `helm-server` reads a single ENC from `HELM_ENC` — a user-provided NOAA `.000`
-cell (Helm ships no chart packs). It needs a valid cell to boot today, so point
-`HELM_ENC` at one. The S-52 **presentation library** it renders with is installed
-durably by `bootstrap.sh` into `~/.helm/runtime/s57data` (override with
-`HELM_S57_DATA`) and survives a reboot. *(Booting with
-no ENC at all — basemap-only — is a planned follow-up.)*
+cell (Helm ships no chart packs). A valid cell is required for S-52 ENC tiles,
+but not for the server to boot. If the cell is missing or invalid, Helm starts in
+basemap-only mode: `/health` stays green, `/catalog` reports zero chart cells,
+`/chart/...png` returns transparent tiles, and local MBTiles/PMTiles or online
+fill can still paint underneath. The S-52 **presentation library** it renders
+with is installed durably by `bootstrap.sh` into `~/.helm/runtime/s57data`
+(override with `HELM_S57_DATA`) and survives a reboot.
 
 ### Local Basemap Packs
 
@@ -305,6 +307,7 @@ engine/test-engine.sh
 It starts private test instances and verifies:
 
 - one-origin `helm-server` framing, `/health`, `/catalog`, UI, and S-52 tiles;
+- no-ENC basemap-only boot behavior via `engine/test-no-enc-boot.sh`;
 - immutable tile caching and ETag revalidation;
 - nav-core per-fix math, source tags, and waypoint auto-advance;
 - GPL containment guard;
@@ -316,7 +319,7 @@ It starts private test instances and verifies:
 |---|---|
 | One-origin UI | `http://127.0.0.1:9001/` serves the browser app |
 | Health/catalog | `/health` and `/catalog` return JSON |
-| Charts | S-52 chart tiles render when `HELM_ENC` points at a valid NOAA cell |
+| Charts | S-52 chart tiles render when `HELM_ENC` points at a valid NOAA cell; without one, Helm stays up in basemap-only mode |
 | Data honesty | missing or stale data is shown as missing/stale, not silently live |
 | AIS | AIS targets appear after NMEA/AIS sentences reach the server |
 | Routes | route create/save/activate uses the command plane and navobj persistence |
@@ -328,7 +331,8 @@ It starts private test instances and verifies:
 - Xcode license errors: run `sudo xcodebuild -license accept`.
 - `patch` errors during OpenCPN configure: install `gpatch`.
 - `dyld: library not loaded`: set `DYLD_LIBRARY_PATH` as shown above.
-- No ENC tiles: set `HELM_ENC` to a valid `.000` file.
+- No ENC tiles: set `HELM_ENC` to a valid `.000` file. If none is configured,
+  Helm should still boot; `/health` reports `chart_loaded:false`.
 - UI loads but no boat movement: feed NMEA/SignalK; the server should not fake a
   live vessel.
 - Port conflict: pick another private `HELM_PORT` and, if needed,

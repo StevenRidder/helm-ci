@@ -55,6 +55,21 @@ PY
 printf '\033[1m=== Helm engine — end-to-end test ===\033[0m\n'
 echo "binaries: $BIN"
 
+# ---------- A0) no-ENC boot: chart failure must not kill the server ----------
+hdr "A0. No-ENC boot  (ENGINE-15 basemap-only startup)"
+NO_ENC_PORT="$(free_port)"
+NO_ENC_RELAY_PORT="$(free_port)"
+if HELM_OCPN_DIR="${HELM_OCPN_DIR:-$HOME/.helm/build/helm-opencpn}" \
+   HELM_TEST_PORT="$NO_ENC_PORT" \
+   HELM_RELAY_PORT="$NO_ENC_RELAY_PORT" \
+   HELM_SERVER_BIN="$BIN/helm-server" \
+   bash "$HERE/test-no-enc-boot.sh" >/tmp/te-no-enc.txt 2>&1; then
+  P "helm-server boots without ENC and serves health/catalog/UI/transparent tiles"
+else
+  F "no-ENC boot smoke failed:"
+  sed 's/^/        /' /tmp/te-no-enc.txt
+fi
+
 # ---------- A) one-origin server ----------
 hdr "A. One-origin server  (ENGINE-9 merge · ENGINE-12 build · CHART-3 tiles)"
 ST="$(mktemp -d)"
@@ -78,15 +93,23 @@ if grep -q 'ALL PASS' /tmp/te-smoke.txt; then
 else
   F "nav-stream framing failed:"; sed 's/^/        /' /tmp/te-smoke.txt
 fi
-h=$(curl -s -o /dev/null -w '%{http_code}' "http://127.0.0.1:$SPORT/health" || echo ERR)
+h=$(curl -s -o /tmp/te-health.json -w '%{http_code}' "http://127.0.0.1:$SPORT/health" || echo ERR)
 [ "$h" = 200 ] && P "GET /health → 200 (liveness)" || F "GET /health → $h"
+chart_loaded=$(python3 -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("chart_loaded", True) else "false")' /tmp/te-health.json 2>/dev/null || echo true)
 # real S-52 tile render off the Key West ENC, with immutable caching + 304 revalidation
 curl -s -D /tmp/te-th -o /tmp/te-tile.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png"
 tcode=$(awk 'NR==1{print $2}' /tmp/te-th 2>/dev/null); tsz=$(wc -c </tmp/te-tile.png 2>/dev/null | tr -d ' ')
 ctype=$(grep -i '^content-type:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
-{ [ "$tcode" = 200 ] && echo "${ctype:-}" | grep -qi 'image/png' && [ "${tsz:-0}" -gt 1000 ]; } \
-  && P "GET /chart S-52 tile → 200 image/png, ${tsz}B real ENC render (CHART-3)" \
-  || F "S-52 tile → code=$tcode type=${ctype:-?} bytes=${tsz:-?}"
+if [ "$chart_loaded" = true ]; then
+  { [ "$tcode" = 200 ] && echo "${ctype:-}" | grep -qi 'image/png' && [ "${tsz:-0}" -gt 1000 ]; } \
+    && P "GET /chart S-52 tile → 200 image/png, ${tsz}B real ENC render (CHART-3)" \
+    || F "S-52 tile → code=$tcode type=${ctype:-?} bytes=${tsz:-?}"
+else
+  cstatus=$(grep -i '^x-helm-chart-status:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
+  { [ "$tcode" = 200 ] && echo "${ctype:-}" | grep -qi 'image/png' && [ "${tsz:-0}" -gt 50 ] && [ "$cstatus" = unavailable ]; } \
+    && P "GET /chart with no ENC → 200 transparent image/png, ${tsz}B (ENGINE-15)" \
+    || F "no-ENC chart tile → code=$tcode type=${ctype:-?} bytes=${tsz:-?} status=${cstatus:-?}"
+fi
 grep -qi 'cache-control:.*immutable' /tmp/te-th 2>/dev/null \
   && P "tile: Cache-Control immutable (offline-friendly caching)" || F "tile not immutable-cached"
 etag=$(grep -i '^etag:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')

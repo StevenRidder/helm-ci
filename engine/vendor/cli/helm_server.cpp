@@ -149,6 +149,8 @@ static void resolve_runtime_paths() {
 static s57chart* g_chart = nullptr;
 static Extent    g_ext;
 static std::string g_blank;
+static std::string g_chart_status = "not-initialized";
+static std::string g_chart_unavailable_reason;
 static const int TS = 256;
 
 // CHART-8: true engine-side S-52 colour palette (Day/Dusk/Night), NOT a raster reskin. Rendering is
@@ -172,7 +174,7 @@ static ColorScheme palette_from_query(const std::string& uri) {   // ?p=day|dusk
 static void apply_palette(ColorScheme scheme) {               // main-thread only (called from render_tile)
   if (scheme == g_color_scheme) return;
   ps52plib->SetPLIBColorScheme(scheme, ChartCtx(false, 0));
-  g_chart->SetColorScheme(scheme);
+  if (g_chart) g_chart->SetColorScheme(scheme);
   g_color_scheme = scheme;
 }
 
@@ -242,6 +244,7 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld\n", z, x, y);
     return TileStatus::BadRequest;
   }
+  if (!g_chart) return TileStatus::NoCoverage;
   double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
   if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
@@ -288,6 +291,23 @@ static std::string make_blank() {
   return out;
 }
 
+static bool mark_chart_unavailable(const char* reason) {
+  if (g_chart) { delete g_chart; g_chart = nullptr; }
+  g_chart_status = "unavailable";
+  g_chart_unavailable_reason = reason ? reason : "chart unavailable";
+  g_ext = Extent();
+  g_cell_name = "no-enc";
+  g_native_scale = 0;
+  if (g_blank.empty()) g_blank = make_blank();
+  if (g_blank.empty()) {
+    printf("FATAL: blank tile gen failed while entering basemap-only mode\n");
+    return false;
+  }
+  printf("chart unavailable: %s — booting basemap-only; /chart returns transparent tiles, /catalog has no cells\n",
+         g_chart_unavailable_reason.c_str());
+  return true;
+}
+
 static bool init_chart(const wxString& enc_path) {
   setvbuf(stdout, nullptr, _IONBF, 0);
   resolve_runtime_paths();   // durable, env-overridable s57data / SENC paths
@@ -303,6 +323,9 @@ static bool init_chart(const wxString& enc_path) {
     return false;
   }
   ps52plib->SetPLIBColorScheme(GLOBAL_COLOR_SCHEME_DAY, ChartCtx(false, 0));
+  g_default_cat = g_display_cat = ps52plib->GetDisplayCategory();   // still defined in basemap-only mode
+  g_blank = make_blank();
+  if (g_blank.empty()) { printf("FATAL: blank tile gen failed\n"); return false; }
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
   // CHART-12: if the cell is S-63 encrypted, decrypt it to a plain S-57 temp and load THAT (the
   // catalog id below still uses the original cell name). A plain S-57 cell passes through unchanged.
@@ -311,11 +334,17 @@ static bool init_chart(const wxString& enc_path) {
   if (s63::is_encrypted(s63_src)) {
     static s63::Decoder s63dec = s63::Decoder::from_env();
     std::string cn = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8()), err;
-    if (!s63dec.enabled()) { printf("S-63 encrypted cell %s but no permit/HW_ID (set HELM_S63_PERMIT + HELM_S63_HWID)\n", cn.c_str()); return false; }
+    if (!s63dec.enabled()) {
+      char msg[256]; std::snprintf(msg, sizeof msg, "S-63 encrypted cell %s but no permit/HW_ID (set HELM_S63_PERMIT + HELM_S63_HWID)", cn.c_str());
+      return mark_chart_unavailable(msg);
+    }
     std::string s63_dir = helm_runtime_path("s63");
     ::wxFileName::Mkdir(wxString::FromUTF8(s63_dir.c_str()), 0755, wxPATH_MKDIR_FULL);
     std::string tmp = s63_dir + "/" + cn + ".000";
-    if (!s63dec.decrypt_to_file(s63_src, cn, tmp, err)) { printf("S-63 decrypt FAILED for %s: %s\n", cn.c_str(), err.c_str()); return false; }
+    if (!s63dec.decrypt_to_file(s63_src, cn, tmp, err)) {
+      std::string msg = "S-63 decrypt FAILED for " + cn + ": " + err;
+      return mark_chart_unavailable(msg.c_str());
+    }
     printf("S-63: decrypted %s -> plain S-57\n", cn.c_str());
     load_path = wxString::FromUTF8(tmp.c_str());
   }
@@ -323,25 +352,28 @@ static bool init_chart(const wxString& enc_path) {
   g_chart->DisableBackgroundSENC();
   if (g_chart->Init(load_path, FULL_INIT) != INIT_OK) {
     printf("chart Init FAILED — could not load ENC cell %s\n"
-           "  fix: set HELM_ENC to a valid .000 cell (bootstrap installs a baseline cell in ~/.helm/runtime/enc)\n",
+           "  fix for S-52 charts: set HELM_ENC to a valid .000 cell; continuing basemap-only\n",
            (const char*)load_path.ToUTF8());
-    return false;
+    return mark_chart_unavailable("chart Init failed");
   }
   g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
-  if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return false; }
+  if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return mark_chart_unavailable("GetChartExtent failed"); }
   int ns = g_chart->GetNativeScale();
-  if (ns <= 1) { printf("FATAL: chart native scale invalid (%d)\n", ns); return false; }
-  g_blank = make_blank();
-  if (g_blank.empty()) { printf("FATAL: blank tile gen failed\n"); return false; }
+  if (ns <= 1) { printf("chart native scale invalid (%d)\n", ns); return mark_chart_unavailable("chart native scale invalid"); }
+  g_chart_status = "loaded";
+  g_chart_unavailable_reason.clear();
   g_cell_name = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8());
   g_native_scale = ns;   // CHART-8: ETag is built per-request as "<cell>.<palette>.<cat>.s<scale>"
-  g_default_cat = g_display_cat = ps52plib->GetDisplayCategory();   // CHART-9: the renderer's default display category
   printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d\n",
          g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns);
   return true;
 }
 
 static void warmup_render() {
+  if (!g_chart) {
+    printf("warmup render skipped: no ENC chart loaded (basemap-only)\n");
+    return;
+  }
   double clat = (g_ext.SLAT + g_ext.NLAT) / 2.0, clon = (g_ext.WLON + g_ext.ELON) / 2.0;
   const int z = 13; const double n = std::pow(2.0, z);
   long x = (long)((clon + 180.0) / 360.0 * n);
@@ -2180,7 +2212,7 @@ static std::string tide_stations_json(const std::string& uri) {
 static const char* geo_str(GeoPrim_t t) { return t == GEO_POINT ? "point" : (t == GEO_LINE ? "line" : (t == GEO_AREA ? "area" : "")); }
 static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
                             ColorScheme palette, DisCat cat, std::string& out) {
-  if (!g_chart) return TileStatus::BadRequest;
+  if (!g_chart) { out = "[]"; return TileStatus::Ok; }
   if (lon < g_ext.WLON || lon > g_ext.ELON || lat < g_ext.SLAT || lat > g_ext.NLAT) { out = "[]"; return TileStatus::Ok; }
   apply_palette(palette); apply_category(cat);              // visibility parity with the tiles (main-thread only)
   double ppm;                                               // pixels/metre — from the zoom hint if given, else the cell span
@@ -4181,6 +4213,8 @@ public:
             h.erase("X-Helm-Renderer-Output-Sha");
             h.erase("X-Helm-Renderer-Error");
             h["X-Helm-Renderer"] = "legacy";
+            h["X-Helm-Chart-Status"] = g_chart_status;
+            if (!g_chart_unavailable_reason.empty()) h["X-Helm-Chart-Unavailable-Reason"] = header_safe(g_chart_unavailable_reason);
             if (fallback_reason && *fallback_reason) h["X-Helm-Renderer-Fallback"] = fallback_reason;
             else h.erase("X-Helm-Renderer-Fallback");
             char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), g_native_scale);
@@ -4201,6 +4235,7 @@ public:
                     h["X-Helm-Overzoom"] = oz; } }
                 return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
               case TileStatus::NoCoverage: h["Content-Type"] = "image/png";
+                if (!g_chart) h["X-Helm-Chart-Status"] = "unavailable";
                 return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
               case TileStatus::BadRequest: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
                 return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
@@ -4288,7 +4323,13 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, pbody);
         }
         if (path == "/health") { h["Content-Type"] = "application/json";
-          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string("{\"status\":\"ok\",\"engine\":\"helm-server\"}")); }
+          std::string body = "{\"status\":\"ok\",\"engine\":\"helm-server\",\"chart_loaded\":" +
+            std::string(g_chart ? "true" : "false") +
+            ",\"chart_status\":\"" + json_escape(g_chart_status) + "\"";
+          if (!g_chart_unavailable_reason.empty())
+            body += ",\"chart_unavailable_reason\":\"" + json_escape(g_chart_unavailable_reason) + "\"";
+          body += "}";
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body); }
         if (path == "/tides/summary") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_summary_json(req->uri)); }
         if (path == "/tides/providers") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES-9: audited official/provider region catalog
@@ -4306,6 +4347,14 @@ public:
         if (path == "/tides/stations") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: station markers (GeoJSON)
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_stations_json(req->uri)); }
         if (path == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
+          if (!g_chart) {
+            std::string cb = "{\"cells\":[],\"count\":0,\"chart_loaded\":false,\"chart_status\":\"" +
+              json_escape(g_chart_status) + "\"";
+            if (!g_chart_unavailable_reason.empty())
+              cb += ",\"chart_unavailable_reason\":\"" + json_escape(g_chart_unavailable_reason) + "\"";
+            cb += "}";
+            return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, cb);
+          }
           int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
           std::string edtn, eddate;                                             // CONTRACT-5b: cell edition from the loaded chart
           if (g_chart) { edtn = std::string(g_chart->GetSE().ToUTF8());
