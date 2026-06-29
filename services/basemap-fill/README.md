@@ -6,15 +6,19 @@ charts and fills the gaps (the missing z16 in every Fiji pack, anything past the
 zoom, and everywhere outside the Fiji bbox). Where the owned charts have tiles, they paint
 on top and the fill is hidden; where they don't, the satellite shows instead of dark ocean.
 
-Permissive **stdlib only** — no GPL, no OpenCPN (ADR-0006/0009). Part of the post-GPL data
-plane, beside [`services/wx`](../wx). Holds the upstream URL server-side so the browser only
-ever talks to this origin.
+CHART-18 adds the C++ runtime daemon, `helm-basemap-cache`, beside `helm-packd`. The Python
+`server.py` remains the reference/dev fallback. The cache still holds the upstream URL
+server-side so the browser only ever talks to this origin.
 
 ## Run
 
 ```sh
 sh services/basemap-fill/run.sh      # :8095, cache in ~/.helm/basemap-fill-cache
 ```
+
+`run.sh` prefers the C++ binary at
+`$HELM_OCPN_DIR/build/cli/helm-basemap-cache` (or `HELM_BASEMAP_CACHE_BIN`) and falls back to
+`server.py` when the binary is not installed yet.
 
 Bind is `0.0.0.0` so an iPad/phone on the boat LAN loads the same fill from this Mac
 (`index.html`'s `transformRequest` rewrites the `:8095` host like it does `:8091`).
@@ -32,6 +36,11 @@ Bind is `0.0.0.0` so an iPad/phone on the boat LAN loads the same fill from this
 
 `source` is `eox` (production) or `esri` (dev/alt only — paid ToS). MapLibre requests
 `{z}/{x}/{y}`; both upstreams address `{z}/{y}/{x}`, handled internally.
+
+When `HELM_BASEMAP_UPSTREAM` is set, `helm-basemap-cache` can also run as a same-path cache/proxy
+for a remote local-pack server. That is the C++ replacement path for
+`services/basemap-proxy-cache`; leave the Python proxy as a dev/reference helper until parity is
+fully proven.
 
 ## Cache policy (world-class, no size cap)
 
@@ -51,6 +60,9 @@ Bind is `0.0.0.0` so an iPad/phone on the boat LAN loads the same fill from this
 | `HELM_FILL_CACHE` | `~/.helm/basemap-fill-cache` | disk cache root |
 | `HELM_FILL_REFRESH_DAYS` | `30` | background-revalidate age |
 | `HELM_FILL_TIMEOUT` | `12` | upstream fetch timeout (s) |
+| `HELM_BASEMAP_CACHE_BIN` | `$HELM_OCPN_DIR/build/cli/helm-basemap-cache` | preferred C++ daemon |
+| `HELM_BASEMAP_EOX_URL` | EOX WMTS template | test/alt source override |
+| `HELM_BASEMAP_UPSTREAM` | unset | optional remote local-pack proxy upstream |
 
 ## Production source
 

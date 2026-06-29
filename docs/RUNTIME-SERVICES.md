@@ -57,8 +57,9 @@ for human review.
 | `engine/` → `helm-server` | C++ | Required runtime | Keep as the safety/chart/nav core. |
 | `pipeline/mbtiles_server.py` | Python | Runtime helper on `:8091` | Port first. It is now product infrastructure despite living under `pipeline/`. |
 | `services/wx` | Python FastAPI | Runtime helper on `:8093` | Keep briefly as the Weather 2.0 reference baker/cache; port after the WX-19 renderer proves the bundle contract. |
-| `services/basemap-fill` | Python stdlib | Optional runtime helper on `:8095` | Port or fold into a C++ tile-cache service after `helm-packd`. |
-| `services/basemap-proxy-cache` | Python stdlib | Transitional helper on `:8091` | Do not productize as-is; replace with the same C++ cache path. |
+| `helm-basemap-cache` | C++ | Optional runtime helper on `:8095` or proxy port | Preferred online-fill/remote-pack tile cache. |
+| `services/basemap-fill` | Python stdlib | Reference/dev fallback on `:8095` | Keep until C++ parity is proven everywhere. |
+| `services/basemap-proxy-cache` | Python stdlib | Transitional helper on `:8091` | Dev/reference only; replacement path is `helm-basemap-cache` with `HELM_BASEMAP_UPSTREAM`. |
 | `backend/` | Python FastAPI | Optional AI/community prototype on `:8090` | Keep optional and non-safety. Do not let it become required chartplotter runtime without a separate architecture decision. |
 | `pipeline/*.py` one-shot tools | Python | Offline tooling | Keep Python. These are import/bake tools, not daemons. |
 | `web/serve.py`, `engine/mock-engine.js`, web tests | Python/JS | Dev/test only | Keep as support harnesses. |
@@ -72,7 +73,7 @@ web cockpit / future native client
         v
 helm-server        C++  required nav/chart/safety core
 helm-packd         C++  local MBTiles/PMTiles/portable package serving, catalog, layers, prefetch
-helm-cached        C++  optional generic cache/proxy for satellite/online-fill tiles
+helm-basemap-cache C++  optional generic cache/proxy for satellite/online-fill and remote packs
 helm-envd          C++  environmental bundle replay/materialization after WX-19 proves the contract
 helm-ai/backend    Python optional AI/community/research service, never safety-critical
 pipeline/*         Python CLI data import and bake tools
