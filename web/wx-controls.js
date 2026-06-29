@@ -72,10 +72,27 @@
     if (map.getLayer('wind-particles')) map.setLayoutProperty('wind-particles', 'visibility', visible ? 'visible' : 'none');
   }
 
+  // WX-19: find a prepared bundle region whose coverage contains the view and that has this layer.
+  // Returns the region id, or null to fall back to the older tile/live/legacy paths. Any failure
+  // (no bundle gateway, region not materialized, layer absent) -> null -> the old paths run unchanged.
+  async function pickSceneRegion(map, layer) {
+    if (!window.HelmWxScene || !window.HelmWxScene.loadManifest) return null;
+    var region = (typeof window !== 'undefined' && window.HELM_WX_SCENE_REGION) || 'fiji';
+    try {
+      var man = await window.HelmWxScene.loadManifest(region);
+      if (!man || !man.layers || !man.layers[layer]) return null;
+      var b = (man.coverage || {}).bbox; if (!b) return region;
+      if (b.crossesAntimeridian) return region;                 // wide coverage -> assume it covers the view
+      var c = map.getCenter();
+      return (c.lng >= b.west && c.lng <= b.east && c.lat >= b.south && c.lat <= b.north) ? region : null;
+    } catch (e) { return null; }
+  }
+
   async function apply() {
     var map = S.map; if (!map) return;                  // guard: setWeather()'s hook can fire before build() sets S.map
     var layer = activeLayer(), m = await cog();
     if (window.HelmWxLive) window.HelmWxLive.disable(map);
+    if (window.HelmWxScene && window.HelmWxScene.disable) { try { window.HelmWxScene.disable(); } catch (e) {} }   // WX-19: tear down the scene each apply; re-enabled below if chosen
     m.disableEnsemble(map); m.disableWxTiles(map); stopParticles(map);
     if (layer === 'off') { showLegacy(false); setProbe(''); return; }
 
@@ -95,6 +112,18 @@
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
+      // WX-19: prefer the prepared Environmental Scene (bundle field pyramid) when a bundle covers the
+      // view — one renderer for colour + particles, no gesture-path upstream fetch. Falls through to the
+      // tile/live/legacy paths below when no bundle gateway/region is reachable (today's default deploy).
+      var sceneRegion = await pickSceneRegion(map, layer);
+      if (sceneRegion && window.HelmWxScene) {
+        try {
+          await window.HelmWxScene.enable(map, { region: sceneRegion, layer: layer, opacity: wxOpacity() });
+          showLegacy(false);
+          notify('Live ' + layer + ' · prepared bundle scene (WX-19)', 'ok');
+          probeSoon(); return;
+        } catch (e) { try { window.HelmWxScene.disable(); } catch (e2) {} }   // fall through to the paths below
+      }
       // Try the gateway for ANY layer (atmospheric AND marine). If it serves a manifest, render server-
       // baked value tiles — cached, overzoom, fill-on-zoom, identical behaviour across every layer. Wind
       // and current also get LIVE particles from /velocity. Gateway down -> direct Open-Meteo (atmos) or
