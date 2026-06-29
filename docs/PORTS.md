@@ -9,7 +9,7 @@ machine, boat server, or demo process is safe to stop or replace.
 |------|---------|-------|
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
 | 8090 | Optional backend service | Weather, places, and community/LLM prototype endpoints. |
-| 8091 | Optional BYO MBTiles server | Local raster packs served by `pipeline/mbtiles_server.py`. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
+| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by `pipeline/mbtiles_server.py`. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
 | 8093 | Optional weather gateway | `services/wx` value-tile gateway (Open-Meteo). Must use :8093, never :8091 (WX-15). |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
 | 9001+ | Private development servers | Recommended for local agent/test runs. |
@@ -22,14 +22,18 @@ Run examples on a private port:
 scripts/start-helm.sh --port 8080 --weather --fill
 ```
 
-For BYO MBTiles, point the helper at a local directory:
+For BYO MBTiles or PMTiles, point the helper at a local directory:
 
 ```bash
-HELM_MBTILES_DIR="$HOME/Charts/mbtiles" \
+HELM_MBTILES_DIR="$HOME/Charts/local-packs" \
   python3 pipeline/mbtiles_server.py 8091
 ```
 
-If MBTiles are temporarily on another Mac, use the cache-backed proxy instead
+MBTiles packs are exposed as `/{pack}/{z}/{x}/{y}.{ext}` for existing raster
+sources. PMTiles packs are exposed as `/{pack}.pmtiles` with HTTP Range support
+and are advertised in `/catalog` with `pmtiles_url` and `protocol_url`.
+
+If packs are temporarily on another Mac, use the cache-backed proxy instead
 of a thin one-hop proxy:
 
 ```bash

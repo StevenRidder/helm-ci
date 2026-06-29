@@ -8,6 +8,12 @@ const { boot } = require('./_helpers');
 const tap = (page, lng, lat) => page.evaluate(({ lng, lat }) => {
   const m = window.map; m.fire('click', { lngLat: { lng, lat }, point: m.project([lng, lat]), originalEvent: {} });
 }, { lng, lat });
+const waitForLineAt = (page, lng, lat) => page.waitForFunction(({ lng, lat }) => {
+  const m = window.map;
+  if (!m || !m.getLayer || !m.getLayer('measure-line')) return false;
+  const p = m.project([lng, lat]), b = 12;
+  return m.queryRenderedFeatures([[p.x - b, p.y - b], [p.x + b, p.y + b]], { layers: ['measure-line'] }).length > 0;
+}, { lng, lat }, { timeout: 8000, polling: 100 });
 // the api's `lines` IS what build() renders, so count() reflects what's drawn on the chart
 const renderedLines = (page) => page.evaluate(() => window.__helmMeasure.count());
 const count = (page) => page.evaluate(() => window.__helmMeasure.count());
@@ -59,11 +65,13 @@ test.describe('TOOLS-1 — measure: keepable, editable, persisted lines', () => 
     await tap(page, 0.10, 0.10); await tap(page, 0.30, 0.10); await page.keyboard.press('Enter');
     await tap(page, 0.10, -0.20); await tap(page, 0.30, -0.20); await page.keyboard.press('Enter');
     expect(await count(page)).toBe(2);
+    await waitForLineAt(page, 0.20, 0.10);
 
     await page.evaluate(() => window.__helmMeasure.setMode('edit'));
     expect(await page.evaluate(() => window.__helmMeasure.mode())).toBe('edit');
     await tap(page, 0.80, 0.80);                                      // empty space
     expect(await count(page), 'an edit-mode tap must NOT draw a new line').toBe(2);
+    await waitForLineAt(page, 0.20, 0.10);
 
     await tap(page, 0.20, 0.10);                                      // midpoint of line 1
     expect(await page.evaluate(() => window.__helmMeasure.selected()), 'tap selects the line under it').not.toBeNull();

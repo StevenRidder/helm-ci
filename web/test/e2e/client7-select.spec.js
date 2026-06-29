@@ -14,7 +14,11 @@ async function seed(page, lon, lat) {
       { type: 'Feature', properties: { mmsi, name: 'TESTBOAT', sog: 5, cog: 90 },
         geometry: { type: 'Point', coordinates: [lon, lat] } }] });
   }, { mmsi: MMSI, lon, lat });
-  await page.waitForFunction((m) => window.map.querySourceFeatures('ais').some((f) => f.properties && f.properties.mmsi === m), MMSI, { timeout: 8000 });
+  await page.waitForFunction((m) => {
+    const src = window.map && window.map.getSource && window.map.getSource('ais');
+    const data = src && src.serialize && src.serialize().data;
+    return !!(data && data.features && data.features.some((f) => f.properties && f.properties.mmsi === m));
+  }, MMSI, { timeout: 8000 });
 }
 const fstate = (page, id) => page.evaluate((i) => window.map.getFeatureState({ source: 'ais', id: i }), id);
 
@@ -42,7 +46,11 @@ test.describe('CLIENT-7 — tap-to-select highlight (feature-state, no setData)'
         { type: 'Feature', properties: { mmsi: id, name: 'A' }, geometry: { type: 'Point', coordinates: [177.40, -17.80] } },
         { type: 'Feature', properties: { mmsi: id + 1, name: 'B' }, geometry: { type: 'Point', coordinates: [177.41, -17.81] } }] });
     }, MMSI);
-    await page.waitForFunction((m) => window.map.querySourceFeatures('ais').some((f) => f.properties && f.properties.mmsi === m + 1), MMSI, { timeout: 8000 });
+    await page.waitForFunction((m) => {
+      const src = window.map && window.map.getSource && window.map.getSource('ais');
+      const data = src && src.serialize && src.serialize().data;
+      return !!(data && data.features && data.features.some((f) => f.properties && f.properties.mmsi === m + 1));
+    }, MMSI, { timeout: 8000 });
     await page.evaluate((id) => window.HelmAisSelect.select(id), MMSI);
     await page.evaluate((id) => window.HelmAisSelect.select(id + 1), MMSI);
     expect((await fstate(page, MMSI)).selected, 'previous deselected').toBeFalsy();

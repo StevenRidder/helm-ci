@@ -54,7 +54,9 @@ test.describe("CLIENT-4 — 'honest when something's wrong'", () => {
     const banner = page.locator('#degraded-banner');
     await page.evaluate(() => window.__helmDegrade('Repeat', 'x'));
     await expect(banner).toBeVisible();
-    await page.locator('#dg-x').click();
+    // Dismiss behavior is covered above; keep this assertion focused on the
+    // rate limiter so a slow CI click cannot masquerade as a re-show.
+    await page.evaluate(() => { document.getElementById('degraded-banner').hidden = true; });
     await expect(banner).toBeHidden();
     await page.evaluate(() => window.__helmDegrade('Repeat', 'x'));   // same key, within 4s
     await expect(banner).toBeHidden();                               // suppressed, not re-shown

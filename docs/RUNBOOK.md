@@ -74,8 +74,8 @@ something is missing.
 
 Helm does not include chart packs. Bring your own local charts/basemaps at
 runtime, the same general posture as OpenCPN: the repo supplies code and safe
-sample/public data, while user-owned ENC cells, MBTiles, private satellite
-packs, `~/.helm` runtime data, and generated caches stay outside Git.
+sample/public data, while user-owned ENC cells, MBTiles/PMTiles, private
+satellite packs, `~/.helm` runtime data, and generated caches stay outside Git.
 
 ### NOAA ENC Cells
 
@@ -100,16 +100,35 @@ no ENC at all — basemap-only — is a planned follow-up.)*
 
 The browser UI has local/user-owned chart and imagery slots. In Steve's local
 cockpit those are served from local packs on `:8091`; another user can point the
-same slots at their own local MBTiles/raster service or configure equivalent
-local basemap sources. Do not commit MBTiles, ENC bundles, private imagery, or
-generated chart caches to this repo.
+same slots at their own local MBTiles/PMTiles service or configure equivalent
+local basemap sources. Do not commit MBTiles, PMTiles, ENC bundles, private
+imagery, or generated chart caches to this repo.
 
-Best performance comes from copying the owned MBTiles packs to the machine that
-is serving the UI and starting the local basemap helper:
+Best performance comes from copying the owned packs to the machine that is
+serving the UI and starting the local pack helper:
 
 ```bash
 HELM_MBTILES_DIR="$HOME/.helm/basemaps/fiji-tcl2407" \
   scripts/start-helm.sh --port 9001 --weather --basemap --fill
+```
+
+The helper scans `HELM_MBTILES_DIR` for both `*.mbtiles` and `*.pmtiles`.
+MBTiles remain available as XYZ tile endpoints. PMTiles are advertised in
+`/catalog` with a Range-readable `pmtiles_url` and `pmtiles://` protocol URL, so
+MapLibre clients can load single-file local packs without inventing per-pack
+tile URL templates.
+
+For a direct local acceptance run, start only the local pack helper and open the
+Chart Packs panel in the browser. The UI discovers `/catalog`, lists each local
+pack, and activates the selected pack as the MapLibre raster/PMTiles source.
+Use `basemapPort` when the helper is not on the default `:8091`:
+
+```bash
+HELM_MBTILES_DIR="$HOME/.helm/basemaps/fiji-tcl2407" \
+  python3 pipeline/mbtiles_server.py 9120
+
+python3 web/serve.py 9100
+# open http://127.0.0.1:9100/?basemapPort=9120
 ```
 
 If the packs live on another Mac temporarily, use the cache-backed proxy rather

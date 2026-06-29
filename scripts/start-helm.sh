@@ -13,7 +13,7 @@
 #    HELM_BASEMAP_UPSTREAM=http://192.168.1.137:8091 scripts/start-helm.sh --basemap-proxy
 #
 #  Flags:  --weather        weather value-tile gateway (services/wx) on :8093
-#          --basemap        offline MBTiles basemap server (pipeline) on :8091
+#          --basemap        offline MBTiles/PMTiles local pack server (pipeline) on :8091
 #          --basemap-proxy  cache-backed proxy to HELM_BASEMAP_UPSTREAM on :8091
 #          --fill           online basemap-fill cache proxy on :8095
 #          --backend        AI/places/community backend on :8090
@@ -27,7 +27,7 @@
 #    HELM_WEB_ROOT      web/ dir (default: this repo's web/)
 #    HELM_CONFIG        durable config/runtime dir (default ~/.helm/config)
 #    HELM_ENC           NOAA ENC .000 cell for real S-52 charts
-#    HELM_MBTILES_DIR       dir of *.mbtiles for --basemap (optional; else demo web/data)
+#    HELM_MBTILES_DIR       dir of *.mbtiles/*.pmtiles for --basemap (optional; else demo web/data)
 #    HELM_BASEMAP_UPSTREAM  upstream :8091 URL for --basemap-proxy (example: http://192.168.1.137:8091)
 #
 #  Ctrl-C stops everything this script started.
@@ -127,10 +127,10 @@ fi
 if [ "$WANT_BASEMAP" = 1 ]; then
   if [ -f "$REPO_ROOT/pipeline/mbtiles_server.py" ]; then
     [ -n "${HELM_MBTILES_DIR:-}" ] || SKIPPED+=("basemap note — HELM_MBTILES_DIR unset; serving demo web/data, not your charts")
-    start_bg "mbtiles-basemap (pipeline)" 8091 \
+    start_bg "local-pack-server (pipeline)" 8091 \
       bash -c "exec python3 '$REPO_ROOT/pipeline/mbtiles_server.py' 8091"
   else
-    SKIPPED+=("mbtiles-basemap :8091 — pipeline/mbtiles_server.py not found")
+    SKIPPED+=("local-pack-server :8091 — pipeline/mbtiles_server.py not found")
   fi
 fi
 

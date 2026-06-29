@@ -54,7 +54,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - 🟢 Satellite + NOAA RNC raster · 🟢 True S-52 vector ENC (headless) · 🟢 Multi-cell quilting (transparent NODTA)
 - 🟢 **Depth-on-satellite** (the wedge) · 🟢 Depth-area fill + contours + soundings
 - 🟡 Day/Dusk/Night (UI reskins raster; true engine-side S-52 night not switched) · 🟡 Depth shading bands (no safety-depth tuning)
-- 🟡 mbtiles BYO + on-demand bbox download (CLI exists; UI is a mockup — wire to real download) · ⚪ Pre-baked offline tile packs ([ADR-0008](decisions/0008-prebaked-offline-tile-packs.md))
+- 🟡 mbtiles BYO + on-demand bbox download (BYO pack selector wired; lasso/download UI still needs real estimate/download flow) · ⚪ Pre-baked offline tile packs ([ADR-0008](decisions/0008-prebaked-offline-tile-packs.md))
 - 🔴 S-52 display category (Base/Std/All/Mariner) · 🟡 SCAMIN/overzoom warning · 🟡 Chart-object query (only soundings tappable)
 - 🔴 Course-up/head-up orientation · 🔴 Follow / center-on-ownship · 🟡 Course/heading predictor vector · ⚪ Chart groups
 - 🔴 S-63 / CM93 / relief-shading / sonar bathymetry — **out of scope (not planned)**

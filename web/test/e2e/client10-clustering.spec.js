@@ -7,12 +7,16 @@ const { boot } = require('./_helpers');
 test.describe("CLIENT-10 — 'clean charts in a crowded harbour' (POI clustering)", () => {
   test('dense POIs cluster (point_count present); individual + cluster layers all exist', async ({ page }) => {
     await boot(page);
+    await page.waitForFunction(
+      () => window.map && window.map.isSourceLoaded && window.map.isSourceLoaded('places'),
+      null,
+      { timeout: 12000, polling: 200 });
 
     await page.evaluate(() => {
       const c = [177.4, -17.8], feats = [];
       for (let i = 0; i < 300; i++) {
         feats.push({
-          type: 'Feature', properties: { kind: 'anchorage', name: 'P' + i },
+          type: 'Feature', properties: { kind: 'anchorage', name: 'P' + i, client10: true },
           geometry: { type: 'Point', coordinates: [c[0] + (Math.sin(i) * 0.1), c[1] + (Math.cos(i * 1.3) * 0.08)] },
         });
       }
@@ -21,7 +25,21 @@ test.describe("CLIENT-10 — 'clean charts in a crowded harbour' (POI clustering
     });
 
     await page.waitForFunction(
-      () => window.map.querySourceFeatures('places').some((x) => x.properties && x.properties.cluster),
+      () => {
+        const src = window.map && window.map.getSource && window.map.getSource('places');
+        const data = src && src.serialize && src.serialize().data;
+        return !!(data && data.features && data.features.length === 300
+          && data.features.every((f) => f.properties && f.properties.client10));
+      },
+      null, { timeout: 12000, polling: 200 });
+
+    await page.waitForFunction(
+      () => {
+        const f = window.map.querySourceFeatures('places');
+        const clustered = f.filter((x) => x.properties && x.properties.cluster).length;
+        const maxCount = f.reduce((m, x) => Math.max(m, (x.properties && x.properties.point_count) || 0), 0);
+        return clustered > 0 && maxCount > 1;
+      },
       null, { timeout: 12000, polling: 200 });
 
     const stats = await page.evaluate(() => {

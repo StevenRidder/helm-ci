@@ -18,10 +18,20 @@ import { Protocol } from 'pmtiles';
 const SRC = 'helm-pmtiles', LYR = 'helm-pmtiles';
 let protocolReady = false;
 
+function protocolHandler(protocol) {
+  const handler = protocol && (protocol.tile || protocol.tilev4);
+  if (typeof handler !== 'function') throw new Error('PMTiles protocol handler unavailable');
+  return handler.bind(protocol);
+}
+
 export async function enable(map, ctx) {
   if (!protocolReady) {
     const protocol = new Protocol();
-    ctx.maplibregl.addProtocol('pmtiles', protocol.tile);
+    try {
+      ctx.maplibregl.addProtocol('pmtiles', protocolHandler(protocol));
+    } catch (e) {
+      if (!/already|exist|registered/i.test(String((e && e.message) || e))) throw e;
+    }
     protocolReady = true;
   }
   if (map.getLayer(LYR)) { map.setLayoutProperty(LYR, 'visibility', 'visible'); return; }
