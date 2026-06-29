@@ -51,6 +51,14 @@ function ensure(map, ctx) {
     }
     // A finished rectangle → derive its bbox and publish it to the Download drawer.
     if (f.geometry.type !== 'Polygon') return;
+    // Single-box selection: drop any earlier rectangles so only the most-recent box survives.
+    // (Without this a redraw stacks boxes on the map even though the panel only uses the latest.)
+    try {
+      const stale = draw.getSnapshot()
+        .filter(s => s.id !== id && s.geometry && s.geometry.type === 'Polygon')
+        .map(s => s.id);
+      if (stale.length) draw.removeFeatures(stale);
+    } catch (e) { /* non-fatal */ }
     const ring = f.geometry.coordinates[0];
     const xs = ring.map(p => p[0]), ys = ring.map(p => p[1]);
     const bbox = [Math.min(...xs), Math.min(...ys), Math.max(...xs), Math.max(...ys)]
@@ -63,7 +71,17 @@ function ensure(map, ctx) {
 }
 
 export function route(map, ctx) { ensure(map, ctx).setMode('linestring'); ctx.notify('Click to draw a route; double-click to finish', 'info'); }
-export function lasso(map, ctx) { ensure(map, ctx).setMode('rectangle'); ctx.notify('Drag a rectangle over the area to fetch charts for', 'info'); }
+export function lasso(map, ctx) {
+  const d = ensure(map, ctx);
+  // Clear any previous selection box so a new lasso REPLACES it (single-box model) — drawing a
+  // new box never stacks; to redo, just zoom/pan and drag again.
+  try {
+    const boxes = d.getSnapshot().filter(s => s.geometry && s.geometry.type === 'Polygon').map(s => s.id);
+    if (boxes.length) d.removeFeatures(boxes);
+  } catch (e) { /* non-fatal */ }
+  d.setMode('rectangle');
+  ctx.notify('Drag a box over the area — zoom first; a new box replaces the old one', 'info');
+}
 export function select(map, ctx) { ensure(map, ctx).setMode('select'); }
 
 export function disable() {
