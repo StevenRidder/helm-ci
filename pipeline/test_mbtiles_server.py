@@ -310,6 +310,29 @@ class PackServerTest(unittest.TestCase):
         self.assertIn("out_of_coverage", chart["status"]["states"])
         self.assertNotIn(self.tmp.name, json.dumps(bundle))
 
+    def test_layers_endpoint_exposes_local_maritime_inventory(self):
+        status, inventory = request_json(
+            f"http://127.0.0.1:{self.port}/layers?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(inventory["schema"], "helm.maritime_layer_inventory.v1")
+        self.assertEqual(inventory["coverage"]["bbox"], [178.0, -18.0, 178.5, -17.5])
+        self.assertEqual(inventory["summary"]["roles"]["chart"], 1)
+        self.assertEqual(inventory["summary"]["roles"]["basemap"], 1)
+        self.assertEqual(inventory["summary"]["roles"]["depth"], 1)
+        chart = next(layer for layer in inventory["layers"] if layer["component_id"] == "pack:chart")
+        self.assertEqual(chart["product_identifier"], "S-52")
+        self.assertEqual(chart["dataset_name"], "Demo Chart")
+        self.assertEqual(chart["producer_code"], "NOAA ENC fixture")
+        self.assertEqual(chart["source"]["id"], "US5FIXTURE")
+        self.assertEqual(chart["sample"]["status"], "available")
+        self.assertEqual(chart["sample"]["probe_handle"], "chart.objects")
+        self.assertEqual(chart["pack"]["container"], "mbtiles")
+        sat = next(layer for layer in inventory["layers"] if layer["component_id"] == "pack:sat")
+        self.assertEqual(sat["product_identifier"], "S-52")
+        self.assertEqual(sat["freshness"]["status"], "stale")
+        self.assertNotIn(self.tmp.name, json.dumps(inventory))
+
 
 if __name__ == "__main__":
     unittest.main(verbosity=2)

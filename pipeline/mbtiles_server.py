@@ -5,6 +5,7 @@
   GET /{name}.pmtiles             -> PMTiles archive with HTTP Range support
   HEAD /{name}.pmtiles            -> PMTiles headers for protocol probes
   GET /catalog                    -> JSON of available packs + bounds/zoom/URLs
+  GET /layers                     -> local maritime layer inventory
 
 Offline-first: everything is local and read-only. Bind 0.0.0.0 so an iPad or
 phone on the boat LAN can load the same packs through the boat server.
@@ -34,6 +35,7 @@ import threading
 from typing import Optional, Tuple
 import urllib.parse
 
+from layer_inventory import LayerInventoryError, build_layer_inventory
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
 
@@ -753,6 +755,14 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         self._json_response(200, payload)
 
+    def _layers_response(self, query: dict):
+        try:
+            payload = build_layer_inventory(_catalog(_origin(self)), query)
+        except LayerInventoryError as e:
+            self._json_response(400, {"error": "bad_layer_inventory_request", "message": str(e)})
+            return
+        self._json_response(200, payload)
+
     def _serve_mbtiles(self, name: str, parts: list[str]):
         if len(parts) != 4 or name not in CONNS:
             self._empty(404)
@@ -834,6 +844,19 @@ class H(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             return
+        if path == "layers":
+            try:
+                body = json.dumps(build_layer_inventory(_catalog(_origin(self)), {}), sort_keys=True).encode("utf-8")
+            except LayerInventoryError:
+                self._empty(400)
+                return
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self._cors()
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            return
         self._empty(404)
 
     def do_GET(self):
@@ -847,6 +870,9 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         if path == "bundle":
             self._bundle_response(urllib.parse.parse_qs(parsed.query))
+            return
+        if path == "layers":
+            self._layers_response(urllib.parse.parse_qs(parsed.query))
             return
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])

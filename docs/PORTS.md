@@ -33,7 +33,10 @@ MBTiles packs are exposed as `/{pack}/{z}/{x}/{y}.{ext}` for existing raster
 sources. PMTiles packs are exposed as `/{pack}.pmtiles` with HTTP Range support
 and are advertised in `/catalog` with `pmtiles_url` and `protocol_url`. The same
 helper exposes `GET /prefetch` for route-corridor or bbox tile manifests that a
-client can use to warm its local cache without mutating the packs.
+client can use to warm its local cache without mutating the packs. `GET /layers`
+exposes the local maritime layer inventory: chart/basemap/depth/weather/places/S-100-style
+metadata with coverage, freshness, source, confidence, and sample/probe handles for client
+inspection without leaking private filesystem paths.
 
 If packs are temporarily on another Mac, use the cache-backed proxy instead
 of a thin one-hop proxy:
