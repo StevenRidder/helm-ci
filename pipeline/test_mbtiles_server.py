@@ -48,6 +48,16 @@ def write_mbtiles(path):
             ("display_category", "std"),
             ("chart_edition", "fixture-edition-1"),
             ("render_date", "2026-06-29T00:00:00Z"),
+            ("stale_after_days", "36500"),
+            ("tile_count", "1"),
+            ("tile_count_expected", "3"),
+            ("no_coverage_tile_count", "1"),
+            ("missing_tile_count", "1"),
+            ("coverage_status", "partial"),
+            ("coverage_warning", "fixture coverage gap"),
+            ("palette_pack_group", "fixture-s52"),
+            ("palette_pack_count", "2"),
+            ("palette_variants", '["day","night"]'),
         ],
     )
     conn.execute("INSERT INTO tiles VALUES (0, 0, 0, ?)", (b"\x89PNG\r\n\x1a\nfixture",))
@@ -71,7 +81,16 @@ def write_pmtiles(path):
                 "palette": "night",
                 "display_category": "std",
                 "chart_edition": "fixture-edition-2",
-                "render_date": "2026-06-29T00:00:00Z",
+                "render_date": "2000-01-01T00:00:00Z",
+                "stale_after_days": 1,
+                "tile_count": 1,
+                "tile_count_expected": 1,
+                "no_coverage_tile_count": 0,
+                "missing_tile_count": 0,
+                "coverage_status": "complete",
+                "palette_pack_group": "fixture-s52",
+                "palette_pack_count": 2,
+                "palette_variants": ["day", "night"],
             }
         ).encode("utf-8")
     )
@@ -153,11 +172,20 @@ class PackServerTest(unittest.TestCase):
         self.assertEqual(catalog["chart"]["renderer"], "s52")
         self.assertEqual(catalog["chart"]["palette"], "day")
         self.assertEqual(catalog["chart"]["chart_edition"], "fixture-edition-1")
+        self.assertEqual(catalog["chart"]["palette_pack_group"], "fixture-s52")
+        self.assertEqual(catalog["chart"]["coverage"]["status"], "partial")
+        self.assertEqual(catalog["chart"]["coverage"]["gap_count"], 2)
+        self.assertEqual(catalog["chart"]["coverage"]["warning"], "fixture coverage gap")
+        self.assertEqual(catalog["chart"]["staleness"]["status"], "fresh")
+        self.assertIn("pack_out_of_coverage", [w["code"] for w in catalog["chart"]["warnings"]])
         self.assertEqual(catalog["sat"]["container"], "pmtiles")
         self.assertTrue(catalog["sat"]["range"])
         self.assertEqual(catalog["sat"]["renderer"], "s52")
         self.assertEqual(catalog["sat"]["palette"], "night")
         self.assertEqual(catalog["sat"]["chart_edition"], "fixture-edition-2")
+        self.assertEqual(catalog["sat"]["coverage"]["status"], "complete")
+        self.assertEqual(catalog["sat"]["staleness"]["status"], "stale")
+        self.assertIn("pack_stale", [w["code"] for w in catalog["sat"]["warnings"]])
         self.assertEqual(catalog["sat"]["pmtiles_url"], f"http://127.0.0.1:{self.port}/sat.pmtiles")
         self.assertEqual(catalog["sat"]["protocol_url"], f"pmtiles://http://127.0.0.1:{self.port}/sat.pmtiles")
         self.assertNotIn(self.tmp.name, json.dumps(catalog))

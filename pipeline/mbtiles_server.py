@@ -64,11 +64,19 @@ PACK_METADATA_KEYS = (
     "chart_edition",
     "chart_epoch",
     "render_date",
+    "stale_after_days",
+    "stale_at",
+    "staleness_status",
     "z_range",
     "tile_count",
     "tile_count_expected",
     "no_coverage_tile_count",
     "missing_tile_count",
+    "coverage_status",
+    "coverage_warning",
+    "palette_pack_group",
+    "palette_pack_count",
+    "palette_variants",
     "generated_by",
 )
 
@@ -103,6 +111,38 @@ def _safe_int(value, default: int) -> int:
         return int(value)
     except (TypeError, ValueError):
         return default
+
+
+def _maybe_int(value) -> Optional[int]:
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None
+
+
+def _parse_iso_utc(value) -> Optional[_dt.datetime]:
+    if not value:
+        return None
+    try:
+        parsed = _dt.datetime.fromisoformat(str(value).replace("Z", "+00:00"))
+    except ValueError:
+        return None
+    if parsed.tzinfo is None:
+        parsed = parsed.replace(tzinfo=_dt.timezone.utc)
+    return parsed.astimezone(_dt.timezone.utc)
+
+
+def _bool_value(value) -> Optional[bool]:
+    if isinstance(value, bool):
+        return value
+    if value is None:
+        return None
+    text = str(value).strip().lower()
+    if text in ("1", "true", "yes"):
+        return True
+    if text in ("0", "false", "no"):
+        return False
+    return None
 
 
 def _bounds_array(bounds):
@@ -250,6 +290,98 @@ def _base_record(name: str, path: str, fmt: str, pack_type: str, title: str, met
     return rec
 
 
+def _warning(code: str, severity: str, message: str) -> dict:
+    return {"code": code, "severity": severity, "message": message}
+
+
+def _coverage_summary(rec: dict) -> tuple[dict, list[dict]]:
+    tile_count = _maybe_int(rec.get("tile_count") or rec.get("addressed_tiles"))
+    expected = _maybe_int(rec.get("tile_count_expected"))
+    no_coverage = _maybe_int(rec.get("no_coverage_tile_count")) or 0
+    missing = _maybe_int(rec.get("missing_tile_count")) or 0
+    warnings = []
+
+    if expected is None or expected <= 0:
+        status = rec.get("coverage_status") or "unknown"
+        coverage = {"status": status}
+        if tile_count is not None:
+            coverage["tile_count"] = tile_count
+        return coverage, warnings
+
+    gaps = max(0, no_coverage) + max(0, missing)
+    if tile_count is not None:
+        gaps = max(gaps, expected - tile_count)
+    status = rec.get("coverage_status") or ("complete" if gaps == 0 else "partial")
+    ratio = gaps / expected if expected else 0.0
+    coverage = {
+        "status": status,
+        "tile_count": tile_count,
+        "tile_count_expected": expected,
+        "no_coverage_tile_count": no_coverage,
+        "missing_tile_count": missing,
+        "gap_count": gaps,
+        "gap_ratio": round(ratio, 6),
+    }
+    if status != "complete" or gaps:
+        message = rec.get("coverage_warning") or (
+            f"Pack has coverage gaps: {no_coverage} no-coverage tile(s), "
+            f"{missing} failed tile request(s), {expected} requested tile(s)."
+        )
+        coverage["warning"] = message
+        warnings.append(_warning("pack_out_of_coverage", "warning", message))
+    return coverage, warnings
+
+
+def _staleness_summary(rec: dict) -> tuple[dict, list[dict]]:
+    render_dt = _parse_iso_utc(rec.get("render_date"))
+    stale_after = _maybe_int(rec.get("stale_after_days"))
+    stale_at = _parse_iso_utc(rec.get("stale_at"))
+    warnings = []
+
+    if render_dt is None:
+        message = "Pack has no render_date; freshness cannot be verified."
+        return {"status": "unknown", "warning": message}, [
+            _warning("pack_freshness_unknown", "warning", message)
+        ]
+
+    now = _dt.datetime.now(_dt.timezone.utc)
+    age_days = max(0, int((now - render_dt).total_seconds() // 86400))
+    if stale_after is not None and stale_after > 0 and stale_at is None:
+        stale_at = render_dt + _dt.timedelta(days=stale_after)
+
+    forced_stale = _bool_value(rec.get("is_stale"))
+    if forced_stale is None and str(rec.get("staleness_status", "")).lower() == "stale":
+        forced_stale = True
+
+    stale = bool(forced_stale)
+    if stale_at is not None and now >= stale_at:
+        stale = True
+    status = "stale" if stale else "fresh"
+    staleness = {
+        "status": status,
+        "render_date": rec.get("render_date"),
+        "age_days": age_days,
+    }
+    if stale_after is not None:
+        staleness["stale_after_days"] = stale_after
+    if stale_at is not None:
+        staleness["stale_at"] = stale_at.isoformat().replace("+00:00", "Z")
+    if stale:
+        message = "Pack render date is older than the configured freshness window."
+        staleness["warning"] = message
+        warnings.append(_warning("pack_stale", "warning", message))
+    return staleness, warnings
+
+
+def _enrich_pack_record(rec: dict) -> dict:
+    coverage, coverage_warnings = _coverage_summary(rec)
+    staleness, staleness_warnings = _staleness_summary(rec)
+    rec["coverage"] = coverage
+    rec["staleness"] = staleness
+    rec["warnings"] = coverage_warnings + staleness_warnings
+    return rec
+
+
 def _build_pack_records():
     records, conns, locks = {}, {}, {}
     for name, filename in _pack_map().items():
@@ -282,7 +414,7 @@ def _build_pack_records():
             rec = _base_record(name, path, fmt, pack_type, title, metadata)
             rec["container"] = "mbtiles"
             rec["_path"] = path
-            records[name] = rec
+            records[name] = _enrich_pack_record(rec)
             conns[name] = conn
             locks[name] = threading.Lock()
         elif ext == ".pmtiles":
@@ -302,7 +434,7 @@ def _build_pack_records():
             rec["tile_entries"] = pm["tile_entries"]
             rec["tile_contents"] = pm["tile_contents"]
             rec["_path"] = path
-            records[name] = rec
+            records[name] = _enrich_pack_record(rec)
         else:
             print(f"warning: unsupported pack extension for {name!r}: {path}", file=sys.stderr)
     return records, conns, locks

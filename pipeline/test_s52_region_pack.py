@@ -55,7 +55,7 @@ class TileHandler(http.server.BaseHTTPRequestHandler):
             self.end_headers()
             return
         query = dict(urllib.parse.parse_qsl(parsed.query))
-        if query.get("p") != "night" or query.get("cat") != "std":
+        if query.get("p") not in {"day", "dusk", "night"} or query.get("cat") != "std":
             self.send_response(400)
             self.end_headers()
             return
@@ -120,10 +120,71 @@ class S52RegionPackTest(unittest.TestCase):
         self.assertEqual(meta["chart_edition"], "fixture-edition")
         self.assertEqual(meta["chart_epoch"], "fixture-epoch")
         self.assertEqual(meta["render_date"], "2026-06-29T00:00:00Z")
+        self.assertEqual(meta["stale_after_days"], 90)
+        self.assertEqual(meta["stale_at"], "2026-09-27T00:00:00Z")
+        self.assertEqual(meta["staleness_status"], "fresh")
         self.assertEqual(meta["z_range"], "0-0")
         self.assertEqual(meta["tile_count"], 1)
         self.assertEqual(meta["tile_count_expected"], 1)
+        self.assertEqual(meta["coverage_status"], "complete")
+        self.assertEqual(meta["coverage_warning"], "")
+        self.assertEqual(meta["palette_pack_group"], "test-s52")
+        self.assertEqual(meta["palette_pack_count"], 1)
+        self.assertEqual(meta["palette_variants"], ["night"])
         self.assertEqual(meta["bounds"], [-1.0, -1.0, 1.0, 1.0])
+
+    def test_bakes_repeated_palettes_as_sibling_pmtiles(self):
+        TileHandler.seen = []
+        port = free_port()
+        server = http.server.ThreadingHTTPServer(("127.0.0.1", port), TileHandler)
+        thread = threading.Thread(target=server.serve_forever, daemon=True)
+        thread.start()
+        try:
+            with tempfile.TemporaryDirectory() as td:
+                out = Path(td) / "fiji-s52-{palette}.pmtiles"
+                cmd = [
+                    sys.executable,
+                    str(BAKER),
+                    "--source",
+                    f"http://127.0.0.1:{port}/chart/{{z}}/{{x}}/{{y}}.png",
+                    "--bbox=-1,-1,1,1",
+                    "--minzoom",
+                    "0",
+                    "--maxzoom",
+                    "0",
+                    "--out",
+                    str(out),
+                    "--name",
+                    "Fixture S-52",
+                    "--palette",
+                    "day",
+                    "--palette",
+                    "dusk",
+                    "--display-category",
+                    "std",
+                    "--edition",
+                    "fixture-edition",
+                    "--render-date",
+                    "2026-06-29T00:00:00Z",
+                    "--palette-group",
+                    "fixture-group",
+                ]
+                run = subprocess.run(cmd, cwd=str(ROOT), capture_output=True, text=True, timeout=30)
+                self.assertEqual(run.returncode, 0, run.stdout + run.stderr)
+                day = read_pmtiles_metadata(Path(td) / "fiji-s52-day.pmtiles")
+                dusk = read_pmtiles_metadata(Path(td) / "fiji-s52-dusk.pmtiles")
+        finally:
+            server.shutdown()
+            server.server_close()
+
+        self.assertEqual(len(TileHandler.seen), 2)
+        self.assertEqual(day["palette"], "day")
+        self.assertEqual(dusk["palette"], "dusk")
+        self.assertEqual(day["palette_pack_group"], "fixture-group")
+        self.assertEqual(dusk["palette_pack_group"], "fixture-group")
+        self.assertEqual(day["palette_pack_count"], 2)
+        self.assertEqual(dusk["palette_pack_count"], 2)
+        self.assertEqual(day["palette_variants"], ["day", "dusk"])
 
 
 if __name__ == "__main__":

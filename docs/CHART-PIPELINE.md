@@ -89,8 +89,11 @@ shippable.
 For offline S-52 chart snapshots, `pipeline/bake_s52_region_pack.py` drives the
 same live `/chart/{z}/{x}/{y}.png` renderer over a selected XYZ pyramid and emits
 a PMTiles pack. The pack is stamped with the renderer, palette, display category,
-source chart edition/epoch, render date, bbox, z-range, and tile counts so later
-client work can warn about stale or out-of-coverage chart pixels.
+source chart edition/epoch, render date, freshness window, bbox, z-range, requested
+tile counts, baked tile counts, coverage gaps, and palette sibling group. The
+local pack server normalizes those stamps into `/catalog` `staleness`, `coverage`,
+and `warnings` fields so client work can warn about stale or out-of-coverage chart
+pixels without reimplementing pack metadata rules.
 
 > ⚠ **Supplemental only.** Satellite + satellite-derived bathymetry is an aid, never
 > primary navigation. Clouds hide reefs; imagery can paint reefs out; SDB ≈ IHO ZOC-C.
