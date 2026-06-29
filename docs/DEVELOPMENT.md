@@ -3,9 +3,8 @@
 This guide is for contributors working on the source tree. For an operator-style
 build/run recipe, see [RUNBOOK.md](RUNBOOK.md).
 
-For multi-agent work, start with [AGENT-BOOTSTRAP.md](AGENT-BOOTSTRAP.md). It explains how any
-runtime enlists with Switchboard, claims work, stays inside epic ownership boundaries, and reports
-review-ready evidence.
+Internal multi-agent coordination uses private planning docs and board tooling. Public contributors
+can work from this guide, the runbook, and normal GitHub issues or pull requests.
 
 ## Mental Model
 
