@@ -3,6 +3,7 @@ scripts/publish-public-mirror.sh export-ignore
 scripts/bootstrap-private-install.sh export-ignore
 scripts/update-remote-parity.sh export-ignore
 docs/AUDIT-2026-06-26.md export-ignore
+docs/AGENT-BOOTSTRAP.md export-ignore
 docs/BUSINESS-MODEL.md export-ignore
 docs/EPICS.md export-ignore
 docs/FEATURE-TRACKER.md export-ignore
