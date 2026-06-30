@@ -56,6 +56,7 @@ const APP_SHELL_URLS = [
   './server-endpoint.js',
   './log.js',
   './nav-client.js',
+  './health-panel.js',
   './connections.js',
   './routes.js',
   './route-edit.js',

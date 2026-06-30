@@ -759,6 +759,7 @@
 <script src="server-endpoint.js"></script>
 <script src="log.js"></script>        <!-- CLIENT-18: HelmLog — leveled, level-filtered logger + ring buffer -->
 <script src="nav-client.js"></script>
+<script src="health-panel.js"></script><!-- CLIENT-20: status panel for engine/feed/runtime diagnostics -->
 <script src="connections.js"></script>
 <script src="routes.js"></script>
 <script src="route-edit.js"></script>
@@ -1766,7 +1767,10 @@
     // The address is whatever you loaded the page from — localhost here, helm.local / a LAN IP on
     // the boat — so this single line behaves identically local or remote.
     window.__navClient = HelmNavClient(applyNav,
-      st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else setSource(st.phase, st); },
+      st => { if (st.phase === 'alarm') { if (window.__alarms) __alarms.fromEngine(st.alarm); } else {
+        setSource(st.phase, st);
+        if (window.HelmHealthPanel && HelmHealthPanel.onStatus) HelmHealthPanel.onStatus(st);
+      } },
       { onCommand: m => { if (window.HelmConnections) HelmConnections.onCommand(m); if (window.HelmRoutes) HelmRoutes.onCommand(m); if (window.HelmRouteEdit) HelmRouteEdit.onCommand(m); },
         onAlarm: a => { if (window.__alarms) __alarms.fromAlarm(a); },              // CONTRACT-10: engine alarm raise/update → banner/beep
         onAlarmClear: id => { if (window.__alarms) __alarms.clearById(id); } });    // CONTRACT-10: engine alarm.clear → remove banner
