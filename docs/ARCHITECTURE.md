@@ -28,7 +28,8 @@ and chart rendering, while the web client is a thin, fast cockpit surface that
 can run on the same machine or another display on the boat LAN. Optional helper
 services exist for data and cache seams, but the end state is **small C++
 runtime services plus Python tooling/prototypes**, not required Python daemons.
-See [RUNTIME-SERVICES.md](RUNTIME-SERVICES.md).
+See [RUNTIME-SERVICES.md](RUNTIME-SERVICES.md) and the final
+[HELMC++ acceptance contract](HELMCXX-ACCEPTANCE.md).
 
 ## Current Runnable Shape
 

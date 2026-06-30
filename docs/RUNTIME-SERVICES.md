@@ -4,6 +4,10 @@ Helm remains a small-service boat system, not a single monolith. The correction 
 **runtime boat daemons should be C++ by default** while Python stays in its strongest lanes:
 offline tooling, reference bakers, experiments, and explicitly optional AI/community services.
 
+The final acceptance gate for this policy is [HELMCXX-ACCEPTANCE.md](HELMCXX-ACCEPTANCE.md). That
+contract defines what must be C++, what may remain non-C++, and what evidence is required before the
+runtime can be called C++-only.
+
 This is an architecture guardrail, not a rewrite order to stop all product work. The rule is:
 
 - C++ owns required boat/runtime infrastructure.
@@ -189,3 +193,14 @@ expect to be OpenCPN-native runtime code.
 - Do not move optional AI/community features into the safety core.
 - Do not block WX-19 on a premature weather-service rewrite.
 - Do not introduce new required Python daemons without an explicit deprecation or C++ port plan.
+
+## HELMC++ acceptance
+
+The runtime-service policy is considered accepted only after the HELMC++ gate passes:
+
+- required boat/runtime daemons are C++;
+- no required Python daemon remains;
+- Python references have parity evidence before retirement;
+- the cockpit passes a C++-only Playwright proof;
+- packaging works on fresh machines without Docker;
+- performance, reliability, soak, and maintainability evidence is recorded.
