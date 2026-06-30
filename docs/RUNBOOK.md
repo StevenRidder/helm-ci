@@ -24,7 +24,7 @@ a private port keeps the habit safe.
 
 ```bash
 # 1. Prerequisites, once.
-brew install wxwidgets@3.2 gpatch cmake gdal node python3
+brew install wxwidgets@3.2 gpatch cmake libarchive libusb libsndfile mpg123 lame openssl@3 gdal node python3
 sudo xcodebuild -license accept
 
 # 2. Build the one-origin engine. First run may take 10-20 minutes.
@@ -66,6 +66,7 @@ configure a SignalK/NMEA connection as described below.
 | wxWidgets 3.2 | OpenCPN dependency; 3.3 is not compatible | `brew install wxwidgets@3.2` |
 | GNU patch (`gpatch`) | OpenCPN bundled-lib patches require GNU patch | `brew install gpatch` |
 | CMake | build system | `brew install cmake` |
+| OpenCPN native deps | archive, device, sound, mp3, and TLS libraries used by the headless build | `brew install libarchive libusb libsndfile mpg123 lame openssl@3` |
 | GDAL | optional depth extraction pipeline | `brew install gdal` |
 | node | smoke tests and WebSocket checks | `brew install node` |
 | python3 | helper scripts | macOS/Homebrew Python |
@@ -342,6 +343,17 @@ It starts private test instances and verifies:
 - nav-core per-fix math, source tags, and waypoint auto-advance;
 - GPL containment guard;
 - offline tide smoke/regression coverage.
+
+Fresh-install durability has its own CI smoke:
+
+```bash
+engine/test-fresh-clone-install.sh
+```
+
+That check runs with an empty temporary `HOME`, installs the public sample ENC
+into `~/.helm/runtime`, runs `engine/bootstrap.sh --clean --smoke`, and requires
+`/health`, `/catalog`, and a real ENC chart tile to render without any `/tmp`
+pre-seeding.
 
 ## 7. What to Look For in the Browser
 

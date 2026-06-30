@@ -16,6 +16,8 @@
 # Env overrides:
 #   HELM_OCPN_DIR   clone/build dir (default: ~/.helm/build/helm-opencpn)
 #   WX_CONFIG       wx-config executable (default: homebrew wxwidgets@3.2)
+#   HELM_BOOTSTRAP_SMOKE_PORT  port for --smoke (default: 8088)
+#   HELM_BOOTSTRAP_SMOKE_TILES tile candidates for --smoke ENC render
 #
 set -euo pipefail
 
@@ -196,28 +198,44 @@ if [ "$DO_SMOKE" = 1 ]; then
   # collides with a dev server on :8080.
   say "smoke: helm-server one-origin (/health + S-52 tile)"
   ENC="${HELM_ENC:-$RUNTIME/enc/US5FL4CR/US5FL4CR.000}"
-  export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
+  WX_PREFIX="$(cd "$(dirname "$WX_CONFIG")/.." && pwd)"
+  DYLD_PATHS="$WX_PREFIX/lib"
+  if command -v brew >/dev/null 2>&1; then
+    LIBARCHIVE_PREFIX="$(brew --prefix libarchive 2>/dev/null || true)"
+    [ -n "$LIBARCHIVE_PREFIX" ] && DYLD_PATHS="$DYLD_PATHS:$LIBARCHIVE_PREFIX/lib"
+  fi
+  export DYLD_LIBRARY_PATH="$DYLD_PATHS${DYLD_LIBRARY_PATH:+:$DYLD_LIBRARY_PATH}"
   SMOKE_ROOT="$RUNTIME/smoke"
+  SMOKE_PORT="${HELM_BOOTSTRAP_SMOKE_PORT:-8088}"
   mkdir -p "$SMOKE_ROOT"
   SMOKE_TMP="$SMOKE_ROOT/config.$$"
   SMOKE_LOG="$SMOKE_ROOT/helm-server-smoke.log"
   HEALTH_JSON="$SMOKE_ROOT/helm-health.json"
   TILE_PNG="$SMOKE_ROOT/helm-server-tile.png"
+  SMOKE_TILES="${HELM_BOOTSTRAP_SMOKE_TILES:-12/1117/1760 12/1118/1760 12/1117/1761 13/2234/3520}"
+  SMOKE_MIN_TILE_BYTES="${HELM_BOOTSTRAP_SMOKE_MIN_TILE_BYTES:-1000}"
   mkdir -p "$SMOKE_TMP"
-  HELM_BIND=127.0.0.1 HELM_PORT=8088 HELM_TILES_NO_WARMUP=1 \
+  HELM_BIND=127.0.0.1 HELM_PORT="$SMOKE_PORT" HELM_TILES_NO_WARMUP=1 \
     HELM_WEB_ROOT="$REPO/web" HELM_CONFIG="$SMOKE_TMP" HELM_ENC="$ENC" \
     "$BIN/helm-server" >"$SMOKE_LOG" 2>&1 &
   pid=$!; sleep 3
   fail() { kill "$pid" 2>/dev/null || true; rm -rf "$SMOKE_TMP"; sed 's/^/    /' "$SMOKE_LOG"; die "$1"; }
-  hcode=$(curl -s -o "$HEALTH_JSON" -w '%{http_code}' "http://127.0.0.1:8088/health"  || echo ERR)
-  ccode=$(curl -s -o /dev/null            -w '%{http_code}' "http://127.0.0.1:8088/catalog" || echo ERR)
+  hcode=$(curl -s -o "$HEALTH_JSON" -w '%{http_code}' "http://127.0.0.1:$SMOKE_PORT/health"  || echo ERR)
+  ccode=$(curl -s -o /dev/null            -w '%{http_code}' "http://127.0.0.1:$SMOKE_PORT/catalog" || echo ERR)
   echo "  /health -> http=$hcode   /catalog -> http=$ccode"
   [ "$hcode" = 200 ] || fail "helm-server /health did not return 200 — the one-origin binary is not serving"
   if [ -f "$ENC" ]; then
-    tcode=$(curl -s -o "$TILE_PNG" -w '%{http_code}' "http://127.0.0.1:8088/chart/12/1120/1756.png" || echo ERR)
-    tsz=$(wc -c < "$TILE_PNG" 2>/dev/null | tr -d ' ')
-    echo "  /chart/12/1120/1756.png -> http=$tcode bytes=$tsz"
-    [ "${tsz:-0}" -gt 1000 ] || fail "helm-server S-52 tile render produced no chart content"
+    rendered=0
+    for tile in $SMOKE_TILES; do
+      tcode=$(curl -s -o "$TILE_PNG" -w '%{http_code}' "http://127.0.0.1:$SMOKE_PORT/chart/$tile.png" || echo ERR)
+      tsz=$(wc -c < "$TILE_PNG" 2>/dev/null | tr -d ' ')
+      echo "  /chart/$tile.png -> http=$tcode bytes=$tsz"
+      if [ "$tcode" = 200 ] && [ "${tsz:-0}" -gt "$SMOKE_MIN_TILE_BYTES" ]; then
+        rendered=1
+        break
+      fi
+    done
+    [ "$rendered" = 1 ] || fail "helm-server S-52 tile render produced no chart content"
     echo "  ✓ one-origin server rendered S-52 chart content"
   else
     echo "  (no ENC at $ENC; skipped tile render — /health proves the binary serves)"
