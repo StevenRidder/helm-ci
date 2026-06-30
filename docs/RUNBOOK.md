@@ -8,7 +8,10 @@ headless engine, run the web client, and verify the current one-origin stack.
 client in `web/`. The server owns `/nav`, `/chart/{z}/{x}/{y}.png`, `/health`,
 `/catalog`, and the static UI on one HTTP/WebSocket origin.
 
-There is no SwiftUI/iOS native client yet. The browser is the reference client.
+There is no SwiftUI/iOS native client yet. The browser is the reference client. The `native/`
+subtree contains only the App-Store-clean C++ client/protocol core used to prove the Apple-target
+compile seam; it does not embed the GPL OpenCPN engine, wxWidgets, chart rendering, serial drivers,
+or networking.
 
 ## Live-Port Warning
 
@@ -69,6 +72,21 @@ configure a SignalK/NMEA connection as described below.
 
 `engine/bootstrap.sh` checks prerequisites and fails with the specific fix when
 something is missing.
+
+### Native client core compile gate
+
+The native Apple lane starts with a tiny C++17 client/protocol core, not a SwiftUI app and not an
+iOS build of OpenCPN. To verify it:
+
+```bash
+./native/test-native-core.sh
+```
+
+That builds and tests `libhelm_native_core.a` on macOS, then compiles the same static library for
+iOS Simulator and iPhoneOS when the Apple SDKs are installed. The native core is intentionally
+transport-free: it shares snapshot/delta nav-state reduction, staleness classification, resume
+metadata, and pairing/trust storage shape with future Swift clients while the boat server keeps
+owning safety-critical navigation.
 
 ## 2. Chart and Weather Data
 

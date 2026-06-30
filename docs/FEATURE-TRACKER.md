@@ -109,7 +109,7 @@ shipped with connections. Each new interactive verb reuses that same JSON comman
 - 🟡 Offline-first as safety (UI never touches internet at sea; community/AI must degrade gracefully)
 
 ### Native clients (all ⚪ until the web contract is locked + boat-tested — Steve's rule)
-- 🟡 Shared C++ nav core compiled headless (proven) — Apple-target compile is Phase 0/1
+- 🟢 Shared App-Store-clean C++ client/protocol core compiles for macOS + iOS SDK targets (`native/`) — no GPL/wx/OpenCPN engine embed
 - ⚪ macOS SwiftUI/AppKit · ⚪ iPadOS SwiftUI/Metal · ⚪ iOS one-handed · ⚪ Smart Board dashboard (Phase B)
 - ⚪ Glance surfaces (Watch / widgets / Live Activity / CarPlay) · 🟡 Settings/theme/board persistence (connections persist; rest = Phase A)
 
