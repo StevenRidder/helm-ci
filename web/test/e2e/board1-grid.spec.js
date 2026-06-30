@@ -36,7 +36,7 @@ test('Smart Board supports add, resize, reorder, and reload persistence', async 
 
   await page.evaluate((id) => window.HelmBoard.setTileAlarm(id, { enabled: true, op: '>', threshold: 24, hysteresis: 1 }), customId);
   await page.evaluate(() => window.HelmBoard.update({ sources: {}, sog: 6.6, cog: 125, hdg: 122, depth: 8.2, wind: { spd: 27, dir: 105 }, active: {} }));
-  await expect.poll(() => page.evaluate((id) => window.__alarms._state().active.includes('tile:wind.spd:' + id), customId)).toBe(true);
+  await expect.poll(() => page.evaluate(() => window.__alarms._state().active.includes('tile:wind.spd'))).toBe(true);
 
   await page.locator('.helm-board-rule-path').fill('sog');
   await page.locator('.helm-board-rule-value').fill('7');

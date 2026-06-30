@@ -42,7 +42,7 @@ window.HelmAlarms = function (map, opts) {
   }
 
   // ---- alarm state ----
-  const active = {};            // kind -> { kind, sev, msg, acked }
+  const active = {};            // id -> { id, kind, sev, msg, acked }
   let fresh = true;             // false when feed stale/offline → hold (don't evaluate)
   let lastNav = null;           // last nav frame (so a settings change can re-evaluate at once)
   const num = v => { const m = String(v == null ? '' : v).match(/-?\d+(\.\d+)?/); return m ? parseFloat(m[0]) : NaN; };
@@ -132,17 +132,19 @@ window.HelmAlarms = function (map, opts) {
     positionBanner();
     banner.style.background = crit ? 'rgba(200,30,40,.94)' : 'rgba(190,120,20,.94)';
     banner.style.animation = (crit && unacked) ? 'srcpulse 1s infinite' : 'none';
-    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : (top.kind === 'nofix' ? '📡' : (top.kind === 'guard' ? '🛡' : (top.kind === 'contour' || top.kind === 'route-shoal' ? '🌊' : '⚠︎')))));
+    banner.querySelector('#alarm-ico').textContent = top.kind === 'mob' ? '🛟' : (top.kind === 'anchor' ? '⚓' : (top.kind === 'arrival' ? '🏁' : (top.kind === 'nofix' ? '📡' : (top.kind === 'guard' || top.kind === 'guardzone' ? '🛡' : (top.kind === 'contour' || top.kind === 'route-shoal' ? '🌊' : '⚠︎')))));
     banner.querySelector('#alarm-txt').textContent = top.msg + (list.length > 1 ? '   (+' + (list.length - 1) + ' more)' : '');
     const ack = banner.querySelector('#alarm-ack'); ack.style.display = unacked ? '' : 'none';
   }
-  function fire(kind, sev, msg) {
-    if (enabled[kind] === false) { clear(kind); return; }   // this alarm type is disabled in settings (ALARM-11)
-    const prev = active[kind];
-    active[kind] = { kind, sev, msg, acked: prev ? prev.acked : false };   // keep ack across message updates
+  function fireById(id, kind, sev, msg, resetAck) {
+    id = id || kind;
+    if (enabled[kind] === false) { clear(id); return; }   // this alarm type is disabled in settings (ALARM-11)
+    const prev = active[id];
+    active[id] = { id, kind, sev, msg, acked: (prev && !resetAck) ? prev.acked : false };   // keep ack across message updates unless the decoder reports an escalation
     render();
   }
-  function clear(kind) { if (active[kind]) { delete active[kind]; render(); } }
+  function fire(kind, sev, msg) { fireById(kind, kind, sev, msg, false); }
+  function clear(id) { if (active[id]) { delete active[id]; render(); } }
 
   // ---- feed-loss / no-fix alarm (ALARM-9 / ALARM-10) -------------------------------------------
   // index.html's setSource() already classifies the live nav feed (live / simpos / lagging / stale /
@@ -673,9 +675,9 @@ window.HelmAlarms = function (map, opts) {
     setDepthLimit, setXteLimit, setArrivalNM, setSafetyDepth, setEnabled, setMuted, settings, status,   // ALARM-11 settings API
     onSource,                                            // feed state in → hold + audible no-fix/feed-loss alarm (ALARM-9/10)
     setActive(f) { fresh = !!f; },                       // legacy hold/resume w/o source detail — superseded by onSource
-    fromEngine(a) { if (a && a.kind) fire(a.kind, a.sev || 'warning', a.msg || a.kind); },  // engine t:"alarm" frames (legacy {kind,sev,msg})
-    fromAlarm(a) { if (a && (a.kind || a.id)) fire(a.kind || a.id, a.sev || 'warning', a.msg || a.kind || a.id); },  // CONTRACT-10 raise/update (via onAlarm)
-    clearById(id) { if (id) clear(id); },                // CONTRACT-10 alarm.clear (via onAlarmClear; id == kind for singletons)
+    fromEngine(a) { if (a && (a.id || a.kind)) fireById(a.id || a.kind, a.kind || a.id, a.sev || 'warning', a.msg || a.kind || a.id, false); },  // legacy {kind,sev,msg}, id-aware when present
+    fromAlarm(a, meta) { if (a && (a.id || a.kind)) fireById(a.id || a.kind, a.kind || a.id, a.sev || 'warning', a.msg || a.kind || a.id, !!(meta && meta.escalated)); },  // CONTRACT-10 raise/update: id is identity; kind is icon/class
+    clearById(id) { if (id) clear(id); },                // CONTRACT-10 alarm.clear (via onAlarmClear)
     dropAnchor: p => dropAnchor(p || lastPos), markMOB: () => markMOB(lastPos), setRadius,
     dropGuard: (p, mode) => dropGuard(p || lastPos, mode), clearGuard, setGuardMode, setGuardRadius,   // guard zone (ALARM-7)
     _state: () => ({ active: Object.keys(active), anchor: !!anchor, radius: anchorRadius, mob: !!mob, fresh, feedState, hadFeed,

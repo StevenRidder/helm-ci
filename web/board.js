@@ -287,15 +287,13 @@
     return false;
   }
   function tileAlarmId(tile) {
-    return 'tile:' + String(tile.path || tile.id).replace(/\s+/g, '_') + ':' + tile.id;
+    return 'tile:' + String(tile.path || tile.id).trim().replace(/\s+/g, '_');
   }
-  function raiseAlarm(id, msg, data) {
+  function emitTileAlarm(id, op, rev, msg, data, haptic) {
     try {
-      if (navigator.vibrate) navigator.vibrate([80, 40, 80]);
+      if (haptic && navigator.vibrate) navigator.vibrate([80, 40, 80]);
       if (window.__alarms && window.__alarms.fromAlarm) {
-        // alarms.js still keys by `kind || id`; send id as kind so multiple tile alarms do not
-        // collapse into one "tile" banner while preserving the CONTRACT-10 payload in data.kind.
-        window.__alarms.fromAlarm({ t: 'alarm', op: 'raise', id: id, kind: id, rev: 1, sev: 'critical', msg: msg, data: Object.assign({ kind: 'tile' }, data || {}) });
+        window.__alarms.fromAlarm({ t: 'alarm', op: op || 'raise', id: id, kind: 'tile', gen: 0, rev: rev || 1, sev: 'critical', msg: msg, silenceable: true, data: data || {} });
       }
     } catch (e) { warn('alarm raise failed: ' + (e && e.message)); }
   }
@@ -306,14 +304,21 @@
     var a = normalizeAlarm(tile.alarm);
     var id = tileAlarmId(tile);
     var active = a.enabled && compareValue(raw, a.op, a.threshold, a.hysteresis, tile._alarmActive);
-    if (active && !tile._alarmActive) {
+    var value = parseNumber(raw);
+    var threshold = parseNumber(a.threshold);
+    var msg = tile.title + ' ' + a.op + ' ' + a.threshold + (tile.unit ? ' ' + tile.unit : '') + ' — now ' + dash(raw);
+    if (active && (!tile._alarmActive || Math.abs((tile._alarmLastValue == null ? value : tile._alarmLastValue) - value) > 0.000001 || tile._alarmLastMsg !== msg)) {
       tile._alarmRev = (tile._alarmRev || 0) + 1;
-      raiseAlarm(id, tile.title + ' ' + a.op + ' ' + a.threshold + (tile.unit ? ' ' + tile.unit : '') + ' — now ' + dash(raw), {
-        path: tile.path, value: parseNumber(raw), unit: tile.unit, threshold: parseNumber(a.threshold),
+      emitTileAlarm(id, tile._alarmActive ? 'update' : 'raise', tile._alarmRev, msg, {
+        path: tile.path, value: value, unit: tile.unit, threshold: threshold,
         op: a.op, hysteresis: a.hysteresis, tileId: tile.id
-      });
+      }, !tile._alarmActive);
+      tile._alarmLastValue = value;
+      tile._alarmLastMsg = msg;
     } else if (!active && tile._alarmActive) {
       clearAlarm(id);
+      tile._alarmLastValue = null;
+      tile._alarmLastMsg = '';
     }
     tile._alarmActive = active;
   }
