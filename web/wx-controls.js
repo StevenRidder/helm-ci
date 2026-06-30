@@ -220,6 +220,7 @@
     var op = document.getElementById('wxopacity');
     if (op) {
       var applyTileOpacity = function () {
+        if (window.HelmWxScene && HelmWxScene.setOpacity) HelmWxScene.setOpacity(wxOpacity());   // WX-19: slider drives the scalar FIELD too (was particles-only — the field ignored it)
         if (window.HelmWxLive && HelmWxLive.setOpacity) HelmWxLive.setOpacity(S.map, wxOpacity());
         cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, wxOpacity()); }).catch(function () {});
       };
