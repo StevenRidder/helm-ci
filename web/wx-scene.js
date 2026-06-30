@@ -26,7 +26,7 @@
   var scenes = {};          // sceneKey -> { template (abs url with {z}/{x}/{y}), layer, scale, offset }
   var protoBound = false;
   var bmpWarned = false;
-  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82 };
+  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82, blend: null };
 
   function svc() { return global.HELM_WX_SERVICE || DEFAULT_SVC; }
   function codec() { return global.HelmWxCodec; }
@@ -90,6 +90,51 @@
     });
   }
 
+  // ---- WX-23: two-frame value interpolation (CPU fallback path) -----------------------------------
+  // Per-pixel: lerp the decoded VALUE of frame A and frame B by frac, then ramp. NODATA-honest:
+  // one frame nodata -> use the other; both nodata -> transparent (never invent a value).
+  function colorizeCPUPair(imgA, imgB, frac, layer, scale, offset) {
+    var w = imgA.width || 256, h = imgA.height || 256;
+    var ca = makeCanvas(w, h), cxa = ca.getContext('2d', { willReadFrequently: true }); cxa.drawImage(imgA, 0, 0);
+    var cb = makeCanvas(w, h), cxb = cb.getContext('2d', { willReadFrequently: true }); cxb.drawImage(imgB, 0, 0);
+    var sa, sb;
+    try { sa = cxa.getImageData(0, 0, w, h); sb = cxb.getImageData(0, 0, w, h); } catch (e) { return transparentBitmap(); }
+    var out = cxa.createImageData(w, h), da = sa.data, db = sb.data, od = out.data, C = codec(), R = ramp();
+    for (var i = 0; i < da.length; i += 4) {
+      var va = C.decodeRGBA(da[i], da[i + 1], da[i + 2], da[i + 3], scale, offset);
+      var vb = C.decodeRGBA(db[i], db[i + 1], db[i + 2], db[i + 3], scale, offset);
+      var v;
+      if (va != null && vb != null) v = va + (vb - va) * frac;     // both -> lerp the value
+      else if (va != null) v = va;                                 // B nodata -> A
+      else if (vb != null) v = vb;                                 // A nodata -> B
+      else { od[i + 3] = 0; continue; }                            // both nodata -> transparent
+      var c = R.rampColor(layer, v);
+      od[i] = c[0]; od[i + 1] = c[1]; od[i + 2] = c[2]; od[i + 3] = c[3];
+    }
+    cxa.putImageData(out, 0, 0);
+    return createImageBitmap(ca).then(function (bmp) { return { data: bmp }; });
+  }
+
+  function colorizePair(bufA, bufB, frac, layer, scale, offset) {
+    return Promise.all([
+      createImageBitmap(new Blob([bufA], { type: 'image/png' })),
+      createImageBitmap(new Blob([bufB], { type: 'image/png' }))
+    ]).then(function (imgs) {
+      var imgA = imgs[0], imgB = imgs[1], w = imgA.width || 256, h = imgA.height || 256;
+      if (!w || !h) return transparentBitmap();
+      function done(img) { if (img.close) try { img.close(); } catch (e) {} }
+      if (useGPU()) {
+        var rng = rampDomain(layer);
+        return global.HelmWxSceneGPU.colorizeBitmapPair(imgA, imgB, frac, layer, scale, offset, rng[0], rng[1])
+          .then(function (bmp) { done(imgA); done(imgB); return { data: bmp }; })
+          .catch(function () { return colorizeCPUPair(imgA, imgB, frac, layer, scale, offset); });
+      }
+      var r = colorizeCPUPair(imgA, imgB, frac, layer, scale, offset);
+      done(imgA); done(imgB);
+      return r;
+    });
+  }
+
   // ---- custom protocol handler: MapLibre substitutes {z}/{x}/{y}, then calls us per tile -----------
   function tileHandler(params, abortController) {
     var rest = params.url.slice((PROTO + '://').length);
@@ -97,8 +142,26 @@
     if (!m) return transparentBitmap();
     var sc = scenes[m[1]];
     if (!sc) return transparentBitmap();
-    var url = sc.template.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
     var signal = abortController && abortController.signal;
+    if (sc.pair) {                                          // WX-23: time-interpolated blend of two frames
+      var ua = sc.templateA.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
+      var ub = sc.templateB.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
+      var grab = function (u) {
+        return fetch(u, { signal: signal }).then(function (r) {
+          if (r.status === 404) return null;                // missing frame tile -> null (use the other / parent)
+          if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
+          return r.arrayBuffer();
+        });
+      };
+      return Promise.all([grab(ua), grab(ub)]).then(function (bufs) {
+        var ba = bufs[0], bb = bufs[1];
+        if (ba && bb) return colorizePair(ba, bb, sc.frac, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
+        if (ba) return colorize(ba, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
+        if (bb) return colorize(bb, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
+        return transparentBitmap();                         // both missing inside coverage -> parent tile shows
+      });
+    }
+    var url = sc.template.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
     return fetch(url, { signal: signal }).then(function (r) {
       if (r.status === 404) return transparentBitmap();   // missing tile inside declared coverage -> parent shows
       if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
@@ -127,6 +190,32 @@
     if (isoTime && map[isoTime]) return map[isoTime];
     var ids = Object.keys(map).map(function (k) { return map[k]; });
     return ids.length ? ids[0] : 'latest';
+  }
+  // WX-23: ordered valid-time list (ISO8601 sorts chronologically). Prefer the explicit run.validTimes
+  // array (WX-22 contract); else derive from the frameIdByValidTime keys. Single frame -> no interpolation.
+  function validTimesSorted(manifest) {
+    var run = (manifest && manifest.run) || {};
+    if (Array.isArray(run.validTimes) && run.validTimes.length) return run.validTimes.slice().sort();
+    if (Array.isArray(run.frames) && run.frames.length) return run.frames.map(function (f) { return f.time || f.validTime; }).filter(Boolean).sort();
+    return Object.keys(run.frameIdByValidTime || {}).sort();
+  }
+  // Given a scrub ISO time, return the bracketing pair {aIso,bIso,aId,bId,frac} or null (single frame,
+  // exact-frame hit, or outside the baked range -> caller uses the single-frame hard-switch path).
+  function bracket(manifest, isoTime) {
+    var vts = validTimesSorted(manifest);
+    if (vts.length <= 1 || !isoTime) return null;
+    var t = Date.parse(isoTime); if (!isFinite(t)) return null;
+    var fm = (manifest.run && manifest.run.frameIdByValidTime) || {};
+    if (t <= Date.parse(vts[0]) || t >= Date.parse(vts[vts.length - 1])) return null;   // outside range -> nearest frame
+    for (var i = 0; i < vts.length - 1; i++) {
+      var ta = Date.parse(vts[i]), tb = Date.parse(vts[i + 1]);
+      if (t >= ta && t <= tb && tb > ta) {
+        var frac = (t - ta) / (tb - ta);
+        if (frac <= 0.0001 || frac >= 0.9999) return null;                               // on a frame (either edge) -> hard single-frame path
+        return { aIso: vts[i], bIso: vts[i + 1], aId: fm[vts[i]], bId: fm[vts[i + 1]], frac: frac };
+      }
+    }
+    return null;
   }
   function scaleOffsetFor(manifest, layer) {
     var L = layerCfg(manifest, layer), rng = L.range || (L.fieldTiles && L.fieldTiles.range) || {};
@@ -168,10 +257,19 @@
       state.manifest = manifest; state.region = region; state.layer = layer;
       var L = layerCfg(manifest, layer);
       if (L.ramp && ramp() && ramp().setManifestRamp) ramp().setManifestRamp(layer, L.ramp);   // CLIENT-14: field/particles/probe agree
-      var vtId = frameId(manifest, opts.isoTime); state.validTimeId = vtId;
       var so = scaleOffsetFor(manifest, layer), lod = lodRange(manifest, layer), bounds = coverageBounds(manifest);
-      var key = region + '|' + layer + '|' + vtId;
-      scenes[key] = { template: tileTemplateAbs(manifest, layer, vtId), layer: layer, scale: so.scale, offset: so.offset };
+      var br = bracket(manifest, opts.isoTime); state.blend = br;                       // WX-23: null unless scrubbing between frames
+      var vtId = br ? br.aId : frameId(manifest, opts.isoTime); state.validTimeId = vtId;
+      var key, scene;
+      if (br) {
+        key = region + '|' + layer + '|' + br.aId + '~' + br.bId + '@' + br.frac.toFixed(3);
+        scene = { pair: true, templateA: tileTemplateAbs(manifest, layer, br.aId), templateB: tileTemplateAbs(manifest, layer, br.bId),
+                  frac: br.frac, layer: layer, scale: so.scale, offset: so.offset };
+      } else {
+        key = region + '|' + layer + '|' + vtId;
+        scene = { template: tileTemplateAbs(manifest, layer, vtId), layer: layer, scale: so.scale, offset: so.offset };
+      }
+      scenes[key] = scene;
       remove();
       var src = { type: 'raster', tiles: [PROTO + '://' + key + '/{z}/{x}/{y}'], tileSize: 256, minzoom: lod.minzoom, maxzoom: lod.maxzoom };
       if (bounds) src.bounds = bounds;
@@ -234,26 +332,40 @@
     var cov = (manifest.coverage || {}).bbox;
     if (cov && !cov.crossesAntimeridian) { W = Math.max(W, cov.west); E = Math.min(E, cov.east); S = Math.max(S, cov.south); N = Math.min(N, cov.north); }
     if (!(E > W && N > S)) return Promise.resolve(null);          // viewport doesn't overlap coverage
-    var vt = state.validTimeId, list = C.tilesForBbox(z, [W, S, E, N]);
-    var uTpl = svc() + vf.u.urlTemplate.replace('{validTimeId}', vt);
-    var vTpl = svc() + vf.v.urlTemplate.replace('{validTimeId}', vt);
+    var list = C.tilesForBbox(z, [W, S, E, N]);
     function url(tpl, t) { return tpl.replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y); }
-    function gather(tpl, so) {
+    function gather(tplBase, so, vt) {
+      var tpl = svc() + tplBase.replace('{validTimeId}', vt);
       return Promise.all(list.map(function (t) {
         return fetchValueTile(url(tpl, t), so.scale, so.offset).then(function (g) { return { k: t.x + '/' + t.y, g: g }; });
       })).then(function (rows) { var mp = {}; rows.forEach(function (r) { if (r.g) mp[r.k] = r.g; }); return mp; });
     }
-    return Promise.all([gather(uTpl, vf.u), gather(vTpl, vf.v)]).then(function (sets) {
-      var uT = sets[0], vT = sets[1], NX = VGRID_NX, NY = VGRID_NY, us = new Array(NX * NY), vs = new Array(NX * NY), any = false;
-      for (var j = 0; j < NY; j++) {
-        var lat = N - (N - S) * (j / (NY - 1));
-        for (var i = 0; i < NX; i++) {
-          var lon = W + (E - W) * (i / (NX - 1));
-          var u = sampleTileSet(uT, lon, lat, z), v = sampleTileSet(vT, lon, lat, z);
-          us[j * NX + i] = u; vs[j * NX + i] = v;
-          if (u === u && v === v) any = true;                     // NaN !== NaN
+    var NX = VGRID_NX, NY = VGRID_NY;
+    function gridFor(vt) {                                          // sample u/v onto the lat/lon grid for one frame
+      return Promise.all([gather(vf.u.urlTemplate, vf.u, vt), gather(vf.v.urlTemplate, vf.v, vt)]).then(function (sets) {
+        var uT = sets[0], vT = sets[1], us = new Array(NX * NY), vs = new Array(NX * NY);
+        for (var j = 0; j < NY; j++) {
+          var lat = N - (N - S) * (j / (NY - 1));
+          for (var i = 0; i < NX; i++) {
+            var lon = W + (E - W) * (i / (NX - 1));
+            us[j * NX + i] = sampleTileSet(uT, lon, lat, z); vs[j * NX + i] = sampleTileSet(vT, lon, lat, z);
+          }
         }
-      }
+        return { us: us, vs: vs };
+      });
+    }
+    function lerpComp(a, b, f) { var ga = a === a, gb = b === b; if (ga && gb) return a + (b - a) * f; if (ga) return a; if (gb) return b; return NaN; }
+    var bl = state.blend;                                          // WX-23: interpolate u/v too, so particles + colour share the SAME time
+    var gridP = bl
+      ? Promise.all([gridFor(bl.aId), gridFor(bl.bId)]).then(function (gs) {
+          var A = gs[0], B = gs[1], us = new Array(NX * NY), vs = new Array(NX * NY);
+          for (var k = 0; k < NX * NY; k++) { us[k] = lerpComp(A.us[k], B.us[k], bl.frac); vs[k] = lerpComp(A.vs[k], B.vs[k], bl.frac); }
+          return { us: us, vs: vs };
+        })
+      : gridFor(state.validTimeId);
+    return gridP.then(function (G) {
+      var us = G.us, vs = G.vs, any = false;
+      for (var k = 0; k < NX * NY; k++) { if (us[k] === us[k] && vs[k] === vs[k]) { any = true; break; } }
       if (!any) return null;
       var hdr = { nx: NX, ny: NY, lo1: W, la1: N, lo2: E, la2: S, dx: (E - W) / (NX - 1), dy: (N - S) / (NY - 1) };
       return [{ header: assign({ parameterNumber: 2 }, hdr), data: us }, { header: assign({ parameterNumber: 3 }, hdr), data: vs }];
@@ -316,12 +428,25 @@
     var L = layerCfg(manifest, layer), lod = lodRange(manifest, layer);
     var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m ? m.getZoom() : lod.maxzoom)));
     var so = scaleOffsetFor(manifest, layer);
-    var tpl = svc() + ((L.fieldTiles && L.fieldTiles.urlTemplate) || '').replace('{validTimeId}', state.validTimeId);
+    var tplBase = (L.fieldTiles && L.fieldTiles.urlTemplate) || '';
     var p = C.lonLatToPixel(lon, lat, z, 256);
-    var url = tpl.replace('{z}', z).replace('{x}', p.x).replace('{y}', p.y);
-    return fetchValueTile(url, so.scale, so.offset).then(function (g) {
-      var v = g ? C.bilinear(g.vals, g.w, g.h, p.px, p.py) : null;
-      if (v == null || v !== v) v = null;             // NaN -> honest nodata
+    function frameVal(vtId) {                                       // bilinear value at the point for one frame
+      var url = (svc() + tplBase.replace('{validTimeId}', vtId)).replace('{z}', z).replace('{x}', p.x).replace('{y}', p.y);
+      return fetchValueTile(url, so.scale, so.offset).then(function (g) {
+        var v = g ? C.bilinear(g.vals, g.w, g.h, p.px, p.py) : null;
+        return (v == null || v !== v) ? null : v;
+      });
+    }
+    var bl = state.blend;                                          // WX-23: interpolate the probed value where defined
+    var valP = bl
+      ? Promise.all([frameVal(bl.aId), frameVal(bl.bId)]).then(function (vv) {
+          var va = vv[0], vb = vv[1];
+          if (va != null && vb != null) return va + (vb - va) * bl.frac;
+          return (va != null) ? va : (vb != null ? vb : null);
+        })
+      : frameVal(state.validTimeId);
+    return valP.then(function (v) {
+      if (v != null && v !== v) v = null;             // NaN -> honest nodata
       var run = manifest.run || {}, gen = manifest.generatedAt || run.runTime || null;
       var ttl = (manifest.cachePolicy && manifest.cachePolicy.refreshCadenceSeconds) || 0, stale = false;
       try { if (gen && ttl) stale = (Date.now() - Date.parse(gen)) > ttl * 1000; } catch (e) {}
@@ -329,7 +454,8 @@
         schema: 'helm.layer.sample.v1', layer: layer,
         value: (v == null ? null : Math.round(v * 10) / 10), unit: L.unit || '',
         sourceRef: { title: (manifest.title || 'environmental bundle'), model: (run.model || ''), bundleId: manifest.bundleId || null },
-        freshness: { generatedAt: gen, validTime: invFrame(manifest, state.validTimeId), ttlSeconds: ttl, stale: stale },
+        freshness: { generatedAt: gen, validTime: bl ? bl.aIso : invFrame(manifest, state.validTimeId), ttlSeconds: ttl, stale: stale,
+                     interpolated: bl ? { fromIso: bl.aIso, toIso: bl.bIso, frac: Math.round(bl.frac * 1000) / 1000 } : null },
         confidence: null,
         coverage: (v == null ? 'nodata' : 'in'),
         advisory: true, notForNavigation: true        // advisory met-ocean — never for navigation
@@ -374,6 +500,7 @@
 
   global.HelmWxScene = {
     enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample, status: status,
-    disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state
+    disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state,
+    _bracket: bracket, _validTimesSorted: validTimesSorted        // WX-23 test seam (frame-bracketing is unit-tested)
   };
 })(typeof window !== 'undefined' ? window : this);
