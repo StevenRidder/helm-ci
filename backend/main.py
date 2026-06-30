@@ -29,6 +29,7 @@ from llm import LLMClient, prefilter
 from publisher import NFLPublisher, OSMNotes
 from agents import ResearchAgent, get_weather
 from context import resolve_context
+from guardrails import attach_guardrails
 
 app = FastAPI(title="Helm backend", version="0.1")
 app.add_middleware(
@@ -127,7 +128,8 @@ def whereto(req: WhereTo):
          "properties": {"id": r["place"]["id"], "name": r["place"]["name"], "rank": i + 1,
                         "confidence": r["confidence"]}}
         for i, r in enumerate(recs)]}
-    return {"query": req.query, "provider": llm.provider, "recommendations": recs, "geojson": fc}
+    out = {"query": req.query, "provider": llm.provider, "recommendations": recs, "geojson": fc}
+    return attach_guardrails(out, "whereto", recommendations=recs)
 
 
 @app.post("/giveback/nfl/push")

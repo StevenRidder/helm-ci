@@ -23,6 +23,8 @@ import time
 
 import httpx
 
+from guardrails import attach_guardrails
+
 UA = {"User-Agent": "Helm/0.1 (marine nav prototype; contact: steve@taikunai.com)"}
 
 
@@ -120,13 +122,13 @@ class ResearchAgent:
         lat, lon, name = place["lat"], place["lon"], place["name"]
         weather = get_weather(lat, lon)  # always real, no key needed
         if self.llm.provider == "stub":
-            return self._stub_dossier(place, weather)
+            return attach_guardrails(self._stub_dossier(place, weather), "dossier")
         try:
-            return self._agent_dossier(place, weather)
+            return attach_guardrails(self._agent_dossier(place, weather), "dossier")
         except Exception as e:
             d = self._stub_dossier(place, weather)
             d["note"] = f"(agent unavailable, stub used: {e})"
-            return d
+            return attach_guardrails(d, "dossier")
 
     def narrate_passage(self, slices, boat=None):
         """Narrate a sequence of slices along a path P(t) — the 'along the way' briefing.
@@ -136,7 +138,8 @@ class ResearchAgent:
         for s in slices:
             srcs.extend(s.get("sources", []))
         if self.llm.provider == "stub":
-            return {"provider": "stub", "narration": self._stub_passage(legs), "legs": legs, "sources": srcs}
+            out = {"provider": "stub", "narration": self._stub_passage(legs), "legs": legs, "sources": srcs}
+            return attach_guardrails(out, "briefing", text=out["narration"], contexts=slices)
         try:
             from openai import OpenAI
             client = OpenAI(api_key=self.llm.key)
@@ -148,11 +151,13 @@ class ResearchAgent:
             resp = client.chat.completions.create(model=self.llm.model, temperature=0.3,
                 messages=[{"role": "system", "content": sys},
                           {"role": "user", "content": json.dumps({"boat": boat, "legs": legs})[:9000]}])
-            return {"provider": "openai", "narration": resp.choices[0].message.content.strip(),
-                    "legs": legs, "sources": srcs}
+            out = {"provider": "openai", "narration": resp.choices[0].message.content.strip(),
+                   "legs": legs, "sources": srcs}
+            return attach_guardrails(out, "briefing", text=out["narration"], contexts=slices)
         except Exception as e:
-            return {"provider": "stub", "narration": self._stub_passage(legs) + f" (LLM unavailable: {e})",
-                    "legs": legs, "sources": srcs}
+            out = {"provider": "stub", "narration": self._stub_passage(legs) + f" (LLM unavailable: {e})",
+                   "legs": legs, "sources": srcs}
+            return attach_guardrails(out, "briefing", text=out["narration"], contexts=slices)
 
     def _leg_summary(self, ctx, i):
         L, pt = ctx.get("layers", {}), ctx.get("point", {})
@@ -187,14 +192,17 @@ class ResearchAgent:
         """Speak a fused spacetime context (from context.resolve_context) in plain language,
         with citations + honesty. The keystone: pick a point in space+time -> narration."""
         if self.llm.provider == "stub":
-            return {"narration": self._stub_narration(ctx), "provider": "stub",
-                    "sources": ctx.get("sources", [])}
+            out = {"narration": self._stub_narration(ctx), "provider": "stub",
+                   "sources": ctx.get("sources", [])}
+            return attach_guardrails(out, "narration", text=out["narration"], contexts=[ctx])
         try:
-            return {"narration": self._llm_narration(ctx), "provider": "openai",
-                    "sources": ctx.get("sources", [])}
+            out = {"narration": self._llm_narration(ctx), "provider": "openai",
+                   "sources": ctx.get("sources", [])}
+            return attach_guardrails(out, "narration", text=out["narration"], contexts=[ctx])
         except Exception as e:
-            return {"narration": self._stub_narration(ctx) + f" (LLM unavailable: {e})",
-                    "provider": "stub", "sources": ctx.get("sources", [])}
+            out = {"narration": self._stub_narration(ctx) + f" (LLM unavailable: {e})",
+                   "provider": "stub", "sources": ctx.get("sources", [])}
+            return attach_guardrails(out, "narration", text=out["narration"], contexts=[ctx])
 
     def _stub_narration(self, ctx):
         L, pt = ctx.get("layers", {}), ctx["point"]
@@ -251,9 +259,9 @@ class ResearchAgent:
         )
         return resp.choices[0].message.content.strip()
 
-    def _section(self, key, summary, sources, facts=None):
+    def _section(self, key, summary, sources, facts=None, horizon="verify locally before relying"):
         return {"summary": summary, "facts": facts or {}, "sources": sources,
-                "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ")}
+                "fetchedAt": time.strftime("%Y-%m-%dT%H:%MZ"), "horizon": horizon}
 
     def _stub_dossier(self, place, weather):
         wx = weather.get("now") or {}
@@ -263,7 +271,8 @@ class ResearchAgent:
         return {
             "place": {k: place[k] for k in ("id", "name", "lat", "lon", "source")},
             "provider": "stub",
-            "arrivalWeather": self._section("weather", arr, [{"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"}], wx),
+            "arrivalWeather": self._section("weather", arr, [{"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"}], wx,
+                                            "Open-Meteo forecast horizon; recheck before departure"),
             "sections": {
                 "formalities": self._section("formalities", "Check local port-of-entry procedure, hours and fees before arrival.", SEED_SOURCES["formalities"]),
                 "anchorage": self._section("anchorage", "See holding/shelter from open data and reviews; verify on the chart.", SEED_SOURCES["anchorage"]),
@@ -303,9 +312,18 @@ class ResearchAgent:
                     parsed = json.loads(re.search(r"\{.*\}", content, re.S).group(0))
                 except Exception:
                     parsed = {"sections": {}}
+                sections = parsed.get("sections", {})
+                fetched = time.strftime("%Y-%m-%dT%H:%MZ")
+                for section in sections.values():
+                    if isinstance(section, dict):
+                        section.setdefault("sources", [])
+                        section.setdefault("fetchedAt", fetched)
+                        section.setdefault("horizon", "verify locally before relying")
                 return {"place": {k: place[k] for k in ("id", "name", "lat", "lon", "source")},
-                        "provider": "openai", "arrivalWeather": self._section("weather", "", [], weather.get("now") or {}),
-                        "sections": parsed.get("sections", {}),
+                        "provider": "openai",
+                        "arrivalWeather": self._section("weather", "", [{"title": "Open-Meteo", "url": "https://open-meteo.com", "kind": "open"}], weather.get("now") or {},
+                                                        "Open-Meteo forecast horizon; recheck before departure"),
+                        "sections": sections,
                         "disclaimer": "Researched from real weather + cited sources. Verify locally."}
             messages.append(msg)
             for tc in msg.tool_calls:

@@ -121,10 +121,13 @@ class LLMClient:
             "place": {k: c["place"][k] for k in ("id", "source", "kind", "name", "lat", "lon")},
             "reasons": reasons,
             "sources": _sources_for(c),
+            "freshness": "request-time",
+            "horizon": "advisory planning only; verify locally before acting",
             "confidence": conf,
             "computed": comp,
             "llm": mode,
             "nfl": c["place"]["source"] == "nfl",
+            "advisory": {"mayAct": False, "requiresHumanVerification": True},
         }
 
     def _rank_openai(self, query, ranked, position, boat, forecast):

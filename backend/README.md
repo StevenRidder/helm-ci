@@ -63,6 +63,22 @@ dropping from the fused context. `context.resolve_context` keeps its existing
 layer payload shape and adds a nested `sample` provenance envelope to each
 probeable layer.
 
+## Advisory guardrails
+
+`guardrails.py` enforces the AI-13 response contract for `/context`, `/narrate`,
+`/briefing`, `/dossier`, and `/whereto`. Every AI-facing response carries a
+`guardrails` envelope with:
+
+- `actionClass: advisory`, `mayAct: false`, and `notForNavigation: true`
+- cited-source, freshness, and horizon evidence counts
+- visible violations such as `missing_sources`, `missing_freshness`,
+  `missing_horizon`, or `unsafe_action_language`
+
+Guardrail failures do not masquerade as green output: the response is marked
+`needs_verification` or `blocked_from_action` while preserving the original
+reason. This keeps the Python backend useful for optional narration and research
+without making it part of the safety/control runtime.
+
 ## The ReAct agents ([agents.py](agents.py))
 
 A reason→act→observe tool-calling loop that **researches instead of hallucinating**. Tools:

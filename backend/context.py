@@ -12,6 +12,7 @@ single call. Every layer is tagged with its source and the NFL layer is explicit
 unless experimental/partnership — honesty preserved end to end.
 """
 import store
+from guardrails import build_guardrail_report
 from probe_contract import sample_metadata
 from probe_layers import build_default_registry
 
@@ -87,7 +88,7 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
         L["chart"] = {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",
                       "source": {"title": "NOAA ENC (S-52)", "kind": "open"}}
 
-    return {
+    ctx = {
         "point": {"lat": lat, "lon": lon, "t": t, "weatherValidAt": wx_time},
         "layers": L,
         "boat": boat,
@@ -95,3 +96,5 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
         "sources": sources,
         "disclaimer": "Fused from layered, cited sources. Supplemental — verify on official charts.",
     }
+    ctx["guardrails"] = build_guardrail_report("context", contexts=[ctx])
+    return ctx
