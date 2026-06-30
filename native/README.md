@@ -41,3 +41,15 @@ cmake --build --preset iphoneos-release
 
 The iOS presets build only `libhelm_native_core.a`; tests remain macOS-hosted.
 
+## iOS WKWebView proof shell
+
+`native/ios/` contains the `NATIVE-2` proof app. It does not reimplement the chart client and does
+not embed the GPL/OpenCPN engine. It discovers a boat-side `helm-server` advertised as `_helm._tcp`
+over Bonjour, then loads the existing Helm web UI in a `WKWebView`.
+
+```sh
+native/ios/build-ios-proof.sh
+```
+
+That script builds the iOS Simulator app with signing disabled. It does not start any Helm runtime
+or touch the shared live `:8080` instance.

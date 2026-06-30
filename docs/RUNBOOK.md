@@ -82,11 +82,23 @@ iOS build of OpenCPN. To verify it:
 ./native/test-native-core.sh
 ```
 
+The first iOS proof shell is a WKWebView wrapper around the existing web UI. It discovers a
+boat-side `helm-server` over Bonjour (`_helm._tcp`) and loads that HTTP/TLS origin in a native
+shell without embedding OpenCPN/GPL code:
+
+```bash
+native/ios/build-ios-proof.sh
+```
+
 That builds and tests `libhelm_native_core.a` on macOS, then compiles the same static library for
 iOS Simulator and iPhoneOS when the Apple SDKs are installed. The native core is intentionally
 transport-free: it shares snapshot/delta nav-state reduction, staleness classification, resume
 metadata, and pairing/trust storage shape with future Swift clients while the boat server keeps
 owning safety-critical navigation.
+
+Run the proof from Xcode (`native/ios/HelmWebViewProof.xcodeproj`) against a private Helm server,
+for example `scripts/start-helm.sh --port 9001`. Do not use the shared live `:8080` instance for
+agent testing.
 
 ## 2. Chart and Weather Data
 
