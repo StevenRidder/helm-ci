@@ -30,6 +30,10 @@ expectContains(sw, 'refresh failed, serving cached asset', 'offline revalidate c
 
 for (const asset of [
   './index.html',
+  './manifest.webmanifest',
+  './icons/helm-180.png',
+  './icons/helm-192.png',
+  './icons/helm-512.png',
   './vendor/maplibre-gl/maplibre-gl.css',
   './vendor/maplibre-gl/maplibre-gl.js',
   './style/manifest.json',
@@ -40,6 +44,9 @@ for (const asset of [
 ]) {
   expectContains(sw, `'${asset}'`, `precache asset ${asset}`);
 }
+
+expectContains(sw, 'client12-v1', 'CLIENT-12 cache version');
+expectContains(sw, 'webmanifest', 'manifest runtime cache extension');
 
 for (const prefix of [
   '/health',

@@ -1,4 +1,4 @@
-// sw.js - Helm offline app-shell cache (CLIENT-11).
+// sw.js - Helm offline app-shell cache (CLIENT-11/12).
 //
 // This is deliberately small and dependency-free. It gives an already-loaded
 // Helm client a reloadable shell, local glyphs/style assets, and same-origin
@@ -6,7 +6,7 @@
 // alarm, health, AIS, route, tide, or query endpoints; those must fail loud so
 // the UI can keep showing honest LIVE/STALE/OFFLINE state.
 
-const CACHE_VERSION = 'client11-v1';
+const CACHE_VERSION = 'client12-v1';
 const SHELL_CACHE = 'helm-shell-' + CACHE_VERSION;
 const TILE_CACHE = 'helm-tiles-' + CACHE_VERSION;
 const RUNTIME_CACHE = 'helm-runtime-' + CACHE_VERSION;
@@ -16,6 +16,10 @@ const MAX_RUNTIME_ENTRIES = 350;
 const APP_SHELL_URLS = [
   './',
   './index.html',
+  './manifest.webmanifest',
+  './icons/helm-180.png',
+  './icons/helm-192.png',
+  './icons/helm-512.png',
   './vendor/maplibre-gl/maplibre-gl.css',
   './vendor/maplibre-gl/maplibre-gl.js',
   './vendor/pmtiles.js',
@@ -169,7 +173,7 @@ function isGlyphOrSpriteRequest(url) {
 
 function isShellAsset(url) {
   if (isNetworkOnly(url)) return false;
-  return /\.(?:html|js|css|json|geojson|pbf|png|svg|ico|wasm)$/i.test(url.pathname);
+  return /\.(?:html|js|css|json|webmanifest|geojson|pbf|png|svg|ico|wasm)$/i.test(url.pathname);
 }
 
 async function trimCache(cacheName, maxEntries) {

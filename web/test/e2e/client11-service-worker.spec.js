@@ -26,22 +26,24 @@ test('service worker caches app shell and reloads while offline', async ({ page,
 
   const readCacheState = async () => page.evaluate(async () => {
     const names = await caches.keys();
-    const shellName = names.find(name => name.startsWith('helm-shell-client11-v1'));
-    const tileName = names.find(name => name.startsWith('helm-tiles-client11-v1'));
-    const runtimeName = names.find(name => name.startsWith('helm-runtime-client11-v1'));
+    const shellName = names.find(name => name.startsWith('helm-shell-client12-v1'));
+    const tileName = names.find(name => name.startsWith('helm-tiles-client12-v1'));
+    const runtimeName = names.find(name => name.startsWith('helm-runtime-client12-v1'));
     const hasShell = !!shellName;
     const shell = shellName ? await caches.open(shellName) : null;
     const hasIndex = !!(shell && await shell.match(new URL('index.html', location.href).href));
+    const hasManifest = !!(await caches.match(new URL('manifest.webmanifest', location.href).href));
+    const hasIcon = !!(await caches.match(new URL('icons/helm-512.png', location.href).href));
     const hasMapLibre = !!(await caches.match(new URL('vendor/maplibre-gl/maplibre-gl.js', location.href).href));
     const hasGlyph = !!(await caches.match(new URL('fonts/Noto%20Sans%20Regular/0-255.pbf', location.href).href));
     const healthCached = !!(await caches.match(new URL('health', location.href).href));
     const navCached = !!(await caches.match(new URL('nav', location.href).href));
-    return { hasShell, hasIndex, hasMapLibre, hasGlyph, healthCached, navCached, tileName, runtimeName };
+    return { hasShell, hasIndex, hasManifest, hasIcon, hasMapLibre, hasGlyph, healthCached, navCached, tileName, runtimeName };
   });
 
   await expect.poll(async () => {
     const state = await readCacheState();
-    return Boolean(state.hasShell && state.tileName && state.runtimeName && state.hasIndex && state.hasMapLibre && state.hasGlyph);
+    return Boolean(state.hasShell && state.tileName && state.runtimeName && state.hasIndex && state.hasManifest && state.hasIcon && state.hasMapLibre && state.hasGlyph);
   }, { timeout: 20000 }).toBeTruthy();
 
   const cacheState = await readCacheState();
@@ -50,6 +52,8 @@ test('service worker caches app shell and reloads while offline', async ({ page,
   expect(cacheState.tileName).toBeTruthy();
   expect(cacheState.runtimeName).toBeTruthy();
   expect(cacheState.hasIndex).toBeTruthy();
+  expect(cacheState.hasManifest).toBeTruthy();
+  expect(cacheState.hasIcon).toBeTruthy();
   expect(cacheState.hasMapLibre).toBeTruthy();
   expect(cacheState.hasGlyph).toBeTruthy();
   expect(cacheState.healthCached).toBeFalsy();
