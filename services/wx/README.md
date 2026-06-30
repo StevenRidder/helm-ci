@@ -99,8 +99,8 @@ The service writes a durable bundle under:
 ```text
 $HELM_WX_CACHE/env/bundles/open-meteo/latest/<region>/
   manifest.json
-  layers/<layer>/scalar/latest/<z>/<x>/<y>.png
-  layers/<layer>/vector/latest/{u,v}/<z>/<x>/<y>.png    # vector layers
+  layers/<layer>/scalar/<validTimeId>/<z>/<x>/<y>.png
+  layers/<layer>/vector/<validTimeId>/{u,v}/<z>/<x>/<y>.png    # vector layers
 ```
 
 Replay endpoints serve only those prepared files and include:
@@ -114,6 +114,18 @@ That is the invariant WX-19 should depend on: pan/zoom/scrub/toggle/sample reads
 data and never calls the provider. Use `route=lon,lat;lon,lat;...` plus `route_margin=` instead of
 `w/s/e/n` for a route-corridor prewarm. `tile_budget` intentionally fails closed before a refresh job
 can accidentally fan out into a giant upstream/provider burst.
+
+WX-22 adds multi-frame warm jobs for the Environmental Scene renderer. Add `frames=N` and optionally
+`frame_hours=0,1,2` to materialize multiple forecast valid times in one bundle:
+
+```text
+/bundles/open-meteo/latest/materialize?region=fiji&layers=wind,temp&frames=3&frame_hours=0,1,2
+```
+
+The manifest keeps `run.validTimes[]`, `run.frameIdByValidTime`, and a top-level ordered `frames[]`
+list shaped for the renderer: `{validTimeId, time, latest, validTime, isLatest, offsetSeconds}`.
+Tile paths use compact UTC frame ids such as `20260630T010000Z`; `/latest/` remains an alias for the
+first frame so older scene clients keep rendering while WX-23/WX-24 consume the explicit frame ids.
 
 Wide overview materializations also enforce a source-grid point budget before provider fetches. A
 large Fiji/South-Pacific bbox such as `w=160&e=-150` crosses the antimeridian and is internally held

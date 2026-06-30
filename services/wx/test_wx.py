@@ -152,9 +152,13 @@ def main():
           "Fiji/South Pacific fixture includes the full met-ocean layer catalog")
 
     # 6) WX-18 prepared bundle materialization + cache-only replay.
-    async def fake_fetch_points(layer, qlat, qlon):
+    frame_order = {}
+
+    async def fake_fetch_points(layer, qlat, qlon, valid_time=None):
         cfg = app.LAYERS[layer]
-        mid = (cfg["vmin"] + cfg["vmax"]) / 2.0
+        frame_key = valid_time or "latest"
+        frame_idx = frame_order.setdefault(frame_key, len(frame_order))
+        mid = (cfg["vmin"] + cfg["vmax"]) / 2.0 + frame_idx
         nodes = []
         for _ in qlat:
             cur = {cfg["v"]: mid}
@@ -189,6 +193,43 @@ def main():
     check(materialized["telemetry"]["tilesWritten"] >= len(app.BUNDLE_LAYER_ORDER),
           "materialized bundle writes scalar/vector tile files")
 
+    # 7) WX-22 multi-frame bake: frame ids are stable path segments and replay remains cache-only.
+    multiframe = asyncio.run(app.materialize_environment_bundle(
+        "fiji-multiframe",
+        ["wind", "temp"],
+        160.0, -35.0, -150.0, 5.0,
+        minzoom=0,
+        maxzoom=0,
+        res=20.0,
+        tile_budget=16,
+        frames=3,
+        frame_hours="0,1,2",
+    ))
+    run = multiframe["run"]
+    frames = multiframe.get("frames") or []
+    frame_ids = [f["validTimeId"] for f in frames]
+    check(run["frames"] == 3 and len(run["validTimes"]) == 3 and len(frames) == 3,
+          "multi-frame bundle manifest lists three valid times")
+    check(len(set(frame_ids)) == 3 and all(fid != "latest" for fid in frame_ids),
+          "multi-frame bundle uses stable compact validTimeId path segments")
+    check(all(f["time"] == f["validTime"] for f in frames) and frames[0]["latest"] is True and
+          all(f["latest"] is False for f in frames[1:]),
+          "multi-frame entries expose renderer-friendly time/latest aliases")
+    check(all(run["frameIdByValidTime"][f["validTime"]] == f["validTimeId"] for f in frames),
+          "multi-frame manifest maps validTime ISO strings to tile path ids")
+    check(multiframe["telemetry"]["framesMaterialized"] == 3,
+          "multi-frame telemetry records frame count")
+    route_multiframe = client.get(
+        "/bundles/open-meteo/latest/materialize"
+        "?region=route-multiframe&layers=wind,temp&w=160&s=-35&e=-150&n=5"
+        "&minzoom=0&maxzoom=0&res=20&tile_budget=16&frames=3&frame_hours=0,1,2"
+    )
+    route_multiframe_payload = route_multiframe.json()
+    check(route_multiframe.status_code == 200 and
+          route_multiframe_payload["bundle"]["run"]["frames"] == 3 and
+          route_multiframe_payload["bundle"]["telemetry"]["framesMaterialized"] == 3,
+          "materialize endpoint accepts frames/frame_hours for multi-frame warm jobs")
+
     async def exploding_fetch_async(*args, **kwargs):
         raise AssertionError("prepared replay must not call provider/grid fetch")
 
@@ -210,12 +251,31 @@ def main():
     prepared_manifest = client.get("/bundles/open-meteo/latest/fiji-test/manifest.json")
     check(prepared_manifest.status_code == 200 and prepared_manifest.headers.get("x-helm-upstream-fetch") == "0",
           "prepared manifest replays from cache only")
+    multi_manifest = client.get("/bundles/open-meteo/latest/fiji-multiframe/manifest.json")
+    multi_payload = multi_manifest.json()
+    multi_frames = multi_payload.get("frames") or []
+    check(multi_manifest.status_code == 200 and multi_manifest.headers.get("x-helm-upstream-fetch") == "0" and
+          len(multi_frames) == 3,
+          "multi-frame manifest replays from cache only")
     scalar_resp = client.get("/bundles/open-meteo/latest/fiji-test/layers/wind/scalar/latest/0/0/0.png")
     vector_resp = client.get("/bundles/open-meteo/latest/fiji-test/layers/wind/vector/latest/u/0/0/0.png")
     check(scalar_resp.status_code == 200 and scalar_resp.headers.get("x-helm-bundle-cache") == "hit",
           "prepared scalar tile replays from cache")
     check(vector_resp.status_code == 200 and vector_resp.headers.get("x-helm-upstream-fetch") == "0",
           "prepared vector component tile replays from cache")
+    m0, m1 = multi_frames[0]["validTimeId"], multi_frames[1]["validTimeId"]
+    multi_w0 = client.get(f"/bundles/open-meteo/latest/fiji-multiframe/layers/wind/scalar/{m0}/0/0/0.png")
+    multi_w1 = client.get(f"/bundles/open-meteo/latest/fiji-multiframe/layers/wind/scalar/{m1}/0/0/0.png")
+    multi_latest = client.get("/bundles/open-meteo/latest/fiji-multiframe/layers/wind/scalar/latest/0/0/0.png")
+    multi_temp1 = client.get(f"/bundles/open-meteo/latest/fiji-multiframe/layers/temp/scalar/{m1}/0/0/0.png")
+    check(multi_w0.status_code == 200 and multi_w1.status_code == 200 and
+          multi_w0.headers.get("x-helm-upstream-fetch") == "0" and
+          multi_w1.headers.get("x-helm-bundle-cache") == "hit",
+          "multi-frame wind frame N and N+1 tiles replay from cache")
+    check(multi_latest.status_code == 200 and multi_latest.content == multi_w0.content,
+          "legacy latest alias resolves to the first multi-frame tile")
+    check(multi_temp1.status_code == 200 and multi_temp1.headers.get("x-helm-upstream-fetch") == "0",
+          "multi-frame temp frame N+1 tile replays from cache")
     check(app._stats["openmeteo_calls"] == calls_before_replay,
           "prepared manifest/tile replay makes zero upstream calls")
     tw, th, tpx = decode_png_rgba(scalar_resp.content)
@@ -272,7 +332,7 @@ def main():
           west_resp.headers.get("x-helm-bundle-cache") == "hit",
           "prepared tile west of 180 replays from cache")
 
-    # 7) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
+    # 8) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])
     check(empty.sample(0.5, 0.5) is None, "fully-missing grid samples to None (NODATA, not faked)")
 

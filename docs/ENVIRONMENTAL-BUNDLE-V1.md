@@ -184,6 +184,9 @@ Time ids in paths SHOULD use compact UTC:
 ```
 
 A manifest MAY also provide `frameIdByValidTime` when path ids differ from ISO strings.
+Prepared bundles MAY also expose an ordered top-level `frames[]` convenience list with
+`validTime`, `time`, `validTimeId`, `isLatest`/`latest`, and offset metadata. `run.validTimes[]`
+and `run.frameIdByValidTime` remain the canonical contract for clients that only need tile path ids.
 
 ---
 

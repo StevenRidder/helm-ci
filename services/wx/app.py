@@ -41,6 +41,7 @@ import struct
 import time
 import traceback
 import zlib
+from datetime import datetime, timedelta, timezone
 from typing import Dict, List, Optional, Set, Tuple
 
 import httpx
@@ -59,6 +60,8 @@ BUNDLE_PROVIDER = "open-meteo"
 BUNDLE_MODEL_ID = "latest"
 BUNDLE_VALID_TIME_ID = "latest"
 DEFAULT_PREPARED_REGION = "fiji-south-pacific"
+DEFAULT_BUNDLE_FRAMES = int(os.environ.get("HELM_WX_BUNDLE_FRAMES", "1"))
+DEFAULT_BUNDLE_FRAME_STEP_HOURS = float(os.environ.get("HELM_WX_BUNDLE_FRAME_STEP_HOURS", "1"))
 
 
 def _load_dotenv():
@@ -431,14 +434,47 @@ def _region_covers(reg, cz, cx, cy) -> bool:
     return rw <= w and re_ >= e and rs <= s and rn >= n
 
 
-async def _fetch_points(layer: str, qlat, qlon):
+def _iso_hour_key(value: str) -> str:
+    return (value or "").replace("Z", "")[:13]
+
+
+def _node_for_valid_time(node: dict, cfg: dict, valid_time: Optional[str]) -> dict:
+    """Return a current-shaped node, using hourly arrays when a forecast valid time was requested."""
+    if not valid_time:
+        return node or {}
+    hourly = (node or {}).get("hourly") or {}
+    times = hourly.get("time") or []
+    if not times:
+        return node or {}
+    target = _iso_hour_key(valid_time)
+    idx = None
+    for i, t in enumerate(times):
+        if _iso_hour_key(str(t)) == target:
+            idx = i
+            break
+    if idx is None:
+        return node or {}
+    cur = {}
+    for key in (cfg.get("v"), cfg.get("dir")):
+        if not key:
+            continue
+        vals = hourly.get(key) or []
+        if idx < len(vals):
+            cur[key] = vals[idx]
+    return {"current": cur}
+
+
+async def _fetch_points(layer: str, qlat, qlon, valid_time: Optional[str] = None):
     """One batched (<=~140-pt) Open-Meteo request -> list of nodes. Throttled + keyed; raises on 429."""
     global _om_sem, _om_last, _cooldown_until
     cfg = LAYERS[layer]
     cur = cfg["v"] + ("," + cfg["dir"] if cfg.get("dir") else "")
     params = {"latitude": ",".join(str(round(a, 3)) for a in qlat),
-              "longitude": ",".join(str(round(((o + 180) % 360 + 360) % 360 - 180, 3)) for o in qlon),
-              "current": cur}
+              "longitude": ",".join(str(round(((o + 180) % 360 + 360) % 360 - 180, 3)) for o in qlon)}
+    if valid_time:
+        params.update({"hourly": cur, "timezone": "UTC", "forecast_hours": "24"})
+    else:
+        params["current"] = cur
     if not cfg.get("marine"):
         params["wind_speed_unit"] = "kn"
     if OPENMETEO_KEY:
@@ -459,10 +495,12 @@ async def _fetch_points(layer: str, qlat, qlon):
         raise RuntimeError("open-meteo 429")
     r.raise_for_status()
     nodes = r.json()
-    return nodes if isinstance(nodes, list) else [nodes]
+    rows = nodes if isinstance(nodes, list) else [nodes]
+    return [_node_for_valid_time(node, cfg, valid_time) for node in rows]
 
 
-async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: float = REGION_RES):
+async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: float = REGION_RES,
+                      valid_time: Optional[str] = None):
     """Ingest a dense grid over (w,s,e,n) into _regions[layer] — the source for Windy-parity tiles there."""
     cfg = LAYERS[layer]
     conv = cfg.get("conv"); sign = 1.0 if cfg.get("dir_to") else -1.0; D2R = math.pi / 180.0
@@ -479,7 +517,9 @@ async def warm_region(layer: str, w: float, s: float, e: float, n: float, res: f
     async def do_batch(chunk):
         nonlocal failed
         try:
-            nodes = await _fetch_points(layer, [lats[j] for (j, i) in chunk], [lons[i] for (j, i) in chunk])
+            nodes = await _fetch_points(layer, [lats[j] for (j, i) in chunk],
+                                        [lons[i] for (j, i) in chunk],
+                                        valid_time=valid_time)
         except Exception:
             failed += 1            # one bad batch (e.g. a transient 429 on a cold-start burst) must NOT
             return                 # sink the whole region warm — leave its points NODATA, keep the rest
@@ -632,6 +672,54 @@ def manifest_for(layer: str) -> dict:
 
 def _now_iso() -> str:
     return time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime())
+
+
+def _parse_iso_utc(value: str) -> datetime:
+    return datetime.strptime(value, "%Y-%m-%dT%H:%M:%SZ").replace(tzinfo=timezone.utc)
+
+
+def _iso_from_dt(value: datetime) -> str:
+    return value.astimezone(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ")
+
+
+def _compact_time_id(value: str) -> str:
+    return _parse_iso_utc(value).strftime("%Y%m%dT%H%M%SZ")
+
+
+def _parse_frame_offsets(frame_hours: str, frame_count: int) -> List[int]:
+    if frame_count < 1:
+        frame_count = 1
+    offsets: List[int] = []
+    for raw in (frame_hours or "").split(","):
+        raw = raw.strip()
+        if not raw:
+            continue
+        offsets.append(int(round(float(raw) * 3600)))
+    if not offsets:
+        step = int(round(DEFAULT_BUNDLE_FRAME_STEP_HOURS * 3600))
+        offsets = [i * step for i in range(frame_count)]
+    while len(offsets) < frame_count:
+        step = int(round(DEFAULT_BUNDLE_FRAME_STEP_HOURS * 3600))
+        offsets.append(offsets[-1] + step)
+    return offsets[:frame_count]
+
+
+def _bundle_frames(generated_at: str, frame_count: int = 1, frame_hours: str = "") -> List[dict]:
+    base = _parse_iso_utc(generated_at)
+    offsets = _parse_frame_offsets(frame_hours, frame_count)
+    multi = len(offsets) > 1
+    frames = []
+    for i, seconds in enumerate(offsets):
+        valid_time = _iso_from_dt(base + timedelta(seconds=seconds))
+        frames.append({
+            "validTime": valid_time,
+            "time": valid_time,
+            "validTimeId": _compact_time_id(valid_time) if multi else BUNDLE_VALID_TIME_ID,
+            "offsetSeconds": seconds,
+            "isLatest": i == 0,
+            "latest": i == 0,
+        })
+    return frames
 
 
 def _warm_region_hint() -> Optional[dict]:
@@ -1060,7 +1148,8 @@ def _parse_route_bbox(route: str, margin_deg: float) -> Optional[Tuple[float, fl
     return max(-180.0, w), s, min(180.0, e), n
 
 
-def _planned_tile_count(layers: List[str], w: float, s: float, e: float, n: float, minzoom: int, maxzoom: int) -> int:
+def _planned_tile_count(layers: List[str], w: float, s: float, e: float, n: float, minzoom: int,
+                        maxzoom: int, frame_count: int = 1) -> int:
     coords = []
     for z in range(minzoom, maxzoom + 1):
         coords.extend(_tile_coords_for_bbox(z, w, s, e, n))
@@ -1070,7 +1159,7 @@ def _planned_tile_count(layers: List[str], w: float, s: float, e: float, n: floa
         total += per_scalar
         if LAYERS[layer].get("vector"):
             total += per_scalar * 2
-    return total
+    return total * max(1, frame_count)
 
 
 def _planned_source_summary(layers: List[str], w: float, s: float, e: float, n: float, res: float) -> dict:
@@ -1117,10 +1206,16 @@ def _prepared_layer_for(region_id: str, layer: str, minzoom: int, maxzoom: int) 
 
 
 def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
-                       minzoom: int, maxzoom: int, generated_at: str, tile_summary: dict,
+                       minzoom: int, maxzoom: int, generated_at: str, frames: List[dict], tile_summary: dict,
                        upstream_calls: int, route: str = "", source_summary: Optional[dict] = None) -> dict:
     region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
-    valid_time = generated_at
+    valid_times = [f["validTime"] for f in frames]
+    frame_id_by_valid_time = {f["validTime"]: f["validTimeId"] for f in frames}
+    time_step = None
+    if len(frames) > 1:
+        steps = [frames[i + 1]["offsetSeconds"] - frames[i]["offsetSeconds"] for i in range(len(frames) - 1)]
+        if steps and all(step == steps[0] for step in steps):
+            time_step = steps[0]
     return {
         "schema": BUNDLE_SCHEMA,
         "bundleId": f"{BUNDLE_PROVIDER}/{BUNDLE_MODEL_ID}/{region_slug}",
@@ -1142,10 +1237,13 @@ def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e:
             "marineModel": MARINE_MODEL,
             "runTime": generated_at,
             "runLabel": BUNDLE_MODEL_ID,
-            "validTimes": [valid_time],
-            "frameIdByValidTime": {valid_time: BUNDLE_VALID_TIME_ID},
-            "frames": 1,
+            "validTimes": valid_times,
+            "frameIdByValidTime": frame_id_by_valid_time,
+            "frames": len(frames),
+            "timeStepSeconds": time_step,
+            "latestValidTime": valid_times[0] if valid_times else None,
         },
+        "frames": frames,
         "coverage": {
             "crs": "OGC:CRS84",
             "bbox": _coverage_bbox(w, s, e, n),
@@ -1205,6 +1303,7 @@ def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e:
             "upstreamCallsDuringMaterialize": upstream_calls,
             "gesturePathUpstreamFetches": 0,
             "replayMode": "cache-only",
+            "framesMaterialized": len(frames),
             "materializeSourceGrid": source_summary or _planned_source_summary(layers, w, s, e, n, REGION_RES),
         },
         "disclaimer": "Forecast/advisory met-ocean data. Cross-reference official sources. NOT FOR NAVIGATION.",
@@ -1254,11 +1353,14 @@ def discover_prepared_bundles() -> List[dict]:
 
 async def materialize_environment_bundle(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
                                          minzoom: int = 0, maxzoom: int = 3, res: float = REGION_RES,
-                                         route: str = "", tile_budget: int = 512) -> dict:
+                                         route: str = "", tile_budget: int = 512, frames: int = DEFAULT_BUNDLE_FRAMES,
+                                         frame_hours: str = "") -> dict:
     if minzoom < 0 or maxzoom < minzoom or maxzoom > 22:
         raise ValueError("invalid zoom range")
+    generated_at = _now_iso()
+    frame_list = _bundle_frames(generated_at, frames, frame_hours)
     iw, is_, ie, in_ = _internal_bbox(w, s, e, n)
-    planned = _planned_tile_count(layers, w, s, e, n, minzoom, maxzoom)
+    planned = _planned_tile_count(layers, w, s, e, n, minzoom, maxzoom, len(frame_list))
     if planned > tile_budget:
         raise ValueError(f"planned tile count {planned} exceeds tile_budget {tile_budget}")
     source_fit = _fit_source_resolution(iw, is_, ie, in_, res)
@@ -1266,39 +1368,44 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
     region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
     tile_summary: Dict[str, dict] = {}
     for layer in layers:
-        warm = await warm_region(layer, iw, is_, ie, in_, source_fit["effective"])
-        warm["requested_res_deg"] = source_fit["requested"]
-        warm["source_point_budget"] = source_fit["pointBudget"]
-        warm["source_resolution_adjusted"] = source_fit["adjusted"]
-        reg = _regions[layer]
         coords: Set[Tuple[int, int, int]] = set()
         for z in range(minzoom, maxzoom + 1):
             coords.update(_tile_coords_for_bbox(z, w, s, e, n))
         scale, offset = layer_scale_offset(LAYERS[layer])
         scalar_count = 0
         scalar_valid = 0
-        for z, x, y in sorted(coords):
-            png, any_valid = _bake_grid_tile(reg["grid"], z, x, y, scale, offset)
-            _write_bytes(_prepared_tile_path(region_slug, layer, "scalar", BUNDLE_VALID_TIME_ID, z, x, y), png)
-            scalar_count += 1
-            scalar_valid += 1 if any_valid else 0
         vector_count = 0
         vector_valid = 0
-        if LAYERS[layer].get("vector"):
-            vscale, voffset = _vector_component_scale_offset(LAYERS[layer])
-            for component in ("u", "v"):
-                grid = _vector_component_grid(reg, component)
-                if grid is None:
-                    continue
-                for z, x, y in sorted(coords):
-                    png, any_valid = _bake_grid_tile(grid, z, x, y, vscale, voffset)
-                    _write_bytes(_prepared_tile_path(region_slug, layer, "vector", BUNDLE_VALID_TIME_ID, z, x, y, component), png)
-                    vector_count += 1
-                    vector_valid += 1 if any_valid else 0
+        warms = []
+        for frame in frame_list:
+            warm = await warm_region(layer, iw, is_, ie, in_, source_fit["effective"],
+                                     valid_time=frame["validTime"] if len(frame_list) > 1 else None)
+            warm["requested_res_deg"] = source_fit["requested"]
+            warm["source_point_budget"] = source_fit["pointBudget"]
+            warm["source_resolution_adjusted"] = source_fit["adjusted"]
+            warm["validTime"] = frame["validTime"]
+            warm["validTimeId"] = frame["validTimeId"]
+            warms.append(warm)
+            reg = _regions[layer]
+            for z, x, y in sorted(coords):
+                png, any_valid = _bake_grid_tile(reg["grid"], z, x, y, scale, offset)
+                _write_bytes(_prepared_tile_path(region_slug, layer, "scalar", frame["validTimeId"], z, x, y), png)
+                scalar_count += 1
+                scalar_valid += 1 if any_valid else 0
+            if LAYERS[layer].get("vector"):
+                vscale, voffset = _vector_component_scale_offset(LAYERS[layer])
+                for component in ("u", "v"):
+                    grid = _vector_component_grid(reg, component)
+                    if grid is None:
+                        continue
+                    for z, x, y in sorted(coords):
+                        png, any_valid = _bake_grid_tile(grid, z, x, y, vscale, voffset)
+                        _write_bytes(_prepared_tile_path(region_slug, layer, "vector", frame["validTimeId"], z, x, y, component), png)
+                        vector_count += 1
+                        vector_valid += 1 if any_valid else 0
         tile_summary[layer] = {"scalar": scalar_count, "scalarWithData": scalar_valid,
                                "vector": vector_count, "vectorWithData": vector_valid,
-                               "warm": warm}
-    generated_at = _now_iso()
+                               "warm": warms[-1] if warms else None, "frames": warms}
     upstream_calls = int(_stats["openmeteo_calls"]) - calls0
     source_summary = {
         "requestedResolutionDegrees": source_fit["requested"],
@@ -1309,7 +1416,7 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
         "layers": len(layers),
     }
     manifest = _prepared_manifest(region_slug, layers, w, s, e, n, minzoom, maxzoom,
-                                  generated_at, tile_summary, upstream_calls, route=route,
+                                  generated_at, frame_list, tile_summary, upstream_calls, route=route,
                                   source_summary=source_summary)
     _write_json(_prepared_bundle_manifest_path(region_slug), manifest)
     _stats["bundle_materializations"] += 1
@@ -1317,11 +1424,24 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
     return manifest
 
 
+def _resolve_prepared_valid_time_id(region_id: str, valid_time_id: str) -> str:
+    if valid_time_id != BUNDLE_VALID_TIME_ID:
+        return valid_time_id
+    manifest = _read_json(_prepared_bundle_manifest_path(region_id))
+    run = manifest.get("run") if isinstance(manifest, dict) and isinstance(manifest.get("run"), dict) else {}
+    valid_times = run.get("validTimes") or []
+    frame_ids = run.get("frameIdByValidTime") or {}
+    latest = run.get("latestValidTime") or (valid_times[0] if valid_times else "")
+    if latest and frame_ids.get(latest):
+        return frame_ids[latest]
+    return valid_time_id
+
+
 def _serve_prepared_file(path: str, request: Request, media_type: str):
     if not os.path.exists(path):
         _stats["bundle_replay_misses"] += 1
         return PlainTextResponse("prepared bundle cache miss", status_code=404,
-                                 headers={"X-Helm-Bundle-Cache": "miss"})
+                                 headers={"X-Helm-Bundle-Cache": "miss", "X-Helm-Upstream-Fetch": "0"})
     data = open(path, "rb").read()
     etag = 'W/"%s"' % hashlib.md5(data).hexdigest()
     headers = {"Cache-Control": "public, max-age=%d, stale-while-revalidate=%d" % (REGION_TTL, REGION_TTL),
@@ -1371,7 +1491,8 @@ def bundle_manifest():
 async def materialize_bundle(region: str = DEFAULT_PREPARED_REGION, layers: str = "wind,current",
                              w: float = 160.0, s: float = -35.0, e: float = -150.0, n: float = 5.0,
                              minzoom: int = 0, maxzoom: int = 3, res: float = REGION_RES,
-                             route: str = "", route_margin: float = 1.0, tile_budget: int = 512):
+                             route: str = "", route_margin: float = 1.0, tile_budget: int = 512,
+                             frames: int = DEFAULT_BUNDLE_FRAMES, frame_hours: str = ""):
     """Explicit refresh/warm job for a prepared bundle.
 
     This is the WX-18 boundary: provider calls happen here, not while a user pans/zooms/scrubs.
@@ -1384,7 +1505,8 @@ async def materialize_bundle(region: str = DEFAULT_PREPARED_REGION, layers: str 
             w, s, e, n = route_bbox
         manifest = await materialize_environment_bundle(region, picked_layers, w, s, e, n,
                                                         minzoom=minzoom, maxzoom=maxzoom, res=res,
-                                                        route=route, tile_budget=tile_budget)
+                                                        route=route, tile_budget=tile_budget,
+                                                        frames=frames, frame_hours=frame_hours)
         return {"ok": True, "bundle": manifest, "manifest": _prepared_bundle_url(region)}
     except ValueError as ex:
         return JSONResponse({"error": True, "reason": str(ex)}, status_code=400)
@@ -1407,6 +1529,7 @@ def prepared_bundle_manifest(region_id: str):
 def prepared_scalar_tile(region_id: str, layer: str, valid_time_id: str, z: int, x: int, y: int, request: Request):
     if layer not in LAYERS:
         return PlainTextResponse("unknown layer", status_code=404)
+    valid_time_id = _resolve_prepared_valid_time_id(region_id, valid_time_id)
     return _serve_prepared_file(_prepared_tile_path(region_id, layer, "scalar", valid_time_id, z, x, y),
                                 request, "image/png")
 
@@ -1416,6 +1539,7 @@ def prepared_vector_tile(region_id: str, layer: str, valid_time_id: str, compone
                          z: int, x: int, y: int, request: Request):
     if layer not in LAYERS or not LAYERS[layer].get("vector") or component not in ("u", "v"):
         return PlainTextResponse("unknown vector component", status_code=404)
+    valid_time_id = _resolve_prepared_valid_time_id(region_id, valid_time_id)
     return _serve_prepared_file(_prepared_tile_path(region_id, layer, "vector", valid_time_id, z, x, y, component),
                                 request, "image/png")
 
