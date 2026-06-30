@@ -5,6 +5,7 @@ struct ContentView: View {
     @State private var selectedEndpoint: HelmEndpoint?
     @State private var manualURLText = "http://127.0.0.1:9001/"
     @State private var loadedURL = URL(string: "http://127.0.0.1:9001/")!
+    @State private var capabilityReport = HelmWebCapabilityReport()
 
     var body: some View {
         NavigationSplitView {
@@ -55,7 +56,25 @@ struct ContentView: View {
                 } header: {
                     Text("Fallback")
                 } footer: {
-                    Text("NATIVE-2 is a proof shell: the real Helm UI is still the web app served by the boat-side helm-server.")
+                    Text("NATIVE-5 keeps the product web-first: prove WKWebView + MapLibre/WebGPU before escalating to native MapLibre/Metal.")
+                }
+
+                Section {
+                    CapabilityRow(label: "Renderer", value: capabilityReport.gpuSummary)
+                    CapabilityRow(label: "MapLibre", value: capabilityReport.mapLibreLoaded ? "loaded" : "not observed")
+                    CapabilityRow(label: "Service worker", value: capabilityReport.serviceWorkerAvailable ? "available" : "unavailable")
+                    CapabilityRow(label: "Viewport", value: "\(capabilityReport.viewportWidth)×\(capabilityReport.viewportHeight) @\(String(format: "%.1f", capabilityReport.devicePixelRatio))x")
+                    CapabilityRow(label: "Safe area", value: "top \(capabilityReport.safeAreaTop), bottom \(capabilityReport.safeAreaBottom)")
+
+                    if let error = capabilityReport.error {
+                        Text(error)
+                            .font(.caption)
+                            .foregroundStyle(.red)
+                    }
+                } header: {
+                    Text("Web renderer gate")
+                } footer: {
+                    Text(capabilityReport.rendererRecommendation)
                 }
             }
             .navigationTitle("Helm")
@@ -65,7 +84,7 @@ struct ContentView: View {
                 }
             }
         } detail: {
-            HelmWebView(url: loadedURL)
+            HelmWebView(url: loadedURL, capabilityReport: $capabilityReport)
                 .ignoresSafeArea()
                 .navigationTitle(loadedURL.host ?? "Helm")
                 .navigationBarTitleDisplayMode(.inline)
@@ -73,6 +92,22 @@ struct ContentView: View {
         .onAppear {
             browser.start()
         }
+    }
+}
+
+private struct CapabilityRow: View {
+    let label: String
+    let value: String
+
+    var body: some View {
+        HStack {
+            Text(label)
+            Spacer()
+            Text(value)
+                .foregroundStyle(.secondary)
+                .multilineTextAlignment(.trailing)
+        }
+        .font(.caption)
     }
 }
 

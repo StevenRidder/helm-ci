@@ -12,6 +12,7 @@
 		210000110000000000000003 /* HelmBonjourBrowser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210000010000000000000003 /* HelmBonjourBrowser.swift */; };
 		210000110000000000000004 /* HelmEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210000010000000000000004 /* HelmEndpoint.swift */; };
 		210000110000000000000005 /* HelmWebView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210000010000000000000005 /* HelmWebView.swift */; };
+		210000110000000000000006 /* HelmWebCapabilityReport.swift in Sources */ = {isa = PBXBuildFile; fileRef = 210000010000000000000008 /* HelmWebCapabilityReport.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		210000010000000000000005 /* HelmWebView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmWebView.swift; sourceTree = "<group>"; };
 		210000010000000000000006 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		210000010000000000000007 /* HelmWebViewProof.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = HelmWebViewProof.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		210000010000000000000008 /* HelmWebCapabilityReport.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HelmWebCapabilityReport.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -51,6 +53,7 @@
 				210000010000000000000003 /* HelmBonjourBrowser.swift */,
 				210000010000000000000004 /* HelmEndpoint.swift */,
 				210000010000000000000005 /* HelmWebView.swift */,
+				210000010000000000000008 /* HelmWebCapabilityReport.swift */,
 				210000010000000000000006 /* Info.plist */,
 			);
 			path = HelmWebViewProof;
@@ -137,6 +140,7 @@
 				210000110000000000000003 /* HelmBonjourBrowser.swift in Sources */,
 				210000110000000000000004 /* HelmEndpoint.swift in Sources */,
 				210000110000000000000005 /* HelmWebView.swift in Sources */,
+				210000110000000000000006 /* HelmWebCapabilityReport.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

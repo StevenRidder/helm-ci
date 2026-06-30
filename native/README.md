@@ -43,9 +43,11 @@ The iOS presets build only `libhelm_native_core.a`; tests remain macOS-hosted.
 
 ## Native clients
 
-- `ios/` contains the NATIVE-2 WKWebView proof app. It does not reimplement the chart client and
+- `ios/` contains the web-first iPad/iPhone proof app. It does not reimplement the chart client and
   does not embed the GPL/OpenCPN engine. It discovers a boat-side `helm-server` advertised as
-  `_helm._tcp` over Bonjour, then loads the existing Helm web UI in a `WKWebView`.
+  `_helm._tcp` over Bonjour, loads the existing Helm web UI in a `WKWebView`, and reports the
+  browser/GPU capabilities that decide whether MapLibre GL JS + WebGPU is sufficient before any
+  native MapLibre/Metal work is justified.
 - `macos/` contains the first SwiftUI/AppKit macOS client. It discovers/connects to a boat-side
   `helm-server` and sends the CONN-9 serial NMEA `conn.upsert` command without linking OpenCPN or
   touching the live `:8080` screen.

@@ -245,17 +245,18 @@ The protocol is half the experience; the iOS client is the other half.
   two URLs in [web/style.json](../web/style.json) / `nav-source.js` from `127.0.0.1` to the
   Bonjour host and an iPad renders real S-52 under live nav with **zero new code**. Ship this
   to prove the path before investing in native.
-- **Production client:** native **SwiftUI + MapLibre-iOS (Metal)** for the chart, a thin Swift
-  layer speaking the protocol:
-  - `URLSessionWebSocketTask` for `/nav` (snapshot/delta merge, `lastSeq` resume).
-  - `URLCache` / on-disk store for tiles (immutable caching → offline once viewed).
-  - **`NWPathMonitor`** to detect WiFi drop / WiFi↔cellular flips → flip to OFFLINE and kick an
-    instant reconnect on a new path (don't wait out the backoff when the network just changed).
-  - **`NWBrowser`** for Bonjour discovery + pairing.
-  - **Background:** `UIBackgroundModes` (location) for anchor watch; drop to `alarms`-only
-    subscription when backgrounded, resume full rate on foreground; APNs critical alerts for
-    §3. Keep the GPL engine off the device — the client links **no** OpenCPN code (the
-    arm's-length boundary from [ADR-0006](decisions/0006-server-client-thin-display.md)).
+- **Production posture:** web-first. The shared [web/](../web/) client remains the product UI across
+  desktop, iPad, and phone: MapLibre GL JS for map composition, WebGPU where the browser can carry
+  dense weather/field/particle layers, and explicit WebGL/server-raster fallbacks where it cannot.
+  The native iOS shell owns OS integration and evidence gathering, not a second chart UI:
+  - `NWBrowser` for Bonjour discovery + pairing.
+  - `WKWebView` loading the boat-server origin and reporting WebGPU/WebGL/MapLibre/service-worker
+    capability so we know when the web path is enough.
+  - `NWPathMonitor`, background alarm plumbing, APNs critical alerts, and token/cert storage later.
+  - Keep the GPL engine off the device — the client links **no** OpenCPN code (the arm's-length
+    boundary from [ADR-0006](decisions/0006-server-client-thin-display.md)).
+  Native **SwiftUI + MapLibre-iOS/Metal** is an escalation path only if the WKWebView/WebGPU gate
+  proves a hard product limit that the shared web client cannot solve.
 
 ---
 
@@ -285,8 +286,11 @@ degrades visibly and honestly, and it never lies about position.**
 5. **Channels + bbox-culled AIS.** Battery/bandwidth scaling; busy-harbor AIS.
 6. **Alarms reliability tier + APNs critical alerts.** Anchor watch you can sleep through.
 7. **Pairing/TLS-pin + tokens.** Safe on a shared marina network.
-8. **Native SwiftUI/MapLibre client.** Replace the WebView with the real iOS app.
+8. **iPad web-render capability gate.** Prove the WKWebView path reports MapLibre/WebGPU/WebGL,
+   safe-area, service-worker, and viewport readiness before considering native MapLibre/Metal.
 9. **Route-corridor prefetch / offline bundles.** Leave-the-boat resilience.
+10. **Native SwiftUI/MapLibre client only if proven necessary.** Escalate after evidence, not by
+    default.
 
 Steps 1–4 already turn the proven Phase 2 engine into a genuinely usable iPad chartplotter
-over boat WiFi; 5–9 make it world-class.
+over boat WiFi; 5–9 make the web-first client world-class.

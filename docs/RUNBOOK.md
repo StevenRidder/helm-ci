@@ -8,10 +8,10 @@ headless engine, run the web client, and verify the current one-origin stack.
 client in `web/`. The server owns `/nav`, `/chart/{z}/{x}/{y}.png`, `/health`,
 `/catalog`, and the static UI on one HTTP/WebSocket origin.
 
-There is no SwiftUI/iOS native client yet. The browser is the reference client. The `native/`
-subtree contains only the App-Store-clean C++ client/protocol core used to prove the Apple-target
-compile seam; it does not embed the GPL OpenCPN engine, wxWidgets, chart rendering, serial drivers,
-or networking.
+The browser/web client is the reference client. The `native/` subtree contains App-Store-clean
+client/protocol code and thin native shells used to prove Apple-target packaging, discovery, and
+WKWebView capability gates; it does not embed the GPL OpenCPN engine, wxWidgets, chart rendering,
+serial drivers, or networking stacks from the engine.
 
 ## Live-Port Warning
 
