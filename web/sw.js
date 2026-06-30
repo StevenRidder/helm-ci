@@ -38,6 +38,7 @@ const APP_SHELL_URLS = [
   './integrations/temporal.js',
   './shell.js',
   './persist.js',
+  './board.js',
   './offline-packs.js',
   './tooltip.js',
   './wind-layer.js',
