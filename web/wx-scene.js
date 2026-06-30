@@ -26,7 +26,7 @@
   var scenes = {};          // sceneKey -> { template (abs url with {z}/{x}/{y}), layer, scale, offset }
   var protoBound = false;
   var bmpWarned = false;
-  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82, blend: null };
+  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82, blend: null, lastGoodServe: 0 };
 
   function svc() { return global.HELM_WX_SERVICE || DEFAULT_SVC; }
   function codec() { return global.HelmWxCodec; }
@@ -135,6 +135,33 @@
     });
   }
 
+  // ---- WX-24: last-good textures (serve-stale, never blank on frame-change / missing-or-empty tile) ----
+  // Cache the value-tile bytes that last rendered WITH DATA, keyed per (layer, z/x/y) — frame-independent.
+  // When a new frame's tile is missing (404) or carries no data (empty / not-yet-ready), re-colourise the
+  // held bytes instead of flashing blank, and flag the scene stale (honest: shown WITH a "last-good" badge,
+  // never silently). Bounded LRU. hasData() is only consulted on a REVISIT (a held tile exists), so
+  // first-load tiles pay no extra decode.
+  var lastGood = {}, lastGoodOrder = [], LASTGOOD_CAP = 600, lgBadgeTimer = null;
+  function cacheGood(key, buf) {
+    if (!lastGood[key]) lastGoodOrder.push(key);
+    lastGood[key] = { buf: buf, at: Date.now() };
+    while (lastGoodOrder.length > LASTGOOD_CAP) { var old = lastGoodOrder.shift(); if (old !== key) delete lastGood[old]; }
+  }
+  function markLastGoodServe() {
+    state.lastGoodServe = Date.now();
+    if (lgBadgeTimer) return;
+    lgBadgeTimer = setTimeout(function () { lgBadgeTimer = null; try { renderStatusBadge(); } catch (e) {} }, 150);
+  }
+  function hasData(buf) {                       // helm-wxv1 NODATA = alpha < 128; does any pixel carry data?
+    return createImageBitmap(new Blob([buf], { type: 'image/png' })).then(function (img) {
+      var w = img.width || 256, h = img.height || 256, cv = makeCanvas(w, h), cx = cv.getContext('2d', { willReadFrequently: true });
+      cx.drawImage(img, 0, 0); if (img.close) try { img.close(); } catch (e) {}
+      var d; try { d = cx.getImageData(0, 0, w, h).data; } catch (e) { return true; }
+      for (var i = 3; i < d.length; i += 4) if (d[i] >= 128) return true;
+      return false;
+    }).catch(function () { return true; });     // can't inspect -> assume data (never falsely hold)
+  }
+
   // ---- custom protocol handler: MapLibre substitutes {z}/{x}/{y}, then calls us per tile -----------
   function tileHandler(params, abortController) {
     var rest = params.url.slice((PROTO + '://').length);
@@ -143,30 +170,43 @@
     var sc = scenes[m[1]];
     if (!sc) return transparentBitmap();
     var signal = abortController && abortController.signal;
+    var key = sc.layer + '|' + m[2] + '/' + m[3] + '/' + m[4];   // WX-24: frame-independent tile key for last-good
+    function holdOrTransparent() {                               // hold last-good (stale) instead of a blank flash
+      if (lastGood[key]) { markLastGoodServe(); return colorize(lastGood[key].buf, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
+      return transparentBitmap();
+    }
+    function renderFresh(buf) { cacheGood(key, buf); return colorize(buf, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
     if (sc.pair) {                                          // WX-23: time-interpolated blend of two frames
       var ua = sc.templateA.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
       var ub = sc.templateB.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
       var grab = function (u) {
         return fetch(u, { signal: signal }).then(function (r) {
-          if (r.status === 404) return null;                // missing frame tile -> null (use the other / parent)
+          if (r.status === 404) return null;                // missing frame tile -> null
           if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
           return r.arrayBuffer();
         });
       };
       return Promise.all([grab(ua), grab(ub)]).then(function (bufs) {
         var ba = bufs[0], bb = bufs[1];
-        if (ba && bb) return colorizePair(ba, bb, sc.frac, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
-        if (ba) return colorize(ba, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
-        if (bb) return colorize(bb, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
-        return transparentBitmap();                         // both missing inside coverage -> parent tile shows
+        if (!ba && !bb) return holdOrTransparent();                                   // both frames' tiles missing
+        if (!lastGood[key]) {                                                         // first sighting -> render + cache
+          if (ba && bb) { cacheGood(key, ba); return colorizePair(ba, bb, sc.frac, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
+          return renderFresh(ba || bb);
+        }
+        return Promise.all([ba ? hasData(ba) : Promise.resolve(false), bb ? hasData(bb) : Promise.resolve(false)]).then(function (hd) {
+          if (!hd[0] && !hd[1]) return holdOrTransparent();                           // new frames carry no data here -> hold last-good
+          if (hd[0] && hd[1]) { cacheGood(key, ba); return colorizePair(ba, bb, sc.frac, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
+          return renderFresh(hd[0] ? ba : bb);                                        // only one side has data
+        });
       });
     }
     var url = sc.template.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
     return fetch(url, { signal: signal }).then(function (r) {
-      if (r.status === 404) return transparentBitmap();   // missing tile inside declared coverage -> parent shows
+      if (r.status === 404) return holdOrTransparent();                               // missing tile -> hold last-good / parent
       if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
       return r.arrayBuffer().then(function (buf) {
-        return colorize(buf, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); });
+        if (!lastGood[key]) return renderFresh(buf);                                  // first sighting
+        return hasData(buf).then(function (has) { return has ? renderFresh(buf) : holdOrTransparent(); });
       });
     });
   }
@@ -258,7 +298,7 @@
       var L = layerCfg(manifest, layer);
       if (L.ramp && ramp() && ramp().setManifestRamp) ramp().setManifestRamp(layer, L.ramp);   // CLIENT-14: field/particles/probe agree
       var so = scaleOffsetFor(manifest, layer), lod = lodRange(manifest, layer), bounds = coverageBounds(manifest);
-      var br = bracket(manifest, opts.isoTime); state.blend = br;                       // WX-23: null unless scrubbing between frames
+      var br = bracket(manifest, opts.isoTime); state.blend = br; state.lastGoodServe = 0;   // WX-23 blend / WX-24 reset hold-state per frame load
       var vtId = br ? br.aId : frameId(manifest, opts.isoTime); state.validTimeId = vtId;
       var key, scene;
       if (br) {
@@ -479,7 +519,9 @@
   function status() {
     if (!state.manifest || !state.layer) return { state: 'off' };
     var f = manifestFreshness(state.manifest);
-    return { state: f.stale ? 'stale' : 'fresh', layer: state.layer, validTime: invFrame(state.manifest, state.validTimeId),
+    var holding = !!state.lastGoodServe && (Date.now() - state.lastGoodServe) < 4000;   // WX-24: recently held last-good
+    return { state: (holding || f.stale) ? 'stale' : 'fresh', holdingLastGood: holding, layer: state.layer,
+             validTime: invFrame(state.manifest, state.validTimeId),
              generatedAt: f.generatedAt, ageSeconds: f.ageSeconds, ttlSeconds: f.ttlSeconds };
   }
   function fmtAge(s) { if (s == null) return ''; if (s < 3600) return Math.round(s / 60) + ' min'; if (s < 86400) return Math.round(s / 3600) + ' h'; return Math.round(s / 86400) + ' d'; }
@@ -491,7 +533,9 @@
       el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:30;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.9);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
       document.body.appendChild(el);
     }
-    el.textContent = '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle';
+    el.textContent = st.holdingLastGood
+      ? '⚠ ' + st.layer + ' — showing last-good (frame data unavailable)'
+      : '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle';
     el.style.display = 'block';
   }
   function hideStatusBadge() { var el = document.getElementById('helm-wx-scene-status'); if (el) el.style.display = 'none'; }
@@ -501,6 +545,7 @@
   global.HelmWxScene = {
     enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample, status: status,
     disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state,
-    _bracket: bracket, _validTimesSorted: validTimesSorted        // WX-23 test seam (frame-bracketing is unit-tested)
+    _bracket: bracket, _validTimesSorted: validTimesSorted,       // WX-23 test seam (frame-bracketing is unit-tested)
+    _cacheGood: cacheGood, _lastGoodKeys: function () { return Object.keys(lastGood); }   // WX-24 test seam (bounded LRU)
   };
 })(typeof window !== 'undefined' ? window : this);
