@@ -80,6 +80,11 @@ HELM_BIND=127.0.0.1 HELM_PORT=$SPORT HELM_RELAY_PORT=$RPORT HELM_TILES_NO_WARMUP
   HELM_VULKAN_RENDERER_SHA="${HELM_VULKAN_RENDERER_SHA:-local-fixture}" \
   "$BIN/helm-server" >/tmp/te-server.log 2>&1 &
 SPID=$!; sleep 3
+curl -s -o /tmp/te-health-nofix.json "http://127.0.0.1:$SPORT/health" || true
+nofix_status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("nav",{}).get("fix_status","?"))' /tmp/te-health-nofix.json 2>/dev/null || echo "?")
+[ "$nofix_status" = offline ] \
+  && P "health reports nav.fix_status=offline before any GPS feed (ENGINE-17)" \
+  || F "health did not report no-fix offline state before feed (got $nofix_status)"
 # live-data-only engine (the simulator was removed): feed a continuous real fix into the seeded
 # NMEA relay (tcp-server on $RPORT) or the nav loop idles and streams nothing — the contract is
 # "no fabricated boat; nav idles until a real fix (pos+SOG+COG)".
@@ -87,12 +92,17 @@ SPID=$!; sleep 3
 FEEDPID=$!; sleep 1.5
 # nav-stream framing (snapshot → deltas, strictly increasing seq) via the contract smoke
 node "$HERE/stream-smoke.js" 127.0.0.1 $SPORT --ws-only >/tmp/te-smoke.txt 2>&1
+curl -s -o /tmp/te-health-livefix.json "http://127.0.0.1:$SPORT/health" || true
 kill $FEEDPID 2>/dev/null
 if grep -q 'ALL PASS' /tmp/te-smoke.txt; then
   while IFS= read -r l; do P "nav stream:${l#  ok  }"; done < <(grep '  ok   ' /tmp/te-smoke.txt)
 else
   F "nav-stream framing failed:"; sed 's/^/        /' /tmp/te-smoke.txt
 fi
+livefix_status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1])).get("nav",{}).get("fix_status","?"))' /tmp/te-health-livefix.json 2>/dev/null || echo "?")
+[ "$livefix_status" = live ] \
+  && P "health reports nav.fix_status=live while real RMC feed is fresh (ENGINE-17)" \
+  || F "health did not report live fix while feed was active (got $livefix_status)"
 h=$(curl -s -o /tmp/te-health.json -w '%{http_code}' "http://127.0.0.1:$SPORT/health" || echo ERR)
 [ "$h" = 200 ] && P "GET /health → 200 (liveness)" || F "GET /health → $h"
 chart_loaded=$(python3 -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("chart_loaded", True) else "false")' /tmp/te-health.json 2>/dev/null || echo true)

@@ -2700,6 +2700,54 @@ static std::string ais_trim(std::string s) {     // AIS text fields are right-pa
 }
 static std::map<int, AisRow> g_ais_rows;
 static bool fresh(std::time_t t) { return t != 0 && std::difftime(std::time(nullptr), t) <= kStaleSec; }
+static const long kFixOfflineSec = 30;     // health moves stale -> offline after a quiet feed is clearly gone
+static long field_age(std::time_t t, std::time_t now) { return t ? (long)std::max(0.0, std::difftime(now, t)) : -1; }
+static std::string nav_health_json() {
+  std::time_t now = std::time(nullptr);
+  std::lock_guard<std::mutex> lk(g_real.m);
+  long posAge = field_age(g_real.pos_t, now);
+  long sogAge = field_age(g_real.sog.t, now);
+  long cogAge = field_age(g_real.cog.t, now);
+  bool posFresh = fresh(g_real.pos_t);
+  bool sogFresh = fresh(g_real.sog.t);
+  bool cogFresh = fresh(g_real.cog.t);
+  bool anySeen = g_real.pos_t || g_real.sog.t || g_real.cog.t;
+  bool complete = g_real.pos_t && g_real.sog.t && g_real.cog.t;
+  long maxAge = std::max(posAge, std::max(sogAge, cogAge));
+
+  const char* status = "offline";
+  const char* reason = "no_required_fix_fields";
+  if (complete && posFresh && sogFresh && cogFresh) {
+    status = "live";
+    reason = "ok";
+  } else if (anySeen && (!complete || maxAge <= kFixOfflineSec)) {
+    status = "stale";
+    reason = complete ? "fix_stale" : "missing_required_fix_fields";
+  }
+
+  std::string missing = "[";
+  bool first = true;
+  auto add_missing = [&](const char* k, bool seen) {
+    if (seen) return;
+    missing += std::string(first ? "" : ",") + "\"" + k + "\"";
+    first = false;
+  };
+  add_missing("pos", g_real.pos_t != 0);
+  add_missing("sog", g_real.sog.t != 0);
+  add_missing("cog", g_real.cog.t != 0);
+  missing += "]";
+
+  char ages[128];
+  std::snprintf(ages, sizeof ages,
+                "\"ageSec\":%ld,\"fields\":{\"posAgeSec\":%ld,\"sogAgeSec\":%ld,\"cogAgeSec\":%ld}",
+                complete ? maxAge : -1, posAge, sogAge, cogAge);
+  return std::string("{\"fix_status\":\"") + status + "\",\"reason\":\"" + reason +
+         "\",\"required\":[\"pos\",\"sog\",\"cog\"],\"missing\":" + missing +
+         ",\"sources\":{\"pos\":\"" + json_escape(g_real.pos_t ? g_real.pos_src : "missing") +
+         "\",\"sog\":\"" + json_escape(g_real.sog.t ? g_real.sog.src : "missing") +
+         "\",\"cog\":\"" + json_escape(g_real.cog.t ? g_real.cog.src : "missing") +
+         "\"}," + ages + "}";
+}
 // CONN-6 source-priority merge: a fresh, higher-or-equal-priority source wins; a lower-priority
 // source only fills a field in when the current holder has gone stale. Higher number = preferred,
 // so a backup feed takes over on failover and the primary reclaims when it returns. (caller holds g_real.m)
@@ -3789,8 +3837,9 @@ static void nav_loop(ix::HttpServer* server) {
     if (ver != seenVer) { seenVer = ver; rebuild_route(); }
     // LIVE-DATA-ONLY gate. Require a fresh real fix; no sim unless HELM_SIM. bGPSValid drives the
     // AisDecoder's CPA, so clearing it on no-fix invalidates collision math (no plausible-but-wrong
-    // CPA against a frozen / demo-origin ownship). On no-fix we emit NO frame, so the client's
-    // staleness tier + no-fix alarm fire (those trip when frames STOP, not on a synthetic frame).
+    // CPA against a frozen / demo-origin ownship). On no-fix we emit NO nav frame, so browser
+    // clients age into STALE/OFFLINE instead of seeing a frozen position as live; /health exposes
+    // the engine-side fix_status for native clients and watchdogs.
     bool have_fix = fresh(g_real.pos_t) && fresh(g_real.sog.t) && fresh(g_real.cog.t);
     g_have_fix.store(have_fix);
     bGPSValid = have_fix || g_sim;
@@ -4328,6 +4377,7 @@ public:
             ",\"chart_status\":\"" + json_escape(g_chart_status) + "\"";
           if (!g_chart_unavailable_reason.empty())
             body += ",\"chart_unavailable_reason\":\"" + json_escape(g_chart_unavailable_reason) + "\"";
+          body += ",\"nav\":" + nav_health_json();
           body += "}";
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body); }
         if (path == "/tides/summary") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";

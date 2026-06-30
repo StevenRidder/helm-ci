@@ -65,6 +65,9 @@ health="$(curl -sf "http://127.0.0.1:$PORT/health")" || { cat "$LOG"; exit 1; }
 echo "$health" | grep -q '"engine":"helm-server"'
 echo "$health" | grep -q '"chart_loaded":false'
 echo "$health" | grep -q '"chart_status":"unavailable"'
+echo "$health" | grep -q '"nav":{'
+echo "$health" | grep -q '"fix_status":"offline"'
+echo "$health" | grep -q '"missing":\["pos","sog","cog"\]'
 
 catalog="$(curl -sf "http://127.0.0.1:$PORT/catalog")" || { cat "$LOG"; exit 1; }
 echo "$catalog" | grep -q '"cells":\[\]'
