@@ -11,7 +11,7 @@
     "notable_finding": "Semantic QA caught a real generator bug: west cardinal lost the repeated yellow band when colors were deduped. The bug was fixed and covered."
   },
   "local_s52_inventory": {
-    "source": "/Users/steveridder/.helm/runtime/s57data/chartsymbols.xml",
+    "source": "~/.helm/runtime/s57data/chartsymbols.xml",
     "symbol_definitions": 1093,
     "unique_symbol_names": 1018,
     "patterns": 30,

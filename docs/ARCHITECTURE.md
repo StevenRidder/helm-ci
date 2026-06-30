@@ -135,3 +135,17 @@ screen. The near-term open collaboration goal is more basic and more important:
 - improve platform coverage;
 - harden the engine/client contract with tests;
 - package the system without hiding the safety caveats.
+
+## Proposed Service Boundaries
+
+The public alpha is intentionally not presented as a finished microservice
+system. The proposed end state is documented separately so contributors can
+review the boundaries without confusing them for current build instructions:
+
+- [proposals/TARGET-SERVICE-ARCHITECTURE.md](proposals/TARGET-SERVICE-ARCHITECTURE.md)
+  maps the current code into target services and extraction order.
+- [proposals/INTERFACE-CATALOG.md](proposals/INTERFACE-CATALOG.md) defines the
+  first-pass contracts between those services.
+- [proposals/STANDARDS-LAYER-MAP.md](proposals/STANDARDS-LAYER-MAP.md) records
+  which existing standards own each layer and where Helm-specific proposals are
+  appropriate.

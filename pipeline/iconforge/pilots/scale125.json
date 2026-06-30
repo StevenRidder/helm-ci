@@ -1,7 +1,7 @@
 {
   "id": "scale125",
   "title": "125-asset Icon Forge scale batch",
-  "source": "/Users/steveridder/.helm/runtime/s57data/chartsymbols.xml",
+  "source": "~/.helm/runtime/s57data/chartsymbols.xml",
   "target_assets": 125,
   "selected_assets": 125,
   "quotas": {

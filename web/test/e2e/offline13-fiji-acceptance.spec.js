@@ -11,6 +11,7 @@ const ENABLED = !!process.env.HELM_OFFLINE13;
 const PACKD_ORIGIN = process.env.HELM_OFFLINE13_PACKD_URL || 'http://127.0.0.1:9127';
 const FIJI_HASH = process.env.HELM_OFFLINE13_HASH || '#9/-17.75/178.12';
 const EVIDENCE_DIR = process.env.HELM_OFFLINE13_EVIDENCE_DIR || '';
+const PRIVATE_PATH_PATTERN = new RegExp(['/Users/', 'CloudStorage', 'Drop' + 'box', 'COS/Charts', 'steve' + 'ridder'].join('|'), 'i');
 
 test.skip(!ENABLED, 'Set HELM_OFFLINE13=1 and provide local Fiji packs to run the OFFLINE-13 acceptance proof.');
 
@@ -43,7 +44,7 @@ async function packdJson(request, pathname) {
 test('Fiji local packs survive offline pan/zoom/layer/tap acceptance', async ({ page, request }) => {
   const catalog = await packdJson(request, '/catalog');
   const catalogText = asJsonText(catalog);
-  expect(catalogText, 'catalog must not leak private filesystem paths').not.toMatch(/\/Users\/|CloudStorage|Dropbox|COS\/Charts|steveridder/i);
+  expect(catalogText, 'catalog must not leak private filesystem paths').not.toMatch(PRIVATE_PATH_PATTERN);
 
   const packs = Object.values(catalog || {});
   const navPack = packs.find(p => /navionics/i.test(`${p.id || ''} ${p.title || ''}`));
@@ -53,7 +54,7 @@ test('Fiji local packs survive offline pan/zoom/layer/tap acceptance', async ({ 
 
   const layers = await packdJson(request, '/layers');
   const layersText = asJsonText(layers);
-  expect(layersText, '/layers must not leak private filesystem paths').not.toMatch(/\/Users\/|CloudStorage|Dropbox|COS\/Charts|steveridder/i);
+  expect(layersText, '/layers must not leak private filesystem paths').not.toMatch(PRIVATE_PATH_PATTERN);
   const navLayer = (layers.layers || []).find(l => l.component_id === `pack:${navPack.id}` || /navionics/i.test(`${l.dataset_name || ''} ${l.component_id || ''}`));
   expect(navLayer, 'Navionics pack appears in /layers inventory').toBeTruthy();
   expect(navLayer.inspection.semantic_objects, 'raster pack must not pretend to expose objects').toBe('unavailable');

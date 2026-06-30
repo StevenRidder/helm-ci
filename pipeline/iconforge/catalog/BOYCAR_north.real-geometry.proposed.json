@@ -26,7 +26,7 @@
   ],
   "source_refs": {
     "s52_metadata": {
-      "path": "/Users/steveridder/.helm/runtime/s57data/chartsymbols.xml",
+      "path": "~/.helm/runtime/s57data/chartsymbols.xml",
       "lookup": {
         "object_class": "BOYCAR",
         "lookup_id": "1022",

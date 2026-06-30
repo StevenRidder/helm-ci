@@ -3,7 +3,7 @@
   "title": "20-symbol Icon Forge stress pilot",
   "purpose": "Exercise the symbol-generation pipeline across safety-critical orientation, color, conditional danger, pattern, and sibling-confusion classes before scaling beyond the POC fixtures.",
   "source_policy": {
-    "s52_metadata": "/Users/steveridder/.helm/runtime/s57data/chartsymbols.xml",
+    "s52_metadata": "~/.helm/runtime/s57data/chartsymbols.xml",
     "chart_no_1_reference_root": "references/us-chart-1/",
     "clean_ip_rule": "Generate fresh owned SVG from Chart No.1 references and style primitives. Use chartsymbols.xml for metadata, lookup conditions, pivots, palette expectations, and sibling discrimination only; do not copy OpenCPN raster artwork into the owned pack."
   },

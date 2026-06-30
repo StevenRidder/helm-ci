@@ -99,6 +99,9 @@ chart data and NMEA/SignalK input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUS
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Contributor workflow, ports, tests, local data rules |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Headless C++ boat server + browser/mobile client boundary |
 | [docs/RUNTIME-SERVICES.md](docs/RUNTIME-SERVICES.md) | End-state C++ runtime microservices; Python limited to tooling/prototypes |
+| [docs/proposals/TARGET-SERVICE-ARCHITECTURE.md](docs/proposals/TARGET-SERVICE-ARCHITECTURE.md) | Proposed service end state and extraction order |
+| [docs/proposals/INTERFACE-CATALOG.md](docs/proposals/INTERFACE-CATALOG.md) | Draft interface contracts between proposed services |
+| [docs/proposals/STANDARDS-LAYER-MAP.md](docs/proposals/STANDARDS-LAYER-MAP.md) | Existing standards by layer, and where Helm-specific RFCs/proposals fit |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
 | [docs/VULKAN-HELM-WEBGPU-PROOF.md](docs/VULKAN-HELM-WEBGPU-PROOF.md) | Helm's WebGPU-first consumer path for the shared OpenCPN renderer proof |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |

@@ -14,3 +14,5 @@ docs/posts/ export-ignore
 docs/decisions/0003-license-posture.md export-ignore
 docs/decisions/0010-distribution-and-packaging-posture.md export-ignore
 docs/AUTOPILOT.md export-ignore
+pipeline/iconforge/AGENT-BRIEF.md export-ignore
+pipeline/iconforge/CONTEXT-THREAD.md export-ignore

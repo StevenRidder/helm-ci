@@ -8,6 +8,7 @@ Run:  python -m forge.scale125_select
 from __future__ import annotations
 
 import json
+import os
 import re
 import xml.etree.ElementTree as ET
 from dataclasses import asdict, dataclass
@@ -15,7 +16,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parent.parent
-S52 = Path("/Users/steveridder/.helm/runtime/s57data/chartsymbols.xml")
+S52 = Path(os.environ.get("HELM_S52_CHARTSYMBOLS", Path.home() / ".helm/runtime/s57data/chartsymbols.xml"))
 OUT = ROOT / "pilots" / "scale125.json"
 TARGET = 125
 MANDATORY_ASSETS = [
