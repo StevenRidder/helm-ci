@@ -79,7 +79,7 @@ def _symbol(entry: dict, tokens: list[str]) -> str:
     asset = entry["asset"]
     family = entry["family"]
     fill = tokens[0]
-    if "cardinal" in entry["stress_reasons"]:
+    if any("cardinal" in reason for reason in entry["stress_reasons"]):
         top = {
             "01": '<polygon points="32,4 25,16 39,16" fill="var(--black)"/><polygon points="32,15 25,27 39,27" fill="var(--black)"/>',
             "02": '<polygon points="32,4 25,16 39,16" fill="var(--black)"/><polygon points="25,16 39,16 32,28" fill="var(--black)"/>',
@@ -105,7 +105,7 @@ def _symbol(entry: dict, tokens: list[str]) -> str:
     if family == "wreck_rock_obstruction":
         return '<ellipse cx="32" cy="34" rx="23" ry="13" fill="none" stroke="var(--black)" stroke-dasharray="2 4"/><path d="M18 42h28M24 42V26M32 42V22M40 42V29M18 48l28-28M18 20l28 28" stroke="var(--black)" fill="none"/>'
 
-    if "lateral" in entry["stress_reasons"]:
+    if any("lateral" in reason for reason in entry["stress_reasons"]):
         if "can" in (entry.get("description") or "").lower():
             return f'<rect x="23" y="24" width="18" height="28" rx="2" fill="{_var(fill)}"/><ellipse cx="32" cy="53" rx="12" ry="4" fill="{_var("white")}"/>'
         return f'<path d="M32 22l-13 31h26z" fill="{_var(fill)}"/><ellipse cx="32" cy="53" rx="13" ry="4" fill="{_var("white")}"/>'

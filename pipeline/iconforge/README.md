@@ -144,4 +144,6 @@ python3 -m forge.scale125_select
 python3 -m forge.tests.test_scale125_selection
 python3 -m forge.scale125_generate
 python3 -m forge.tests.test_scale125_generate
+python3 -m forge.scale125_verify
+python3 -m forge.tests.test_scale125_verify
 ```
