@@ -72,6 +72,26 @@ protocol boundary described in [ARCHITECTURE.md](ARCHITECTURE.md).
 - Do not commit private chart packs, S-63 data, oeSENC output, generated SENC
   caches, private imagery, or other non-redistributable test data.
 
+## Icon Forge Presentation Asset Pack Boundary
+
+Icon Forge is allowed to generate fresh SVG artwork from public-domain U.S.
+Chart No.1 references, local `chartsymbols.xml` / S-52 lookup metadata, and
+Helm-authored generator primitives/stylepacks. The generated artwork must carry
+provenance hashes for the catalog, stylepacks, generator code, QA reports, atlas
+manifests, and rendered atlas images before the full catalog is run.
+
+Icon Forge must not extract, trace, crop, or repackage OpenCPN GPL
+`rastersymbols-*.png` sheets into the owned Presentation Asset Pack. It also
+must not use private ENC, S-63, oeSENC, generated SENC cache, or proprietary IHO
+publication artwork as committed source material. Broken or uncertain symbols
+stay in the hard pile; the verifier must not be weakened to increase coverage.
+
+Until counsel confirms the own-artwork provenance and distribution placement,
+the Presentation Asset Pack remains engine-side and experimental. Raw generated
+artwork does not cross into closed/mobile/client distribution surfaces, and the
+public wording should describe the work as a provenance-gated pilot rather than
+a finished redistributable library.
+
 ## Contribution Workflow
 
 1. Put shared renderer behavior on the OpenCPN-facing Vulkan branch with clear
