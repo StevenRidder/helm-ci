@@ -1219,6 +1219,11 @@ def _prepared_tile_path(region_id: str, layer: str, family: str, valid_time_id: 
     return os.path.join(root, "layers", layer, "vector", valid_time_id, component or "u", str(z), str(x), f"{y}.png")
 
 
+def _wrap_tile_x(z: int, x: int) -> int:
+    n = 2 ** int(z)
+    return ((int(x) % n) + n) % n if n > 0 else int(x)
+
+
 def _parse_layers(layers: str) -> List[str]:
     out = []
     for layer in [x.strip() for x in str(layers or "").split(",") if x.strip()]:
@@ -1817,6 +1822,7 @@ def prepared_scalar_tile(region_id: str, layer: str, valid_time_id: str, z: int,
     if layer not in LAYERS:
         return PlainTextResponse("unknown layer", status_code=404)
     valid_time_id = _resolve_prepared_valid_time_id(region_id, valid_time_id)
+    x = _wrap_tile_x(z, x)
     return _serve_prepared_file(_prepared_tile_path(region_id, layer, "scalar", valid_time_id, z, x, y),
                                 request, "image/png")
 
@@ -1827,6 +1833,7 @@ def prepared_vector_tile(region_id: str, layer: str, valid_time_id: str, compone
     if layer not in LAYERS or not LAYERS[layer].get("vector") or component not in ("u", "v"):
         return PlainTextResponse("unknown vector component", status_code=404)
     valid_time_id = _resolve_prepared_valid_time_id(region_id, valid_time_id)
+    x = _wrap_tile_x(z, x)
     return _serve_prepared_file(_prepared_tile_path(region_id, layer, "vector", valid_time_id, z, x, y, component),
                                 request, "image/png")
 

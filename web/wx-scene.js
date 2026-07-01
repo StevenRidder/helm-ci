@@ -169,22 +169,61 @@
   }
 
   // ---- custom protocol handler: MapLibre substitutes {z}/{x}/{y}, then calls us per tile -----------
+  function wrapTileX(z, x) {
+    var n = Math.pow(2, Number(z) || 0), xi = Math.floor(Number(x));
+    return n > 0 && isFinite(xi) ? ((xi % n) + n) % n : xi;
+  }
+  function wrappedPixel(lon, lat, z) {
+    var C = codec(), p = C.lonLatToPixel(lon, lat, z, 256);
+    p.x = wrapTileX(z, p.x);
+    return p;
+  }
+  function wrappedTilesForBbox(z, bbox) {
+    var raw = codec().tilesForBbox(z, bbox), seen = {}, out = [];
+    raw.forEach(function (t) {
+      var x = wrapTileX(t.z, t.x), key = x + '/' + t.y;
+      if (!seen[key]) { seen[key] = true; out.push({ z: t.z, x: x, y: t.y }); }
+    });
+    return out;
+  }
+  function shiftIntervalTo(w, e, mid) {
+    w = Number(w); e = Number(e); mid = Number(mid);
+    if (!isFinite(w) || !isFinite(e) || !isFinite(mid)) return { west: w, east: e };
+    var c = (w + e) / 2;
+    while (c - mid > 180) { w -= 360; e -= 360; c -= 360; }
+    while (mid - c > 180) { w += 360; e += 360; c += 360; }
+    return { west: w, east: e };
+  }
+  function clipViewToCoverage(manifest, W, S, E, N) {
+    if (E < W) E += 360;
+    var cov = (manifest && manifest.coverage && manifest.coverage.bbox) || null;
+    if (cov && !cov.global) {
+      var cw = Number(cov.west), ce = Number(cov.east);
+      if (cov.crossesAntimeridian || ce < cw) ce += 360;
+      var shifted = shiftIntervalTo(cw, ce, (W + E) / 2);
+      W = Math.max(W, shifted.west); E = Math.min(E, shifted.east);
+      S = Math.max(S, Number(cov.south)); N = Math.min(N, Number(cov.north));
+    }
+    return (E > W && N > S) ? { west: W, south: S, east: E, north: N } : null;
+  }
+
   function tileHandler(params, abortController) {
     var rest = params.url.slice((PROTO + '://').length);
-    var m = rest.match(/^([^/]+)\/(\d+)\/(\d+)\/(\d+)/);
+    var m = rest.match(/^([^/]+)\/(\d+)\/(-?\d+)\/(\d+)/);
     if (!m) return transparentBitmap();
     var sc = scenes[m[1]];
     if (!sc) return transparentBitmap();
+    var z = m[2], x = String(wrapTileX(z, m[3])), y = m[4];
     var signal = abortController && abortController.signal;
-    var key = sc.layer + '|' + m[2] + '/' + m[3] + '/' + m[4];   // WX-24: frame-independent tile key for last-good
+    var key = sc.layer + '|' + z + '/' + x + '/' + y;   // WX-24: frame-independent tile key for last-good
     function holdOrTransparent() {                               // hold last-good (stale) instead of a blank flash
       if (lastGood[key]) { markLastGoodServe(); return colorize(lastGood[key].buf, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
       return transparentBitmap();
     }
     function renderFresh(buf) { cacheGood(key, buf); return colorize(buf, sc.layer, sc.scale, sc.offset).catch(function (e) { bmpFail(e); return transparentBitmap(); }); }
     if (sc.pair) {                                          // WX-23: time-interpolated blend of two frames
-      var ua = sc.templateA.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
-      var ub = sc.templateB.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
+      var ua = sc.templateA.replace('{z}', z).replace('{x}', x).replace('{y}', y);
+      var ub = sc.templateB.replace('{z}', z).replace('{x}', x).replace('{y}', y);
       var grab = function (u) {
         return fetch(u, { signal: signal }).then(function (r) {
           if (r.status === 404) { markMissingTile(); return null; }  // missing frame tile -> null, but visible status
@@ -206,7 +245,7 @@
         });
       });
     }
-    var url = sc.template.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
+    var url = sc.template.replace('{z}', z).replace('{x}', x).replace('{y}', y);
     return fetch(url, { signal: signal }).then(function (r) {
       if (r.status === 404) { markMissingTile(); return holdOrTransparent(); }         // missing tile -> hold last-good / parent
       if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
@@ -362,9 +401,9 @@
     valueTileCache[url] = p; return p;
   }
   function sampleTileSet(tiles, lon, lat, z) {
-    var C = codec(), p = C.lonLatToPixel(lon, lat, z, 256), g = tiles[p.x + '/' + p.y];
+    var p = wrappedPixel(lon, lat, z), g = tiles[p.x + '/' + p.y];
     if (!g || !g.vals) return NaN;
-    var v = C.bilinear(g.vals, g.w, g.h, p.px, p.py);
+    var v = codec().bilinear(g.vals, g.w, g.h, p.px, p.py);
     return (v == null ? NaN : v);
   }
   function assign(a, b) { for (var k in b) if (b.hasOwnProperty(k)) a[k] = b[k]; return a; }
@@ -377,10 +416,10 @@
     var lod = lodRange(manifest, layer);
     var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m.getZoom())));
     var b = m.getBounds(), W = b.getWest(), E = b.getEast(), S = b.getSouth(), N = b.getNorth();
-    var cov = (manifest.coverage || {}).bbox;
-    if (cov && !cov.crossesAntimeridian) { W = Math.max(W, cov.west); E = Math.min(E, cov.east); S = Math.max(S, cov.south); N = Math.min(N, cov.north); }
-    if (!(E > W && N > S)) return Promise.resolve(null);          // viewport doesn't overlap coverage
-    var list = C.tilesForBbox(z, [W, S, E, N]);
+    var clipped = clipViewToCoverage(manifest, W, S, E, N);
+    if (!clipped) return Promise.resolve(null);          // viewport doesn't overlap this prepared bundle
+    W = clipped.west; S = clipped.south; E = clipped.east; N = clipped.north;
+    var list = wrappedTilesForBbox(z, [W, S, E, N]);
     function url(tpl, t) { return tpl.replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y); }
     function gather(tplBase, so, vt) {
       var tpl = svc() + tplBase.replace('{validTimeId}', vt);
@@ -477,7 +516,7 @@
     var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m ? m.getZoom() : lod.maxzoom)));
     var so = scaleOffsetFor(manifest, layer);
     var tplBase = (L.fieldTiles && L.fieldTiles.urlTemplate) || '';
-    var p = C.lonLatToPixel(lon, lat, z, 256);
+    var p = wrappedPixel(lon, lat, z);
     function frameVal(vtId) {                                       // bilinear value at the point for one frame
       var url = (svc() + tplBase.replace('{validTimeId}', vtId)).replace('{z}', z).replace('{x}', p.x).replace('{y}', p.y);
       return fetchValueTile(url, so.scale, so.offset).then(function (g) {
@@ -560,6 +599,7 @@
     enable: enable, enableScalar: enableScalar, setValidTime: setValidTime, sample: sample, status: status,
     disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state,
     _bracket: bracket, _validTimesSorted: validTimesSorted,       // WX-23 test seam (frame-bracketing is unit-tested)
+    _wrapTileX: wrapTileX, _wrappedTilesForBbox: wrappedTilesForBbox, _clipViewToCoverage: clipViewToCoverage, // WX-19 antimeridian test seams
     _cacheGood: cacheGood, _lastGoodKeys: function () { return Object.keys(lastGood); }   // WX-24 test seam (bounded LRU)
   };
 })(typeof window !== 'undefined' ? window : this);

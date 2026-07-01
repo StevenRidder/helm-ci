@@ -367,12 +367,24 @@ def main():
     west_resp = client.get(
         f"/bundles/open-meteo/latest/dateline-test/layers/wind/scalar/latest/{west_tile[0]}/{west_tile[1]}/{west_tile[2]}.png"
     ) if west_tile else None
+    east_alias_resp = client.get(
+        f"/bundles/open-meteo/latest/dateline-test/layers/wind/scalar/latest/{east_tile[0]}/{east_tile[1] + (2 ** east_tile[0])}/{east_tile[2]}.png"
+    ) if east_tile else None
+    east_vector_alias_resp = client.get(
+        f"/bundles/open-meteo/latest/dateline-test/layers/wind/vector/latest/u/{east_tile[0]}/{east_tile[1] + (2 ** east_tile[0])}/{east_tile[2]}.png"
+    ) if east_tile else None
     check(east_resp is not None and east_resp.status_code == 200 and
           east_resp.headers.get("x-helm-upstream-fetch") == "0",
           "prepared tile east of 180 replays from cache")
     check(west_resp is not None and west_resp.status_code == 200 and
           west_resp.headers.get("x-helm-bundle-cache") == "hit",
           "prepared tile west of 180 replays from cache")
+    check(east_alias_resp is not None and east_alias_resp.status_code == 200 and
+          east_alias_resp.content == east_resp.content,
+          "prepared scalar tile endpoint wraps antimeridian x aliases")
+    check(east_vector_alias_resp is not None and east_vector_alias_resp.status_code == 200 and
+          east_vector_alias_resp.headers.get("x-helm-upstream-fetch") == "0",
+          "prepared vector tile endpoint wraps antimeridian x aliases")
 
     # 9) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])

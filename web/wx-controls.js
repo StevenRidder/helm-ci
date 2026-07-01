@@ -53,6 +53,7 @@
       if (!PD.on) return;
       window.__helmWind.setData(vel); window.__helmWind.setVisible(true);
     } catch (e) {
+      if (!PD.on) return;
       // FAIL LOUD: surface the broken live-particle feed rather than silently freezing stale particles.
       if (window.console) console.warn('[helm-wx] live particle velocity fetch failed (' + PD.layer + '):', e && e.message);
       notify('Live ' + PD.layer + ' particles: live feed unavailable (field still cached)', 'warn');
@@ -71,7 +72,7 @@
   }
   function coverageBadge(msg, level) {
     var id = 'helm-wx-coverage-status', el = document.getElementById(id);
-    if (!msg) { if (el) el.style.display = 'none'; return; }
+    if (!msg) { if (el) { el.textContent = ''; el.style.display = 'none'; } return; }
     if (!el) {
       el = document.createElement('div'); el.id = id;
       el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:31;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.92);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
@@ -255,8 +256,8 @@
     if (!window.HelmWxScene || !HelmWxScene.status || !HelmWxScene.state) return false;
     var st = HelmWxScene.status();
     if (!st || st.state === 'off' || !HelmWxScene.state.manifest) return false;
-    if (!coverageReport(map, HelmWxScene.state.manifest, COVER_MARGIN).coversView) return true;
     var cov = HelmWxScene.state.manifest.coverage || {}, tier = cov.tier || cov.standingTier || '';
+    if (!coverageReport(map, HelmWxScene.state.manifest, cov.standing ? 0 : COVER_MARGIN).coversView) return true;
     var z = map.getZoom ? map.getZoom() : 4;
     return (tier === 'wide' && z >= 5.35) || (tier === 'near' && z < 4.85);
   }
@@ -440,6 +441,7 @@
       clearTimeout(viewRecheckTimer);
       viewRecheckTimer = setTimeout(function () {
         if (activeSceneNeedsRecheck(map)) apply().catch(function () {});
+        else coverageBadge('');
       }, 140);
     }
     map.on('moveend', viewChanged);
