@@ -38,7 +38,7 @@ or break working helpers before parity exists. The rule is:
 | `helm-server` nav/chart core | C++ one-origin boat server | C++ required runtime |
 | `helm-packd` local packs | C++ port merged; Python oracle may remain for tests | C++ required runtime |
 | tile cache/proxy | C++ cache/proxy merged for runtime use | C++ when enabled |
-| weather/environment bundles | Python `services/wx` remains current/reference while WebGPU scene and contract stabilize | C++ `helm-envd`/`helm-wxd` required runtime after parity |
+| weather/environment grid packs | Python `services/wx` remains current/reference while compact grid packs and WebGPU scene stabilize | C++ `helm-envd`/`helm-wxd` grid-pack service required runtime after parity |
 | `backend/` FastAPI/AI/community | Optional prototype/companion path | Optional non-safety only, or ported if ever promoted to required runtime |
 | `pipeline/` and generators | Python and shell tooling | Allowed outside required runtime; selected appliance paths may be ported |
 | `web/` cockpit | Browser JavaScript/MapLibre/WebGPU | Browser JavaScript/WebGPU product UI |
@@ -81,7 +81,7 @@ web cockpit / future native client
 helm-server        C++  required nav/chart/safety core
 helm-packd         C++  local MBTiles/PMTiles/portable package serving, catalog, layers, prefetch
 helm-basemap-cache C++  optional generic cache/proxy for satellite/online-fill and remote packs
-helm-envd          C++  environmental bundle replay/materialization
+helm-envd          C++  environmental grid-pack replay, validation, inventory, and selected-pack prefetch
 ```
 
 Names are provisional. What matters is the boundary:
@@ -104,7 +104,7 @@ exit tasks.
 | `engine/` / `helm-server` | Nav, AIS, route, chart tile, health, and one-origin boat server | Required C++ runtime. |
 | `helm-packd` | Local MBTiles/PMTiles packs, catalog, layers, prefetch, bundle manifests | Required C++ runtime. |
 | `helm-basemap-cache` | Cache/proxy for online fill and remote/local pack fallback | C++ when enabled as a runtime service. |
-| `helm-envd` | Environmental model-run bundle replay/materialization | Required C++ runtime after the field-texture contract is proven. |
+| `helm-envd` | Environmental grid-pack replay, validation, stale/offline/error reporting, and selected-pack prefetch | Required C++ runtime after the grid/field-texture contract is proven. |
 | data-preparation tools | Import, bake, conversion, sample generation, fixture tooling | Outside required runtime. |
 | `web/` | Browser cockpit, MapLibre, WebGPU, UI tests | Client surface, not boat runtime daemon. |
 | native Apple clients | WKWebView, SwiftUI, MapLibre Native, Metal | Thin client over the boat server. |
@@ -147,19 +147,22 @@ Required contract:
 
 This should not decide chart semantics. It is a cache service.
 
-### 3. `helm-envd`: environmental bundle daemon
+### 3. `helm-envd`: environmental grid-pack service
 
 Required contract:
 
-- replay prepared environmental bundles;
-- serve scalar and vector field tiles;
-- expose all-zoom fallback/overzoom behavior;
+- replay prepared `helm.env.grid.v1` packs;
+- validate pack manifests, chunk indexes, compression, and checksums;
+- serve range-addressed scalar and vector grid chunks through `helm-packd`/pack service boundaries;
 - preserve valid-time and source metadata;
 - avoid provider fetches during offline-mode tests;
+- fail loudly for missing chunks, stale runs, unsupported compression, unsupported render capability,
+  and out-of-pack requests;
 - consume S-100-family metadata as provenance/portrayal data, not shader/backend policy.
 
-The C++ service should replay prepared bundles and run scheduled/materialize jobs, but it should
-not bake UI assumptions into the service.
+The C++ service should replay prepared grid packs and run explicit selected-pack refresh/import jobs,
+but it should not bake UI assumptions into the service. It must not become a monolith: package
+serving, cache inventory, provider ingestion jobs, and browser rendering stay separate.
 
 ## OpenCPN Alignment
 

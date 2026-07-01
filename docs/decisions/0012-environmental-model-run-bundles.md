@@ -1,6 +1,7 @@
 # ADR-0012 - Environmental Model-Run Bundles
 
-- **Status:** Accepted for WX-17 contract scope; baker and renderer remain follow-up work.
+- **Status:** Accepted for WX-17 compatibility scope; superseded for new WX-19 storage work by
+  [ADR-0014](0014-environmental-grid-packs.md).
 - **Date:** 2026-06-29
 - **Builds on:** [ADR-0008](0008-prebaked-offline-tile-packs.md), [ADR-0011](0011-s100-layer-ingestion-spike.md), `WX-10`, `WX-14`, `OFFLINE-14`, `LABS-5`
 
@@ -16,7 +17,7 @@ that is still not the product target:
 - route weather, AI explain-this, pass advisors, and offline packs need the same numeric field data;
 - S-100-family met-ocean datasets must fit without teaching the renderer product-specific semantics.
 
-The correct unit is a prepared model-run bundle:
+The 2026-06-29 decision selected a prepared model-run bundle as the next unit:
 
 ```text
 model: ecmwf/gfs/open-meteo/marine
@@ -48,8 +49,10 @@ GET /bundles/index.json
 GET /bundles/open-meteo/latest/manifest.json
 ```
 
-The implementation-grade field contract is specified in
-[Environmental Bundle v1](../ENVIRONMENTAL-BUNDLE-V1.md).
+The compatibility field contract is specified in
+[Environmental Bundle v1](../ENVIRONMENTAL-BUNDLE-V1.md). New production WX work that would expand
+this into PNG/value-tile pyramids should instead use
+[Environmental Grid v1](../ENVIRONMENTAL-GRID-V1.md).
 
 The current Open-Meteo bundle is deliberately labelled `latest-frame-compatibility`. It advertises
 the real target contract while acknowledging that existing `/{layer}/{z}/{x}/{y}.png` endpoints may

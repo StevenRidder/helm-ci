@@ -19,7 +19,8 @@ The goal is the same style of artifact OpenCPN maintainers can react to usefully
 | Chart service | [interfaces/chart-service-v1.md](interfaces/chart-service-v1.md) | `helm-chartd` | gateway, WebGPU/browser, debug | Owns chart portrayal execution and queries. |
 | Render backend | [interfaces/render-backend-v1.md](interfaces/render-backend-v1.md) | `helm-renderd` / backend module | chart service, cache | Draw-only. Does not own chart semantics. |
 | Local package service | [interfaces/package-service-v1.md](interfaces/package-service-v1.md) | `helm-packd` | gateway, clients, offline tooling | Owns local pack/catalog/prefetch contracts. |
-| Environmental bundle service | [interfaces/environment-bundle-v1.md](interfaces/environment-bundle-v1.md) | `helm-envd` | clients, WebGPU scene, package service | Owns prepared field bundles, not weather truth. |
+| Environmental grid packs | [../ENVIRONMENTAL-GRID-V1.md](../ENVIRONMENTAL-GRID-V1.md) | cloud/VM pack factory, future `helm-envd` | WebGPU scene, `helm-packd`, clients, tests | Owns compact numeric fields and fail-loud pack semantics, not weather truth. |
+| Environmental bundle service | [interfaces/environment-bundle-v1.md](interfaces/environment-bundle-v1.md) | `helm-envd` | clients, WebGPU scene, package service | Compatibility/reference surface for prepared field bundles. Do not expand into PNG pyramids. |
 | Layer manifest service | [interfaces/layer-manifest-v1.md](interfaces/layer-manifest-v1.md) | `helm-layerd`, `helm-packd` | clients, debug tools | Owns overlay metadata and inspection envelopes. |
 | Source-to-render inspection | [interfaces/inspection-trace-v1.md](interfaces/inspection-trace-v1.md) | chart/render/cache services | debug UI, tests, agents | Owns provenance trace, not portrayal authority. |
 | Symbol library manifest | [interfaces/symbol-library-v1.md](interfaces/symbol-library-v1.md) | symbol asset pipeline | chart, render, cache, UI | Owns assets/provenance, not cartography. |
@@ -53,6 +54,8 @@ Examples:
 helm.nav.snapshot.v1
 helm.chart.catalog.v1
 helm.package.catalog.v1
+helm.env.grid.pack.v1
+helm.env.grid.chunk.v1
 helm.env.bundle.v1
 helm.debug.trace.v1
 ```

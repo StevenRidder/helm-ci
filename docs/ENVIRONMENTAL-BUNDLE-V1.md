@@ -3,6 +3,11 @@
 > Implementation contract for Windy-parity met-ocean layers in Helm.
 > ADR: [ADR-0012](decisions/0012-environmental-model-run-bundles.md).
 
+> **Status update 2026-07-02:** this PNG/value-tile bundle contract remains a compatibility and
+> reference/oracle surface. New `WX-19` acceptance work moves to compact numeric grid packs:
+> [`ENVIRONMENTAL-GRID-V1.md`](ENVIRONMENTAL-GRID-V1.md). Do not extend this document into larger
+> PNG pyramids or hidden fallback behavior for the production WX path.
+
 `helm.env.bundle.v1` is the contract between:
 
 - the bundle baker/cache (`WX-18`);
