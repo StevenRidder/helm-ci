@@ -51,6 +51,24 @@ The service names are less important than the boundary. Required boat daemons mu
 
 ## Runtime inventory
 
+The machine-readable source for the runtime language policy is
+[`runtime-inventory.json`](runtime-inventory.json). It classifies each current or
+target runtime/service/pipeline entry point as `required-runtime`,
+`transitional-reference`, `dev-tooling`, `fixture/test`, `offline-bake`,
+`optional-non-safety`, or `removed`.
+
+Validate it with:
+
+```bash
+python3 scripts/check-runtime-inventory.py
+```
+
+That guard is intentionally narrow: it fails if an implemented required-runtime
+entry launches Python, `uvicorn`, FastAPI, or another Python daemon. Transitional
+Python references must name their C++ exit task, and optional Python services
+must be explicitly non-safety. `HELMC++-2`, `HELMC++-3`, and the final dossier
+consume this inventory as evidence.
+
 | Surface | Accepted role | HELMC++ requirement |
 |---|---|---|
 | `engine/` / `helm-server` | Nav, AIS, route, chart tile, health, and one-origin boat server | Required C++ runtime. |

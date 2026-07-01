@@ -10,6 +10,12 @@ and the cockpit remains browser JavaScript/WebGPU.
 The final acceptance gate for this policy is [HELMCXX-ACCEPTANCE.md](HELMCXX-ACCEPTANCE.md). That
 contract defines what must be C++, what may remain outside required runtime, and what evidence is
 required before the runtime can be called C++-only.
+The checked-in machine-readable inventory is
+[runtime-inventory.json](runtime-inventory.json), and its guard is:
+
+```bash
+python3 scripts/check-runtime-inventory.py
+```
 
 This is an architecture guardrail, not a rewrite order to stop all product work
 or break working helpers before parity exists. The rule is:
@@ -87,6 +93,11 @@ Names are provisional. What matters is the boundary:
 - the browser remains a thin client, not a hidden owner of runtime semantics.
 
 ## Target Service Inventory
+
+The table below is the human-readable summary. The enforceable version is
+[`runtime-inventory.json`](runtime-inventory.json), which also names current
+Python references/oracles, optional non-safety services, owner lanes, and C++
+exit tasks.
 
 | Target service | Accepted role | C++ runtime decision |
 |---|---|---|

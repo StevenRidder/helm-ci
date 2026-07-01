@@ -1,0 +1,29 @@
+name: HELMC++ runtime guard
+
+on:
+  push:
+    paths:
+      - "docs/runtime-inventory.json"
+      - "docs/HELMCXX-ACCEPTANCE.md"
+      - "docs/RUNTIME-SERVICES.md"
+      - "scripts/check-runtime-inventory.py"
+      - ".github/workflows/helmcxx-runtime-guard.yml"
+  pull_request:
+    paths:
+      - "docs/runtime-inventory.json"
+      - "docs/HELMCXX-ACCEPTANCE.md"
+      - "docs/RUNTIME-SERVICES.md"
+      - "scripts/check-runtime-inventory.py"
+      - ".github/workflows/helmcxx-runtime-guard.yml"
+  workflow_dispatch:
+
+jobs:
+  runtime-inventory:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+      - name: Check runtime inventory
+        run: python3 scripts/check-runtime-inventory.py

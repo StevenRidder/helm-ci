@@ -21,6 +21,13 @@ The maintained product target is C++ for required boat-side backend/runtime and
 browser JavaScript/WebGPU for the frontend. Python is still allowed for working
 helpers, AI/lab experiments, fixtures, and reference/oracle paths, but should not
 be introduced as a new required runtime dependency.
+The current machine-readable classification lives in
+[runtime-inventory.json](runtime-inventory.json). Before adding or promoting a
+service, run:
+
+```bash
+python3 scripts/check-runtime-inventory.py
+```
 
 You usually do not need to understand every part to contribute. Pick one area,
 make a small change, and include a test or verification note.
