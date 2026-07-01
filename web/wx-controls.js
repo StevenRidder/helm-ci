@@ -5,7 +5,7 @@
 // rail stops overflowing. Injected into #drawer-weather at runtime from this WX-owned file — no edit
 // to the shell body. Orchestrates four engines:
 //   • legacy field overlay (Standard)        — index.html setWeather()
-//   • fetch-on-pan live full-bleed (Live)     — web/wx-live.js
+//   • fail-loud live scene (Live)             — prepared local/cache bundles only
 //   • GFS-vs-ECMWF spread (Ensemble)          — web/integrations/cog.js
 //   • PredictWind GPX/GRIB import             — web/wx-import.js (window.HelmImport)
 (function () {
@@ -24,14 +24,10 @@
   var SCENE_LAYERS = ['wind', 'gust', 'rain', 'temp', 'sst', 'clouds', 'waves', 'swell', 'pressure', 'cape', 'current'];
   var SCENE_LAYER_SET = {}; SCENE_LAYERS.forEach(function (l) { SCENE_LAYER_SET[l] = true; });
   var COVER_MARGIN = 0.06;      // prepared scene must run a little past the visible viewport
-  var PREP_MARGIN = 0.32;       // materialize a larger tile set so small pans don't expose edges
-  var PREP = { inflight: {}, done: {}, failed: {}, lastPlan: null, lastMessageKey: '' };
-  var ALLOW_VIEWPORT_MATERIALIZE = typeof window !== 'undefined' && window.HELM_WX_ENABLE_VIEWPORT_MATERIALIZE === true;
   var APPLY_SEQ = 0;
 
-  // LIVE animated wind particles, fed by the helm-wx gateway's /velocity endpoint (keyed server-side,
-  // cached) — NOT the rate-capped free API and never the client holding a key. Refetches on pan/zoom and
-  // feeds the existing GPU particle layer (window.__helmWind). This is what makes the wind "alive".
+  // Legacy live particle feed. WX-30 keeps it disabled on the normal live scene path because it is a
+  // gateway request during pan/zoom. WX-33 replaces it with particles sampled from local grid packs.
   var PD = { on: false, key: '', t: null, handler: null, cache: {}, layer: 'wind' };
   function pdBbox(map) {
     var b = map.getBounds(), w = b.getWest(), e = b.getEast(), s = b.getSouth(), n = b.getNorth();
@@ -83,6 +79,27 @@
     el.style.color = level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--warn,#e0a23a)';
   }
   function seg(el, on) { Array.prototype.forEach.call(el.children, function (b) { b.dataset.sel = (b.dataset.val === on) ? '1' : ''; }); }
+
+  function missingEdgesText(report) {
+    var miss = report && report.missing;
+    return miss && miss.length ? ' (' + miss.join('/') + ' edge missing)' : '';
+  }
+  function failLoudText(layer, code, detail) {
+    var bits = ['Live ' + layer + ' unavailable', code || 'missing_prepared_weather_pack'];
+    if (detail) bits.push(detail);
+    bits.push('no gateway/direct fallback/download');
+    return bits.join(' · ');
+  }
+  function failLiveUnavailable(layer, pick) {
+    var rep = pick && pick.miss && pick.miss.coverage;
+    var reason = (pick && pick.offEdge) ? 'outside prepared local weather pack' : 'no prepared local weather pack covers this view';
+    var msg = failLoudText(layer, 'missing_prepared_weather_pack', reason + missingEdgesText(rep));
+    coverageBadge('⚠ ' + layer + ' unavailable — ' + reason + missingEdgesText(rep), 'warn');
+    notify(msg, 'warn');
+    showLegacy(false);
+    stopParticles(S.map);
+    setProbe('<span style="color:var(--warn,#e8a13a)">' + msg + '</span>');
+  }
 
   function showLegacy(visible) {
     var map = S.map; if (!map) return;
@@ -163,93 +180,13 @@
     if (c.global) return 3;
     return 4;
   }
-  async function bundleIndexed(region, layer) {
-    try {
-      var rows = await preparedCandidates(layer);
-      return rows.some(function (r) { return r.region === region && r.index; });
-    } catch (e) { return false; }
-  }
-  function quantizeViewForMaterialize(map) {
-    var v = viewBox(map, PREP_MARGIN), zoom = map.getZoom ? map.getZoom() : 4;
-    var q = zoom < 4.75 ? 10 : (zoom < 6.75 ? 5 : 2);
-    var w = Math.floor(v.west / q) * q, e = Math.ceil(v.east / q) * q;
-    var s = clamp(Math.floor(v.south / q) * q, -84, 84), n = clamp(Math.ceil(v.north / q) * q, -84, 84);
-    if ((e - w) >= 350) { w = -180; e = 180; }
-    while (w < -180) { w += 360; e += 360; }
-    while (w > 180) { w -= 360; e -= 360; }
-    var sw = normLon(w), se = normLon(e);
-    if (Math.abs(se + 180) < 1e-6 && e > w) se = 180;
-    var maxzoom = zoom < 4.75 ? 5 : 6;
-    function part(x) { return String(Math.round(x * 10) / 10).replace('-', 'm').replace('.', 'p'); }
-    return {
-      region: 'view-z' + maxzoom + '-w' + part(sw) + '-s' + part(s) + '-e' + part(se) + '-n' + part(n),
-      w: sw, s: s, e: se, n: n,
-      minzoom: 0, maxzoom: maxzoom,
-      res: zoom < 4.75 ? 1.0 : 0.5,
-      tileBudget: maxzoom >= 6 ? 50000 : 16000
-    };
-  }
-  function materializeUrl(plan) {
-    var qs = [
-      'region=' + encodeURIComponent(plan.region),
-      'layers=' + encodeURIComponent(SCENE_LAYERS.join(',')),
-      'w=' + encodeURIComponent(plan.w.toFixed(4)),
-      's=' + encodeURIComponent(plan.s.toFixed(4)),
-      'e=' + encodeURIComponent(plan.e.toFixed(4)),
-      'n=' + encodeURIComponent(plan.n.toFixed(4)),
-      'minzoom=' + plan.minzoom,
-      'maxzoom=' + plan.maxzoom,
-      'res=' + plan.res,
-      'tile_budget=' + plan.tileBudget,
-      'frames=2',
-      'frame_hours=0,3'
-    ].join('&');
-    return WX_SERVICE + '/bundles/open-meteo/latest/materialize?' + qs;
-  }
   function ensureViewportBundle(map, layer, report) {
     if (!SCENE_LAYER_SET[layer]) return null;
-    var plan = quantizeViewForMaterialize(map); PREP.lastPlan = plan;
-    if (!ALLOW_VIEWPORT_MATERIALIZE) {
-      var miss = report && report.missing && report.missing.length ? ' (' + report.missing.join('/') + ' edge missing)' : '';
-      coverageBadge('⚠ ' + layer + ' outside standing weather cache' + miss + ' — using gateway fallback', 'warn');
-      notify('Live ' + layer + ' · standing cache missing/off-edge; gateway fallback only (no viewport bake)', 'warn');
-      return { disabled: true, reason: 'viewport-materialize-disabled', plan: plan };
-    }
-    if (PREP.done[plan.region]) {
-      coverageBadge('⚠ ' + layer + ' partial coverage — waiting for prepared bundle index', 'warn');
-      return plan;
-    }
-    if (PREP.failed[plan.region] && Date.now() - PREP.failed[plan.region] < 5 * 60 * 1000) return plan;
-    var msgKey = layer + '|' + plan.region;
-    if (PREP.lastMessageKey !== msgKey) {
-      PREP.lastMessageKey = msgKey;
-      var miss = report && report.missing && report.missing.length ? ' (' + report.missing.join('/') + ' edge missing)' : '';
-      notify('Live ' + layer + ' · preparing full-view weather coverage' + miss + ' — showing gateway tiles meanwhile', 'warn');
-      coverageBadge('⚠ ' + layer + ' partial coverage — preparing full-view bundle', 'warn');
-    }
-    if (PREP.inflight[plan.region]) return plan;
-    PREP.inflight[plan.region] = fetch(materializeUrl(plan), { cache: 'no-store' }).then(function (r) {
-      if (!r.ok) return r.json().catch(function () { return {}; }).then(function (body) { throw new Error((body && body.reason) || ('HTTP ' + r.status)); });
-      return r.json();
-    }).then(function () {
-      PREP.done[plan.region] = true;
-      coverageBadge('⚠ partial coverage — materialized; verifying prepared bundle index', 'warn');
-      notify('Live weather materialized · verifying prepared bundle ' + plan.region, 'warn');
-      // Do not immediately re-apply just because materialize returned 200. The new bundle is only
-      // usable after /bundles/index.json advertises it; re-applying before that briefly removes/re-adds
-      // the gateway raster and can create the blank flash WX-19 is meant to prevent.
-      setTimeout(function () {
-        bundleIndexed(plan.region, activeLayer()).then(function (ok) {
-          if (ok && activeLayer() !== 'off' && S.resolution === 'live') apply().catch(function () {});
-        });
-      }, 1000);
-    }).catch(function (e) {
-      PREP.failed[plan.region] = Date.now();
-      coverageBadge('⚠ weather coverage materialize failed — gateway fallback only', 'warn');
-      notify('Weather coverage materialize failed: ' + ((e && e.message) || e), 'warn');
-      if (window.console) console.warn('[helm-wx] viewport bundle materialize failed:', e);
-    }).then(function () { delete PREP.inflight[plan.region]; });
-    return plan;
+    return {
+      disabled: true,
+      reason: 'missing-prepared-weather-pack',
+      report: report || null
+    };
   }
 
   function activeSceneNeedsRecheck(map) {
@@ -263,7 +200,8 @@
   }
 
   // WX-19: find a prepared bundle region whose coverage contains the full view and that has this layer.
-  // Returns {region, manifest, coverage}, or schedules a visible materialize job and returns {plan, miss}.
+  // Returns {region, manifest, coverage}, or a fail-loud {plan, miss} record. It never materializes,
+  // never switches to gateway tiles, and never calls a provider from pan/zoom/scrub.
   // This is intentionally viewport-based, not center-point based: a Windy-style field cannot be "fresh"
   // if any visible edge is outside prepared coverage.
   async function pickSceneRegion(map, layer) {
@@ -308,9 +246,8 @@
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
     } else if (S.resolution === 'live') {
-      // WX-19: prefer the prepared Environmental Scene (bundle field pyramid) when a bundle covers the
-      // view — one renderer for colour + particles, no gesture-path upstream fetch. Falls through to the
-      // tile/live/legacy paths below when no bundle gateway/region is reachable (today's default deploy).
+      // WX-30: prepared Environmental Scene only. If no local/prepared pack covers the view, fail loud.
+      // No gateway tiles, no direct Open-Meteo, no viewport materialize, and no hidden download.
       var scenePick = await pickSceneRegion(map, layer);
       if (seq !== APPLY_SEQ) return;
       if (scenePick && scenePick.region && window.HelmWxScene) {
@@ -322,31 +259,13 @@
           var tier = ((scenePick.coverage || {}).coverage || {}).tier || ((scenePick.manifest && scenePick.manifest.coverage) || {}).tier || '';
           notify('Live ' + layer + ' · standing ' + (tier || 'prepared') + ' bundle scene (WX-19)', 'ok');
           probeSoon(); return;
-        } catch (e) { try { window.HelmWxScene.disable(); } catch (e2) {} }   // fall through to the paths below
+        } catch (e) {
+          try { window.HelmWxScene.disable(); } catch (e2) {}
+          scenePick = { plan: { reason: 'scene-enable-failed' }, miss: scenePick, error: e };
+        }
       }
-      // Try the gateway for ANY layer (atmospheric AND marine). If it serves a manifest, render server-
-      // baked value tiles — cached, overzoom, fill-on-zoom, identical behaviour across every layer. Wind
-      // and current also get LIVE particles from /velocity. Gateway down -> direct Open-Meteo (atmos) or
-      // the legacy field (marine). This is why all 11 layers now behave the same on global<->local zoom.
-      var cfg = null;
-      try {
-        cfg = await m.enableWxTiles(map, { maplibregl: window.maplibregl,
-          manifestUrl: WX_SERVICE + '/' + layer + '/manifest.json',
-          beforeId: 'route-line', opacity: wxOpacity(), notify: function () {} });
-      } catch (e) { cfg = null; }
-      if (cfg) {
-        showLegacy(false);
-        if ((layer === 'wind' || layer === 'current') && particlesOn()) startParticles(map, layer); else stopParticles(map);
-        if (scenePick && scenePick.offEdge) notify('Live ' + layer + ' · standing cache unavailable/off-edge; gateway tiles are temporary', 'warn');
-        else if (scenePick && scenePick.plan) notify('Live ' + layer + ' · preparing prepared bundle; gateway tiles are temporary', 'warn');
-        else notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
-      } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
-        window.HelmWxLive.enable(map, { layer: layer, opacity: wxOpacity(), notify: notify });   // gateway down -> direct Open-Meteo
-        notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
-      } else {
-        // CLIENT-14: legacy field retired. Gateway down + non-atmospheric layer -> no offline field; say so.
-        notify('Live ' + layer + ' needs the helm-wx gateway — start services/wx (no offline field for this layer)', 'warn');
-      }
+      failLiveUnavailable(layer, scenePick);
+      return;
     } else {
       showLegacy(true);                                   // Standard + Single → the legacy field handles it
       notify('');
@@ -363,7 +282,9 @@
     if (layer === 'off') return setProbe('');
     var s = null;
     if (S.model === 'ensemble') { var e = await m.sampleEnsemble(c.lat, c.lng); if (e && e.value != null) return setProbe('<b>' + e.mean + ' ' + e.unit + '</b> · spread ' + e.spread + ' · ' + e.agreement); }
-    else if (S.resolution === 'live' && window.HelmWxLive) { s = window.HelmWxLive.sampleAt(c.lat, c.lng); }
+    else if (S.resolution === 'live' && window.HelmWxScene && window.HelmWxScene.status && window.HelmWxScene.status().state === 'on') {
+      s = null; // WX-30: no direct/live fallback sampler; WX-33 adds grid-pack sampling.
+    }
     if (s && s.value != null) return setProbe('<b>' + s.value + ' ' + s.unit + '</b> @ centre · ' + (s.sourceRef ? s.sourceRef.title : s.source));
     setProbe('');
   }
@@ -455,10 +376,8 @@
   // programmatically (not via a drawer click) — keeps Live tracking the active layer.
   window.HelmWxControls = { apply: function () { apply().catch(function () {}); },
     _test: { viewBox: viewBox, coverageReportForBbox: coverageReportForBbox,
-      quantizeViewForMaterialize: quantizeViewForMaterialize, materializeUrl: materializeUrl,
       activeSceneNeedsRecheck: activeSceneNeedsRecheck,
-      viewportMaterializeEnabled: function () { return ALLOW_VIEWPORT_MATERIALIZE; },
-      candidateRank: candidateRank } };
+      candidateRank: candidateRank, failLoudText: failLoudText } };
 
   function boot() {
     var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);

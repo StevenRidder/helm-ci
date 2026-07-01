@@ -45,11 +45,10 @@ ok('Fiji bbox is normalized into the viewport longitude frame', Math.round(rep.c
 const wide = { west: 110, east: -100, south: -50, north: 25, crossesAntimeridian: true };
 ok('Wider basin bbox covers the same z4 viewport', T.coverageReportForBbox(wide, z4View).coversView === true);
 
-const plan = T.quantizeViewForMaterialize(map(-245.429, -39.476, -112.999, 16.724, 4.2));
-ok('materialize plan crosses antimeridian for the z4 Fiji view', plan.e < plan.w, JSON.stringify(plan));
-ok('materialize plan requests low-zoom overview through z5', plan.maxzoom === 5, JSON.stringify(plan));
-ok('materialize URL uses the prepared-bundle endpoint', /\/bundles\/open-meteo\/latest\/materialize\?/.test(T.materializeUrl(plan)));
-ok('viewport materialize is disabled on the normal sailing path', T.viewportMaterializeEnabled() === false);
+ok('fail-loud status names missing prepared pack',
+  /missing_prepared_weather_pack/.test(T.failLoudText('wind', 'missing_prepared_weather_pack', 'outside prepared pack')));
+ok('fail-loud status explicitly rejects gateway/direct fallback',
+  /no gateway\/direct fallback\/download/.test(T.failLoudText('wind', 'missing_prepared_weather_pack', 'outside prepared pack')));
 ok('wide standing tier is preferred below the z5 split',
   T.candidateRank({ coverage: { standing: true, tier: 'wide' } }, 4.2) <
   T.candidateRank({ coverage: { standing: true, tier: 'near' } }, 4.2));

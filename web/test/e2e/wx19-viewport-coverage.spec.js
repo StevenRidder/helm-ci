@@ -169,7 +169,7 @@ function velocityPayload() {
 }
 
 async function installMockGateway(page) {
-  const materialize = [];
+  const requests = { materialize: [], gatewayManifests: [], gatewayTiles: [], velocity: [] };
   await page.route(/https?:\/\/(?:127\.0\.0\.1|localhost):8093\/.*/, async (route) => {
     const url = new URL(route.request().url());
     const path = url.pathname;
@@ -186,7 +186,7 @@ async function installMockGateway(page) {
       return route.fulfill({ contentType: 'application/json', body: JSON.stringify(preparedManifest(region, layers)) });
     }
     if (path === '/bundles/open-meteo/latest/materialize') {
-      materialize.push(url.toString());
+      requests.materialize.push(url.toString());
       return route.fulfill({
         contentType: 'application/json',
         body: JSON.stringify({ ok: true, manifest: `/bundles/open-meteo/latest/${url.searchParams.get('region')}/manifest.json` }),
@@ -197,17 +197,20 @@ async function installMockGateway(page) {
     }
     const manifest = path.match(/^\/([^/]+)\/manifest\.json$/);
     if (manifest && SCENE_LAYERS.includes(manifest[1])) {
+      requests.gatewayManifests.push(url.toString());
       return route.fulfill({ contentType: 'application/json', body: JSON.stringify(gatewayManifest(manifest[1])) });
     }
     if (/^\/velocity\/(wind|current)$/.test(path)) {
+      requests.velocity.push(url.toString());
       return route.fulfill({ contentType: 'application/json', body: JSON.stringify(velocityPayload()) });
     }
     if (new RegExp(`^\\/(${SCENE_LAYERS.join('|')})(?:\\/t\\d+)?\\/\\d+\\/\\d+\\/\\d+\\.png$`).test(path)) {
+      requests.gatewayTiles.push(url.toString());
       return route.fulfill({ contentType: 'image/png', body: PNG_1X1 });
     }
     return route.fulfill({ status: 404, contentType: 'application/json', body: JSON.stringify({ error: true, path }) });
   });
-  return materialize;
+  return requests;
 }
 
 async function boot(page, hash) {
@@ -249,7 +252,7 @@ async function wxState(page) {
 
 test('WX-19 uses standing WIDE/NEAR caches across rapid zooms without viewport materialize', async ({ page }) => {
   test.setTimeout(90000);
-  const materialize = await installMockGateway(page);
+  const requests = await installMockGateway(page);
   await boot(page, '#4.21/-17.68169/177.38424');
   await clickRail(page, 'weather');
   await clickLayer(page, 'wind');
@@ -277,12 +280,15 @@ test('WX-19 uses standing WIDE/NEAR caches across rapid zooms without viewport m
   expect(state.sceneLayer).toBe(true);
   expect(state.gribLayer).toBe(false);
   expect(state.coverageBadge).not.toMatch(/partial|preparing/i);
-  expect(materialize).toHaveLength(0);
+  expect(requests.materialize).toHaveLength(0);
+  expect(requests.gatewayManifests).toHaveLength(0);
+  expect(requests.gatewayTiles).toHaveLength(0);
+  expect(requests.velocity).toHaveLength(0);
 });
 
-test('WX-19 core layers use standing cache at wide view; secondary layers do not viewport-bake', async ({ page }) => {
+test('WX-30 core layers use standing cache; missing secondary coverage fails loud without fallback', async ({ page }) => {
   test.setTimeout(120000);
-  const materialize = await installMockGateway(page);
+  const requests = await installMockGateway(page);
   await boot(page, '#4.21/-17.48045/-179.2142');
   await clickRail(page, 'weather');
 
@@ -302,10 +308,21 @@ test('WX-19 core layers use standing cache at wide view; secondary layers do not
 
   await clickLayer(page, 'gust');
   await page.waitForFunction(
-    () => window.map && window.map.getLayer('helm-wx-grib') && !window.map.getLayer('helm-wx-scene'),
+    () => window.map && !window.map.getLayer('helm-wx-grib') && !window.map.getLayer('helm-wx-scene') &&
+      /unavailable|missing_prepared_weather_pack|no gateway\/direct fallback\/download/i.test(
+        ((document.querySelector('#helm-wx-coverage-status') || {}).textContent || '') + ' ' +
+        ((document.querySelector('#wx-notice') || {}).textContent || '')
+      ),
     null,
     { timeout: 20000 }
   );
-  expect((await wxState(page)).coverageBadge).not.toMatch(/preparing full-view/i);
-  expect(materialize).toHaveLength(0);
+  const failed = await wxState(page);
+  expect(failed.sceneLayer).toBe(false);
+  expect(failed.gribLayer).toBe(false);
+  expect(failed.coverageBadge).toMatch(/unavailable/i);
+  expect(failed.coverageBadge).not.toMatch(/preparing|fallback|gateway tiles/i);
+  expect(requests.materialize).toHaveLength(0);
+  expect(requests.gatewayManifests).toHaveLength(0);
+  expect(requests.gatewayTiles).toHaveLength(0);
+  expect(requests.velocity).toHaveLength(0);
 });

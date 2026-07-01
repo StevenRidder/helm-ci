@@ -37,13 +37,6 @@ async function wxOpacityStyle(page) {
   });
 }
 
-async function wxLiveOpacity(page) {
-  return page.evaluate(() => {
-    if (!window.map || !window.map.getLayer || !window.map.getLayer('helm-wx-live')) return null;
-    return window.map.getPaintProperty('helm-wx-live', 'raster-opacity');
-  });
-}
-
 function mockedWeatherNodes(urlText) {
   const u = new URL(urlText);
   const latCount = (u.searchParams.get('latitude') || '').split(',').filter(Boolean).length || 144;
@@ -111,7 +104,7 @@ test('settings rail opens the drawer and the drawer scrolls on the live app', as
   expect(drawerState.text).toContain('Card text size');
 });
 
-test('weather transparency changes the live weather layer opacity', async ({ page }) => {
+test('weather transparency UI stays explicit while missing live packs fail loud without fallback', async ({ page }) => {
   await boot(page);
 
   await clickRail(page, 'weather');
@@ -138,23 +131,19 @@ test('weather transparency changes the live weather layer opacity', async ({ pag
   expect(scrubberState.text).not.toContain('Thu 12:00 PM');
 
   await page.locator('#wx button[data-wx="wind"]').click();
-  await page.waitForFunction(
-    () => window.map && window.map.getLayer && window.map.getLayer('helm-wx-live'),
-    null,
-    { timeout: 20000 }
-  );
-
-  await expect.poll(async () => wxLiveOpacity(page))
-    .toBeCloseTo(0.72, 2);
+  await expect(page.locator('#wx-notice')).toContainText('missing_prepared_weather_pack', { timeout: 20000 });
+  await expect(page.locator('#wx-notice')).toContainText('no gateway/direct fallback/download');
+  await expect.poll(async () => page.evaluate(() => ({
+    legacyLive: !!(window.map && window.map.getLayer && window.map.getLayer('helm-wx-live')),
+    grib: !!(window.map && window.map.getLayer && window.map.getLayer('helm-wx-grib')),
+  }))).toEqual({ legacyLive: false, grib: false });
 
   await page.locator('#wxopacity').evaluate((el) => {
     el.value = '80';
     el.dispatchEvent(new Event('input', { bubbles: true }));
   });
   await expect.poll(async () => (await wxOpacityStyle(page)).fill).toBe('80%');
-
-  await expect.poll(async () => wxLiveOpacity(page))
-    .toBeCloseTo(0.20, 2);
+  await expect(page.locator('#wx-notice')).toContainText('no gateway/direct fallback/download');
 });
 
 test.describe('mobile chromium', () => {
