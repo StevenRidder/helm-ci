@@ -31,6 +31,12 @@ ok("health ok", h.get("ok"))
 ok("llm provider is stub (no key)", h.get("llm") == "stub")
 ok("nfl push mock", h["nfl"]["mode"] == "mock")
 ok("osm scaffold", h["osm"]["mode"] == "scaffold")
+boundary = h.get("boundary", {})
+ok("backend is optional companion", boundary.get("serviceClass") == "optional_ai_community_backend")
+ok("backend is not chart/nav runtime", boundary.get("requiredForChartNavRuntime") is False)
+ok("backend is non-safety", boundary.get("safetyCritical") is False)
+ok("backend promotion requires C++ decision",
+   boundary.get("promotionRequires") == "board_task_and_cpp_runtime_decision")
 
 # places (source-tagged store)
 pl = c.get("/places").json()

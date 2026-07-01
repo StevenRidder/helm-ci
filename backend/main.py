@@ -1,5 +1,5 @@
 """
-Helm backend — FastAPI app (prototype).
+Helm backend — FastAPI app (optional prototype).
 
 The small service the static web app + C++ engine don't provide: the place store, owned
 pins/reviews, the "where to go" recommender, and the give-back publishers. Source-agnostic,
@@ -10,6 +10,10 @@ offline-first, NFL-slot-open. Run:
 
 The web prototype (web/community.js) auto-detects this at http://127.0.0.1:8090 and falls
 back to local sample data when it's not running — so the chart never breaks.
+
+Boundary: this service is optional, non-safety, and not required for chart/nav runtime.
+If any endpoint becomes required for normal boat operation, split the durable contract first
+and make a C++ runtime decision before wiring it as required.
 """
 import os
 from typing import List, Optional   # explicit (not PEP 604 `|`) so this runs on Python 3.9+ too
@@ -88,7 +92,13 @@ class NoteReq(BaseModel):
 @app.get("/health")
 def health():
     return {"ok": True, "llm": llm.provider, "model": llm.model if llm.provider == "openai" else None,
-            "nfl": nfl.status(), "osm": osm.status()}
+            "nfl": nfl.status(), "osm": osm.status(),
+            "boundary": {
+                "serviceClass": "optional_ai_community_backend",
+                "requiredForChartNavRuntime": False,
+                "safetyCritical": False,
+                "promotionRequires": "board_task_and_cpp_runtime_decision",
+            }}
 
 
 @app.get("/places")

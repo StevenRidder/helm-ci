@@ -16,7 +16,7 @@
 #          --basemap        offline MBTiles/PMTiles local pack server (pipeline) on :8091
 #          --basemap-proxy  cache-backed proxy to HELM_BASEMAP_UPSTREAM on :8091
 #          --fill           online basemap-fill cache proxy on :8095
-#          --backend        AI/places/community backend on :8090
+#          --backend        optional non-safety AI/places/community backend on :8090
 #          --all            all except --basemap-proxy (each still skipped if deps/data are missing)
 #          --port N         helm-server port (default 8080; use a private port on shared boats)
 #

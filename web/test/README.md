@@ -22,6 +22,7 @@ non-zero (fail); the runner just executes each and tallies.
 | `alarms` | `web/alarms.smoke.js` | alarm logic |
 | `true-wind` | `web/true-wind.js` (inline self-test) | TWS/TWD/TWA from apparent wind + boat motion (WX-13) |
 | `wx-value-codec` | `web/wx-value-codec.js` (inline self-test) | value↔RGBA round-trip, NODATA honesty, tile math (WX-10) |
+| `ai18-optional-backend` | `web/test/ai18-optional-backend.test.cjs` | AI/backend boundary: absent `:8090` returns honest offline states and cached/local data instead of becoming a chart/nav dependency |
 | `ais-risk` *(new)* | `web/test/ais-risk.test.cjs` | **collision-risk tiering** — danger/caution/normal matrix, engine-`risk` precedence, `cpaValid`/no-tcpa/opening guards; `danger` == the CPA-alarm predicate exactly |
 | `ais-guard` *(new)* | `web/test/ais-guard.test.cjs` | **proximity / guard-zone** breach detection, exit hysteresis, and **fail-loud** (feed loss freezes a breach; no fix clears it) — never a false "all clear" |
 

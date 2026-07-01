@@ -8,7 +8,7 @@ machine, boat server, or demo process is safe to stop or replace.
 | Port | Service | Notes |
 |------|---------|-------|
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
-| 8090 | Optional backend service | Weather, places, and community/LLM prototype endpoints. |
+| 8090 | Optional backend service | AI, places, community/LLM, and agent weather-at-point prototype endpoints. Non-safety companion only; not required for chart/nav runtime. |
 | 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by C++ `helm-packd`; `pipeline/mbtiles_server.py` remains the Python reference/oracle. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
 | 8093 | Optional weather gateway | `services/wx` value-tile gateway (Open-Meteo). Must use :8093, never :8091 (WX-15). |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |

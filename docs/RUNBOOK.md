@@ -55,6 +55,14 @@ Ctrl-C stops everything it started.
 scripts/start-helm.sh --port 9001 --all
 ```
 
+`--backend` starts the Python/FastAPI AI, places, and community companion on
+`:8090`. It is optional and non-safety: `helm-server` still owns `/nav`,
+`/chart`, `/catalog`, `/health`, routes, AIS, and chart rendering, and the web
+client must show cached/local/sample data or an honest offline state when the
+backend is absent. If a Python backend feature ever becomes required for normal
+boat operation, split the stable protocol/store contract first and make an
+explicit C++ runtime decision before wiring it as required.
+
 The UI will load even without live vessel data. To see live movement, feed NMEA or
 configure a SignalK/NMEA connection as described below.
 

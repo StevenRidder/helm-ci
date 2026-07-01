@@ -1,9 +1,19 @@
-# Helm backend (prototype)
+# Helm backend (optional prototype)
 
 The small FastAPI service the static web app + C++ engine don't provide: the **place store**,
 **owned pins/reviews**, the **"where to go" recommender**, **ReAct research agents** that fill
 the dossier cards, and the **give-back publishers** (NFL push + OSM Notes). Source-agnostic,
 offline-first, NFL-slot-open, and source-labelled.
+
+This service is explicitly **optional and non-safety**. Helm's chart, nav, AIS,
+route, alarm, catalog, and health runtime must remain usable without it. Web
+callers must treat it as an advisory/community companion: if `:8090` is absent,
+show cached/local/sample data or an honest offline state, not a broken cockpit.
+
+If any backend feature becomes required for normal boat operation, do not wire
+that requirement through Python/FastAPI directly. First split out the durable
+protocol/store contract, create a board task, and make the C++ runtime ownership
+decision.
 
 ## Run
 
