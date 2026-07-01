@@ -26,7 +26,8 @@
   var scenes = {};          // sceneKey -> { template (abs url with {z}/{x}/{y}), layer, scale, offset }
   var protoBound = false;
   var bmpWarned = false;
-  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82, blend: null, lastGoodServe: 0 };
+  var state = { map: null, region: null, layer: null, validTimeId: null, manifest: null, opacity: 0.82, blend: null,
+    lastGoodServe: 0, lastMissingTile: 0, missingTileCount: 0, coverage: null };
 
   function svc() { return global.HELM_WX_SERVICE || DEFAULT_SVC; }
   function codec() { return global.HelmWxCodec; }
@@ -152,6 +153,11 @@
     if (lgBadgeTimer) return;
     lgBadgeTimer = setTimeout(function () { lgBadgeTimer = null; try { renderStatusBadge(); } catch (e) {} }, 150);
   }
+  function markMissingTile() {
+    state.lastMissingTile = Date.now(); state.missingTileCount = (state.missingTileCount || 0) + 1;
+    if (lgBadgeTimer) return;
+    lgBadgeTimer = setTimeout(function () { lgBadgeTimer = null; try { renderStatusBadge(); } catch (e) {} }, 150);
+  }
   function hasData(buf) {                       // helm-wxv1 NODATA = alpha < 128; does any pixel carry data?
     return createImageBitmap(new Blob([buf], { type: 'image/png' })).then(function (img) {
       var w = img.width || 256, h = img.height || 256, cv = makeCanvas(w, h), cx = cv.getContext('2d', { willReadFrequently: true });
@@ -181,7 +187,7 @@
       var ub = sc.templateB.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
       var grab = function (u) {
         return fetch(u, { signal: signal }).then(function (r) {
-          if (r.status === 404) return null;                // missing frame tile -> null
+          if (r.status === 404) { markMissingTile(); return null; }  // missing frame tile -> null, but visible status
           if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
           return r.arrayBuffer();
         });
@@ -202,7 +208,7 @@
     }
     var url = sc.template.replace('{z}', m[2]).replace('{x}', m[3]).replace('{y}', m[4]);
     return fetch(url, { signal: signal }).then(function (r) {
-      if (r.status === 404) return holdOrTransparent();                               // missing tile -> hold last-good / parent
+      if (r.status === 404) { markMissingTile(); return holdOrTransparent(); }         // missing tile -> hold last-good / parent
       if (!r.ok) throw new Error('wx-scene tile HTTP ' + r.status);
       return r.arrayBuffer().then(function (buf) {
         if (!lastGood[key]) return renderFresh(buf);                                  // first sighting
@@ -299,6 +305,7 @@
       if (L.ramp && ramp() && ramp().setManifestRamp) ramp().setManifestRamp(layer, L.ramp);   // CLIENT-14: field/particles/probe agree
       var so = scaleOffsetFor(manifest, layer), lod = lodRange(manifest, layer), bounds = coverageBounds(manifest);
       var br = bracket(manifest, opts.isoTime); state.blend = br; state.lastGoodServe = 0;   // WX-23 blend / WX-24 reset hold-state per frame load
+      state.lastMissingTile = 0; state.missingTileCount = 0; state.coverage = opts.coverage || null;
       var vtId = br ? br.aId : frameId(manifest, opts.isoTime); state.validTimeId = vtId;
       var key, scene;
       if (br) {
@@ -520,20 +527,26 @@
     if (!state.manifest || !state.layer) return { state: 'off' };
     var f = manifestFreshness(state.manifest);
     var holding = !!state.lastGoodServe && (Date.now() - state.lastGoodServe) < 4000;   // WX-24: recently held last-good
-    return { state: (holding || f.stale) ? 'stale' : 'fresh', holdingLastGood: holding, layer: state.layer,
+    var missing = !!state.lastMissingTile && (Date.now() - state.lastMissingTile) < 7000;
+    var partial = missing || (state.coverage && state.coverage.coversView === false);
+    return { state: partial ? 'partial' : ((holding || f.stale) ? 'stale' : 'fresh'),
+             holdingLastGood: holding, missingTiles: state.missingTileCount || 0, partialCoverage: partial,
+             coverage: state.coverage || null, layer: state.layer,
              validTime: invFrame(state.manifest, state.validTimeId),
              generatedAt: f.generatedAt, ageSeconds: f.ageSeconds, ttlSeconds: f.ttlSeconds };
   }
   function fmtAge(s) { if (s == null) return ''; if (s < 3600) return Math.round(s / 60) + ' min'; if (s < 86400) return Math.round(s / 3600) + ' h'; return Math.round(s / 86400) + ' d'; }
   function renderStatusBadge() {
     var el = document.getElementById('helm-wx-scene-status'), st = status();
-    if (!st || st.state !== 'stale') { if (el) el.style.display = 'none'; return; }   // show only when stale
+    if (!st || (st.state !== 'stale' && st.state !== 'partial')) { if (el) el.style.display = 'none'; return; }   // show only when stale/partial
     if (!el) {
       el = document.createElement('div'); el.id = 'helm-wx-scene-status';
       el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:30;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.9);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
       document.body.appendChild(el);
     }
-    el.textContent = st.holdingLastGood
+    el.textContent = st.state === 'partial'
+      ? '⚠ ' + st.layer + ' partial coverage — missing prepared tiles (' + (st.missingTiles || 0) + ')'
+      : st.holdingLastGood
       ? '⚠ ' + st.layer + ' — showing last-good (frame data unavailable)'
       : '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle';
     el.style.display = 'block';

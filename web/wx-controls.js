@@ -21,6 +21,11 @@
                    (location.protocol + '//' + location.hostname + ':8093');
   function wxOpacity() { var s = document.getElementById('wxopacity'); return s ? Math.max(0, Math.min(1, (100 - (+s.value)) / 100)) : 0.82; }
   function particlesOn() { var p = document.getElementById('particles'); return p ? !!p.checked : true; }
+  var SCENE_LAYERS = ['wind', 'gust', 'rain', 'temp', 'sst', 'clouds', 'waves', 'swell', 'pressure', 'cape', 'current'];
+  var SCENE_LAYER_SET = {}; SCENE_LAYERS.forEach(function (l) { SCENE_LAYER_SET[l] = true; });
+  var COVER_MARGIN = 0.06;      // prepared scene must run a little past the visible viewport
+  var PREP_MARGIN = 0.32;       // materialize a larger tile set so small pans don't expose edges
+  var PREP = { inflight: {}, done: {}, failed: {}, lastPlan: null, lastMessageKey: '' };
 
   // LIVE animated wind particles, fed by the helm-wx gateway's /velocity endpoint (keyed server-side,
   // cached) — NOT the rate-capped free API and never the client holding a key. Refetches on pan/zoom and
@@ -62,6 +67,18 @@
     n.style.color = level === 'warn' ? 'var(--warn,#e8a13a)' : (level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--cdim,#8aa)');
     n.style.borderColor = level === 'warn' ? 'var(--warn,#e8a13a)' : 'var(--line,#345)';
   }
+  function coverageBadge(msg, level) {
+    var id = 'helm-wx-coverage-status', el = document.getElementById(id);
+    if (!msg) { if (el) el.style.display = 'none'; return; }
+    if (!el) {
+      el = document.createElement('div'); el.id = id;
+      el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:31;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.92);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
+      document.body.appendChild(el);
+    }
+    el.textContent = msg; el.style.display = 'block';
+    el.style.borderColor = level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--warn,#e0a23a)';
+    el.style.color = level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--warn,#e0a23a)';
+  }
   function seg(el, on) { Array.prototype.forEach.call(el.children, function (b) { b.dataset.sel = (b.dataset.val === on) ? '1' : ''; }); }
 
   function showLegacy(visible) {
@@ -72,20 +89,174 @@
     if (map.getLayer('wind-particles')) map.setLayoutProperty('wind-particles', 'visibility', visible ? 'visible' : 'none');
   }
 
-  // WX-19: find a prepared bundle region whose coverage contains the view and that has this layer.
-  // Returns the region id, or null to fall back to the older tile/live/legacy paths. Any failure
-  // (no bundle gateway, region not materialized, layer absent) -> null -> the old paths run unchanged.
-  async function pickSceneRegion(map, layer) {
-    if (!window.HelmWxScene || !window.HelmWxScene.loadManifest) return null;
-    var region = (typeof window !== 'undefined' && window.HELM_WX_SCENE_REGION) || 'fiji';
+  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
+  function normLon(lon) {
+    lon = +lon;
+    while (lon < -180) lon += 360;
+    while (lon > 180) lon -= 360;
+    return lon;
+  }
+  function shiftIntervalTo(w, e, mid) {
+    w = +w; e = +e; if (e < w) e += 360;
+    var cm = (w + e) / 2;
+    while (cm - mid > 180) { w -= 360; e -= 360; cm -= 360; }
+    while (mid - cm > 180) { w += 360; e += 360; cm += 360; }
+    return { west: w, east: e };
+  }
+  function viewBox(map, margin) {
+    var b = map.getBounds(), w = b.getWest(), e = b.getEast(), s = b.getSouth(), n = b.getNorth();
+    if (e < w) e += 360;
+    var mw = (e - w) * (margin || 0), mh = (n - s) * (margin || 0);
+    return { west: w - mw, east: e + mw, south: clamp(s - mh, -84, 84), north: clamp(n + mh, -84, 84) };
+  }
+  function coverageReportForBbox(bbox, view) {
+    if (!bbox) return { coversView: true, reason: 'unbounded' };
+    var mid = (view.west + view.east) / 2;
+    var cov = shiftIntervalTo(bbox.west, (bbox.crossesAntimeridian || bbox.east < bbox.west) ? bbox.east + 360 : bbox.east, mid);
+    var south = +bbox.south, north = +bbox.north;
+    var miss = [];
+    if (cov.west > view.west) miss.push('west');
+    if (cov.east < view.east) miss.push('east');
+    if (south > view.south) miss.push('south');
+    if (north < view.north) miss.push('north');
+    return {
+      coversView: miss.length === 0,
+      missing: miss,
+      coverage: { west: cov.west, east: cov.east, south: south, north: north },
+      viewport: view
+    };
+  }
+  function coverageReport(map, manifest, margin) {
+    if ((manifest.coverage || {}).global) return { coversView: true, reason: 'global', viewport: viewBox(map, margin || 0) };
+    return coverageReportForBbox(((manifest.coverage || {}).bbox), viewBox(map, margin || 0));
+  }
+  function regionIdFromManifestPath(path) {
+    var m = String(path || '').match(/\/bundles\/open-meteo\/latest\/([^/]+)\/manifest\.json$/);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+  async function preparedCandidates(layer) {
+    var rows = [];
     try {
-      var man = await window.HelmWxScene.loadManifest(region);
-      if (!man || !man.layers || !man.layers[layer]) return null;
-      var b = (man.coverage || {}).bbox; if (!b) return region;
-      if (b.crossesAntimeridian) return region;                 // wide coverage -> assume it covers the view
-      var c = map.getCenter();
-      return (c.lng >= b.west && c.lng <= b.east && c.lat >= b.south && c.lat <= b.north) ? region : null;
-    } catch (e) { return null; }
+      var idx = await fetch(WX_SERVICE + '/bundles/index.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; });
+      ((idx && idx.bundles) || []).forEach(function (b) {
+        if (!b || !b.cacheOnlyReplay || !b.offlineReady) return;
+        if (b.layers && b.layers.indexOf(layer) < 0) return;
+        var rid = ((b.coverage || {}).regionId) || regionIdFromManifestPath(b.manifest);
+        if (rid) rows.push({ region: rid, coverage: b.coverage || null, index: b });
+      });
+    } catch (e) {}
+    var def = (typeof window !== 'undefined' && window.HELM_WX_SCENE_REGION) || 'fiji';
+    if (!rows.some(function (r) { return r.region === def; })) rows.push({ region: def, coverage: null, index: null });
+    return rows;
+  }
+  async function bundleIndexed(region, layer) {
+    try {
+      var rows = await preparedCandidates(layer);
+      return rows.some(function (r) { return r.region === region && r.index; });
+    } catch (e) { return false; }
+  }
+  function quantizeViewForMaterialize(map) {
+    var v = viewBox(map, PREP_MARGIN), zoom = map.getZoom ? map.getZoom() : 4;
+    var q = zoom < 4.75 ? 10 : (zoom < 6.75 ? 5 : 2);
+    var w = Math.floor(v.west / q) * q, e = Math.ceil(v.east / q) * q;
+    var s = clamp(Math.floor(v.south / q) * q, -84, 84), n = clamp(Math.ceil(v.north / q) * q, -84, 84);
+    if ((e - w) >= 350) { w = -180; e = 180; }
+    while (w < -180) { w += 360; e += 360; }
+    while (w > 180) { w -= 360; e -= 360; }
+    var sw = normLon(w), se = normLon(e);
+    if (Math.abs(se + 180) < 1e-6 && e > w) se = 180;
+    var maxzoom = zoom < 4.75 ? 5 : 6;
+    function part(x) { return String(Math.round(x * 10) / 10).replace('-', 'm').replace('.', 'p'); }
+    return {
+      region: 'view-z' + maxzoom + '-w' + part(sw) + '-s' + part(s) + '-e' + part(se) + '-n' + part(n),
+      w: sw, s: s, e: se, n: n,
+      minzoom: 0, maxzoom: maxzoom,
+      res: zoom < 4.75 ? 1.0 : 0.5,
+      tileBudget: maxzoom >= 6 ? 50000 : 16000
+    };
+  }
+  function materializeUrl(plan) {
+    var qs = [
+      'region=' + encodeURIComponent(plan.region),
+      'layers=' + encodeURIComponent(SCENE_LAYERS.join(',')),
+      'w=' + encodeURIComponent(plan.w.toFixed(4)),
+      's=' + encodeURIComponent(plan.s.toFixed(4)),
+      'e=' + encodeURIComponent(plan.e.toFixed(4)),
+      'n=' + encodeURIComponent(plan.n.toFixed(4)),
+      'minzoom=' + plan.minzoom,
+      'maxzoom=' + plan.maxzoom,
+      'res=' + plan.res,
+      'tile_budget=' + plan.tileBudget,
+      'frames=2',
+      'frame_hours=0,3'
+    ].join('&');
+    return WX_SERVICE + '/bundles/open-meteo/latest/materialize?' + qs;
+  }
+  function ensureViewportBundle(map, layer, report) {
+    if (!SCENE_LAYER_SET[layer]) return null;
+    var plan = quantizeViewForMaterialize(map); PREP.lastPlan = plan;
+    if (PREP.done[plan.region]) {
+      coverageBadge('⚠ ' + layer + ' partial coverage — waiting for prepared bundle index', 'warn');
+      return plan;
+    }
+    if (PREP.failed[plan.region] && Date.now() - PREP.failed[plan.region] < 5 * 60 * 1000) return plan;
+    var msgKey = layer + '|' + plan.region;
+    if (PREP.lastMessageKey !== msgKey) {
+      PREP.lastMessageKey = msgKey;
+      var miss = report && report.missing && report.missing.length ? ' (' + report.missing.join('/') + ' edge missing)' : '';
+      notify('Live ' + layer + ' · preparing full-view weather coverage' + miss + ' — showing gateway tiles meanwhile', 'warn');
+      coverageBadge('⚠ ' + layer + ' partial coverage — preparing full-view bundle', 'warn');
+    }
+    if (PREP.inflight[plan.region]) return plan;
+    PREP.inflight[plan.region] = fetch(materializeUrl(plan), { cache: 'no-store' }).then(function (r) {
+      if (!r.ok) return r.json().catch(function () { return {}; }).then(function (body) { throw new Error((body && body.reason) || ('HTTP ' + r.status)); });
+      return r.json();
+    }).then(function () {
+      PREP.done[plan.region] = true;
+      coverageBadge('⚠ partial coverage — materialized; verifying prepared bundle index', 'warn');
+      notify('Live weather materialized · verifying prepared bundle ' + plan.region, 'warn');
+      // Do not immediately re-apply just because materialize returned 200. The new bundle is only
+      // usable after /bundles/index.json advertises it; re-applying before that briefly removes/re-adds
+      // the gateway raster and can create the blank flash WX-19 is meant to prevent.
+      setTimeout(function () {
+        bundleIndexed(plan.region, activeLayer()).then(function (ok) {
+          if (ok && activeLayer() !== 'off' && S.resolution === 'live') apply().catch(function () {});
+        });
+      }, 1000);
+    }).catch(function (e) {
+      PREP.failed[plan.region] = Date.now();
+      coverageBadge('⚠ weather coverage materialize failed — gateway fallback only', 'warn');
+      notify('Weather coverage materialize failed: ' + ((e && e.message) || e), 'warn');
+      if (window.console) console.warn('[helm-wx] viewport bundle materialize failed:', e);
+    }).then(function () { delete PREP.inflight[plan.region]; });
+    return plan;
+  }
+
+  function activeSceneNeedsRecheck(map) {
+    if (!window.HelmWxScene || !HelmWxScene.status || !HelmWxScene.state) return false;
+    var st = HelmWxScene.status();
+    if (!st || st.state === 'off' || !HelmWxScene.state.manifest) return false;
+    return !coverageReport(map, HelmWxScene.state.manifest, COVER_MARGIN).coversView;
+  }
+
+  // WX-19: find a prepared bundle region whose coverage contains the full view and that has this layer.
+  // Returns {region, manifest, coverage}, or schedules a visible materialize job and returns {plan, miss}.
+  // This is intentionally viewport-based, not center-point based: a Windy-style field cannot be "fresh"
+  // if any visible edge is outside prepared coverage.
+  async function pickSceneRegion(map, layer) {
+    if (!window.HelmWxScene || !window.HelmWxScene.loadManifest || !SCENE_LAYER_SET[layer]) return null;
+    var candidates = await preparedCandidates(layer), firstMiss = null;
+    try {
+      for (var i = 0; i < candidates.length; i++) {
+        var region = candidates[i].region, man = await window.HelmWxScene.loadManifest(region);
+        if (!man || !man.layers || !man.layers[layer]) continue;
+        var rep = coverageReport(map, man, COVER_MARGIN);
+        if (rep.coversView) return { region: region, manifest: man, coverage: rep };
+        if (!firstMiss) firstMiss = { region: region, manifest: man, coverage: rep };
+      }
+    } catch (e) {}
+    var plan = ensureViewportBundle(map, layer, firstMiss && firstMiss.coverage);
+    return plan ? { plan: plan, miss: firstMiss } : null;
   }
 
   async function apply() {
@@ -115,11 +286,12 @@
       // WX-19: prefer the prepared Environmental Scene (bundle field pyramid) when a bundle covers the
       // view — one renderer for colour + particles, no gesture-path upstream fetch. Falls through to the
       // tile/live/legacy paths below when no bundle gateway/region is reachable (today's default deploy).
-      var sceneRegion = await pickSceneRegion(map, layer);
-      if (sceneRegion && window.HelmWxScene) {
+      var scenePick = await pickSceneRegion(map, layer);
+      if (scenePick && scenePick.region && window.HelmWxScene) {
         try {
-          await window.HelmWxScene.enable(map, { region: sceneRegion, layer: layer, opacity: wxOpacity() });
+          await window.HelmWxScene.enable(map, { region: scenePick.region, layer: layer, opacity: wxOpacity(), coverage: scenePick.coverage });
           showLegacy(false);
+          coverageBadge('');
           notify('Live ' + layer + ' · prepared bundle scene (WX-19)', 'ok');
           probeSoon(); return;
         } catch (e) { try { window.HelmWxScene.disable(); } catch (e2) {} }   // fall through to the paths below
@@ -137,7 +309,8 @@
       if (cfg) {
         showLegacy(false);
         if ((layer === 'wind' || layer === 'current') && particlesOn()) startParticles(map, layer); else stopParticles(map);
-        notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
+        if (scenePick && scenePick.plan) notify('Live ' + layer + ' · preparing prepared bundle; gateway tiles are temporary', 'warn');
+        else notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
       } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
         window.HelmWxLive.enable(map, { layer: layer, opacity: wxOpacity(), notify: notify });   // gateway down -> direct Open-Meteo
         notify('Live ' + layer + ' · direct (helm-wx gateway offline) — start services/wx for tiles', 'info');
@@ -227,10 +400,21 @@
       op.addEventListener('input', applyTileOpacity);
     }
 
-    // re-apply my mode whenever the user picks a different weather layer
-    var wx = document.getElementById('wx');
-    if (wx) wx.addEventListener('click', function (e) { if (e.target.closest('button')) setTimeout(function () { apply().catch(function () {}); }, 60); });
-    map.on('moveend', probeSoon);
+    // Layer changes are applied by index.html:setWeather() through HelmWxControls.apply().
+    // Keep only that single path; double-applying briefly removes/re-adds the tile source during
+    // layer changes and can show a blank/boxed weather gap under fast zoom/pan tests.
+    var viewRecheckTimer = null;
+    function viewChanged() {
+      probeSoon();
+      if (S.resolution !== 'live') return;
+      var layer = activeLayer();
+      if (!layer || layer === 'off' || layer === 'radar') return;
+      if (!activeSceneNeedsRecheck(map)) return;
+      clearTimeout(viewRecheckTimer);
+      viewRecheckTimer = setTimeout(function () { apply().catch(function () {}); }, 100);
+    }
+    map.on('moveend', viewChanged);
+    map.on('zoomend', viewChanged);
     // Engage the default mode (Live · fills view) ON LOAD — otherwise the legacy static field stays up
     // until the user clicks the drawer, which is why weather looked like a fixed box on first paint.
     setTimeout(function () { if (activeLayer() !== 'off') apply().catch(function () {}); }, 150);
@@ -238,7 +422,10 @@
 
   // Exposed so the shell's setWeather() can re-engage the current mode when the active layer changes
   // programmatically (not via a drawer click) — keeps Live tracking the active layer.
-  window.HelmWxControls = { apply: function () { apply().catch(function () {}); } };
+  window.HelmWxControls = { apply: function () { apply().catch(function () {}); },
+    _test: { viewBox: viewBox, coverageReportForBbox: coverageReportForBbox,
+      quantizeViewForMaterialize: quantizeViewForMaterialize, materializeUrl: materializeUrl,
+      activeSceneNeedsRecheck: activeSceneNeedsRecheck } };
 
   function boot() {
     var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);

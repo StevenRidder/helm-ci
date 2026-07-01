@@ -17,6 +17,15 @@ async function clickRail(page, rail) {
   await page.mouse.click(box.x + box.width / 2, box.y + box.height / 2);
 }
 
+async function activeWeatherRaster(page) {
+  return page.evaluate(() => {
+    if (!window.map || !window.map.getLayer) return null;
+    if (window.map.getLayer('helm-wx-grib')) return 'helm-wx-grib';
+    if (window.map.getLayer('helm-wx-scene')) return 'helm-wx-scene';
+    return null;
+  });
+}
+
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
     try {
@@ -44,12 +53,15 @@ test('weather gateway serves marine tiles and transparency controls them', async
   await page.locator('#wx button[data-wx="current"]').click();
 
   await page.waitForFunction(
-    () => window.map && window.map.getLayer && window.map.getLayer('helm-wx-grib'),
+    () => window.map && window.map.getLayer &&
+      (window.map.getLayer('helm-wx-grib') || window.map.getLayer('helm-wx-scene')),
     null,
     { timeout: 90000 }
   );
+  const rasterLayer = await activeWeatherRaster(page);
+  expect(rasterLayer, 'current weather raster layer is visible').toBeTruthy();
 
-  await expect.poll(async () => page.evaluate(() => window.map.getPaintProperty('helm-wx-grib', 'raster-opacity')), {
+  await expect.poll(async () => page.evaluate((layer) => window.map.getPaintProperty(layer, 'raster-opacity'), rasterLayer), {
     timeout: 10000,
   }).toBeCloseTo(0.72, 2);
 
@@ -58,7 +70,10 @@ test('weather gateway serves marine tiles and transparency controls them', async
     el.dispatchEvent(new Event('input', { bubbles: true }));
   });
 
-  await expect.poll(async () => page.evaluate(() => window.map.getPaintProperty('helm-wx-grib', 'raster-opacity')), {
+  await expect.poll(async () => {
+    const layer = await activeWeatherRaster(page);
+    return page.evaluate((name) => window.map.getPaintProperty(name, 'raster-opacity'), layer);
+  }, {
     timeout: 10000,
   }).toBeCloseTo(0.20, 2);
 });
