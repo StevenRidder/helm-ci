@@ -1,6 +1,7 @@
 const { test, expect } = require('@playwright/test');
 
 const SCENE_LAYERS = ['wind', 'gust', 'rain', 'temp', 'sst', 'clouds', 'waves', 'swell', 'pressure', 'cape', 'current'];
+const CORE_LAYERS = ['wind', 'rain', 'waves', 'swell', 'current'];
 const VECTOR_LAYERS = new Set(['wind', 'current']);
 const VALID_TIME = '2026-07-01T00:00:00Z';
 const VALID_TIME_ID = '20260701T000000Z';
@@ -9,7 +10,31 @@ const PNG_1X1 = Buffer.from(
   'base64'
 );
 
-function coverage() {
+function coverage(region = 'fiji') {
+  if (region === 'standing-wide') {
+    return {
+      bbox: { crossesAntimeridian: true, west: 87.38424, south: -62.68169, east: -92.61576, north: 27.31831, spanDegrees: 180 },
+      crs: 'OGC:CRS84',
+      global: false,
+      standing: true,
+      tier: 'wide',
+      anchor: { lon: 177.38424, lat: -17.68169 },
+      regionId: 'standing-wide',
+      wrap: 'antimeridian',
+    };
+  }
+  if (region === 'standing-near') {
+    return {
+      bbox: { crossesAntimeridian: true, west: 157.38424, south: -32.68169, east: -162.61576, north: -2.68169, spanDegrees: 40 },
+      crs: 'OGC:CRS84',
+      global: false,
+      standing: true,
+      tier: 'near',
+      anchor: { lon: 177.38424, lat: -17.68169 },
+      regionId: 'standing-near',
+      wrap: 'antimeridian',
+    };
+  }
   return {
     bbox: { crossesAntimeridian: true, west: 172, south: -26, east: -144, north: -5 },
     crs: 'OGC:CRS84',
@@ -25,8 +50,8 @@ function rampFor(layer) {
   return [[0, [98, 113, 183, 0.7]], [10, [52, 171, 151, 0.85]], [30, [232, 130, 50, 0.95]]];
 }
 
-function preparedLayer(layer) {
-  const base = `/bundles/open-meteo/latest/fiji/layers/${layer}`;
+function preparedLayer(layer, region = 'fiji') {
+  const base = `/bundles/open-meteo/latest/${region}/layers/${layer}`;
   const out = {
     id: layer,
     kind: VECTOR_LAYERS.has(layer) ? 'vector' : 'scalar',
@@ -50,13 +75,13 @@ function preparedLayer(layer) {
   return out;
 }
 
-function preparedManifest() {
+function preparedManifest(region = 'fiji', layers = SCENE_LAYERS) {
   return {
     schema: 'helm.env.bundle.v1',
-    bundleId: 'open-meteo/latest/fiji',
+    bundleId: `open-meteo/latest/${region}`,
     encoding: 'helm-wxv1',
     generatedAt: VALID_TIME,
-    coverage: coverage(),
+    coverage: coverage(region),
     run: {
       mode: 'model-run-cache',
       runTime: VALID_TIME,
@@ -67,15 +92,31 @@ function preparedManifest() {
     frames: [{ validTime: VALID_TIME, validTimeId: VALID_TIME_ID, isLatest: true }],
     cachePolicy: { cacheOnlyReplay: true, upstreamFetchesAllowedDuringGesture: false, ttlSeconds: 10800 },
     cacheState: { state: 'fresh', offlineReady: true, serveStale: true, materializedAt: VALID_TIME },
-    layers: Object.fromEntries(SCENE_LAYERS.map((layer) => [layer, preparedLayer(layer)])),
+    layers: Object.fromEntries(layers.map((layer) => [layer, preparedLayer(layer, region)])),
   };
 }
 
 function bundleIndex() {
+  const standing = (region, layers) => ({
+    id: `open-meteo/latest/${region}`,
+    kind: 'environmental-bundle',
+    schema: 'helm.env.bundle.v1',
+    manifest: `/bundles/open-meteo/latest/${region}/manifest.json`,
+    coverage: coverage(region),
+    layers,
+    validTimes: [VALID_TIME],
+    runTime: VALID_TIME,
+    cacheOnlyReplay: true,
+    offlineReady: true,
+    cacheState: { state: 'fresh', offlineReady: true },
+  });
   return {
     schema: 'helm.env.bundle.index.v1',
     generatedAt: VALID_TIME,
-    bundles: [{
+    bundles: [
+      standing('standing-near', CORE_LAYERS),
+      standing('standing-wide', CORE_LAYERS),
+      {
       id: 'open-meteo/latest/fiji',
       kind: 'environmental-bundle',
       schema: 'helm.env.bundle.v1',
@@ -138,8 +179,11 @@ async function installMockGateway(page) {
     if (path === '/bundles/index.json') {
       return route.fulfill({ contentType: 'application/json', body: JSON.stringify(bundleIndex()) });
     }
-    if (path === '/bundles/open-meteo/latest/fiji/manifest.json') {
-      return route.fulfill({ contentType: 'application/json', body: JSON.stringify(preparedManifest()) });
+    const prepared = path.match(/^\/bundles\/open-meteo\/latest\/([^/]+)\/manifest\.json$/);
+    if (prepared) {
+      const region = prepared[1];
+      const layers = region.startsWith('standing-') ? CORE_LAYERS : SCENE_LAYERS;
+      return route.fulfill({ contentType: 'application/json', body: JSON.stringify(preparedManifest(region, layers)) });
     }
     if (path === '/bundles/open-meteo/latest/materialize') {
       materialize.push(url.toString());
@@ -148,7 +192,7 @@ async function installMockGateway(page) {
         body: JSON.stringify({ ok: true, manifest: `/bundles/open-meteo/latest/${url.searchParams.get('region')}/manifest.json` }),
       });
     }
-    if (/^\/bundles\/open-meteo\/latest\/fiji\/layers\/.+\.png$/.test(path)) {
+    if (/^\/bundles\/open-meteo\/latest\/(?:fiji|standing-wide|standing-near)\/layers\/.+\.png$/.test(path)) {
       return route.fulfill({ contentType: 'image/png', body: PNG_1X1 });
     }
     const manifest = path.match(/^\/([^/]+)\/manifest\.json$/);
@@ -203,10 +247,10 @@ async function wxState(page) {
   }));
 }
 
-test('WX-19 revalidates prepared coverage on zoom-out and falls back to full-view gateway tiles', async ({ page }) => {
+test('WX-19 uses standing WIDE/NEAR caches across rapid zooms without viewport materialize', async ({ page }) => {
   test.setTimeout(90000);
   const materialize = await installMockGateway(page);
-  await boot(page, '#7/-17.68169/177.38424');
+  await boot(page, '#4.21/-17.68169/177.38424');
   await clickRail(page, 'weather');
   await clickLayer(page, 'wind');
 
@@ -215,42 +259,53 @@ test('WX-19 revalidates prepared coverage on zoom-out and falls back to full-vie
     null,
     { timeout: 20000 }
   );
-  expect((await wxState(page)).sceneLayer).toBe(true);
+  let state = await wxState(page);
+  expect(state.sceneLayer).toBe(true);
+  expect(state.sceneStatus.region).toBe('standing-wide');
 
-  await page.evaluate(() => window.map.jumpTo({ center: [177.38424, -17.68169], zoom: 4.21 }));
-
+  for (let i = 0; i < 20; i++) {
+    await page.evaluate((z) => window.map.jumpTo({ center: [177.38424, -17.68169], zoom: z }), i % 2 ? 10 : 3);
+  }
+  await page.evaluate(() => window.map.jumpTo({ center: [177.38424, -17.68169], zoom: 7.2 }));
   await page.waitForFunction(
-    () => window.map && !window.map.getLayer('helm-wx-scene') && window.map.getLayer('helm-wx-grib') &&
-      /partial coverage/.test((document.querySelector('#helm-wx-coverage-status') || {}).textContent || ''),
+    () => window.map && window.map.getLayer('helm-wx-scene') && !window.map.getLayer('helm-wx-grib') &&
+      window.HelmWxScene && window.HelmWxScene.status && window.HelmWxScene.status().region === 'standing-near',
     null,
     { timeout: 20000 }
   );
-  const state = await wxState(page);
-  expect(state.sceneLayer).toBe(false);
-  expect(state.gribLayer).toBe(true);
-  expect(state.coverageBadge).toContain('partial coverage');
-  expect(materialize.length).toBeGreaterThan(0);
-  expect(materialize[0]).toContain('/bundles/open-meteo/latest/materialize');
+  state = await wxState(page);
+  expect(state.sceneLayer).toBe(true);
+  expect(state.gribLayer).toBe(false);
+  expect(state.coverageBadge).not.toMatch(/partial|preparing/i);
+  expect(materialize).toHaveLength(0);
 });
 
-test('WX-19 wide viewport does not use the boxed Fiji prepared renderer for any scene layer', async ({ page }) => {
+test('WX-19 core layers use standing cache at wide view; secondary layers do not viewport-bake', async ({ page }) => {
   test.setTimeout(120000);
-  await installMockGateway(page);
+  const materialize = await installMockGateway(page);
   await boot(page, '#4.21/-17.48045/-179.2142');
   await clickRail(page, 'weather');
 
-  for (const layer of SCENE_LAYERS) {
+  for (const layer of CORE_LAYERS) {
     await clickLayer(page, layer);
     await page.waitForFunction(
-      () => window.map && window.map.getLayer('helm-wx-grib') && !window.map.getLayer('helm-wx-scene') &&
-        /partial coverage/.test((document.querySelector('#helm-wx-coverage-status') || {}).textContent || ''),
+      () => window.map && window.map.getLayer('helm-wx-scene') && !window.map.getLayer('helm-wx-grib') &&
+        !/partial|preparing/i.test((document.querySelector('#helm-wx-coverage-status') || {}).textContent || ''),
       null,
       { timeout: 20000 }
     );
     const state = await wxState(page);
     expect(state.active).toBe(layer);
-    expect(state.gribLayer).toBe(true);
-    expect(state.sceneLayer).toBe(false);
-    expect(state.coverageBadge).toContain('partial coverage');
+    expect(state.sceneLayer).toBe(true);
+    expect(state.gribLayer).toBe(false);
   }
+
+  await clickLayer(page, 'gust');
+  await page.waitForFunction(
+    () => window.map && window.map.getLayer('helm-wx-grib') && !window.map.getLayer('helm-wx-scene'),
+    null,
+    { timeout: 20000 }
+  );
+  expect((await wxState(page)).coverageBadge).not.toMatch(/preparing full-view/i);
+  expect(materialize).toHaveLength(0);
 });

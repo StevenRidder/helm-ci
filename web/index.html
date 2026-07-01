@@ -1163,8 +1163,9 @@
   function applyOpacity() {
     opSlider.style.setProperty('--wx-fill', opSlider.value + '%');
     const o = (100 - (+opSlider.value)) / 100;     // slider right = more transparent
+    if (window.HelmWxScene && HelmWxScene.setOpacity) HelmWxScene.setOpacity(o);
     if (field) field.setOpacity(o);
-    if (wind) wind.setOpacity(Math.max(0.04, o * 0.7));
+    if (wind) wind.setOpacity(o);
     if (window.HelmWxLive && HelmWxLive.setOpacity) HelmWxLive.setOpacity(map, o);
   }
   opSlider.addEventListener('input', applyOpacity);

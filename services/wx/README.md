@@ -127,6 +127,26 @@ list shaped for the renderer: `{validTimeId, time, latest, validTime, isLatest, 
 Tile paths use compact UTC frame ids such as `20260630T010000Z`; `/latest/` remains an alias for the
 first frame so older scene clients keep rendering while WX-23/WX-24 consume the explicit frame ids.
 
+### WX-19 standing GPS/route pyramid — normal sailing path
+
+Do **not** bake per viewport while the user pans/zooms. The Windy-style path is a standing cache,
+centered on the boat GPS and refreshed on model cadence:
+
+```bash
+curl 'http://127.0.0.1:8093/bundles/open-meteo/latest/materialize/standing?lon=177.4&lat=-17.6&route=177,-18;-179,-17'
+```
+
+That writes two prepared tiers:
+
+- `wide`: ~hemisphere-scale overview, z0-z5, coarse source resolution.
+- `near`: passage/route-scale detail, z5-z7, finer source resolution.
+
+Core layers default to `wind,rain,waves,swell,current`; set `HELM_WX_STANDING_LAYERS` to change them.
+Use `HELM_WX_STANDING_LON`, `HELM_WX_STANDING_LAT`, optional `HELM_WX_STANDING_ROUTE`, and
+`HELM_WX_STANDING_REFRESH_SECONDS=21600` to let the gateway keep those tiers warm in the background.
+The browser consumes these bundles like basemap tiles and should make zero provider/materialize calls
+from pan/zoom/scrub gestures.
+
 Wide overview materializations also enforce a source-grid point budget before provider fetches. A
 large Fiji/South-Pacific bbox such as `w=160&e=-150` crosses the antimeridian and is internally held
 as a continuous `160..210` grid for sampling, but the baker coarsens the provider source grid when

@@ -275,7 +275,8 @@
     return { minzoom: los.length ? Math.min.apply(null, los) : 0, maxzoom: his.length ? Math.max.apply(null, his) : 8 };
   }
   function coverageBounds(manifest) {
-    var b = (manifest.coverage || {}).bbox;
+    var coverage = manifest.coverage || {}, b = coverage.bbox;
+    if (coverage.global || (b && b.global)) return null; // global/wrapped standing caches must not clamp MapLibre source bounds
     if (!b || b.crossesAntimeridian) return null;          // wrap-crossing coverage -> let MapLibre wrap (no bounds clamp)
     return [b.west, b.south, b.east, b.north];
   }
@@ -531,7 +532,7 @@
     var partial = missing || (state.coverage && state.coverage.coversView === false);
     return { state: partial ? 'partial' : ((holding || f.stale) ? 'stale' : 'fresh'),
              holdingLastGood: holding, missingTiles: state.missingTileCount || 0, partialCoverage: partial,
-             coverage: state.coverage || null, layer: state.layer,
+             coverage: state.coverage || null, layer: state.layer, region: state.region,
              validTime: invFrame(state.manifest, state.validTimeId),
              generatedAt: f.generatedAt, ageSeconds: f.ageSeconds, ttlSeconds: f.ttlSeconds };
   }

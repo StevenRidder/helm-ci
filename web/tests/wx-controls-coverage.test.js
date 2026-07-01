@@ -1,4 +1,5 @@
-// WX-19 unit test: viewport coverage must be antimeridian-aware and viewport-based.
+// WX-19 unit test: standing-cache coverage must be antimeridian-aware, viewport-based,
+// and normal pan/zoom must NOT kick off viewport materialize jobs.
 // Run: node web/tests/wx-controls-coverage.test.js
 const fs = require('fs'), path = require('path'), vm = require('vm');
 const code = fs.readFileSync(path.join(__dirname, '..', 'wx-controls.js'), 'utf8');
@@ -48,6 +49,13 @@ const plan = T.quantizeViewForMaterialize(map(-245.429, -39.476, -112.999, 16.72
 ok('materialize plan crosses antimeridian for the z4 Fiji view', plan.e < plan.w, JSON.stringify(plan));
 ok('materialize plan requests low-zoom overview through z5', plan.maxzoom === 5, JSON.stringify(plan));
 ok('materialize URL uses the prepared-bundle endpoint', /\/bundles\/open-meteo\/latest\/materialize\?/.test(T.materializeUrl(plan)));
+ok('viewport materialize is disabled on the normal sailing path', T.viewportMaterializeEnabled() === false);
+ok('wide standing tier is preferred below the z5 split',
+  T.candidateRank({ coverage: { standing: true, tier: 'wide' } }, 4.2) <
+  T.candidateRank({ coverage: { standing: true, tier: 'near' } }, 4.2));
+ok('near standing tier is preferred above the z5 split',
+  T.candidateRank({ coverage: { standing: true, tier: 'near' } }, 7.0) <
+  T.candidateRank({ coverage: { standing: true, tier: 'wide' } }, 7.0));
 
 console.log('\n  ' + pass + ' passed, ' + fail + ' failed');
 process.exit(fail ? 1 : 0);

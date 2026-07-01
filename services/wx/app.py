@@ -62,6 +62,20 @@ BUNDLE_VALID_TIME_ID = "latest"
 DEFAULT_PREPARED_REGION = "fiji-south-pacific"
 DEFAULT_BUNDLE_FRAMES = int(os.environ.get("HELM_WX_BUNDLE_FRAMES", "1"))
 DEFAULT_BUNDLE_FRAME_STEP_HOURS = float(os.environ.get("HELM_WX_BUNDLE_FRAME_STEP_HOURS", "1"))
+STANDING_REGION_PREFIX = os.environ.get("HELM_WX_STANDING_REGION_PREFIX", "standing")
+STANDING_WIDE_DEGREES = float(os.environ.get("HELM_WX_STANDING_WIDE_DEGREES", "180"))
+STANDING_WIDE_LAT_DEGREES = float(os.environ.get("HELM_WX_STANDING_WIDE_LAT_DEGREES", "90"))
+STANDING_NEAR_LON_DEGREES = float(os.environ.get("HELM_WX_STANDING_NEAR_LON_DEGREES", "40"))
+STANDING_NEAR_LAT_DEGREES = float(os.environ.get("HELM_WX_STANDING_NEAR_LAT_DEGREES", "30"))
+STANDING_WIDE_MAXZOOM = int(os.environ.get("HELM_WX_STANDING_WIDE_MAXZOOM", "5"))
+STANDING_NEAR_MINZOOM = int(os.environ.get("HELM_WX_STANDING_NEAR_MINZOOM", "5"))
+STANDING_NEAR_MAXZOOM = int(os.environ.get("HELM_WX_STANDING_NEAR_MAXZOOM", "7"))
+STANDING_WIDE_RES = float(os.environ.get("HELM_WX_STANDING_WIDE_RES", "0.5"))
+STANDING_NEAR_RES = float(os.environ.get("HELM_WX_STANDING_NEAR_RES", "0.25"))
+STANDING_WIDE_TILE_BUDGET = int(os.environ.get("HELM_WX_STANDING_WIDE_TILE_BUDGET", "400000"))
+STANDING_NEAR_TILE_BUDGET = int(os.environ.get("HELM_WX_STANDING_NEAR_TILE_BUDGET", "400000"))
+STANDING_DEFAULT_DAYS = int(os.environ.get("HELM_WX_STANDING_DAYS", "10"))
+STANDING_REFRESH_SECONDS = int(os.environ.get("HELM_WX_STANDING_REFRESH_SECONDS", "21600"))
 
 
 def _load_dotenv():
@@ -158,6 +172,12 @@ BUNDLE_LAYER_ORDER = [
     "wind", "gust", "rain", "temp", "pressure", "clouds", "cape",
     "waves", "swell", "current", "sst",
 ]
+STANDING_CORE_LAYER_ORDER = [
+    layer for layer in os.environ.get("HELM_WX_STANDING_CORE_LAYERS", "wind,rain,waves,swell,current").split(",")
+    if layer.strip() in LAYERS
+]
+STANDING_CORE_LAYER_ORDER = [layer.strip() for layer in STANDING_CORE_LAYER_ORDER] or ["wind", "rain", "waves", "swell", "current"]
+STANDING_CORE_LAYERS_CSV = ",".join(STANDING_CORE_LAYER_ORDER)
 S100_LAYER_REFS = {
     # S-41X weather/wave products are S-100-family overlays. Open-Meteo is NOT an official S-100
     # source; these refs keep Helm's metadata/probe shape aligned so an official S-413/S-412
@@ -687,14 +707,17 @@ def _compact_time_id(value: str) -> str:
 
 
 def _parse_frame_offsets(frame_hours: str, frame_count: int) -> List[int]:
-    if frame_count < 1:
-        frame_count = 1
+    requested_count = int(frame_count)
     offsets: List[int] = []
     for raw in (frame_hours or "").split(","):
         raw = raw.strip()
         if not raw:
             continue
         offsets.append(int(round(float(raw) * 3600)))
+    if requested_count < 1:
+        frame_count = len(offsets) if offsets else 1
+    else:
+        frame_count = requested_count
     if not offsets:
         step = int(round(DEFAULT_BUNDLE_FRAME_STEP_HOURS * 3600))
         offsets = [i * step for i in range(frame_count)]
@@ -702,6 +725,23 @@ def _parse_frame_offsets(frame_hours: str, frame_count: int) -> List[int]:
         step = int(round(DEFAULT_BUNDLE_FRAME_STEP_HOURS * 3600))
         offsets.append(offsets[-1] + step)
     return offsets[:frame_count]
+
+
+def _standing_frame_hours(days: int = STANDING_DEFAULT_DAYS) -> str:
+    configured = os.environ.get("HELM_WX_STANDING_FRAME_HOURS", "").strip()
+    if configured:
+        return configured
+    horizon = max(1, min(10, int(days))) * 24
+    hours: List[int] = []
+    h = 0
+    while h <= min(72, horizon):
+        hours.append(h)
+        h += 3
+    h = 78
+    while h <= horizon:
+        hours.append(h)
+        h += 6
+    return ",".join(str(h) for h in hours)
 
 
 def _bundle_frames(generated_at: str, frame_count: int = 1, frame_hours: str = "") -> List[dict]:
@@ -976,13 +1016,87 @@ def _dir_size(path: str) -> int:
 
 
 def _coverage_bbox(w: float, s: float, e: float, n: float) -> dict:
+    span = (float(e) + 360.0 - float(w)) if float(e) < float(w) else (float(e) - float(w))
+    globalish = span >= 359.999 and float(s) <= -84.9 and float(n) >= 84.9
     return {
         "west": float(w),
         "south": float(s),
         "east": float(e),
         "north": float(n),
         "crossesAntimeridian": float(e) < float(w),
+        "spanDegrees": span,
+        "global": globalish,
     }
+
+
+def _norm_lon(lon: float) -> float:
+    lon = float(lon)
+    while lon < -180.0:
+        lon += 360.0
+    while lon > 180.0:
+        lon -= 360.0
+    return lon
+
+
+def _lon_in_center_frame(lon: float, center: float) -> float:
+    lon = float(lon)
+    center = float(center)
+    while lon - center > 180.0:
+        lon -= 360.0
+    while center - lon > 180.0:
+        lon += 360.0
+    return lon
+
+
+def _wrapped_bbox_from_continuous(w: float, s: float, e: float, n: float) -> Tuple[float, float, float, float]:
+    span = max(0.0, float(e) - float(w))
+    if span >= 360.0:
+        return -180.0, max(-85.0, float(s)), 180.0, min(85.0, float(n))
+    west = _norm_lon(w)
+    east = _norm_lon(e)
+    if abs(east + 180.0) < 1e-9 and e > w:
+        east = 180.0
+    return west, max(-85.0, float(s)), east, min(85.0, float(n))
+
+
+def _slug_coord(value: float, quantum: float) -> str:
+    q = round(float(value) / quantum) * quantum
+    return ("m" if q < 0 else "p") + (("%0.2f" % abs(q)).rstrip("0").rstrip(".")).replace(".", "p")
+
+
+def _standing_region_id(tier: str, lon: float, lat: float) -> str:
+    q = 5.0 if tier == "wide" else 1.0
+    return f"{_safe_segment(STANDING_REGION_PREFIX)}-{tier}-lon{_slug_coord(lon, q)}-lat{_slug_coord(lat, q)}"
+
+
+def _route_points(route: str) -> List[Tuple[float, float]]:
+    pts = []
+    if not route:
+        return pts
+    for item in route.split(";"):
+        if not item.strip():
+            continue
+        parts = [p.strip() for p in item.split(",")]
+        if len(parts) != 2:
+            raise ValueError("route must be lon,lat;lon,lat")
+        pts.append((float(parts[0]), float(parts[1])))
+    return pts
+
+
+def _centered_bbox(lon: float, lat: float, width: float, height: float,
+                   route: str = "", route_margin: float = 1.0) -> Tuple[float, float, float, float]:
+    center_lon = float(lon)
+    center_lat = float(lat)
+    half_w, half_h = float(width) / 2.0, float(height) / 2.0
+    w, e = center_lon - half_w, center_lon + half_w
+    s, n = center_lat - half_h, center_lat + half_h
+    for rlon, rlat in _route_points(route):
+        flon = _lon_in_center_frame(rlon, center_lon)
+        w = min(w, flon - route_margin)
+        e = max(e, flon + route_margin)
+        s = min(s, rlat - route_margin)
+        n = max(n, rlat + route_margin)
+    return _wrapped_bbox_from_continuous(w, s, e, n)
 
 
 def _internal_bbox(w: float, s: float, e: float, n: float) -> Tuple[float, float, float, float]:
@@ -1207,10 +1321,14 @@ def _prepared_layer_for(region_id: str, layer: str, minzoom: int, maxzoom: int) 
 
 def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
                        minzoom: int, maxzoom: int, generated_at: str, frames: List[dict], tile_summary: dict,
-                       upstream_calls: int, route: str = "", source_summary: Optional[dict] = None) -> dict:
+                       upstream_calls: int, route: str = "", source_summary: Optional[dict] = None,
+                       standing_tier: str = "", anchor_lon: Optional[float] = None,
+                       anchor_lat: Optional[float] = None) -> dict:
     region_slug = _safe_segment(region_id, DEFAULT_PREPARED_REGION)
     valid_times = [f["validTime"] for f in frames]
     frame_id_by_valid_time = {f["validTime"]: f["validTimeId"] for f in frames}
+    bbox = _coverage_bbox(w, s, e, n)
+    standing_tier = _safe_segment(standing_tier, "") if standing_tier else ""
     time_step = None
     if len(frames) > 1:
         steps = [frames[i + 1]["offsetSeconds"] - frames[i]["offsetSeconds"] for i in range(len(frames) - 1)]
@@ -1246,12 +1364,16 @@ def _prepared_manifest(region_id: str, layers: List[str], w: float, s: float, e:
         "frames": frames,
         "coverage": {
             "crs": "OGC:CRS84",
-            "bbox": _coverage_bbox(w, s, e, n),
+            "bbox": bbox,
             "polygon": None,
-            "global": False,
-            "wrap": "antimeridian" if e < w else "none",
+            "global": bool(bbox.get("global")),
+            "wrap": "global" if bbox.get("global") else ("antimeridian" if e < w else "none"),
             "regionId": region_slug,
             "route": route or None,
+            "standing": bool(standing_tier),
+            "tier": standing_tier or None,
+            "anchor": ({"lon": float(anchor_lon), "lat": float(anchor_lat)}
+                       if anchor_lon is not None and anchor_lat is not None else None),
         },
         "lod": {
             "tileMatrixSet": "WebMercatorQuad",
@@ -1348,13 +1470,26 @@ def discover_prepared_bundles() -> List[dict]:
             "advisoryOnly": True,
             "offlineReady": bool((manifest.get("cacheState") or {}).get("offlineReady")),
         })
+    def rank(item: dict) -> Tuple[int, str]:
+        coverage = item.get("coverage") if isinstance(item.get("coverage"), dict) else {}
+        tier = coverage.get("tier")
+        if coverage.get("standing") and tier == "near":
+            return (0, item.get("id", ""))
+        if coverage.get("standing") and tier == "wide":
+            return (1, item.get("id", ""))
+        if coverage.get("global"):
+            return (2, item.get("id", ""))
+        return (3, item.get("id", ""))
+    out.sort(key=rank)
     return out
 
 
 async def materialize_environment_bundle(region_id: str, layers: List[str], w: float, s: float, e: float, n: float,
                                          minzoom: int = 0, maxzoom: int = 3, res: float = REGION_RES,
                                          route: str = "", tile_budget: int = 512, frames: int = DEFAULT_BUNDLE_FRAMES,
-                                         frame_hours: str = "") -> dict:
+                                         frame_hours: str = "", standing_tier: str = "",
+                                         anchor_lon: Optional[float] = None,
+                                         anchor_lat: Optional[float] = None) -> dict:
     if minzoom < 0 or maxzoom < minzoom or maxzoom > 22:
         raise ValueError("invalid zoom range")
     generated_at = _now_iso()
@@ -1417,11 +1552,106 @@ async def materialize_environment_bundle(region_id: str, layers: List[str], w: f
     }
     manifest = _prepared_manifest(region_slug, layers, w, s, e, n, minzoom, maxzoom,
                                   generated_at, frame_list, tile_summary, upstream_calls, route=route,
-                                  source_summary=source_summary)
+                                  source_summary=source_summary, standing_tier=standing_tier,
+                                  anchor_lon=anchor_lon, anchor_lat=anchor_lat)
     _write_json(_prepared_bundle_manifest_path(region_slug), manifest)
     _stats["bundle_materializations"] += 1
     _stats["bundle_tiles_written"] += manifest["telemetry"]["tilesWritten"]
     return manifest
+
+
+def standing_pyramid_plan(lon: float, lat: float, route: str = "", route_margin: float = 1.0,
+                          wide_maxzoom: int = STANDING_WIDE_MAXZOOM,
+                          near_minzoom: int = STANDING_NEAR_MINZOOM,
+                          near_maxzoom: int = STANDING_NEAR_MAXZOOM,
+                          wide_res: float = STANDING_WIDE_RES,
+                          near_res: float = STANDING_NEAR_RES,
+                          wide_tile_budget: int = STANDING_WIDE_TILE_BUDGET,
+                          near_tile_budget: int = STANDING_NEAR_TILE_BUDGET) -> List[dict]:
+    lon = _norm_lon(lon)
+    lat = max(-85.0, min(85.0, float(lat)))
+    wide = _centered_bbox(lon, lat, STANDING_WIDE_DEGREES, STANDING_WIDE_LAT_DEGREES)
+    near = _centered_bbox(lon, lat, STANDING_NEAR_LON_DEGREES, STANDING_NEAR_LAT_DEGREES,
+                          route=route, route_margin=route_margin)
+    return [
+        {
+            "tier": "wide",
+            "region": _standing_region_id("wide", lon, lat),
+            "bbox": {"w": wide[0], "s": wide[1], "e": wide[2], "n": wide[3]},
+            "minzoom": 0,
+            "maxzoom": int(wide_maxzoom),
+            "res": float(wide_res),
+            "tileBudget": int(wide_tile_budget),
+            "purpose": "hemisphere-scale fast overview centered on GPS",
+        },
+        {
+            "tier": "near",
+            "region": _standing_region_id("near", lon, lat),
+            "bbox": {"w": near[0], "s": near[1], "e": near[2], "n": near[3]},
+            "minzoom": int(near_minzoom),
+            "maxzoom": int(near_maxzoom),
+            "res": float(near_res),
+            "tileBudget": int(near_tile_budget),
+            "purpose": "route/passsage-scale high-detail cache centered on GPS and route",
+        },
+    ]
+
+
+def _standing_plan_response(lon: float, lat: float, layers: List[str], route: str, route_margin: float,
+                            days: int, frame_hours: str, frames: int, **kwargs) -> dict:
+    hours = frame_hours or _standing_frame_hours(days)
+    frame_count = len(_parse_frame_offsets(hours, frames))
+    plans = standing_pyramid_plan(lon, lat, route=route, route_margin=route_margin, **kwargs)
+    for plan in plans:
+        b = plan["bbox"]
+        plan["layers"] = list(layers)
+        plan["frames"] = frame_count
+        plan["plannedTiles"] = _planned_tile_count(layers, b["w"], b["s"], b["e"], b["n"],
+                                                   plan["minzoom"], plan["maxzoom"], frame_count)
+        plan["source"] = _planned_source_summary(layers, b["w"], b["s"], b["e"], b["n"], plan["res"])
+    return {
+        "schema": "helm.env.standing-plan.v1",
+        "generatedAt": _now_iso(),
+        "anchor": {"lon": _norm_lon(lon), "lat": max(-85.0, min(85.0, float(lat)))},
+        "route": route or None,
+        "layers": layers,
+        "days": max(1, min(10, int(days))),
+        "frameHours": hours,
+        "frames": frame_count,
+        "tiers": plans,
+        "gesturePathInvariant": "normal pan/zoom/scrub reads these standing bundles only; no viewport materialize",
+    }
+
+
+async def materialize_standing_pyramid(lon: float, lat: float, layers: List[str], route: str = "",
+                                       route_margin: float = 1.0, days: int = STANDING_DEFAULT_DAYS,
+                                       frames: int = 0, frame_hours: str = "",
+                                       wide_maxzoom: int = STANDING_WIDE_MAXZOOM,
+                                       near_minzoom: int = STANDING_NEAR_MINZOOM,
+                                       near_maxzoom: int = STANDING_NEAR_MAXZOOM,
+                                       wide_res: float = STANDING_WIDE_RES,
+                                       near_res: float = STANDING_NEAR_RES,
+                                       wide_tile_budget: int = STANDING_WIDE_TILE_BUDGET,
+                                       near_tile_budget: int = STANDING_NEAR_TILE_BUDGET) -> dict:
+    hours = frame_hours or _standing_frame_hours(days)
+    plan = _standing_plan_response(
+        lon, lat, layers, route, route_margin, days, hours, frames,
+        wide_maxzoom=wide_maxzoom, near_minzoom=near_minzoom, near_maxzoom=near_maxzoom,
+        wide_res=wide_res, near_res=near_res,
+        wide_tile_budget=wide_tile_budget, near_tile_budget=near_tile_budget,
+    )
+    bundles = []
+    for tier in plan["tiers"]:
+        b = tier["bbox"]
+        manifest = await materialize_environment_bundle(
+            tier["region"], layers, b["w"], b["s"], b["e"], b["n"],
+            minzoom=tier["minzoom"], maxzoom=tier["maxzoom"], res=tier["res"],
+            route=route, tile_budget=tier["tileBudget"], frames=frames,
+            frame_hours=hours, standing_tier=tier["tier"], anchor_lon=lon, anchor_lat=lat,
+        )
+        bundles.append({"tier": tier["tier"], "region": tier["region"],
+                        "manifest": _prepared_bundle_url(tier["region"]), "bundle": manifest})
+    return {"ok": True, "plan": plan, "bundles": bundles}
 
 
 def _resolve_prepared_valid_time_id(region_id: str, valid_time_id: str) -> str:
@@ -1512,6 +1742,63 @@ async def materialize_bundle(region: str = DEFAULT_PREPARED_REGION, layers: str 
         return JSONResponse({"error": True, "reason": str(ex)}, status_code=400)
     except Exception as ex:
         print("[helm-wx] bundle materialize failed: %r" % ex)
+        traceback.print_exc()
+        return JSONResponse({"error": True, "reason": str(ex)}, status_code=503)
+
+
+@app.get("/bundles/open-meteo/latest/standing-plan")
+def standing_plan(lon: float, lat: float, layers: str = STANDING_CORE_LAYERS_CSV,
+                  route: str = "", route_margin: float = 1.0, days: int = STANDING_DEFAULT_DAYS,
+                  frames: int = 0, frame_hours: str = "",
+                  wide_maxzoom: int = STANDING_WIDE_MAXZOOM,
+                  near_minzoom: int = STANDING_NEAR_MINZOOM,
+                  near_maxzoom: int = STANDING_NEAR_MAXZOOM,
+                  wide_res: float = STANDING_WIDE_RES,
+                  near_res: float = STANDING_NEAR_RES,
+                  wide_tile_budget: int = STANDING_WIDE_TILE_BUDGET,
+                  near_tile_budget: int = STANDING_NEAR_TILE_BUDGET):
+    try:
+        picked_layers = _parse_layers(layers)
+        return _standing_plan_response(
+            lon, lat, picked_layers, route, route_margin, days, frame_hours, frames,
+            wide_maxzoom=wide_maxzoom, near_minzoom=near_minzoom, near_maxzoom=near_maxzoom,
+            wide_res=wide_res, near_res=near_res,
+            wide_tile_budget=wide_tile_budget, near_tile_budget=near_tile_budget,
+        )
+    except ValueError as ex:
+        return JSONResponse({"error": True, "reason": str(ex)}, status_code=400)
+
+
+@app.get("/bundles/open-meteo/latest/materialize/standing")
+async def materialize_standing_bundle(lon: float, lat: float, layers: str = STANDING_CORE_LAYERS_CSV,
+                                      route: str = "", route_margin: float = 1.0,
+                                      days: int = STANDING_DEFAULT_DAYS,
+                                      frames: int = 0, frame_hours: str = "",
+                                      wide_maxzoom: int = STANDING_WIDE_MAXZOOM,
+                                      near_minzoom: int = STANDING_NEAR_MINZOOM,
+                                      near_maxzoom: int = STANDING_NEAR_MAXZOOM,
+                                      wide_res: float = STANDING_WIDE_RES,
+                                      near_res: float = STANDING_NEAR_RES,
+                                      wide_tile_budget: int = STANDING_WIDE_TILE_BUDGET,
+                                      near_tile_budget: int = STANDING_NEAR_TILE_BUDGET):
+    """Refresh the standing Windy-style cache tiers for a boat.
+
+    This is the normal production path: a background job calls this on model cadence and when GPS/route
+    drift crosses the recenter threshold. The browser never calls this while the user pans or zooms.
+    """
+    try:
+        picked_layers = _parse_layers(layers)
+        return await materialize_standing_pyramid(
+            lon, lat, picked_layers, route=route, route_margin=route_margin, days=days,
+            frames=frames, frame_hours=frame_hours,
+            wide_maxzoom=wide_maxzoom, near_minzoom=near_minzoom, near_maxzoom=near_maxzoom,
+            wide_res=wide_res, near_res=near_res,
+            wide_tile_budget=wide_tile_budget, near_tile_budget=near_tile_budget,
+        )
+    except ValueError as ex:
+        return JSONResponse({"error": True, "reason": str(ex)}, status_code=400)
+    except Exception as ex:
+        print("[helm-wx] standing materialize failed: %r" % ex)
         traceback.print_exc()
         return JSONResponse({"error": True, "reason": str(ex)}, status_code=503)
 
@@ -1708,6 +1995,40 @@ async def _startup_warm():
                 if L in LAYERS:
                     await warm_once(L)
             await asyncio.sleep(REGION_TTL)
+    asyncio.create_task(loop())
+
+
+@app.on_event("startup")
+async def _startup_standing_pyramid():
+    """Optional boat-side standing cache loop.
+
+    Set HELM_WX_STANDING_LON/LAT (and optionally HELM_WX_STANDING_ROUTE) in ~/.helm/wx/.env or the
+    launcher. The browser never triggers this; it just consumes whatever this loop has prepared.
+    """
+    raw_lon = os.environ.get("HELM_WX_STANDING_LON", "").strip()
+    raw_lat = os.environ.get("HELM_WX_STANDING_LAT", "").strip()
+    if not raw_lon or not raw_lat:
+        return
+    try:
+        lon, lat = float(raw_lon), float(raw_lat)
+        layers = _parse_layers(os.environ.get("HELM_WX_STANDING_LAYERS", STANDING_CORE_LAYERS_CSV))
+    except Exception as ex:
+        print(f"[helm-wx] standing cache disabled: invalid HELM_WX_STANDING_* env ({ex!r})", flush=True)
+        return
+    route = os.environ.get("HELM_WX_STANDING_ROUTE", "").strip()
+    frame_hours = os.environ.get("HELM_WX_STANDING_FRAME_HOURS", "").strip()
+    print(f"[helm-wx] standing cache scheduled: anchor=({lon},{lat}) layers={layers} refresh={STANDING_REFRESH_SECONDS}s", flush=True)
+
+    async def loop():
+        await asyncio.sleep(3)
+        while True:
+            try:
+                result = await materialize_standing_pyramid(lon, lat, layers, route=route, frame_hours=frame_hours)
+                tiers = ",".join(b["tier"] for b in result.get("bundles", []))
+                print(f"[helm-wx] standing cache refreshed: tiers={tiers}", flush=True)
+            except Exception as ex:
+                print(f"[helm-wx] standing cache refresh FAILED: {ex!r}", flush=True)
+            await asyncio.sleep(max(300, STANDING_REFRESH_SECONDS))
     asyncio.create_task(loop())
 
 

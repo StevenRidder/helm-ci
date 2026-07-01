@@ -230,6 +230,36 @@ def main():
           route_multiframe_payload["bundle"]["telemetry"]["framesMaterialized"] == 3,
           "materialize endpoint accepts frames/frame_hours for multi-frame warm jobs")
 
+    # 8) WX-19 replacement path: GPS/route anchored standing pyramid, not viewport-chasing.
+    standing_plan = client.get(
+        "/bundles/open-meteo/latest/standing-plan"
+        "?lon=177.4&lat=-17.6&layers=wind,current&route=177,-18;-179,-17"
+        "&wide_maxzoom=0&near_minzoom=0&near_maxzoom=0&frame_hours=0,3"
+    ).json()
+    check(standing_plan["schema"] == "helm.env.standing-plan.v1" and
+          [tier["tier"] for tier in standing_plan["tiers"]] == ["wide", "near"],
+          "standing plan emits WIDE and NEAR GPS/route-centered tiers")
+    check(standing_plan["tiers"][0]["bbox"]["w"] > standing_plan["tiers"][0]["bbox"]["e"],
+          "standing WIDE tier may cross the antimeridian as a normal wrapped tile edge")
+    standing_resp = client.get(
+        "/bundles/open-meteo/latest/materialize/standing"
+        "?lon=177.4&lat=-17.6&layers=wind,current&route=177,-18;-179,-17"
+        "&wide_maxzoom=0&near_minzoom=0&near_maxzoom=0&wide_tile_budget=32&near_tile_budget=32"
+        "&frame_hours=0,3"
+    )
+    standing_payload = standing_resp.json()
+    check(standing_resp.status_code == 200 and len(standing_payload.get("bundles", [])) == 2,
+          "standing materialize bakes both WIDE and NEAR tiers")
+    standing_wide = next(b for b in standing_payload["bundles"] if b["tier"] == "wide")
+    standing_near = next(b for b in standing_payload["bundles"] if b["tier"] == "near")
+    check(standing_wide["bundle"]["coverage"]["standing"] is True and
+          standing_wide["bundle"]["coverage"]["tier"] == "wide" and
+          standing_wide["bundle"]["run"]["frames"] == 2,
+          "standing WIDE manifest records tier metadata and forecast frames")
+    check(standing_near["bundle"]["coverage"]["tier"] == "near" and
+          standing_near["bundle"]["coverage"]["anchor"]["lon"] == 177.4,
+          "standing NEAR manifest records GPS anchor metadata")
+
     async def exploding_fetch_async(*args, **kwargs):
         raise AssertionError("prepared replay must not call provider/grid fetch")
 
@@ -248,6 +278,11 @@ def main():
           "prepared bundle index advertises offline/cache-only replay")
     check(prepared_index["sample"]["probeHandle"] == "weather.bundle",
           "prepared bundle index exposes weather bundle sample handle")
+    standing_index = [bun for bun in route_index["bundles"]
+                      if isinstance(bun.get("coverage"), dict) and bun["coverage"].get("standing")]
+    check({(bun.get("coverage") or {}).get("tier") for bun in standing_index} >= {"wide", "near"} and
+          all(bun.get("offlineReady") and bun.get("cacheOnlyReplay") for bun in standing_index),
+          "bundle index advertises standing WIDE/NEAR tiers as offline/cache-only")
     prepared_manifest = client.get("/bundles/open-meteo/latest/fiji-test/manifest.json")
     check(prepared_manifest.status_code == 200 and prepared_manifest.headers.get("x-helm-upstream-fetch") == "0",
           "prepared manifest replays from cache only")
@@ -276,6 +311,13 @@ def main():
           "legacy latest alias resolves to the first multi-frame tile")
     check(multi_temp1.status_code == 200 and multi_temp1.headers.get("x-helm-upstream-fetch") == "0",
           "multi-frame temp frame N+1 tile replays from cache")
+    standing_region = standing_wide["region"]
+    standing_frame = standing_wide["bundle"]["frames"][0]["validTimeId"]
+    standing_tile = client.get(
+        f"/bundles/open-meteo/latest/{standing_region}/layers/wind/scalar/{standing_frame}/0/0/0.png"
+    )
+    check(standing_tile.status_code == 200 and standing_tile.headers.get("x-helm-upstream-fetch") == "0",
+          "standing WIDE tile replays from cache with zero upstream fetch")
     check(app._stats["openmeteo_calls"] == calls_before_replay,
           "prepared manifest/tile replay makes zero upstream calls")
     tw, th, tpx = decode_png_rgba(scalar_resp.content)
@@ -332,7 +374,7 @@ def main():
           west_resp.headers.get("x-helm-bundle-cache") == "hit",
           "prepared tile west of 180 replays from cache")
 
-    # 8) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
+    # 9) NODATA honesty: a grid that samples None must emit a transparent pixel, never a fake value
     empty = app.Grid(2, 2, 0, 0, 1, 1, [None, None, None, None])
     check(empty.sample(0.5, 0.5) is None, "fully-missing grid samples to None (NODATA, not faked)")
 

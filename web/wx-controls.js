@@ -26,6 +26,8 @@
   var COVER_MARGIN = 0.06;      // prepared scene must run a little past the visible viewport
   var PREP_MARGIN = 0.32;       // materialize a larger tile set so small pans don't expose edges
   var PREP = { inflight: {}, done: {}, failed: {}, lastPlan: null, lastMessageKey: '' };
+  var ALLOW_VIEWPORT_MATERIALIZE = typeof window !== 'undefined' && window.HELM_WX_ENABLE_VIEWPORT_MATERIALIZE === true;
+  var APPLY_SEQ = 0;
 
   // LIVE animated wind particles, fed by the helm-wx gateway's /velocity endpoint (keyed server-side,
   // cached) — NOT the rate-capped free API and never the client holding a key. Refetches on pan/zoom and
@@ -147,7 +149,18 @@
     } catch (e) {}
     var def = (typeof window !== 'undefined' && window.HELM_WX_SCENE_REGION) || 'fiji';
     if (!rows.some(function (r) { return r.region === def; })) rows.push({ region: def, coverage: null, index: null });
+    rows.sort(function (a, b) {
+      return candidateRank(a, S.map && S.map.getZoom ? S.map.getZoom() : 4) -
+             candidateRank(b, S.map && S.map.getZoom ? S.map.getZoom() : 4);
+    });
     return rows;
+  }
+  function candidateRank(row, zoom) {
+    var c = row && row.coverage || {}, tier = c.tier || c.standingTier || '';
+    if (c.standing && tier === 'near') return zoom >= 5 ? 0 : 2;
+    if (c.standing && tier === 'wide') return zoom < 5.35 ? 0 : 1;
+    if (c.global) return 3;
+    return 4;
   }
   async function bundleIndexed(region, layer) {
     try {
@@ -195,6 +208,12 @@
   function ensureViewportBundle(map, layer, report) {
     if (!SCENE_LAYER_SET[layer]) return null;
     var plan = quantizeViewForMaterialize(map); PREP.lastPlan = plan;
+    if (!ALLOW_VIEWPORT_MATERIALIZE) {
+      var miss = report && report.missing && report.missing.length ? ' (' + report.missing.join('/') + ' edge missing)' : '';
+      coverageBadge('⚠ ' + layer + ' outside standing weather cache' + miss + ' — using gateway fallback', 'warn');
+      notify('Live ' + layer + ' · standing cache missing/off-edge; gateway fallback only (no viewport bake)', 'warn');
+      return { disabled: true, reason: 'viewport-materialize-disabled', plan: plan };
+    }
     if (PREP.done[plan.region]) {
       coverageBadge('⚠ ' + layer + ' partial coverage — waiting for prepared bundle index', 'warn');
       return plan;
@@ -236,7 +255,10 @@
     if (!window.HelmWxScene || !HelmWxScene.status || !HelmWxScene.state) return false;
     var st = HelmWxScene.status();
     if (!st || st.state === 'off' || !HelmWxScene.state.manifest) return false;
-    return !coverageReport(map, HelmWxScene.state.manifest, COVER_MARGIN).coversView;
+    if (!coverageReport(map, HelmWxScene.state.manifest, COVER_MARGIN).coversView) return true;
+    var cov = HelmWxScene.state.manifest.coverage || {}, tier = cov.tier || cov.standingTier || '';
+    var z = map.getZoom ? map.getZoom() : 4;
+    return (tier === 'wide' && z >= 5.35) || (tier === 'near' && z < 4.85);
   }
 
   // WX-19: find a prepared bundle region whose coverage contains the full view and that has this layer.
@@ -256,12 +278,14 @@
       }
     } catch (e) {}
     var plan = ensureViewportBundle(map, layer, firstMiss && firstMiss.coverage);
-    return plan ? { plan: plan, miss: firstMiss } : null;
+    return plan ? { plan: plan.plan || plan, miss: firstMiss, offEdge: !!plan.disabled } : null;
   }
 
   async function apply() {
+    var seq = ++APPLY_SEQ;
     var map = S.map; if (!map) return;                  // guard: setWeather()'s hook can fire before build() sets S.map
     var layer = activeLayer(), m = await cog();
+    if (seq !== APPLY_SEQ) return;
     if (window.HelmWxLive) window.HelmWxLive.disable(map);
     if (window.HelmWxScene && window.HelmWxScene.disable) { try { window.HelmWxScene.disable(); } catch (e) {} }   // WX-19: tear down the scene each apply; re-enabled below if chosen
     m.disableEnsemble(map); m.disableWxTiles(map); stopParticles(map);
@@ -287,12 +311,15 @@
       // view — one renderer for colour + particles, no gesture-path upstream fetch. Falls through to the
       // tile/live/legacy paths below when no bundle gateway/region is reachable (today's default deploy).
       var scenePick = await pickSceneRegion(map, layer);
+      if (seq !== APPLY_SEQ) return;
       if (scenePick && scenePick.region && window.HelmWxScene) {
         try {
           await window.HelmWxScene.enable(map, { region: scenePick.region, layer: layer, opacity: wxOpacity(), coverage: scenePick.coverage });
+          if (seq !== APPLY_SEQ) { setTimeout(function () { if (activeLayer() === layer) apply().catch(function () {}); }, 0); return; }
           showLegacy(false);
           coverageBadge('');
-          notify('Live ' + layer + ' · prepared bundle scene (WX-19)', 'ok');
+          var tier = ((scenePick.coverage || {}).coverage || {}).tier || ((scenePick.manifest && scenePick.manifest.coverage) || {}).tier || '';
+          notify('Live ' + layer + ' · standing ' + (tier || 'prepared') + ' bundle scene (WX-19)', 'ok');
           probeSoon(); return;
         } catch (e) { try { window.HelmWxScene.disable(); } catch (e2) {} }   // fall through to the paths below
       }
@@ -309,7 +336,8 @@
       if (cfg) {
         showLegacy(false);
         if ((layer === 'wind' || layer === 'current') && particlesOn()) startParticles(map, layer); else stopParticles(map);
-        if (scenePick && scenePick.plan) notify('Live ' + layer + ' · preparing prepared bundle; gateway tiles are temporary', 'warn');
+        if (scenePick && scenePick.offEdge) notify('Live ' + layer + ' · standing cache unavailable/off-edge; gateway tiles are temporary', 'warn');
+        else if (scenePick && scenePick.plan) notify('Live ' + layer + ' · preparing prepared bundle; gateway tiles are temporary', 'warn');
         else notify('Live ' + layer + ' · helm-wx server tiles (cached) — Windy-style', 'ok');
       } else if (window.HelmWxLive && window.HelmWxLive.supports(layer)) {
         window.HelmWxLive.enable(map, { layer: layer, opacity: wxOpacity(), notify: notify });   // gateway down -> direct Open-Meteo
@@ -409,9 +437,10 @@
       if (S.resolution !== 'live') return;
       var layer = activeLayer();
       if (!layer || layer === 'off' || layer === 'radar') return;
-      if (!activeSceneNeedsRecheck(map)) return;
       clearTimeout(viewRecheckTimer);
-      viewRecheckTimer = setTimeout(function () { apply().catch(function () {}); }, 100);
+      viewRecheckTimer = setTimeout(function () {
+        if (activeSceneNeedsRecheck(map)) apply().catch(function () {});
+      }, 140);
     }
     map.on('moveend', viewChanged);
     map.on('zoomend', viewChanged);
@@ -425,7 +454,9 @@
   window.HelmWxControls = { apply: function () { apply().catch(function () {}); },
     _test: { viewBox: viewBox, coverageReportForBbox: coverageReportForBbox,
       quantizeViewForMaterialize: quantizeViewForMaterialize, materializeUrl: materializeUrl,
-      activeSceneNeedsRecheck: activeSceneNeedsRecheck } };
+      activeSceneNeedsRecheck: activeSceneNeedsRecheck,
+      viewportMaterializeEnabled: function () { return ALLOW_VIEWPORT_MATERIALIZE; },
+      candidateRank: candidateRank } };
 
   function boot() {
     var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);
