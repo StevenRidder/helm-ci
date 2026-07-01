@@ -334,12 +334,26 @@
 
   // ---- public API --------------------------------------------------------------------------------
   // enableScalar(map, { region, layer, isoTime, opacity }) -> Promise<{layer,validTimeId,lod,bounds,unit,ramp}>
+  // MapLibre's addSource/addLayer THROW while the style is still loading ('Style is not done
+  // loading') — e.g. the first weather enable racing app boot. Gate on the exact flag
+  // _checkLoaded() throws on (style._loaded = style JSON parsed) — NOT isStyleLoaded(), which
+  // also demands every source/tile be settled and can flap forever on a live mutating map.
+  function whenStyleReady(map) {
+    return new Promise(function (res) {
+      (function chk() {
+        var st = map.style;
+        if (!st || st._loaded) return res();   // no style at all -> proceed and let the real error surface
+        map.once('styledata', chk);
+      })();
+    });
+  }
+
   function enableScalar(map, opts) {
     opts = opts || {};
     state.map = map; ensureProtocol();
     var region = opts.region || state.region || 'fiji';
     var layer = opts.layer || 'wind';
-    return loadManifest(region).then(function (manifest) {
+    return whenStyleReady(map).then(function () { return loadManifest(region); }).then(function (manifest) {
       state.manifest = manifest; state.region = region; state.layer = layer;
       var L = layerCfg(manifest, layer);
       if (L.ramp && ramp() && ramp().setManifestRamp) ramp().setManifestRamp(layer, L.ramp);   // CLIENT-14: field/particles/probe agree
@@ -409,15 +423,18 @@
   function assign(a, b) { for (var k in b) if (b.hasOwnProperty(k)) a[k] = b[k]; return a; }
 
   // Assemble the GRIB-JSON velocity array (u,v components) the particle engine ingests.
+  // Resolves { grid, reason } — reason says WHY there is no grid ('no-vector-field' |
+  // 'outside-coverage' | 'no-vector-data' | 'ok') so callers surface it instead of
+  // silently switching particles off (fail-and-fix-early: no hidden empty states).
   function buildVelocity(layer) {
     var m = state.map, manifest = state.manifest, C = codec();
     var vf = layerCfg(manifest, layer).vectorField;
-    if (!m || !vf || !vf.u || !vf.v) return Promise.resolve(null);
+    if (!m || !vf || !vf.u || !vf.v) return Promise.resolve({ grid: null, reason: 'no-vector-field' });
     var lod = lodRange(manifest, layer);
     var z = Math.max(lod.minzoom, Math.min(lod.maxzoom, Math.round(m.getZoom())));
     var b = m.getBounds(), W = b.getWest(), E = b.getEast(), S = b.getSouth(), N = b.getNorth();
     var clipped = clipViewToCoverage(manifest, W, S, E, N);
-    if (!clipped) return Promise.resolve(null);          // viewport doesn't overlap this prepared bundle
+    if (!clipped) return Promise.resolve({ grid: null, reason: 'outside-coverage' });   // viewport doesn't overlap this prepared bundle
     W = clipped.west; S = clipped.south; E = clipped.east; N = clipped.north;
     var list = wrappedTilesForBbox(z, [W, S, E, N]);
     function url(tpl, t) { return tpl.replace('{z}', t.z).replace('{x}', t.x).replace('{y}', t.y); }
@@ -453,33 +470,55 @@
     return gridP.then(function (G) {
       var us = G.us, vs = G.vs, any = false;
       for (var k = 0; k < NX * NY; k++) { if (us[k] === us[k] && vs[k] === vs[k]) { any = true; break; } }
-      if (!any) return null;
+      if (!any) return { grid: null, reason: 'no-vector-data' };
       var hdr = { nx: NX, ny: NY, lo1: W, la1: N, lo2: E, la2: S, dx: (E - W) / (NX - 1), dy: (N - S) / (NY - 1) };
-      return [{ header: assign({ parameterNumber: 2 }, hdr), data: us }, { header: assign({ parameterNumber: 3 }, hdr), data: vs }];
+      return { grid: [{ header: assign({ parameterNumber: 2 }, hdr), data: us }, { header: assign({ parameterNumber: 3 }, hdr), data: vs }], reason: 'ok' };
     });
+  }
+
+  // Particle-path health, surfaced through status() + the status badge. A vector layer whose
+  // particles are OFF for a data reason (outside bundle, empty uv, build error) is a REAL
+  // signal — never hidden. Logged once per reason transition; the moveend retry stays armed.
+  function setParticleState(active, reason) {
+    var prev = state.particles || {};
+    state.particles = { active: active, reason: reason };
+    if (!active && reason !== 'no-vector-field' && prev.reason !== reason && log.warn) {
+      log.warn.call(log, '[wx-scene] particles OFF — ' + reason + ' (retries on map move)');
+    }
+    try { renderStatusBadge(); } catch (e) {}
   }
 
   function refreshParticles() {
     var w = global.__helmWind; if (!pState.on || !w) return;
     var tok = ++pState.token;
-    buildVelocity(pState.layer).then(function (vel) {
+    buildVelocity(pState.layer).then(function (r) {
       if (tok !== pState.token || !pState.on) return;             // a newer move superseded this build
-      if (!vel) { try { w.setVisible(false); } catch (e) {} return; }
-      w.setData(vel); w.setVisible(true);
-    }).catch(function (e) { if (log.warn) log.warn.call(log, '[wx-scene] particle build failed: ' + ((e && e.message) || e)); });
+      if (!r.grid) { setParticleState(false, r.reason); try { w.setVisible(false); } catch (e) {} return; }
+      w.setData(r.grid); w.setVisible(true); setParticleState(true, 'ok');
+    }).catch(function (e) {
+      setParticleState(false, 'build-failed: ' + ((e && e.message) || e));
+      if (log.warn) log.warn.call(log, '[wx-scene] particle build failed: ' + ((e && e.message) || e));
+    });
   }
   function onMove() { clearTimeout(pState.debounce); pState.debounce = setTimeout(refreshParticles, 300); }   // refetch from cache only — no upstream
   function startParticles(map, layer) {
     var w = global.__helmWind; if (!w) return Promise.resolve(false);
     pState.on = true; pState.layer = layer;
     if (!pState.moveHandler) { pState.moveHandler = onMove; map.on('moveend', pState.moveHandler); }
-    return buildVelocity(layer).then(function (vel) {
-      if (vel && pState.on) { w.setData(vel); w.setVisible(true); }
-      return !!vel;
-    }).catch(function () { return false; });
+    return buildVelocity(layer).then(function (r) {
+      if (r.grid && pState.on) { w.setData(r.grid); w.setVisible(true); setParticleState(true, 'ok'); }
+      else if (pState.on) setParticleState(false, r.reason);
+      return !!r.grid;
+    }).catch(function (e) {
+      // was a bare `return false` — a throw here (engine setData, decode) vanished entirely
+      setParticleState(false, 'build-failed: ' + ((e && e.message) || e));
+      if (log.warn) log.warn.call(log, '[wx-scene] particle start failed: ' + ((e && e.message) || e));
+      return false;
+    });
   }
   function stopParticles() {
     pState.on = false; pState.layer = null; pState.token++;
+    state.particles = null;                                        // intentional off — not a warning state
     var w = global.__helmWind; if (w) try { w.setVisible(false); } catch (e) {}
     if (pState.moveHandler && state.map) { try { state.map.off('moveend', pState.moveHandler); } catch (e) {} pState.moveHandler = null; }
   }
@@ -572,13 +611,23 @@
     return { state: partial ? 'partial' : ((holding || f.stale) ? 'stale' : 'fresh'),
              holdingLastGood: holding, missingTiles: state.missingTileCount || 0, partialCoverage: partial,
              coverage: state.coverage || null, layer: state.layer, region: state.region,
+             particles: state.particles || null,                  // WX-25: particle-path health (never hidden)
              validTime: invFrame(state.manifest, state.validTimeId),
              generatedAt: f.generatedAt, ageSeconds: f.ageSeconds, ttlSeconds: f.ttlSeconds };
+  }
+  function particleWarn(st) {                                     // particles off for a DATA reason on a vector layer
+    return !!(st.particles && !st.particles.active && st.particles.reason !== 'no-vector-field');
+  }
+  function particleMsg(reason) {
+    if (reason === 'outside-coverage') return 'view outside prepared bundle (retries on move)';
+    if (reason === 'no-vector-data') return 'no vector data in view';
+    return reason;                                                // build-failed: <real error>
   }
   function fmtAge(s) { if (s == null) return ''; if (s < 3600) return Math.round(s / 60) + ' min'; if (s < 86400) return Math.round(s / 3600) + ' h'; return Math.round(s / 86400) + ' d'; }
   function renderStatusBadge() {
     var el = document.getElementById('helm-wx-scene-status'), st = status();
-    if (!st || (st.state !== 'stale' && st.state !== 'partial')) { if (el) el.style.display = 'none'; return; }   // show only when stale/partial
+    var pw = st && particleWarn(st);
+    if (!st || (st.state !== 'stale' && st.state !== 'partial' && !pw)) { if (el) el.style.display = 'none'; return; }   // show when stale/partial/particles-off
     if (!el) {
       el = document.createElement('div'); el.id = 'helm-wx-scene-status';
       el.style.cssText = 'position:fixed;top:122px;left:50%;transform:translateX(-50%);z-index:30;padding:5px 12px;border-radius:13px;background:rgba(20,24,30,.9);border:1px solid var(--warn,#e0a23a);color:var(--warn,#e0a23a);font:600 11px/1.4 system-ui,-apple-system,sans-serif;letter-spacing:.2px;pointer-events:none;box-shadow:0 2px 10px rgba(0,0,0,.4)';
@@ -588,7 +637,9 @@
       ? '⚠ ' + st.layer + ' partial coverage — missing prepared tiles (' + (st.missingTiles || 0) + ')'
       : st.holdingLastGood
       ? '⚠ ' + st.layer + ' — showing last-good (frame data unavailable)'
-      : '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle';
+      : st.state === 'stale'
+      ? '⚠ ' + st.layer + ' forecast ' + fmtAge(st.ageSeconds) + ' old — refresh the bundle'
+      : '⚠ ' + st.layer + ' particles off — ' + particleMsg(st.particles.reason);
     el.style.display = 'block';
   }
   function hideStatusBadge() { var el = document.getElementById('helm-wx-scene-status'); if (el) el.style.display = 'none'; }
@@ -600,6 +651,7 @@
     disable: disable, setOpacity: setOpacity, loadManifest: loadManifest, state: state,
     _bracket: bracket, _validTimesSorted: validTimesSorted,       // WX-23 test seam (frame-bracketing is unit-tested)
     _wrapTileX: wrapTileX, _wrappedTilesForBbox: wrappedTilesForBbox, _clipViewToCoverage: clipViewToCoverage, // WX-19 antimeridian test seams
-    _cacheGood: cacheGood, _lastGoodKeys: function () { return Object.keys(lastGood); }   // WX-24 test seam (bounded LRU)
+    _cacheGood: cacheGood, _lastGoodKeys: function () { return Object.keys(lastGood); },  // WX-24 test seam (bounded LRU)
+    _setParticleState: setParticleState, _particleWarn: particleWarn, _particleMsg: particleMsg   // WX-25 fail-loud particle-health seam
   };
 })(typeof window !== 'undefined' ? window : this);

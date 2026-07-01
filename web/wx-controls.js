@@ -92,9 +92,14 @@
   }
   function failLiveUnavailable(layer, pick) {
     var rep = pick && pick.miss && pick.miss.coverage;
-    var reason = (pick && pick.offEdge) ? 'outside prepared local weather pack' : 'no prepared local weather pack covers this view';
-    var msg = failLoudText(layer, 'missing_prepared_weather_pack', reason + missingEdgesText(rep));
-    coverageBadge('⚠ ' + layer + ' unavailable — ' + reason + missingEdgesText(rep), 'warn');
+    var err = pick && pick.error;
+    // Report the REAL cause: a scene-enable exception is NOT a missing pack — mislabeling it
+    // sends whoever debugs it hunting for coverage when the pack was fine (fail-and-fix-early).
+    var code = err ? 'scene_enable_failed' : 'missing_prepared_weather_pack';
+    var reason = err ? ('scene enable failed: ' + ((err && err.message) || err))
+      : (pick && pick.offEdge) ? 'outside prepared local weather pack' : 'no prepared local weather pack covers this view';
+    var msg = failLoudText(layer, code, reason + (err ? '' : missingEdgesText(rep)));
+    coverageBadge('⚠ ' + layer + ' unavailable — ' + reason + (err ? '' : missingEdgesText(rep)), 'warn');
     notify(msg, 'warn');
     showLegacy(false);
     stopParticles(S.map);

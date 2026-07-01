@@ -750,6 +750,7 @@
 <script src="tooltip.js"></script><!-- fast custom hover tooltips (replaces the slow ~1.5s native title delay) -->
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
+<script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
 <!-- CLIENT-14: field-layer.js (legacy fixed-bbox HelmField) retired — field is rendered by the Live path (wx-live.js / helmwx tiles); legend via wx-ramp.js -->
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
@@ -1042,7 +1043,9 @@
   });
 
   // ---- weather: heatmap color field (HelmField) + animated particles (HelmWind) ----
-  const wind = window.HelmWind ? HelmWind(map) : null;
+  // WX-25: HelmWindAuto = WebGPU compute advection when available, visible CPU fallback otherwise
+  // (window.__helmWindMode says which path is live). Same API either way; wx-scene/wx-live don't care.
+  const wind = window.HelmWindAuto ? HelmWindAuto(map) : (window.HelmWind ? HelmWind(map) : null);
   window.__helmWind = wind;                    // shared with Live (wx-live.js) to drive particles over the viewport
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;   // CLIENT-14: legacy HelmField retired — stays null; Live owns the field, legend via HelmWxRamp. Residual `if (field)` guards below are vestigial no-ops (removed with the renderer rewrite in WX-19).

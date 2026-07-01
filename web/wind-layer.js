@@ -552,6 +552,7 @@
     return new HelmWindLayer(map, opts);
   }
   HelmWind.Layer = HelmWindLayer;
+  HelmWind.Field = WindField;   // WX-25: shared grid parser — the GPU engine reuses these semantics
 
   // UMD-ish export
   if (typeof module !== 'undefined' && module.exports) {
