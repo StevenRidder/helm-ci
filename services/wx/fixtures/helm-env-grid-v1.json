@@ -21,7 +21,9 @@
     "payload": "helm.env.grid.chunk.v1",
     "rangeReadable": true,
     "servedBy": "helm-packd",
-    "requiredRuntime": "C++"
+    "requiredRuntime": "C++",
+    "byteRangeSemantics": "offset-length",
+    "checksumAlgorithm": "sha256"
   },
   "coverage": {
     "crs": "OGC:CRS84",

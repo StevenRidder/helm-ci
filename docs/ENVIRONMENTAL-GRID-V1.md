@@ -220,12 +220,26 @@ The pack manifest MUST state:
   "payload": "helm.env.grid.chunk.v1",
   "rangeReadable": true,
   "servedBy": "helm-packd",
-  "requiredRuntime": "C++"
+  "requiredRuntime": "C++",
+  "packUrl": "open-meteo-gfs-20260701T000000Z-global-low.pmtiles",
+  "byteRangeSemantics": "offset-length",
+  "checksumAlgorithm": "sha256"
 }
 ```
 
 `helm-packd` owns byte-range serving, pack inventory, and cache metadata. It does not own weather
 physics or colour ramps.
+
+Each chunk index entry uses `byteRange: [offset, length]`, not inclusive end offsets. The client
+requests `Range: bytes=<offset>-<offset + length - 1>`, verifies the exact byte count, checks the
+declared `sha256:<hex>` checksum, and only then decodes the `HELMGRID` envelope. Missing ranges,
+short reads, checksum mismatches, or bad chunk magic are hard failures with visible diagnostics.
+
+The packer emits a public sidecar (`<pack>.metadata.json`) for `helm-packd` catalog visibility:
+`kind=environmental-grid`, `helm_pack_schema=helm.env.grid.pack.v1`,
+`encoding=helm.env.grid.v1`, `payload=helm.env.grid.chunk.v1`, layer/tier ids, chunk count, and
+failure policy. Filesystem paths and private provider credentials remain excluded from catalog
+responses.
 
 ## 8. Render contract
 
@@ -287,5 +301,7 @@ Required diagnostic fields:
 - this contract has a golden manifest fixture;
 - a validator rejects missing fail-loud policy, image-tile-only payloads, and unsupported encodings;
 - at least one synthetic chunk fixture proves the binary envelope can carry scalar and vector bands;
+- a range-readable PMTiles/packd shell can carry real `helm.env.grid.chunk.v1` byte ranges with
+  checked SHA-256 integrity and no PNG payloads;
 - `WX-32`, `WX-33`, `WX-34`, `WX-35`, and `WX-20` can reference this contract without inventing new
   storage semantics.

@@ -85,6 +85,15 @@ PACK_METADATA_KEYS = (
     "palette_pack_count",
     "palette_variants",
     "generated_by",
+    "encoding",
+    "payload",
+    "grid_pack_id",
+    "grid_pack_url",
+    "grid_pack_manifest",
+    "grid_layers",
+    "grid_tiers",
+    "chunk_count",
+    "failure_policy",
 )
 
 SOURCE_METADATA_KEYS = (
