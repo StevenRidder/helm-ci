@@ -96,5 +96,6 @@ secrets/
 .claude/
 AGENTS.md
 web/.wx33-e2e/
+web/.client23-e2e/
 web/.wx36-real/
 web/.wx26-e2e/

@@ -42,6 +42,7 @@ tab), so the rAF-driven ownship/track behaviours ARE testable. **Each spec maps 
 | `e2e/client2-track-cap.spec.js` | CLIENT-2 | "Plot for days" — a 5000-pt snapshot and overflowing deltas stay **capped at 3000** (most-recent kept) |
 | `e2e/client3-deck-leak.spec.js` | CLIENT-3 | "Toggle layers freely" — enable→disable→enable leaves **no leaked map control**, re-enable rebuilds cleanly |
 | `e2e/client4-error-surface.spec.js` | CLIENT-4 | "Honest when something's wrong" — real errors/rejections banner, benign tile 404s are suppressed, a **dead nav backend surfaces**, rate-limit + dismiss work, and a failed style shows the banner **not a blank page** |
+| `e2e/client23-windy-parity.spec.js` | CLIENT-23 | "Weather behaves like a chart layer, not a live hack" — compact-grid layers render through HelmWxGrid, pan/zoom/time-scrub create no hidden provider/gateway fetches, GPU hosts emit screenshots + frame/memory metrics, and non-WebGPU hosts fail loud |
 | `e2e/smoke.spec.js` | — | boots in SIM with no uncaught errors, banner hidden |
 
 ```sh
@@ -49,6 +50,7 @@ cd web/test
 npm install                              # @playwright/test
 npx playwright install chromium          # one-time browser download
 npx playwright test                      # run all E2E (starts serve.py itself)
+npm run test:e2e:client23                # run the Windy-parity environmental gate only
 ```
 
 CI runs this on every `web/**` push/PR — see [`.github/workflows/web-e2e.yml`](../../.github/workflows/web-e2e.yml).

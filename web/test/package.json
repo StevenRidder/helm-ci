@@ -5,6 +5,7 @@
   "scripts": {
     "test:unit": "node run.mjs",
     "test:e2e": "playwright test",
+    "test:e2e:client23": "playwright test e2e/client23-windy-parity.spec.js",
     "test": "node run.mjs && playwright test"
   },
   "devDependencies": {
