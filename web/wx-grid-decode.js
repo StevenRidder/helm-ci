@@ -61,6 +61,10 @@
       // Contract §6: do NOT silently switch source when the codec is unreadable.
       throw loudError('unsupported_compression', 'Cannot decode compression "' + comp + '"', assign({ compression: comp }, ctx));
     }
+    var origin = (h.grid && h.grid.origin) || 'northwest';       // absent = pre-pin v1 pack (§6)
+    if (origin !== 'northwest') {
+      throw loudError('unsupported_grid_origin', 'Cannot decode grid origin "' + origin + '"', assign({ origin: origin }, ctx));
+    }
     var g = h.grid || {};
     var w = g.width | 0, ht = g.height | 0;
     if (w <= 0 || ht <= 0) throw loudError('bad_chunk_grid', 'Chunk grid has invalid dimensions', ctx);

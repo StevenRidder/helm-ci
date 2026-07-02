@@ -195,13 +195,18 @@ The header MUST include:
   "layer": "wind",
   "validTime": "2026-07-01T03:00:00Z",
   "bbox": [-180, -90, -170, -80],
-  "grid": { "width": 21, "height": 21, "dx": 0.5, "dy": 0.5 },
+  "grid": { "width": 21, "height": 21, "dx": 0.5, "dy": 0.5, "origin": "northwest" },
   "bands": {
     "u": { "type": "int16", "scale": 0.01, "offset": 0, "nodata": -32768, "unit": "m/s" },
     "v": { "type": "int16", "scale": 0.01, "offset": 0, "nodata": -32768, "unit": "m/s" }
   }
 }
 ```
+
+Grid registration is pinned (WX-35): `grid.origin` is `"northwest"` — row 0 is the NORTH edge
+(rows increase southward), column 0 is the west edge (columns increase eastward), values are
+band-major. Producers MUST emit it; consumers MUST treat an absent `origin` as `northwest`
+(v1 packs predate the pin) and MUST fail with `unsupported_grid_origin` for any other value.
 
 Compression choices are implementation-defined per pack. A consumer MUST fail with
 `unsupported_compression` if the pack declares a codec it cannot read. Do not silently switch to an

@@ -52,7 +52,8 @@ def chunk_grid(manifest: dict[str, Any], chunk: dict[str, Any]) -> dict[str, Any
     height = int(round((float(bbox[3]) - float(bbox[1])) / dy)) + 1
     if width <= 0 or height <= 0:
         fail(f"chunk {chunk.get('layer')} has invalid grid dimensions")
-    return {"width": width, "height": height, "dx": dx, "dy": dy}
+    # WX-35: pin grid registration — row 0 = NORTH edge, col 0 = west (contract §6).
+    return {"width": width, "height": height, "dx": dx, "dy": dy, "origin": "northwest"}
 
 
 def make_payload(manifest: dict[str, Any], chunk_key: str, chunk: dict[str, Any]) -> bytes:
@@ -280,6 +281,9 @@ def verify_chunk(chunk_key: str, chunk: dict[str, Any], pack_path: Path) -> None
         fail(f"bad_chunk_schema: {chunk_key}")
     if header.get("chunkKey") != chunk_key:
         fail(f"chunk_key_mismatch: {chunk_key}")
+    origin = (header.get("grid") or {}).get("origin", "northwest")
+    if origin != "northwest":
+        fail(f"unsupported_grid_origin: {chunk_key} ({origin})")
 
 
 def verify_command(args: argparse.Namespace) -> int:

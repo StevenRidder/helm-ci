@@ -101,7 +101,7 @@
       active: active,
       scene: !!window.HelmWxScene,
       gpu: !!(window.HelmWxSceneGPU && HelmWxSceneGPU.supported && HelmWxSceneGPU.supported()),
-      live: !!window.HelmWxLive,
+      grid: !!window.HelmWxGrid,
       codec: !!window.HelmWxCodec,
       ramp: !!window.HelmWxRamp,
       notice: notice && notice.style.display !== 'none' ? notice.textContent : ''

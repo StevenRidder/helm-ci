@@ -53,7 +53,6 @@ const APP_SHELL_URLS = [
   './wx-grib.js',
   './wx-grib2.js',
   './wx-import.js',
-  './wx-live.js',
   './wx-controls.js',
   './wx-scrim.js',
   './nav-source.js',

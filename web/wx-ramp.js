@@ -1,7 +1,7 @@
 // wx-ramp.js — single source of truth for weather colour ramps (CLIENT-14).
 //
 // Before this, the wind ramp lived in THREE non-identical places — WINDY_WIND (index.html),
-// LAYERS[*].stops (wx-live.js) and RAMP (wind-layer.js) — so the animated particles and the
+// LAYERS[*].stops (the retired live path) and RAMP (wind-layer.js) — so the animated particles and the
 // scalar field could paint DIFFERENT colours for the same wind speed. Now every path reads its
 // stops from here, so a value maps to one colour everywhere by construction.
 //
@@ -13,7 +13,7 @@
   'use strict';
 
   // Canonical Windy-aligned stops per layer (knots / °C / mm / % / hPa / J·kg⁻¹). This IS the
-  // wx-live palette — the most graduated, Windy-matched set — now shared by the particles too.
+  // most graduated, Windy-matched palette — now shared by the particles too.
   var RAMPS = {
     wind:     [[0, [98, 113, 183]], [5, [57, 131, 168]], [10, [52, 171, 151]], [16, [123, 183, 80]], [22, [225, 200, 60]], [30, [232, 130, 50]], [40, [214, 70, 74]], [55, [150, 60, 150]]],
     gust:     [[0, [56, 189, 248]], [10, [45, 212, 191]], [20, [250, 204, 21]], [30, [249, 115, 22]], [42, [239, 68, 68]], [60, [217, 33, 154]]],

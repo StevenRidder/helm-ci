@@ -129,7 +129,7 @@
 
   // Bilinear-interpolate [u, v] at lat/lon. Returns null if outside the grid. Writes into the
   // provided 2-array `out` to avoid allocation. Arg order (lat, lon) is unified across all weather
-  // samplers -- cog.sampleWx(lat,lon,t), HelmWxLive.sampleAt(lat,lon) -- per CLIENT-14.
+  // samplers -- e.g. cog.sampleWx(lat,lon,t) -- per CLIENT-14.
   WindField.prototype.sample = function (lat, lon, out) {
     if (!this.valid) return null;
     // Fractional grid coordinates. Column increases eastward from lo1;
@@ -501,7 +501,7 @@
   };
 
   // Feed an in-memory leaflet-velocity grid (same shape load() fetches). Lets the Live fetch-on-pan
-  // mode (wx-live.js) drive the particles over the current VIEWPORT — the windgl/Windy approach where
+  // path (now the Environmental Scene) drive the particles over the current VIEWPORT — windgl-style:
   // the GPU particle field re-renders to fill the screen at any zoom, instead of one fixed-bbox patch.
   HelmWindLayer.prototype.setData = function (json) {
     var ok = this.field.build(json);

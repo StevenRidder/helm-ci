@@ -754,7 +754,7 @@
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
 <script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
 <script src="wx-grid-scene.js"></script><!-- WX-33: WebGPU model-grid renderer (HelmWxGrid; no tiles, no substitution) -->
-<!-- CLIENT-14: field-layer.js (legacy fixed-bbox HelmField) retired — field is rendered by the Live path (wx-live.js / helmwx tiles); legend via wx-ramp.js -->
+<!-- CLIENT-14/WX-35: legacy field-layer.js AND the gesture-fetching wx-live.js are retired — the field is the prepared Environmental Scene (wx-scene.js); legend via wx-ramp.js -->
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
 <!-- WX weather — codec + GRIB2 reader (globals) + probe faces + engines. The UI (hi-res tiles,
@@ -766,7 +766,6 @@
 <script src="wx-grib.js"></script>
 <script src="wx-grib2.js"></script>
 <script src="wx-import.js"></script>
-<script src="wx-live.js"></script>
 <script src="wx-controls.js"></script>
 <script src="wx-scrim.js"></script><!-- Windy-parity: dim+desaturate the basemap while a weather overlay is active so it pops; reverts on Off -->
 <script src="nav-source.js"></script>
@@ -1047,9 +1046,9 @@
 
   // ---- weather: heatmap color field (HelmField) + animated particles (HelmWind) ----
   // WX-25: HelmWindAuto = WebGPU compute advection when available, visible CPU fallback otherwise
-  // (window.__helmWindMode says which path is live). Same API either way; wx-scene/wx-live don't care.
+  // (window.__helmWindMode says which path is live). Same API either way; the scene doesn't care.
   const wind = window.HelmWindAuto ? HelmWindAuto(map) : (window.HelmWind ? HelmWind(map) : null);
-  window.__helmWind = wind;                    // shared with Live (wx-live.js) to drive particles over the viewport
+  window.__helmWind = wind;                    // shared with the Environmental Scene (wx-scene.js) — it owns particle data/visibility
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;   // CLIENT-14: legacy HelmField retired — stays null; Live owns the field, legend via HelmWxRamp. Residual `if (field)` guards below are vestigial no-ops (removed with the renderer rewrite in WX-19).
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
@@ -1057,7 +1056,7 @@
   const measureBtn = document.querySelector('.ri[data-rail="measure"]');
   const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
   const collision = window.HelmCollision ? HelmCollision(map) : null;
-  const VECTOR = { wind: 'wind.json', waves: 'waves.json', swell: 'swell.json', current: 'current.json' };
+  const VECTOR = { wind: 1, waves: 1, swell: 1, current: 1 };   // vector (u/v) layers — the scene drives their particles (WX-35)
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
   const WINDY_WIND = (window.HelmWxRamp ? HelmWxRamp.stopsFor('wind') : []);   // CLIENT-14: single shared ramp source (was a duplicated literal)
@@ -1073,7 +1072,6 @@
     if (!stops || !stops.length) return null;
     return { vmin: stops[0][0], vmax: stops[stops.length - 1][0], stops, unit: WX_UNITS[name] || '', layer: name };
   }
-  const velUrl = n => forecast ? `data/${n}-t${frame}.json` : `data/${VECTOR[n]}`;
 
   let wxNoticeTimer = null;
   function wxNotice(layer, msg) {       // surface a failed weather load instead of silently showing nothing
@@ -1123,10 +1121,10 @@
     // above) renders the field from the gateway/Open-Meteo; the legend comes from the shared ramp.
     wxNoticeClear(); buildLegend(legendFromRamp(name));
     const partOn = document.getElementById('particles').checked;
-    if (wind) {
-      if (VECTOR[name] && partOn) { wind.load(velUrl(name)); wind.setVisible(true); }
-      else wind.setVisible(false);
-    }
+    // WX-35: the Environmental Scene (wx-scene startParticles) owns vector particles — data AND
+    // visibility. The legacy fixture-JSON autoload is retired (it 404'd forever and raced the
+    // scene with an empty, visible engine). Here we only ensure particles hide when they can't apply.
+    if (wind && !(VECTOR[name] && partOn)) wind.setVisible(false);
   }
 
   function setFrame(i) {
@@ -1139,9 +1137,7 @@
       ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
       : ('+' + frame + 'h');
     if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
-      if (field) field.load(fieldUrl(activeWx), fieldOpts(activeWx)).then(buildLegend).catch(() => wxNotice(activeWx));
       if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'));   // re-contour isobars for the new frame
-      if (wind && VECTOR[activeWx] && document.getElementById('particles').checked) wind.load(velUrl(activeWx));
     }
   }
   fetch('data/forecast.json').then(r => r.ok ? r.json() : null).then(fc => {
@@ -1172,7 +1168,6 @@
     if (window.HelmWxScene && HelmWxScene.setOpacity) HelmWxScene.setOpacity(o);
     if (field) field.setOpacity(o);
     if (wind) wind.setOpacity(o);
-    if (window.HelmWxLive && HelmWxLive.setOpacity) HelmWxLive.setOpacity(map, o);
   }
   opSlider.addEventListener('input', applyOpacity);
   applyOpacity();

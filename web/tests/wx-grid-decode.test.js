@@ -126,3 +126,14 @@ ok('bracketValidTimes lerps between frames, clamps outside, snaps at edges', () 
 });
 
 console.log((process.exitCode ? 'FAIL' : 'ok') + ' - wx-grid-decode: ' + pass + ' groups passed');
+
+ok('grid.origin: absent defaults northwest; anything else fails loud (contract §6 pin)', () => {
+  const base = { width: 1, height: 1, dx: 1, dy: 1, bbox: [0, 0, 0, 0],
+    bands: { u: { type: 'int16', scale: 1, nodata: -32768, stored: [5] } } };
+  const nw = envelope(base); nw.header.grid.origin = 'northwest';
+  assert.strictEqual(D.decodeChunk(nw, {}).bands.u[0], 5, 'explicit northwest decodes');
+  const legacy = envelope(base);                       // no origin — pre-pin v1 pack
+  assert.strictEqual(D.decodeChunk(legacy, {}).bands.u[0], 5, 'absent origin = northwest');
+  const flipped = envelope(base); flipped.header.grid.origin = 'southwest';
+  throwsCode(() => D.decodeChunk(flipped, {}), 'unsupported_grid_origin');
+});
