@@ -35,7 +35,28 @@ ok('shader keeps the contract semantics markers', () => {
   assert.ok(src.includes('mix(a.xy, b.xy, u.frac)'), 'values lerped before colourization');
   assert.ok(src.includes('c.rgb*alpha, alpha'), 'premultiplied output');
   assert.ok(src.includes('1e29'), 'NODATA sentinel honoured');
-  assert.ok(src.includes('u.opacity*valid'), 'opacity scales alpha only, invalid -> transparent');
+  assert.ok(src.includes('c.a*valid'), 'invalid -> transparent');
+  // layer opacity must NOT be baked into the texture — MapLibre raster-opacity owns it,
+  // so the slider fades the weather TOWARD THE CHART (compositing rework)
+  assert.ok(!src.includes('u.opacity'), 'opacity lives in raster-opacity, not the shader');
+  assert.ok(src.includes('atan(exp(merc))'), 'rows are inverse-mercator (linear-in-mercator canvas)');
+});
+
+ok('render extent: mercator clamp + antimeridian unwrap', () => {
+  const T = win.HelmWxGrid._test;
+  // global pack: ±90 must clamp to web-mercator's ±85, span exactly 360
+  const g = T.renderExtent({ west: -180, east: 180, north: 90, south: -90, global: true });
+  assert.strictEqual(g.north, 85); assert.strictEqual(g.south, -85);
+  assert.strictEqual(g.east - g.west, 360);
+  // Fiji route pack crosses 180: east stays unwrapped (one continuous extent)
+  const f = T.renderExtent({ west: 157.4, east: -162.6, north: 2.4, south: -37.6, global: false });
+  assert.strictEqual(f.east, 197.4);
+  assert.ok(f.mN > f.mS, 'mercator north above south');
+  // ...but globe culls any quad past mercator x=1, so a crossing extent MUST split
+  // at 180 into two in-world segments (the field vanished on globe without this)
+  const segs = T.splitExtent(f);
+  assert.strictEqual(JSON.stringify(segs.map(s => [s.west, s.east])), '[[157.4,180],[-180,-162.6]]');
+  assert.strictEqual(JSON.stringify(T.splitExtent(g).map(s => [s.west, s.east])), '[[-180,180]]', 'global stays one segment');
 });
 
 ok('balanced braces (rough syntax sanity)', () => {

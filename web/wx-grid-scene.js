@@ -1,17 +1,21 @@
 /*
- * Helm — wx-grid-scene.js (WX-33)
+ * Helm — wx-grid-scene.js (WX-33, compositing rework)
  * --------------------------------------------------------------------------
  * WebGPU model-grid renderer: draws weather DIRECTLY from helm.env.grid.v1
- * numeric grids. A fixed screen-space mesh is unprojected through MapLibre
- * (map.unproject per vertex, per frame) so the renderer is PROJECTION-
- * AGNOSTIC — mercator, globe, and pitched views all work because MapLibre
- * owns the projection math; the shader only ever sees model-grid coords.
- * Per fragment the grid is sampled with NODATA-honest manual bilinear,
+ * numeric grids into an OFFSCREEN canvas laid out in geographic space
+ * (x linear in longitude, y linear in mercator-y across the pack coverage),
+ * then hands that canvas to MapLibre as a canvas source + raster layer
+ * inserted BELOW 'route-line'. MapLibre owns ALL projection (mercator,
+ * globe, pitch — image sources reproject everywhere), the chart's own
+ * symbols/route/AIS stay crisp ON TOP of the weather, and the transparency
+ * slider drives the layer's raster-opacity — true see-through-to-the-chart
+ * transparency, not a screen overlay dimming toward the page background.
+ * Pan/zoom re-renders NOTHING here: the field is a static texture MapLibre
+ * warps like any raster. No tiles, no seams, no per-gesture work at all.
+ *
+ * Per texel the grid is sampled with NODATA-honest manual bilinear,
  * value-lerped between the two bracketing valid times, unit-converted
- * explicitly, and ramped to colour with premultiplied alpha — the
- * transparency slider changes opacity ONLY. No tiles, no seams, no boxes:
- * the data is resident on the GPU, so zoom/pan hammering has nothing to
- * fetch and nothing to race.
+ * explicitly, and ramped to colour with premultiplied alpha.
  *
  * Data path: HelmWxGridPacks (WX-32 range transport, checksum-verified) ->
  * HelmWxGridDecode (typed bands, tier assembly) -> rg32float textures.
@@ -31,11 +35,12 @@
   'use strict';
 
   var SENTINEL = 1e30;                  // NaN encoded for WGSL (fast-math NaN is unreliable)
-  var MESH_W = 64, MESH_H = 48;         // screen mesh density (unprojected per frame; ~3k verts)
+  var UPSCALE = 4, MAX_TEX = 2048;      // offscreen texels per grid cell / hard texture cap
+  var SRC_ID = 'helm-wx-grid';          // MapLibre source + layer id
   // Pack values are SI (contract §5); ramps are display units. Explicit per layer — no hidden defaults.
   var UNIT_FACTOR = { wind: 1.9438445, current: 1.9438445, gust: 1.9438445 };   // m/s -> kn; others 1:1
   // Probe/legend display units AFTER conversion (packs store SI; ramps/probe show these).
-  var DISPLAY_UNIT = { wind: 'kn', gust: 'kn', current: 'kn', rain: 'mm/h', temp: '\u00b0C', sst: '\u00b0C',
+  var DISPLAY_UNIT = { wind: 'kn', gust: 'kn', current: 'kn', rain: 'mm/h', temp: '°C', sst: '°C',
                        pressure: 'hPa', clouds: '%', cape: 'J/kg', waves: 'm', swell: 'm' };
 
   function loud(code, message, details) {
@@ -46,7 +51,7 @@
 
   var state = {
     _gen: 0,
-    on: false, map: null, gpu: null, canvas: null, ctx: null,
+    on: false, map: null, gpu: null, segs: [],
     manifest: null, manifestUrl: null, layer: null, meta: null,
     frames: {},                          // validTime -> { assembled, tex }
     bracket: null,                       // {a, b, frac}
@@ -92,21 +97,24 @@
       generatedAt: state.manifest && state.manifest.generatedAt,
       ageSeconds: ageSeconds(),
       opacity: state.opacity,
+      composited: 'maplibre-raster',
       diagnostics: state.diagnostics.slice(-10)
     };
   }
 
   // ---- WGSL -----------------------------------------------------------------
-  // Vertex: static NDC position + streamed (fx, fy, valid) grid coords computed
-  // on the CPU via map.unproject. Fragment: NODATA-honest bilinear over the two
-  // frame textures, value-lerp, unit convert, ramp, premultiplied alpha.
+  // Vertex: fullscreen triangle over the OFFSCREEN geographic canvas. Fragment:
+  // texel -> (lon linear west..east, lat via inverse mercator between the
+  // clamped coverage edges) -> fractional grid coords -> NODATA-honest bilinear
+  // over the two frame textures, value-lerp, unit convert, ramp, premultiplied
+  // alpha. Layer opacity is NOT applied here — MapLibre raster-opacity owns it.
 
   var WGSL = [
     'struct U {',
     '  west: f32, north: f32, dx: f32, dy: f32,',
     '  gw: f32, gh: f32, wrap: f32, frac: f32,',
-    '  unitF: f32, rmin: f32, rspan: f32, opacity: f32,',
-    '  vector: f32, pad0: f32, pad1: f32, pad2: f32,',
+    '  unitF: f32, rmin: f32, rspan: f32, segWest: f32,',
+    '  vector: f32, mercN: f32, mercS: f32, segEast: f32,',
     '};',
     '@group(0) @binding(0) var<uniform> u: U;',
     '@group(0) @binding(1) var fA: texture_2d<f32>;',   // rg32float; scalar in .r, vector u/v in .rg
@@ -114,9 +122,13 @@
     '@group(0) @binding(3) var ramp: texture_2d<f32>;',
     '@group(0) @binding(4) var rs: sampler;',
     '',
-    'struct VO { @builtin(position) pos: vec4<f32>, @location(0) g: vec3<f32> };',
-    '@vertex fn vs(@location(0) ndc: vec2<f32>, @location(1) g: vec3<f32>) -> VO {',
-    '  var o: VO; o.pos = vec4<f32>(ndc, 0.0, 1.0); o.g = g; return o;',
+    'struct VO { @builtin(position) pos: vec4<f32>, @location(0) uv: vec2<f32> };',
+    '@vertex fn vs(@builtin(vertex_index) vi: u32) -> VO {',
+    '  var p = array<vec2<f32>, 3>(vec2<f32>(-1.0, -3.0), vec2<f32>(3.0, 1.0), vec2<f32>(-1.0, 1.0));',
+    '  var o: VO;',
+    '  o.pos = vec4<f32>(p[vi], 0.0, 1.0);',
+    '  o.uv = vec2<f32>((p[vi].x + 1.0) * 0.5, (1.0 - p[vi].y) * 0.5);',   // uv.y = 0 at the north edge
+    '  return o;',
     '}',
     '',
     // NODATA-honest manual bilinear over one frame texture. Returns (value.xy, valid).
@@ -145,7 +157,17 @@
     '}',
     '',
     '@fragment fn fs(in: VO) -> @location(0) vec4<f32> {',
-    '  let fx = in.g.x; let fy = in.g.y;',
+    // texel -> geographic coords. Rows are linear in MERCATOR-Y because MapLibre
+    // maps image/canvas sources linearly into mercator space — linear-in-lat here
+    // would smear the field north-south across a wide pack.
+    '  let lon = u.segWest + in.uv.x * (u.segEast - u.segWest);',
+    '  let merc = mix(u.mercN, u.mercS, in.uv.y);',
+    '  let lat = degrees(2.0*atan(exp(merc)) - 1.5707963267949);',
+    // segment lon -> the grid's [west, west+360) window (an east-of-180 segment carries
+    // rewrapped lons; a global east edge lands exactly on west and wraps in the tap)
+    '  let lonG = lon - 360.0*floor((lon - u.west)/360.0);',
+    '  let fx = (lonG - u.west)/u.dx;',
+    '  let fy = (u.north - lat)/u.dy;',
     '  let a = sampleFrame(0u, fx, fy);',
     '  let b = sampleFrame(1u, fx, fy);',
     '  var val = vec2<f32>(0.0, 0.0);',
@@ -153,14 +175,13 @@
     '  if (a.z > 0.5 && b.z > 0.5) { val = mix(a.xy, b.xy, u.frac); valid = 1.0; }',   // lerp VALUES then colour (§8)
     '  else if (a.z > 0.5) { val = a.xy; valid = 1.0; }',
     '  else if (b.z > 0.5) { val = b.xy; valid = 1.0; }',
-    '  if (in.g.z < 0.999) { valid = 0.0; }',               // any unprojectable mesh corner -> transparent
     '  var display = val.x;',
     '  if (u.vector > 0.5) { display = length(val); }',
     '  display = display*u.unitF;',
     '  let t = clamp((display - u.rmin)/max(u.rspan, 1e-6), 0.0, 1.0);',
     '  let c = textureSample(ramp, rs, vec2<f32>(t, 0.5));',   // unconditional -> uniform control flow
-    '  let alpha = c.a*u.opacity*valid;',                       // NODATA/out-of-coverage -> fully transparent
-    '  return vec4<f32>(c.rgb*alpha, alpha);',                  // premultiplied: slider moves ALPHA only
+    '  let alpha = c.a*valid;',                                // NODATA/out-of-coverage -> fully transparent
+    '  return vec4<f32>(c.rgb*alpha, alpha);',                 // premultiplied; slider lives in raster-opacity
     '}'
   ].join('\n');
 
@@ -199,10 +220,7 @@
       var premul = { color: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha' },
                      alpha: { srcFactor: 'one', dstFactor: 'one-minus-src-alpha' } };
       var pipe = dev.createRenderPipeline({ layout: 'auto',
-        vertex: { module: mod, entryPoint: 'vs', buffers: [
-          { arrayStride: 8, attributes: [{ shaderLocation: 0, offset: 0, format: 'float32x2' }] },
-          { arrayStride: 12, attributes: [{ shaderLocation: 1, offset: 0, format: 'float32x3' }] }
-        ] },
+        vertex: { module: mod, entryPoint: 'vs' },
         fragment: { module: mod, entryPoint: 'fs', targets: [{ format: fmt, blend: premul }] },
         primitive: { topology: 'triangle-list' } });
       state.gpu = {
@@ -210,72 +228,107 @@
         sampler: dev.createSampler({ magFilter: 'linear', minFilter: 'linear' }),
         ubuf: dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST })
       };
-      buildMesh();
       return state.gpu;
     });
   }
 
-  // Static NDC mesh + index buffer; the grid-coord vertex stream is rewritten per render.
-  function buildMesh() {
-    var dev = state.gpu.device;
-    var W = MESH_W, H = MESH_H;
-    var ndc = new Float32Array(W * H * 2);
-    for (var j = 0; j < H; j++) {
-      for (var i = 0; i < W; i++) {
-        var k = (j * W + i) * 2;
-        ndc[k] = (i / (W - 1)) * 2 - 1;
-        ndc[k + 1] = 1 - (j / (H - 1)) * 2;
-      }
-    }
-    var idx = new Uint32Array((W - 1) * (H - 1) * 6);
-    var n = 0;
-    for (var r = 0; r < H - 1; r++) {
-      for (var c = 0; c < W - 1; c++) {
-        var v0 = r * W + c, v1 = v0 + 1, v2 = v0 + W, v3 = v2 + 1;
-        idx[n++] = v0; idx[n++] = v2; idx[n++] = v1;
-        idx[n++] = v1; idx[n++] = v2; idx[n++] = v3;
-      }
-    }
-    var g = state.gpu;
-    g.ndcBuf = dev.createBuffer({ size: ndc.byteLength, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
-    dev.queue.writeBuffer(g.ndcBuf, 0, ndc);
-    g.idxBuf = dev.createBuffer({ size: idx.byteLength, usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST });
-    dev.queue.writeBuffer(g.idxBuf, 0, idx);
-    g.idxCount = idx.length;
-    g.gposBuf = dev.createBuffer({ size: W * H * 12, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
-    g.gpos = new Float32Array(W * H * 3);
+  function mercY(lat) { return Math.log(Math.tan(Math.PI / 4 + (lat * Math.PI / 180) / 2)); }
+
+  // Geographic extent the offscreen canvas covers: the pack coverage, latitudes
+  // clamped to web-mercator's ±85° (a global pack's ±90 edge is unmappable), east
+  // UNWRAPPED past 180 so an antimeridian-crossing pack stays one continuous quad.
+  function renderExtent(meta) {
+    var north = Math.min(meta.north, 85), south = Math.max(meta.south, -85);
+    var west = meta.west;
+    var east = meta.global ? meta.west + 360 : meta.east;
+    if (!meta.global && east <= west) east += 360;
+    return { west: west, east: east, north: north, south: south, mN: mercY(north), mS: mercY(south) };
   }
 
-  function buildCanvas(map) {
-    if (state.canvas) return;
-    var mapCanvas = map.getCanvas(), container = mapCanvas.parentNode;
-    var c = document.createElement('canvas');
-    c.className = 'helm-wx-grid-canvas';
-    var s = c.style;
-    s.position = 'absolute'; s.top = '0'; s.left = '0';
-    s.width = '100%'; s.height = '100%';
-    s.pointerEvents = 'none'; s.zIndex = '1'; s.display = 'block';
-    // field sits UNDER the particle canvas (same z-index, earlier in DOM order)
-    var particles = container.querySelector('.helm-wind-canvas');
-    container.insertBefore(c, particles || null);
-    state.canvas = c;
-    state.ctx = c.getContext('webgpu');
-    if (!state.ctx) throw loud('unsupported_renderer_capability', 'webgpu canvas context unavailable', { action: 'enable WebGPU' });
-    state.ctx.configure({ device: state.gpu.device, format: state.gpu.format, alphaMode: 'premultiplied' });
-    resizeCanvas();
+  // Globe projection has no world copies: a quad whose east edge passes 180°
+  // (mercator x > 1) is culled ENTIRELY — the Fiji route pack crosses 180 by
+  // design and simply vanished on the globe. Split a crossing extent at 180
+  // into two in-world segments; each gets its own canvas + source below.
+  function splitExtent(ext) {
+    if (ext.east <= 180) return [ext];
+    return [
+      Object.assign({}, ext, { east: 180 }),
+      Object.assign({}, ext, { west: -180, east: ext.east - 360 })
+    ];
   }
 
-  function resizeCanvas() {
-    var map = state.map, c = state.canvas;
-    if (!map || !c) return;
-    var mc = map.getCanvas();
-    var w = mc.clientWidth || mc.width, h = mc.clientHeight || mc.height;
-    var dpr = Math.min(global.devicePixelRatio || 1, 2);
-    c.width = Math.max(1, Math.round(w * dpr));
-    c.height = Math.max(1, Math.round(h * dpr));
-    c.style.width = w + 'px';
-    c.style.height = h + 'px';
-    state.wCss = w; state.hCss = h;
+  // Offscreen canvases the grid renders into (one per segment). Hidden from the
+  // page — MapLibre reads them as canvas sources; they are never composited as
+  // DOM. Kept in the document so tooling and the e2e specs can find
+  // '.helm-wx-grid-canvas'.
+  function makeCanvases() {
+    var ext = renderExtent(state.meta);
+    var segs = splitExtent(ext);
+    var fullW = Math.min(MAX_TEX, Math.max(256, state.meta.width * UPSCALE));
+    var aspect = (ext.mN - ext.mS) / ((ext.east - ext.west) * Math.PI / 180);
+    var h = Math.min(MAX_TEX, Math.max(256, Math.round(fullW * aspect)));
+    while (state.segs.length > segs.length) {
+      var dead = state.segs.pop();
+      if (dead.canvas && dead.canvas.parentNode) dead.canvas.parentNode.removeChild(dead.canvas);
+    }
+    for (var i = 0; i < segs.length; i++) {
+      var span = segs[i].east - segs[i].west;
+      var w = Math.max(64, Math.round(fullW * span / (ext.east - ext.west)));   // uniform texel density
+      var s = state.segs[i];
+      if (!s) {
+        var c = document.createElement('canvas');
+        c.className = 'helm-wx-grid-canvas';
+        c.style.display = 'none';
+        document.body.appendChild(c);
+        var ctx = c.getContext('webgpu');
+        if (!ctx) throw loud('unsupported_renderer_capability', 'webgpu canvas context unavailable', { action: 'enable WebGPU' });
+        ctx.configure({ device: state.gpu.device, format: state.gpu.format, alphaMode: 'premultiplied' });
+        s = state.segs[i] = { canvas: c, ctx: ctx };
+      }
+      if (s.canvas.width !== w || s.canvas.height !== h) { s.canvas.width = w; s.canvas.height = h; }
+      s.ext = segs[i];
+    }
+  }
+
+  // (Re)attach the segment canvases to the map as raster layers UNDER the
+  // chart's own features — weather must never paint over the route, AIS or labels.
+  function removeFromMap(map) {
+    for (var i = 0; i < 4; i++) {
+      var id = SRC_ID + '-' + i;
+      try { if (map.getLayer(id)) map.removeLayer(id); } catch (e) {}
+      try { if (map.getSource(id)) map.removeSource(id); } catch (e) {}
+    }
+  }
+  function addToMap(map) {
+    removeFromMap(map);
+    var before;
+    try { before = map.getLayer('route-line') ? 'route-line' : undefined; } catch (e) {}
+    state.segs.forEach(function (s, i) {
+      var id = SRC_ID + '-' + i;
+      map.addSource(id, {
+        type: 'canvas', canvas: s.canvas, animate: false,
+        coordinates: [[s.ext.west, s.ext.north], [s.ext.east, s.ext.north], [s.ext.east, s.ext.south], [s.ext.west, s.ext.south]]
+      });
+      map.addLayer({ id: id, type: 'raster', source: id,
+        paint: { 'raster-opacity': state.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } }, before);
+    });
+  }
+
+  // The canvas source is animate:false (a constant repaint loop would burn battery
+  // for a static field). After each offscreen draw, play() for two frames so
+  // MapLibre re-uploads the canvas — the WebGPU present lands by then — and pause.
+  function refreshSource() {
+    var map = state.map;
+    if (!map) return;
+    var playing = [];
+    state.segs.forEach(function (_s, i) {
+      var src;
+      try { src = map.getSource(SRC_ID + '-' + i); } catch (e) {}
+      if (src && src.play) { src.play(); playing.push(src); }
+    });
+    if (!playing.length) return;
+    var raf = (typeof requestAnimationFrame === 'function') ? requestAnimationFrame : function (f) { setTimeout(f, 16); };
+    raf(function () { raf(function () { playing.forEach(function (src) { try { src.pause(); } catch (e) {} }); }); });
   }
 
   // Tier field -> rg32float texture (NaN -> SENTINEL). Scalar bands land in .r.
@@ -396,91 +449,37 @@
 
   // ---- render ---------------------------------------------------------------
 
-  // Rewrite the grid-coord vertex stream: unproject the fixed screen mesh through
-  // MapLibre (projection-agnostic), unwrap lon row-continuously (antimeridian-safe
-  // interpolation), convert to fractional grid coords.
-  function updateMesh() {
-    var m = state.map, g = state.gpu, meta = state.meta;
-    var W = MESH_W, H = MESH_H, out = g.gpos;
-    var wCss = state.wCss || 1, hCss = state.hCss || 1;
-    for (var j = 0; j < H; j++) {
-      var prevLon = null;
-      for (var i = 0; i < W; i++) {
-        var k = (j * W + i) * 3;
-        var px = (i / (W - 1)) * wCss, py = (j / (H - 1)) * hCss;
-        var ll = null;
-        try { ll = m.unproject([px, py]); } catch (e) {}
-        if (!ll || !isFinite(ll.lat) || !isFinite(ll.lng) || Math.abs(ll.lat) > 90.5) {
-          out[k] = 0; out[k + 1] = -1; out[k + 2] = 0;       // invalid corner -> fragment transparent
-          prevLon = null;
-          continue;
-        }
-        var lon = ll.lng;
-        if (prevLon != null) lon = lon - 360 * Math.round((lon - prevLon) / 360);   // row-continuous unwrap
-        prevLon = lon;
-        var fx;
-        if (meta.global) {
-          fx = (lon - meta.west) / meta.dx;                  // shader wraps columns
-        } else {
-          // window the lon to [west-180, west+180): continuous THROUGH the pack's west edge
-          // (a [west, west+360) window put a 360/dx cliff exactly at the edge — a compressed
-          // whole-grid smear one triangle wide). Out-of-coverage fx goes negative/over and
-          // the shader tap rejects it — transparent, honest.
-          var lonW = lon - 360 * Math.floor((lon - (meta.west - 180)) / 360);
-          fx = (lonW - meta.west) / meta.dx;
-        }
-        out[k] = fx;
-        out[k + 1] = (meta.north - ll.lat) / meta.dy;
-        out[k + 2] = 1;
-      }
-    }
-    g.device.queue.writeBuffer(g.gposBuf, 0, out);
-  }
-
+  // One fullscreen pass into the offscreen geographic canvas. Runs on enable and
+  // time-scrub ONLY — map gestures never reach this (MapLibre warps the texture).
   function render() {
-    if (!state.on || !state.gpu || !state.bracket || !state.canvas) return;
+    if (!state.on || !state.gpu || !state.bracket || !state.segs.length) return;
     var g = state.gpu, dev = g.device, m = state.meta, br = state.bracket;
     var fA = state.frames[br.a], fB = state.frames[br.b];
     if (!fA || !fA.tex || !fB || !fB.tex) return;
-    updateMesh();
     var unitF = UNIT_FACTOR[state.layer] || 1;
-    dev.queue.writeBuffer(g.ubuf, 0, new Float32Array([
-      m.west, m.north, m.dx, m.dy,
-      m.width, m.height, m.global ? 1 : 0, br.frac,
-      unitF, g.rmin, g.rspan, state.opacity,
-      m.kind === 'vector' ? 1 : 0, 0, 0, 0]));
-    var bind = dev.createBindGroup({ layout: g.pipe.getBindGroupLayout(0), entries: [
-      { binding: 0, resource: { buffer: g.ubuf } },
-      { binding: 1, resource: fA.tex.createView() },
-      { binding: 2, resource: fB.tex.createView() },
-      { binding: 3, resource: g.rampTex.createView() },
-      { binding: 4, resource: g.sampler }] });
-    var enc = dev.createCommandEncoder();
-    var pass = enc.beginRenderPass({ colorAttachments: [{ view: state.ctx.getCurrentTexture().createView(),
-      clearValue: { r: 0, g: 0, b: 0, a: 0 }, loadOp: 'clear', storeOp: 'store' }] });
-    pass.setPipeline(g.pipe);
-    pass.setBindGroup(0, bind);
-    pass.setVertexBuffer(0, g.ndcBuf);
-    pass.setVertexBuffer(1, g.gposBuf);
-    pass.setIndexBuffer(g.idxBuf, 'uint32');
-    pass.drawIndexed(g.idxCount);
-    pass.end();
-    dev.queue.submit([enc.finish()]);
-  }
-
-  function bindMap(map) {
-    if (state._bound) return;
-    state._onMove = function () { render(); };                  // fires per animation frame during gestures
-    state._onResize = function () { resizeCanvas(); render(); };
-    map.on('move', state._onMove);
-    map.on('resize', state._onResize);
-    state._bound = true;
-  }
-  function unbindMap() {
-    if (!state._bound || !state.map) return;
-    state.map.off('move', state._onMove);
-    state.map.off('resize', state._onResize);
-    state._bound = false;
+    state.segs.forEach(function (seg) {
+      // one uniform buffer per segment draw: writeBuffer+submit per pass keeps ordering
+      dev.queue.writeBuffer(g.ubuf, 0, new Float32Array([
+        m.west, m.north, m.dx, m.dy,
+        m.width, m.height, m.global ? 1 : 0, br.frac,
+        unitF, g.rmin, g.rspan, seg.ext.west,
+        m.kind === 'vector' ? 1 : 0, seg.ext.mN, seg.ext.mS, seg.ext.east]));
+      var bind = dev.createBindGroup({ layout: g.pipe.getBindGroupLayout(0), entries: [
+        { binding: 0, resource: { buffer: g.ubuf } },
+        { binding: 1, resource: fA.tex.createView() },
+        { binding: 2, resource: fB.tex.createView() },
+        { binding: 3, resource: g.rampTex.createView() },
+        { binding: 4, resource: g.sampler }] });
+      var enc = dev.createCommandEncoder();
+      var pass = enc.beginRenderPass({ colorAttachments: [{ view: seg.ctx.getCurrentTexture().createView(),
+        clearValue: { r: 0, g: 0, b: 0, a: 0 }, loadOp: 'clear', storeOp: 'store' }] });
+      pass.setPipeline(g.pipe);
+      pass.setBindGroup(0, bind);
+      pass.draw(3);
+      pass.end();
+      dev.queue.submit([enc.finish()]);
+    });
+    refreshSource();
   }
 
   // ---- public ---------------------------------------------------------------
@@ -521,11 +520,12 @@
       if (gen !== state._gen) { publish(); return status(); }   // superseded by disable()/off — stay down
       g.rampTex = rampTexture(lutInfo); g.rmin = lutInfo.rmin; g.rspan = lutInfo.rspan;
       uploadFrames();
-      buildCanvas(map);
-      bindMap(map);
+      makeCanvases();
       state.on = true;
-      feedParticles();
       render();
+      addToMap(map);
+      refreshSource();
+      feedParticles();
       publish();
       return status();
     }).catch(function (e) {
@@ -610,23 +610,31 @@
       freshness: { generatedAt: state.manifest && state.manifest.generatedAt,
                    validTimeA: br.a, validTimeB: br.b, frac: br.frac, ageSeconds: ageSeconds() },
       sourceRef: { packId: state.manifest && state.manifest.packId,
-                   title: 'helm.env.grid.v1 pack \u00b7 ' + ((state.manifest && state.manifest.source && state.manifest.source.provider) || 'unknown') }
+                   title: 'helm.env.grid.v1 pack · ' + ((state.manifest && state.manifest.source && state.manifest.source.provider) || 'unknown') }
     });
   }
 
+  // Alpha only — colour untouched (§8). The slider drives MapLibre's raster-opacity,
+  // so the CHART fades through the weather; the offscreen field is never re-rendered.
   function setOpacity(o) {
-    state.opacity = Math.max(0, Math.min(1, +o));              // alpha only — colour untouched (§8)
-    render();
+    state.opacity = Math.max(0, Math.min(1, +o));
+    var map = state.map;
+    state.segs.forEach(function (_s, i) {
+      var id = SRC_ID + '-' + i;
+      try { if (map && map.getLayer(id)) map.setPaintProperty(id, 'raster-opacity', state.opacity); } catch (e) {}
+    });
+    publish();
   }
 
   function disable() {
     state._gen++;                                            // invalidate any in-flight enable
     state.on = false;
-    unbindMap();
+    var map = state.map;
+    if (map) removeFromMap(map);
     var w = global.__helmWind;
     if (w && state.meta && state.meta.kind === 'vector') { try { w.setVisible(false); } catch (e) {} }
-    if (state.canvas && state.canvas.parentNode) state.canvas.parentNode.removeChild(state.canvas);
-    state.canvas = null; state.ctx = null;
+    state.segs.forEach(function (s) { if (s.canvas && s.canvas.parentNode) s.canvas.parentNode.removeChild(s.canvas); });
+    state.segs = [];
     for (var k in state.frames) { if (state.frames.hasOwnProperty(k)) { try { state.frames[k].tex && state.frames[k].tex.destroy(); } catch (e) {} } }
     state.frames = {};
     state.manifest = null; state.meta = null; state.bracket = null;
@@ -637,6 +645,7 @@
     enable: enable, disable: disable, setTime: setTime, setOpacity: setOpacity, status: status,
     sample: sample,
     _test: { UNIT_FACTOR: UNIT_FACTOR, DISPLAY_UNIT: DISPLAY_UNIT, SENTINEL: SENTINEL,
-             MESH: [MESH_W, MESH_H], buildShader: buildShader, sampleFrameCPU: sampleFrameCPU }
+             buildShader: buildShader, sampleFrameCPU: sampleFrameCPU, renderExtent: renderExtent,
+             splitExtent: splitExtent, mercY: mercY }
   };
 })(typeof window !== 'undefined' ? window : this);

@@ -330,9 +330,13 @@
     this.viewBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     this.viewGlowBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     this.fadeBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
-    this.oneBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    // present-pass scale = the LAYER opacity (drawer transparency slider). Before this,
+    // colored particles + their accumulated trail film ignored the slider completely —
+    // the map stayed under a fixed veil no matter how transparent the user asked for.
+    this.presentBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     dev.queue.writeBuffer(this.fadeBuf, 0, new Float32Array([this.opts.fadeOpacity, 0, 0, 0]));
-    dev.queue.writeBuffer(this.oneBuf, 0, new Float32Array([1, 0, 0, 0]));
+    this._layerOpacity = (this._layerOpacity == null) ? 1 : this._layerOpacity;
+    dev.queue.writeBuffer(this.presentBuf, 0, new Float32Array([this._layerOpacity, 0, 0, 0]));
     this._rampTex = this._bakeRamp();
   };
 
@@ -537,7 +541,7 @@
     var presentBind = dev.createBindGroup({ layout: this.presentPipe.getBindGroupLayout(0), entries: [
       { binding: 0, resource: dstTex.createView() },
       { binding: 1, resource: this.sampler },
-      { binding: 2, resource: { buffer: this.oneBuf } }] });
+      { binding: 2, resource: { buffer: this.presentBuf } }] });
     var pp = enc.beginRenderPass({ colorAttachments: [{ view: this.ctx.getCurrentTexture().createView(),
       clearValue: { r: 0, g: 0, b: 0, a: 0 }, loadOp: 'clear', storeOp: 'store' }] });
     pp.setPipeline(this.presentPipe);
@@ -609,6 +613,9 @@
   GpuWindLayer.prototype.setNeutral = function (v) { this._neutral = !!v; this._uploadView(); };
   GpuWindLayer.prototype.setOpacity = function (a) {
     this._neutralAlpha = Math.max(0.03, Math.min(0.95, a));   // same clamp as the CPU engine
+    // premultiplied uniform scale at present time: fades particles AND trail film together
+    this._layerOpacity = Math.max(0, Math.min(1, +a || 0));
+    if (this.presentBuf) this.gpu.device.queue.writeBuffer(this.presentBuf, 0, new Float32Array([this._layerOpacity, 0, 0, 0]));
     this._uploadView();
   };
 

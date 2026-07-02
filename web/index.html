@@ -1182,7 +1182,8 @@
     }
   } };
 
-  document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx)));
+  let wxUserPick = false;                                   // a real click outranks the boot default below
+  document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => { wxUserPick = true; setWeather(b.dataset.wx); }));
   document.getElementById('particles').addEventListener('change', () => {
     const active = document.querySelector('#wx button.on');
     if (active) setWeather(active.dataset.wx);
@@ -1201,7 +1202,11 @@
 
   map.on('load', () => {
     if (map.getLayer('wind-arrows')) map.setLayoutProperty('wind-arrows', 'visibility', 'none'); // replaced by particles
-    setWeather('off');   // weather defaults OFF — user opts in by picking a layer (which then uses Live · fills view)
+    // Weather defaults OFF — user opts in by picking a layer (which then uses Live · fills view).
+    // Guarded: 'load' fires whenever style+tiles settle (slow charts at sea = seconds after boot),
+    // and an unconditional off HERE silently ate a layer the user had already picked — the drawer
+    // snapped back to Off with no notice, a dead first click. The default must not outrank a click.
+    if (!wxUserPick) setWeather('off');
   });
 
   // click popups (suppressed while the measure tool is active — a click then drops a ruler point)
