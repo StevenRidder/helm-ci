@@ -15,6 +15,11 @@ from __future__ import annotations
 
 import argparse
 import copy
+import concurrent.futures
+import math
+import urllib.error
+import urllib.parse
+import urllib.request
 import hashlib
 import json
 import os
@@ -40,7 +45,7 @@ FAILURE_POLICY = {
 ADAPTERS = {
     "fixture": {"requiresNetwork": False, "implemented": True},
     "manifest": {"requiresNetwork": False, "implemented": True},
-    "open-meteo": {"requiresNetwork": True, "implemented": False},
+    "open-meteo": {"requiresNetwork": True, "implemented": True},   # WX-36 live adapter below
     "noaa": {"requiresNetwork": True, "implemented": False},
     "predictwind": {"requiresNetwork": True, "implemented": False},
 }
@@ -53,6 +58,8 @@ ENV_GRID_FAILURE_CODES = {
     "bad_chunk_schema",
     "chunk_key_mismatch",
     "unsupported_band_type",
+    "bad_band_values",
+    "quantization_overflow",
 }
 
 
@@ -276,6 +283,225 @@ def translate_env_grid_failure(exc: SystemExit, context: str) -> None:
     fail(code, f"{context}: {message}", {"context": context})
 
 
+# ---- WX-36: open-meteo live source adapter -----------------------------------
+# Fetches real model values ONCE per factory run and attaches them to the pack's
+# chunks as bandValues (quantized by env_grid_pack per the band metadata). The
+# COMMERCIAL hosts are the only defaults — the free host burst-limits and
+# silently starves grids (the warm_region lesson); a keyless or rate-limited run
+# FAILS LOUD instead of publishing holes. Any failed batch aborts the bake.
+
+OPENMETEO_FORECAST_HOST = "https://customer-api.open-meteo.com"
+OPENMETEO_MARINE_HOST = "https://customer-marine-api.open-meteo.com"
+OPENMETEO_BATCH = 140                      # points per API call
+OPENMETEO_LAYERS = {
+    # layer -> host kind, hourly vars, band shape. Units are SI per contract §5:
+    # forecast wind/gust request wind_speed_unit=ms; marine current arrives km/h -> /3.6.
+    "wind":     {"host": "forecast", "vars": ["wind_speed_10m", "wind_direction_10m"], "kind": "vector_from"},
+    "gust":     {"host": "forecast", "vars": ["wind_gusts_10m"], "kind": "scalar"},
+    "rain":     {"host": "forecast", "vars": ["precipitation"], "kind": "scalar"},
+    "temp":     {"host": "forecast", "vars": ["temperature_2m"], "kind": "scalar"},
+    "pressure": {"host": "forecast", "vars": ["pressure_msl"], "kind": "scalar"},
+    "clouds":   {"host": "forecast", "vars": ["cloud_cover"], "kind": "scalar"},
+    "cape":     {"host": "forecast", "vars": ["cape"], "kind": "scalar"},
+    "waves":    {"host": "marine", "vars": ["wave_height"], "kind": "scalar"},
+    "swell":    {"host": "marine", "vars": ["swell_wave_height"], "kind": "scalar"},
+    "sst":      {"host": "marine", "vars": ["sea_surface_temperature"], "kind": "scalar"},
+    "current":  {"host": "marine", "vars": ["ocean_current_velocity", "ocean_current_direction"],
+                 "kind": "vector_to", "speed_div": 3.6},
+}
+
+
+def openmeteo_api_key(decl: dict[str, Any]) -> str:
+    env_name = str(decl.get("apiKeyEnv") or "HELM_WX_OPENMETEO_KEY")
+    key = os.environ.get(env_name, "").strip()
+    if not key:
+        fail(
+            "missing_credentials",
+            f"open-meteo adapter requires the commercial API key in ${env_name}; "
+            "the free host is not a fallback (it burst-limits into silent holes)",
+            {"apiKeyEnv": env_name},
+        )
+    return key
+
+
+def openmeteo_hosts(decl: dict[str, Any]) -> dict[str, str]:
+    # Overrides exist for the mock-upstream tests; production jobs omit them and
+    # get the commercial hosts. api.open-meteo.com is deliberately NEVER a default.
+    return {
+        "forecast": str(decl.get("forecastHost") or OPENMETEO_FORECAST_HOST).rstrip("/"),
+        "marine": str(decl.get("marineHost") or OPENMETEO_MARINE_HOST).rstrip("/"),
+    }
+
+
+def chunk_grid_points(manifest: dict[str, Any], chunk: dict[str, Any]) -> tuple[dict[str, Any], list[tuple[float, float]]]:
+    grid = env_grid_pack.chunk_grid(manifest, chunk)
+    bbox = chunk["bbox"]
+    west, north = float(bbox[0]), float(bbox[3])
+    points: list[tuple[float, float]] = []
+    for row in range(grid["height"]):                    # row 0 = north (grid.origin northwest)
+        lat = north - row * grid["dy"]
+        for col in range(grid["width"]):
+            lon = west + col * grid["dx"]
+            lon = ((lon + 180.0) % 360.0) - 180.0        # API wants [-180, 180); unwrapped route bboxes normalize per point
+            points.append((round(lat, 6), round(lon, 6)))
+    return grid, points
+
+
+def openmeteo_time_key(valid_time: str) -> str:
+    return str(valid_time).replace("Z", "")[:16]         # API hourly time is 'YYYY-MM-DDTHH:MM' in UTC
+
+
+def openmeteo_fetch_batch(url: str, attempt_limit: int = 3) -> list[dict[str, Any]]:
+    last_error: Exception | None = None
+    for attempt in range(attempt_limit):
+        try:
+            with urllib.request.urlopen(url, timeout=90) as resp:
+                payload = json.loads(resp.read().decode("utf-8"))
+            return payload if isinstance(payload, list) else [payload]
+        except urllib.error.HTTPError as exc:
+            if exc.code in (401, 402, 403):
+                fail("missing_credentials", f"open-meteo rejected the API key (HTTP {exc.code})", {"status": exc.code})
+            if exc.code == 429:
+                fail("rate_limited", "open-meteo rate-limited the bake (HTTP 429) — aborting, no partial pack", {"status": 429})
+            last_error = exc
+        except (urllib.error.URLError, TimeoutError, json.JSONDecodeError, OSError) as exc:
+            last_error = exc
+        if attempt < attempt_limit - 1:
+            time.sleep(1.0 + attempt * 2.0)
+    fail(
+        "source_fetch_failed",
+        f"open-meteo batch failed after {attempt_limit} attempts: {last_error}",
+        {"error": str(last_error)},
+    )
+
+
+def openmeteo_fetch_grid(host: str, api_path: str, points: list[tuple[float, float]], hourly_vars: list[str],
+                         valid_times: list[str], key: str, extra: dict[str, str], concurrency: int) -> list[dict[str, dict[str, float]]]:
+    """Fetch hourly vars for every grid point; returns per-point {var: {timeKey: value}}.
+
+    ONE call per <=140-point batch returns ALL hours and ALL vars for that host —
+    frames are free; calls scale with points only. Every batch must succeed.
+    """
+    dates = sorted({str(t)[:10] for t in valid_times})
+    time_keys = [openmeteo_time_key(t) for t in valid_times]
+    urls = []
+    for start in range(0, len(points), OPENMETEO_BATCH):
+        batch = points[start:start + OPENMETEO_BATCH]
+        params = {
+            "latitude": ",".join(str(lat) for lat, _ in batch),
+            "longitude": ",".join(str(lon) for _, lon in batch),
+            "hourly": ",".join(hourly_vars),
+            "start_date": dates[0],
+            "end_date": dates[-1],
+            "timezone": "UTC",
+            "apikey": key,
+        }
+        params.update(extra)
+        urls.append((start, len(batch), f"{host}{api_path}?{urllib.parse.urlencode(params)}"))
+    results: list[dict[str, dict[str, float]] | None] = [None] * len(points)
+    def run_one(entry):
+        start, count, url = entry
+        rows = openmeteo_fetch_batch(url)
+        if len(rows) != count:
+            fail("source_fetch_failed", f"open-meteo returned {len(rows)} points for a {count}-point batch", {"url_points": count})
+        for offset, row in enumerate(rows):
+            hourly = row.get("hourly") or {}
+            times = hourly.get("time") or []
+            index_of = {str(t)[:16]: i for i, t in enumerate(times)}
+            per_var: dict[str, dict[str, float]] = {}
+            for var in hourly_vars:
+                series = hourly.get(var)
+                if not isinstance(series, list) or len(series) != len(times):
+                    fail("source_fetch_failed", f"open-meteo response missing hourly.{var}", {"var": var})
+                values: dict[str, float] = {}
+                for tk in time_keys:
+                    if tk not in index_of:
+                        fail("missing_valid_time", f"open-meteo hourly data has no entry for {tk}", {"validTime": tk, "var": var})
+                    values[tk] = series[index_of[tk]]
+                per_var[var] = values
+            results[start + offset] = per_var
+    with concurrent.futures.ThreadPoolExecutor(max_workers=max(1, concurrency)) as pool:
+        for future in [pool.submit(run_one, entry) for entry in urls]:
+            future.result()                              # any batch failure aborts the whole bake
+    return results  # type: ignore[return-value]
+
+
+def openmeteo_band_values(cfg: dict[str, Any], band_ids: list[str], grid_values: list[dict[str, dict[str, float]]],
+                          time_key: str) -> dict[str, list]:
+    kind = cfg["kind"]
+    speed_div = float(cfg.get("speed_div", 1.0))
+    if kind == "scalar":
+        var = cfg["vars"][0]
+        vals = []
+        for per_var in grid_values:
+            v = per_var[var].get(time_key)
+            vals.append(None if v is None else float(v) / speed_div)
+        return {band_ids[0]: vals}
+    # vector: derive u/v from speed+direction. Wind direction is FROM (meteorological,
+    # sign -1); ocean-current direction is TOWARD (oceanographic, sign +1) — matches
+    # services/wx and the WX-19/WX-33 renderers.
+    sign = -1.0 if kind == "vector_from" else 1.0
+    speed_var, dir_var = cfg["vars"][0], cfg["vars"][1]
+    us: list = []
+    vs: list = []
+    for per_var in grid_values:
+        speed = per_var[speed_var].get(time_key)
+        direction = per_var[dir_var].get(time_key)
+        if speed is None or direction is None:
+            us.append(None)
+            vs.append(None)
+            continue
+        spd = float(speed) / speed_div
+        rad = math.radians(float(direction))
+        us.append(sign * spd * math.sin(rad))
+        vs.append(sign * spd * math.cos(rad))
+    if "u" not in band_ids or "v" not in band_ids:
+        fail("bad_band_values", f"vector layer must declare u/v bands, has {band_ids}")
+    return {"u": us, "v": vs}
+
+
+def openmeteo_populate(source: dict[str, Any], manifest: dict[str, Any]) -> dict[str, int]:
+    """Attach real bandValues to every chunk in the pack manifest. Returns call stats."""
+    decl = source["decl"]
+    key = openmeteo_api_key(decl)
+    hosts = openmeteo_hosts(decl)
+    concurrency = int(decl.get("concurrency", 6))
+    valid_times = list(manifest["run"]["validTimes"])
+    layers = manifest["layers"]
+    chunks = manifest["chunks"]
+
+    # Group needed hourly vars per host, then fetch each host ONCE per unique point
+    # set — hourly responses carry every frame, so frames add zero calls.
+    host_vars: dict[str, list[str]] = {"forecast": [], "marine": []}
+    for chunk in chunks.values():
+        layer = chunk["layer"]
+        cfg = OPENMETEO_LAYERS.get(layer)
+        if cfg is None:
+            fail("unsupported_layer", f"open-meteo adapter has no mapping for layer {layer}", {"layer": layer})
+        for var in cfg["vars"]:
+            if var not in host_vars[cfg["host"]]:
+                host_vars[cfg["host"]].append(var)
+
+    fetched: dict[tuple, list[dict[str, dict[str, float]]]] = {}
+    calls = {"forecast": 0, "marine": 0}
+    for chunk_key in sorted(chunks):
+        chunk = chunks[chunk_key]
+        cfg = OPENMETEO_LAYERS[chunk["layer"]]
+        host_kind = cfg["host"]
+        _grid, points = chunk_grid_points(manifest, chunk)
+        cache_key = (host_kind, tuple(points))
+        if cache_key not in fetched:
+            api_path = "/v1/forecast" if host_kind == "forecast" else "/v1/marine"
+            extra = {"wind_speed_unit": "ms"} if host_kind == "forecast" else {}
+            fetched[cache_key] = openmeteo_fetch_grid(
+                hosts[host_kind], api_path, points, host_vars[host_kind], valid_times, key, extra, concurrency)
+            calls[host_kind] += (len(points) + OPENMETEO_BATCH - 1) // OPENMETEO_BATCH
+        band_ids = list((layers.get(chunk["layer"]) or {}).get("bands", {}).keys())
+        chunk["bandValues"] = openmeteo_band_values(
+            cfg, band_ids, fetched[cache_key], openmeteo_time_key(chunk["validTime"]))
+    return calls
+
+
 def build_pack_manifest(job: dict[str, Any], pack: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
     source_manifest = source["manifest"]
     model_run = job["modelRun"]
@@ -352,6 +578,8 @@ def pack_manifest(manifest: dict[str, Any], out_pack: Path, out_manifest: Path) 
         data_offset, _data_length = env_grid_pack.write_pmtiles_shell(out_pack, manifest, chunk_bytes)
     except SystemExit as exc:
         translate_env_grid_failure(exc, f"packing {out_pack.name}")
+    for _chunk_key, chunk in chunk_items:
+        chunk.pop("bandValues", None)                  # values are IN the pack; never in the manifest JSON
     packed = copy.deepcopy(manifest)
     offset = data_offset
     for (chunk_key, _chunk), blob in zip(chunk_items, chunk_bytes):
@@ -387,6 +615,9 @@ def build_release(job: dict[str, Any], sources: dict[str, dict[str, Any]], stagi
             fail("invalid_pack", "pack entries must be objects")
         source = selected_source(job, sources, pack)
         manifest = build_pack_manifest(job, pack, source)
+        if str(source["decl"].get("type") or "manifest") == "open-meteo":
+            calls = openmeteo_populate(source, manifest)
+            print(json.dumps({"openMeteoCalls": calls, "packId": manifest["packId"]}), file=sys.stderr)
         profile_slug = slug(str(pack.get("profile") or pack.get("tier") or "pack"))
         anchor_slug = slug(str(pack.get("anchor") or manifest["packId"]))
         pack_name = f"{release_id}-{profile_slug}-{anchor_slug}.pmtiles"

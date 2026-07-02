@@ -36,8 +36,10 @@ means `northwest` (pre-pin v1 packs). See ENVIRONMENTAL-GRID-V1.md §6.
 
 ## Still gating WX-26 (final removal)
 
-1. A **live source adapter** in the pack factory (`open-meteo` / GRIB) so real packs exist for the
-   boat's region — today only fixture/local sources are implemented (deliberately: no surprise
-   network fetches).
+1. ~~A **live source adapter** in the pack factory~~ — **DONE (WX-36)**: the `open-meteo` adapter
+   fetches real model values against the commercial hosts only (keyless/rate-limited runs fail
+   loud; a failed batch aborts the bake), quantizes to int16/uint16 bands, and packs through the
+   existing chunk machinery. One-command bake: `scripts/wx_bake_openmeteo.py --anchor lon,lat
+   --out <dir>`. GRIB/NOAA adapters remain unimplemented placeholders.
 2. The **drawer/UI swap** from the prepared-bundle scene to `HelmWxGrid` once real packs flow.
 3. C++ `helm-envd`/`helm-wxd` parity (WX-20) before the Python gateway can be deleted.

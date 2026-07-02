@@ -56,6 +56,41 @@ def chunk_grid(manifest: dict[str, Any], chunk: dict[str, Any]) -> dict[str, Any
     return {"width": width, "height": height, "dx": dx, "dy": dy, "origin": "northwest"}
 
 
+def quantize_band(values: list, band: dict[str, Any], cells: int, chunk_key: str, band_id: str) -> bytes:
+    """Quantize REAL physical values (row-major, row 0 = north) into a stored band.
+
+    WX-36: this is the real-data path. stored = round((physical - offset) / scale);
+    None/NaN -> nodata. Values that quantize outside the representable range (or
+    collide with the nodata sentinel) FAIL LOUD — a silently clamped storm is a
+    placeholder by another name.
+    """
+    btype = str(band.get("type"))
+    scale = float(band.get("scale", 1.0))
+    offset = float(band.get("offset", 0.0))
+    nodata = int(band.get("nodata", 0))
+    if len(values) != cells:
+        fail(f"bad_band_values: {chunk_key}/{band_id} has {len(values)} values, expected {cells}")
+    if btype == "int16":
+        lo, hi, fmt = -32768, 32767, "<h"
+    elif btype == "uint16":
+        lo, hi, fmt = 0, 65535, "<H"
+    else:
+        fail(f"unsupported band type for real values: {btype}")
+    out = bytearray()
+    for value in values:
+        if value is None or (isinstance(value, float) and value != value):
+            stored = nodata
+        else:
+            stored = round((float(value) - offset) / scale)
+            if stored < lo or stored > hi or stored == nodata:
+                fail(
+                    f"quantization_overflow: {chunk_key}/{band_id} value {value} -> stored {stored} "
+                    f"outside {btype} range (or nodata collision)"
+                )
+        out += struct.pack(fmt, stored)
+    return bytes(out)
+
+
 def make_payload(manifest: dict[str, Any], chunk_key: str, chunk: dict[str, Any]) -> bytes:
     layer = manifest.get("layers", {}).get(chunk.get("layer"), {})
     bands = layer.get("bands")
@@ -63,6 +98,16 @@ def make_payload(manifest: dict[str, Any], chunk_key: str, chunk: dict[str, Any]
         fail(f"chunk {chunk_key} references layer without bands")
     grid = chunk_grid(manifest, chunk)
     cells = grid["width"] * grid["height"]
+    band_values = chunk.get("bandValues")
+    if isinstance(band_values, dict) and band_values:
+        # WX-36 real-data path: every declared band must be provided — a missing band is a
+        # hole, not a fixture to synthesize over.
+        out = bytearray()
+        for band_id, band in bands.items():
+            if band_id not in band_values:
+                fail(f"bad_band_values: {chunk_key} missing values for band {band_id}")
+            out += quantize_band(band_values[band_id], band, cells, chunk_key, band_id)
+        return bytes(out)
     seed = hashlib.sha256(chunk_key.encode("utf-8")).digest()
     out = bytearray()
     for band_index, (_band_id, band) in enumerate(bands.items()):

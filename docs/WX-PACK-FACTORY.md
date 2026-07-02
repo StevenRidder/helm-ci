@@ -123,3 +123,24 @@ No failure may be hidden by gateway substitution, placeholder data, or loose PNG
 
 The Python CLI is reference/tooling for the cloud-job shape, not a required boat daemon. Productized
 boat-side runtime remains the C++ `helm-packd`/`helm-envd` path.
+
+
+## Open-Meteo live adapter (WX-36)
+
+`sources[].type: "open-meteo"` fetches real model values at publish time:
+
+- **Commercial hosts only** (`customer-api.open-meteo.com` + `customer-marine-api.open-meteo.com`),
+  key from `$HELM_WX_OPENMETEO_KEY` (override via `apiKeyEnv`). The free host is never a fallback —
+  it burst-limits into silent grid holes, the exact failure the grid contract forbids. Keyless runs
+  fail `missing_credentials` before any fetch; upstream 429 fails `rate_limited`.
+- **Calls scale with grid points only** (`ceil(points/140)` per host): one batched call returns all
+  hourly vars and ALL valid times, so frames are free. A route-high passage window (40x30 deg @
+  0.25) is ~280 calls total for the core five layers.
+- **Any failed batch aborts the bake** — the factory never publishes a pack with silent holes.
+  NaN/missing upstream values become band `nodata` honestly; quantization overflow fails loud.
+- Values are SI per the grid contract (§5): forecast vars request `wind_speed_unit=ms`; marine
+  current speeds arrive km/h and are converted. Wind direction is FROM (u = -v*sin, v = -v*cos);
+  ocean-current direction is TOWARD (positive signs) — matching `services/wx` and the renderers.
+- Tests: `python3 scripts/test-wx-openmeteo-adapter.py` (mock upstream, zero live network).
+- One-command bake: `python3 scripts/wx_bake_openmeteo.py --anchor 177.4,-17.6 --out ~/.helm/wx-packs`
+  (prints the exact call count before fetching; `--dry-run` to inspect the job).
