@@ -34,6 +34,9 @@
   var MESH_W = 64, MESH_H = 48;         // screen mesh density (unprojected per frame; ~3k verts)
   // Pack values are SI (contract §5); ramps are display units. Explicit per layer — no hidden defaults.
   var UNIT_FACTOR = { wind: 1.9438445, current: 1.9438445, gust: 1.9438445 };   // m/s -> kn; others 1:1
+  // Probe/legend display units AFTER conversion (packs store SI; ramps/probe show these).
+  var DISPLAY_UNIT = { wind: 'kn', gust: 'kn', current: 'kn', rain: 'mm/h', temp: '\u00b0C', sst: '\u00b0C',
+                       pressure: 'hPa', clouds: '%', cape: 'J/kg', waves: 'm', swell: 'm' };
 
   function loud(code, message, details) {
     var e = ((global.HelmWxGridPacks && global.HelmWxGridPacks.loudError) ||
@@ -42,6 +45,7 @@
   }
 
   var state = {
+    _gen: 0,
     on: false, map: null, gpu: null, canvas: null, ctx: null,
     manifest: null, manifestUrl: null, layer: null, meta: null,
     frames: {},                          // validTime -> { assembled, tex }
@@ -67,6 +71,13 @@
 
   function publish() { global.__helmWxGridStatus = status(); }
 
+  function ageSeconds() {
+    var gen = state.manifest && state.manifest.generatedAt;
+    if (!gen) return null;
+    var t = Date.parse(gen);
+    return isFinite(t) ? Math.max(0, Math.round((Date.now() - t) / 1000)) : null;
+  }
+
   function status() {
     return {
       state: state.on ? 'on' : 'off',
@@ -75,7 +86,12 @@
       tier: state.meta && state.meta.tier,
       kind: state.meta && state.meta.kind,
       frames: state.bracket ? { a: state.bracket.a, b: state.bracket.b, frac: state.bracket.frac } : null,
+      validTimes: (state.manifest && state.manifest.run && state.manifest.run.validTimes) || [],
+      coverage: state.meta ? { west: state.meta.west, south: state.meta.south, east: state.meta.east,
+                               north: state.meta.north, global: !!state.meta.global, tier: state.meta.tier } : null,
       generatedAt: state.manifest && state.manifest.generatedAt,
+      ageSeconds: ageSeconds(),
+      opacity: state.opacity,
       diagnostics: state.diagnostics.slice(-10)
     };
   }
@@ -121,7 +137,8 @@
     '  let p10 = textureLoad(fA_or(t), vec2<u32>(u32(x1), y0), 0).rg;',
     '  let p01 = textureLoad(fA_or(t), vec2<u32>(u32(x0), y1), 0).rg;',
     '  let p11 = textureLoad(fA_or(t), vec2<u32>(u32(x1), y1), 0).rg;',
-    '  let bad = max(max(abs(p00.x), abs(p10.x)), max(abs(p01.x), abs(p11.x)));',
+    '  let bad = max(max(max(abs(p00.x), abs(p00.y)), max(abs(p10.x), abs(p10.y))),',
+    '                max(max(abs(p01.x), abs(p01.y)), max(abs(p11.x), abs(p11.y))));',
     '  if (bad > 1e29) { return vec3<f32>(0.0, 0.0, 0.0); }',
     '  let uv = p00*(1.0-gx)*(1.0-gy) + p10*gx*(1.0-gy) + p01*(1.0-gx)*gy + p11*gx*gy;',
     '  return vec3<f32>(uv, 1.0);',
@@ -314,11 +331,15 @@
         { validTime: validTime, action: 'install pack / wait for model run' });
     }
     return Promise.all(keys.map(function (k) {
-      return P().fetchChunk(man, state.manifestUrl, k).then(function (env) {
+      return P().fetchChunk(man, state.manifestUrl, k, state.transport).then(function (env) {
         return D().decodeChunk(env, { chunkKey: k, packId: man.packId });
       });
     })).then(function (decoded) {
       var assembled = D().assembleTier(man, layer, validTime, decoded);
+      if (assembled.chunksPlaced < keys.length) {
+        // a hole is a REAL signal — visible in status().diagnostics, never papered over
+        record('partial_frame', { validTime: validTime, placed: assembled.chunksPlaced, expected: keys.length });
+      }
       state.frames[validTime] = { assembled: assembled, tex: null };
       return state.frames[validTime];
     });
@@ -336,7 +357,17 @@
   // at the current frac — matches what the shader draws, contract §8).
   function feedParticles() {
     var w = global.__helmWind;
-    if (!w || state.meta.kind !== 'vector') return;
+    if (!w) return;
+    if (state.meta.kind !== 'vector') {                      // scalar layer: previous wind trails must not linger
+      try { w.setVisible(false); } catch (e) {}
+      return;
+    }
+    // Drawer parity: the #particles checkbox is authoritative when present. Unchecked ->
+    // particles stay hidden (explicitly, not silently: the drawer owns that state).
+    try {
+      var cb = typeof document !== 'undefined' && document.getElementById('particles');
+      if (cb && !cb.checked) { w.setVisible(false); return; }
+    } catch (e) {}
     var br = state.bracket;
     var A = state.frames[br.a].assembled, B = state.frames[br.b].assembled;
     var lerped = A;
@@ -350,7 +381,15 @@
       lerped = { meta: A.meta, bands: { u: u, v: v } };
     }
     var unitF = UNIT_FACTOR[state.layer] || 1;
-    w.setData(D().toVelocityGrid(lerped, unitF));
+    var vel = D().toVelocityGrid(lerped, unitF);
+    var any = false, data = vel[0].data;
+    for (var j = 0; j < data.length; j++) { if (data[j] === data[j]) { any = true; break; } }
+    if (!any) {
+      record('no_vector_data', { validTime: state.bracket.a, action: 'check pack bake coverage' });
+      w.setVisible(false);
+      return;
+    }
+    w.setData(vel);
     w.setVisible(true);
   }
   function lerp1(a, b, f) { var ga = a === a, gb = b === b; if (ga && gb) return a + (b - a) * f; if (ga) return a; if (gb) return b; return NaN; }
@@ -379,11 +418,17 @@
         var lon = ll.lng;
         if (prevLon != null) lon = lon - 360 * Math.round((lon - prevLon) / 360);   // row-continuous unwrap
         prevLon = lon;
-        var lonN = lon - 360 * Math.floor((lon - meta.west) / 360);                 // into [west, west+360)
-        // keep interpolation continuity: express fx from the CONTINUOUS lon, let the
-        // shader wrap columns (global) — offset the whole row consistently instead
-        var fx = (lon - meta.west) / meta.dx;
-        if (!meta.global) fx = (lonN - meta.west) / meta.dx;
+        var fx;
+        if (meta.global) {
+          fx = (lon - meta.west) / meta.dx;                  // shader wraps columns
+        } else {
+          // window the lon to [west-180, west+180): continuous THROUGH the pack's west edge
+          // (a [west, west+360) window put a 360/dx cliff exactly at the edge — a compressed
+          // whole-grid smear one triangle wide). Out-of-coverage fx goes negative/over and
+          // the shader tap rejects it — transparent, honest.
+          var lonW = lon - 360 * Math.floor((lon - (meta.west - 180)) / 360);
+          fx = (lonW - meta.west) / meta.dx;
+        }
         out[k] = fx;
         out[k + 1] = (meta.north - ll.lat) / meta.dy;
         out[k + 2] = 1;
@@ -445,11 +490,14 @@
     if (!opts.manifestUrl) return Promise.reject(loud('missing_manifest', 'enable() needs opts.manifestUrl', {}));
     state.map = map;
     state.layer = opts.layer || 'wind';
+    state.transport = opts.transport || (opts.chunkEndpoint ? { chunkEndpoint: opts.chunkEndpoint } : null);
     if (opts.opacity != null) state.opacity = +opts.opacity;
     // Data plane FIRST (all CPU): manifest, tier, ramp domain, chunk fetch/decode/assembly.
     // Every data fail-loud path works — and is testable — without a GPU. The capability
     // gate comes last, so 'unsupported_renderer_capability' means exactly that.
     var lutInfo;
+    state.diagnostics = [];                                  // reset FIRST — loadFrame records partial_frame into it
+    var gen = ++state._gen;                                  // off/disable during the awaits must win (no ghost re-enable)
     return P().fetchManifest(opts.manifestUrl).then(function (man) {
       // Frames belong to ONE pack identity. A different manifest/pack/run (or layer)
       // must never be served cached frames from a previous one — that would smuggle
@@ -462,18 +510,20 @@
       }
       state.manifest = man; state.manifestUrl = opts.manifestUrl;
       state.meta = D().tierMeta(man, state.layer);
+      var R = global.HelmWxRamp;
+      if (R && R.clearManifestRamp) R.clearManifestRamp(state.layer);   // canonical RAMPS drive grid LUTs
       lutInfo = rampLut(state.layer);
       state.bracket = D().bracketValidTimes((man.run || {}).validTimes, opts.when);
       return Promise.all([loadFrame(state.bracket.a), loadFrame(state.bracket.b)]);
     }).then(function () {
       return ensureGpu();
     }).then(function (g) {
+      if (gen !== state._gen) { publish(); return status(); }   // superseded by disable()/off — stay down
       g.rampTex = rampTexture(lutInfo); g.rmin = lutInfo.rmin; g.rspan = lutInfo.rspan;
       uploadFrames();
       buildCanvas(map);
       bindMap(map);
       state.on = true;
-      state.diagnostics = [];
       feedParticles();
       render();
       publish();
@@ -488,11 +538,80 @@
 
   function setTime(iso) {
     if (!state.manifest) return Promise.reject(loud('out_of_pack', 'grid scene is not enabled', {}));
+    var prev = state.bracket;
     state.bracket = D().bracketValidTimes((state.manifest.run || {}).validTimes, iso);
     return Promise.all([loadFrame(state.bracket.a), loadFrame(state.bracket.b)]).then(function () {
       if (state.gpu) uploadFrames();
       feedParticles(); render(); publish(); return status();
-    }).catch(function (e) { record(e.code || 'set_time_failed', { message: e.message }); throw e; });
+    }).catch(function (e) {
+      state.bracket = prev;                                  // the display keeps showing what it SAYS it shows
+      record(e.code || 'set_time_failed', { message: e.message });
+      render(); publish();
+      throw e;
+    });
+  }
+
+  // WX-26: probe sampler — helm.layer.sample.v1 shape (parity with the old scene's sample()).
+  // CPU bilinear over the SAME assembled frames the GPU draws, value-lerped at the current
+  // bracket, converted to display units. NODATA-honest: any poisoned corner -> value null.
+  function sampleFrameCPU(assembled, lat, lon) {
+    var m = assembled.meta;
+    var lonN = lon - 360 * Math.floor((lon - m.west) / 360);       // into [west, west+360)
+    var fx = (lonN - m.west) / m.dx;
+    var fy = (m.north - lat) / m.dy;
+    if (fy < 0 || fy > m.height - 1) return null;
+    if (!m.global && (fx < 0 || fx > m.width - 1)) return null;
+    var x0 = Math.floor(fx), y0 = Math.floor(Math.max(0, Math.min(m.height - 1, fy)));
+    var y1 = Math.min(y0 + 1, m.height - 1);
+    var x1 = x0 + 1;
+    if (m.global) { x0 = ((x0 % m.width) + m.width) % m.width; x1 = (x0 + 1) % m.width; }
+    else { x0 = Math.max(0, Math.min(m.width - 1, x0)); x1 = Math.max(0, Math.min(m.width - 1, x1)); }
+    var gx = fx - Math.floor(fx), gy = Math.max(0, Math.min(m.height - 1, fy)) - y0;
+    var out = {};
+    for (var b = 0; b < m.bands.length; b++) {
+      var band = assembled.bands[m.bands[b]];
+      var p00 = band[y0 * m.width + x0], p10 = band[y0 * m.width + x1];
+      var p01 = band[y1 * m.width + x0], p11 = band[y1 * m.width + x1];
+      if (p00 !== p00 || p10 !== p10 || p01 !== p01 || p11 !== p11) return null;   // NODATA poisons
+      out[m.bands[b]] = p00 * (1 - gx) * (1 - gy) + p10 * gx * (1 - gy) + p01 * (1 - gx) * gy + p11 * gx * gy;
+    }
+    return out;
+  }
+
+  function sample(lat, lon) {
+    if (!state.bracket) return Promise.resolve(null);   // data-plane read: works whenever frames are loaded
+    var br = state.bracket;
+    var A = state.frames[br.a], B = state.frames[br.b];
+    if (!A || !B) return Promise.resolve(null);
+    var a = sampleFrameCPU(A.assembled, lat, lon);
+    var b = sampleFrameCPU(B.assembled, lat, lon);
+    var vals = null;
+    if (a && b) { vals = {}; for (var k in a) if (a.hasOwnProperty(k)) vals[k] = a[k] + (b[k] - a[k]) * br.frac; }
+    else vals = a || b;
+    var unitF = UNIT_FACTOR[state.layer] || 1;
+    var display = null, uv = null;
+    if (vals) {
+      if (state.meta.kind === 'vector') {
+        display = Math.sqrt(vals.u * vals.u + vals.v * vals.v) * unitF;
+        uv = { u: vals.u * unitF, v: vals.v * unitF };
+      } else {
+        display = vals[state.meta.bands[0]] * unitF;
+      }
+    }
+    return Promise.resolve({
+      schema: 'helm.layer.sample.v1',
+      layer: state.layer,
+      value: display == null ? null : Math.round(display * 10) / 10,
+      unit: DISPLAY_UNIT[state.layer] || '',
+      vector: uv,
+      coverage: vals ? 'in' : 'out',
+      advisory: true,
+      notForNavigation: true,
+      freshness: { generatedAt: state.manifest && state.manifest.generatedAt,
+                   validTimeA: br.a, validTimeB: br.b, frac: br.frac, ageSeconds: ageSeconds() },
+      sourceRef: { packId: state.manifest && state.manifest.packId,
+                   title: 'helm.env.grid.v1 pack \u00b7 ' + ((state.manifest && state.manifest.source && state.manifest.source.provider) || 'unknown') }
+    });
   }
 
   function setOpacity(o) {
@@ -501,6 +620,7 @@
   }
 
   function disable() {
+    state._gen++;                                            // invalidate any in-flight enable
     state.on = false;
     unbindMap();
     var w = global.__helmWind;
@@ -515,6 +635,8 @@
 
   global.HelmWxGrid = {
     enable: enable, disable: disable, setTime: setTime, setOpacity: setOpacity, status: status,
-    _test: { UNIT_FACTOR: UNIT_FACTOR, SENTINEL: SENTINEL, MESH: [MESH_W, MESH_H], buildShader: buildShader }
+    sample: sample,
+    _test: { UNIT_FACTOR: UNIT_FACTOR, DISPLAY_UNIT: DISPLAY_UNIT, SENTINEL: SENTINEL,
+             MESH: [MESH_W, MESH_H], buildShader: buildShader, sampleFrameCPU: sampleFrameCPU }
   };
 })(typeof window !== 'undefined' ? window : this);

@@ -12,7 +12,8 @@
 #    scripts/start-helm.sh --weather --fill # core + chosen helpers
 #    HELM_BASEMAP_UPSTREAM=http://192.168.1.137:8091 scripts/start-helm.sh --basemap-proxy
 #
-#  Flags:  --weather        weather value-tile gateway (services/wx) on :8093
+#  Flags:  --weather        helm-envd grid-pack weather service on :8094 (WX-26; needs a baked release)
+#          --wx-oracle      RETIRED Python bundle gateway on :8093 (dev/reference comparisons only)
 #          --basemap        offline MBTiles/PMTiles local pack server (pipeline) on :8091
 #          --basemap-proxy  cache-backed proxy to HELM_BASEMAP_UPSTREAM on :8091
 #          --fill           online basemap-fill cache proxy on :8095
@@ -48,6 +49,7 @@ HELM_SAMPLE_ENC="${HELM_SAMPLE_ENC:-$HELM_RUNTIME_DIR/enc/US5FL4CR/US5FL4CR.000}
 WANT_WEATHER=0; WANT_BASEMAP=0; WANT_BASEMAP_PROXY=0; WANT_FILL=0; WANT_BACKEND=0
 while [ $# -gt 0 ]; do
   case "$1" in
+    --wx-oracle) WANT_WX_ORACLE=1 ;;
     --weather) WANT_WEATHER=1 ;;
     --basemap) WANT_BASEMAP=1 ;;
     --basemap-proxy) WANT_BASEMAP_PROXY=1 ;;
@@ -115,12 +117,40 @@ PIDS+=("$!"); STARTED+=("helm-server (core) :$HELM_PORT  (pid $!)")
 
 # ---- HELPERS (opt-in, prerequisite-checked) -------------------------------
 if [ "$WANT_WEATHER" = 1 ]; then
+  # WX-26: live weather = helm-envd (:8094, C++) serving helm.env.grid.v1 packs from the
+  # release tree (bake with scripts/wx_bake_openmeteo.py --out "$HELM_WX_PACKS_DIR").
+  ENVD_BIN="${HELM_ENVD_BIN:-$HOME/.helm/bin/helm-envd}"
+  PACKS_DIR="${HELM_WX_PACKS_DIR:-$HOME/.helm/live/web/wx-packs}"
+  if [ -x "$ENVD_BIN" ] && [ -f "$PACKS_DIR/current.json" ]; then
+    MANIFESTS=$(python3 - "$PACKS_DIR" <<'PYEOF2'
+import json, sys, pathlib
+base = pathlib.Path(sys.argv[1])
+cur = json.loads((base / "current.json").read_text())
+idx_path = base / cur["indexUrl"]
+release = json.loads(idx_path.read_text())
+print(",".join(str((idx_path.parent / p["manifestUrl"]).resolve()) for p in release["packs"]))
+PYEOF2
+)
+    if [ -n "$MANIFESTS" ]; then
+      start_bg "helm-envd (grid packs)" 8094 \
+        bash -c "HELM_BIND='${HELM_ENVD_BIND:-0.0.0.0}' HELM_ENV_GRID_MANIFESTS='$MANIFESTS' exec '$ENVD_BIN' 8094"
+    else
+      SKIPPED+=("helm-envd :8094 — release tree at $PACKS_DIR has no packs; bake with scripts/wx_bake_openmeteo.py")
+    fi
+  else
+    SKIPPED+=("helm-envd :8094 — need HELM_ENVD_BIN (built binary) and a baked release at $PACKS_DIR/current.json")
+  fi
+fi
+
+if [ "${WANT_WX_ORACLE:-0}" = 1 ]; then
+  # Dev/reference ONLY (RUNTIME-SERVICES.md): the retired Python bundle gateway. Never
+  # required by the cockpit; kept for oracle comparisons until deleted.
   WX_PY="$(wx_python)"
   if "$WX_PY" -c "import uvicorn, fastapi, httpx, numpy" >/dev/null 2>&1 && [ -f "$REPO_ROOT/services/wx/app.py" ]; then
-    start_bg "weather-gateway (services/wx)" 8093 \
+    start_bg "wx-oracle (services/wx, dev/reference)" 8093 \
       bash -c "cd '$REPO_ROOT/services/wx' && exec '$WX_PY' -m uvicorn app:app --port 8093"
   else
-    SKIPPED+=("weather-gateway :8093 — deps missing: python3 -m venv services/wx/.venv && services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt")
+    SKIPPED+=("wx-oracle :8093 — deps missing: python3 -m venv services/wx/.venv && services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt")
   fi
 fi
 

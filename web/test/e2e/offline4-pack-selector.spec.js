@@ -27,7 +27,6 @@ test.beforeEach(async ({ page }) => {
     } catch (e) {}
   });
 
-  await page.route(/https?:\/\/[^/]+:8093\/.*/, route => route.fulfill({ status: 503, body: 'weather gateway intentionally offline in test' }));
   await page.route(/https?:\/\/[^/]+:9101\/(?!catalog$).*/, route => route.fulfill({
     status: 200,
     headers: { 'content-type': 'image/png', 'access-control-allow-origin': '*' },

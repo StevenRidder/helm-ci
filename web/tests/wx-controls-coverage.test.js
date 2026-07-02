@@ -1,60 +1,80 @@
-// WX-19 unit test: standing-cache coverage must be antimeridian-aware, viewport-based,
-// and normal pan/zoom must NOT kick off viewport materialize jobs.
+// WX-26 unit test: the drawer's fail-loud message discipline + the release pack picker.
+// (Replaces the WX-19 coverage-machinery tests — viewBox/coverageReport/candidateRank died
+// with the bundle scene; discovery now picks packs from the release index.)
 // Run: node web/tests/wx-controls-coverage.test.js
 const fs = require('fs'), path = require('path'), vm = require('vm');
-const code = fs.readFileSync(path.join(__dirname, '..', 'wx-controls.js'), 'utf8');
+const assert = require('assert');
 
-function bounds(w, s, e, n) {
-  return { getWest: () => w, getSouth: () => s, getEast: () => e, getNorth: () => n };
-}
-function map(w, s, e, n, z) {
-  return { getBounds: () => bounds(w, s, e, n), getZoom: () => z };
+let pass = 0;
+function ok(name, fn) {
+  try { fn(); pass++; console.log('  ok - ' + name); }
+  catch (e) { console.error('  FAIL - ' + name + ': ' + e.message); process.exitCode = 1; }
 }
 
-const ctx = {
-  window: { addEventListener: function () {} },
+// ---- failLoudText (pinned: verified-local-ui.spec asserts these strings in the DOM) ----
+const controls = fs.readFileSync(path.join(__dirname, '..', 'wx-controls.js'), 'utf8');
+const winC = {
+  console, setTimeout, clearTimeout,
   location: { protocol: 'http:', hostname: 'localhost' },
   document: {
-    readyState: 'loading',
-    addEventListener: function () {},
-    getElementById: function () { return null; },
-    createElement: function () { return { style: {}, appendChild: function () {} }; },
-    body: { appendChild: function () {} },
+    getElementById: () => null, createElement: () => ({ style: {}, addEventListener: () => {} }),
+    querySelector: () => null, querySelectorAll: () => [], readyState: 'loading',
+    body: { appendChild: () => {} }
   },
-  console, setTimeout, clearTimeout, Math, Array, Object, String, Number,
-  encodeURIComponent, decodeURIComponent, Promise,
-  fetch: function () { return Promise.resolve({ ok: false }); },
+  addEventListener: () => {}
 };
-vm.createContext(ctx);
-vm.runInContext(code, ctx);
-const T = ctx.window.HelmWxControls._test;
+winC.window = winC;
+vm.runInContext(controls, vm.createContext(winC));
 
-let pass = 0, fail = 0;
-function ok(name, cond, detail) {
-  console.log((cond ? '  PASS ' : '  FAIL ') + name + (cond || !detail ? '' : '  ' + detail));
-  cond ? pass++ : fail++;
-}
+ok('failLoudText carries the code, the reason, and the no-fallback promise', () => {
+  const t = winC.HelmWxControls._test.failLoudText('wind', 'missing_release', 'weather release pointer could not be loaded');
+  assert.ok(t.includes('Live wind unavailable'));
+  assert.ok(t.includes('missing_release'));
+  assert.ok(t.includes('no gateway/direct fallback/download'), 'the no-substitution promise is part of the message');
+  const d = winC.HelmWxControls._test.failLoudText('rain', null, null);
+  assert.ok(d.includes('weather_pack_unavailable'), 'default code is honest, not green');
+});
 
-const fiji = { west: 172, east: -144, south: -26, north: -5, crossesAntimeridian: true };
-const z4View = { west: -245.429, east: -112.999, south: -39.476, north: 16.724 };
-const rep = T.coverageReportForBbox(fiji, z4View);
-ok('Fiji prepared bbox does NOT cover the wide z4 viewport', rep.coversView === false, JSON.stringify(rep));
-ok('coverage report names missing edges', rep.missing.indexOf('west') >= 0 && rep.missing.indexOf('east') >= 0 && rep.missing.indexOf('south') >= 0 && rep.missing.indexOf('north') >= 0, JSON.stringify(rep.missing));
-ok('Fiji bbox is normalized into the viewport longitude frame', Math.round(rep.coverage.west) === -188 && Math.round(rep.coverage.east) === -144, JSON.stringify(rep.coverage));
+// ---- pickPack (pure discovery choice logic from wx-grid-pack-client.js) ----
+const client = fs.readFileSync(path.join(__dirname, '..', 'wx-grid-pack-client.js'), 'utf8');
+const winP = { console, location: { href: 'http://localhost/' } };
+winP.window = winP;
+vm.runInContext(client, vm.createContext(winP));
+const pickPack = winP.HelmWxGridPacks.pickPack;
 
-const wide = { west: 110, east: -100, south: -50, north: 25, crossesAntimeridian: true };
-ok('Wider basin bbox covers the same z4 viewport', T.coverageReportForBbox(wide, z4View).coversView === true);
+const release = { packs: [
+  { packId: 'global', tier: 'global-low', layers: ['wind', 'rain'],
+    coverage: { global: true, bbox: [-180, -90, 180, 90] } },
+  { packId: 'fiji', tier: 'route-high', layers: ['wind', 'waves'],
+    coverage: { global: false, bbox: [157.4, -32.6, 197.4, -2.6] } }   // crosses 180 (east unwrapped)
+] };
 
-ok('fail-loud status names missing prepared pack',
-  /missing_prepared_weather_pack/.test(T.failLoudText('wind', 'missing_prepared_weather_pack', 'outside prepared pack')));
-ok('fail-loud status explicitly rejects gateway/direct fallback',
-  /no gateway\/direct fallback\/download/.test(T.failLoudText('wind', 'missing_prepared_weather_pack', 'outside prepared pack')));
-ok('wide standing tier is preferred below the z5 split',
-  T.candidateRank({ coverage: { standing: true, tier: 'wide' } }, 4.2) <
-  T.candidateRank({ coverage: { standing: true, tier: 'near' } }, 4.2));
-ok('near standing tier is preferred above the z5 split',
-  T.candidateRank({ coverage: { standing: true, tier: 'near' } }, 7.0) <
-  T.candidateRank({ coverage: { standing: true, tier: 'wide' } }, 7.0));
+ok('prefers the covering route-high pack over global-low', () => {
+  const r = pickPack(release, 'wind', { lat: -17.6, lng: 177.4 });
+  assert.strictEqual(r.miss, false);
+  assert.strictEqual(r.pack.packId, 'fiji');
+});
 
-console.log('\n  ' + pass + ' passed, ' + fail + ' failed');
-process.exit(fail ? 1 : 0);
+ok('antimeridian coverage: a point at -175 lon is inside the wrapped Fiji bbox', () => {
+  const r = pickPack(release, 'waves', { lat: -17, lng: -175 });   // = 185E, inside 157.4..197.4
+  assert.strictEqual(r.miss, false);
+  assert.strictEqual(r.pack.packId, 'fiji');
+});
+
+ok('falls back to the global pack when the view leaves route coverage', () => {
+  const r = pickPack(release, 'wind', { lat: 40, lng: -70 });      // North Atlantic
+  assert.strictEqual(r.miss, false);
+  assert.strictEqual(r.pack.packId, 'global');
+});
+
+ok('layer only in a non-covering pack -> honest miss, never a silent stretch', () => {
+  const r = pickPack(release, 'waves', { lat: 40, lng: -70 });     // waves only in fiji pack
+  assert.strictEqual(r.miss, true);
+  assert.ok(/no installed pack covers/.test(r.reason));
+});
+
+ok('layer in no pack -> null (caller raises out_of_pack with available list)', () => {
+  assert.strictEqual(pickPack(release, 'cape', { lat: 0, lng: 0 }), null);
+});
+
+console.log((process.exitCode ? 'FAIL' : 'ok') + ' - wx-controls (WX-26): ' + pass + ' groups passed');

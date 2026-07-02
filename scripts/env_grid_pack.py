@@ -276,7 +276,7 @@ def pack_command(args: argparse.Namespace) -> int:
     transport["container"] = "pmtiles"
     transport["payload"] = "helm.env.grid.chunk.v1"
     transport["rangeReadable"] = True
-    transport["servedBy"] = "helm-packd"
+    transport["servedBy"] = "helm-envd"
     transport["requiredRuntime"] = "C++"
     transport["packUrl"] = out_path.name
     transport["byteRangeSemantics"] = "offset-length"

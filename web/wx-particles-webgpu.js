@@ -2,7 +2,7 @@
  * Helm — wx-particles-webgpu.js (WX-25)
  * --------------------------------------------------------------------------
  * WebGPU COMPUTE-pass particle advection for the wind/current layer — the
- * follow-on documented in wx-scene-webgpu.js. Advects the particle pool in a
+ * follow-on to the WX-19 colorize path. Advects the particle pool in a
  * WGSL compute shader (same u/v field the scalar colorize uses — the WX-19
  * invariant) and draws the trails GPU-side into its own overlay canvas, so
  * high particle counts cost the main thread nothing.

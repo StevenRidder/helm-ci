@@ -224,7 +224,7 @@ The pack manifest MUST state:
   "container": "pmtiles",
   "payload": "helm.env.grid.chunk.v1",
   "rangeReadable": true,
-  "servedBy": "helm-packd",
+  "servedBy": "helm-envd",
   "requiredRuntime": "C++",
   "packUrl": "open-meteo-gfs-20260701T000000Z-global-low.pmtiles",
   "byteRangeSemantics": "offset-length",

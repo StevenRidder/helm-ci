@@ -141,6 +141,7 @@ if [ "$START" = 1 ]; then
     BASEMAP_ARGS=(--basemap-proxy)
   fi
   stop_port 8093
+stop_port 8094
   stop_port 8095
   echo "update-remote-parity: starting Helm on :$PORT with weather :8093, fill :8095, and $ENC"
   exec env HELM_ENC="$ENC" scripts/start-helm.sh --port "$PORT" --weather "${BASEMAP_ARGS[@]}" --fill

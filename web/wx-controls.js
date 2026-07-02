@@ -1,63 +1,28 @@
 // wx-controls.js — the unified Weather panel.  WX epic · weather-ux.
 // ----------------------------------------------------------------------------------------------
-// Folds the three former rail icons (value-encoded tiles / ensemble spread / PredictWind import)
-// INTO the existing Weather drawer as inline controls, so weather lives in one place and the left
-// rail stops overflowing. Injected into #drawer-weather at runtime from this WX-owned file — no edit
-// to the shell body. Orchestrates four engines:
-//   • legacy field overlay (Standard)        — index.html setWeather()
-//   • fail-loud live scene (Live)             — prepared local/cache bundles only
-//   • GFS-vs-ECMWF spread (Ensemble)          — web/integrations/cog.js
-//   • PredictWind GPX/GRIB import             — web/wx-import.js (window.HelmImport)
+// WX-26: live weather runs ENTIRELY on compact helm.env.grid.v1 packs — discovery via the
+// pack-factory release tree (current.json → index.json → manifest), rendering via HelmWxGrid
+// (WebGPU model-grid scene), chunk bytes via helm-envd (:8094) or a range-capable origin.
+// The prepared-bundle scene (HelmWxScene) and the :8093 gateway are RETIRED — there is no
+// gateway fallback, no viewport materialize, no provider call from any gesture. Missing packs,
+// layers, chunks or capability FAIL LOUD with the real code and a next action.
+// Also orchestrates: GFS-vs-ECMWF ensemble spread (integrations/cog.js, local demo packs) and
+// PredictWind GPX/GRIB import (wx-import.js) — both explicit, user-invoked, local.
 (function () {
   'use strict';
   var cogP = null;
   function cog() { return cogP || (cogP = import('./integrations/cog.js')); }
-  var S = { map: null, resolution: 'live', model: 'single', els: {}, probeT: null };  // Live (fill-the-view) is the default — Windy-style
-  // The helm-wx tile gateway (services/wx). Default: same host, port 8093. Override with window.HELM_WX_SERVICE.
-  // NOTE: :8091 is the offline mbtiles BASEMAP server (pipeline/mbtiles_server.py — navionics/googlesat/…);
-  // the weather gateway must NOT use it. Squatting :8091 made the navionics basemap 404, exposing the dark
-  // depth-area fills as "black ovals". Weather lives on :8093.
-  var WX_SERVICE = (typeof window !== 'undefined' && window.HELM_WX_SERVICE) ||
-                   (location.protocol + '//' + location.hostname + ':8093');
+  var S = { map: null, model: 'single', els: {}, probeT: null };
+  // Release tree base (same-origin static JSON: current.json / releases/…) and the helm-envd
+  // chunk endpoint. Chunk bytes CANNOT come from helm-server (no Range support) — envd serves
+  // verified whole chunks with CORS. Overrides: window.HELM_WX_PACKS_BASE / HELM_WX_CHUNK_BASE
+  // ('' disables the endpoint → raw Range transport, used by e2e against range-capable serve.py).
+  var PACKS_BASE = (typeof window !== 'undefined' && window.HELM_WX_PACKS_BASE != null)
+    ? window.HELM_WX_PACKS_BASE : 'wx-packs';
+  var CHUNK_BASE = (typeof window !== 'undefined' && window.HELM_WX_CHUNK_BASE != null)
+    ? window.HELM_WX_CHUNK_BASE : (location.protocol + '//' + location.hostname + ':8094');
   function wxOpacity() { var s = document.getElementById('wxopacity'); return s ? Math.max(0, Math.min(1, (100 - (+s.value)) / 100)) : 0.82; }
-  function particlesOn() { var p = document.getElementById('particles'); return p ? !!p.checked : true; }
-  var SCENE_LAYERS = ['wind', 'gust', 'rain', 'temp', 'sst', 'clouds', 'waves', 'swell', 'pressure', 'cape', 'current'];
-  var SCENE_LAYER_SET = {}; SCENE_LAYERS.forEach(function (l) { SCENE_LAYER_SET[l] = true; });
-  var COVER_MARGIN = 0.06;      // prepared scene must run a little past the visible viewport
   var APPLY_SEQ = 0;
-
-  // Legacy live particle feed. WX-30 keeps it disabled on the normal live scene path because it is a
-  // gateway request during pan/zoom. WX-33 replaces it with particles sampled from local grid packs.
-  var PD = { on: false, key: '', t: null, handler: null, cache: {}, layer: 'wind' };
-  function pdBbox(map) {
-    var b = map.getBounds(), w = b.getWest(), e = b.getEast(), s = b.getSouth(), n = b.getNorth();
-    if (e < w) e += 360;
-    var mw = (e - w) * 0.4, mh = (n - s) * 0.4;
-    return [w - mw, Math.max(-84, s - mh), e + mw, Math.min(84, n + mh)];
-  }
-  async function pdRefresh() {
-    var map = S.map; if (!PD.on || !map || !window.__helmWind) return;
-    var bb = pdBbox(map), key = PD.layer + '|' + bb.map(function (x) { return x.toFixed(1); }).join(',');
-    if (key === PD.key) return; PD.key = key;
-    var cached = PD.cache[key];
-    if (cached) { window.__helmWind.setData(cached); window.__helmWind.setVisible(true); return; }
-    try {
-      var u = WX_SERVICE + '/velocity/' + PD.layer + '?w=' + bb[0].toFixed(3) + '&s=' + bb[1].toFixed(3) +
-              '&e=' + bb[2].toFixed(3) + '&n=' + bb[3].toFixed(3);
-      var vel = await fetch(u).then(function (r) { if (!r.ok) throw new Error('HTTP ' + r.status); return r.json(); });
-      PD.cache[key] = vel;
-      if (!PD.on) return;
-      window.__helmWind.setData(vel); window.__helmWind.setVisible(true);
-    } catch (e) {
-      if (!PD.on) return;
-      // FAIL LOUD: surface the broken live-particle feed rather than silently freezing stale particles.
-      if (window.console) console.warn('[helm-wx] live particle velocity fetch failed (' + PD.layer + '):', e && e.message);
-      notify('Live ' + PD.layer + ' particles: live feed unavailable (field still cached)', 'warn');
-    }
-  }
-  function pdMove() { clearTimeout(PD.t); PD.t = setTimeout(function () { pdRefresh().catch(function () {}); }, 400); }
-  function startParticles(map, layer) { PD.layer = layer || 'wind'; PD.on = true; if (!PD.handler) { PD.handler = pdMove; map.on('moveend', PD.handler); } pdRefresh().catch(function () {}); }
-  function stopParticles(map) { PD.on = false; if (PD.handler) { map.off('moveend', PD.handler); PD.handler = null; } PD.key = ''; }
 
   function activeLayer() { return window.__activeWx || 'off'; }   // weather defaults OFF until the user picks a layer
   function notify(msg, level) {
@@ -78,164 +43,75 @@
     el.style.borderColor = level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--warn,#e0a23a)';
     el.style.color = level === 'ok' ? 'var(--ok,#5fd08a)' : 'var(--warn,#e0a23a)';
   }
-  function seg(el, on) { Array.prototype.forEach.call(el.children, function (b) { b.dataset.sel = (b.dataset.val === on) ? '1' : ''; }); }
 
-  function missingEdgesText(report) {
-    var miss = report && report.missing;
-    return miss && miss.length ? ' (' + miss.join('/') + ' edge missing)' : '';
-  }
+  // Fail-loud message discipline (pinned by unit + e2e tests): the REAL code, the reason,
+  // and the standing promise that nothing was silently substituted.
   function failLoudText(layer, code, detail) {
-    var bits = ['Live ' + layer + ' unavailable', code || 'missing_prepared_weather_pack'];
+    var bits = ['Live ' + layer + ' unavailable', code || 'weather_pack_unavailable'];
     if (detail) bits.push(detail);
     bits.push('no gateway/direct fallback/download');
     return bits.join(' · ');
   }
-  function failLiveUnavailable(layer, pick) {
-    var rep = pick && pick.miss && pick.miss.coverage;
-    var err = pick && pick.error;
-    // Report the REAL cause: a scene-enable exception is NOT a missing pack — mislabeling it
-    // sends whoever debugs it hunting for coverage when the pack was fine (fail-and-fix-early).
-    var code = err ? 'scene_enable_failed' : 'missing_prepared_weather_pack';
-    var reason = err ? ('scene enable failed: ' + ((err && err.message) || err))
-      : (pick && pick.offEdge) ? 'outside prepared local weather pack' : 'no prepared local weather pack covers this view';
-    var msg = failLoudText(layer, code, reason + (err ? '' : missingEdgesText(rep)));
-    coverageBadge('⚠ ' + layer + ' unavailable — ' + reason + (err ? '' : missingEdgesText(rep)), 'warn');
+  function failLiveUnavailable(layer, err) {
+    var code = (err && err.code) || 'weather_pack_unavailable';
+    var reason = (err && err.message) || 'no installed weather pack';
+    var action = err && err.details && err.details.action;
+    var msg = failLoudText(layer, code, reason + (action ? ' — ' + action : ''));
+    // Capability failures keep the loaded DATA (nothing rendered; the probe can still read
+    // the pack). Data failures tear down so a previous layer can't linger under a warning.
+    if (code !== 'unsupported_renderer_capability') {
+      try { if (window.HelmWxGrid) HelmWxGrid.disable(); } catch (e) {}
+    }
+    coverageBadge('⚠ ' + layer + ' unavailable — ' + reason, 'warn');
     notify(msg, 'warn');
-    showLegacy(false);
-    stopParticles(S.map);
     setProbe('<span style="color:var(--warn,#e8a13a)">' + msg + '</span>');
   }
 
-  function showLegacy(visible) {
-    var map = S.map; if (!map) return;
-    if (map.getLayer('helm-wxfield')) map.setLayoutProperty('helm-wxfield', 'visibility', visible ? 'visible' : 'none');
-    var pc = document.getElementById('particles');
-    // particle canvas is driven by the legacy code; just hide its layer if present
-    if (map.getLayer('wind-particles')) map.setLayoutProperty('wind-particles', 'visibility', visible ? 'visible' : 'none');
-  }
-
-  function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }
-  function normLon(lon) {
-    lon = +lon;
-    while (lon < -180) lon += 360;
-    while (lon > 180) lon -= 360;
-    return lon;
-  }
-  function shiftIntervalTo(w, e, mid) {
-    w = +w; e = +e; if (e < w) e += 360;
-    var cm = (w + e) / 2;
-    while (cm - mid > 180) { w -= 360; e -= 360; cm -= 360; }
-    while (mid - cm > 180) { w += 360; e += 360; cm += 360; }
-    return { west: w, east: e };
-  }
-  function viewBox(map, margin) {
-    var b = map.getBounds(), w = b.getWest(), e = b.getEast(), s = b.getSouth(), n = b.getNorth();
-    if (e < w) e += 360;
-    var mw = (e - w) * (margin || 0), mh = (n - s) * (margin || 0);
-    return { west: w - mw, east: e + mw, south: clamp(s - mh, -84, 84), north: clamp(n + mh, -84, 84) };
-  }
-  function coverageReportForBbox(bbox, view) {
-    if (!bbox) return { coversView: true, reason: 'unbounded' };
-    var mid = (view.west + view.east) / 2;
-    var cov = shiftIntervalTo(bbox.west, (bbox.crossesAntimeridian || bbox.east < bbox.west) ? bbox.east + 360 : bbox.east, mid);
-    var south = +bbox.south, north = +bbox.north;
-    var miss = [];
-    if (cov.west > view.west) miss.push('west');
-    if (cov.east < view.east) miss.push('east');
-    if (south > view.south) miss.push('south');
-    if (north < view.north) miss.push('north');
-    return {
-      coversView: miss.length === 0,
-      missing: miss,
-      coverage: { west: cov.west, east: cov.east, south: south, north: north },
-      viewport: view
-    };
-  }
-  function coverageReport(map, manifest, margin) {
-    if ((manifest.coverage || {}).global) return { coversView: true, reason: 'global', viewport: viewBox(map, margin || 0) };
-    return coverageReportForBbox(((manifest.coverage || {}).bbox), viewBox(map, margin || 0));
-  }
-  function regionIdFromManifestPath(path) {
-    var m = String(path || '').match(/\/bundles\/open-meteo\/latest\/([^/]+)\/manifest\.json$/);
-    return m ? decodeURIComponent(m[1]) : null;
-  }
-  async function preparedCandidates(layer) {
-    var rows = [];
-    try {
-      var idx = await fetch(WX_SERVICE + '/bundles/index.json', { cache: 'no-store' }).then(function (r) { return r.ok ? r.json() : null; });
-      ((idx && idx.bundles) || []).forEach(function (b) {
-        if (!b || !b.cacheOnlyReplay || !b.offlineReady) return;
-        if (b.layers && b.layers.indexOf(layer) < 0) return;
-        var rid = ((b.coverage || {}).regionId) || regionIdFromManifestPath(b.manifest);
-        if (rid) rows.push({ region: rid, coverage: b.coverage || null, index: b });
-      });
-    } catch (e) {}
-    var def = (typeof window !== 'undefined' && window.HELM_WX_SCENE_REGION) || 'fiji';
-    if (!rows.some(function (r) { return r.region === def; })) rows.push({ region: def, coverage: null, index: null });
-    rows.sort(function (a, b) {
-      return candidateRank(a, S.map && S.map.getZoom ? S.map.getZoom() : 4) -
-             candidateRank(b, S.map && S.map.getZoom ? S.map.getZoom() : 4);
-    });
-    return rows;
-  }
-  function candidateRank(row, zoom) {
-    var c = row && row.coverage || {}, tier = c.tier || c.standingTier || '';
-    if (c.standing && tier === 'near') return zoom >= 5 ? 0 : 2;
-    if (c.standing && tier === 'wide') return zoom < 5.35 ? 0 : 1;
-    if (c.global) return 3;
-    return 4;
-  }
-  function ensureViewportBundle(map, layer, report) {
-    if (!SCENE_LAYER_SET[layer]) return null;
-    return {
-      disabled: true,
-      reason: 'missing-prepared-weather-pack',
-      report: report || null
-    };
-  }
-
-  function activeSceneNeedsRecheck(map) {
-    if (!window.HelmWxScene || !HelmWxScene.status || !HelmWxScene.state) return false;
-    var st = HelmWxScene.status();
-    if (!st || st.state === 'off' || !HelmWxScene.state.manifest) return false;
-    var cov = HelmWxScene.state.manifest.coverage || {}, tier = cov.tier || cov.standingTier || '';
-    if (!coverageReport(map, HelmWxScene.state.manifest, cov.standing ? 0 : COVER_MARGIN).coversView) return true;
-    var z = map.getZoom ? map.getZoom() : 4;
-    return (tier === 'wide' && z >= 5.35) || (tier === 'near' && z < 4.85);
-  }
-
-  // WX-19: find a prepared bundle region whose coverage contains the full view and that has this layer.
-  // Returns {region, manifest, coverage}, or a fail-loud {plan, miss} record. It never materializes,
-  // never switches to gateway tiles, and never calls a provider from pan/zoom/scrub.
-  // This is intentionally viewport-based, not center-point based: a Windy-style field cannot be "fresh"
-  // if any visible edge is outside prepared coverage.
-  async function pickSceneRegion(map, layer) {
-    if (!window.HelmWxScene || !window.HelmWxScene.loadManifest || !SCENE_LAYER_SET[layer]) return null;
-    var candidates = await preparedCandidates(layer), firstMiss = null;
-    try {
-      for (var i = 0; i < candidates.length; i++) {
-        var region = candidates[i].region, man = await window.HelmWxScene.loadManifest(region);
-        if (!man || !man.layers || !man.layers[layer]) continue;
-        var rep = coverageReport(map, man, COVER_MARGIN);
-        if (rep.coversView) return { region: region, manifest: man, coverage: rep };
-        if (!firstMiss) firstMiss = { region: region, manifest: man, coverage: rep };
+  // Post-enable honesty: stale packs and partial frames surface on the badge; a healthy
+  // scene clears it. Pure function of HelmWxGrid.status() — no fetches, no rechecks.
+  function healthBadge(layer) {
+    if (!window.HelmWxGrid) return;
+    var st = HelmWxGrid.status();
+    if (!st || st.state !== 'on') return;
+    var partial = (st.diagnostics || []).some(function (d) { return d.code === 'partial_frame' || d.code === 'no_vector_data'; });
+    if (partial) return coverageBadge('⚠ ' + layer + ' — pack has data holes (see console diagnostics)', 'warn');
+    if (st.ageSeconds != null && st.ageSeconds > 24 * 3600) {
+      return coverageBadge('⚠ ' + layer + ' forecast ' + Math.round(st.ageSeconds / 3600) + ' h old — bake a fresh pack', 'warn');
+    }
+    var times = st.validTimes || [];
+    if (times.length && Date.parse(times[times.length - 1]) < Date.now()) {
+      return coverageBadge('⚠ ' + layer + ' — forecast horizon passed (showing last frame) — bake a fresh pack', 'warn');
+    }
+    var c = st.coverage, m = S.map;
+    if (c && !c.global && m) {
+      var ctr = m.getCenter();
+      var lon = ctr.lng - 360 * Math.floor((ctr.lng - c.west) / 360);
+      var e = c.east < c.west ? c.east + 360 : c.east;
+      if (ctr.lat < c.south || ctr.lat > c.north || lon < c.west || lon > e) {
+        return coverageBadge('⚠ ' + layer + ' — view outside installed pack (' + (c.tier || 'pack') + ')', 'warn');
       }
-    } catch (e) {}
-    var plan = ensureViewportBundle(map, layer, firstMiss && firstMiss.coverage);
-    return plan ? { plan: plan.plan || plan, miss: firstMiss, offEdge: !!plan.disabled } : null;
+    }
+    coverageBadge('');
   }
 
   async function apply() {
     var seq = ++APPLY_SEQ;
     var map = S.map; if (!map) return;                  // guard: setWeather()'s hook can fire before build() sets S.map
-    var layer = activeLayer(), m = await cog();
+    var layer = activeLayer(), m;
+    try { m = await cog(); }
+    catch (e) {                                          // a dead dynamic import must not be a silent dead click
+      notify('weather module failed to load (integrations/cog.js): ' + (e.message || e), 'warn');
+      throw e;
+    }
     if (seq !== APPLY_SEQ) return;
-    if (window.HelmWxScene && window.HelmWxScene.disable) { try { window.HelmWxScene.disable(); } catch (e) {} }   // WX-19: tear down the scene each apply; re-enabled below if chosen
-    m.disableEnsemble(map); m.disableWxTiles(map); stopParticles(map);
-    if (layer === 'off') { showLegacy(false); setProbe(''); return; }
+    m.disableEnsemble(map); m.disableWxTiles(map);
+    if (layer === 'off') {
+      try { if (window.HelmWxGrid) HelmWxGrid.disable(); } catch (e) {}
+      coverageBadge(''); setProbe(''); return;
+    }
 
     if (S.model === 'ensemble') {
-      showLegacy(false);
+      try { if (window.HelmWxGrid) HelmWxGrid.disable(); } catch (e) {}
       // GFS-vs-ECMWF spread. Live two-model needs a connection; offline we show the committed demo
       // pack (Key West), clearly labelled — bake your area for a local ensemble.
       try {
@@ -249,33 +125,35 @@
           notify('Ensemble spread · GFS vs ECMWF (demo pack — bake your area for local)', 'ok');
         } else notify('No ensemble pack — run pipeline/make_value_tiles.py --demo-ensemble', 'warn');
       } catch (e) { notify('ensemble unavailable: ' + (e.message || e), 'warn'); }
-    } else if (S.resolution === 'live') {
-      // WX-30: prepared Environmental Scene only. If no local/prepared pack covers the view, fail loud.
-      // No gateway tiles, no direct Open-Meteo, no viewport materialize, and no hidden download.
-      var scenePick = await pickSceneRegion(map, layer);
-      if (seq !== APPLY_SEQ) return;
-      if (scenePick && scenePick.region && window.HelmWxScene) {
-        try {
-          await window.HelmWxScene.enable(map, { region: scenePick.region, layer: layer, opacity: wxOpacity(), coverage: scenePick.coverage });
-          if (seq !== APPLY_SEQ) { setTimeout(function () { if (activeLayer() === layer) apply().catch(function () {}); }, 0); return; }
-          showLegacy(false);
-          coverageBadge('');
-          var tier = ((scenePick.coverage || {}).coverage || {}).tier || ((scenePick.manifest && scenePick.manifest.coverage) || {}).tier || '';
-          notify('Live ' + layer + ' · standing ' + (tier || 'prepared') + ' bundle scene (WX-19)', 'ok');
-          probeSoon(); return;
-        } catch (e) {
-          try { window.HelmWxScene.disable(); } catch (e2) {}
-          scenePick = { plan: { reason: 'scene-enable-failed' }, miss: scenePick, error: e };
-        }
-      }
-      failLiveUnavailable(layer, scenePick);
+      probeSoon();
       return;
-    } else {
-      showLegacy(true);                                   // Standard + Single → the legacy field handles it
-      notify('');
-      var nn = document.getElementById('wx-notice'); if (nn) nn.style.display = 'none';
     }
-    probeSoon();
+
+    // WX-26 live path: compact grid packs ONLY. Discovery walks the release tree; enable
+    // renders straight from numeric chunks. Re-applying with the same pack+layer reuses the
+    // scene's cached frames (identity-keyed) — no teardown thrash on layer re-selection.
+    if (!window.HelmWxGrid || !window.HelmWxGridPacks) {
+      failLiveUnavailable(layer, { code: 'unsupported_renderer_capability', message: 'grid renderer modules missing' });
+      return;
+    }
+    try {
+      var ctr = map.getCenter();
+      var disc = await HelmWxGridPacks.discoverPack(PACKS_BASE, layer, { lat: ctr.lat, lng: ctr.lng });
+      if (seq !== APPLY_SEQ) return;
+      var st = await HelmWxGrid.enable(map, {
+        manifestUrl: disc.manifestUrl, layer: layer, opacity: wxOpacity(),
+        when: window.__helmTime || undefined,
+        transport: CHUNK_BASE ? { chunkEndpoint: CHUNK_BASE } : null
+      });
+      if (seq !== APPLY_SEQ) { setTimeout(function () { if (activeLayer() === layer) apply().catch(function () {}); }, 0); return; }
+      notify('Live ' + layer + ' · ' + (disc.pack.tier || 'grid') + ' pack · ' + disc.releaseId, 'ok');
+      healthBadge(layer);
+      if (window.HelmWxTime && HelmWxTime.sync) HelmWxTime.sync(st.validTimes || []);   // time scrubber (index.html)
+      probeSoon();
+    } catch (e) {
+      if (seq !== APPLY_SEQ) return;
+      failLiveUnavailable(layer, e);
+    }
   }
 
   function setProbe(html) { if (S.els.probe) S.els.probe.innerHTML = html || '<span style="color:var(--cdim,#8aa)">move the map to read a value</span>'; }
@@ -286,8 +164,8 @@
     if (layer === 'off') return setProbe('');
     var s = null;
     if (S.model === 'ensemble') { var e = await m.sampleEnsemble(c.lat, c.lng); if (e && e.value != null) return setProbe('<b>' + e.mean + ' ' + e.unit + '</b> · spread ' + e.spread + ' · ' + e.agreement); }
-    else if (S.resolution === 'live' && window.HelmWxScene && window.HelmWxScene.status && window.HelmWxScene.status().state === 'on') {
-      s = null; // WX-30: no direct/live fallback sampler; WX-33 adds grid-pack sampling.
+    else if (window.HelmWxGrid && HelmWxGrid.status().state === 'on') {
+      s = await HelmWxGrid.sample(c.lat, c.lng);        // WX-26: grid-pack sampler (same values the GPU draws)
     }
     if (s && s.value != null) return setProbe('<b>' + s.value + ' ' + s.unit + '</b> @ centre · ' + (s.sourceRef ? s.sourceRef.title : s.source));
     setProbe('');
@@ -298,7 +176,6 @@
     var box = document.createElement('div');
     box.id = 'wx-plus';
     box.style.cssText = 'margin-top:12px;border-top:.5px solid var(--line,#2a3540);padding-top:11px';
-    function label(t) { var d = document.createElement('div'); d.textContent = t; d.style.cssText = 'font-size:11px;color:var(--cdim,#8aa);margin:0 0 5px'; return d; }
     function segctl(opts) {
       var w = document.createElement('div'); w.style.cssText = 'display:flex;border:.5px solid var(--line,#345);border-radius:8px;overflow:hidden;margin-bottom:10px';
       opts.forEach(function (o) {
@@ -312,10 +189,8 @@
     }
     function paintSeg(w, on) { Array.prototype.forEach.call(w.children, function (b) { var sel = b.dataset.val === on; b.dataset.sel = sel ? '1' : ''; b.style.background = sel ? 'var(--accent,#39c2c9)' : 'transparent'; b.style.color = sel ? '#05121d' : 'var(--cdim,#8aa)'; b.style.fontWeight = sel ? '600' : '400'; }); }
 
-    // Resolution + Model controls are hidden for now — hardcoded to Live (fills view) + Single via the S
-    // defaults. The segments are still built (just not appended) so the paint/handler lines below stay
-    // valid; to expose the toggles again, re-append resSeg/modSeg here.
-    var resSeg = segctl([{ val: 'standard', txt: 'Standard' }, { val: 'live', txt: 'Live · fills view' }]);
+    // Model control is hidden for now — hardcoded Single via the S default. Built (not appended)
+    // so the paint/handler lines stay valid; to expose the toggle again, re-append modSeg here.
     var modSeg = segctl([{ val: 'single', txt: 'Single' }, { val: 'ensemble', txt: 'Ensemble spread' }]);
 
     var probe = document.createElement('div');
@@ -336,54 +211,45 @@
     if (anchor && anchor.parentNode) anchor.parentNode.insertBefore(box, anchor.nextSibling);
     else drawer.appendChild(box);
 
-    paintSeg(resSeg, S.resolution); paintSeg(modSeg, S.model);
-    resSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.resolution = b.dataset.val; paintSeg(resSeg, S.resolution); apply().catch(function () {}); });
+    paintSeg(modSeg, S.model);
     modSeg.addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; S.model = b.dataset.val; paintSeg(modSeg, S.model); apply().catch(function () {}); });
     setProbe('');
 
-    // Transparency slider drives the SERVICE TILES too (index.html only wired it to the legacy field).
-    // Keep index.html's lighter default (slider 28 ≈ 0.72 opacity) so the chart reads through — forcing a
-    // Windy-opaque 0.92 here loaded too "thick" over the chart.
+    // Transparency slider drives the grid scene + ensemble tiles (index.html wires the particles).
     var op = document.getElementById('wxopacity');
     if (op) {
       var applyTileOpacity = function () {
-        if (window.HelmWxScene && HelmWxScene.setOpacity) HelmWxScene.setOpacity(wxOpacity());   // WX-19: slider drives the scalar FIELD too (was particles-only — the field ignored it)
+        if (window.HelmWxGrid && HelmWxGrid.setOpacity) HelmWxGrid.setOpacity(wxOpacity());   // alpha only — colour untouched
         cog().then(function (m) { if (m.setWxOpacity) m.setWxOpacity(S.map, wxOpacity()); }).catch(function () {});
       };
       op.addEventListener('input', applyTileOpacity);
     }
+    // Particle checkbox re-applies so the grid scene re-feeds/hides the engine honestly.
+    var pc = document.getElementById('particles');
+    if (pc) pc.addEventListener('change', function () { if (activeLayer() !== 'off') apply().catch(function () {}); });
 
-    // Layer changes are applied by index.html:setWeather() through HelmWxControls.apply().
-    // Keep only that single path; double-applying briefly removes/re-adds the tile source during
-    // layer changes and can show a blank/boxed weather gap under fast zoom/pan tests.
-    var viewRecheckTimer = null;
+    // View changes: probe refresh + HONESTY badge only (stale/holes/outside-pack). No coverage
+    // chasing, no re-pick, no fetch of any kind from pan/zoom — the pack covers what it covers.
+    var viewT = null;
     function viewChanged() {
       probeSoon();
-      if (S.resolution !== 'live') return;
       var layer = activeLayer();
       if (!layer || layer === 'off' || layer === 'radar') return;
-      clearTimeout(viewRecheckTimer);
-      viewRecheckTimer = setTimeout(function () {
-        if (activeSceneNeedsRecheck(map)) apply().catch(function () {});
-        else coverageBadge('');
-      }, 140);
+      clearTimeout(viewT);
+      viewT = setTimeout(function () { healthBadge(layer); }, 140);
     }
     map.on('moveend', viewChanged);
     map.on('zoomend', viewChanged);
-    // Engage the default mode (Live · fills view) ON LOAD — otherwise the legacy static field stays up
-    // until the user clicks the drawer, which is why weather looked like a fixed box on first paint.
+    // Engage live weather ON LOAD if a layer is already active.
     setTimeout(function () { if (activeLayer() !== 'off') apply().catch(function () {}); }, 150);
   }
 
   // Exposed so the shell's setWeather() can re-engage the current mode when the active layer changes
   // programmatically (not via a drawer click) — keeps Live tracking the active layer.
   window.HelmWxControls = { apply: function () { apply().catch(function () {}); },
-    _test: { viewBox: viewBox, coverageReportForBbox: coverageReportForBbox,
-      activeSceneNeedsRecheck: activeSceneNeedsRecheck,
-      candidateRank: candidateRank, failLoudText: failLoudText } };
+    _test: { failLoudText: failLoudText, healthBadge: healthBadge } };
 
   function boot() {
-    var map = window.map || (window.HelmShell && HelmShell.panel ? null : null);
     var drawer = document.getElementById('drawer-weather');
     if (!window.map || !drawer) return setTimeout(boot, 300);
     if (document.getElementById('wx-plus')) return;        // already built

@@ -99,8 +99,7 @@
     var active = window.__activeWx || 'off';
     return {
       active: active,
-      scene: !!window.HelmWxScene,
-      gpu: !!(window.HelmWxSceneGPU && HelmWxSceneGPU.supported && HelmWxSceneGPU.supported()),
+      gpu: !!(typeof navigator !== 'undefined' && navigator.gpu),
       grid: !!window.HelmWxGrid,
       codec: !!window.HelmWxCodec,
       ramp: !!window.HelmWxRamp,
@@ -133,8 +132,8 @@
     var w = wxSnapshot();
     if (w.notice) return { label: 'degraded', sev: 'warn', detail: w.notice };
     if (w.active && w.active !== 'off') {
-      var renderer = w.scene ? 'scene' : w.live ? 'live' : 'renderer missing';
-      return { label: w.active, sev: w.scene || w.live ? 'ok' : 'bad', detail: renderer + (w.gpu ? ' / GPU' : '') };
+      var renderer = w.grid ? 'grid' : 'renderer missing';
+      return { label: w.active, sev: w.grid ? 'ok' : 'bad', detail: renderer + (w.gpu ? ' / GPU' : '') };
     }
     return { label: 'off', sev: 'ok', detail: (w.codec && w.ramp ? 'weather modules loaded' : 'module status partial') };
   }

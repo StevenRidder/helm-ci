@@ -53,7 +53,11 @@ test.beforeEach(async ({ page }) => {
       sessionStorage.clear();
     } catch (e) {}
   });
-  await page.route(/https?:\/\/[^/]+:8093\/.*/, route => route.fulfill({ status: 503, body: 'weather gateway intentionally offline in test' }));
+  // WX-26: the :8093 gateway is RETIRED — no stub. Any request to it is a regression,
+  // collected here and asserted zero in the weather test below.
+  let gatewayCalls = 0;
+  page.on('request', r => { if (/:8093\//.test(r.url())) gatewayCalls += 1; });
+  page._countGateway = () => gatewayCalls;
   await page.route('https://api.open-meteo.com/**', route => route.fulfill({
     status: 200,
     headers: { 'content-type': 'application/json', 'access-control-allow-origin': '*' },
@@ -131,7 +135,7 @@ test('weather transparency UI stays explicit while missing live packs fail loud 
   expect(scrubberState.text).not.toContain('Thu 12:00 PM');
 
   await page.locator('#wx button[data-wx="wind"]').click();
-  await expect(page.locator('#wx-notice')).toContainText('missing_prepared_weather_pack', { timeout: 20000 });
+  await expect(page.locator('#wx-notice')).toContainText('missing_release', { timeout: 20000 });   // WX-26: no release tree in the test env — the drawer must say so
   await expect(page.locator('#wx-notice')).toContainText('no gateway/direct fallback/download');
   await expect.poll(async () => page.evaluate(() => ({
     legacyLive: !!(window.map && window.map.getLayer && window.map.getLayer('helm-wx-live')),
@@ -144,6 +148,7 @@ test('weather transparency UI stays explicit while missing live packs fail loud 
   });
   await expect.poll(async () => (await wxOpacityStyle(page)).fill).toBe('80%');
   await expect(page.locator('#wx-notice')).toContainText('no gateway/direct fallback/download');
+  expect(page._countGateway ? page._countGateway() : 0).toBe(0);   // retired port stays silent
 });
 
 test.describe('mobile chromium', () => {

@@ -211,7 +211,13 @@
     return { a: prev, b: next, frac: frac };
   }
 
+  // WX-26: non-throwing availability introspection for the drawer (tierMeta throws).
+  function layersFor(manifest) {
+    return Object.keys((manifest && manifest.layers) || {});
+  }
+
   var API = {
+    layersFor: layersFor,
     decodeChunk: decodeChunk,
     decodeBand: decodeBand,
     chunkKeysFor: chunkKeysFor,

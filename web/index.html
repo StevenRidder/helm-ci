@@ -754,15 +754,13 @@
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
 <script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
 <script src="wx-grid-scene.js"></script><!-- WX-33: WebGPU model-grid renderer (HelmWxGrid; no tiles, no substitution) -->
-<!-- CLIENT-14/WX-35: legacy field-layer.js AND the gesture-fetching wx-live.js are retired — the field is the prepared Environmental Scene (wx-scene.js); legend via wx-ramp.js -->
+<!-- CLIENT-14/WX-35/WX-26: field-layer.js, wx-live.js AND the prepared-bundle scene (wx-scene*.js, :8093 gateway) are retired — live weather is the WebGPU grid scene (wx-grid-scene.js) over helm.env.grid.v1 packs; legend via wx-ramp.js -->
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
 <!-- WX weather — codec + GRIB2 reader (globals) + probe faces + engines. The UI (hi-res tiles,
      ensemble spread, PredictWind import) is consolidated INTO the Weather drawer by wx-controls.js,
      so there are no longer standalone G/E/I rail icons. -->
 <script src="wx-value-codec.js"></script>
-<script src="wx-scene-webgpu.js"></script><!-- WX-19 phase 4: WebGPU GPU tile colouriser (primary target; wx-scene falls back to CPU/WebGL) -->
-<script src="wx-scene.js"></script><!-- WX-19: Environmental Scene renderer (bundle-backed field scene); needs wx-value-codec + wx-ramp -->
 <script src="wx-grib.js"></script>
 <script src="wx-grib2.js"></script>
 <script src="wx-import.js"></script>
@@ -1048,7 +1046,7 @@
   // WX-25: HelmWindAuto = WebGPU compute advection when available, visible CPU fallback otherwise
   // (window.__helmWindMode says which path is live). Same API either way; the scene doesn't care.
   const wind = window.HelmWindAuto ? HelmWindAuto(map) : (window.HelmWind ? HelmWind(map) : null);
-  window.__helmWind = wind;                    // shared with the Environmental Scene (wx-scene.js) — it owns particle data/visibility
+  window.__helmWind = wind;                    // shared with the grid scene (wx-grid-scene.js) — it owns particle data/visibility
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;   // CLIENT-14: legacy HelmField retired — stays null; Live owns the field, legend via HelmWxRamp. Residual `if (field)` guards below are vestigial no-ops (removed with the renderer rewrite in WX-19).
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
@@ -1056,7 +1054,7 @@
   const measureBtn = document.querySelector('.ri[data-rail="measure"]');
   const measure = window.HelmMeasure ? HelmMeasure(map, { onChange: a => { if (measureBtn) measureBtn.classList.toggle('on', a); } }) : null;
   const collision = window.HelmCollision ? HelmCollision(map) : null;
-  const VECTOR = { wind: 1, waves: 1, swell: 1, current: 1 };   // vector (u/v) layers — the scene drives their particles (WX-35)
+  const VECTOR = { wind: 1, current: 1 };   // vector (u/v) layers per the grid contract §5 — the scene drives their particles
   // Windy-style wind colour ramp (knots -> rgb): muted blue (calm) through teal,
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
   const WINDY_WIND = (window.HelmWxRamp ? HelmWxRamp.stopsFor('wind') : []);   // CLIENT-14: single shared ramp source (was a duplicated literal)
@@ -1121,7 +1119,7 @@
     // above) renders the field from the gateway/Open-Meteo; the legend comes from the shared ramp.
     wxNoticeClear(); buildLegend(legendFromRamp(name));
     const partOn = document.getElementById('particles').checked;
-    // WX-35: the Environmental Scene (wx-scene startParticles) owns vector particles — data AND
+    // WX-35/WX-26: the grid scene (wx-grid-scene feedParticles) owns vector particles — data AND
     // visibility. The legacy fixture-JSON autoload is retired (it 404'd forever and raced the
     // scene with an empty, visible engine). Here we only ensure particles hide when they can't apply.
     if (wind && !(VECTOR[name] && partOn)) wind.setVisible(false);
@@ -1155,6 +1153,35 @@
     setFrame(0);
   }).catch(() => {});
 
+  // WX-26: live time scrubber — populated from the installed grid pack's validTimes by
+  // HelmWxControls (HelmWxTime.sync). Scrub = value-lerp inside cached frames; NO fetch.
+  window.HelmWxTime = { times: [], sync(times) {
+    this.times = times || [];
+    const t = document.getElementById('time'), sl = document.getElementById('tslider');
+    if (!t || !sl) return;
+    if (this.times.length < 2) { if (!forecast) t.style.display = 'none'; return; }
+    t.style.display = 'block';
+    sl.max = this.times.length - 1;
+    const play = document.getElementById('play');
+    if (play) play.style.display = 'none';       // legacy demo control; grid scrub has no autoplay yet
+    // sync slider position to the frame actually rendered
+    const st = window.HelmWxGrid && HelmWxGrid.status();
+    if (st && st.frames) { const i = this.times.indexOf(st.frames.a); if (i >= 0) sl.value = i; }
+    if (!sl.dataset.gridWired) {
+      sl.dataset.gridWired = '1';
+      sl.addEventListener('input', () => {
+        const iso = window.HelmWxTime.times[+sl.value];
+        if (!iso || !window.HelmWxGrid) return;
+        HelmWxGrid.setTime(iso).then(() => {
+          // label and probe time update ONLY after the frames actually swapped (a failed
+          // scrub must not leave the label claiming a time the screen isn't showing)
+          window.__helmTime = iso;
+          document.getElementById('tlabel').textContent = new Date(iso).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' });
+        }).catch(e => wxNotice(activeWx, '⚠ scrub failed · ' + (e.code || e.message) + ' — still showing previous frame'));
+      });
+    }
+  } };
+
   document.querySelectorAll('#wx button').forEach(b => b.addEventListener('click', () => setWeather(b.dataset.wx)));
   document.getElementById('particles').addEventListener('change', () => {
     const active = document.querySelector('#wx button.on');
@@ -1165,7 +1192,7 @@
   function applyOpacity() {
     opSlider.style.setProperty('--wx-fill', opSlider.value + '%');
     const o = (100 - (+opSlider.value)) / 100;     // slider right = more transparent
-    if (window.HelmWxScene && HelmWxScene.setOpacity) HelmWxScene.setOpacity(o);
+    if (window.HelmWxGrid && HelmWxGrid.setOpacity) HelmWxGrid.setOpacity(o);   // WX-26: grid scene (alpha only)
     if (field) field.setOpacity(o);
     if (wind) wind.setOpacity(o);
   }

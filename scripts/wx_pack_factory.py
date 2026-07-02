@@ -544,7 +544,7 @@ def build_pack_manifest(job: dict[str, Any], pack: dict[str, Any], source: dict[
             "container": "pmtiles",
             "payload": "helm.env.grid.chunk.v1",
             "rangeReadable": True,
-            "servedBy": "helm-packd",
+            "servedBy": "helm-envd",   # WX-26: envd serves manifest chunks to the cockpit (packd stays basemap-only)
             "requiredRuntime": "C++",
             "byteRangeSemantics": "offset-length",
             "checksumAlgorithm": "sha256",

@@ -33,7 +33,7 @@ engine/bootstrap.sh
 # 3. Optional but recommended: install a free NOAA ENC sample into ~/.helm/runtime/enc.
 scripts/install-sample-enc.sh
 
-# 4. Set up the weather gateway venv, once.
+# 4. Bake a weather release + build helm-envd, once (WX-26: grid packs replaced the gateway).
 python3 -m venv services/wx/.venv
 services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
 

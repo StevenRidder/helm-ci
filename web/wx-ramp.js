@@ -21,14 +21,22 @@
     temp:     [[-10, [70, 90, 200]], [0, [80, 180, 235]], [10, [70, 200, 130]], [20, [245, 205, 60]], [30, [240, 120, 40]], [42, [210, 40, 40]]],
     clouds:   [[0, [150, 170, 190, 0]], [40, [200, 210, 222, 0.4]], [80, [235, 240, 246, 0.75]], [100, [250, 252, 255, 0.9]]],
     pressure: [[980, [120, 80, 200]], [1000, [80, 160, 230]], [1013, [120, 205, 140]], [1025, [240, 200, 80]], [1040, [230, 110, 55]]],
-    cape:     [[0, [56, 160, 200, 0]], [300, [120, 200, 120, 0.5]], [1000, [245, 205, 60, 0.8]], [2500, [240, 120, 40, 0.9]], [4000, [220, 40, 40, 0.95]]]
+    cape:     [[0, [56, 160, 200, 0]], [300, [120, 200, 120, 0.5]], [1000, [245, 205, 60, 0.8]], [2500, [240, 120, 40, 0.9]], [4000, [220, 40, 40, 0.95]]],
+    // WX-26: marine layers get their OWN Windy-aligned stops — they were silently falling back
+    // to the wind ramp (wrong domain AND wrong palette; 3 m seas painted like 3 kn of wind).
+    waves:    [[0, [70, 110, 190]], [1, [60, 160, 180]], [2, [80, 190, 130]], [3, [225, 200, 60]], [5, [235, 130, 50]], [8, [215, 65, 70]]],
+    swell:    [[0, [80, 100, 185]], [1, [70, 150, 190]], [2, [90, 185, 140]], [3, [230, 205, 65]], [4.5, [235, 135, 55]], [6, [210, 70, 80]]],
+    current:  [[0, [90, 120, 190, 0.25]], [0.5, [60, 170, 170]], [1, [110, 195, 100]], [2, [230, 200, 60]], [3, [235, 125, 50]], [4, [215, 65, 75]]],
+    sst:      [[0, [90, 90, 210]], [10, [70, 170, 220]], [18, [70, 200, 140]], [24, [240, 205, 65]], [28, [240, 130, 45]], [32, [215, 50, 50]]]
   };
 
   // Per-layer override registered from a loaded tile manifest (cog.js → setManifestRamp). The
   // gateway's baked ramp wins, so the field tiles, the particles and the probe all match it.
   var overrides = {};
 
-  function stopsFor(layer) { return overrides[layer] || RAMPS[layer] || RAMPS.wind; }
+  // WX-26: strict — unknown layers return null so consumers FAIL LOUD instead of silently
+  // painting with the wind palette. rampColor/rampCss keep a visible white fallback.
+  function stopsFor(layer) { return overrides[layer] || RAMPS[layer] || null; }
 
   // Interpolate stops at value v → [r, g, b, a(0..255)]. Identical math to HelmWxCodec.rampColor;
   // kept self-contained so wx-ramp has no load-order dependency (wind-layer loads before the codec).

@@ -47,6 +47,10 @@ const APP_SHELL_URLS = [
   './tooltip.js',
   './wind-layer.js',
   './wx-ramp.js',
+  './wx-grid-pack-client.js',
+  './wx-grid-decode.js',
+  './wx-grid-scene.js',
+  './wx-particles-webgpu.js',
   './radar.js',
   './isobars.js',
   './wx-value-codec.js',
@@ -152,6 +156,27 @@ function matchesPrefix(pathname, prefix) {
 
 function isNetworkOnly(url) {
   return NETWORK_ONLY_PREFIXES.some(prefix => matchesPrefix(url.pathname, prefix));
+}
+
+// WX-26: weather release discovery (/wx-packs/current.json → index → manifests).
+// stale-while-revalidate here would silently pin an OLD release while a fresh bake sits
+// on disk; network-only would kill offline weather. Network-first: fresh when reachable,
+// last-known release offline — the drawer's age/horizon badges make staleness visible.
+function isWxPacksRequest(url) {
+  return matchesPrefix(url.pathname, '/wx-packs');
+}
+
+async function networkFirstWxPacks(request) {
+  const cache = await caches.open(RUNTIME_CACHE);
+  try {
+    const response = await fetch(request);
+    if (isCacheable(response)) await cache.put(request, response.clone());
+    return response;
+  } catch (err) {
+    const cached = await cache.match(request);
+    if (cached) return cached;
+    throw err;
+  }
 }
 
 function isTileRequest(url) {
@@ -279,6 +304,11 @@ self.addEventListener('fetch', event => {
 
   if (request.mode === 'navigate') {
     event.respondWith(networkFirstNavigation(request));
+    return;
+  }
+
+  if (isWxPacksRequest(url)) {
+    event.respondWith(networkFirstWxPacks(request));
     return;
   }
 

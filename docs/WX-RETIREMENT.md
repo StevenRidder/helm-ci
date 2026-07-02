@@ -18,9 +18,10 @@ if a retired entrypoint creeps back.
 
 | Component | Label | Removal gate / C++ target |
 |---|---|---|
-| `web/wx-scene.js` + `wx-scene-webgpu.js` + `wx-controls.js` (prepared-bundle Environmental Scene) | **shipping bridge** — explicit primary path; fail-loud (WX-30), no silent substitution | Retired by **WX-26** once real grid packs flow end-to-end (needs a live source adapter in the pack factory — `open-meteo` adapter is `implemented: False` today). |
-| `services/wx` (Python gateway :8093) | **dev/reference + shipping bridge** for the scene above | **WX-26 / WX-20**: C++ `helm-envd`/`helm-wxd` per [RUNTIME-SERVICES.md](RUNTIME-SERVICES.md); Python stays as oracle. |
-| `web/wx-grid-*.js` (pack client, decode, WebGPU grid scene) | **grid path** — the replacement (WX-32/WX-33) | Becomes primary at WX-26; UI swap happens there, not here. |
+| `web/wx-scene.js` + `wx-scene-webgpu.js` | **REMOVED (WX-26)** — deleted with their unit tests; the retirement gate pins them out | done |
+| `web/wx-controls.js` | **rewritten (WX-26)** — live mode = release discovery → `HelmWxGrid`; no gateway, no coverage-chasing | n/a |
+| `services/wx` (Python gateway :8093) | **dev/reference oracle ONLY** — the cockpit never calls it (`start-helm.sh --wx-oracle` to run) | delete when oracle comparisons end |
+| `web/wx-grid-*.js` (pack client, decode, WebGPU grid scene) | **PRIMARY live weather (WX-26)** — drawer-wired, service-worker precached, probe + scrub + particles | n/a |
 | `scripts/wx_pack_factory.py`, `scripts/env_grid_pack.py` | **cloud job / packer** (WX-34) | Cloud/VM job; C++ path for productized backend per contract §10. |
 | `helm-packd` | **required runtime, C++** (merged) | serves packs by range; owns no weather physics. |
 | `web/wind-layer.js` + `wx-particles-webgpu.js` | **shared particle engines** (CPU + WebGPU compute), driven by whichever scene is active | Stay; both scenes feed them the same u/v values. |
@@ -41,5 +42,7 @@ means `northwest` (pre-pin v1 packs). See ENVIRONMENTAL-GRID-V1.md §6.
    loud; a failed batch aborts the bake), quantizes to int16/uint16 bands, and packs through the
    existing chunk machinery. One-command bake: `scripts/wx_bake_openmeteo.py --anchor lon,lat
    --out <dir>`. GRIB/NOAA adapters remain unimplemented placeholders.
-2. The **drawer/UI swap** from the prepared-bundle scene to `HelmWxGrid` once real packs flow.
-3. C++ `helm-envd`/`helm-wxd` parity (WX-20) before the Python gateway can be deleted.
+2. ~~The **drawer/UI swap**~~ — **DONE (WX-26)**: live mode runs discovery → `HelmWxGrid` with the
+   envd chunk endpoint; the bundle scene is deleted and gate-pinned.
+3. ~~C++ `helm-envd` parity (WX-20)~~ — **DONE**: envd serves the cockpit's chunks (:8094).
+   Remaining: delete the Python oracle (`services/wx`) when reference comparisons end.
