@@ -95,3 +95,4 @@ secrets/
 # Local agent/live-machine coordination. Keep these out of the public repo.
 .claude/
 AGENTS.md
+web/.wx33-e2e/

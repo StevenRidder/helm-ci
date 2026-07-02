@@ -751,6 +751,9 @@
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
 <script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
+<script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
+<script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
+<script src="wx-grid-scene.js"></script><!-- WX-33: WebGPU model-grid renderer (HelmWxGrid; no tiles, no substitution) -->
 <!-- CLIENT-14: field-layer.js (legacy fixed-bbox HelmField) retired — field is rendered by the Live path (wx-live.js / helmwx tiles); legend via wx-ramp.js -->
 <script src="radar.js"></script>
 <script src="isobars.js"></script>
