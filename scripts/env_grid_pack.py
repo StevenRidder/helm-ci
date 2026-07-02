@@ -178,14 +178,16 @@ def write_pmtiles_shell(out_path: Path, manifest: dict[str, Any], chunks: list[b
     return data_off, len(data)
 
 
-def public_sidecar(manifest: dict[str, Any], pack_name: str) -> dict[str, Any]:
+def public_sidecar(manifest: dict[str, Any], pack_name: str, generated_by: str = "scripts/env_grid_pack.py") -> dict[str, Any]:
     layers = sorted((manifest.get("layers") or {}).keys())
     tiers = sorted((manifest.get("tiers") or {}).keys())
+    source = manifest.get("source") or {}
     return {
         "title": manifest.get("packId"),
         "kind": "environmental-grid",
-        "source": manifest.get("source", {}).get("provider", "local"),
-        "license": "local-user-owned",
+        "source": source.get("provider", "local"),
+        "license": source.get("license", "local-user-owned"),
+        "source_provenance": source.get("provenance"),
         "helm_pack_schema": "helm.env.grid.pack.v1",
         "pack_role": "environmental-grid",
         "encoding": "helm.env.grid.v1",
@@ -197,7 +199,7 @@ def public_sidecar(manifest: dict[str, Any], pack_name: str) -> dict[str, Any]:
         "grid_tiers": tiers,
         "chunk_count": len(manifest.get("chunks") or {}),
         "failure_policy": manifest.get("failurePolicy", {}),
-        "generated_by": "scripts/env_grid_pack.py",
+        "generated_by": generated_by,
     }
 
 
