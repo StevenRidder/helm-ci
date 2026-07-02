@@ -146,20 +146,23 @@
       "final_acceptance_required": true,
       "language": "C++17",
       "process_type": "daemon",
-      "ports": ["8093 target or configured env service port"],
+      "ports": ["8094 default", "9001+ private test ports"],
       "paths": [
+        "engine/vendor/cli/helm_envd.cpp",
+        "engine/test-envd.sh",
+        "pipeline/test_helm_envd_contract.py",
+        "docs/WX-20-HELM-ENVD.md",
         "docs/ENVIRONMENTAL-GRID-V1.md",
-        "docs/ENVIRONMENTAL-BUNDLE-V1.md",
         "docs/WEATHER.md"
       ],
-      "launch": [],
+      "launch": ["$HELM_ENVD_BIN <private-port>"],
       "starts_python_daemon": false,
       "python_allowed": false,
       "owner": "WX",
       "cxx_exit_task": "WX-20",
       "evidence_tasks": ["WX-31", "WX-32", "WX-33", "WX-35", "WX-20"],
       "feeds_helmcxx": ["HELMC++-2", "HELMC++-3", "HELMC++-4", "HELMC++-8"],
-      "notes": "This is the main remaining required-runtime C++ port. The accepted WX path is compact helm.env.grid.v1 packs, not PNG pyramids. services/wx is the reference/oracle until WX-20 lands."
+      "notes": "WX-20 implements the first C++ local replay/validation slice for compact helm.env.grid.v1 packs: sanitized inventory, checked byte-range chunks, and fail-loud diagnostics. This entry remains planned for HELMC++ final acceptance until provider/job parity and client cutover are complete; services/wx stays reference/oracle until full parity."
     },
     {
       "id": "services-wx-python",

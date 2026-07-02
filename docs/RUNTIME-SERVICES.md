@@ -38,7 +38,7 @@ or break working helpers before parity exists. The rule is:
 | `helm-server` nav/chart core | C++ one-origin boat server | C++ required runtime |
 | `helm-packd` local packs | C++ port merged; Python oracle may remain for tests | C++ required runtime |
 | tile cache/proxy | C++ cache/proxy merged for runtime use | C++ when enabled |
-| weather/environment grid packs | Python `services/wx` remains current/reference while compact grid packs and WebGPU scene stabilize | C++ `helm-envd`/`helm-wxd` grid-pack service required runtime after parity |
+| weather/environment grid packs | C++ `helm-envd` first replay/validation slice exists; Python `services/wx` remains reference/oracle and provider bridge until full parity | C++ `helm-envd`/`helm-wxd` grid-pack service required runtime after parity |
 | `backend/` FastAPI/AI/community | Optional prototype/companion path | Optional non-safety only, or ported if ever promoted to required runtime |
 | `pipeline/` and generators | Python and shell tooling | Allowed outside required runtime; selected appliance paths may be ported |
 | `web/` cockpit | Browser JavaScript/MapLibre/WebGPU | Browser JavaScript/WebGPU product UI |
@@ -104,7 +104,7 @@ exit tasks.
 | `engine/` / `helm-server` | Nav, AIS, route, chart tile, health, and one-origin boat server | Required C++ runtime. |
 | `helm-packd` | Local MBTiles/PMTiles packs, catalog, layers, prefetch, bundle manifests | Required C++ runtime. |
 | `helm-basemap-cache` | Cache/proxy for online fill and remote/local pack fallback | C++ when enabled as a runtime service. |
-| `helm-envd` | Environmental grid-pack replay, validation, stale/offline/error reporting, and selected-pack prefetch | Required C++ runtime after the grid/field-texture contract is proven. |
+| `helm-envd` | Environmental grid-pack replay, validation, stale/offline/error reporting, and selected-pack prefetch | First C++ replay/validation slice implemented by WX-20; provider/job parity remains incremental. |
 | data-preparation tools | Import, bake, conversion, sample generation, fixture tooling | Outside required runtime. |
 | `web/` | Browser cockpit, MapLibre, WebGPU, UI tests | Client surface, not boat runtime daemon. |
 | native Apple clients | WKWebView, SwiftUI, MapLibre Native, Metal | Thin client over the boat server. |
@@ -163,6 +163,12 @@ Required contract:
 The C++ service should replay prepared grid packs and run explicit selected-pack refresh/import jobs,
 but it should not bake UI assumptions into the service. It must not become a monolith: package
 serving, cache inventory, provider ingestion jobs, and browser rendering stay separate.
+
+WX-20 lands the first vertical slice as [`helm_envd.cpp`](../engine/vendor/cli/helm_envd.cpp):
+local-only manifest validation, sanitized `/packs` inventory, and validated `/chunk` replay for
+uncompressed `HELMGRID` chunks. Unsupported capabilities fail loud; they are not hidden behind
+provider calls, PNG pyramids, gateway substitution, or viewport-triggered fetches. See
+[`WX-20-HELM-ENVD.md`](WX-20-HELM-ENVD.md).
 
 ## OpenCPN Alignment
 

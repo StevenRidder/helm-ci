@@ -121,7 +121,7 @@ for p in "$PATCHES"/[0-9][0-9][0-9][0-9]-*.patch; do
   git -C "$OCPN_DIR" apply "$p"
   echo "  applied $name"
 done
-for target in helm-server helm-packd helm-basemap-cache; do
+for target in helm-server helm-packd helm-envd helm-basemap-cache; do
   grep -q "add_executable($target" "$OCPN_DIR/cli/CMakeLists.txt" ||
     die "patch series did not expose CMake target $target in cli/CMakeLists.txt"
 done
@@ -149,15 +149,17 @@ say "build helm targets (-j$JOBS)"
 # and the tide-catalog fetch helper; building them by default keeps the tide stack reproducible too.
 # helm-s52-atlas-builder / helm-s52-atlas-smoke are dependency-free C++ S-52 asset pipeline
 # checks for Vulkan renderer symbols/patterns/line styles. helm-packd is the local MBTiles/PMTiles
-# pack daemon; helm-basemap-cache is the optional online-fill/remote-pack tile cache. Both are
-# independent of chart/nav, so they can be tested without touching :8080.
-cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-tiles helm-packd helm-basemap-cache helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
+# pack daemon; helm-envd is the environmental grid-pack validator/replay daemon; helm-basemap-cache
+# is the optional online-fill/remote-pack tile cache. They are independent of chart/nav, so they can
+# be tested without touching :8080.
+cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-tiles helm-packd helm-envd helm-basemap-cache helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
-ls -1 "$BIN"/{helm-tiles,helm-packd,helm-basemap-cache,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
+ls -1 "$BIN"/{helm-tiles,helm-packd,helm-envd,helm-basemap-cache,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
 [ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
 [ -x "$BIN/helm-packd" ] || die "helm-packd (local pack daemon) did not build despite being a default target (OFFLINE-16) — check the build log above"
+[ -x "$BIN/helm-envd" ] || die "helm-envd (environmental grid-pack daemon) did not build despite being a default target (WX-20) — check the build log above"
 [ -x "$BIN/helm-basemap-cache" ] || die "helm-basemap-cache (optional basemap cache/proxy) did not build despite being a default target (CHART-18) — check the build log above"
 
 # ---- install the DURABLE runtime (so a fresh install / reboot can COLD-START) ----------------
