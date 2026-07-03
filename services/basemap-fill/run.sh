@@ -10,6 +10,9 @@ export HELM_FILL_CACHE="${HELM_FILL_CACHE:-$HOME/.helm/basemap-fill-cache}"
 export HELM_FILL_REFRESH_DAYS="${HELM_FILL_REFRESH_DAYS:-30}"
 HELM_OCPN_DIR="${HELM_OCPN_DIR:-$HOME/.helm/build/helm-opencpn}"
 HELM_BASEMAP_CACHE_BIN="${HELM_BASEMAP_CACHE_BIN:-$HELM_OCPN_DIR/build/cli/helm-basemap-cache}"
+# Also accept the DEPLOYED binary location (parity with start-helm.sh HELM_PACKD_BIN default),
+# so the C++ path survives a cleaned build dir instead of silently falling back to Python.
+[ -x "$HELM_BASEMAP_CACHE_BIN" ] || HELM_BASEMAP_CACHE_BIN="$HOME/.helm/bin/helm-basemap-cache"
 
 # REUSE-IF-UP: never double-bind; leave a running instance alone.
 if curl -sf -o /dev/null --max-time 2 "http://127.0.0.1:$HELM_FILL_PORT/health" 2>/dev/null; then
