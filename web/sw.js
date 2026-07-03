@@ -255,13 +255,13 @@ async function cacheFirst(request, cacheName, maxEntries) {
   return response;
 }
 
-async function staleWhileRevalidate(request, cacheName, maxEntries) {
+async function staleWhileRevalidate(event, request, cacheName, maxEntries) {
   const cache = await caches.open(cacheName);
   const cached = await cache.match(request);
-  const refresh = fetch(request).then(response => {
+  const refresh = fetch(request).then(async response => {
     if (isCacheable(response)) {
-      cache.put(request, response.clone());
-      trimCache(cacheName, maxEntries).catch(err => {
+      await cache.put(request, response.clone());
+      await trimCache(cacheName, maxEntries).catch(err => {
         console.warn('[helm-sw] cache trim failed:', err && err.message);
       });
     }
@@ -271,6 +271,11 @@ async function staleWhileRevalidate(request, cacheName, maxEntries) {
     console.warn('[helm-sw] refresh failed, serving cached asset:', request.url, err && err.message);
     return cached;
   });
+  // CRITICAL: without waitUntil the browser kills this worker the moment the cached
+  // response is returned — the background refresh dies mid-flight and the cache NEVER
+  // converges to a deploy. That silently pinned clients to a WEEKS-old app shell while
+  // "reload twice" did nothing. waitUntil keeps the worker alive until the refresh lands.
+  event.waitUntil(refresh.then(() => undefined).catch(() => undefined));
   return cached || refresh;
 }
 
@@ -284,6 +289,14 @@ self.addEventListener('activate', event => {
     const names = await caches.keys();
     await Promise.all(names.filter(name => name.startsWith('helm-') && !keep.has(name)).map(name => caches.delete(name)));
     await Promise.all([caches.open(TILE_CACHE), caches.open(RUNTIME_CACHE)]);
+    // A new worker just precached the WHOLE shell fresh (install used cache:'reload').
+    // Runtime copies of those same files predate this deploy — purge them so the first
+    // controlled load serves current code instead of a stale runtime hit. Non-shell
+    // runtime entries (e.g. /wx-packs offline fallback) are untouched.
+    const shell = await caches.open(SHELL_CACHE);
+    const runtime = await caches.open(RUNTIME_CACHE);
+    const shellKeys = await shell.keys();
+    await Promise.all(shellKeys.map(k => runtime.delete(k.url)));
     await self.clients.claim();
   })());
 });
@@ -318,6 +331,6 @@ self.addEventListener('fetch', event => {
   }
 
   if (isShellAsset(url)) {
-    event.respondWith(staleWhileRevalidate(request, RUNTIME_CACHE, MAX_RUNTIME_ENTRIES));
+    event.respondWith(staleWhileRevalidate(event, request, RUNTIME_CACHE, MAX_RUNTIME_ENTRIES));
   }
 });

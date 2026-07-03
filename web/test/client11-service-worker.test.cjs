@@ -24,7 +24,10 @@ expectContains(sw, "self.addEventListener('install'", 'install handler');
 expectContains(sw, "self.addEventListener('fetch'", 'fetch handler');
 expectContains(sw, 'networkFirstNavigation', 'navigation fallback handler');
 expectContains(sw, 'cacheFirst(request, TILE_CACHE', 'cache-first tile/glyph strategy');
-expectContains(sw, 'staleWhileRevalidate(request, RUNTIME_CACHE', 'runtime shell strategy');
+expectContains(sw, 'staleWhileRevalidate(event, request, RUNTIME_CACHE', 'runtime shell strategy');
+// the background refresh MUST be waitUntil'd — without it the browser kills the worker
+// before the refresh lands and deploys never reach installed clients (the WX-41 bug)
+expectContains(sw, 'event.waitUntil(refresh', 'revalidation kept alive past respondWith');
 expectContains(sw, 'caches.open(TILE_CACHE), caches.open(RUNTIME_CACHE)', 'install creates runtime cache buckets');
 expectContains(sw, 'refresh failed, serving cached asset', 'offline revalidate catch');
 
