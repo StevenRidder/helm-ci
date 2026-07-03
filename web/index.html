@@ -905,6 +905,12 @@
       ? await HelmShell.buildStyle({ styleDir: 'style', fallback: 'style.json' })
       : await (await fetch('style.json')).json();
     await preferUserDepthData(style);
+    // OFFLINE-19: the owned Fiji basemaps are now pmtiles:// sources served by C++ packd
+    // (retires the Python :8091). The pmtiles protocol MUST be registered before the map
+    // reads the style, or those sources fail — do it in the same fail-loud path as the style.
+    if (window.HelmOfflinePacks && HelmOfflinePacks.ensurePmtilesProtocol) {
+      await HelmOfflinePacks.ensurePmtilesProtocol();
+    }
   } catch (e) {
     // The map can't be built without a style — surface it explicitly instead of a silent blank page.
     if (window.__helmDegrade) window.__helmDegrade('Chart failed to load', (e && e.message) || e);
@@ -966,8 +972,15 @@
   if (map.touchPitch) map.touchPitch.disable();     // two-finger gesture = zoom + rotate only
   // Surface real map failures (style/source/layer) on the degraded banner; stay quiet on benign
   // tile/sprite/glyph 404s (common offline) so we never cry wolf.
+  // The owned Fiji basemaps (navionics/sat) are SUPPLEMENTARY raster — served by packd as
+  // pmtiles:// archives (OFFLINE-19). A pmtiles fetch failure surfaces as a bare "Failed to
+  // fetch" with no URL, so it can't be matched by message; key off the sourceId instead and
+  // treat a basemap-source failure as benign (like an old .png tile 404). The ENC chart (:8090)
+  // and live nav/weather stay fatal-loud — packd being down must NOT blank the whole display.
+  var BASEMAP_SOURCES = { navionics: 1, googlesat: 1, bingsat: 1, arcgis: 1, satellite: 1, sat: 1, charts: 1, 'helm-chart-online-fill': 1 };
   map.on('error', function (ev) {
     var m = (ev && ev.error && ev.error.message) || (ev && ev.message) || 'map error';
+    if (ev && ev.sourceId && BASEMAP_SOURCES[ev.sourceId]) { console.warn('[helm] basemap source ' + ev.sourceId + ':', m); return; }
     if (window.__helmDegrade && !window.__helmBenignError(m)) window.__helmDegrade('Chart error', m);
     else console.warn('[helm] map:', m);
   });

@@ -155,12 +155,16 @@ if [ "${WANT_WX_ORACLE:-0}" = 1 ]; then
 fi
 
 if [ "$WANT_BASEMAP" = 1 ]; then
-  if [ -f "$REPO_ROOT/pipeline/mbtiles_server.py" ]; then
-    [ -n "${HELM_MBTILES_DIR:-}" ] || SKIPPED+=("basemap note — HELM_MBTILES_DIR unset; serving demo web/data, not your charts")
-    start_bg "local-pack-server (pipeline)" 8091 \
-      bash -c "exec python3 '$REPO_ROOT/pipeline/mbtiles_server.py' 8091"
+  # OFFLINE-19: the local pack server on :8091 is now C++ helm-packd (warm-mmap PMTiles/MBTiles),
+  # NOT pipeline/mbtiles_server.py — that Python server is retired from the runtime (kept only as
+  # the parity test oracle). Serves the owned Fiji basemaps as pmtiles:// archives.
+  PACKD_BIN="${HELM_PACKD_BIN:-$HOME/.helm/bin/helm-packd}"
+  if [ -x "$PACKD_BIN" ]; then
+    [ -n "${HELM_MBTILES_DIR:-}" ] || SKIPPED+=("basemap note — HELM_MBTILES_DIR unset; serving demo web/data, not your charts (set it to your PMTiles dir, e.g. ~/.helm/charts/fiji)")
+    start_bg "local-pack-server (helm-packd, C++)" 8091 \
+      bash -c "exec env HELM_BIND=0.0.0.0 '$PACKD_BIN' 8091"
   else
-    SKIPPED+=("local-pack-server :8091 — pipeline/mbtiles_server.py not found")
+    SKIPPED+=("local-pack-server :8091 — helm-packd not built at $PACKD_BIN (build via engine/bootstrap.sh, or set HELM_PACKD_BIN)")
   fi
 fi
 

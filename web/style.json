@@ -18,9 +18,7 @@
     "navionics": {
       "type": "raster",
       "tileSize": 256,
-      "tiles": [
-        "http://localhost:8091/navionics/{z}/{x}/{y}.png"
-      ],
+      "url": "pmtiles://http://localhost:8091/navionics.pmtiles",
       "minzoom": 7,
       "maxzoom": 17,
       "bounds": [175.0, -22.5, 180.5, -11.0],
@@ -28,19 +26,19 @@
     },
     "googlesat": {
       "type": "raster", "tileSize": 256,
-      "tiles": ["http://localhost:8091/googlesat/{z}/{x}/{y}.jpg"],
+      "url": "pmtiles://http://localhost:8091/googlesat.pmtiles",
       "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
       "attribution": "Google satellite — owned (Fiji TCL2407)"
     },
     "bingsat": {
       "type": "raster", "tileSize": 256,
-      "tiles": ["http://localhost:8091/bingsat/{z}/{x}/{y}.jpg"],
+      "url": "pmtiles://http://localhost:8091/bingsat.pmtiles",
       "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
       "attribution": "Bing satellite — owned (Fiji TCL2407)"
     },
     "arcgis": {
       "type": "raster", "tileSize": 256,
-      "tiles": ["http://localhost:8091/arcgis/{z}/{x}/{y}.jpg"],
+      "url": "pmtiles://http://localhost:8091/arcgis.pmtiles",
       "minzoom": 7, "maxzoom": 17, "bounds": [175.0, -22.5, 180.5, -11.0],
       "attribution": "ArcGIS satellite — owned (Fiji TCL2407)"
     },

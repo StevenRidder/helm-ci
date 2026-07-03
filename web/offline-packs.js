@@ -654,6 +654,7 @@
     refresh: fetchCatalog,
     activate: activate,
     fit: fitPack,
+    ensurePmtilesProtocol: ensurePmtilesProtocol,   // boot registers pmtiles:// before the basemap sources load (OFFLINE-19)
     state: state
   };
 })();
