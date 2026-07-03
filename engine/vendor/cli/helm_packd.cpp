@@ -33,6 +33,7 @@
 #include <sstream>
 #include <stdexcept>
 #include <string>
+#include <sys/mman.h>
 #include <sys/stat.h>
 #include <thread>
 #include <unistd.h>
@@ -86,6 +87,17 @@ struct PackRecord {
   std::unique_ptr<rapidjson::Document> public_metadata;
   std::unique_ptr<sqlite3, SqliteCloser> db;
   mutable std::mutex db_mutex;
+  // OFFLINE-18: lazy warm mmap of a PMTiles archive. Mapped once on the first Range
+  // request, then every slice is a memcpy from the mapped region (the OS page cache is
+  // the LRU) instead of a per-request open()/seek()/read() through std::ifstream.
+  mutable std::mutex mmap_mutex;
+  mutable const unsigned char* mmap_data = nullptr;
+  mutable std::size_t mmap_size = 0;
+  mutable int mmap_fd = -1;
+  ~PackRecord() {
+    if (mmap_data) ::munmap(const_cast<unsigned char*>(mmap_data), mmap_size);
+    if (mmap_fd >= 0) ::close(mmap_fd);
+  }
 };
 
 using Headers = ix::WebSocketHttpHeaders;
@@ -1973,6 +1985,29 @@ std::string read_file_slice(const std::string& path, std::uint64_t start, std::u
   return body;
 }
 
+// OFFLINE-18: warm mmap accessor. Maps the archive once (MAP_PRIVATE, read-only) and
+// returns a pointer into it; the OS page cache backs repeated Range reads, so there is no
+// per-request open/seek/read left to coalesce. Fails open: nullptr -> caller falls back to
+// read_file_slice() (byte-identical). Thread-safe: init under mmap_mutex, then the mapped
+// region is immutable and read lock-free.
+const unsigned char* pmtiles_mapped(const PackRecord& rec, std::size_t& out_size) {
+  std::lock_guard<std::mutex> lk(rec.mmap_mutex);
+  if (rec.mmap_data == nullptr) {
+    const int fd = ::open(rec.path.c_str(), O_RDONLY);
+    if (fd < 0) return nullptr;
+    struct stat st {};
+    if (::fstat(fd, &st) != 0 || st.st_size <= 0) { ::close(fd); return nullptr; }
+    void* addr = ::mmap(nullptr, static_cast<std::size_t>(st.st_size), PROT_READ, MAP_PRIVATE, fd, 0);
+    if (addr == MAP_FAILED) { ::close(fd); return nullptr; }
+    ::madvise(addr, static_cast<std::size_t>(st.st_size), MADV_RANDOM);  // PMTiles = random tile access
+    rec.mmap_fd = fd;
+    rec.mmap_size = static_cast<std::size_t>(st.st_size);
+    rec.mmap_data = static_cast<const unsigned char*>(addr);
+  }
+  out_size = rec.mmap_size;
+  return rec.mmap_data;
+}
+
 std::string etag_for(const PackRecord& rec) {
   std::ostringstream out;
   out << "\"" << std::hex << rec.modified_epoch << "-" << rec.size_bytes << "\"";
@@ -2004,8 +2039,18 @@ ix::HttpResponsePtr serve_pmtiles(const PackRecord& rec, const ix::HttpRequestPt
     return std::make_shared<ix::HttpResponse>(range.partial ? 206 : 200,
       range.partial ? "Partial Content" : "OK", ix::HttpErrorCode::Ok, h, std::string());
   }
-  return response(range.partial ? 206 : 200, range.partial ? "Partial Content" : "OK", std::move(h),
-                  read_file_slice(rec.path, range.start, length));
+  std::size_t mapped_size = 0;
+  const unsigned char* mapped = pmtiles_mapped(rec, mapped_size);
+  std::string body;
+  if (mapped && range.start < mapped_size) {
+    const std::size_t avail =
+      static_cast<std::size_t>(std::min<std::uint64_t>(length, mapped_size - range.start));
+    body.assign(reinterpret_cast<const char*>(mapped) + range.start, avail);
+  } else {
+    body = read_file_slice(rec.path, range.start, length);  // fail-open: byte-identical
+  }
+  return response(range.partial ? 206 : 200, range.partial ? "Partial Content" : "OK",
+                  std::move(h), std::move(body));
 }
 
 ix::HttpResponsePtr serve_mbtiles(const PackRecord& rec, const std::vector<std::string>& parts) {

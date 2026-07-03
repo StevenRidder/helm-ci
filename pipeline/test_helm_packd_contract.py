@@ -248,6 +248,24 @@ class HelmPackdContractTest(unittest.TestCase):
             self.assertGreater(int(resp.headers.get("Content-Length", "0")), 127)
             self.assertEqual(resp.read(), b"")
 
+        # OFFLINE-18: the warm-mmap path maps the archive once, then serves every slice as a
+        # memcpy from the mapped region. Verify it stays byte-identical across many sequential
+        # ranges — including mid-file offsets and the last byte — against the full body (which
+        # itself exercises the no-Range mmap read).
+        with urllib.request.urlopen(f"http://127.0.0.1:{self.port}/sat.pmtiles", timeout=2) as resp:
+            self.assertEqual(resp.status, 200)
+            full = resp.read()
+        self.assertGreater(len(full), 200)
+        end = len(full) - 1
+        for start, stop in [(0, 6), (7, 20), (100, 149), (end - 9, end), (end, end)]:
+            r = urllib.request.Request(
+                f"http://127.0.0.1:{self.port}/sat.pmtiles",
+                headers={"Range": f"bytes={start}-{stop}"},
+            )
+            with urllib.request.urlopen(r, timeout=2) as resp:
+                self.assertEqual(resp.status, 206, f"range {start}-{stop}")
+                self.assertEqual(resp.read(), full[start:stop + 1], f"range {start}-{stop} bytes")
+
     def test_offline17_layers_prefetch_and_bundle_endpoints(self) -> None:
         status, layers = request_json(
             f"http://127.0.0.1:{self.port}/layers?"
