@@ -305,30 +305,19 @@
     try { before = map.getLayer('route-line') ? 'route-line' : undefined; } catch (e) {}
     state.segs.forEach(function (s, i) {
       var id = SRC_ID + '-' + i;
+      // animate:true — MapLibre re-reads the canvas every frame (its stock video-canvas
+      // path). The previous play()/pause() refresh dance could freeze a STALE texture.
       map.addSource(id, {
-        type: 'canvas', canvas: s.canvas, animate: false,
+        type: 'canvas', canvas: s.canvas, animate: true,
         coordinates: [[s.ext.west, s.ext.north], [s.ext.east, s.ext.north], [s.ext.east, s.ext.south], [s.ext.west, s.ext.south]]
       });
+      // raster-opacity-transition 0: MapLibre tweens raster-opacity over 300ms by default,
+      // and an idle map FREEZES mid-tween — the slider then reads as a permanently
+      // washed-out field (chart bleeding through at "opacity 1"). Photoshop dials don't fade.
       map.addLayer({ id: id, type: 'raster', source: id,
-        paint: { 'raster-opacity': state.opacity, 'raster-resampling': 'linear', 'raster-fade-duration': 0 } }, before);
+        paint: { 'raster-opacity': state.opacity, 'raster-opacity-transition': { duration: 0, delay: 0 },
+                 'raster-resampling': 'linear', 'raster-fade-duration': 0 } }, before);
     });
-  }
-
-  // The canvas source is animate:false (a constant repaint loop would burn battery
-  // for a static field). After each offscreen draw, play() for two frames so
-  // MapLibre re-uploads the canvas — the WebGPU present lands by then — and pause.
-  function refreshSource() {
-    var map = state.map;
-    if (!map) return;
-    var playing = [];
-    state.segs.forEach(function (_s, i) {
-      var src;
-      try { src = map.getSource(SRC_ID + '-' + i); } catch (e) {}
-      if (src && src.play) { src.play(); playing.push(src); }
-    });
-    if (!playing.length) return;
-    var raf = (typeof requestAnimationFrame === 'function') ? requestAnimationFrame : function (f) { setTimeout(f, 16); };
-    raf(function () { raf(function () { playing.forEach(function (src) { try { src.pause(); } catch (e) {} }); }); });
   }
 
   // Tier field -> rg32float texture (NaN -> SENTINEL). Scalar bands land in .r.
@@ -479,7 +468,7 @@
       pass.end();
       dev.queue.submit([enc.finish()]);
     });
-    refreshSource();
+    if (state.map && state.map.triggerRepaint) state.map.triggerRepaint();
   }
 
   // ---- public ---------------------------------------------------------------
@@ -524,7 +513,6 @@
       state.on = true;
       render();
       addToMap(map);
-      refreshSource();
       feedParticles();
       publish();
       return status();
