@@ -234,9 +234,13 @@
   //  Bootstrap + SHELL controls (panel + ⌘K), registered from this file only.
   // ============================================================================================
   (function boot() {
-    if (window.map && window.HelmAisVectors) {
+    // Wait until the map is genuinely USABLE (has .on), not merely assigned — an async boot
+    // step (e.g. registering the pmtiles:// protocol before the map is built) can widen the
+    // window where window.map is set but not yet ready. Retry quietly; only the try/catch
+    // below is left to surface a GENUINE init failure (fail-loud on real errors, not the race).
+    if (window.map && typeof window.map.on === 'function' && window.HelmAisVectors) {
       try { window.__aisVectors = window.HelmAisVectors(window.map); }
-      catch (e) { console.warn('HelmAisVectors: init deferred —', e && e.message); window.__aisVectors = null; setTimeout(boot, 150); }
+      catch (e) { console.warn('HelmAisVectors: init failed —', e && e.message); window.__aisVectors = null; setTimeout(boot, 150); }
     } else { setTimeout(boot, 60); }
   })();
 
