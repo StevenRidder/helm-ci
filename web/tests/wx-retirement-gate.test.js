@@ -77,4 +77,11 @@ ok('grid path is present, loud, and precached for offline reload', () => {
   assert.ok(/no gateway\/direct fallback\/download/.test(read('wx-controls.js')), 'fail-loud promise text intact');
 });
 
+ok('wx-scrim never dims the weather itself (prefix exclusion, not a stale id list)', () => {
+  const scrim = fs.readFileSync(path.join(WEB, 'wx-scrim.js'), 'utf8');
+  assert.ok(/indexOf\('helm-wx-'\) === 0|startsWith\('helm-wx-'\)/.test(scrim),
+    'weather rasters excluded by helm-wx- PREFIX (a hardcoded id list crushed helm-wx-grid-0/1 to 0.42 brightness)');
+  assert.ok(!/WX_RASTER\s*=/.test(scrim), 'stale hardcoded exclusion list removed');
+});
+
 console.log((process.exitCode ? 'FAIL' : 'ok') + ' - wx-retirement-gate: ' + pass + ' groups passed');

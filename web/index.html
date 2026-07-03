@@ -798,7 +798,6 @@
 <script src="true-wind.js"></script>      <!-- WX-13: pure true-wind derivation (HelmTrueWind, unit-tested) -->
 <script src="true-wind-ui.js"></script>   <!-- WX-13: live readout, registered via HelmShell -->
 <script src="tactics.js"></script>        <!-- opposite-tack assist: tack/gybe + line, on WX-13 true wind (instrument-only) -->
-<script src="safety-dock.js"></script><!-- CHART: movable MOB/anchor-watch/guard safety pill (drag-anywhere, edge-relative persist, double-tap reset) -->
 <script>
 // --- Global error surface (CLIENT-4): a thrown exception or rejected promise must SAY so — never
 // die silently on a safety display. ONLY a failed MAP RESOURCE (tile/sprite/glyph/.png/.pbf — common
@@ -1059,8 +1058,8 @@
   // green, yellow, orange, red, to purple (storm). Overrides the field's stops.
   const WINDY_WIND = (window.HelmWxRamp ? HelmWxRamp.stopsFor('wind') : []);   // CLIENT-14: single shared ramp source (was a duplicated literal)
   const fieldOpts = n => n === 'wind' ? { stops: WINDY_WIND } : undefined;
-  let frame = 0, forecast = null, playTimer = null, activeWx = 'wind';
-  const fieldUrl = n => forecast ? `data/field-${n}-t${frame}.json` : `data/field-${n}.json`;
+  let activeWx = 'wind';
+  const fieldUrl = n => `data/field-${n}.json`;
   // CLIENT-14: build the legend from the single shared ramp (web/wx-ramp.js) so it matches the field
   // + particles exactly — replaces reading stops off the retired legacy HelmField.
   const WX_UNITS = { wind: 'kn', gust: 'kn', rain: 'mm', temp: '°C', clouds: '%', pressure: 'hPa', cape: 'J/kg', current: 'kn', waves: 'm', swell: 'm', sst: '°C' };
@@ -1125,33 +1124,6 @@
     if (wind && !(VECTOR[name] && partOn)) wind.setVisible(false);
   }
 
-  function setFrame(i) {
-    if (!forecast) return;
-    frame = Math.max(0, Math.min(forecast.hours - 1, i));
-    document.getElementById('tslider').value = frame;
-    const t = forecast.times && forecast.times[frame];
-    window.__helmTime = t || null;                       // shared with the spacetime probe
-    document.getElementById('tlabel').textContent = t
-      ? new Date(t + 'Z').toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' })
-      : ('+' + frame + 'h');
-    if (activeWx && activeWx !== 'radar' && activeWx !== 'off') {
-      if (iso && activeWx === 'pressure') iso.load(fieldUrl('pressure'));   // re-contour isobars for the new frame
-    }
-  }
-  fetch('data/forecast.json').then(r => r.ok ? r.json() : null).then(fc => {
-    if (!fc) return;
-    forecast = fc;
-    const sl = document.getElementById('tslider');
-    sl.max = fc.hours - 1; sl.value = 0;
-    document.getElementById('time').style.display = 'block';
-    sl.addEventListener('input', () => setFrame(+sl.value));
-    const playBtn = document.getElementById('play');
-    playBtn.addEventListener('click', () => {
-      if (playTimer) { clearInterval(playTimer); playTimer = null; playBtn.innerHTML = '&#9658;'; }
-      else { playBtn.innerHTML = '&#10073;&#10073;'; playTimer = setInterval(() => setFrame((frame + 1) % forecast.hours), 900); }
-    });
-    setFrame(0);
-  }).catch(() => {});
 
   // WX-26: live time scrubber — populated from the installed grid pack's validTimes by
   // HelmWxControls (HelmWxTime.sync). Scrub = value-lerp inside cached frames; NO fetch.
@@ -1159,7 +1131,7 @@
     this.times = times || [];
     const t = document.getElementById('time'), sl = document.getElementById('tslider');
     if (!t || !sl) return;
-    if (this.times.length < 2) { if (!forecast) t.style.display = 'none'; return; }
+    if (this.times.length < 2) { t.style.display = 'none'; return; }
     t.style.display = 'block';
     sl.max = this.times.length - 1;
     const play = document.getElementById('play');

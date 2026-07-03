@@ -13,7 +13,11 @@
   // colour competition (chart-blue vs rain-blue), a touch of negative contrast flattens it.
   var DIM  = { 'raster-brightness-max': 0.42, 'raster-saturation': -0.7, 'raster-contrast': -0.12 };
   var NORM = { 'raster-brightness-max': 1,    'raster-saturation': 0,    'raster-contrast': 0 };
-  var WX_RASTER = { 'helm-wx-grib': 1, 'helm-radar': 1 };  // never dim the weather itself
+  // Never dim the weather itself. By PREFIX, not a hardcoded id list: the old list named
+  // only the retired stack ('helm-wx-grib') so the WX-26 grid layers (helm-wx-grid-0/1)
+  // were treated as basemap and crushed to 0.42 brightness / -0.7 saturation 240ms after
+  // every warm weather click — "works for a second, then the colours go to garbage".
+  function isWeatherRaster(id) { return id === 'helm-radar' || id.indexOf('helm-wx-') === 0; }
 
   function setDim(on) {
     var m = window.map;
@@ -21,7 +25,7 @@
     var layers;
     try { layers = (m.getStyle().layers) || []; } catch (e) { return; }
     layers.forEach(function (l) {
-      if (l.type !== 'raster' || WX_RASTER[l.id]) return;
+      if (l.type !== 'raster' || isWeatherRaster(l.id)) return;
       var p = on ? DIM : NORM;
       Object.keys(p).forEach(function (k) { try { m.setPaintProperty(l.id, k, p[k]); } catch (e) {} });
     });
