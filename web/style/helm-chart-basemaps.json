@@ -113,7 +113,8 @@
       "id": "satellite",
       "type": "raster",
       "source": "sat",
-      "layout": { "visibility": "none" }
+      "layout": { "visibility": "none" },
+      "paint": { "raster-fade-duration": 0 }
     },
     {
       "id": "charts",
@@ -123,7 +124,8 @@
         "visibility": "none"
       },
       "paint": {
-        "raster-opacity": 0.85
+        "raster-opacity": 0.85,
+        "raster-fade-duration": 0
       }
     },
     {
@@ -134,7 +136,8 @@
         "visibility": "visible"
       },
       "paint": {
-        "raster-opacity": 1.0
+        "raster-opacity": 1.0,
+        "raster-fade-duration": 0
       }
     }
   ]

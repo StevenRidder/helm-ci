@@ -13,6 +13,7 @@
       "type": "symbol",
       "source": "wind",
       "layout": {
+        "visibility": "none",
         "text-field": "↑",
         "text-font": [
           "Noto Sans Regular"

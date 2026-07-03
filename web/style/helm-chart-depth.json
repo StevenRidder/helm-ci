@@ -62,6 +62,7 @@
       "id": "soundg-text",
       "type": "symbol",
       "source": "soundg",
+      "minzoom": 12,
       "layout": {
         "text-field": [
           "number-format",
