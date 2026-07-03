@@ -139,6 +139,26 @@ def validate_job(job: dict[str, Any]) -> None:
     parse_time(str(model_run["runTime"]), "modelRun.runTime")
     for idx, valid_time in enumerate(model_run["validTimes"]):
         parse_time(str(valid_time), f"modelRun.validTimes[{idx}]")
+    # Per-pack validTimes are OPTIONAL (split-horizon packs: e.g. a 16d forecast pack
+    # and a 10d marine pack in one release). When present they must be well-formed and a
+    # subset of the modelRun envelope — a pack cannot carry a frame the run doesn't declare.
+    model_valid = {str(t) for t in model_run["validTimes"]}
+    for p_idx, pack in enumerate(job["packs"]):
+        if not isinstance(pack, dict):
+            continue
+        pack_times = pack.get("validTimes")
+        if pack_times is None:
+            continue
+        if not isinstance(pack_times, list) or not pack_times:
+            fail("invalid_job", f"packs[{p_idx}].validTimes must be a non-empty list when present")
+        for t_idx, valid_time in enumerate(pack_times):
+            parse_time(str(valid_time), f"packs[{p_idx}].validTimes[{t_idx}]")
+            if str(valid_time) not in model_valid:
+                fail(
+                    "invalid_job",
+                    f"packs[{p_idx}].validTimes[{t_idx}] {valid_time} is not in modelRun.validTimes",
+                    {"validTime": str(valid_time)},
+                )
 
 
 def release_id_for(job: dict[str, Any]) -> str:
@@ -505,7 +525,11 @@ def openmeteo_populate(source: dict[str, Any], manifest: dict[str, Any]) -> dict
 def build_pack_manifest(job: dict[str, Any], pack: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
     source_manifest = source["manifest"]
     model_run = job["modelRun"]
-    valid_times = list(model_run["validTimes"])
+    # Split-horizon: a pack may declare its own validTimes (a subset of the modelRun
+    # envelope, validated in validate_job). This flows into both build_chunks and the
+    # manifest run.validTimes, so openmeteo_populate asks this pack's single host for
+    # exactly this pack's horizon — the forecast pack gets 16d, the marine pack 10d.
+    valid_times = list(pack.get("validTimes") or model_run["validTimes"])
     layer_names = list(pack.get("layers") or source_manifest.get("layers", {}).keys())
     tier_id = str(pack.get("tier") or pack.get("profile") or "global-low")
     profile = str(pack.get("profile") or tier_id)

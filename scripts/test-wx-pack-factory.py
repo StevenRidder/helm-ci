@@ -199,6 +199,46 @@ def main() -> int:
         assert same_profile_release["totals"]["packs"] == 3
         assert len({pack["packUrl"] for pack in same_profile_release["packs"]}) == 3
 
+        # WX-38 split horizon: a pack may declare its own validTimes (a subset of the
+        # modelRun envelope) so one release can carry two horizons. Here the route-high
+        # pack takes only the first frame while global-low keeps the full run.
+        subset_job = json.loads(job.read_text(encoding="utf-8"))
+        first_time = subset_job["modelRun"]["validTimes"][0]
+        subset_job["packs"][1]["validTimes"] = [first_time]
+        for chunk in subset_job["packs"][1]["chunks"]:
+            chunk.pop("validTimes", None)              # chunks inherit the pack's narrowed horizon (as the bake script builds them)
+        subset_path = write_job(tmp, "subset-vt-job.json", subset_job)
+        subset_out = tmp / "subset-vt"
+        publish(subset_path, subset_out)
+        subset_current = json.loads((subset_out / "current.json").read_text(encoding="utf-8"))
+        subset_dir = subset_out / subset_current["indexUrl"].rsplit("/", 1)[0]
+        subset_release = json.loads((subset_out / subset_current["indexUrl"]).read_text(encoding="utf-8"))
+        by_profile = {pack["profile"]: pack for pack in subset_release["packs"]}
+        assert by_profile["route-high"]["validTimes"] == [first_time]
+        assert by_profile["global-low"]["validTimes"] == subset_job["modelRun"]["validTimes"]
+        # release envelope stays the full modelRun; the per-pack horizon narrows independently
+        assert subset_release["modelRun"]["validTimes"] == subset_job["modelRun"]["validTimes"]
+        # the narrowed pack packs+verifies clean, and its chunk keys only carry its own frame
+        subset_manifest = json.loads(
+            (subset_dir / by_profile["route-high"]["manifestUrl"]).read_text(encoding="utf-8"))
+        assert {chunk["validTime"] for chunk in subset_manifest["chunks"].values()} == {first_time}
+        run(sys.executable, str(PACKER), "verify", str(subset_dir / by_profile["route-high"]["manifestUrl"]),
+            str(subset_dir / by_profile["route-high"]["packUrl"]))
+
+        # A pack validTime outside the modelRun envelope fails loud before any packing.
+        outside_vt_job = json.loads(job.read_text(encoding="utf-8"))
+        outside_vt_job["packs"][1]["validTimes"] = ["2026-07-01T06:00:00Z"]  # not one of the run's two frames
+        outside_vt_path = write_job(tmp, "outside-vt-job.json", outside_vt_job)
+        failed = publish(outside_vt_path, tmp / "outside-vt", expect_ok=False)
+        assert "not in modelRun.validTimes" in failed.stderr
+
+        # An empty per-pack validTimes list is rejected (would otherwise silently mean "all").
+        empty_vt_job = json.loads(job.read_text(encoding="utf-8"))
+        empty_vt_job["packs"][1]["validTimes"] = []
+        empty_vt_path = write_job(tmp, "empty-vt-job.json", empty_vt_job)
+        failed = publish(empty_vt_path, tmp / "empty-vt", expect_ok=False)
+        assert "must be a non-empty list" in failed.stderr
+
         bad_source_manifest = json.loads((ROOT / "services" / "wx" / "fixtures" / "helm-env-grid-v1.json").read_text(encoding="utf-8"))
         bad_source_manifest["layers"]["wind"]["bands"]["u"]["type"] = "float16"
         bad_source_path = tmp / "bad-source.json"
