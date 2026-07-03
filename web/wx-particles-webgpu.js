@@ -330,13 +330,10 @@
     this.viewBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     this.viewGlowBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     this.fadeBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
-    // present-pass scale = the LAYER opacity (drawer transparency slider). Before this,
-    // colored particles + their accumulated trail film ignored the slider completely —
-    // the map stayed under a fixed veil no matter how transparent the user asked for.
+    // present pass blits the trail texture 1:1; layer opacity is CSS on the canvas
     this.presentBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     dev.queue.writeBuffer(this.fadeBuf, 0, new Float32Array([this.opts.fadeOpacity, 0, 0, 0]));
-    this._layerOpacity = (this._layerOpacity == null) ? 1 : this._layerOpacity;
-    dev.queue.writeBuffer(this.presentBuf, 0, new Float32Array([this._layerOpacity, 0, 0, 0]));
+    dev.queue.writeBuffer(this.presentBuf, 0, new Float32Array([1, 0, 0, 0]));
     this._rampTex = this._bakeRamp();
   };
 
@@ -612,11 +609,13 @@
   GpuWindLayer.prototype.isVisible = function () { return this._visible; };
   GpuWindLayer.prototype.setNeutral = function (v) { this._neutral = !!v; this._uploadView(); };
   GpuWindLayer.prototype.setOpacity = function (a) {
-    this._neutralAlpha = Math.max(0.03, Math.min(0.95, a));   // same clamp as the CPU engine
-    // premultiplied uniform scale at present time: fades particles AND trail film together
-    this._layerOpacity = Math.max(0, Math.min(1, +a || 0));
-    if (this.presentBuf) this.gpu.device.queue.writeBuffer(this.presentBuf, 0, new Float32Array([this._layerOpacity, 0, 0, 0]));
-    this._uploadView();
+    // WHOLE-LAYER opacity, Photoshop-style: CSS opacity composites the fully-rendered
+    // canvas at N% — particles AND trail film fade together, mirroring the field's
+    // MapLibre raster-opacity. It must NOT touch _neutralAlpha: coupling the per-segment
+    // white alpha to the slider meant "fully opaque weather" cranked every deposit to
+    // 0.95 white and the accumulated trail film BLEACHED the colour field underneath.
+    // Per-particle alpha stays at its tuned constant (0.27).
+    if (this.canvas) this.canvas.style.opacity = String(Math.max(0, Math.min(1, +a || 0)));
   };
 
   GpuWindLayer.prototype.destroy = function () {

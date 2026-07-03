@@ -532,7 +532,9 @@
 
   HelmWindLayer.prototype.isVisible = function () { return this._visible; };
   HelmWindLayer.prototype.setNeutral = function (v) { this._neutral = !!v; };
-  HelmWindLayer.prototype.setOpacity = function (a) { this._neutralAlpha = Math.max(0.03, Math.min(0.95, a)); };
+  // LAYER opacity: CSS opacity scales particles + trail film together. Not _neutralAlpha —
+  // slider-coupled per-segment white alpha bleached the colour field at low transparency.
+  HelmWindLayer.prototype.setOpacity = function (a) { if (this.canvas) this.canvas.style.opacity = String(Math.max(0, Math.min(1, +a || 0))); };
 
   HelmWindLayer.prototype.destroy = function () {
     if (this._destroyed) return;
