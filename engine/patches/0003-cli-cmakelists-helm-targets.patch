@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,196 @@ if (APPLE)
+@@ -90,3 +90,203 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -139,6 +139,14 @@ index 1909f44..ae59f3e 100644
 +add_executable(helm-s52-atlas-smoke helm_s52_atlas_smoke.cpp)
 +set_property(TARGET helm-s52-atlas-smoke PROPERTY ENABLE_EXPORTS ON)
 +target_link_libraries(helm-s52-atlas-smoke PRIVATE helm-s52-atlas)
++
++# ---- Helm clean-room symbol package loader: runtime evidence -> renderer records ----
++add_library(helm-symbol-package STATIC helm_symbol_package.cpp)
++target_compile_features(helm-symbol-package PUBLIC cxx_std_17)
++
++add_executable(helm-symbol-package-smoke helm_symbol_package_smoke.cpp)
++set_property(TARGET helm-symbol-package-smoke PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-symbol-package-smoke PRIVATE helm-symbol-package)
 +
 +# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
 +add_executable(helm-engine helm_engine.cpp api_shim.cpp)
