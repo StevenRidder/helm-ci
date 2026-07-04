@@ -11,9 +11,12 @@ Run:
 from __future__ import annotations
 
 import argparse
+import csv
 import hashlib
 import json
+import os
 import sqlite3
+import xml.etree.ElementTree as ET
 from collections import Counter, defaultdict
 from pathlib import Path
 from typing import Any
@@ -51,6 +54,15 @@ CHARTSYMBOLS_CANDIDATES = [
     ROOT / "reference_sources" / "opencpn-open-source" / "data" / "s57data" / "chartsymbols.xml",
 ]
 
+ATTDECODE_CANDIDATES = [
+    Path("/Users/steveridder/.helm/runtime/s57data/attdecode.csv"),
+    Path("/private/tmp/opencpn-symbol-audit-1783066960/data/s57data/attdecode.csv"),
+    ROOT / "reference_sources" / "opencpn-open-source" / "data" / "s57data" / "attdecode.csv",
+]
+
+FALLBACK_S57_PATTERN_CODES = dict(standard_source_table.S57_PATTERNS)
+FALLBACK_S57_PATTERN_CODES["6"] = "border stripe"
+
 S101_REQUIRED_CLASSES = {
     "s101_feature_equivalent",
     "s101_component_context_required",
@@ -87,6 +99,10 @@ def _sha256(path: Path) -> str | None:
     return digest.hexdigest()
 
 
+def _local_name(tag: str) -> str:
+    return tag.rsplit("}", 1)[-1]
+
+
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(json.dumps(payload, separators=(",", ":"), sort_keys=True) + "\n")
@@ -96,6 +112,25 @@ def _connect(db_path: Path = DB_PATH) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
     return conn
+
+
+def _resolved_s101_roots(s101_roots: list[Path] | None = None) -> list[Path]:
+    roots: list[Path] = []
+    for env_name in ("HELM_S101_PORTRAYAL_ROOT", "S101_PORTRAYAL_ROOT"):
+        value = os.environ.get(env_name)
+        if value:
+            roots.append(Path(value))
+    roots.extend(s101_roots or [])
+    roots.extend(S101_LOCAL_ROOTS)
+    out: list[Path] = []
+    seen: set[str] = set()
+    for root in roots:
+        key = str(root)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(root)
+    return out
 
 
 def _indexes() -> dict[str, Any]:
@@ -243,19 +278,57 @@ def _existing_chartsymbols() -> Path | None:
     return None
 
 
-def _find_s101_file(relative_path: str | None) -> Path | None:
+def _existing_attdecode() -> Path | None:
+    for path in ATTDECODE_CANDIDATES:
+        if path.exists():
+            return path
+    return None
+
+
+def _parse_attdecode_values(raw: str | None) -> dict[str, str]:
+    values: dict[str, str] = {}
+    parts = [part.strip() for part in (raw or "").split(";")]
+    for index in range(0, len(parts) - 1, 2):
+        code = parts[index]
+        label = parts[index + 1]
+        if code and label:
+            values[code] = label
+    return values
+
+
+def _attdecode_attribute(path: Path | None, attribute: str) -> dict[str, str]:
+    if not path:
+        return {}
+    try:
+        with path.open(newline="") as handle:
+            for row in csv.DictReader(handle):
+                if row.get("Attribute") == attribute:
+                    return _parse_attdecode_values(row.get("ValueDecode"))
+    except OSError:
+        return {}
+    return {}
+
+
+def _find_s101_file(relative_path: str | None, roots: list[Path]) -> Path | None:
     if not relative_path:
         return None
     rel = Path(relative_path)
-    for root in S101_LOCAL_ROOTS:
+    for root in roots:
         candidate = root / rel
         if candidate.exists():
             return candidate
     return None
 
 
-def _find_s101_feature_catalogue() -> Path | None:
-    for root in S101_LOCAL_ROOTS:
+def _find_s101_feature_catalogue(
+    roots: list[Path],
+    explicit_path: Path | None = None,
+) -> Path | None:
+    env_path = os.environ.get("HELM_S101_FEATURE_CATALOGUE") or os.environ.get("S101_FEATURE_CATALOGUE")
+    for candidate in [explicit_path, Path(env_path) if env_path else None]:
+        if candidate and candidate.exists():
+            return candidate
+    for root in roots:
         for name in ("FeatureCatalogue.xml", "featureCatalogue.xml"):
             candidate = root / name
             if candidate.exists():
@@ -266,15 +339,111 @@ def _find_s101_feature_catalogue() -> Path | None:
     return None
 
 
+def _feature_catalogue_evidence(path: Path | None) -> dict[str, Any]:
+    if not path:
+        return {
+            "path": "",
+            "sha256": None,
+            "status": "missing",
+            "parse_status": "missing",
+            "feature_type_count": 0,
+            "feature_types": [],
+            "attribute_binding_count": 0,
+        }
+    try:
+        tree = ET.parse(path)
+    except ET.ParseError as exc:
+        return {
+            "path": str(path),
+            "sha256": _sha256(path),
+            "status": "present",
+            "parse_status": "malformed_xml",
+            "parse_error": str(exc),
+            "feature_type_count": 0,
+            "feature_types": [],
+            "attribute_binding_count": 0,
+        }
+
+    feature_types: list[str] = []
+    attribute_bindings = 0
+    for elem in tree.iter():
+        name = _local_name(elem.tag)
+        if name in {"S100_FC_FeatureType", "FeatureType", "featureType"} or name.endswith("FeatureType"):
+            feature_name = (
+                elem.attrib.get("name")
+                or elem.attrib.get("code")
+                or elem.attrib.get("id")
+                or elem.findtext(".//{*}name")
+                or elem.findtext(".//{*}code")
+            )
+            if feature_name:
+                feature_types.append(str(feature_name))
+        if name in {"S100_FC_AttributeBinding", "AttributeBinding", "attributeBinding"} or name.endswith("AttributeBinding"):
+            attribute_bindings += 1
+
+    return {
+        "path": str(path),
+        "sha256": _sha256(path),
+        "status": "present",
+        "parse_status": "parsed",
+        "root_tag": _local_name(tree.getroot().tag),
+        "root_attributes": dict(tree.getroot().attrib),
+        "feature_type_count": len(feature_types),
+        "feature_types": sorted(set(feature_types)),
+        "attribute_binding_count": attribute_bindings,
+    }
+
+
+def _source_context(
+    *,
+    s101_roots: list[Path] | None = None,
+    feature_catalogue_path: Path | None = None,
+) -> dict[str, Any]:
+    roots = _resolved_s101_roots(s101_roots)
+    feature_catalogue = _find_s101_feature_catalogue(roots, feature_catalogue_path)
+    attdecode = _existing_attdecode()
+    attdecode_colpat = _attdecode_attribute(attdecode, "COLPAT")
+    s57_pattern_codes = dict(FALLBACK_S57_PATTERN_CODES)
+    if attdecode_colpat:
+        s57_pattern_codes.update(attdecode_colpat)
+    return {
+        "s101_roots": roots,
+        "attdecode_path": attdecode,
+        "attdecode_colpat": attdecode_colpat,
+        "s57_pattern_codes": s57_pattern_codes,
+        "feature_catalogue_path": feature_catalogue,
+        "feature_catalogue": _feature_catalogue_evidence(feature_catalogue),
+    }
+
+
+def _as_list(value: Any) -> list[Any]:
+    if isinstance(value, list):
+        return value
+    if isinstance(value, str):
+        text = value.strip()
+        if not text:
+            return []
+        if text.startswith("["):
+            try:
+                parsed = json.loads(text)
+            except json.JSONDecodeError:
+                parsed = None
+            if isinstance(parsed, list):
+                return parsed
+        if "," in text:
+            return [item.strip() for item in text.split(",") if item.strip()]
+    return [value]
+
+
 def _decode_colour(value: Any) -> list[str]:
-    values = value if isinstance(value, list) else [value]
+    values = _as_list(value)
     return [
         standard_source_table.S57_COLOURS.get(str(item), f"unknown_s57_colour_{item}")
         for item in values
     ]
 
 
-def _decode_attribute(predicate: dict[str, Any]) -> dict[str, Any]:
+def _decode_attribute(predicate: dict[str, Any], source_context: dict[str, Any] | None = None) -> dict[str, Any]:
     attribute = str(predicate.get("attribute") or "").upper()
     value = predicate.get("value")
     decoded: Any = value
@@ -286,9 +455,15 @@ def _decode_attribute(predicate: dict[str, Any]) -> dict[str, Any]:
         dictionary = "S57_COLOURS"
         status = "decoded"
     elif attribute == "COLPAT":
-        decoded = standard_source_table.S57_PATTERNS.get(str(value), f"unknown_s57_pattern_{value}")
-        dictionary = "S57_PATTERNS"
-        status = "decoded" if not str(decoded).startswith("unknown_") else "unknown_code"
+        values = _as_list(value)
+        pattern_codes = (source_context or {}).get("s57_pattern_codes") or FALLBACK_S57_PATTERN_CODES
+        decoded_values = [
+            pattern_codes.get(str(item), f"unknown_s57_pattern_{item}")
+            for item in values
+        ]
+        decoded = decoded_values if len(decoded_values) != 1 else decoded_values[0]
+        dictionary = "S57_PATTERNS+attdecode.COLPAT"
+        status = "decoded" if not any(str(item).startswith("unknown_") for item in decoded_values) else "unknown_code"
     elif attribute == "BOYSHP":
         decoded = standard_source_table.BOY_SHAPES.get(str(value), f"unknown_s57_buoy_shape_{value}")
         dictionary = "BOY_SHAPES"
@@ -312,8 +487,11 @@ def _decode_attribute(predicate: dict[str, Any]) -> dict[str, Any]:
     }
 
 
-def _decoded_attributes(predicates: list[dict[str, Any]]) -> tuple[list[dict[str, Any]], list[str]]:
-    decoded = [_decode_attribute(predicate) for predicate in predicates]
+def _decoded_attributes(
+    predicates: list[dict[str, Any]],
+    source_context: dict[str, Any] | None = None,
+) -> tuple[list[dict[str, Any]], list[str]]:
+    decoded = [_decode_attribute(predicate, source_context) for predicate in predicates]
     gaps = []
     for item in decoded:
         if item["decode_status"] == "unknown_code":
@@ -347,29 +525,37 @@ def _s52_visual_recipe(db_row: sqlite3.Row, semantic: dict[str, Any]) -> dict[st
     }
 
 
-def _s101_evidence(db_row: sqlite3.Row) -> dict[str, Any]:
+def _s101_evidence(db_row: sqlite3.Row, source_context: dict[str, Any]) -> dict[str, Any]:
     portrayal = _json_value(db_row["portrayal_evidence"], {})
     attrs = _json_value(db_row["resolver_s101_attributes"], {})
     unresolved = _json_value(db_row["resolver_unresolved_reasons"], [])
     rule_file = db_row["s101_rule_file"]
-    local_rule = _find_s101_file(rule_file)
-    feature_catalogue = _find_s101_feature_catalogue()
+    local_rule = _find_s101_file(rule_file, source_context["s101_roots"])
+    feature_catalogue = source_context["feature_catalogue"]
     direct = portrayal.get("direct_symbol") or {}
     shape_witness = portrayal.get("shape_witness") or {}
     instruction_basis = portrayal.get("instruction_basis") or []
     rule_instruction_refs = portrayal.get("rule_instruction_refs") or []
+    feature_type = db_row["resolver_s101_feature_type"]
+    catalogue_feature_types = set(feature_catalogue.get("feature_types") or [])
     return {
         "resolver_status": db_row["resolver_status"],
         "mapping_type": db_row["s101_mapping_type"],
         "crosswalk_class": db_row["s101_crosswalk_class"],
         "basis": db_row["s101_basis"],
         "runtime_scope": db_row["runtime_scope"],
-        "feature_type": db_row["resolver_s101_feature_type"],
+        "feature_type": feature_type,
         "rule_file": rule_file,
         "rule_file_local_path": str(local_rule) if local_rule else "",
         "rule_file_sha256": _sha256(local_rule) if local_rule else None,
-        "feature_catalogue_local_path": str(feature_catalogue) if feature_catalogue else "",
-        "feature_catalogue_sha256": _sha256(feature_catalogue) if feature_catalogue else None,
+        "feature_catalogue_local_path": feature_catalogue.get("path") or "",
+        "feature_catalogue_sha256": feature_catalogue.get("sha256"),
+        "feature_catalogue_parse_status": feature_catalogue.get("parse_status"),
+        "feature_catalogue_feature_present": (
+            feature_type in catalogue_feature_types
+            if feature_catalogue.get("parse_status") == "parsed" and feature_type
+            else None
+        ),
         "direct_symbol_id": db_row["s101_direct_symbol_id"],
         "direct_symbol_file": direct.get("symbol_file"),
         "direct_symbol_matched": direct.get("matched"),
@@ -404,9 +590,10 @@ def _s101_evidence(db_row: sqlite3.Row) -> dict[str, Any]:
     }
 
 
-def _source_files() -> dict[str, Any]:
+def _source_files(source_context: dict[str, Any]) -> dict[str, Any]:
     chartsymbols = _existing_chartsymbols()
-    feature_catalogue = _find_s101_feature_catalogue()
+    attdecode = source_context["attdecode_path"]
+    feature_catalogue = source_context["feature_catalogue"]
     return {
         "db": {
             "path": str(DB_PATH),
@@ -418,25 +605,24 @@ def _source_files() -> dict[str, Any]:
             "role": "OpenCPN S-52 implementation witness and lookup spine",
         },
         "s57_dictionary_decode": {
-            "source": "forge/standard_source_table.py constants",
+            "source": "forge/standard_source_table.py constants plus local attdecode.csv where present",
             "builder_path": str(STANDARD_SOURCE_BUILDER.relative_to(ROOT)),
             "builder_sha256": _sha256(STANDARD_SOURCE_BUILDER),
             "source_table_path": str(STANDARD_SOURCE_TABLE.relative_to(ROOT)),
             "source_table_sha256": _sha256(STANDARD_SOURCE_TABLE),
+            "attdecode_path": str(attdecode) if attdecode else "",
+            "attdecode_sha256": _sha256(attdecode) if attdecode else None,
+            "attdecode_colpat_values": source_context["attdecode_colpat"],
             "official_catalogue_status": "not_machine_readable_locally",
         },
-        "s101_feature_catalogue": {
-            "path": str(feature_catalogue) if feature_catalogue else "",
-            "sha256": _sha256(feature_catalogue) if feature_catalogue else None,
-            "status": "present" if feature_catalogue else "missing",
-        },
+        "s101_feature_catalogue": feature_catalogue,
         "s101_local_roots": [
             {
                 "path": str(root),
                 "exists": root.exists(),
                 "role": "external_local_audit_reference_not_redistributed",
             }
-            for root in S101_LOCAL_ROOTS
+            for root in source_context["s101_roots"]
         ],
         "sidecars": {
             "semantic_evidence_db": {"path": str(SEMANTIC_DB.relative_to(ROOT)), "sha256": _sha256(SEMANTIC_DB)},
@@ -459,13 +645,14 @@ def _row_trace(
     db_row: sqlite3.Row,
     gates: list[dict[str, Any]],
     indexes: dict[str, Any],
+    source_context: dict[str, Any],
 ) -> dict[str, Any]:
     symbol_id = str(db_row["s52_symbol_id"] or "")
     predicates = _json_value(db_row["attribute_predicates"], [])
-    decoded_predicates, dictionary_gaps = _decoded_attributes(predicates)
+    decoded_predicates, dictionary_gaps = _decoded_attributes(predicates, source_context)
     semantic_tuple = _semantic_tuple(db_row)
     semantic = _pick_semantic(db_row, indexes)
-    s101 = _s101_evidence(db_row)
+    s101 = _s101_evidence(db_row, source_context)
     colour = indexes["colour_by_asset"].get(symbol_id) or {}
     recipe_sidecar = indexes["recipe_by_symbol"].get(symbol_id) or {}
     helm_recipe = semantic.get("helm_symbol_recipe") or {}
@@ -504,6 +691,10 @@ def _row_trace(
             reason_codes.append("authority_trace:s101_rule_file_not_hashed")
         if not s101.get("feature_catalogue_sha256"):
             reason_codes.append("authority_trace:s101_feature_catalogue_missing")
+        elif s101.get("feature_catalogue_parse_status") != "parsed":
+            reason_codes.append("authority_trace:s101_feature_catalogue_unparsed")
+        elif s101.get("feature_catalogue_feature_present") is False:
+            reason_codes.append("authority_trace:s101_feature_catalogue_feature_not_found")
     elif s101_class in NON_S101_CLASSES:
         reason_codes.append(f"authority_trace:{s101_class}")
     else:
@@ -550,9 +741,19 @@ def _row_trace(
                 if item.get("attribute") == "COLOUR"
                 for colour in (item.get("decoded_value") if isinstance(item.get("decoded_value"), list) else [item.get("decoded_value")])
             ],
-            "source": "forge.standard_source_table.S57_COLOURS/S57_PATTERNS/BOY_SHAPES/BCN_SHAPES",
+            "source": (
+                "forge.standard_source_table.S57_COLOURS/S57_PATTERNS/BOY_SHAPES/BCN_SHAPES"
+                "+hashed_attdecode.COLPAT"
+                if source_context.get("attdecode_colpat")
+                else "forge.standard_source_table.S57_COLOURS/S57_PATTERNS/BOY_SHAPES/BCN_SHAPES"
+            ),
             "source_hash": _sha256(STANDARD_SOURCE_BUILDER),
-            "official_catalogue_status": "not_machine_readable_locally",
+            "attdecode_sha256": _sha256(source_context.get("attdecode_path")),
+            "official_catalogue_status": (
+                "local_attdecode_present"
+                if source_context.get("attdecode_colpat")
+                else "not_machine_readable_locally"
+            ),
         },
         "s52_lookup": {
             "source_name": db_row["source_name"],
@@ -684,13 +885,22 @@ def _gap_rows(trace_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     return gaps
 
 
-def build(*, db_path: Path = DB_PATH) -> dict[str, Any]:
+def build(
+    *,
+    db_path: Path = DB_PATH,
+    s101_roots: list[Path] | None = None,
+    feature_catalogue_path: Path | None = None,
+) -> dict[str, Any]:
     indexes = _indexes()
+    source_context = _source_context(
+        s101_roots=s101_roots,
+        feature_catalogue_path=feature_catalogue_path,
+    )
     with _connect(db_path) as conn:
         gate_index = _gate_rows(conn)
         lookup_rows = _lookup_rows(conn)
         trace_rows = [
-            _row_trace(row, gate_index.get(int(row["s52_lookup_id"]), []), indexes)
+            _row_trace(row, gate_index.get(int(row["s52_lookup_id"]), []), indexes, source_context)
             for row in lookup_rows
         ]
         asset_summaries = _asset_summaries(conn, trace_rows)
@@ -724,7 +934,7 @@ def build(*, db_path: Path = DB_PATH) -> dict[str, Any]:
                 "Helm generated SVGs and manifests remain owned outputs."
             ),
         },
-        "source": _source_files(),
+        "source": _source_files(source_context),
         "summary": {
             "s52_lookup_rows": len(trace_rows),
             "authority_trace_rows": len(trace_rows),
@@ -833,8 +1043,25 @@ def main(argv: list[str] | None = None) -> int:
     parser.add_argument("--db", type=Path, default=DB_PATH)
     parser.add_argument("--json", type=Path, default=REPORT_JSON)
     parser.add_argument("--markdown", type=Path, default=REPORT_MD)
+    parser.add_argument(
+        "--s101-root",
+        action="append",
+        type=Path,
+        default=[],
+        help="Additional local S-101 Portrayal Catalogue root; files are hashed as evidence only.",
+    )
+    parser.add_argument(
+        "--feature-catalogue",
+        type=Path,
+        default=None,
+        help="Explicit local S-101 FeatureCatalogue.xml path to hash/parse as evidence.",
+    )
     args = parser.parse_args(argv)
-    payload = build(db_path=args.db)
+    payload = build(
+        db_path=args.db,
+        s101_roots=args.s101_root,
+        feature_catalogue_path=args.feature_catalogue,
+    )
     if args.json != REPORT_JSON:
         _write_json(args.json, payload)
     if args.markdown != REPORT_MD:

@@ -6,7 +6,7 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 - status: `authority_trace_gate_complete`
 - s52_lookup_rows: `3057`
 - authority_trace_rows: `3057`
-- authority_trace_gap_rows: `17373`
+- authority_trace_gap_rows: `17326`
 - asset_summary_rows: `824`
 - runtime_blocker_rows: `3057`
 
