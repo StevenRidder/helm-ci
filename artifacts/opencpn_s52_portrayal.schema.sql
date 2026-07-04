@@ -329,20 +329,6 @@ CREATE VIEW runtime_symbol_candidate_v1 AS
           c.source_refs
         FROM runtime_symbol_candidate c
 /* runtime_symbol_candidate_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;
-CREATE VIEW runtime_symbol_portrayal_v1 AS
-        SELECT c.*
-        FROM runtime_symbol_candidate_v1 c
-        WHERE c.runtime_eligible = 1
-          AND c.candidate_status = 'runtime_eligible'
-          AND c.blocking_gate_count = 0
-          AND c.pending_gate_count = 0
-          AND NOT EXISTS (
-            SELECT 1
-            FROM runtime_symbol_gate g
-            WHERE g.s52_lookup_id = c.s52_lookup_id
-              AND g.gate_status IN ('blocked', 'pending')
-          )
-/* runtime_symbol_portrayal_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;
 CREATE VIEW runtime_symbol_blocker_v1 AS
         SELECT
           g.s52_lookup_id,
@@ -400,3 +386,23 @@ CREATE INDEX runtime_symbol_candidate_status_idx ON runtime_symbol_candidate (ca
 CREATE INDEX electronic_chart1_entry_taxonomy_idx ON electronic_chart1_entry (row_taxonomy);
 CREATE INDEX electronic_chart1_entry_status_idx ON electronic_chart1_entry (evidence_status);
 CREATE INDEX electronic_chart1_entry_object_idx ON electronic_chart1_entry (s57_object_class);
+CREATE VIEW runtime_symbol_portrayal_v1 AS
+        SELECT c.*
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 1
+          AND c.candidate_status = 'runtime_eligible'
+          AND c.blocking_gate_count = 0
+          AND c.pending_gate_count = 0
+          AND (
+            SELECT COUNT(DISTINCT g.gate_name)
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_name IN ('source_provenance', 's57_semantic_tuple', 's52_instruction_ast', 's101_crosswalk_evidence', 'topmark_daymark_special_cases', 'visual_approval')
+          ) = 6
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_status IN ('blocked', 'pending')
+          )
+/* runtime_symbol_portrayal_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;

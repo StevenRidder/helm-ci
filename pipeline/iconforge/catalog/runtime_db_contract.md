@@ -23,7 +23,7 @@ FORGE-50 backend proof for the runtime symbol DB gate contract.
 
 ### `runtime_symbol_portrayal_v1`
 - strict runtime serving surface
-- requires runtime_eligible=1, candidate_status=runtime_eligible, zero blocking gates, zero pending gates
+- requires runtime_eligible=1, candidate_status=runtime_eligible, every named required gate present, zero blocking gates, zero pending gates
 - also excludes rows with any blocked or pending runtime_symbol_gate
 
 ## Checks
@@ -34,7 +34,8 @@ FORGE-50 backend proof for the runtime symbol DB gate contract.
 | `sqlite_foreign_key_check` | `pass` | Foreign-key graph is intact. |
 | `runtime_candidate_view_covers_lookup_rows` | `pass` | runtime_symbol_candidate_v1 is the complete review/browse surface. |
 | `runtime_blocker_view_explains_ineligible_rows` | `pass` | runtime_symbol_blocker_v1 exposes queryable blocked/pending reasons. |
-| `runtime_portrayal_view_is_strict_gate_clear_surface` | `pass` | runtime_symbol_portrayal_v1 fails closed from full gate state, not just one flag. |
+| `runtime_portrayal_view_is_strict_gate_clear_surface` | `pass` | runtime_symbol_portrayal_v1 fails closed from complete named gate state, not just one flag. |
+| `runtime_required_gates_cover_all_candidates` | `pass` | runtime promotion is structurally blocked unless every named required gate exists for the row. |
 | `runtime_eligibility_matches_gate_state` | `pass` | candidate_status/runtime_eligible agree with blocking and pending gates. |
 | `blocker_rows_are_queryable` | `pass` | Each blocker row has gate name/status/severity/detail and valid JSON evidence. |
 | `zero_runtime_rows_are_deliberate_fail_closed` | `pass` | The empty runtime surface is an approval gate state, not missing DB data. |

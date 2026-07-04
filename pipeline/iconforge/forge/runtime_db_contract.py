@@ -25,6 +25,14 @@ CATALOG = ROOT / "catalog"
 CONTRACT_JSON = CATALOG / "runtime_db_contract.json"
 CONTRACT_MD = CATALOG / "runtime_db_contract.md"
 SCHEMA = "helm.iconforge.runtime_db_contract.v1"
+RUNTIME_REQUIRED_GATES = (
+    "source_provenance",
+    "s57_semantic_tuple",
+    "s52_instruction_ast",
+    "s101_crosswalk_evidence",
+    "topmark_daymark_special_cases",
+    "visual_approval",
+)
 
 
 def _sha256(path: Path) -> str:
@@ -49,6 +57,10 @@ def _rows(con: sqlite3.Connection, sql: str) -> list[dict[str, Any]]:
     return [dict(row) for row in con.execute(sql)]
 
 
+def _sql_string_list(values: tuple[str, ...]) -> str:
+    return ", ".join("'" + value.replace("'", "''") + "'" for value in values)
+
+
 def _check(name: str, ok: bool, expected: str, actual: Any, detail: str) -> dict[str, Any]:
     return {
         "name": name,
@@ -62,6 +74,8 @@ def _check(name: str, ok: bool, expected: str, actual: Any, detail: str) -> dict
 def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
     if not db_path.exists():
         raise FileNotFoundError(f"runtime DB missing: {db_path}")
+    required_gate_sql = _sql_string_list(RUNTIME_REQUIRED_GATES)
+    required_gate_count = len(RUNTIME_REQUIRED_GATES)
     with _connect(db_path) as con:
         integrity = [row[0] for row in con.execute("PRAGMA integrity_check")]
         foreign_key_rows = _rows(con, "PRAGMA foreign_key_check")
@@ -97,13 +111,19 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
         )
         gate_mismatch_rows = _scalar(
             con,
-            """
+            f"""
             SELECT COUNT(*)
             FROM runtime_symbol_candidate_v1 c
             WHERE c.runtime_eligible != CASE
               WHEN c.candidate_status = 'runtime_eligible'
                AND c.blocking_gate_count = 0
                AND c.pending_gate_count = 0
+               AND (
+                 SELECT COUNT(DISTINCT g.gate_name)
+                 FROM runtime_symbol_gate g
+                 WHERE g.s52_lookup_id = c.s52_lookup_id
+                   AND g.gate_name IN ({required_gate_sql})
+               ) = {required_gate_count}
                AND NOT EXISTS (
                  SELECT 1
                  FROM runtime_symbol_gate g
@@ -115,13 +135,19 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
         )
         derived_portrayal_rows = _scalar(
             con,
-            """
+            f"""
             SELECT COUNT(*)
             FROM runtime_symbol_candidate_v1 c
             WHERE c.runtime_eligible = 1
               AND c.candidate_status = 'runtime_eligible'
               AND c.blocking_gate_count = 0
               AND c.pending_gate_count = 0
+              AND (
+                SELECT COUNT(DISTINCT g.gate_name)
+                FROM runtime_symbol_gate g
+                WHERE g.s52_lookup_id = c.s52_lookup_id
+                  AND g.gate_name IN ({required_gate_sql})
+              ) = {required_gate_count}
               AND NOT EXISTS (
                 SELECT 1
                 FROM runtime_symbol_gate g
@@ -132,13 +158,19 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
         )
         leaky_portrayal_rows = _scalar(
             con,
-            """
+            f"""
             SELECT COUNT(*)
             FROM runtime_symbol_portrayal_v1 p
             WHERE p.runtime_eligible != 1
                OR p.candidate_status != 'runtime_eligible'
                OR p.blocking_gate_count != 0
                OR p.pending_gate_count != 0
+               OR (
+                 SELECT COUNT(DISTINCT g.gate_name)
+                 FROM runtime_symbol_gate g
+                 WHERE g.s52_lookup_id = p.s52_lookup_id
+                   AND g.gate_name IN ({required_gate_sql})
+               ) != {required_gate_count}
                OR EXISTS (
                  SELECT 1
                  FROM runtime_symbol_gate g
@@ -158,6 +190,32 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
                OR detail = ''
                OR evidence IS NULL
                OR json_valid(evidence) = 0
+            """,
+        )
+        missing_required_gate_rows = _scalar(
+            con,
+            f"""
+            SELECT COUNT(*)
+            FROM runtime_symbol_candidate_v1 c
+            WHERE (
+              SELECT COUNT(DISTINCT g.gate_name)
+              FROM runtime_symbol_gate g
+              WHERE g.s52_lookup_id = c.s52_lookup_id
+                AND g.gate_name IN ({required_gate_sql})
+            ) != {required_gate_count}
+            """,
+        )
+        portrayal_missing_required_gate_rows = _scalar(
+            con,
+            f"""
+            SELECT COUNT(*)
+            FROM runtime_symbol_portrayal_v1 p
+            WHERE (
+              SELECT COUNT(DISTINCT g.gate_name)
+              FROM runtime_symbol_gate g
+              WHERE g.s52_lookup_id = p.s52_lookup_id
+                AND g.gate_name IN ({required_gate_sql})
+            ) != {required_gate_count}
             """,
         )
         audit_fail_rows = _rows(
@@ -209,14 +267,27 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
         ),
         _check(
             "runtime_portrayal_view_is_strict_gate_clear_surface",
-            portrayal_rows == derived_portrayal_rows and leaky_portrayal_rows == 0,
-            "view equals derived gate-clear query, with 0 leaky rows",
+            portrayal_rows == derived_portrayal_rows
+            and leaky_portrayal_rows == 0
+            and portrayal_missing_required_gate_rows == 0,
+            "view equals derived complete-gate-clear query, with 0 leaky rows",
             {
                 "runtime_symbol_portrayal_v1": portrayal_rows,
                 "derived_gate_clear_rows": derived_portrayal_rows,
                 "leaky_rows": leaky_portrayal_rows,
+                "missing_required_gate_rows": portrayal_missing_required_gate_rows,
             },
-            "runtime_symbol_portrayal_v1 fails closed from full gate state, not just one flag.",
+            "runtime_symbol_portrayal_v1 fails closed from complete named gate state, not just one flag.",
+        ),
+        _check(
+            "runtime_required_gates_cover_all_candidates",
+            missing_required_gate_rows == 0,
+            f"0 candidates missing any of {required_gate_count} required runtime gates",
+            {
+                "missing_required_gate_rows": missing_required_gate_rows,
+                "required_gates": list(RUNTIME_REQUIRED_GATES),
+            },
+            "runtime promotion is structurally blocked unless every named required gate exists for the row.",
         ),
         _check(
             "runtime_eligibility_matches_gate_state",
@@ -273,7 +344,7 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
             ],
             "runtime_symbol_portrayal_v1": [
                 "strict runtime serving surface",
-                "requires runtime_eligible=1, candidate_status=runtime_eligible, zero blocking gates, zero pending gates",
+                "requires runtime_eligible=1, candidate_status=runtime_eligible, every named required gate present, zero blocking gates, zero pending gates",
                 "also excludes rows with any blocked or pending runtime_symbol_gate",
             ],
         },
@@ -284,6 +355,7 @@ def build_contract(*, db_path: Path = DB_PATH) -> dict[str, Any]:
             "runtime_eligible_rows": eligible_rows,
             "blocker_rows": blocker_rows,
             "visual_approval_pending_rows": visual_pending_rows,
+            "required_runtime_gates": list(RUNTIME_REQUIRED_GATES),
             "candidate_status_counts": candidate_status_counts,
             "blocker_gate_counts": blocker_gate_counts,
         },

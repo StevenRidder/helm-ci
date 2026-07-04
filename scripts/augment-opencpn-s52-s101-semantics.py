@@ -13,7 +13,9 @@ from __future__ import annotations
 import argparse
 import json
 import os
+import shutil
 import sqlite3
+import tempfile
 from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
@@ -190,6 +192,19 @@ STANDARDS_REFERENCES = [
     },
 ]
 
+RUNTIME_REQUIRED_GATES = (
+    "source_provenance",
+    "s57_semantic_tuple",
+    "s52_instruction_ast",
+    "s101_crosswalk_evidence",
+    "topmark_daymark_special_cases",
+    "visual_approval",
+)
+
+
+class AuditFailure(RuntimeError):
+    """Raised when the DB audit table records one or more failing checks."""
+
 
 def json_dumps(value: Any) -> str:
     return json.dumps(value, sort_keys=True, separators=(",", ":"))
@@ -199,6 +214,10 @@ def json_loads(value: str | None, default: Any) -> Any:
     if not value:
         return default
     return json.loads(value)
+
+
+def sql_string_list(values: tuple[str, ...]) -> str:
+    return ", ".join("'" + value.replace("'", "''") + "'" for value in values)
 
 
 def split_top_level_commands(instruction: str) -> tuple[list[str], list[str]]:
@@ -1211,6 +1230,7 @@ def create_tables(con: sqlite3.Connection) -> None:
         CREATE INDEX electronic_chart1_entry_object_idx ON electronic_chart1_entry (s57_object_class);
         """
     )
+    create_runtime_portrayal_view(con)
     con.executemany(
         """
         INSERT INTO s52_topmark_shape_decode (
@@ -1240,6 +1260,35 @@ def create_tables(con: sqlite3.Connection) -> None:
             )
             for code, (label, normalized) in sorted(TOPSHP_OPENCPN_SPECIALS.items())
         ],
+    )
+
+
+def create_runtime_portrayal_view(con: sqlite3.Connection) -> None:
+    required_gate_sql = sql_string_list(RUNTIME_REQUIRED_GATES)
+    required_gate_count = len(RUNTIME_REQUIRED_GATES)
+    con.execute("DROP VIEW IF EXISTS runtime_symbol_portrayal_v1")
+    con.execute(
+        f"""
+        CREATE VIEW runtime_symbol_portrayal_v1 AS
+        SELECT c.*
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 1
+          AND c.candidate_status = 'runtime_eligible'
+          AND c.blocking_gate_count = 0
+          AND c.pending_gate_count = 0
+          AND (
+            SELECT COUNT(DISTINCT g.gate_name)
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_name IN ({required_gate_sql})
+          ) = {required_gate_count}
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_status IN ('blocked', 'pending')
+          )
+        """
     )
 
 
@@ -2141,6 +2190,8 @@ def audit(con: sqlite3.Connection) -> None:
     def scalar(query: str) -> Any:
         return con.execute(query).fetchone()[0]
 
+    required_gate_sql = sql_string_list(RUNTIME_REQUIRED_GATES)
+    required_gate_count = len(RUNTIME_REQUIRED_GATES)
     metadata = dict(con.execute("SELECT key, value FROM s52_source_metadata").fetchall())
     lookup_count = scalar("SELECT COUNT(*) FROM s52_portrayal_lookup")
     semantic_count = scalar("SELECT COUNT(*) FROM s52_semantic_tuple")
@@ -2225,13 +2276,19 @@ def audit(con: sqlite3.Connection) -> None:
     runtime_candidate_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate_v1")
     runtime_portrayal_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_portrayal_v1")
     runtime_portrayal_derived_count = scalar(
-        """
+        f"""
         SELECT COUNT(*)
         FROM runtime_symbol_candidate_v1 c
         WHERE c.runtime_eligible = 1
           AND c.candidate_status = 'runtime_eligible'
           AND c.blocking_gate_count = 0
           AND c.pending_gate_count = 0
+          AND (
+            SELECT COUNT(DISTINCT g.gate_name)
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_name IN ({required_gate_sql})
+          ) = {required_gate_count}
           AND NOT EXISTS (
             SELECT 1
             FROM runtime_symbol_gate g
@@ -2241,13 +2298,19 @@ def audit(con: sqlite3.Connection) -> None:
         """
     )
     runtime_portrayal_leak_count = scalar(
-        """
+        f"""
         SELECT COUNT(*)
         FROM runtime_symbol_portrayal_v1 p
         WHERE p.runtime_eligible != 1
            OR p.candidate_status != 'runtime_eligible'
            OR p.blocking_gate_count != 0
            OR p.pending_gate_count != 0
+           OR (
+             SELECT COUNT(DISTINCT g.gate_name)
+             FROM runtime_symbol_gate g
+             WHERE g.s52_lookup_id = p.s52_lookup_id
+               AND g.gate_name IN ({required_gate_sql})
+           ) != {required_gate_count}
            OR EXISTS (
              SELECT 1
              FROM runtime_symbol_gate g
@@ -2257,13 +2320,19 @@ def audit(con: sqlite3.Connection) -> None:
         """
     )
     runtime_flag_gate_mismatch_count = scalar(
-        """
+        f"""
         SELECT COUNT(*)
         FROM runtime_symbol_candidate_v1 c
         WHERE c.runtime_eligible != CASE
           WHEN c.candidate_status = 'runtime_eligible'
            AND c.blocking_gate_count = 0
            AND c.pending_gate_count = 0
+           AND (
+             SELECT COUNT(DISTINCT g.gate_name)
+             FROM runtime_symbol_gate g
+             WHERE g.s52_lookup_id = c.s52_lookup_id
+               AND g.gate_name IN ({required_gate_sql})
+           ) = {required_gate_count}
            AND NOT EXISTS (
              SELECT 1
              FROM runtime_symbol_gate g
@@ -2336,6 +2405,30 @@ def audit(con: sqlite3.Connection) -> None:
     )
     runtime_gate_subject_count = scalar("SELECT COUNT(DISTINCT s52_lookup_id) FROM runtime_symbol_gate")
     runtime_gate_count = scalar("SELECT COUNT(*) FROM runtime_symbol_gate")
+    runtime_missing_required_gate_count = scalar(
+        f"""
+        SELECT COUNT(*)
+        FROM runtime_symbol_candidate_v1 c
+        WHERE (
+          SELECT COUNT(DISTINCT g.gate_name)
+          FROM runtime_symbol_gate g
+          WHERE g.s52_lookup_id = c.s52_lookup_id
+            AND g.gate_name IN ({required_gate_sql})
+        ) != {required_gate_count}
+        """
+    )
+    runtime_portrayal_missing_required_gate_count = scalar(
+        f"""
+        SELECT COUNT(*)
+        FROM runtime_symbol_portrayal_v1 p
+        WHERE (
+          SELECT COUNT(DISTINCT g.gate_name)
+          FROM runtime_symbol_gate g
+          WHERE g.s52_lookup_id = p.s52_lookup_id
+            AND g.gate_name IN ({required_gate_sql})
+        ) != {required_gate_count}
+        """
+    )
     runtime_eligible_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate WHERE runtime_eligible = 1")
     instruction_ast_count = scalar("SELECT COUNT(*) FROM s52_instruction_ast")
     instruction_complete_count = scalar(
@@ -2547,10 +2640,22 @@ def audit(con: sqlite3.Connection) -> None:
         ),
         (
             "runtime_gates_cover_all_lookup_rows",
-            runtime_gate_subject_count == lookup_count and runtime_gate_count >= lookup_count * 6,
-            f"{lookup_count} subjects and at least {lookup_count * 6} gates",
+            runtime_gate_subject_count == lookup_count and runtime_gate_count >= lookup_count * required_gate_count,
+            f"{lookup_count} subjects and at least {lookup_count * required_gate_count} gates",
             json_dumps({"subjects": runtime_gate_subject_count, "gates": runtime_gate_count}),
             "every lookup row has row-level provenance, semantic, S-52, S-101, topmark, and visual gates",
+        ),
+        (
+            "runtime_required_gates_cover_all_candidates",
+            runtime_missing_required_gate_count == 0,
+            f"0 candidates missing any of {required_gate_count} required runtime gates",
+            json_dumps(
+                {
+                    "missing_required_gate_rows": runtime_missing_required_gate_count,
+                    "required_gates": RUNTIME_REQUIRED_GATES,
+                }
+            ),
+            "runtime promotion is structurally blocked unless every named required gate exists for the row",
         ),
         (
             "runtime_flags_match_gate_state",
@@ -2619,16 +2724,18 @@ def audit(con: sqlite3.Connection) -> None:
         (
             "runtime_portrayal_view_requires_all_gates_clear",
             runtime_portrayal_view_count == runtime_portrayal_derived_count
-            and runtime_portrayal_leak_count == 0,
-            "strict view equals rows with runtime_eligible, runtime_eligible status, and no blocked/pending gates",
+            and runtime_portrayal_leak_count == 0
+            and runtime_portrayal_missing_required_gate_count == 0,
+            "strict view equals rows with runtime_eligible status, all required gates present, and no blocked/pending gates",
             json_dumps(
                 {
                     "runtime_symbol_portrayal_v1": runtime_portrayal_view_count,
                     "derived_gate_clear_rows": runtime_portrayal_derived_count,
                     "leaky_rows": runtime_portrayal_leak_count,
+                    "missing_required_gate_rows": runtime_portrayal_missing_required_gate_count,
                 }
             ),
-            "runtime_symbol_portrayal_v1 is fail-closed from full gate state, not only a stored flag",
+            "runtime_symbol_portrayal_v1 is fail-closed from complete named gate state, not only a stored flag",
         ),
         (
             "electronic_chart1_entries_cover_all_lookup_rows",
@@ -2706,6 +2813,25 @@ def audit(con: sqlite3.Connection) -> None:
             """,
             (name, "pass" if ok else "fail", expected, actual, detail),
         )
+    assert_audit_pass(con)
+
+
+def assert_audit_pass(con: sqlite3.Connection) -> None:
+    failures = con.execute(
+        """
+        SELECT check_name, expected, actual, detail
+        FROM s52_s101_import_audit
+        WHERE status != 'pass'
+        ORDER BY check_name
+        """
+    ).fetchall()
+    if not failures:
+        return
+    details = [
+        f"{row[0]} expected={row[1]!r} actual={row[2]!r} detail={row[3]!r}"
+        for row in failures
+    ]
+    raise AuditFailure("s52_s101_import_audit has failing checks:\n" + "\n".join(details))
 
 
 def update_metadata(
@@ -2742,7 +2868,7 @@ def update_metadata(
         )
 
 
-def augment(db_path: Path, approval_root: Path | None) -> None:
+def _augment_in_place(db_path: Path, approval_root: Path | None) -> None:
     with sqlite3.connect(db_path) as con:
         con.execute("PRAGMA foreign_keys = ON")
         create_tables(con)
@@ -2759,6 +2885,28 @@ def augment(db_path: Path, approval_root: Path | None) -> None:
         audit(con)
 
 
+def augment(db_path: Path, approval_root: Path | None, *, atomic: bool = True) -> None:
+    if not atomic:
+        _augment_in_place(db_path, approval_root)
+        return
+
+    db_path = db_path.resolve()
+    db_path.parent.mkdir(parents=True, exist_ok=True)
+    fd, tmp_name = tempfile.mkstemp(prefix=f".{db_path.name}.", suffix=".tmp", dir=db_path.parent)
+    os.close(fd)
+    tmp_path = Path(tmp_name)
+    try:
+        shutil.copy2(db_path, tmp_path)
+        _augment_in_place(tmp_path, approval_root)
+        os.replace(tmp_path, db_path)
+    except Exception:
+        try:
+            tmp_path.unlink()
+        except FileNotFoundError:
+            pass
+        raise
+
+
 def main() -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--db", type=Path, default=DEFAULT_DB)
@@ -2768,8 +2916,13 @@ def main() -> int:
         default=DEFAULT_APPROVAL_ROOT,
         help="Icon Forge approval-server worktree root to import as evidence tables.",
     )
+    parser.add_argument(
+        "--in-place",
+        action="store_true",
+        help="Mutate the DB path directly. Default uses a temp copy and atomic replace after audits pass.",
+    )
     args = parser.parse_args()
-    augment(args.db, args.approval_root)
+    augment(args.db, args.approval_root, atomic=not args.in_place)
     print(f"augmented {args.db}")
     return 0
 
