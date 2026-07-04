@@ -3,7 +3,10 @@
 Status: stacked POC draft for Vulkan board `SEAM-2`
 
 This document specifies the backend-neutral command stream between chart
-semantics and renderer execution. It builds on
+semantics and renderer execution. The production C++ in-memory schema is
+`helm.render.model.v1` in `engine/vulkan/render_model.h`; this JSON command
+stream is the reviewable export/debug/golden-test form over the same model. It
+builds on
 [VULKAN-RENDERER-SEAM.md](VULKAN-RENDERER-SEAM.md): conversion and S-52
 decisions are shared; OpenCPN and Helm adapters only choose targets, scheduling,
 and integration policy.
@@ -35,7 +38,7 @@ preserve the same semantics and provenance.
 
 ## Stream Envelope
 
-Every render submission is a `RenderScene`:
+Every render submission is a `RenderScene` / `RenderModel`:
 
 ```text
 RenderScene
@@ -45,7 +48,7 @@ RenderScene
   render_view
   display_state
   resource_table
-  command_groups[]
+  command_groups[] | layers[]
   provenance_table
   diagnostics
 ```
@@ -56,7 +59,7 @@ Required invariants:
 - `scene_id` is stable for a deterministic view/source/display tuple.
 - `source_epoch` identifies chart database inputs, updates, and renderer
   settings that invalidate cached command streams.
-- `command_groups` are already sorted into deterministic draw order.
+- `command_groups` / `layers` are already sorted into deterministic draw order.
 - `provenance_table` is addressable from every command.
 
 ## Render View
@@ -193,6 +196,12 @@ fixture form is `[chart_priority, quilt_rank, display_priority, render_pass_rank
 source_sequence]`; later implementations may add child-rule or text-pass fields
 as long as the schema version changes. The backend may batch commands only when
 the semantic order remains equivalent.
+
+In the C++ schema this common envelope is `RenderPrimitive`: the payload is one
+of `AreaFill`, `LineStroke`, `SymbolInstance`, `TextLabel`, `Sounding`,
+`RasterPatch`, `ContourLine`, or `CoverageMask`; the source trace, material key,
+SCAMIN/scale range, safety/display state, stable order, and inspection handles
+live beside the payload so backend code cannot accidentally own chart semantics.
 
 Visible commands are the normal output. Culled S-52 objects do not become
 backend commands, but debug fixtures may record a `semantic.culled` diagnostic
@@ -455,8 +464,8 @@ The initial committed fixture corpus and checker live under
 
 ## Open Questions For Implementation
 
-- whether the C++ in-memory form should mirror the fixture JSON exactly or use
-  a compact typed struct layer with a JSON exporter;
+- the C++ in-memory form is a typed struct layer (`helm.render.model.v1`) with
+  JSON fixture/export forms for review and regression tests;
 - whether glyph shaping belongs in command construction or backend resource
   preparation;
 - how much S-52 conditional-symbology reasoning should be captured in
