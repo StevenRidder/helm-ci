@@ -288,3 +288,47 @@ CREATE INDEX iconforge_lookup_link_lookup_idx ON iconforge_s52_lookup_link (s52_
 CREATE INDEX runtime_symbol_gate_lookup_idx ON runtime_symbol_gate (s52_lookup_id);
 CREATE INDEX runtime_symbol_gate_name_status_idx ON runtime_symbol_gate (gate_name, gate_status);
 CREATE INDEX runtime_symbol_candidate_status_idx ON runtime_symbol_candidate (candidate_status);
+CREATE TABLE iconforge_s101_topmark_mapping_row (
+          s52_lookup_id integer primary key references runtime_symbol_candidate(s52_lookup_id) on delete cascade,
+          row_key text not null,
+          asset text,
+          object_class text not null,
+          source_topmark_shape_code integer,
+          source_topmark_shape_label text,
+          source_topmark_normalized_name text,
+          topmark_context text not null check (topmark_context in ('rigid', 'floating', 'context_required')),
+          context_basis text not null,
+          s101_symbol_id text,
+          s101_symbol_file text,
+          s101_local_reference_path text,
+          s101_rule_file text not null,
+          s101_rule_context text,
+          shape_safe integer not null check (shape_safe in (0, 1)),
+          map_status text not null,
+          semantic_json text not null check (json_valid(semantic_json)),
+          s101_attributes_json text not null check (json_valid(s101_attributes_json)),
+          evidence_json text not null check (json_valid(evidence_json)),
+          source_boundary text not null default 'reference_only_not_bundled',
+          created_at text not null default current_timestamp
+        );
+CREATE INDEX idx_iconforge_s101_topmark_mapping_asset
+          on iconforge_s101_topmark_mapping_row(asset);
+CREATE TABLE iconforge_s101_topmark_asset_map (
+          asset text primary key,
+          asset_status text not null,
+          preferred_s52_lookup_id integer references runtime_symbol_candidate(s52_lookup_id) on delete set null,
+          source_topmark_shape_code integer,
+          source_topmark_shape_label text,
+          topmark_context text,
+          context_basis text,
+          s101_symbol_id text,
+          s101_symbol_file text,
+          s101_local_reference_path text,
+          shape_safe integer not null check (shape_safe in (0, 1)),
+          row_count integer not null,
+          safe_row_count integer not null,
+          context_required_count integer not null,
+          evidence_json text not null check (json_valid(evidence_json)),
+          source_boundary text not null default 'reference_only_not_bundled',
+          created_at text not null default current_timestamp
+        );

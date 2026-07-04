@@ -13,7 +13,7 @@
   },
   "forge_contract": {
     "runtime_db": "artifacts/opencpn_s52_portrayal.sqlite",
-    "runtime_db_sha256": "378a45c80f62d5da9add45f4dfea6fb4d62330688b8ddbded425a6365adbec60",
+    "runtime_db_sha256": "d6d6e28ba650b8d80245fa147b9ec65fad9f8cd63c5aa980868c445cc2f1f394",
     "runtime_evidence_snapshot": "pipeline/iconforge/catalog/runtime_evidence_snapshot.json",
     "runtime_evidence_snapshot_sha256": "a52258aafd683252f67bb16262d71a1e6fa5e493d8923405a79d2e6c6e1ed954",
     "proof_manifest": "pipeline/iconforge/proof/manifest.json",
