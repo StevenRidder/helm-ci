@@ -34,8 +34,7 @@ engine/bootstrap.sh
 scripts/install-sample-enc.sh
 
 # 4. Bake a weather release + build helm-envd, once (WX-26: grid packs replaced the gateway).
-python3 -m venv services/wx/.venv
-services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
+#    (see scripts/wx_bake_openmeteo.py + engine/bootstrap.sh; helm-envd is C++, no venv needed)
 
 # 5. Run a private one-origin server plus weather and online-fill helpers.
 scripts/start-helm.sh --port 9001 --weather --fill

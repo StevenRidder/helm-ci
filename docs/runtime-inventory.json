@@ -165,35 +165,6 @@
       "notes": "WX-20 implements the first C++ local replay/validation slice for compact helm.env.grid.v1 packs: sanitized inventory, checked byte-range chunks, and fail-loud diagnostics. This entry remains planned for HELMC++ final acceptance until provider/job parity and client cutover are complete; services/wx stays reference/oracle until full parity."
     },
     {
-      "id": "services-wx-python",
-      "title": "Python environmental gateway/grid-pack reference/oracle",
-      "classification": "transitional-reference",
-      "status": "implemented",
-      "required_runtime": false,
-      "final_acceptance_required": false,
-      "language": "Python/FastAPI",
-      "process_type": "daemon",
-      "ports": ["8093"],
-      "paths": [
-        "services/wx/app.py",
-        "services/wx/README.md",
-        "services/wx/test_wx.py",
-        "services/wx/requirements.txt"
-      ],
-      "launch": [
-        "cd services/wx && python -m uvicorn app:app --port 8093",
-        "scripts/start-helm.sh --weather"
-      ],
-      "starts_python_daemon": true,
-      "python_allowed": true,
-      "allowed_python_reason": "Reference/oracle while WX-19 proves the compact grid-pack field contract and WX-20 ports the runtime behavior to C++.",
-      "cxx_exit_task": "WX-20",
-      "owner": "WX",
-      "evidence_tasks": ["WX-17", "WX-18", "WX-22", "WX-31", "WX-32", "WX-33", "WX-35", "WX-20"],
-      "feeds_helmcxx": ["HELMC++-2"],
-      "notes": "May be used for parity tests. It cannot be part of HELMC++ final required runtime."
-    },
-    {
       "id": "pipeline-mbtiles-server-python",
       "title": "Python local MBTiles/PMTiles reference server",
       "classification": "transitional-reference",

@@ -35,12 +35,14 @@ bundles byte-identical** to the committed files, so the lockfile is an accurate 
 
 ## Python companion services (FastAPI)
 
-`backend/` (AI / companion service) and `services/wx/` (the helm-wx value-tile gateway). These are
-server-side **companion** services — not the nav core. Audited with `pip-audit -r <requirements.txt>`.
+`backend/` (the optional AI / places / community companion service). This is a server-side **companion**
+service — not the nav core. Audited with `pip-audit -r backend/requirements.txt`. (The `services/wx`
+Python weather gateway was DELETED in CLIENT-28 — the C++ `helm-envd` replaced it — so only `backend/`
+carries a Python `requirements.txt` now.)
 
-> CLIENT-16 **audits and recommends** here; it does **not** edit these files — `backend/requirements.txt`
-> and `services/wx/requirements.txt` are owned by the BACKEND and WX epics. Two gaps: (1) deps use
-> unpinned `>=` ranges (no lockfile → not reproducible); (2) the resolved versions carry known CVEs.
+> CLIENT-16 **audits and recommends** here; it does **not** edit `backend/requirements.txt` (owned by
+> the BACKEND epic). Two gaps: (1) deps use unpinned `>=` ranges (no lockfile → not reproducible);
+> (2) the resolved versions carry known CVEs.
 
 ### Findings (2026-06-26)
 | Package | Resolved | CVEs | Fixed in |
@@ -48,7 +50,7 @@ server-side **companion** services — not the nav core. Audited with `pip-audit
 | `starlette` (via `fastapi`) | 0.49.3 | 5 — PYSEC-2026-161, GHSA-wqp7-x3pw-xc5r, GHSA-x746-7m8f-x49c, GHSA-82w8-qh3p-5jfq, GHSA-jp82-jpqv-5vv3 | ≥ 1.3.1 |
 | `python-dotenv` | 1.2.1 | 1 — GHSA-mf9w-mj56-hr94 | ≥ 1.2.2 |
 
-Both `requirements.txt` resolve to the same vulnerable `starlette` (pulled transitively by `fastapi`).
+`backend/requirements.txt` resolves to a vulnerable `starlette` (pulled transitively by `fastapi`).
 
 ### Recommendation (for BACKEND / WX owners)
 - Pin exact versions + add a lockfile (`pip-compile` / `uv lock`) so the Python supply chain is
@@ -61,5 +63,4 @@ Both `requirements.txt` resolve to the same vulnerable `starlette` (pulled trans
 ```sh
 cd web/vendor && npm ci && npm audit            # JavaScript
 pip-audit -r backend/requirements.txt            # Python (run in a venv)
-pip-audit -r services/wx/requirements.txt
 ```

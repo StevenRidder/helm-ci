@@ -64,9 +64,7 @@ The build creates:
 
 ```bash
 scripts/install-sample-enc.sh
-python3 -m venv services/wx/.venv
-services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt
-scripts/start-helm.sh --port 9001 --weather --fill
+scripts/start-helm.sh --port 9001 --weather --fill   # --weather needs helm-envd built + a baked release
 ```
 
 Then open:

@@ -20,7 +20,7 @@ if a retired entrypoint creeps back.
 |---|---|---|
 | `web/wx-scene.js` + `wx-scene-webgpu.js` | **REMOVED (WX-26)** — deleted with their unit tests; the retirement gate pins them out | done |
 | `web/wx-controls.js` | **rewritten (WX-26)** — live mode = release discovery → `HelmWxGrid`; no gateway, no coverage-chasing | n/a |
-| `services/wx` (Python gateway :8093) | **dev/reference oracle ONLY** — the cockpit never calls it (`start-helm.sh --wx-oracle` to run) | delete when oracle comparisons end |
+| `services/wx` (Python gateway :8093) | **DELETED** (CLIENT-28) — envd (:8094, C++) proved the grid-pack contract; oracle comparisons done. Only `services/wx/fixtures/` remain (used by e2e). | done |
 | `web/wx-grid-*.js` (pack client, decode, WebGPU grid scene) | **PRIMARY live weather (WX-26)** — drawer-wired, service-worker precached, probe + scrub + particles | n/a |
 | `scripts/wx_pack_factory.py`, `scripts/env_grid_pack.py` | **cloud job / packer** (WX-34) | Cloud/VM job; C++ path for productized backend per contract §10. |
 | `helm-packd` | **required runtime, C++** (merged) | serves packs by range; owns no weather physics. |

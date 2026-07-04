@@ -13,7 +13,6 @@
 #    HELM_BASEMAP_UPSTREAM=http://192.168.1.137:8091 scripts/start-helm.sh --basemap-proxy
 #
 #  Flags:  --weather        helm-envd grid-pack weather service on :8094 (WX-26; needs a baked release)
-#          --wx-oracle      RETIRED Python bundle gateway on :8093 (dev/reference comparisons only)
 #          --basemap        offline MBTiles/PMTiles local pack server (pipeline) on :8091
 #          --basemap-proxy  cache-backed proxy to HELM_BASEMAP_UPSTREAM on :8091
 #          --fill           online basemap-fill cache proxy on :8095
@@ -49,7 +48,6 @@ HELM_SAMPLE_ENC="${HELM_SAMPLE_ENC:-$HELM_RUNTIME_DIR/enc/US5FL4CR/US5FL4CR.000}
 WANT_WEATHER=0; WANT_BASEMAP=0; WANT_BASEMAP_PROXY=0; WANT_FILL=0; WANT_BACKEND=0
 while [ $# -gt 0 ]; do
   case "$1" in
-    --wx-oracle) WANT_WX_ORACLE=1 ;;
     --weather) WANT_WEATHER=1 ;;
     --basemap) WANT_BASEMAP=1 ;;
     --basemap-proxy) WANT_BASEMAP_PROXY=1 ;;
@@ -66,14 +64,6 @@ done
 die() { echo "start-helm: $*" >&2; exit 1; }
 have_py() { python3 -c "import $1" >/dev/null 2>&1; }
 port_busy() { lsof -tiTCP:"$1" -sTCP:LISTEN >/dev/null 2>&1 || curl -sf -o /dev/null --max-time 2 "http://127.0.0.1:$1/health" 2>/dev/null; }
-wx_python() {
-  if [ -x "$REPO_ROOT/services/wx/.venv/bin/python" ]; then
-    echo "$REPO_ROOT/services/wx/.venv/bin/python"
-  else
-    echo python3
-  fi
-}
-
 # pid -> "label@port" for the status summary + cleanup
 declare -a PIDS=() ; declare -a STARTED=() ; declare -a SKIPPED=()
 
@@ -139,18 +129,6 @@ PYEOF2
     fi
   else
     SKIPPED+=("helm-envd :8094 — need HELM_ENVD_BIN (built binary) and a baked release at $PACKS_DIR/current.json")
-  fi
-fi
-
-if [ "${WANT_WX_ORACLE:-0}" = 1 ]; then
-  # Dev/reference ONLY (RUNTIME-SERVICES.md): the retired Python bundle gateway. Never
-  # required by the cockpit; kept for oracle comparisons until deleted.
-  WX_PY="$(wx_python)"
-  if "$WX_PY" -c "import uvicorn, fastapi, httpx, numpy" >/dev/null 2>&1 && [ -f "$REPO_ROOT/services/wx/app.py" ]; then
-    start_bg "wx-oracle (services/wx, dev/reference)" 8093 \
-      bash -c "cd '$REPO_ROOT/services/wx' && exec '$WX_PY' -m uvicorn app:app --port 8093"
-  else
-    SKIPPED+=("wx-oracle :8093 — deps missing: python3 -m venv services/wx/.venv && services/wx/.venv/bin/python -m pip install -r services/wx/requirements.txt")
   fi
 fi
 

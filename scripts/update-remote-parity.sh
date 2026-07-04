@@ -102,18 +102,6 @@ stop_port() {
   sleep 1
 }
 
-ensure_wx_venv() {
-  local py="services/wx/.venv/bin/python"
-  if [ ! -x "$py" ]; then
-    echo "update-remote-parity: creating services/wx/.venv for weather gateway"
-    python3 -m venv services/wx/.venv
-  fi
-  if ! "$py" -c "import uvicorn, fastapi, httpx, numpy" >/dev/null 2>&1; then
-    echo "update-remote-parity: installing weather gateway deps"
-    "$py" -m pip install -r services/wx/requirements.txt
-  fi
-}
-
 if [ "$VERIFY_ONLY" = 1 ]; then
   exec scripts/verify-live-ui.sh "http://127.0.0.1:$PORT" "$HASH"
 fi
@@ -128,7 +116,6 @@ if [ "$BUILD" = 1 ]; then
   engine/bootstrap.sh
 fi
 
-ensure_wx_venv
 
 ENC="$(HELM_SAMPLE_ENC_CELL=US5FL4CR scripts/install-sample-enc.sh | tail -n 1)"
 [ -f "$ENC" ] || { echo "update-remote-parity: expected ENC missing: $ENC" >&2; exit 1; }

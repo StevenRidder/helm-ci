@@ -10,7 +10,7 @@ machine, boat server, or demo process is safe to stop or replace.
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
 | 8090 | Optional backend service | AI, places, community/LLM, and agent weather-at-point prototype endpoints. Non-safety companion only; not required for chart/nav runtime. |
 | 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by C++ `helm-packd`; `pipeline/mbtiles_server.py` remains the Python reference/oracle. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
-| 8093 | RETIRED (dev oracle only) | The Python bundle gateway is retired (WX-26); the cockpit never calls it. `scripts/start-helm.sh --wx-oracle` can start it for reference comparisons. Port stays reserved so nothing else squats it. |
+| 8093 | RETIRED + DELETED | The Python bundle gateway (`services/wx/app.py`) was retired (WX-26) and DELETED (CLIENT-28) — `helm-envd` (:8094, C++) replaced it. Port stays reserved so nothing else squats it. |
 | 8094 | Weather data plane | C++ `helm-envd` — serves validated `helm.env.grid.v1` chunks to the cockpit (`/chunk`), plus `/health` and `/packs`. Started by `scripts/start-helm.sh --weather` from the baked release tree. |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
 | 9001+ | Private development servers | Recommended for local agent/test runs. |
