@@ -1,0 +1,80 @@
+{
+  "fixture_id": "symbol-selection",
+  "title": "Synthetic attribute-driven symbol selection fixture",
+  "schema_version": "vulkan.render_scene.v0",
+  "scene_id": "symbol-selection-day-standard-z24",
+  "source_file": "source.json",
+  "scene_file": "scene.commands.json",
+  "provenance_file": "provenance.json",
+  "license": {
+    "type": "synthetic-clean-room-fixture",
+    "redistribution": "repo-owned",
+    "notes": "No chart data or third-party artwork. Symbol ids and attributes come from Helm Forge clean-room evidence records."
+  },
+  "capture_matrix": [
+    {
+      "name": "day-standard-z24-symbol-selection",
+      "palette": "day",
+      "display_category": "standard",
+      "projection": "web_mercator_tile",
+      "scale_denom": 24000,
+      "pixel_size": [
+        16,
+        16
+      ]
+    },
+    {
+      "name": "dusk-standard-z24-symbol-selection",
+      "palette": "dusk",
+      "display_category": "standard",
+      "projection": "web_mercator_tile",
+      "scale_denom": 24000,
+      "pixel_size": [
+        16,
+        16
+      ]
+    },
+    {
+      "name": "night-standard-z24-symbol-selection",
+      "palette": "night",
+      "display_category": "standard",
+      "projection": "web_mercator_tile",
+      "scale_denom": 24000,
+      "pixel_size": [
+        16,
+        16
+      ]
+    }
+  ],
+  "required_command_types": [
+    "place_symbol"
+  ],
+  "semantic_assertions": {
+    "fixture_manifest": "../../symbol-selection/fixtures.json",
+    "expected_fixture_ids": [
+      "direct-s101-obstruction",
+      "boypil60-red-pillar-buoy",
+      "rule-derived-daymark-topmark",
+      "catalogue-rule-isolated-danger-beacon",
+      "documented-deviation-anchor-point",
+      "non-s101-runtime-ais-default",
+      "extension-profile-border"
+    ],
+    "ordered_command_ids": [
+      "cmd.symbol.direct-s101-obstruction",
+      "cmd.symbol.boypil60-red-pillar-buoy",
+      "cmd.symbol.rule-derived-daymark-topmark",
+      "cmd.symbol.catalogue-rule-isolated-danger-beacon",
+      "cmd.symbol.documented-deviation-anchor-point",
+      "cmd.symbol.non-s101-runtime-ais-default",
+      "cmd.symbol.extension-profile-border"
+    ],
+    "default_render_allowed": false
+  },
+  "expected_hashes": {
+    "source_json_sha256": "a4de097a7d402853e79efda65f83c9e3d9deef9a375827c5a4f9139b631ab7ff",
+    "scene_commands_json_sha256": "96b89c949a86e5eac73ea0fe55b93dcdf98a62230637ec059ab42ebfa3dc3f90",
+    "provenance_json_sha256": "6365b90e02abe61a3cd2382d5ce12252a542684341bc8d19064dc0c377afaa6e"
+  },
+  "expected_images": []
+}

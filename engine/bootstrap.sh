@@ -149,15 +149,16 @@ say "build helm targets (-j$JOBS)"
 # and the tide-catalog fetch helper; building them by default keeps the tide stack reproducible too.
 # helm-s52-atlas-builder / helm-s52-atlas-smoke are dependency-free C++ S-52 asset pipeline
 # checks for Vulkan renderer symbols/patterns/line styles. helm-symbol-package-smoke validates the
-# clean-room runtime evidence loader that downstream chart/render code consumes. helm-packd is the
-# local MBTiles/PMTiles pack daemon; helm-envd is the environmental grid-pack validator/replay daemon;
-# helm-basemap-cache is the optional online-fill/remote-pack tile cache. They are independent of
-# chart/nav, so they can be tested without touching :8080.
-cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-symbol-package-smoke helm-tiles helm-packd helm-envd helm-basemap-cache helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
+# clean-room runtime evidence loader that downstream chart/render code consumes. The CHART-6
+# helm-symbol-selection-fixtures binary checks attribute-driven fixture expectations against that
+# evidence. helm-packd is the local MBTiles/PMTiles pack daemon; helm-envd is the environmental
+# grid-pack validator/replay daemon; helm-basemap-cache is the optional online-fill/remote-pack tile
+# cache. They are independent of chart/nav, so they can be tested without touching :8080.
+cmake --build "$OCPN_DIR/build" --target helm-chartrender chart-spike helm-tides helm-tides-smoke helm-tides-fetch helm-s52-atlas-builder helm-s52-atlas-smoke helm-symbol-package-smoke helm-symbol-selection-fixtures helm-tiles helm-packd helm-envd helm-basemap-cache helm-engine helm-server helm-vulkan-fixture-check -j"$JOBS"
 
 BIN="$OCPN_DIR/build/cli"
 say "done — binaries in $BIN"
-ls -1 "$BIN"/{helm-tiles,helm-packd,helm-envd,helm-basemap-cache,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-symbol-package-smoke,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
+ls -1 "$BIN"/{helm-tiles,helm-packd,helm-envd,helm-basemap-cache,helm-engine,chart-spike,helm-tides-smoke,helm-tides-fetch,helm-s52-atlas-builder,helm-s52-atlas-smoke,helm-symbol-package-smoke,helm-symbol-selection-fixtures,helm-server,helm-vulkan-fixture-check} 2>/dev/null | sed 's/^/  /'
 [ -x "$BIN/helm-server" ] || die "helm-server (one-origin :8080) did not build despite being a default target (ENGINE-12) — check the build log above"
 [ -x "$BIN/helm-packd" ] || die "helm-packd (local pack daemon) did not build despite being a default target (OFFLINE-16) — check the build log above"
 [ -x "$BIN/helm-envd" ] || die "helm-envd (environmental grid-pack daemon) did not build despite being a default target (WX-20) — check the build log above"

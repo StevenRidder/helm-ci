@@ -1,0 +1,109 @@
+{
+  "fixture_id": "symbol-selection",
+  "source_epoch": "synthetic-symbol-selection@2026-07-04",
+  "source_type": "synthetic",
+  "charts": [
+    {
+      "source_chart_id": "SYNTH-SYMBOL-SELECTION",
+      "source_chart_edition": "1",
+      "source_update": "0",
+      "native_scale": 12000,
+      "chart_priority": 1,
+      "quilt_rank": 1,
+      "bounds": {
+        "west": -81.805,
+        "south": 24.495,
+        "east": -81.795,
+        "north": 24.505
+      },
+      "objects": [
+        {
+          "source_object_id": "fixture.direct-s101-obstruction",
+          "source_object_class": "OBSTRN",
+          "geometry_type": "point",
+          "attributes": {
+            "category_of_obstruction": "9",
+            "value_of_sounding": true
+          },
+          "expected_symbol_id": "ACHARE02",
+          "expected_command_id": "cmd.symbol.direct-s101-obstruction"
+        },
+        {
+          "source_object_id": "fixture.boypil60-red-pillar-buoy",
+          "source_object_class": "BOYLAT",
+          "geometry_type": "point",
+          "attributes": {
+            "buoyShape": "pillar",
+            "colour": [
+              "red"
+            ],
+            "colourPattern": "solid"
+          },
+          "expected_symbol_id": "BOYPIL60",
+          "expected_command_id": "cmd.symbol.boypil60-red-pillar-buoy"
+        },
+        {
+          "source_object_id": "fixture.rule-derived-daymark-topmark",
+          "source_object_class": "DAYMAR",
+          "geometry_type": "point",
+          "attributes": {
+            "beaconShape": "beacon",
+            "colour": [
+              "red",
+              "black",
+              "white"
+            ],
+            "colourPattern": "vertical_stripes"
+          },
+          "expected_symbol_id": "TOPSHQ28",
+          "expected_command_id": "cmd.symbol.rule-derived-daymark-topmark"
+        },
+        {
+          "source_object_id": "fixture.catalogue-rule-isolated-danger-beacon",
+          "source_object_class": "BCNISD",
+          "geometry_type": "point",
+          "attributes": {
+            "buoyShape": "buoy",
+            "colour": [
+              "black",
+              "red",
+              "black"
+            ]
+          },
+          "expected_symbol_id": "BCNGEN76",
+          "expected_command_id": "cmd.symbol.catalogue-rule-isolated-danger-beacon"
+        },
+        {
+          "source_object_id": "fixture.documented-deviation-anchor-point",
+          "source_object_class": "ACHPNT",
+          "geometry_type": "point",
+          "attributes": {},
+          "expected_symbol_id": "ACHPNT01",
+          "expected_command_id": "cmd.symbol.documented-deviation-anchor-point"
+        },
+        {
+          "source_object_id": "fixture.non-s101-runtime-ais-default",
+          "source_object_class": "$CSYMB",
+          "geometry_type": "point",
+          "attributes": {},
+          "expected_symbol_id": "AISDEF01",
+          "expected_command_id": "cmd.symbol.non-s101-runtime-ais-default"
+        },
+        {
+          "source_object_id": "fixture.extension-profile-border",
+          "source_object_class": "chkpnt",
+          "normalized_object_class": "CHKPNT",
+          "geometry_type": "point",
+          "attributes": {
+            "colour": [
+              "red"
+            ],
+            "colourPattern": "solid"
+          },
+          "expected_symbol_id": "BORDER01",
+          "expected_command_id": "cmd.symbol.extension-profile-border"
+        }
+      ]
+    }
+  ]
+}
