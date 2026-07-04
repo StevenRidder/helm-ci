@@ -1139,9 +1139,18 @@ def create_tables(con: sqlite3.Connection) -> None:
         FROM runtime_symbol_candidate c;
 
         CREATE VIEW runtime_symbol_portrayal_v1 AS
-        SELECT *
-        FROM runtime_symbol_candidate_v1
-        WHERE runtime_eligible = 1;
+        SELECT c.*
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 1
+          AND c.candidate_status = 'runtime_eligible'
+          AND c.blocking_gate_count = 0
+          AND c.pending_gate_count = 0
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_status IN ('blocked', 'pending')
+          );
 
         CREATE VIEW runtime_symbol_blocker_v1 AS
         SELECT
@@ -2215,6 +2224,80 @@ def audit(con: sqlite3.Connection) -> None:
     runtime_candidate_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate")
     runtime_candidate_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate_v1")
     runtime_portrayal_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_portrayal_v1")
+    runtime_portrayal_derived_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 1
+          AND c.candidate_status = 'runtime_eligible'
+          AND c.blocking_gate_count = 0
+          AND c.pending_gate_count = 0
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_status IN ('blocked', 'pending')
+          )
+        """
+    )
+    runtime_portrayal_leak_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM runtime_symbol_portrayal_v1 p
+        WHERE p.runtime_eligible != 1
+           OR p.candidate_status != 'runtime_eligible'
+           OR p.blocking_gate_count != 0
+           OR p.pending_gate_count != 0
+           OR EXISTS (
+             SELECT 1
+             FROM runtime_symbol_gate g
+             WHERE g.s52_lookup_id = p.s52_lookup_id
+               AND g.gate_status IN ('blocked', 'pending')
+           )
+        """
+    )
+    runtime_flag_gate_mismatch_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible != CASE
+          WHEN c.candidate_status = 'runtime_eligible'
+           AND c.blocking_gate_count = 0
+           AND c.pending_gate_count = 0
+           AND NOT EXISTS (
+             SELECT 1
+             FROM runtime_symbol_gate g
+             WHERE g.s52_lookup_id = c.s52_lookup_id
+               AND g.gate_status IN ('blocked', 'pending')
+           )
+          THEN 1 ELSE 0 END
+        """
+    )
+    runtime_ineligible_without_blocker_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 0
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_blocker_v1 b
+            WHERE b.s52_lookup_id = c.s52_lookup_id
+          )
+        """
+    )
+    runtime_blocker_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_blocker_v1")
+    runtime_malformed_blocker_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM runtime_symbol_blocker_v1
+        WHERE gate_name = ''
+           OR gate_status NOT IN ('blocked', 'pending')
+           OR severity = ''
+           OR detail = ''
+           OR evidence IS NULL
+           OR json_valid(evidence) = 0
+        """
+    )
     chart1_entry_count = scalar("SELECT COUNT(*) FROM electronic_chart1_entry")
     chart1_entry_view_count = scalar("SELECT COUNT(*) FROM electronic_chart1_entry_v1")
     chart1_runtime_eligible_count = scalar(
@@ -2284,6 +2367,9 @@ def audit(con: sqlite3.Connection) -> None:
     iconforge_audit_status = con.execute(
         "SELECT value FROM iconforge_approval_metadata WHERE key = 's101_mapping_audit_status'"
     ).fetchone()
+    iconforge_audit_coverage = con.execute(
+        "SELECT value FROM iconforge_approval_metadata WHERE key = 's101_mapping_audit_coverage'"
+    ).fetchone()
     iconforge_manifest_coverage = con.execute(
         "SELECT value FROM iconforge_approval_metadata WHERE key = 'proof_manifest_coverage'"
     ).fetchone()
@@ -2293,6 +2379,7 @@ def audit(con: sqlite3.Connection) -> None:
     audit_status_value = json.loads(iconforge_audit_status[0]) if iconforge_audit_status else None
     manifest_coverage = json.loads(iconforge_manifest_coverage[0]) if iconforge_manifest_coverage else {}
     alignment_review = json.loads(iconforge_alignment_review[0]) if iconforge_alignment_review else {}
+    audit_coverage = json.loads(iconforge_audit_coverage[0]) if iconforge_audit_coverage else {}
     manifest_blockers = manifest_coverage.get("gate_blockers") or []
     alignment_blockers = alignment_review.get("blockers") or []
 
@@ -2398,11 +2485,21 @@ def audit(con: sqlite3.Connection) -> None:
             "approval standard source rows reconcile with S-101 resolver rows",
         ),
         (
-            "iconforge_mapping_audit_pass_preserved",
-            audit_status_value == "pass",
-            "pass",
-            str(audit_status_value),
-            "Forge S-101 mapping audit status is recorded; this is evidence accounting, not runtime approval",
+            "iconforge_mapping_audit_evidence_loaded",
+            audit_status_value in {"pass", "review_required"}
+            and audit_coverage.get("all_rows_accounted_for") is True
+            and audit_coverage.get("all_rows_classified") is True
+            and audit_coverage.get("true_mapping_gaps", 0) == 0,
+            "mapping audit loaded, rows accounted/classified, true_mapping_gaps=0",
+            json_dumps(
+                {
+                    "status": audit_status_value,
+                    "all_rows_accounted_for": audit_coverage.get("all_rows_accounted_for"),
+                    "all_rows_classified": audit_coverage.get("all_rows_classified"),
+                    "true_mapping_gaps": audit_coverage.get("true_mapping_gaps"),
+                }
+            ),
+            "Forge S-101 mapping audit evidence is present; review_required remains a separate visual/alignment gate, not a mapping import failure",
         ),
         (
             "iconforge_manifest_gate_still_review_required",
@@ -2456,6 +2553,32 @@ def audit(con: sqlite3.Connection) -> None:
             "every lookup row has row-level provenance, semantic, S-52, S-101, topmark, and visual gates",
         ),
         (
+            "runtime_flags_match_gate_state",
+            runtime_flag_gate_mismatch_count == 0,
+            "0 rows where runtime_eligible disagrees with candidate status and blocking/pending gates",
+            str(runtime_flag_gate_mismatch_count),
+            "runtime_eligible is derived from explicit gate state, not a silent override",
+        ),
+        (
+            "runtime_blocker_view_explains_all_ineligible_rows",
+            runtime_ineligible_without_blocker_count == 0 and runtime_blocker_view_count > 0,
+            "every ineligible row has at least one runtime_symbol_blocker_v1 row",
+            json_dumps(
+                {
+                    "blocker_rows": runtime_blocker_view_count,
+                    "ineligible_without_blocker": runtime_ineligible_without_blocker_count,
+                }
+            ),
+            "runtime_symbol_blocker_v1 is the queryable hard-pile explanation surface for blocked/pending rows",
+        ),
+        (
+            "runtime_blocker_rows_are_queryable",
+            runtime_malformed_blocker_count == 0,
+            "0 malformed blocker rows",
+            str(runtime_malformed_blocker_count),
+            "blocker rows expose gate_name, status, severity, non-empty detail, and valid JSON evidence",
+        ),
+        (
             "s52_instruction_ast_covers_all_lookup_rows",
             instruction_ast_count == lookup_count,
             str(lookup_count),
@@ -2492,6 +2615,20 @@ def audit(con: sqlite3.Connection) -> None:
             "0",
             json_dumps({"runtime_symbol_portrayal_v1": runtime_portrayal_view_count, "runtime_eligible": runtime_eligible_count}),
             "runtime_symbol_portrayal_v1 must remain empty until parser, mapping, visual, and edge-case gates pass",
+        ),
+        (
+            "runtime_portrayal_view_requires_all_gates_clear",
+            runtime_portrayal_view_count == runtime_portrayal_derived_count
+            and runtime_portrayal_leak_count == 0,
+            "strict view equals rows with runtime_eligible, runtime_eligible status, and no blocked/pending gates",
+            json_dumps(
+                {
+                    "runtime_symbol_portrayal_v1": runtime_portrayal_view_count,
+                    "derived_gate_clear_rows": runtime_portrayal_derived_count,
+                    "leaky_rows": runtime_portrayal_leak_count,
+                }
+            ),
+            "runtime_symbol_portrayal_v1 is fail-closed from full gate state, not only a stored flag",
         ),
         (
             "electronic_chart1_entries_cover_all_lookup_rows",

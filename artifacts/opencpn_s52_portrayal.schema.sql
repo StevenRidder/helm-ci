@@ -49,6 +49,50 @@ CREATE INDEX s52_portrayal_lookup_match_idx ON s52_portrayal_lookup (object_acro
 CREATE INDEX s52_portrayal_lookup_rcid_idx ON s52_portrayal_lookup (rcid);
 CREATE INDEX s52_portrayal_resource_name_idx ON s52_portrayal_resource (name);
 CREATE INDEX s52_portrayal_resource_type_idx ON s52_portrayal_resource (resource_type);
+CREATE TABLE iconforge_s101_topmark_mapping_row (
+          s52_lookup_id integer primary key references runtime_symbol_candidate(s52_lookup_id) on delete cascade,
+          row_key text not null,
+          asset text,
+          object_class text not null,
+          source_topmark_shape_code integer,
+          source_topmark_shape_label text,
+          source_topmark_normalized_name text,
+          topmark_context text not null check (topmark_context in ('rigid', 'floating', 'context_required')),
+          context_basis text not null,
+          s101_symbol_id text,
+          s101_symbol_file text,
+          s101_local_reference_path text,
+          s101_rule_file text not null,
+          s101_rule_context text,
+          shape_safe integer not null check (shape_safe in (0, 1)),
+          map_status text not null,
+          semantic_json text not null check (json_valid(semantic_json)),
+          s101_attributes_json text not null check (json_valid(s101_attributes_json)),
+          evidence_json text not null check (json_valid(evidence_json)),
+          source_boundary text not null default 'reference_only_not_bundled',
+          created_at text not null default current_timestamp
+        );
+CREATE INDEX idx_iconforge_s101_topmark_mapping_asset
+          on iconforge_s101_topmark_mapping_row(asset);
+CREATE TABLE iconforge_s101_topmark_asset_map (
+          asset text primary key,
+          asset_status text not null,
+          preferred_s52_lookup_id integer references runtime_symbol_candidate(s52_lookup_id) on delete set null,
+          source_topmark_shape_code integer,
+          source_topmark_shape_label text,
+          topmark_context text,
+          context_basis text,
+          s101_symbol_id text,
+          s101_symbol_file text,
+          s101_local_reference_path text,
+          shape_safe integer not null check (shape_safe in (0, 1)),
+          row_count integer not null,
+          safe_row_count integer not null,
+          context_required_count integer not null,
+          evidence_json text not null check (json_valid(evidence_json)),
+          source_boundary text not null default 'reference_only_not_bundled',
+          created_at text not null default current_timestamp
+        );
 CREATE TABLE s52_topmark_shape_decode (
           source_attribute TEXT NOT NULL DEFAULT 'TOPSHP',
           code INTEGER PRIMARY KEY,
@@ -229,6 +273,39 @@ CREATE TABLE runtime_symbol_candidate (
           source_refs TEXT NOT NULL CHECK (json_valid(source_refs)),
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
+CREATE TABLE electronic_chart1_entry (
+          s52_lookup_id INTEGER PRIMARY KEY REFERENCES s52_portrayal_lookup(id) ON DELETE CASCADE,
+          row_key TEXT NOT NULL,
+          chart1_row_id TEXT NOT NULL UNIQUE,
+          row_taxonomy TEXT NOT NULL CHECK (
+            row_taxonomy IN (
+              'point_symbol',
+              'line_style',
+              'area_fill',
+              'conditional_rule',
+              'text_rule',
+              'runtime_overlay',
+              'placeholder_manual',
+              'non_reviewable_construct'
+            )
+          ),
+          taxonomy_reason TEXT NOT NULL,
+          evidence_status TEXT NOT NULL CHECK (evidence_status IN ('green', 'yellow', 'red')),
+          render_eligibility TEXT NOT NULL CHECK (render_eligibility = 'fail_closed_not_runtime_eligible'),
+          reason_codes TEXT NOT NULL CHECK (json_valid(reason_codes)),
+          s57_object_class TEXT NOT NULL,
+          s57_attribute_tuple TEXT NOT NULL CHECK (json_valid(s57_attribute_tuple)),
+          s52_instruction TEXT NOT NULL,
+          s52_instruction_evidence TEXT NOT NULL CHECK (json_valid(s52_instruction_evidence)),
+          s101_evidence TEXT NOT NULL CHECK (json_valid(s101_evidence)),
+          helm_art_path TEXT,
+          helm_art_status TEXT NOT NULL,
+          colour_authority TEXT NOT NULL CHECK (json_valid(colour_authority)),
+          shape_family_authority TEXT NOT NULL CHECK (json_valid(shape_family_authority)),
+          human_qa_status TEXT NOT NULL CHECK (json_valid(human_qa_status)),
+          provenance TEXT NOT NULL CHECK (json_valid(provenance)),
+          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
 CREATE VIEW runtime_symbol_candidate_v1 AS
         SELECT
           c.s52_lookup_id,
@@ -253,9 +330,18 @@ CREATE VIEW runtime_symbol_candidate_v1 AS
         FROM runtime_symbol_candidate c
 /* runtime_symbol_candidate_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;
 CREATE VIEW runtime_symbol_portrayal_v1 AS
-        SELECT *
-        FROM runtime_symbol_candidate_v1
-        WHERE runtime_eligible = 1
+        SELECT c.*
+        FROM runtime_symbol_candidate_v1 c
+        WHERE c.runtime_eligible = 1
+          AND c.candidate_status = 'runtime_eligible'
+          AND c.blocking_gate_count = 0
+          AND c.pending_gate_count = 0
+          AND NOT EXISTS (
+            SELECT 1
+            FROM runtime_symbol_gate g
+            WHERE g.s52_lookup_id = c.s52_lookup_id
+              AND g.gate_status IN ('blocked', 'pending')
+          )
 /* runtime_symbol_portrayal_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;
 CREATE VIEW runtime_symbol_blocker_v1 AS
         SELECT
@@ -273,6 +359,29 @@ CREATE VIEW runtime_symbol_blocker_v1 AS
         JOIN runtime_symbol_candidate c ON c.s52_lookup_id = g.s52_lookup_id
         WHERE g.gate_status IN ('blocked', 'pending')
 /* runtime_symbol_blocker_v1(s52_lookup_id,object_acronym,s52_symbol_id,category,gate_name,gate_status,severity,detail,evidence) */;
+CREATE VIEW electronic_chart1_entry_v1 AS
+        SELECT
+          s52_lookup_id,
+          row_key,
+          chart1_row_id,
+          row_taxonomy,
+          taxonomy_reason,
+          evidence_status,
+          render_eligibility,
+          reason_codes,
+          s57_object_class,
+          s57_attribute_tuple,
+          s52_instruction,
+          s52_instruction_evidence,
+          s101_evidence,
+          helm_art_path,
+          helm_art_status,
+          colour_authority,
+          shape_family_authority,
+          human_qa_status,
+          provenance
+        FROM electronic_chart1_entry
+/* electronic_chart1_entry_v1(s52_lookup_id,row_key,chart1_row_id,row_taxonomy,taxonomy_reason,evidence_status,render_eligibility,reason_codes,s57_object_class,s57_attribute_tuple,s52_instruction,s52_instruction_evidence,s101_evidence,helm_art_path,helm_art_status,colour_authority,shape_family_authority,human_qa_status,provenance) */;
 CREATE INDEX s52_semantic_tuple_lookup_idx ON s52_semantic_tuple (s52_lookup_id);
 CREATE INDEX s52_semantic_tuple_object_idx ON s52_semantic_tuple (object_class);
 CREATE INDEX s52_semantic_tuple_category_idx ON s52_semantic_tuple (category);
@@ -288,47 +397,6 @@ CREATE INDEX iconforge_lookup_link_lookup_idx ON iconforge_s52_lookup_link (s52_
 CREATE INDEX runtime_symbol_gate_lookup_idx ON runtime_symbol_gate (s52_lookup_id);
 CREATE INDEX runtime_symbol_gate_name_status_idx ON runtime_symbol_gate (gate_name, gate_status);
 CREATE INDEX runtime_symbol_candidate_status_idx ON runtime_symbol_candidate (candidate_status);
-CREATE TABLE iconforge_s101_topmark_mapping_row (
-          s52_lookup_id integer primary key references runtime_symbol_candidate(s52_lookup_id) on delete cascade,
-          row_key text not null,
-          asset text,
-          object_class text not null,
-          source_topmark_shape_code integer,
-          source_topmark_shape_label text,
-          source_topmark_normalized_name text,
-          topmark_context text not null check (topmark_context in ('rigid', 'floating', 'context_required')),
-          context_basis text not null,
-          s101_symbol_id text,
-          s101_symbol_file text,
-          s101_local_reference_path text,
-          s101_rule_file text not null,
-          s101_rule_context text,
-          shape_safe integer not null check (shape_safe in (0, 1)),
-          map_status text not null,
-          semantic_json text not null check (json_valid(semantic_json)),
-          s101_attributes_json text not null check (json_valid(s101_attributes_json)),
-          evidence_json text not null check (json_valid(evidence_json)),
-          source_boundary text not null default 'reference_only_not_bundled',
-          created_at text not null default current_timestamp
-        );
-CREATE INDEX idx_iconforge_s101_topmark_mapping_asset
-          on iconforge_s101_topmark_mapping_row(asset);
-CREATE TABLE iconforge_s101_topmark_asset_map (
-          asset text primary key,
-          asset_status text not null,
-          preferred_s52_lookup_id integer references runtime_symbol_candidate(s52_lookup_id) on delete set null,
-          source_topmark_shape_code integer,
-          source_topmark_shape_label text,
-          topmark_context text,
-          context_basis text,
-          s101_symbol_id text,
-          s101_symbol_file text,
-          s101_local_reference_path text,
-          shape_safe integer not null check (shape_safe in (0, 1)),
-          row_count integer not null,
-          safe_row_count integer not null,
-          context_required_count integer not null,
-          evidence_json text not null check (json_valid(evidence_json)),
-          source_boundary text not null default 'reference_only_not_bundled',
-          created_at text not null default current_timestamp
-        );
+CREATE INDEX electronic_chart1_entry_taxonomy_idx ON electronic_chart1_entry (row_taxonomy);
+CREATE INDEX electronic_chart1_entry_status_idx ON electronic_chart1_entry (evidence_status);
+CREATE INDEX electronic_chart1_entry_object_idx ON electronic_chart1_entry (s57_object_class);
