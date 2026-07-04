@@ -6,6 +6,7 @@
 #include <fstream>
 #include <map>
 #include <sstream>
+#include <utility>
 
 namespace helm {
 namespace symbols {
@@ -376,6 +377,77 @@ bool ProofIndex(const Json &manifest,
   return true;
 }
 
+struct ProofIndexes {
+  std::map<std::string, const Json *> by_symbol_id;
+  std::map<std::string, const Json *> by_row_key;
+  Json public_proof_data;
+};
+
+std::string DirName(const std::string &path) {
+  const std::string::size_type slash = path.find_last_of('/');
+  return slash == std::string::npos ? "." : path.substr(0, slash);
+}
+
+std::string JoinPath(const std::string &base, const std::string &path) {
+  if (path.empty()) return base;
+  if (!path.empty() && path[0] == '/') return path;
+  if (base.empty() || base == ".") return path;
+  return base + "/" + path;
+}
+
+bool BuildLegacyProofIndexes(const Json &manifest,
+                             ProofIndexes *indexes,
+                             std::string *error) {
+  return ProofIndex(manifest, &indexes->by_symbol_id, error);
+}
+
+bool BuildPublicProofIndexes(const Json &manifest,
+                             const std::string &manifest_path,
+                             ProofIndexes *indexes,
+                             std::string *error) {
+  const Json *proof_bundle = nullptr;
+  if (!RequireObject(manifest, "proof_bundle", &proof_bundle, error)) return false;
+  const std::string relative_path = StringValue(Get(*proof_bundle, "path"));
+  if (relative_path.empty()) {
+    if (error) *error = "public proof manifest missing proof_bundle.path";
+    return false;
+  }
+  const std::string manifest_dir = DirName(manifest_path);
+  const std::string proof_path = JoinPath(manifest_dir, relative_path);
+  std::string load_error;
+  if (!LoadJson(proof_path, &indexes->public_proof_data, &load_error)) {
+    const std::string package_root_path = JoinPath(DirName(manifest_dir), relative_path);
+    if (!LoadJson(package_root_path, &indexes->public_proof_data, error)) {
+      if (error) *error = load_error + "; " + *error;
+      return false;
+    }
+  }
+  const Json *schema = Get(indexes->public_proof_data, "schema");
+  if (!schema || schema->type != Json::STRING ||
+      schema->string != "helm.forge.public_cleanroom_symbol_proof_data.v1") {
+    if (error) {
+      *error = "unsupported public proof data schema: " +
+               (schema && schema->type == Json::STRING ? schema->string : "");
+    }
+    return false;
+  }
+  const Json *rows = nullptr;
+  if (!RequireArray(indexes->public_proof_data, "rows", &rows, error)) return false;
+  for (const Json &row : rows->array) {
+    if (row.type != Json::OBJECT) {
+      if (error) *error = "public proof rows must be objects";
+      return false;
+    }
+    const std::string row_key = StringValue(Get(row, "row_key"));
+    const std::string symbol_id = StringValue(Get(row, "symbol_id"));
+    if (!row_key.empty()) indexes->by_row_key[row_key] = &row;
+    if (!symbol_id.empty() && indexes->by_symbol_id.find(symbol_id) == indexes->by_symbol_id.end()) {
+      indexes->by_symbol_id[symbol_id] = &row;
+    }
+  }
+  return true;
+}
+
 SourceEvidence ParseSourceEvidence(const Json &item) {
   SourceEvidence out;
   out.reason_code = StringValue(Get(item, "reason_code"));
@@ -400,6 +472,55 @@ const Json *ObjectChild(const Json *object, const std::string &key) {
 void ApplyProofMetadata(const Json *proof, SymbolRecord *record) {
   if (!proof) return;
   record->proof_manifest_present = true;
+
+  const Json *public_runtime = Get(*proof, "runtime");
+  const Json *public_gates = Get(*proof, "gates");
+  const Json *public_standards = Get(*proof, "standards");
+  if (public_runtime || public_gates || public_standards) {
+    const Json *standards_s57 = ObjectChild(public_standards, "s57");
+    const Json *attribute_tuple = ObjectChild(standards_s57, "attribute_tuple");
+    const Json *standards_s101 = ObjectChild(public_standards, "s101_trace");
+    const Json *display = Get(*proof, "display");
+    const Json *gates_runtime = ObjectChild(public_gates, "runtime");
+    const Json *gates_proof = ObjectChild(public_gates, "proof");
+    const Json *clean_room = Get(*proof, "clean_room_boundary");
+
+    record->kind = StringValue(ObjectChild(attribute_tuple, "s52_asset_kind"),
+                               StringValue(Get(*proof, "row_taxonomy")));
+    record->name = StringValue(ObjectChild(display, "title"),
+                               record->symbol_id);
+    record->family = StringValue(Get(*proof, "section"));
+    record->package_status = StringValue(ObjectChild(public_gates, "human_review_status"));
+    record->proof_final_approved =
+        StringValue(ObjectChild(gates_proof, "gate")) == "green" &&
+        record->package_status != "needs_human_review";
+    record->chartplotter_runtime_eligible =
+        BoolValue(ObjectChild(public_runtime, "eligible")) ||
+        BoolValue(ObjectChild(gates_runtime, "runtime_eligible"));
+
+    const std::string classification = StringValue(ObjectChild(standards_s101, "classification"));
+    const std::string row_taxonomy = StringValue(Get(*proof, "row_taxonomy"));
+    if (row_taxonomy == "runtime_overlay" ||
+        classification == "non_s101_runtime_construct") {
+      record->runtime_scope = "renderer_overlay_or_ui";
+    } else if (classification == "non_s101_or_extension_profile") {
+      record->runtime_scope = "extension_profile_or_manual_mapping";
+    } else {
+      record->runtime_scope = "chart_portrayal";
+    }
+
+    record->clean_room_generated =
+        StringValue(ObjectChild(clean_room, "helm_outputs_role")) ==
+        "generated_owned_candidate";
+    record->comparison_refs_only =
+        StringValue(ObjectChild(clean_room, "opencpn_role")) ==
+        "comparison_target_only";
+    record->third_party_artwork_not_source =
+        StringValue(ObjectChild(clean_room, "s101_role")) ==
+        "standards_vocabulary_and_rule_trace_only";
+    return;
+  }
+
   record->kind = StringValue(Get(*proof, "kind"));
   record->name = StringValue(Get(*proof, "name"));
   record->family = StringValue(Get(*proof, "family"));
@@ -550,7 +671,11 @@ bool LoadSymbolPackage(const std::string &runtime_evidence_snapshot_path,
     if (error) *error = "runtime evidence snapshot is not ready: " + package->snapshot_status;
     return false;
   }
-  if (package->manifest_schema != "helm.symbol.cleanroom-package.v1") {
+  const bool legacy_manifest =
+      package->manifest_schema == "helm.symbol.cleanroom-package.v1";
+  const bool public_manifest =
+      package->manifest_schema == "helm.forge.public_cleanroom_symbol_package.v1";
+  if (!legacy_manifest && !public_manifest) {
     if (error) *error = "unsupported proof manifest schema: " + package->manifest_schema;
     return false;
   }
@@ -576,8 +701,12 @@ bool LoadSymbolPackage(const std::string &runtime_evidence_snapshot_path,
 
   const Json *rows = nullptr;
   if (!RequireArray(snapshot, "rows", &rows, error)) return false;
-  std::map<std::string, const Json *> proof;
-  if (!ProofIndex(manifest, &proof, error)) return false;
+  ProofIndexes proof;
+  if (legacy_manifest) {
+    if (!BuildLegacyProofIndexes(manifest, &proof, error)) return false;
+  } else if (!BuildPublicProofIndexes(manifest, proof_manifest_path, &proof, error)) {
+    return false;
+  }
   package->records.reserve(rows->array.size());
   for (const Json &row : rows->array) {
     if (row.type != Json::OBJECT) {
@@ -586,8 +715,18 @@ bool LoadSymbolPackage(const std::string &runtime_evidence_snapshot_path,
     }
     SymbolRecord record;
     const std::string symbol_id = StringValue(Get(row, "symbol_id"));
-    std::map<std::string, const Json *>::const_iterator found = proof.find(symbol_id);
-    if (!ParseSnapshotRow(row, found == proof.end() ? nullptr : found->second,
+    const std::string row_key = StringValue(Get(row, "row_key"));
+    const Json *proof_row = nullptr;
+    std::map<std::string, const Json *>::const_iterator by_row =
+        proof.by_row_key.find(row_key);
+    if (by_row != proof.by_row_key.end()) {
+      proof_row = by_row->second;
+    } else {
+      std::map<std::string, const Json *>::const_iterator by_symbol =
+          proof.by_symbol_id.find(symbol_id);
+      if (by_symbol != proof.by_symbol_id.end()) proof_row = by_symbol->second;
+    }
+    if (!ParseSnapshotRow(row, proof_row,
                           &record, error)) {
       return false;
     }

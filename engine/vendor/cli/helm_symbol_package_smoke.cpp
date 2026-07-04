@@ -62,7 +62,8 @@ int main(int argc, char **argv) {
         error);
   Check(package.snapshot_schema == "helm.iconforge.runtime_evidence_snapshot.v1",
         "snapshot schema not preserved");
-  Check(package.manifest_schema == "helm.symbol.cleanroom-package.v1",
+  Check(package.manifest_schema == "helm.symbol.cleanroom-package.v1" ||
+            package.manifest_schema == "helm.forge.public_cleanroom_symbol_package.v1",
         "proof manifest schema not preserved");
   Check(package.records.size() == 3057, "expected 3057 runtime evidence rows");
   Check(package.default_render_records.empty(),
@@ -81,7 +82,7 @@ int main(int argc, char **argv) {
         "BOYPIL60 must not be runtime-approved before gates pass");
   Check(boypil60->proof_manifest_present,
         "BOYPIL60 proof manifest metadata missing");
-  Check(boypil60->package_status == "needs_review",
+  Check(boypil60->package_status == "needs_human_review",
         "BOYPIL60 package review status not preserved");
   Check(!boypil60->proof_final_approved,
         "BOYPIL60 final approval should remain false");
@@ -134,14 +135,14 @@ int main(int argc, char **argv) {
   const helm::symbols::SymbolRecord *rdocal02 =
       helm::symbols::FindSymbol(package, "rdocal02", true);
   Check(rdocal02 != nullptr, "missing rdocal02 diagnostic record");
-  Check(!rdocal02->proof_manifest_present,
-        "rdocal02 should expose missing proof manifest provenance");
+  Check(rdocal02->proof_manifest_present,
+        "rdocal02 should resolve through public proof row provenance");
   Check(!rdocal02->runtime_eligible_default,
-        "rdocal02 must not enter default render path without proof metadata");
-  Check(HasApprovalBlockReason(*rdocal02, "proof_manifest_missing"),
-        "rdocal02 missing-proof block reason absent");
-  Check(HasApprovalBlockReason(*rdocal02, "runtime_scope_missing"),
-        "rdocal02 missing-scope block reason absent");
+        "rdocal02 must not enter default render path while runtime gate is fail-closed");
+  Check(HasApprovalBlockReason(*rdocal02, "package_status_not_accepted"),
+        "rdocal02 package-status block reason absent");
+  Check(HasApprovalBlockReason(*rdocal02, "final_approved_false"),
+        "rdocal02 final-approval block reason absent");
 
   Check(helm::symbols::FindSymbol(package, "BOYPIL60", false) == nullptr,
         "diagnostic-only BOYPIL60 leaked into default lookup");

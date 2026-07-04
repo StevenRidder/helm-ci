@@ -52,6 +52,41 @@ RenderTarget
 required to interpret render commands. A command stream generated for a given
 view and display state should replay the same semantics for either adapter.
 
+## Shared Symbol Render Handoff
+
+`ADAPTER-1` fixes the first concrete handoff for clean-room symbols before a
+host adapter asks the backend for pixels. The C++ contract lives in
+`engine/vendor/cli/helm_symbol_render_handoff.*` and consumes the same
+`helm_symbol_package` runtime evidence loader used by CHART/FORGE gates.
+
+Both OpenCPN-native and Helm/offscreen callers submit a
+`SymbolRenderRequest` with:
+
+- input files: runtime evidence snapshot, proof manifest, optional
+  symbol-selection fixture manifest, and optional atlas manifest;
+- handoff schema version `helm.symbol.render_handoff.v1`;
+- adapter kind, palette, symbol id, and explicit runtime scope;
+- S-57 object class, geometry, source feature id, and source attributes;
+- S-101 feature type, portrayal rule file, mapping type, and crosswalk class.
+
+The resolver returns one `SymbolRenderHandoff`:
+
+- resolver status: `resolved`, `diagnostic_only`, `blocked`, or `missing`;
+- the selected package row key and Helm catalog id;
+- runtime flags: DB eligibility, final runtime approval, default chart
+  eligibility, fail-closed state, and block reasons;
+- palette-specific output handles for the backend resource id, texture, SVG,
+  and atlas entry;
+- a diagnostic trace from input files and object attributes through the selected
+  resolver row to the emitted artifact handles.
+
+Adapter kind is deliberately excluded from `SymbolRenderHandoffSemanticKey`.
+The OpenCPN and Helm/offscreen adapters may differ in target creation, readback,
+cache policy, and present timing, but the selected symbol row and output handles
+must be identical for the same source object, palette, and display state.
+Conflicting request evidence blocks the handoff instead of silently choosing an
+optimistic symbol.
+
 ## OpenCPN Adapter
 
 OpenCPN owns the interactive adapter around the shared renderer:
