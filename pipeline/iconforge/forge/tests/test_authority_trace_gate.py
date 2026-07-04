@@ -44,6 +44,7 @@ def _exercise_feature_catalogue_present() -> None:
         payload = authority_trace_gate.build(
             s101_roots=[root],
             feature_catalogue_path=feature_catalogue,
+            write_reports=False,
         )
         source = payload["source"]["s101_feature_catalogue"]
         assert source["status"] == "present"
@@ -54,7 +55,7 @@ def _exercise_feature_catalogue_present() -> None:
         assert "LateralBuoy" in source["feature_types"]
 
         boylat25 = _by_symbol(payload["rows"])["BOYLAT25"][0]
-        assert boylat25["s101_mapping"]["rule_file_local_path"] == str(root / "PortrayalCatalog" / "Rules" / "LateralBuoy.lua")
+        assert boylat25["s101_mapping"]["rule_file_local_path"] == "PortrayalCatalog/Rules/LateralBuoy.lua"
         assert boylat25["s101_mapping"]["rule_file_sha256"]
         assert boylat25["s101_mapping"]["feature_catalogue_sha256"] == source["sha256"]
         assert boylat25["s101_mapping"]["feature_catalogue_parse_status"] == "parsed"
@@ -82,18 +83,19 @@ def _exercise_feature_catalogue_malformed() -> None:
         payload = authority_trace_gate.build(
             s101_roots=[root],
             feature_catalogue_path=feature_catalogue,
+            write_reports=False,
         )
         source = payload["source"]["s101_feature_catalogue"]
         assert source["status"] == "present"
         assert source["parse_status"] == "malformed_xml"
         assert source["sha256"]
 
-        boylat25 = _by_symbol(payload["rows"])["BOYLAT25"][0]
-        assert "authority_trace:s101_feature_catalogue_unparsed" in boylat25["reason_codes"]
-        assert "authority_trace:s101_feature_catalogue_missing" not in boylat25["reason_codes"]
+        boylat13 = _by_symbol(payload["rows"])["BOYLAT13"][0]
+        assert "authority_trace:s101_feature_catalogue_unparsed" in boylat13["reason_codes"]
+        assert "authority_trace:s101_feature_catalogue_missing" not in boylat13["reason_codes"]
         assert any(
             item["blocker_category"] == "malformed_authority_source"
-            for item in boylat25["gap_classifications"]
+            for item in boylat13["gap_classifications"]
         )
 
 
@@ -101,7 +103,7 @@ def main() -> None:
     _exercise_feature_catalogue_present()
     _exercise_feature_catalogue_malformed()
 
-    payload = authority_trace_gate.build()
+    payload = authority_trace_gate.build(write_reports=False)
     assert payload["schema"] == "helm.iconforge.authority_trace_gate.v1"
     assert payload["status"] == "authority_trace_gate_complete"
     assert payload["summary"]["s52_lookup_rows"] == 3057
@@ -117,13 +119,21 @@ def main() -> None:
     reasons = payload["summary"]["reason_counts"]
     assert reasons["authority_trace:runtime_candidate_not_eligible"] == 3057
     assert reasons["authority_trace:s101_feature_catalogue_missing"] > 0
-    assert "authority_trace:s101_rule_file_not_hashed" not in reasons
+    assert reasons["authority_trace:s101_rule_file_not_hashed"] == 1490
     assert "authority_trace:unknown_dictionary_code:COLPAT" not in reasons
-    assert payload["source"]["s57_dictionary_decode"]["attdecode_sha256"]
-    assert payload["source"]["s57_dictionary_decode"]["attdecode_colpat_values"]["5"] == "stripes (direction unknown)"
-    assert payload["source"]["s57_dictionary_decode"]["attdecode_colpat_values"]["6"] == "border stripe"
+    assert payload["source"]["s57_dictionary_decode"]["attdecode_path"] == ""
+    assert payload["source"]["s57_dictionary_decode"]["attdecode_sha256"] is None
+    assert payload["source"]["s57_dictionary_decode"]["attdecode_colpat_values"] == {}
+    assert "/private/tmp/" not in json.dumps(payload["source"], sort_keys=True)
+    assert "/Users/" not in json.dumps(payload["source"], sort_keys=True)
+    assert payload["source"]["db"]["path"] == "artifacts/opencpn_s52_portrayal.sqlite"
+    assert payload["source"]["sidecars"]["recipe_contract"]["path"] == "pipeline/iconforge/catalog/helm_symbol_recipe_contract.json"
     categories = payload["summary"]["blocker_category_counts"]
     assert categories["runtime_eligibility_blocker"] == 3057
+    assert categories["s101_rule_file_missing"] == (
+        reasons["authority_trace:s101_rule_file_missing"]
+        + reasons["authority_trace:s101_rule_file_not_hashed"]
+    )
     assert categories["s101_feature_catalogue_source_missing"] == reasons["authority_trace:s101_feature_catalogue_missing"]
     assert categories["visual_human_approval_blocker"] == reasons["authority_trace:runtime_gate_visual_approval_pending"]
     assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == payload["summary"]["authority_trace_gap_rows"]
@@ -144,7 +154,7 @@ def main() -> None:
     )
     assert colour_decode["decoded_value"] == ["green", "red", "green"]
     assert colour_fixture["s57_dictionary_decode"]["decoded_colours"] == ["green", "red", "green"]
-    assert "hashed_attdecode.COLPAT" in colour_fixture["s57_dictionary_decode"]["source"]
+    assert "hashed_attdecode.COLPAT" not in colour_fixture["s57_dictionary_decode"]["source"]
 
     colpat6 = next(
         item
@@ -153,7 +163,7 @@ def main() -> None:
         if item["attribute"] == "COLPAT" and item["raw"] == "COLPAT6"
     )
     assert colpat6["decoded_value"] == "border stripe"
-    assert colpat6["dictionary"] == "S57_PATTERNS+attdecode.COLPAT"
+    assert colpat6["dictionary"] == "S57_PATTERNS"
 
     colpat12 = next(
         item
@@ -161,7 +171,10 @@ def main() -> None:
         for item in row["s57_feature"]["decoded_attribute_predicates"]
         if item["attribute"] == "COLPAT" and item["raw"] == "COLPAT1,2"
     )
-    assert colpat12["decoded_value"] == ["horizontal stripes", "vertical stripes"]
+    assert colpat12["decoded_value"] == [
+        "horizontal bands/stripes in the listed colour order",
+        "vertical bands/stripes in the listed colour order",
+    ]
 
     boylat25 = rows_by_symbol["BOYLAT25"][0]
     assert boylat25["s52_lookup"]["instruction"].startswith("SY(BOYLAT25)")
@@ -206,6 +219,8 @@ def main() -> None:
 
     saved = json.loads((ROOT / "catalog" / "authority_trace_gate.json").read_text())
     assert saved["summary"]["authority_trace_rows"] == 3057
+    assert "/private/tmp/" not in json.dumps(saved["source"], sort_keys=True)
+    assert "/Users/" not in json.dumps(saved["source"], sort_keys=True)
     assert (ROOT / "catalog" / "authority_trace_gate.md").exists()
 
     print("authority trace gate: OK")

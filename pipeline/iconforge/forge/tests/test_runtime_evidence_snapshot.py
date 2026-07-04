@@ -27,11 +27,12 @@ def main() -> None:
     assert payload["summary"]["matches_runtime_promotion_gate"] is True
     assert payload["summary"]["mismatch_rows"] == []
     assert payload["summary"]["warning_only_rows"] == 0
-    assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == 17326
+    assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == 18816
     assert payload["summary"]["blocker_category_counts"]["runtime_eligibility_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["visual_human_approval_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["s101_feature_catalogue_source_missing"] == 2043
     assert "/private/tmp/" not in json.dumps(payload["source"], sort_keys=True)
+    assert "/Users/" not in json.dumps(payload["source"], sort_keys=True)
     assert payload["source"]["review"]["db"] == "artifacts/opencpn_s52_portrayal.sqlite"
 
     rows = {row["symbol_id"]: row for row in payload["rows"]}
@@ -43,12 +44,19 @@ def main() -> None:
     assert boylat25["review_gates"]["visual_human_approval_blocked"] is True
     assert boylat25["blocker_categories"]["runtime_eligibility_blocker"] == 1
     assert "authority_trace:runtime_candidate_not_eligible" in boylat25["runtime_gate_reason_codes"]
+
+    boylat13 = rows["BOYLAT13"]
     assert any(
         item["blocker_category"] == "s101_feature_catalogue_source_missing"
         and item["evidence"]["parse_status"] == "missing"
-        for item in boylat25["authority_source_evidence"]
+        for item in boylat13["authority_source_evidence"]
     )
-    assert any("S-101 FeatureCatalogue.xml" in hint for hint in boylat25["remediation_hints"])
+    assert any(
+        item["blocker_category"] == "s101_rule_file_missing"
+        and item["evidence"]["sha256"] is None
+        for item in boylat13["authority_source_evidence"]
+    )
+    assert any("S-101 FeatureCatalogue.xml" in hint for hint in boylat13["remediation_hints"])
 
     topmark = rows["TOPSHQ28"]
     assert topmark["runtime_state"] == "runtime_blocked"

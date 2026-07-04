@@ -39,6 +39,9 @@ def main() -> None:
         assert payload["policy"]["browser_business_logic_allowed"] is False
         assert payload["policy"]["static_json_fallback_allowed"] is False
         assert payload["policy"]["runtime_promotion_allowed"] is False
+        assert payload["source"]["recipe_contract"] == "pipeline/iconforge/catalog/helm_symbol_recipe_contract.json"
+        assert "/private/tmp/" not in json.dumps(payload["source"], sort_keys=True)
+        assert "/Users/" not in json.dumps(payload["source"], sort_keys=True)
 
         summary = payload["summary"]
         assert summary["fixture_rows"] == 2523

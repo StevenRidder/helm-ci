@@ -23,12 +23,12 @@ FORGE-37 downstream runtime-readiness snapshot generated from backend DB/proof d
 | `runtime_eligibility_blocker` | 3057 |
 | `visual_human_approval_blocker` | 3057 |
 | `s101_feature_catalogue_source_missing` | 2043 |
+| `s101_rule_file_missing` | 2043 |
 | `helm_interpretation_missing` | 1710 |
 | `helm_recipe_evidence_missing` | 1653 |
 | `s101_resolver_evidence_missing` | 1333 |
 | `runtime_gate_blocker` | 1155 |
 | `s57_semantic_evidence_missing` | 698 |
-| `s101_rule_file_missing` | 553 |
 | `non_s101_scope_boundary` | 515 |
 | `s101_feature_catalogue_binding_missing` | 453 |
 | `colour_authority_blocker` | 421 |

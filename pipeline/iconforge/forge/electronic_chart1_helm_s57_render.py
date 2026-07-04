@@ -24,6 +24,7 @@ from . import render, style_contract, symbol_recipe_contract
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 CATALOG = ROOT / "catalog"
 FIXTURES_JSON = CATALOG / "electronic_chart1_fixtures.json"
 RECIPE_JSON = CATALOG / "helm_symbol_recipe_contract.json"
@@ -60,6 +61,13 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _display_path(path: Path) -> str:
+    try:
+        return path.resolve().relative_to(REPO_ROOT.resolve()).as_posix()
+    except (OSError, ValueError):
+        return path.name
 
 
 def _safe(value: str) -> str:
@@ -491,7 +499,7 @@ def build_render(
             "fixture_rows": len(fixtures),
             "fixture_source_rows": fixture_payload["summary"]["source_rows"],
             "source_hard_pile_rows": len(inherited_hard_pile),
-            "recipe_contract": str(recipe_path),
+            "recipe_contract": _display_path(recipe_path),
             "recipe_contract_sha256": _sha256(recipe_path),
             "palette_contract": "forge.style_contract.OPENBRIDGE_NAV_PALETTES",
         },
