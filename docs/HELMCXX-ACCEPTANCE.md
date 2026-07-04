@@ -203,6 +203,12 @@ Playwright acceptance must include:
 - no provider fetches during offline-mode tests;
 - screenshots and artifacts retained for review.
 
+`scripts/helmcxx-cockpit-proof.sh` is the HELMC++-4 runner for this gate. It
+starts `helm-server`, `helm-packd`, `helm-basemap-cache`, and `helm-envd` on
+private ports, requires a real local ENC for visible chart-tile proof, drives
+`web/test/e2e/helmcxx4-cockpit.spec.js`, and writes screenshots plus JSON
+snapshots to `test-results/helmcxx4-cockpit/`.
+
 ## Better-than-reference evidence
 
 C++ is not accepted because it is C++. It must keep correctness and earn operational advantages.

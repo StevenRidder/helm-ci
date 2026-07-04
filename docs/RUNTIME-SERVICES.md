@@ -176,6 +176,12 @@ uncompressed `HELMGRID` chunks. Unsupported capabilities fail loud; they are not
 provider calls, PNG pyramids, gateway substitution, or viewport-triggered fetches. See
 [`WX-20-HELM-ENVD.md`](WX-20-HELM-ENVD.md).
 
+The user-visible HELMC++ cockpit gate is
+[`scripts/helmcxx-cockpit-proof.sh`](../scripts/helmcxx-cockpit-proof.sh). It
+uses private ports only, launches the C++ runtime services together, and runs
+Playwright against the real cockpit with local chart, pack, weather, health, and
+nav assertions.
+
 ## OpenCPN Alignment
 
 The OpenCPN public repo already has useful C++ seams:
@@ -207,6 +213,9 @@ The runtime-service policy is accepted only after the HELMC++ gate passes:
 - no required non-C++ daemon remains;
 - reference behavior has parity evidence before retirement;
 - `scripts/helmcxx-no-python-runtime.sh` passes on private ports with explicit C++ binary paths;
+- `scripts/helmcxx-cockpit-proof.sh` passes against `helm-server`, `helm-packd`,
+  `helm-basemap-cache`, and `helm-envd` on private ports with retained
+  screenshots/artifacts;
 - the cockpit passes a C++-only Playwright proof;
 - packaging works on fresh machines without Docker;
 - performance, reliability, soak, and maintainability evidence is recorded.

@@ -11,6 +11,7 @@ DerivedData/
 # Build artifacts
 build/
 dist/
+test-results/
 *.o
 *.a
 

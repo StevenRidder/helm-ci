@@ -10,7 +10,9 @@ on:
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
+      - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
+      - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   pull_request:
     paths:
@@ -21,7 +23,9 @@ on:
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
+      - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
+      - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   workflow_dispatch:
 
@@ -40,4 +44,6 @@ jobs:
       - name: Check HELMC++ no-Python harness syntax
         run: |
           bash -n scripts/helmcxx-no-python-runtime.sh
+          bash -n scripts/helmcxx-cockpit-proof.sh
           node --check scripts/helmcxx-make-envd-fixture.mjs
+          node --check web/test/e2e/helmcxx4-cockpit.spec.js
