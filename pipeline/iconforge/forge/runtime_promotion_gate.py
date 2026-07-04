@@ -56,6 +56,15 @@ def _reason_codes(row: dict[str, Any]) -> list[str]:
         reasons.append(f"helm_recipe:{row['helm']['recipe_status']}")
     if row["qa"]["missing_evidence"]:
         reasons.extend(f"missing:{reason}" for reason in row["qa"]["missing_evidence"])
+    style_contract = row["qa"].get("style_contract") or {}
+    style_gate = style_contract.get("gate_status")
+    if style_gate == "failed":
+        reasons.append("style_contract_failed")
+    elif style_gate == "pending":
+        reasons.append("style_contract_pending")
+    elif style_gate != "pass":
+        reasons.append("style_contract_missing")
+    reasons.extend(style_contract.get("reason_codes") or [])
     for gate in row["qa"]["gates"]:
         if gate["status"] in {"blocked", "pending", "warn"}:
             reasons.append(f"gate:{gate['name']}:{gate['status']}")
@@ -86,6 +95,7 @@ def _runtime_row(row: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
             "interpretation": row["helm"]["interpretation"],
             "canonical_svg": images.get("canonical_svg"),
             "palette_resolved_svg": images.get("palette_resolved_svg") or {},
+            "style_contract": row["qa"].get("style_contract") or {},
         },
         "approval": row["approval"]["state"],
         "provenance": {
@@ -136,7 +146,8 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
             "reason_counts": dict(sorted(reason_counts.items())),
             "promotion_rule": (
                 "Export only rows with DB runtime_eligible=true, no blocking/pending gates, "
-                "recipe_ready, helm_interpretation_ready, final human approval, and no missing evidence."
+                "recipe_ready, helm_interpretation_ready, style_contract pass, "
+                "final human approval, and no missing evidence."
             ),
         },
         "render_targets": [

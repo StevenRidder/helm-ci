@@ -29,10 +29,13 @@ def main() -> None:
         assert row["helm"]["recipe_status"]
         assert row["qa"]["gates"]
         assert row["qa"]["runtime_eligible"] is False
+        assert row["qa"]["style_contract"]["schema"] == "helm.iconforge.style_contract_gate.v1"
+        assert row["qa"]["style_contract"]["gate_status"] in {"pass", "pending", "failed"}
         assert row["approval"]["controls"]["save_signoff"] == "/api/save-signoff"
 
     assert rows["BOYPIL60"]["s101"]["feature_type"] == "LateralBuoy"
     assert rows["BOYPIL60"]["s101"]["attributes"]["colour"] == ["red"]
+    assert rows["BOYPIL60"]["qa"]["style_contract"]["status"] in {"style_pass", "style_review"}
     assert rows["TOPSHQ28"]["s101"]["feature_type"] == "Daymark"
     assert rows["TOPSHQ28"]["s101"]["attributes"]["topmarkDaymarkShape"] == "28"
     assert rows["ACHRES71"]["helm"]["recipe_status"] == "manual_exception_required"

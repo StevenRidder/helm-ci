@@ -21,6 +21,8 @@ def main() -> None:
     assert payload["summary"]["runtime_eligible_db_rows"] == 0
     assert payload["summary"]["runtime_portrayal_db_rows"] == 0
     assert "final_approved:false" in payload["summary"]["reason_counts"]
+    assert "style_contract_pending" in payload["summary"]["reason_counts"]
+    assert "style_contract_failed" in payload["summary"]["reason_counts"]
     assert any(reason.startswith("gate:visual_approval:pending") for reason in payload["summary"]["reason_counts"])
     assert not payload["rows"]
     assert payload["hard_pile"][0]["reason_codes"]

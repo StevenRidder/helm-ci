@@ -1,0 +1,603 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="688" height="3036" viewBox="0 0 688 3036" role="img">
+<title>Helm style contract satellite-background contact sheet</title>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#172033}.tiny{font-size:10px}.label{font-size:12px;font-weight:700}.status{font-size:10px}.tile{stroke:#d7dde8;stroke-width:1}.failed{fill:#b00020}.pending{fill:#975a16}.pass{fill:#176b38}</style>
+<rect width="100%" height="100%" fill="#f6f8fb"/>
+<text x="16" y="24" class="label">FORGE-32 style contract contact sheet</text>
+<text x="16" y="43" class="tiny">Current Helm resolved SVGs over representative satellite-like backgrounds. This is a gate witness, not visual approval.</text>
+<text x="128" y="59" class="tiny">open water</text>
+<text x="264" y="59" class="tiny">marina</text>
+<text x="400" y="59" class="tiny">green/park</text>
+<text x="536" y="59" class="tiny">roads/roofs</text>
+<text x="16" y="91" class="label">BOYCAN60</text>
+<text x="16" y="109" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="72" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 122 C150 107 178 140 240 106 L240 144 L128 144 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 90 H234 M150 77 V139 M202 75 V143" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCAN60.svg" x="162" y="76" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="72" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 122 C286 107 314 140 376 106 L376 144 L264 144 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 90 H370 M286 77 V139 M338 75 V143" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCAN60.svg" x="298" y="76" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="72" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 122 C422 107 450 140 512 106 L512 144 L400 144 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 90 H506 M422 77 V139 M474 75 V143" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCAN60.svg" x="434" y="76" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="72" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 122 C558 107 586 140 648 106 L648 144 L536 144 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 90 H642 M558 77 V139 M610 75 V143" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCAN60.svg" x="570" y="76" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="183" class="label">BOYCON68</text>
+<text x="16" y="201" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="164" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 214 C150 199 178 232 240 198 L240 236 L128 236 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 182 H234 M150 169 V231 M202 167 V235" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCON68.svg" x="162" y="168" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="164" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 214 C286 199 314 232 376 198 L376 236 L264 236 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 182 H370 M286 169 V231 M338 167 V235" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCON68.svg" x="298" y="168" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="164" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 214 C422 199 450 232 512 198 L512 236 L400 236 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 182 H506 M422 169 V231 M474 167 V235" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCON68.svg" x="434" y="168" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="164" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 214 C558 199 586 232 648 198 L648 236 L536 236 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 182 H642 M558 169 V231 M610 167 V235" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYCON68.svg" x="570" y="168" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="275" class="label">BOYBAR01</text>
+<text x="16" y="293" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="256" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 306 C150 291 178 324 240 290 L240 328 L128 328 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 274 H234 M150 261 V323 M202 259 V327" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYBAR01.svg" x="162" y="260" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="256" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 306 C286 291 314 324 376 290 L376 328 L264 328 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 274 H370 M286 261 V323 M338 259 V327" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYBAR01.svg" x="298" y="260" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="256" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 306 C422 291 450 324 512 290 L512 328 L400 328 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 274 H506 M422 261 V323 M474 259 V327" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYBAR01.svg" x="434" y="260" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="256" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 306 C558 291 586 324 648 290 L648 328 L536 328 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 274 H642 M558 261 V323 M610 259 V327" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYBAR01.svg" x="570" y="260" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="367" class="label">BOYSPH68</text>
+<text x="16" y="385" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="348" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 398 C150 383 178 416 240 382 L240 420 L128 420 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 366 H234 M150 353 V415 M202 351 V419" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPH68.svg" x="162" y="352" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="348" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 398 C286 383 314 416 376 382 L376 420 L264 420 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 366 H370 M286 353 V415 M338 351 V419" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPH68.svg" x="298" y="352" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="348" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 398 C422 383 450 416 512 382 L512 420 L400 420 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 366 H506 M422 353 V415 M474 351 V419" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPH68.svg" x="434" y="352" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="348" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 398 C558 383 586 416 648 382 L648 420 L536 420 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 366 H642 M558 353 V415 M610 351 V419" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPH68.svg" x="570" y="352" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="459" class="label">BOYSPR68</text>
+<text x="16" y="477" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="440" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 490 C150 475 178 508 240 474 L240 512 L128 512 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 458 H234 M150 445 V507 M202 443 V511" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR68.svg" x="162" y="444" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="440" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 490 C286 475 314 508 376 474 L376 512 L264 512 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 458 H370 M286 445 V507 M338 443 V511" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR68.svg" x="298" y="444" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="440" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 490 C422 475 450 508 512 474 L512 512 L400 512 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 458 H506 M422 445 V507 M474 443 V511" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR68.svg" x="434" y="444" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="440" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 490 C558 475 586 508 648 474 L648 512 L536 512 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 458 H642 M558 445 V507 M610 443 V511" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR68.svg" x="570" y="444" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="551" class="label">BOYPIL60</text>
+<text x="16" y="569" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="532" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 582 C150 567 178 600 240 566 L240 604 L128 604 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 550 H234 M150 537 V599 M202 535 V603" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL60.svg" x="162" y="536" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="532" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 582 C286 567 314 600 376 566 L376 604 L264 604 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 550 H370 M286 537 V599 M338 535 V603" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL60.svg" x="298" y="536" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="532" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 582 C422 567 450 600 512 566 L512 604 L400 604 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 550 H506 M422 537 V599 M474 535 V603" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL60.svg" x="434" y="536" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="532" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 582 C558 567 586 600 648 566 L648 604 L536 604 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 550 H642 M558 537 V599 M610 535 V603" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL60.svg" x="570" y="536" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="643" class="label">BCNGEN68</text>
+<text x="16" y="661" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="624" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 674 C150 659 178 692 240 658 L240 696 L128 696 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 642 H234 M150 629 V691 M202 627 V695" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN68.svg" x="162" y="628" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="624" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 674 C286 659 314 692 376 658 L376 696 L264 696 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 642 H370 M286 629 V691 M338 627 V695" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN68.svg" x="298" y="628" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="624" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 674 C422 659 450 692 512 658 L512 696 L400 696 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 642 H506 M422 629 V691 M474 627 V695" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN68.svg" x="434" y="628" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="624" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 674 C558 659 586 692 648 658 L648 696 L536 696 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 642 H642 M558 629 V691 M610 627 V695" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN68.svg" x="570" y="628" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="735" class="label">BCNLAT15</text>
+<text x="16" y="753" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="716" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 766 C150 751 178 784 240 750 L240 788 L128 788 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 734 H234 M150 721 V783 M202 719 V787" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLAT15.svg" x="162" y="720" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="716" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 766 C286 751 314 784 376 750 L376 788 L264 788 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 734 H370 M286 721 V783 M338 719 V787" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLAT15.svg" x="298" y="720" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="716" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 766 C422 751 450 784 512 750 L512 788 L400 788 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 734 H506 M422 721 V783 M474 719 V787" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLAT15.svg" x="434" y="720" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="716" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 766 C558 751 586 784 648 750 L648 788 L536 788 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 734 H642 M558 721 V783 M610 719 V787" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLAT15.svg" x="570" y="720" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="827" class="label">BCNSTK02</text>
+<text x="16" y="845" class="status pending">style_review</text>
+<text x="16" y="862" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="808" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 858 C150 843 178 876 240 842 L240 880 L128 880 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 826 H234 M150 813 V875 M202 811 V879" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNSTK02.svg" x="162" y="812" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="808" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 858 C286 843 314 876 376 842 L376 880 L264 880 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 826 H370 M286 813 V875 M338 811 V879" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNSTK02.svg" x="298" y="812" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="808" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 858 C422 843 450 876 512 842 L512 880 L400 880 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 826 H506 M422 813 V875 M474 811 V879" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNSTK02.svg" x="434" y="812" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="808" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 858 C558 843 586 876 648 842 L648 880 L536 880 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 826 H642 M558 813 V875 M610 811 V879" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNSTK02.svg" x="570" y="812" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="919" class="label">BCNTOW01</text>
+<text x="16" y="937" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="900" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 950 C150 935 178 968 240 934 L240 972 L128 972 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 918 H234 M150 905 V967 M202 903 V971" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNTOW01.svg" x="162" y="904" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="900" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 950 C286 935 314 968 376 934 L376 972 L264 972 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 918 H370 M286 905 V967 M338 903 V971" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNTOW01.svg" x="298" y="904" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="900" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 950 C422 935 450 968 512 934 L512 972 L400 972 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 918 H506 M422 905 V967 M474 903 V971" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNTOW01.svg" x="434" y="904" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="900" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 950 C558 935 586 968 648 934 L648 972 L536 972 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 918 H642 M558 905 V967 M610 903 V971" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNTOW01.svg" x="570" y="904" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1011" class="label">TOPSHP00</text>
+<text x="16" y="1029" class="status pending">style_review</text>
+<text x="16" y="1046" class="tiny">missing_round_linecap, missing_round_linejoin</text>
+<rect class="tile" x="128" y="992" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1042 C150 1027 178 1060 240 1026 L240 1064 L128 1064 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1010 H234 M150 997 V1059 M202 995 V1063" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPSHP00.svg" x="162" y="996" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="992" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1042 C286 1027 314 1060 376 1026 L376 1064 L264 1064 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1010 H370 M286 997 V1059 M338 995 V1063" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPSHP00.svg" x="298" y="996" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="992" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1042 C422 1027 450 1060 512 1026 L512 1064 L400 1064 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1010 H506 M422 997 V1059 M474 995 V1063" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPSHP00.svg" x="434" y="996" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="992" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1042 C558 1027 586 1060 648 1026 L648 1064 L536 1064 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1010 H642 M558 997 V1059 M610 995 V1063" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPSHP00.svg" x="570" y="996" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1103" class="label">TOPMAR87</text>
+<text x="16" y="1121" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="1084" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1134 C150 1119 178 1152 240 1118 L240 1156 L128 1156 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1102 H234 M150 1089 V1151 M202 1087 V1155" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPMAR87.svg" x="162" y="1088" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1084" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1134 C286 1119 314 1152 376 1118 L376 1156 L264 1156 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1102 H370 M286 1089 V1151 M338 1087 V1155" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPMAR87.svg" x="298" y="1088" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1084" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1134 C422 1119 450 1152 512 1118 L512 1156 L400 1156 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1102 H506 M422 1089 V1151 M474 1087 V1155" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPMAR87.svg" x="434" y="1088" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1084" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1134 C558 1119 586 1152 648 1118 L648 1156 L536 1156 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1102 H642 M558 1089 V1151 M610 1087 V1155" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/TOPMAR87.svg" x="570" y="1088" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1195" class="label">ACHRES71</text>
+<text x="16" y="1213" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="1176" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1226 C150 1211 178 1244 240 1210 L240 1248 L128 1248 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1194 H234 M150 1181 V1243 M202 1179 V1247" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHRES71.svg" x="162" y="1180" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1176" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1226 C286 1211 314 1244 376 1210 L376 1248 L264 1248 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1194 H370 M286 1181 V1243 M338 1179 V1247" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHRES71.svg" x="298" y="1180" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1176" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1226 C422 1211 450 1244 512 1210 L512 1248 L400 1248 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1194 H506 M422 1181 V1243 M474 1179 V1247" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHRES71.svg" x="434" y="1180" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1176" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1226 C558 1211 586 1244 648 1210 L648 1248 L536 1248 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1194 H642 M558 1181 V1243 M610 1179 V1247" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHRES71.svg" x="570" y="1180" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1287" class="label">ACHBRT07</text>
+<text x="16" y="1305" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="1268" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1318 C150 1303 178 1336 240 1302 L240 1340 L128 1340 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1286 H234 M150 1273 V1335 M202 1271 V1339" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHBRT07.svg" x="162" y="1272" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1268" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1318 C286 1303 314 1336 376 1302 L376 1340 L264 1340 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1286 H370 M286 1273 V1335 M338 1271 V1339" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHBRT07.svg" x="298" y="1272" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1268" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1318 C422 1303 450 1336 512 1302 L512 1340 L400 1340 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1286 H506 M422 1273 V1335 M474 1271 V1339" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHBRT07.svg" x="434" y="1272" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1268" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1318 C558 1303 586 1336 648 1302 L648 1340 L536 1340 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1286 H642 M558 1273 V1335 M610 1271 V1339" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/ACHBRT07.svg" x="570" y="1272" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1379" class="label">NMKINF24</text>
+<text x="16" y="1397" class="status pending">style_review</text>
+<text x="16" y="1414" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="1360" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1410 C150 1395 178 1428 240 1394 L240 1432 L128 1432 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1378 H234 M150 1365 V1427 M202 1363 V1431" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKINF24.svg" x="162" y="1364" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1360" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1410 C286 1395 314 1428 376 1394 L376 1432 L264 1432 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1378 H370 M286 1365 V1427 M338 1363 V1431" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKINF24.svg" x="298" y="1364" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1360" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1410 C422 1395 450 1428 512 1394 L512 1432 L400 1432 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1378 H506 M422 1365 V1427 M474 1363 V1431" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKINF24.svg" x="434" y="1364" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1360" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1410 C558 1395 586 1428 648 1394 L648 1432 L536 1432 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1378 H642 M558 1365 V1427 M610 1363 V1431" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKINF24.svg" x="570" y="1364" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1471" class="label">NMKREG20</text>
+<text x="16" y="1489" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="1452" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1502 C150 1487 178 1520 240 1486 L240 1524 L128 1524 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1470 H234 M150 1457 V1519 M202 1455 V1523" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKREG20.svg" x="162" y="1456" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1452" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1502 C286 1487 314 1520 376 1486 L376 1524 L264 1524 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1470 H370 M286 1457 V1519 M338 1455 V1523" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKREG20.svg" x="298" y="1456" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1452" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1502 C422 1487 450 1520 512 1486 L512 1524 L400 1524 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1470 H506 M422 1457 V1519 M474 1455 V1523" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKREG20.svg" x="434" y="1456" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1452" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1502 C558 1487 586 1520 648 1486 L648 1524 L536 1524 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1470 H642 M558 1457 V1519 M610 1455 V1523" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NMKREG20.svg" x="570" y="1456" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1563" class="label">AIRARE02</text>
+<text x="16" y="1581" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="1544" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1594 C150 1579 178 1612 240 1578 L240 1616 L128 1616 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1562 H234 M150 1549 V1611 M202 1547 V1615" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AIRARE02.svg" x="162" y="1548" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1544" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1594 C286 1579 314 1612 376 1578 L376 1616 L264 1616 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1562 H370 M286 1549 V1611 M338 1547 V1615" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AIRARE02.svg" x="298" y="1548" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1544" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1594 C422 1579 450 1612 512 1578 L512 1616 L400 1616 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1562 H506 M422 1549 V1611 M474 1547 V1615" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AIRARE02.svg" x="434" y="1548" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1544" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1594 C558 1579 586 1612 648 1578 L648 1616 L536 1616 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1562 H642 M558 1549 V1611 M610 1547 V1615" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AIRARE02.svg" x="570" y="1548" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1655" class="label">WRECKS01</text>
+<text x="16" y="1673" class="status pending">style_review</text>
+<text x="16" y="1690" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="1636" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1686 C150 1671 178 1704 240 1670 L240 1708 L128 1708 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1654 H234 M150 1641 V1703 M202 1639 V1707" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/WRECKS01.svg" x="162" y="1640" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1636" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1686 C286 1671 314 1704 376 1670 L376 1708 L264 1708 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1654 H370 M286 1641 V1703 M338 1639 V1707" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/WRECKS01.svg" x="298" y="1640" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1636" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1686 C422 1671 450 1704 512 1670 L512 1708 L400 1708 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1654 H506 M422 1641 V1703 M474 1639 V1707" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/WRECKS01.svg" x="434" y="1640" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1636" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1686 C558 1671 586 1704 648 1670 L648 1708 L536 1708 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1654 H642 M558 1641 V1703 M610 1639 V1707" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/WRECKS01.svg" x="570" y="1640" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1747" class="label">OBSTRN11</text>
+<text x="16" y="1765" class="status pending">style_review</text>
+<text x="16" y="1782" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="1728" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1778 C150 1763 178 1796 240 1762 L240 1800 L128 1800 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1746 H234 M150 1733 V1795 M202 1731 V1799" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/OBSTRN11.svg" x="162" y="1732" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1728" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1778 C286 1763 314 1796 376 1762 L376 1800 L264 1800 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1746 H370 M286 1733 V1795 M338 1731 V1799" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/OBSTRN11.svg" x="298" y="1732" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1728" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1778 C422 1763 450 1796 512 1762 L512 1800 L400 1800 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1746 H506 M422 1733 V1795 M474 1731 V1799" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/OBSTRN11.svg" x="434" y="1732" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1728" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1778 C558 1763 586 1796 648 1762 L648 1800 L536 1800 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1746 H642 M558 1733 V1795 M610 1731 V1799" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/OBSTRN11.svg" x="570" y="1732" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1839" class="label">UWTROC03</text>
+<text x="16" y="1857" class="status pending">style_review</text>
+<text x="16" y="1874" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="1820" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1870 C150 1855 178 1888 240 1854 L240 1892 L128 1892 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1838 H234 M150 1825 V1887 M202 1823 V1891" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/UWTROC03.svg" x="162" y="1824" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1820" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1870 C286 1855 314 1888 376 1854 L376 1892 L264 1892 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1838 H370 M286 1825 V1887 M338 1823 V1891" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/UWTROC03.svg" x="298" y="1824" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1820" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1870 C422 1855 450 1888 512 1854 L512 1892 L400 1892 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1838 H506 M422 1825 V1887 M474 1823 V1891" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/UWTROC03.svg" x="434" y="1824" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1820" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1870 C558 1855 586 1888 648 1854 L648 1892 L536 1892 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1838 H642 M558 1825 V1887 M610 1823 V1891" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/UWTROC03.svg" x="570" y="1824" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="1931" class="label">DANGER53</text>
+<text x="16" y="1949" class="status failed">style_blocked</text>
+<text x="16" y="1966" class="tiny">diamond_placeholder, generic_symbol</text>
+<rect class="tile" x="128" y="1912" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 1962 C150 1947 178 1980 240 1946 L240 1984 L128 1984 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 1930 H234 M150 1917 V1979 M202 1915 V1983" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DANGER53.svg" x="162" y="1916" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="1912" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 1962 C286 1947 314 1980 376 1946 L376 1984 L264 1984 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 1930 H370 M286 1917 V1979 M338 1915 V1983" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DANGER53.svg" x="298" y="1916" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="1912" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 1962 C422 1947 450 1980 512 1946 L512 1984 L400 1984 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 1930 H506 M422 1917 V1979 M474 1915 V1983" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DANGER53.svg" x="434" y="1916" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="1912" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 1962 C558 1947 586 1980 648 1946 L648 1984 L536 1984 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 1930 H642 M558 1917 V1979 M610 1915 V1983" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DANGER53.svg" x="570" y="1916" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2023" class="label">NEWOBJ01</text>
+<text x="16" y="2041" class="status failed">style_blocked</text>
+<text x="16" y="2058" class="tiny">diamond_placeholder, generic_symbol</text>
+<rect class="tile" x="128" y="2004" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2054 C150 2039 178 2072 240 2038 L240 2076 L128 2076 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2022 H234 M150 2009 V2071 M202 2007 V2075" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ01.svg" x="162" y="2008" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2004" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2054 C286 2039 314 2072 376 2038 L376 2076 L264 2076 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2022 H370 M286 2009 V2071 M338 2007 V2075" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ01.svg" x="298" y="2008" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2004" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2054 C422 2039 450 2072 512 2038 L512 2076 L400 2076 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2022 H506 M422 2009 V2071 M474 2007 V2075" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ01.svg" x="434" y="2008" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2004" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2054 C558 2039 586 2072 648 2038 L648 2076 L536 2076 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2022 H642 M558 2009 V2071 M610 2007 V2075" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ01.svg" x="570" y="2008" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2115" class="label">AISVES01</text>
+<text x="16" y="2133" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="2096" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2146 C150 2131 178 2164 240 2130 L240 2168 L128 2168 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2114 H234 M150 2101 V2163 M202 2099 V2167" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AISVES01.svg" x="162" y="2100" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2096" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2146 C286 2131 314 2164 376 2130 L376 2168 L264 2168 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2114 H370 M286 2101 V2163 M338 2099 V2167" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AISVES01.svg" x="298" y="2100" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2096" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2146 C422 2131 450 2164 512 2130 L512 2168 L400 2168 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2114 H506 M422 2101 V2163 M474 2099 V2167" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AISVES01.svg" x="434" y="2100" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2096" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2146 C558 2131 586 2164 648 2130 L648 2168 L536 2168 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2114 H642 M558 2101 V2163 M610 2099 V2167" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/AISVES01.svg" x="570" y="2100" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2207" class="label">MSTCON04</text>
+<text x="16" y="2225" class="status pass">style_pass</text>
+<rect class="tile" x="128" y="2188" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2238 C150 2223 178 2256 240 2222 L240 2260 L128 2260 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2206 H234 M150 2193 V2255 M202 2191 V2259" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/MSTCON04.svg" x="162" y="2192" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2188" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2238 C286 2223 314 2256 376 2222 L376 2260 L264 2260 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2206 H370 M286 2193 V2255 M338 2191 V2259" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/MSTCON04.svg" x="298" y="2192" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2188" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2238 C422 2223 450 2256 512 2222 L512 2260 L400 2260 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2206 H506 M422 2193 V2255 M474 2191 V2259" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/MSTCON04.svg" x="434" y="2192" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2188" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2238 C558 2223 586 2256 648 2222 L648 2260 L536 2260 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2206 H642 M558 2193 V2255 M610 2191 V2259" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/MSTCON04.svg" x="570" y="2192" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2299" class="label">DGPS01DRFSTA01</text>
+<text x="16" y="2317" class="status failed">style_blocked</text>
+<text x="16" y="2334" class="tiny">diamond_placeholder, generic_symbol</text>
+<rect class="tile" x="128" y="2280" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2330 C150 2315 178 2348 240 2314 L240 2352 L128 2352 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2298 H234 M150 2285 V2347 M202 2283 V2351" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DGPS01DRFSTA01.svg" x="162" y="2284" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2280" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2330 C286 2315 314 2348 376 2314 L376 2352 L264 2352 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2298 H370 M286 2285 V2347 M338 2283 V2351" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DGPS01DRFSTA01.svg" x="298" y="2284" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2280" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2330 C422 2315 450 2348 512 2314 L512 2352 L400 2352 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2298 H506 M422 2285 V2347 M474 2283 V2351" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DGPS01DRFSTA01.svg" x="434" y="2284" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2280" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2330 C558 2315 586 2348 648 2314 L648 2352 L536 2352 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2298 H642 M558 2285 V2347 M610 2283 V2351" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/DGPS01DRFSTA01.svg" x="570" y="2284" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2391" class="label">NEWOBJ 01</text>
+<text x="16" y="2409" class="status failed">style_blocked</text>
+<text x="16" y="2426" class="tiny">diamond_placeholder, generic_symbol</text>
+<rect class="tile" x="128" y="2372" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2422 C150 2407 178 2440 240 2406 L240 2444 L128 2444 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2390 H234 M150 2377 V2439 M202 2375 V2443" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ_01.svg" x="162" y="2376" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2372" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2422 C286 2407 314 2440 376 2406 L376 2444 L264 2444 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2390 H370 M286 2377 V2439 M338 2375 V2443" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ_01.svg" x="298" y="2376" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2372" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2422 C422 2407 450 2440 512 2406 L512 2444 L400 2444 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2390 H506 M422 2377 V2439 M474 2375 V2443" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ_01.svg" x="434" y="2376" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2372" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2422 C558 2407 586 2440 648 2406 L648 2444 L536 2444 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2390 H642 M558 2377 V2439 M610 2375 V2443" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/NEWOBJ_01.svg" x="570" y="2376" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2483" class="label">BCNGEN01</text>
+<text x="16" y="2501" class="status pending">style_review</text>
+<text x="16" y="2518" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="2464" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2514 C150 2499 178 2532 240 2498 L240 2536 L128 2536 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2482 H234 M150 2469 V2531 M202 2467 V2535" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN01.svg" x="162" y="2468" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2464" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2514 C286 2499 314 2532 376 2498 L376 2536 L264 2536 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2482 H370 M286 2469 V2531 M338 2467 V2535" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN01.svg" x="298" y="2468" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2464" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2514 C422 2499 450 2532 512 2498 L512 2536 L400 2536 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2482 H506 M422 2469 V2531 M474 2467 V2535" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN01.svg" x="434" y="2468" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2464" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2514 C558 2499 586 2532 648 2498 L648 2536 L536 2536 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2482 H642 M558 2469 V2531 M610 2467 V2535" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN01.svg" x="570" y="2468" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2575" class="label">BCNGEN03</text>
+<text x="16" y="2593" class="status pending">style_review</text>
+<text x="16" y="2610" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="2556" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2606 C150 2591 178 2624 240 2590 L240 2628 L128 2628 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2574 H234 M150 2561 V2623 M202 2559 V2627" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN03.svg" x="162" y="2560" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2556" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2606 C286 2591 314 2624 376 2590 L376 2628 L264 2628 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2574 H370 M286 2561 V2623 M338 2559 V2627" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN03.svg" x="298" y="2560" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2556" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2606 C422 2591 450 2624 512 2590 L512 2628 L400 2628 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2574 H506 M422 2561 V2623 M474 2559 V2627" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN03.svg" x="434" y="2560" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2556" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2606 C558 2591 586 2624 648 2590 L648 2628 L536 2628 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2574 H642 M558 2561 V2623 M610 2559 V2627" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNGEN03.svg" x="570" y="2560" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2667" class="label">BCNLTC01</text>
+<text x="16" y="2685" class="status pending">style_review</text>
+<text x="16" y="2702" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="2648" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2698 C150 2683 178 2716 240 2682 L240 2720 L128 2720 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2666 H234 M150 2653 V2715 M202 2651 V2719" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLTC01.svg" x="162" y="2652" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2648" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2698 C286 2683 314 2716 376 2682 L376 2720 L264 2720 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2666 H370 M286 2653 V2715 M338 2651 V2719" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLTC01.svg" x="298" y="2652" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2648" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2698 C422 2683 450 2716 512 2682 L512 2720 L400 2720 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2666 H506 M422 2653 V2715 M474 2651 V2719" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLTC01.svg" x="434" y="2652" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2648" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2698 C558 2683 586 2716 648 2682 L648 2720 L536 2720 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2666 H642 M558 2653 V2715 M610 2651 V2719" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BCNLTC01.svg" x="570" y="2652" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2759" class="label">BORDER01</text>
+<text x="16" y="2777" class="status pending">style_review</text>
+<text x="16" y="2794" class="tiny">oversized_stroke</text>
+<rect class="tile" x="128" y="2740" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2790 C150 2775 178 2808 240 2774 L240 2812 L128 2812 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2758 H234 M150 2745 V2807 M202 2743 V2811" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BORDER01.svg" x="162" y="2744" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2740" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2790 C286 2775 314 2808 376 2774 L376 2812 L264 2812 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2758 H370 M286 2745 V2807 M338 2743 V2811" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BORDER01.svg" x="298" y="2744" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2740" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2790 C422 2775 450 2808 512 2774 L512 2812 L400 2812 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2758 H506 M422 2745 V2807 M474 2743 V2811" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BORDER01.svg" x="434" y="2744" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2740" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2790 C558 2775 586 2808 648 2774 L648 2812 L536 2812 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2758 H642 M558 2745 V2807 M610 2743 V2811" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BORDER01.svg" x="570" y="2744" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2851" class="label">BOYPIL78</text>
+<text x="16" y="2869" class="status pending">style_review</text>
+<text x="16" y="2886" class="tiny">hairline_stroke</text>
+<rect class="tile" x="128" y="2832" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2882 C150 2867 178 2900 240 2866 L240 2904 L128 2904 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2850 H234 M150 2837 V2899 M202 2835 V2903" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL78.svg" x="162" y="2836" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2832" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2882 C286 2867 314 2900 376 2866 L376 2904 L264 2904 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2850 H370 M286 2837 V2899 M338 2835 V2903" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL78.svg" x="298" y="2836" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2832" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2882 C422 2867 450 2900 512 2866 L512 2904 L400 2904 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2850 H506 M422 2837 V2899 M474 2835 V2903" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL78.svg" x="434" y="2836" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2832" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2882 C558 2867 586 2900 648 2866 L648 2904 L536 2904 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2850 H642 M558 2837 V2899 M610 2835 V2903" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYPIL78.svg" x="570" y="2836" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<text x="16" y="2943" class="label">BOYSPR01</text>
+<text x="16" y="2961" class="status pending">style_review</text>
+<text x="16" y="2978" class="tiny">hairline_stroke</text>
+<rect class="tile" x="128" y="2924" width="112" height="72" rx="6" fill="#3f7591"/>
+<path d="M128 2974 C150 2959 178 2992 240 2958 L240 2996 L128 2996 Z" fill="#6ba6bd" opacity="0.78"/>
+<path d="M134 2942 H234 M150 2929 V2991 M202 2927 V2995" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR01.svg" x="162" y="2928" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="264" y="2924" width="112" height="72" rx="6" fill="#58747a"/>
+<path d="M264 2974 C286 2959 314 2992 376 2958 L376 2996 L264 2996 Z" fill="#c4c0a0" opacity="0.78"/>
+<path d="M270 2942 H370 M286 2929 V2991 M338 2927 V2995" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR01.svg" x="298" y="2928" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="400" y="2924" width="112" height="72" rx="6" fill="#577e4b"/>
+<path d="M400 2974 C422 2959 450 2992 512 2958 L512 2996 L400 2996 Z" fill="#8ca36f" opacity="0.78"/>
+<path d="M406 2942 H506 M422 2929 V2991 M474 2927 V2995" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR01.svg" x="434" y="2928" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+<rect class="tile" x="536" y="2924" width="112" height="72" rx="6" fill="#777b7f"/>
+<path d="M536 2974 C558 2959 586 2992 648 2958 L648 2996 L536 2996 Z" fill="#b57b62" opacity="0.78"/>
+<path d="M542 2942 H642 M558 2929 V2991 M610 2927 V2995" stroke="#ffffff" stroke-width="1" opacity="0.18"/>
+<image href="../../proof/svg-day/BOYSPR01.svg" x="570" y="2928" width="48" height="48" preserveAspectRatio="xMidYMid meet"/>
+</svg>

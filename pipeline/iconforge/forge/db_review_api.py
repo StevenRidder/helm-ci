@@ -18,6 +18,7 @@ DB_PATH = ROOT.parent.parent / "artifacts" / "opencpn_s52_portrayal.sqlite"
 SEMANTIC_DB = ROOT / "catalog" / "semantic_evidence_db.json"
 PROOF_MANIFEST = ROOT / "proof" / "manifest.json"
 SIGNOFF_JSON = ROOT / "out" / "human_review" / "icon_review_signoff.json"
+STYLE_AUDIT = ROOT / "catalog" / "standard_style_audit.json"
 
 SCHEMA = "helm.iconforge.db_review_api.v1"
 
@@ -75,6 +76,55 @@ def _approval_index() -> dict[str, dict[str, Any]]:
         if asset:
             out[str(asset)] = row
     return out
+
+
+def _style_index() -> dict[str, dict[str, Any]]:
+    payload = _read_json(STYLE_AUDIT)
+    return {
+        str(row.get("asset")): row
+        for row in payload.get("rows") or []
+        if row.get("asset")
+    }
+
+
+def _style_gate(symbol_id: str, style: dict[str, Any] | None) -> dict[str, Any]:
+    if not symbol_id:
+        return {
+            "schema": "helm.iconforge.style_contract_gate.v1",
+            "status": "style_contract_missing",
+            "gate_status": "pending",
+            "runtime_blocker": True,
+            "reason_codes": ["style_contract:symbol_id_missing"],
+            "issues": ["symbol_id_missing"],
+            "notes": [],
+            "audit_path": str(STYLE_AUDIT),
+        }
+    if not style:
+        return {
+            "schema": "helm.iconforge.style_contract_gate.v1",
+            "status": "style_contract_missing",
+            "gate_status": "pending",
+            "runtime_blocker": True,
+            "reason_codes": ["style_contract:audit_row_missing"],
+            "issues": ["audit_row_missing"],
+            "notes": [],
+            "audit_path": str(STYLE_AUDIT),
+        }
+    status = style.get("status") or "style_review"
+    gate_status = style.get("gate_status")
+    if not gate_status:
+        gate_status = "pass" if status == "style_pass" else "failed" if status == "style_blocked" else "pending"
+    return {
+        "schema": "helm.iconforge.style_contract_gate.v1",
+        "status": status,
+        "gate_status": gate_status,
+        "runtime_blocker": gate_status != "pass",
+        "reason_codes": style.get("reason_codes") or [f"style_contract:{issue}" for issue in style.get("issues") or []],
+        "issues": style.get("issues") or [],
+        "notes": style.get("notes") or [],
+        "asset_path": style.get("path") or "",
+        "audit_path": str(STYLE_AUDIT),
+    }
 
 
 def _root_path_exists(value: str | None) -> bool:
@@ -267,6 +317,7 @@ def _review_row(
     semantic: dict[str, Any],
     proof: dict[str, Any] | None,
     approval: dict[str, Any] | None,
+    style: dict[str, Any] | None,
 ) -> dict[str, Any]:
     symbol_id = str(db_row["s52_symbol_id"] or "")
     semantic_tuple = _json_value(db_row["semantic_tuple"], {})
@@ -294,6 +345,11 @@ def _review_row(
         missing.append("helm_interpretation_text_missing")
     if not helm_candidate.get("canonical_svg"):
         missing.append("helm_candidate_svg_missing")
+    style_contract = _style_gate(symbol_id, style)
+    if style_contract["gate_status"] == "pending":
+        missing.append("style_contract_pending")
+    elif style_contract["gate_status"] == "failed":
+        missing.append("style_contract_failed")
 
     return {
         "row_id": db_row["s52_lookup_id"],
@@ -352,6 +408,7 @@ def _review_row(
         "qa": {
             "runtime_eligible": bool(db_row["runtime_eligible"]),
             "runtime_gate_summary": runtime_gate or gate_summary,
+            "style_contract": style_contract,
             "blocking_gate_count": db_row["blocking_gate_count"],
             "pending_gate_count": db_row["pending_gate_count"],
             "warning_gate_count": db_row["warning_gate_count"],
@@ -384,6 +441,7 @@ def build_review_payload(
     by_key, by_catalog, by_symbol = _semantic_indexes()
     proofs = _proof_index()
     approvals = _approval_index()
+    styles = _style_index()
     with _connect(db_path) as conn:
         sql, params = _row_query(symbol_ids)
         if symbol_ids:
@@ -395,7 +453,7 @@ def build_review_payload(
             semantic = _pick_semantic(db_row, by_key, by_catalog, by_symbol)
             symbol_id = str(db_row["s52_symbol_id"] or "")
             out_rows.append(
-                _review_row(conn, db_row, semantic, proofs.get(symbol_id), approvals.get(symbol_id))
+                _review_row(conn, db_row, semantic, proofs.get(symbol_id), approvals.get(symbol_id), styles.get(symbol_id))
             )
         return {
             "schema": SCHEMA,
@@ -404,6 +462,7 @@ def build_review_payload(
                 "db_sha256": _sha256(db_path),
                 "semantic_evidence": str(SEMANTIC_DB),
                 "proof_manifest": str(PROOF_MANIFEST),
+                "style_audit": str(STYLE_AUDIT),
                 "sidecars_are_display_evidence_only": True,
             },
             "summary": _summary(conn, db_path),

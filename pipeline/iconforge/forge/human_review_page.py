@@ -735,16 +735,20 @@ function image(label, src) {
   return `<div class="imageBox"><img src="${esc(src)}" alt="${esc(label)}"><div class="label">${esc(label)}</div></div>`;
 }
 function gateList(row) {
-  return (row.qa.gates || []).map(gate =>
+  const style = row.qa.style_contract || {};
+  const styleGate = `<li class="${esc(style.gate_status || "pending")}"><strong>style_contract</strong>: ${esc(style.gate_status || "pending")} - ${esc(style.status || "missing")} ${esc((style.issues || []).join(", "))}</li>`;
+  return styleGate + (row.qa.gates || []).map(gate =>
     `<li class="${esc(gate.status)}"><strong>${esc(gate.name)}</strong>: ${esc(gate.status)} - ${esc(gate.detail)}</li>`
   ).join("");
 }
 function renderRow(row) {
   const interp = row.helm.interpretation?.sections || {};
   const missing = row.qa.missing_evidence || [];
+  const style = row.qa.style_contract || {};
   return `<section class="row" data-status="${esc(row.status)}" data-haystack="${esc([
       row.symbol_id, row.opencpn.description, row.s57.description, row.s101.feature_type,
       row.s101.rule_file, row.helm.interpretation_status, row.helm.recipe_status,
+      style.status, style.gate_status, (style.issues || []).join(" "),
       missing.join(" ")
     ].join(" ").toLowerCase())}">
     <div class="report">
@@ -757,6 +761,7 @@ function renderRow(row) {
         <div class="small"><strong>S-101:</strong> ${text(row.s101.feature_type || row.s101.direct_symbol_id || row.s101.mapping_type)}</div>
         <div class="small"><strong>Rule:</strong> ${text(row.s101.rule_file, "no rule file")}</div>
         <div class="small"><strong>Helm:</strong> ${text(row.helm.interpretation_status)} / ${text(row.helm.recipe_status)}</div>
+        <div class="small"><strong>Style contract:</strong> ${text(style.status)} / ${text(style.gate_status)}</div>
       </div>
       <div class="images">
         ${image("Helm", row.images.helm.backend_url)}
@@ -768,6 +773,7 @@ function renderRow(row) {
         <div class="note small"><strong>Helm interpretation:</strong> ${text(interp.what_it_is || interp.clean_room_render_notes || row.helm.interpretation_status)}</div>
         <div class="note small"><strong>S-101 evidence:</strong> ${text(row.s101.portrayal_evidence)}</div>
         <div class="note small"><strong>Runtime gate:</strong> ${text(row.qa.runtime_gate_summary)}</div>
+        <div class="note small"><strong>Style contract:</strong> ${text(style)}</div>
       </div>
     </div>
     <div class="review signoffPanel">
@@ -819,7 +825,7 @@ loadRows();
 <style>{_base_css_v2()}
 .gateList {{ margin: 0; padding-left: 18px; }}
 .gateList li {{ margin-bottom: 5px; }}
-.gateList .blocked, .gateList .pending {{ color: var(--red); }}
+.gateList .blocked, .gateList .failed, .gateList .pending {{ color: var(--red); }}
 .gateList .warn {{ color: #8a4b00; }}
 .missingText {{ color: var(--red); }}
 </style>

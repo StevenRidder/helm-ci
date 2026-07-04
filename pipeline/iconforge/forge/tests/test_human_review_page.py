@@ -57,6 +57,8 @@ def main():
     assert "/api/proof-review/rows?limit=100" in db_html
     assert "helm.iconforge.db_review_api.v1" in db_html
     assert "Runtime blocked" in db_html
+    assert "Style contract" in db_html
+    assert "style_contract" in db_html
 
     rows = list(csv.DictReader(csv_path.open()))
     assert len(rows) == 12
