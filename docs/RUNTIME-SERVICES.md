@@ -16,6 +16,7 @@ The checked-in machine-readable inventory is
 ```bash
 python3 scripts/check-runtime-inventory.py
 python3 scripts/helmcxx-parity-suite.py
+bash -n scripts/helmcxx-no-python-runtime.sh
 ```
 
 This is an architecture guardrail, not a rewrite order to stop all product work
@@ -205,6 +206,7 @@ The runtime-service policy is accepted only after the HELMC++ gate passes:
 - required boat/runtime daemons are C++;
 - no required non-C++ daemon remains;
 - reference behavior has parity evidence before retirement;
+- `scripts/helmcxx-no-python-runtime.sh` passes on private ports with explicit C++ binary paths;
 - the cockpit passes a C++-only Playwright proof;
 - packaging works on fresh machines without Docker;
 - performance, reliability, soak, and maintainability evidence is recorded.

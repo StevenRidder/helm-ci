@@ -9,6 +9,8 @@ on:
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
+      - "scripts/helmcxx-no-python-runtime.sh"
+      - "scripts/helmcxx-make-envd-fixture.mjs"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   pull_request:
     paths:
@@ -18,6 +20,8 @@ on:
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
+      - "scripts/helmcxx-no-python-runtime.sh"
+      - "scripts/helmcxx-make-envd-fixture.mjs"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   workflow_dispatch:
 
@@ -33,3 +37,7 @@ jobs:
         run: python3 scripts/check-runtime-inventory.py
       - name: Check HELMC++ parity suite
         run: python3 scripts/helmcxx-parity-suite.py
+      - name: Check HELMC++ no-Python harness syntax
+        run: |
+          bash -n scripts/helmcxx-no-python-runtime.sh
+          node --check scripts/helmcxx-make-envd-fixture.mjs

@@ -336,16 +336,22 @@
         "engine/test-engine.sh",
         "engine/test-packd.sh",
         "engine/test-fresh-clone-install.sh",
-        "engine/*.js"
+        "engine/*.js",
+        "scripts/helmcxx-no-python-runtime.sh",
+        "scripts/helmcxx-make-envd-fixture.mjs"
       ],
-      "launch": ["engine/test-engine.sh", "engine/test-packd.sh"],
+      "launch": [
+        "engine/test-engine.sh",
+        "engine/test-packd.sh",
+        "scripts/helmcxx-no-python-runtime.sh"
+      ],
       "starts_python_daemon": false,
       "python_allowed": true,
       "allowed_python_reason": "Test harnesses and fixture probes are outside required runtime.",
       "owner": "ENGINE/OFFLINE",
-      "evidence_tasks": ["ENGINE-16", "OFFLINE-16", "OFFLINE-17"],
+      "evidence_tasks": ["ENGINE-16", "OFFLINE-16", "OFFLINE-17", "HELMC++-3"],
       "feeds_helmcxx": ["HELMC++-2", "HELMC++-3", "HELMC++-8"],
-      "notes": "Tests may use Python helpers to generate fixtures or inspect JSON."
+      "notes": "Tests may use Python helpers to generate fixtures or inspect JSON. HELMC++-3 adds a no-Python runtime harness that may use shell/Node as test tooling but launches only C++ required-runtime daemons."
     },
     {
       "id": "web-test-harnesses",

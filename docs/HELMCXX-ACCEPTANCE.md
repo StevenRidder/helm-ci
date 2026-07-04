@@ -166,6 +166,26 @@ The end-to-end harness must prove:
 
 No HELMC++ test may use the live `:8080` screen. Use private ports only.
 
+`HELMC++-3` provides the concrete no-Python runtime harness:
+
+```bash
+HELM_SERVER_BIN=/path/to/helm-server \
+HELM_PACKD_BIN=/path/to/helm-packd \
+HELM_BASEMAP_CACHE_BIN=/path/to/helm-basemap-cache \
+HELM_ENVD_BIN=/path/to/helm-envd \
+scripts/helmcxx-no-python-runtime.sh
+```
+
+The harness launches `helm-server`, `helm-packd`, `helm-basemap-cache`, and
+`helm-envd` directly on private ports from a fresh temporary runtime directory.
+It does not call `scripts/start-helm.sh`, `services/wx`, FastAPI, uvicorn, or
+the Python pack/cache references. It probes health, catalog, layer inventory,
+prefetch, region bundle, PMTiles/local-pack access, env grid chunks, chart tile
+fallback, nav WebSocket frames, bad env manifests, missing packs, no-network
+cache replay, transparent hard misses, and reboot-style restart. It also
+inspects every launched required-runtime process tree and fails if a Python,
+FastAPI, or uvicorn daemon appears.
+
 ## Cockpit proof
 
 End-to-end runtime success is not enough. The user-visible cockpit must also prove the C++ runtime is
