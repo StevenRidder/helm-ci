@@ -58,6 +58,7 @@
       id: spec.id, epic: spec.epic || '?', title: spec.title || spec.id,
       icon: spec.icon || (spec.title ? spec.title[0] : '•'),
       render: spec.render, onOpen: spec.onOpen,
+      rail: spec.rail !== false,                 // set {rail:false} for panels with their own entry point (e.g. a HUD) so they don't consume a rail slot
       _el: null, _rail: null, _rendered: false
     };
     p._handle = makePanelHandle(p);
@@ -109,7 +110,7 @@
     document.body.appendChild(d);
     p._el = d;
 
-    if (ctx.railEl) {
+    if (ctx.railEl && p.rail) {
       var r = document.createElement('div');
       r.className = 'ri'; r.setAttribute('data-rail', p.id); r.title = p.title;
       r.innerHTML = isSvg(p.icon) ? p.icon

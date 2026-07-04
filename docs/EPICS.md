@@ -276,7 +276,7 @@ _Reference-client capabilities that consume the locked contract, live in their O
 
 > The chartplotter utility belt + state: measure ruler/scale bar, cursor lat/lon format, units UI, ⌘K palette chrome, settings/layer/theme/units/board persistence, boat profile, design tokens, and the legal-load-bearing attribution rendering.
 
-- **Owns (collision boundary):** `web/measure.js`, `web/integrations/measures.js`, `web/integrations/cog-disclaimer.js`
+- **Owns (collision boundary):** `web/measure.js`, `web/coordinates.js`, `web/integrations/measures.js`, `web/integrations/cog-disclaimer.js`, `web/test/e2e/tools2-coordinates.spec.js`
 - **Touches shared (coordinate):** `web/index.html`, `web/style.json`
 - **Done =** Measure ruler + scale bar (done); cursor lat/lon coordinate-format readout; units selection UI (NM/kn/m/ft/fathom); ⌘K palette chrome wired enough for fuzzy nav (NL handler lives in AI); persistence layer for settings/layers/theme/units/boards; boat profile (draft/air-draft/polars/comfort limits); design-token file (tokens.css → HelmTheme); day/dusk/night UI toggle; satellite supplemental disclaimer + per-source attribution RENDERING (Copernicus Sentinel data, OpenSeaMap ODbL share-alike, Windy clickable logo, NOAA courtesy) + Overpass self-host/mirror obligation tracked. TOOLS CONSUMES WX's cog.js — it does not own it.
 
