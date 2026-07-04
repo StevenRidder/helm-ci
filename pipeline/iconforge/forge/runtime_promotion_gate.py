@@ -65,6 +65,18 @@ def _reason_codes(row: dict[str, Any]) -> list[str]:
     elif style_gate != "pass":
         reasons.append("style_contract_missing")
     reasons.extend(style_contract.get("reason_codes") or [])
+    colour_authority = row["qa"].get("colour_authority") or {}
+    colour_gate = colour_authority.get("gate_status")
+    if colour_gate in {"failed", "blocked"}:
+        reasons.append("colour_authority_failed")
+    elif colour_gate == "pending":
+        reasons.append("colour_authority_pending")
+    elif not colour_gate:
+        reasons.append("colour_authority_missing")
+    if colour_authority.get("runtime_blocker"):
+        reasons.append("colour_authority_blocked")
+    if colour_gate not in {"pass", "warn"} or colour_authority.get("runtime_blocker"):
+        reasons.extend(colour_authority.get("reason_codes") or [])
     for gate in row["qa"]["gates"]:
         if gate["status"] in {"blocked", "pending", "warn"}:
             reasons.append(f"gate:{gate['name']}:{gate['status']}")
@@ -96,6 +108,7 @@ def _runtime_row(row: dict[str, Any], source: dict[str, Any]) -> dict[str, Any]:
             "canonical_svg": images.get("canonical_svg"),
             "palette_resolved_svg": images.get("palette_resolved_svg") or {},
             "style_contract": row["qa"].get("style_contract") or {},
+            "colour_authority": row["qa"].get("colour_authority") or {},
         },
         "approval": row["approval"]["state"],
         "provenance": {
@@ -147,6 +160,7 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
             "promotion_rule": (
                 "Export only rows with DB runtime_eligible=true, no blocking/pending gates, "
                 "recipe_ready, helm_interpretation_ready, style_contract pass, "
+                "colour_authority pass or documented warn, "
                 "final human approval, and no missing evidence."
             ),
         },

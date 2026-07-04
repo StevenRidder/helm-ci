@@ -16,9 +16,9 @@ def main() -> None:
     assert payload["pagination"]["returned"] == 25
     assert len(payload["source"]["db_sha256"]) == 64
 
-    focused = db_review_api.build_review_payload(symbol_ids=["BOYPIL60", "TOPSHQ28", "ACHRES71"])
+    focused = db_review_api.build_review_payload(symbol_ids=["BOYPIL60", "BOYLAT25", "BCNLAT15", "TOPSHQ28", "ACHRES71"])
     rows = {row["symbol_id"]: row for row in focused["rows"]}
-    for symbol_id in ["BOYPIL60", "TOPSHQ28", "ACHRES71"]:
+    for symbol_id in ["BOYPIL60", "BOYLAT25", "BCNLAT15", "TOPSHQ28", "ACHRES71"]:
         assert symbol_id in rows
         row = rows[symbol_id]
         assert row["opencpn"]["instruction"]
@@ -31,11 +31,21 @@ def main() -> None:
         assert row["qa"]["runtime_eligible"] is False
         assert row["qa"]["style_contract"]["schema"] == "helm.iconforge.style_contract_gate.v1"
         assert row["qa"]["style_contract"]["gate_status"] in {"pass", "pending", "failed"}
+        assert row["qa"]["colour_authority"]["schema"] == "helm.iconforge.colour_authority_contract.v1"
+        assert row["qa"]["colour_authority"]["gate_status"] in {"pass", "warn", "pending"}
         assert row["approval"]["controls"]["save_signoff"] == "/api/save-signoff"
 
     assert rows["BOYPIL60"]["s101"]["feature_type"] == "LateralBuoy"
     assert rows["BOYPIL60"]["s101"]["attributes"]["colour"] == ["red"]
     assert rows["BOYPIL60"]["qa"]["style_contract"]["status"] in {"style_pass", "style_review"}
+    assert rows["BOYPIL60"]["qa"]["colour_authority"]["feature_colour_sequence"] == ["red"]
+    assert rows["BOYPIL60"]["qa"]["colour_authority"]["visual_colour_sequence"] == ["red"]
+    assert rows["BOYLAT25"]["qa"]["colour_authority"]["feature_colour_sequence"] == ["red", "green"]
+    assert rows["BOYLAT25"]["qa"]["colour_authority"]["visual_colour_sequence"] == ["red", "green"]
+    assert rows["BOYLAT25"]["qa"]["colour_authority"]["status"] == "aligned"
+    assert rows["BCNLAT15"]["qa"]["colour_authority"]["status"] == "feature_colour_dropped"
+    assert rows["BCNLAT15"]["qa"]["colour_authority"]["missing_feature_colours"] == ["green"]
+    assert rows["BCNLAT15"]["qa"]["colour_authority"]["extra_visual_colours"] == ["white"]
     assert rows["TOPSHQ28"]["s101"]["feature_type"] == "Daymark"
     assert rows["TOPSHQ28"]["s101"]["attributes"]["topmarkDaymarkShape"] == "28"
     assert rows["ACHRES71"]["helm"]["recipe_status"] == "manual_exception_required"

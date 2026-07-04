@@ -59,6 +59,9 @@ def main():
     assert "Runtime blocked" in db_html
     assert "Style contract" in db_html
     assert "style_contract" in db_html
+    assert "Colour authority" in db_html
+    assert "colour_authority" in db_html
+    assert "render_colour_authority" in db_html
 
     rows = list(csv.DictReader(csv_path.open()))
     assert len(rows) == 12

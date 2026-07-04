@@ -19,6 +19,7 @@ SEMANTIC_DB = ROOT / "catalog" / "semantic_evidence_db.json"
 PROOF_MANIFEST = ROOT / "proof" / "manifest.json"
 SIGNOFF_JSON = ROOT / "out" / "human_review" / "icon_review_signoff.json"
 STYLE_AUDIT = ROOT / "catalog" / "standard_style_audit.json"
+COLOUR_AUTHORITY = ROOT / "catalog" / "colour_authority_contract.json"
 
 SCHEMA = "helm.iconforge.db_review_api.v1"
 
@@ -87,6 +88,19 @@ def _style_index() -> dict[str, dict[str, Any]]:
     }
 
 
+def _colour_authority_index() -> dict[str, dict[str, Any]]:
+    payload = _read_json(COLOUR_AUTHORITY)
+    out: dict[str, dict[str, Any]] = {}
+    for row in payload.get("rows") or []:
+        asset = str(row.get("asset") or "")
+        if not asset:
+            continue
+        out.setdefault(asset, row)
+        out.setdefault(asset.upper(), row)
+        out.setdefault(asset.lower(), row)
+    return out
+
+
 def _style_gate(symbol_id: str, style: dict[str, Any] | None) -> dict[str, Any]:
     if not symbol_id:
         return {
@@ -124,6 +138,59 @@ def _style_gate(symbol_id: str, style: dict[str, Any] | None) -> dict[str, Any]:
         "notes": style.get("notes") or [],
         "asset_path": style.get("path") or "",
         "audit_path": str(STYLE_AUDIT),
+    }
+
+
+def _colour_authority_gate(symbol_id: str, authority: dict[str, Any] | None) -> dict[str, Any]:
+    if not symbol_id:
+        return {
+            "schema": "helm.iconforge.colour_authority_contract.v1",
+            "status": "not_colour_bearing",
+            "gate_status": "pass",
+            "runtime_blocker": False,
+            "render_colour_authority": "not_colour_bearing",
+            "feature_colour_sequence": [],
+            "visual_colour_sequence": [],
+            "visual_pattern": "no_symbol_id",
+            "reason_codes": ["colour_authority:not_colour_bearing"],
+            "notes": ["s52_lookup_has_no_symbol_id"],
+            "report_path": str(COLOUR_AUTHORITY),
+        }
+    if not authority:
+        return {
+            "schema": "helm.iconforge.colour_authority_contract.v1",
+            "status": "unresolved",
+            "gate_status": "pending",
+            "runtime_blocker": True,
+            "render_colour_authority": "manual_review_required",
+            "feature_colour_sequence": [],
+            "visual_colour_sequence": [],
+            "visual_pattern": "missing_authority_row",
+            "reason_codes": ["colour_authority:authority_row_missing"],
+            "notes": [],
+            "report_path": str(COLOUR_AUTHORITY),
+        }
+    gate_status = authority.get("gate_status") or "pending"
+    return {
+        "schema": authority.get("schema") or "helm.iconforge.colour_authority_contract.v1",
+        "status": authority.get("status") or "unresolved",
+        "gate_status": gate_status,
+        "runtime_blocker": bool(authority.get("runtime_blocker")) or gate_status == "pending",
+        "render_colour_authority": authority.get("render_colour_authority") or "manual_review_required",
+        "feature_colour_sequence": authority.get("feature_colour_sequence") or [],
+        "feature_unique_colours": authority.get("feature_unique_colours") or [],
+        "missing_feature_colours": authority.get("missing_feature_colours") or [],
+        "feature_colour_source": authority.get("feature_colour_source") or "",
+        "visual_colour_sequence": authority.get("visual_colour_sequence") or [],
+        "visual_unique_colours": authority.get("visual_unique_colours") or [],
+        "extra_visual_colours": authority.get("extra_visual_colours") or [],
+        "visual_stroke_sequence": authority.get("visual_stroke_sequence") or [],
+        "visual_pattern": authority.get("visual_pattern") or "",
+        "visual_colour_source": authority.get("visual_colour_source") or "",
+        "canonical_svg": authority.get("canonical_svg") or "",
+        "reason_codes": authority.get("reason_codes") or [],
+        "notes": authority.get("notes") or [],
+        "report_path": str(COLOUR_AUTHORITY),
     }
 
 
@@ -318,6 +385,7 @@ def _review_row(
     proof: dict[str, Any] | None,
     approval: dict[str, Any] | None,
     style: dict[str, Any] | None,
+    colour_authority: dict[str, Any] | None,
 ) -> dict[str, Any]:
     symbol_id = str(db_row["s52_symbol_id"] or "")
     semantic_tuple = _json_value(db_row["semantic_tuple"], {})
@@ -350,6 +418,11 @@ def _review_row(
         missing.append("style_contract_pending")
     elif style_contract["gate_status"] == "failed":
         missing.append("style_contract_failed")
+    colour_contract = _colour_authority_gate(symbol_id, colour_authority)
+    if colour_contract["gate_status"] == "pending":
+        missing.append("colour_authority_unresolved")
+    elif colour_contract["runtime_blocker"]:
+        missing.append("colour_authority_blocked")
 
     return {
         "row_id": db_row["s52_lookup_id"],
@@ -409,6 +482,7 @@ def _review_row(
             "runtime_eligible": bool(db_row["runtime_eligible"]),
             "runtime_gate_summary": runtime_gate or gate_summary,
             "style_contract": style_contract,
+            "colour_authority": colour_contract,
             "blocking_gate_count": db_row["blocking_gate_count"],
             "pending_gate_count": db_row["pending_gate_count"],
             "warning_gate_count": db_row["warning_gate_count"],
@@ -442,6 +516,7 @@ def build_review_payload(
     proofs = _proof_index()
     approvals = _approval_index()
     styles = _style_index()
+    colour_authorities = _colour_authority_index()
     with _connect(db_path) as conn:
         sql, params = _row_query(symbol_ids)
         if symbol_ids:
@@ -453,7 +528,15 @@ def build_review_payload(
             semantic = _pick_semantic(db_row, by_key, by_catalog, by_symbol)
             symbol_id = str(db_row["s52_symbol_id"] or "")
             out_rows.append(
-                _review_row(conn, db_row, semantic, proofs.get(symbol_id), approvals.get(symbol_id), styles.get(symbol_id))
+                _review_row(
+                    conn,
+                    db_row,
+                    semantic,
+                    proofs.get(symbol_id),
+                    approvals.get(symbol_id),
+                    styles.get(symbol_id),
+                    colour_authorities.get(symbol_id),
+                )
             )
         return {
             "schema": SCHEMA,
@@ -463,6 +546,7 @@ def build_review_payload(
                 "semantic_evidence": str(SEMANTIC_DB),
                 "proof_manifest": str(PROOF_MANIFEST),
                 "style_audit": str(STYLE_AUDIT),
+                "colour_authority": str(COLOUR_AUTHORITY),
                 "sidecars_are_display_evidence_only": True,
             },
             "summary": _summary(conn, db_path),
