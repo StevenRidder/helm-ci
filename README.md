@@ -112,6 +112,7 @@ input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [docs/proposals/INTERFACE-CATALOG.md](docs/proposals/INTERFACE-CATALOG.md) | Draft interface contracts between proposed services |
 | [docs/proposals/STANDARDS-LAYER-MAP.md](docs/proposals/STANDARDS-LAYER-MAP.md) | Existing standards by layer, and where Helm-specific RFCs/proposals fit |
 | [docs/STREAMING-API.md](docs/STREAMING-API.md) | Boat server ↔ iOS thin clients — the world-class streaming/API contract |
+| [docs/NATIVE-REFERENCE-HARDWARE.md](docs/NATIVE-REFERENCE-HARDWARE.md) | Reference hardware, DC power/UPS gates, and OpenCPN parallel sea-trial plan |
 | [docs/VULKAN-HELM-WEBGPU-PROOF.md](docs/VULKAN-HELM-WEBGPU-PROOF.md) | Helm's WebGPU-first consumer path for the shared OpenCPN renderer proof |
 | [docs/CHART-PIPELINE.md](docs/CHART-PIPELINE.md) | On-demand tiler + depth-on-satellite |
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |

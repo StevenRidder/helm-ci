@@ -38,7 +38,8 @@ client "open source" until it converts to Apache-2.0.
 - Cached Google, Navionics, Esri, Bing, Windy, PredictWind, or other
   restricted commercial data.
 - A downloadable appliance image or paid build before IP counsel reviews the
-  GPL boundary, BSL wording, attribution register, and chart-data sources.
+  GPL boundary, BSL wording, attribution register, chart-data sources, and the
+  evidence gates in [NATIVE-REFERENCE-HARDWARE.md](NATIVE-REFERENCE-HARDWARE.md).
 - A public macOS DMG before `native/macos/package-macos-dmg.sh --notarize`
   passes with a Developer ID identity, the notarization ticket is stapled, and
   counsel has reviewed the native-client notice bundle.

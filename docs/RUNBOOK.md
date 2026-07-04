@@ -124,6 +124,13 @@ For a real public artifact, provide a Developer ID Application identity and a
 notarytool profile, then add `--notarize`. The resulting DMG is still a thin
 client; `helm-server` remains a separate boat-side process.
 
+Reference hardware, DC power/UPS expectations, and the OpenCPN parallel
+sea-trial protocol are tracked in
+[NATIVE-REFERENCE-HARDWARE.md](NATIVE-REFERENCE-HARDWARE.md). Do not describe a
+hardware bundle as reference-certified unless that document has a matching
+evidence level for the exact compute, display, power chain, data gateway, OS,
+and Helm SHA.
+
 ## 2. Chart and Weather Data
 
 Helm does not include chart packs. Bring your own local charts/basemaps at

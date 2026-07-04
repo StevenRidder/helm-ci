@@ -103,6 +103,11 @@ The happy part: the architecture is **already shaped for it.** The on-demand til
 | **Apple as appliance platform** | No appliance/kiosk licensing; can't pre-image/lock down like HA on Linux; OS updates outside our control | Reselling minis is fine (hardware resale); accept less kiosk polish than HA Green |
 | **Hardware ops + liability** | Inventory, RMA, warranty, thin margins; a turnkey nav appliance carries more product-liability weight than BYO software | Stage it (§6); keep satellite-supplemental disclaimers prominent ([LEGAL.md](LEGAL.md)) |
 
+The engineering gate for the appliance path is
+[NATIVE-REFERENCE-HARDWARE.md](NATIVE-REFERENCE-HARDWARE.md): exact hardware
+revision, DC power/UPS evidence, and OpenCPN parallel sea-trial level must be
+recorded before any hardware bundle is described as reference-certified.
+
 ---
 
 ## 5. BOM & pricing sketch (illustrative, not committed)

@@ -41,7 +41,8 @@ port such as `http://127.0.0.1:9001/`.
 
 Helm is not yet:
 
-- a compiled macOS `.app`;
+- a public notarized macOS app release;
+- a certified reference-hardware appliance;
 - a Windows installer;
 - a Linux package;
 - an iOS or Android app;
@@ -59,6 +60,11 @@ The documented path is macOS from source:
 5. provide user-owned chart and boat data if you want real navigation context.
 
 See [docs/RUNBOOK.md](RUNBOOK.md).
+
+The candidate appliance path and sea-trial evidence levels are tracked in
+[docs/NATIVE-REFERENCE-HARDWARE.md](NATIVE-REFERENCE-HARDWARE.md). Those levels
+are internal Helm reference qualifications only; they are not regulatory
+certification and they do not make Helm primary navigation.
 
 ## Data You Need To Provide
 

@@ -123,6 +123,10 @@ release:
 - Verify the exact release build's linked/bundled libraries with platform
   tools (`otool -L`, package manifests, app bundle contents, installer
   contents).
+- For hardware or appliance distribution, refresh
+  [NATIVE-REFERENCE-HARDWARE.md](NATIVE-REFERENCE-HARDWARE.md) with the exact
+  compute, display, power chain, data gateway, evidence level, and sea-trial
+  status.
 - Confirm no restricted data source from [LEGAL.md](LEGAL.md) is bundled,
   cached, or hosted without a signed agreement.
 - Preserve all user-supplied chart, imagery, route, weather, and private boat
