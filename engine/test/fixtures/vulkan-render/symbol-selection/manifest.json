@@ -11,6 +11,24 @@
     "redistribution": "repo-owned",
     "notes": "No chart data or third-party artwork. Symbol ids and attributes come from Helm Forge clean-room evidence records."
   },
+  "forge_contract": {
+    "runtime_db": "artifacts/opencpn_s52_portrayal.sqlite",
+    "runtime_db_sha256": "378a45c80f62d5da9add45f4dfea6fb4d62330688b8ddbded425a6365adbec60",
+    "runtime_evidence_snapshot": "pipeline/iconforge/catalog/runtime_evidence_snapshot.json",
+    "runtime_evidence_snapshot_sha256": "a52258aafd683252f67bb16262d71a1e6fa5e493d8923405a79d2e6c6e1ed954",
+    "proof_manifest": "pipeline/iconforge/proof/manifest.json",
+    "proof_manifest_sha256": "fb82754f9473dc271043d8b343b9ee99fe84d0a2c8ac16a6b6879092eba2c6f0",
+    "symbol_selection_fixtures": "engine/test/fixtures/symbol-selection/fixtures.json",
+    "symbol_selection_fixtures_sha256": "4afac0e1d67bcbd71946b8de620f5a1040c64d8728aed674a42c06354d0646bf",
+    "join_keys": [
+      "s52_lookup_id",
+      "row_key",
+      "helm_catalog_id"
+    ],
+    "runtime_authority": "runtime_symbol_candidate_v1 and runtime_symbol_portrayal_v1",
+    "semantic_authority": "pipeline/iconforge/catalog/runtime_evidence_snapshot.json",
+    "default_render_allowed": false
+  },
   "capture_matrix": [
     {
       "name": "day-standard-z24-symbol-selection",
@@ -72,9 +90,55 @@
     "default_render_allowed": false
   },
   "expected_hashes": {
-    "source_json_sha256": "a4de097a7d402853e79efda65f83c9e3d9deef9a375827c5a4f9139b631ab7ff",
-    "scene_commands_json_sha256": "96b89c949a86e5eac73ea0fe55b93dcdf98a62230637ec059ab42ebfa3dc3f90",
-    "provenance_json_sha256": "6365b90e02abe61a3cd2382d5ce12252a542684341bc8d19064dc0c377afaa6e"
+    "source_json_sha256": "76bfbb3871671a98d9048520f1834fa691fd62f96c9ccc9487e60845fb4385ac",
+    "scene_commands_json_sha256": "b07471ccb629786f80d5d299c90245bbd3bd897474d5da9e8c2bf64c97a2f0df",
+    "provenance_json_sha256": "59f27f401c93282029a5f95c13777178fb6e52a8b65eb38c9664a1f95da45350"
   },
-  "expected_images": []
+  "expected_images": [
+    {
+      "path": "expected-day.ppm",
+      "format": "ppm-ascii",
+      "palette": "day",
+      "sha256": "06d3f9454ddb88d01b77cafc7e8e5c0d648eec7bbddb56483b295df9c4006d04",
+      "role": "Forge package flagged-renderer day diagnostic golden",
+      "forbidden_colors": [
+        "#ff0000"
+      ],
+      "stats": {
+        "background_color": "#5078a0",
+        "non_background_pixels": 7,
+        "unique_colors": 2
+      }
+    },
+    {
+      "path": "expected-dusk.ppm",
+      "format": "ppm-ascii",
+      "palette": "dusk",
+      "sha256": "f4996c2c08a35bb735a8e095eaa21355ee9f38d646e900e724e3f6d98ea42d67",
+      "role": "Forge package flagged-renderer dusk diagnostic golden",
+      "forbidden_colors": [
+        "#ff0000"
+      ],
+      "stats": {
+        "background_color": "#3a4c63",
+        "non_background_pixels": 7,
+        "unique_colors": 2
+      }
+    },
+    {
+      "path": "expected-night.ppm",
+      "format": "ppm-ascii",
+      "palette": "night",
+      "sha256": "81ad72fe45eb0a89c189d3f742200dbecd00c7987bdddd3b928df1a5cbfbe3fa",
+      "role": "Forge package flagged-renderer night diagnostic golden",
+      "forbidden_colors": [
+        "#ff0000"
+      ],
+      "stats": {
+        "background_color": "#121c30",
+        "non_background_pixels": 7,
+        "unique_colors": 2
+      }
+    }
+  ]
 }

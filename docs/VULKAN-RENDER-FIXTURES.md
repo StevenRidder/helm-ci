@@ -91,6 +91,19 @@ offscreen target. On macOS VSG builds with native window creation disabled, the
 probe adapts an `NSWindow`/MoltenVK surface through `vsg::WindowAdapter`, which
 matches the integration shape OpenCPN's chart canvas will need.
 
+`CHART-7` adds the flagged Forge package symbol-selection smoke:
+
+```bash
+engine/test-vulkan-symbol-selection-render.sh
+```
+
+This smoke replays `engine/test/fixtures/vulkan-render/symbol-selection` in a
+diagnostic-only renderer path. It validates day/dusk/night PPM baselines,
+nonblank image stats, no raw witness-red leakage, and DB conformance against
+`runtime_symbol_candidate_v1`, `runtime_symbol_portrayal_v1`, and the Forge
+runtime evidence snapshot while keeping the Forge package path opt-in. See
+[CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md](CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md).
+
 ## Redistributable Fixture Policy
 
 Committed fixtures must be redistributable:

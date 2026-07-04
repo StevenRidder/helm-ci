@@ -15,6 +15,9 @@ struct Attribute {
 struct FixtureCase {
   std::string id;
   std::string coverage_class;
+  int s52_lookup_id = 0;
+  std::string row_key;
+  std::string helm_catalog_id;
   std::string symbol_id;
   std::string source_object_class;
   std::string normalized_object_class;
@@ -40,10 +43,14 @@ void Check(bool condition, const std::string &message) {
 
 const helm::symbols::SymbolRecord *FindRecord(
     const helm::symbols::SymbolPackage &package,
+    int row_id,
+    const std::string &row_key,
     const std::string &symbol_id,
     const std::string &object_class) {
   for (const helm::symbols::SymbolRecord &record : package.records) {
-    if (record.symbol_id == symbol_id &&
+    if (record.row_id == row_id &&
+        record.row_key == row_key &&
+        record.symbol_id == symbol_id &&
         record.s57_object_class == object_class) {
       return &record;
     }
@@ -76,6 +83,9 @@ void CheckFixture(const helm::symbols::SymbolPackage &package,
   CheckPaletteTokens(fixture);
   Check(!fixture.id.empty(), "fixture id is required");
   Check(!fixture.coverage_class.empty(), fixture.id + " coverage class missing");
+  Check(fixture.s52_lookup_id > 0, fixture.id + " s52_lookup_id missing");
+  Check(!fixture.row_key.empty(), fixture.id + " row_key missing");
+  Check(!fixture.helm_catalog_id.empty(), fixture.id + " helm_catalog_id missing");
   Check(!fixture.symbol_id.empty(), fixture.id + " symbol id missing");
   Check(!fixture.source_object_class.empty(),
         fixture.id + " source object class missing");
@@ -87,9 +97,12 @@ void CheckFixture(const helm::symbols::SymbolPackage &package,
         fixture.id + " runtime scope missing");
 
   const helm::symbols::SymbolRecord *record =
-      FindRecord(package, fixture.symbol_id, fixture.normalized_object_class);
+      FindRecord(package, fixture.s52_lookup_id, fixture.row_key,
+                 fixture.symbol_id, fixture.normalized_object_class);
   Check(record != nullptr,
-        fixture.id + " did not match runtime evidence by symbol id + object class");
+        fixture.id + " did not match runtime evidence by s52_lookup_id + row_key");
+  Check(record->helm_catalog_id == fixture.helm_catalog_id,
+        fixture.id + " Helm catalog id mismatch");
   Check(record->s101_feature_type == fixture.expected_feature_type,
         fixture.id + " S-101 feature mismatch");
   Check(record->s101_rule_file == fixture.expected_rule_file,
@@ -139,6 +152,9 @@ std::vector<FixtureCase> Fixtures() {
   return {
       {"direct-s101-obstruction",
        "direct_s101_asset",
+       1194,
+       "OBSTRN_ACHARE02_1193_31245_1193",
+       "OBSTRN_ACHARE02_1193",
        "ACHARE02",
        "OBSTRN",
        "OBSTRN",
@@ -153,6 +169,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"boypil60-red-pillar-buoy",
        "attribute_driven_buoy",
+       1911,
+       "BOYLAT_BOYPIL60_1910_30187_1910",
+       "BOYLAT_BOYPIL60_1910",
        "BOYPIL60",
        "BOYLAT",
        "BOYLAT",
@@ -167,6 +186,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"rule-derived-daymark-topmark",
        "rule_derived_equivalent",
+       2162,
+       "DAYMAR_TOPSHQ28_2160_93930_2161",
+       "DAYMAR_TOPSHQ28_2160",
        "TOPSHQ28",
        "DAYMAR",
        "DAYMAR",
@@ -183,6 +205,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"catalogue-rule-isolated-danger-beacon",
        "catalogue_rule_backed",
+       1732,
+       "BCNISD_BCNGEN76_1731_30020_1731",
+       "BCNISD_BCNGEN76_1731",
        "BCNGEN76",
        "BCNISD",
        "BCNISD",
@@ -197,6 +222,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"documented-deviation-anchor-point",
        "documented_deviation",
+       1715,
+       "ACHPNT_ACHPNT01_1714_30003_1714",
+       "ACHPNT_ACHPNT01_963",
        "ACHPNT01",
        "ACHPNT",
        "ACHPNT",
@@ -211,6 +239,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"non-s101-runtime-ais-default",
        "non_s101_runtime_overlay",
+       1609,
+       "$CSYMB_AISDEF01_1608_31660_1608",
+       "$CSYMB_AISDEF01_1608",
        "AISDEF01",
        "$CSYMB",
        "$CSYMB",
@@ -225,6 +256,9 @@ std::vector<FixtureCase> Fixtures() {
        false},
       {"extension-profile-border",
        "extension_profile_required",
+       1395,
+       "chkpnt_BORDER01_1394_31446_1394",
+       "chkpnt_BORDER01_1394",
        "BORDER01",
        "chkpnt",
        "CHKPNT",

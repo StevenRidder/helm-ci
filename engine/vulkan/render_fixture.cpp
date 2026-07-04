@@ -254,6 +254,22 @@ constexpr Color kBlack{0, 0, 0};
 constexpr Color kWhite{255, 255, 255};
 constexpr Color kRed{255, 0, 0};
 
+struct RenderOptions {
+  std::string palette;
+};
+
+[[nodiscard]] Color background_for_palette(const std::string& palette) {
+  if (palette == "dusk") return Color{58, 76, 99};
+  if (palette == "night") return Color{18, 28, 48};
+  return kBackground;
+}
+
+[[nodiscard]] Color forge_diagnostic_symbol_color(const std::string& palette) {
+  if (palette == "dusk") return Color{180, 92, 54};
+  if (palette == "night") return Color{132, 62, 100};
+  return Color{220, 57, 43};
+}
+
 [[nodiscard]] Color parse_hex_color(const std::string* value, Color fallback = kBlack) {
   if (value == nullptr || value->empty()) return fallback;
   if (value->size() != 7 || (*value)[0] != '#') {
@@ -552,9 +568,12 @@ void draw_stroke_line(Image& image, const Json& command) {
   for (const auto& point : points) image.set_pixel(point.x, point.y, color);
 }
 
-void draw_symbol(Image& image, const Json& command) {
+void draw_symbol(Image& image, const Json& command, const RenderOptions& options) {
   auto point = number_pair(command.at("position"));
-  image.set_pixel(static_cast<int>(std::round(point[0])) - 1, static_cast<int>(std::round(point[1])), kRed);
+  const Color color = command.contains("symbol_selection")
+                          ? forge_diagnostic_symbol_color(options.palette)
+                          : kRed;
+  image.set_pixel(static_cast<int>(std::round(point[0])) - 1, static_cast<int>(std::round(point[1])), color);
 }
 
 void draw_text(Image& image, const Json& command) {
@@ -594,9 +613,18 @@ void draw_raster_sheet(Image& image, const Json& command) {
       kBackground);
 }
 
-[[nodiscard]] Image render_scene(const Json& scene) {
+[[nodiscard]] std::string scene_palette(const Json& scene, const RenderOptions& options) {
+  if (!options.palette.empty()) return options.palette;
+  if (scene.contains("display_state") && scene.at("display_state").contains("palette")) {
+    return scene.at("display_state").at("palette").string();
+  }
+  return "day";
+}
+
+[[nodiscard]] Image render_scene(const Json& scene, const RenderOptions& options = {}) {
   const auto& pixel_size = scene.at("render_view").at("pixel_size").array();
-  Image image(static_cast<int>(pixel_size[0].number()), static_cast<int>(pixel_size[1].number()));
+  const std::string palette = scene_palette(scene, options);
+  Image image(static_cast<int>(pixel_size[0].number()), static_cast<int>(pixel_size[1].number()), background_for_palette(palette));
 
   for (const auto& group : scene.at("command_groups").array()) {
     for (const auto& command : group.at("commands").array()) {
@@ -608,7 +636,7 @@ void draw_raster_sheet(Image& image, const Json& command) {
       } else if (type == "stroke_line") {
         draw_stroke_line(image, command);
       } else if (type == "place_symbol") {
-        draw_symbol(image, command);
+        draw_symbol(image, command, RenderOptions{palette});
       } else if (type == "draw_text") {
         draw_text(image, command);
       } else if (type == "draw_sounding") {
@@ -681,6 +709,42 @@ void check_expected(const Image& image, const std::filesystem::path& expected_pa
     }
   }
   throw std::runtime_error(expected_path.string() + ": rendered pixels differ: " + detail.str());
+}
+
+[[nodiscard]] Color color_from_hex_string(const std::string& hex) {
+  return parse_hex_color(&hex);
+}
+
+void check_forbidden_colors(const Image& image, const Json& expected, const std::filesystem::path& expected_path) {
+  if (!expected.contains("forbidden_colors")) return;
+  for (const auto& forbidden : expected.at("forbidden_colors").array()) {
+    const Color color = color_from_hex_string(forbidden.string());
+    const bool found = std::find(image.pixels().begin(), image.pixels().end(), color) != image.pixels().end();
+    if (found) throw std::runtime_error(expected_path.string() + ": forbidden color leaked into render: " + forbidden.string());
+  }
+}
+
+void check_image_stats(const Image& image, const Json& expected, const std::filesystem::path& expected_path) {
+  if (!expected.contains("stats")) return;
+  const auto& stats = expected.at("stats");
+  if (stats.contains("non_background_pixels")) {
+    const Color background = color_from_hex_string(stats.at("background_color").string());
+    const auto count = static_cast<int>(std::count_if(image.pixels().begin(), image.pixels().end(), [&](const Color& color) {
+      return !(color == background);
+    }));
+    if (count != static_cast<int>(stats.at("non_background_pixels").number())) {
+      throw std::runtime_error(expected_path.string() + ": non-background pixel count mismatch");
+    }
+  }
+  if (stats.contains("unique_colors")) {
+    std::vector<Color> unique;
+    for (const Color& color : image.pixels()) {
+      if (std::find(unique.begin(), unique.end(), color) == unique.end()) unique.push_back(color);
+    }
+    if (static_cast<int>(unique.size()) != static_cast<int>(stats.at("unique_colors").number())) {
+      throw std::runtime_error(expected_path.string() + ": unique color count mismatch");
+    }
+  }
 }
 
 // Tiny SHA-256 for printing stable artifact hashes without external deps.
@@ -779,7 +843,7 @@ class Sha256 {
 void usage(const char* argv0) {
   std::cerr << "usage: " << argv0
             << " <fixture-dir> [--output <path>] [--format ppm|png] [--tile-size N]"
-            << " [--check] [--print-hash] [--backend fixture-cpu|vsg]\n";
+            << " [--palette day|dusk|night] [--check] [--print-hash] [--backend fixture-cpu|vsg]\n";
 }
 
 }  // namespace
@@ -798,6 +862,7 @@ int main(int argc, char** argv) {
     bool check = false;
     bool print_hash = false;
     std::string backend = "fixture-cpu";
+    std::string palette_override;
 
     for (int i = 1; i < argc; ++i) {
       std::string arg = argv[i];
@@ -811,6 +876,12 @@ int main(int argc, char** argv) {
         if (++i >= argc) throw std::runtime_error("--tile-size requires a positive integer");
         tile_size = std::stoi(argv[i]);
         if (*tile_size <= 0) throw std::runtime_error("--tile-size must be positive");
+      } else if (arg == "--palette") {
+        if (++i >= argc) throw std::runtime_error("--palette requires day, dusk, or night");
+        palette_override = argv[i];
+        if (palette_override != "day" && palette_override != "dusk" && palette_override != "night") {
+          throw std::runtime_error("--palette must be day, dusk, or night");
+        }
       } else if (arg == "--check") {
         check = true;
       } else if (arg == "--print-hash") {
@@ -835,7 +906,7 @@ int main(int argc, char** argv) {
     if (backend != "fixture-cpu") throw std::runtime_error("unknown backend: " + backend);
 
     const Json scene = load_json(scene_path_for_fixture(fixture_dir));
-    const Image image = render_scene(scene);
+    const Image image = render_scene(scene, RenderOptions{palette_override});
     const Image output_image = tile_size ? image.scaled_to(*tile_size, *tile_size) : image;
 
     if (format.empty()) {
@@ -865,7 +936,13 @@ int main(int argc, char** argv) {
       int checked = 0;
       for (const auto& expected : manifest.at("expected_images").array()) {
         if (expected.at("format").string() != "ppm-ascii") continue;
-        check_expected(image, fixture_dir / expected.at("path").string());
+        const std::string expected_palette = expected.contains("palette")
+                                                 ? expected.at("palette").string()
+                                                 : palette_override;
+        const Image expected_image = render_scene(scene, RenderOptions{expected_palette});
+        check_expected(expected_image, fixture_dir / expected.at("path").string());
+        check_forbidden_colors(expected_image, expected, fixture_dir / expected.at("path").string());
+        check_image_stats(expected_image, expected, fixture_dir / expected.at("path").string());
         ++checked;
       }
       if (checked == 0) throw std::runtime_error(fixture_dir.string() + ": no ppm-ascii expected images to check");

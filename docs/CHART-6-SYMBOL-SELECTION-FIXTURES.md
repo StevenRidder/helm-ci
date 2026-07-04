@@ -13,6 +13,7 @@ Validation smoke:
 
 ```sh
 engine/test-symbol-selection-fixtures.sh
+engine/test-symbol-selection-db-conformance.sh
 ```
 
 The smoke loads:
@@ -20,8 +21,15 @@ The smoke loads:
 - `pipeline/iconforge/catalog/runtime_evidence_snapshot.json`
 - `pipeline/iconforge/proof/manifest.json`
 
-It then checks the fixture cases against the CHART-5 C++ loader by
-`symbol_id + normalized_object_class`.
+It then checks the fixture cases against the CHART-5 C++ loader by exact
+`s52_lookup_id + row_key`, plus `symbol_id` and normalized object class.
+
+The DB conformance smoke opens `artifacts/opencpn_s52_portrayal.sqlite` and
+checks the same join keys against `runtime_symbol_candidate_v1`,
+`runtime_symbol_portrayal_v1`, and
+`pipeline/iconforge/catalog/runtime_evidence_snapshot.json`. This makes the
+synthetic render fixture fail early if it drifts from the real Forge DB
+contract.
 
 Coverage:
 
@@ -49,3 +57,14 @@ The `vulkan-render/symbol-selection` fixture is a synthetic command-stream
 wrapper with seven `place_symbol` commands. It exists so CHART-7 can render the
 same cases through the Vulkan/VSG smoke path without inventing new fixture
 selection semantics.
+
+CHART-7 consumes the same fixture through a flagged diagnostic renderer path:
+
+```sh
+engine/test-vulkan-symbol-selection-render.sh
+```
+
+That smoke keeps the Forge package path opt-in, renders day/dusk/night
+diagnostic PPM baselines, and proves runtime-blocked rows do not become default
+chart symbols. See
+[CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md](CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md).

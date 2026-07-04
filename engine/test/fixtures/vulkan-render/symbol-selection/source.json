@@ -26,7 +26,12 @@
             "value_of_sounding": true
           },
           "expected_symbol_id": "ACHARE02",
-          "expected_command_id": "cmd.symbol.direct-s101-obstruction"
+          "expected_command_id": "cmd.symbol.direct-s101-obstruction",
+          "db_contract": {
+            "s52_lookup_id": 1194,
+            "row_key": "OBSTRN_ACHARE02_1193_31245_1193",
+            "helm_catalog_id": "OBSTRN_ACHARE02_1193"
+          }
         },
         {
           "source_object_id": "fixture.boypil60-red-pillar-buoy",
@@ -40,7 +45,12 @@
             "colourPattern": "solid"
           },
           "expected_symbol_id": "BOYPIL60",
-          "expected_command_id": "cmd.symbol.boypil60-red-pillar-buoy"
+          "expected_command_id": "cmd.symbol.boypil60-red-pillar-buoy",
+          "db_contract": {
+            "s52_lookup_id": 1911,
+            "row_key": "BOYLAT_BOYPIL60_1910_30187_1910",
+            "helm_catalog_id": "BOYLAT_BOYPIL60_1910"
+          }
         },
         {
           "source_object_id": "fixture.rule-derived-daymark-topmark",
@@ -56,7 +66,12 @@
             "colourPattern": "vertical_stripes"
           },
           "expected_symbol_id": "TOPSHQ28",
-          "expected_command_id": "cmd.symbol.rule-derived-daymark-topmark"
+          "expected_command_id": "cmd.symbol.rule-derived-daymark-topmark",
+          "db_contract": {
+            "s52_lookup_id": 2162,
+            "row_key": "DAYMAR_TOPSHQ28_2160_93930_2161",
+            "helm_catalog_id": "DAYMAR_TOPSHQ28_2160"
+          }
         },
         {
           "source_object_id": "fixture.catalogue-rule-isolated-danger-beacon",
@@ -71,7 +86,12 @@
             ]
           },
           "expected_symbol_id": "BCNGEN76",
-          "expected_command_id": "cmd.symbol.catalogue-rule-isolated-danger-beacon"
+          "expected_command_id": "cmd.symbol.catalogue-rule-isolated-danger-beacon",
+          "db_contract": {
+            "s52_lookup_id": 1732,
+            "row_key": "BCNISD_BCNGEN76_1731_30020_1731",
+            "helm_catalog_id": "BCNISD_BCNGEN76_1731"
+          }
         },
         {
           "source_object_id": "fixture.documented-deviation-anchor-point",
@@ -79,7 +99,12 @@
           "geometry_type": "point",
           "attributes": {},
           "expected_symbol_id": "ACHPNT01",
-          "expected_command_id": "cmd.symbol.documented-deviation-anchor-point"
+          "expected_command_id": "cmd.symbol.documented-deviation-anchor-point",
+          "db_contract": {
+            "s52_lookup_id": 1715,
+            "row_key": "ACHPNT_ACHPNT01_1714_30003_1714",
+            "helm_catalog_id": "ACHPNT_ACHPNT01_963"
+          }
         },
         {
           "source_object_id": "fixture.non-s101-runtime-ais-default",
@@ -87,7 +112,12 @@
           "geometry_type": "point",
           "attributes": {},
           "expected_symbol_id": "AISDEF01",
-          "expected_command_id": "cmd.symbol.non-s101-runtime-ais-default"
+          "expected_command_id": "cmd.symbol.non-s101-runtime-ais-default",
+          "db_contract": {
+            "s52_lookup_id": 1609,
+            "row_key": "$CSYMB_AISDEF01_1608_31660_1608",
+            "helm_catalog_id": "$CSYMB_AISDEF01_1608"
+          }
         },
         {
           "source_object_id": "fixture.extension-profile-border",
@@ -101,7 +131,12 @@
             "colourPattern": "solid"
           },
           "expected_symbol_id": "BORDER01",
-          "expected_command_id": "cmd.symbol.extension-profile-border"
+          "expected_command_id": "cmd.symbol.extension-profile-border",
+          "db_contract": {
+            "s52_lookup_id": 1395,
+            "row_key": "chkpnt_BORDER01_1394_31446_1394",
+            "helm_catalog_id": "chkpnt_BORDER01_1394"
+          }
         }
       ]
     }

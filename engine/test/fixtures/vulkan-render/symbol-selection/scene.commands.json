@@ -178,6 +178,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "direct-s101-obstruction",
+            "s52_lookup_id": 1194,
+            "row_key": "OBSTRN_ACHARE02_1193_31245_1193",
+            "helm_catalog_id": "OBSTRN_ACHARE02_1193",
             "symbol_id": "ACHARE02",
             "object_class": "OBSTRN",
             "feature_type": "Obstruction",
@@ -207,6 +210,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "boypil60-red-pillar-buoy",
+            "s52_lookup_id": 1911,
+            "row_key": "BOYLAT_BOYPIL60_1910_30187_1910",
+            "helm_catalog_id": "BOYLAT_BOYPIL60_1910",
             "symbol_id": "BOYPIL60",
             "object_class": "BOYLAT",
             "feature_type": "LateralBuoy",
@@ -243,6 +249,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "rule-derived-daymark-topmark",
+            "s52_lookup_id": 2162,
+            "row_key": "DAYMAR_TOPSHQ28_2160_93930_2161",
+            "helm_catalog_id": "DAYMAR_TOPSHQ28_2160",
             "symbol_id": "TOPSHQ28",
             "object_class": "DAYMAR",
             "feature_type": "Daymark",
@@ -272,6 +281,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "catalogue-rule-isolated-danger-beacon",
+            "s52_lookup_id": 1732,
+            "row_key": "BCNISD_BCNGEN76_1731_30020_1731",
+            "helm_catalog_id": "BCNISD_BCNGEN76_1731",
             "symbol_id": "BCNGEN76",
             "object_class": "BCNISD",
             "feature_type": "IsolatedDangerBeacon",
@@ -301,6 +313,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "documented-deviation-anchor-point",
+            "s52_lookup_id": 1715,
+            "row_key": "ACHPNT_ACHPNT01_1714_30003_1714",
+            "helm_catalog_id": "ACHPNT_ACHPNT01_963",
             "symbol_id": "ACHPNT01",
             "object_class": "ACHPNT",
             "feature_type": "AnchorBerth",
@@ -330,6 +345,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "non-s101-runtime-ais-default",
+            "s52_lookup_id": 1609,
+            "row_key": "$CSYMB_AISDEF01_1608_31660_1608",
+            "helm_catalog_id": "$CSYMB_AISDEF01_1608",
             "symbol_id": "AISDEF01",
             "object_class": "$CSYMB",
             "feature_type": "",
@@ -359,6 +377,9 @@
           "priority": 70,
           "symbol_selection": {
             "fixture_id": "extension-profile-border",
+            "s52_lookup_id": 1395,
+            "row_key": "chkpnt_BORDER01_1394_31446_1394",
+            "helm_catalog_id": "chkpnt_BORDER01_1394",
             "symbol_id": "BORDER01",
             "object_class": "CHKPNT",
             "source_object_class": "chkpnt",
