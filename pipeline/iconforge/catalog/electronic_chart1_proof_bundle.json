@@ -1,0 +1,165 @@
+{
+  "bundle": {
+    "copy_images": true,
+    "files": {
+      "coverage": "coverage.json",
+      "hard_pile": "hard-pile.json",
+      "index": "index.html",
+      "manifest": "manifest.json",
+      "rows": "rows.json",
+      "schema": "schema.json"
+    },
+    "image_copy_limit": null,
+    "out_dir": "out/electronic_chart1_proof_bundle"
+  },
+  "coverage": {
+    "authority_rows": 3057,
+    "hard_pile_reason_counts": {
+      "diff:helm_s57_render_missing": 683,
+      "diff:opencpn_reference_missing": 597,
+      "diff:unsupported_taxonomy:non_reviewable_construct": 273,
+      "diff:unsupported_taxonomy:placeholder_manual": 238,
+      "diff:unsupported_taxonomy:runtime_overlay": 16,
+      "helm_recipe:missing": 683,
+      "helm_s101_trace:missing": 534,
+      "helm_s57_render:missing": 683,
+      "helm_shape_family:missing": 230,
+      "opencpn_reference_render:missing": 597,
+      "s101_db_backing:missing": 150,
+      "s101_feature_type:missing": 349,
+      "s101_forge43_trace:missing": 534,
+      "s52_instruction:missing": 52,
+      "s52_parse_status:partial": 7
+    },
+    "hard_pile_rows": 698,
+    "image_files_copied": 28308,
+    "missing_media_references": 0,
+    "proof_gate_counts": {
+      "red": 2193,
+      "yellow": 166
+    },
+    "proof_rows": 2359,
+    "row_taxonomy_counts": {
+      "area_fill": 100,
+      "conditional_rule": 188,
+      "line_style": 283,
+      "non_reviewable_construct": 273,
+      "placeholder_manual": 238,
+      "point_symbol": 1850,
+      "runtime_overlay": 16,
+      "text_rule": 109
+    },
+    "runtime_eligible_rows": 0,
+    "runtime_promotion_allowed_rows": 0,
+    "section_counts": {
+      "area_fills": 100,
+      "conditional_rules": 188,
+      "line_styles": 283,
+      "manual_placeholders": 238,
+      "non_reviewable_construct": 273,
+      "point_symbols": 1626,
+      "runtime_overlays": 16,
+      "text_rules": 109,
+      "topmarks_daymarks": 224
+    },
+    "semantic_gate_counts": {
+      "green": 696,
+      "red": 897,
+      "yellow": 766
+    },
+    "visible_gap_counts": {
+      "authority:authority_text_pending_source": 1470,
+      "diff:helm_s57_render_missing": 683,
+      "diff:opencpn_reference_missing": 597,
+      "diff:unsupported_taxonomy:non_reviewable_construct": 273,
+      "diff:unsupported_taxonomy:placeholder_manual": 238,
+      "diff:unsupported_taxonomy:runtime_overlay": 16,
+      "helm_recipe:manual_exception_required": 460,
+      "helm_recipe:missing": 1004,
+      "helm_recipe:recipe_missing": 48,
+      "helm_s101_trace:missing": 534,
+      "helm_s57_render:missing": 683,
+      "helm_shape_family:missing": 1165,
+      "human_qa:pending": 2359,
+      "opencpn_reference_refs:missing": 83,
+      "opencpn_reference_render:missing": 597,
+      "runtime_gate:fail_closed": 2359,
+      "s101_classification:unresolved": 6,
+      "s101_db_backing:missing": 958,
+      "s101_feature_type:missing": 1395,
+      "s101_forge43_trace:missing": 534,
+      "s101_trace:db_backing_missing": 808,
+      "s101_trace:non_s101_or_extension_profile": 484,
+      "s101_trace:non_s101_runtime_construct": 42,
+      "s101_trace:semantic_only_manual": 276,
+      "s101_trace:unresolved": 6,
+      "s52_instruction:missing": 52,
+      "s52_parse_status:partial": 7,
+      "semantic_gate:red": 897,
+      "semantic_gate:yellow": 766,
+      "visual_gate:red": 1954,
+      "visual_gate:yellow": 171,
+      "visual_palette:day:red": 1952,
+      "visual_palette:day:yellow": 171,
+      "visual_palette:dusk:red": 1954,
+      "visual_palette:dusk:yellow": 170,
+      "visual_palette:night:red": 1954,
+      "visual_palette:night:yellow": 171
+    },
+    "visual_gate_counts": {
+      "green": 234,
+      "red": 1954,
+      "yellow": 171
+    }
+  },
+  "local_server": {
+    "api": {
+      "feedback": "/api/electronic-chart1-proof/feedback",
+      "hard_pile": "/api/electronic-chart1-proof/hard-pile",
+      "manifest": "/api/electronic-chart1-proof/manifest",
+      "rows": "/api/electronic-chart1-proof/rows",
+      "summary": "/api/electronic-chart1-proof/summary"
+    },
+    "command": "python3 -m forge.electronic_chart1_proof_bundle --serve --port 9020",
+    "module": "forge.electronic_chart1_proof_bundle",
+    "url": "http://127.0.0.1:9020/out/electronic_chart1_proof_bundle/index.html"
+  },
+  "policy": {
+    "backend_generated": true,
+    "browser_business_logic_allowed": false,
+    "helm_outputs_role": "generated_owned_candidate",
+    "missing_data_visible_alert_required": true,
+    "opencpn_reference_role": "comparison_target_only",
+    "runtime_promotion_allowed": false,
+    "static_json_fallback_allowed": false
+  },
+  "schema": "helm.forge.electronic_chart1_proof_bundle.v1",
+  "source": {
+    "authority_corpus": {
+      "path": "catalog/electronic_chart1_authority_corpus.json",
+      "schema": "helm.forge.electronic_chart1_authority_corpus.v1",
+      "sha256": "1df8f0331c532d10d03fe2ba5975f52f50108b12d79ccdcb83c4575c1035a5d1"
+    },
+    "diff_engine": {
+      "path": "catalog/electronic_chart1_diff_engine.json",
+      "schema": "helm.forge.electronic_chart1_diff_engine.v1",
+      "sha256": "44a2d24102f5cfe3c09ff6888f50d0a3417e94ceadec973a2915ca71ca4306b7"
+    },
+    "helm_s101_render": {
+      "path": "catalog/electronic_chart1_helm_s101_render.json",
+      "schema": "helm.forge.electronic_chart1_helm_s101_render.v1",
+      "sha256": "841d9bed8012822bdae20c8e110b5d17313e07982563be34bde4c6e0482e5d28"
+    },
+    "helm_s57_render": {
+      "path": "catalog/electronic_chart1_helm_s57_render.json",
+      "schema": "helm.forge.electronic_chart1_helm_s57_render.v1",
+      "sha256": "c243cd4a2d78406899c0845e9915a4f57592be26fe9cc23f3bb1e1ae3a1cb8b4"
+    },
+    "opencpn_reference": {
+      "path": "catalog/electronic_chart1_opencpn_reference.json",
+      "schema": "helm.forge.electronic_chart1_opencpn_reference.v1",
+      "sha256": "6354a1359d18e2d65155aaefc9feb431791d105a3dd8b0812e01146973783acf"
+    }
+  },
+  "status": "proof_bundle_ready"
+}
