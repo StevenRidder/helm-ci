@@ -1,0 +1,24 @@
+[Unit]
+Description=Helm C++ one-origin boat server
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=helm
+Group=helm
+EnvironmentFile=/etc/helm/helm-runtime.env
+WorkingDirectory=/opt/helm
+ExecStart=/opt/helm/bin/helm-server
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/etc/helm /var/lib/helm /var/cache/helm /var/log/helm /srv/helm
+StandardOutput=append:/var/log/helm/helm-server.log
+StandardError=append:/var/log/helm/helm-server.err.log
+
+[Install]
+WantedBy=multi-user.target

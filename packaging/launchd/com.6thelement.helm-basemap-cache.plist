@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.6thelement.helm-basemap-cache</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/helm/bin/helm-basemap-cache</string>
+    <string>8095</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/opt/helm</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HELM_BIND</key>
+    <string>0.0.0.0</string>
+    <key>HELM_FILL_CACHE</key>
+    <string>/var/cache/helm/basemap-fill</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/var/log/helm/helm-basemap-cache.log</string>
+  <key>StandardErrorPath</key>
+  <string>/var/log/helm/helm-basemap-cache.err.log</string>
+</dict>
+</plist>

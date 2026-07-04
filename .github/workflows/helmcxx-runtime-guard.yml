@@ -7,13 +7,17 @@ on:
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/HELMCXX-MAINTAINABILITY.md"
+      - "docs/HELMCXX-PACKAGING.md"
       - "docs/RUNTIME-SERVICES.md"
+      - "packaging/**"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-benchmark-soak.mjs"
       - "scripts/helmcxx-maintainability-audit.mjs"
+      - "scripts/helmcxx-packaging-proof.sh"
+      - "scripts/install-helmcxx-runtime.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
@@ -23,13 +27,17 @@ on:
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/HELMCXX-MAINTAINABILITY.md"
+      - "docs/HELMCXX-PACKAGING.md"
       - "docs/RUNTIME-SERVICES.md"
+      - "packaging/**"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-benchmark-soak.mjs"
       - "scripts/helmcxx-maintainability-audit.mjs"
+      - "scripts/helmcxx-packaging-proof.sh"
+      - "scripts/install-helmcxx-runtime.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
@@ -51,9 +59,13 @@ jobs:
         run: |
           bash -n scripts/helmcxx-no-python-runtime.sh
           bash -n scripts/helmcxx-cockpit-proof.sh
+          bash -n scripts/install-helmcxx-runtime.sh
+          bash -n scripts/helmcxx-packaging-proof.sh
           node --check scripts/helmcxx-make-envd-fixture.mjs
           node --check scripts/helmcxx-benchmark-soak.mjs
           node --check scripts/helmcxx-maintainability-audit.mjs
           node --check web/test/e2e/helmcxx4-cockpit.spec.js
       - name: Check HELMC++ maintainability audit
         run: scripts/helmcxx-maintainability-audit.mjs
+      - name: Check HELMC++ packaging proof
+        run: scripts/helmcxx-packaging-proof.sh

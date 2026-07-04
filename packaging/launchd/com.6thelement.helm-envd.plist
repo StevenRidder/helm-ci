@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+  <key>Label</key>
+  <string>com.6thelement.helm-envd</string>
+  <key>ProgramArguments</key>
+  <array>
+    <string>/opt/helm/bin/helm-envd</string>
+    <string>8094</string>
+  </array>
+  <key>WorkingDirectory</key>
+  <string>/opt/helm</string>
+  <key>EnvironmentVariables</key>
+  <dict>
+    <key>HELM_BIND</key>
+    <string>0.0.0.0</string>
+    <key>HELM_ENV_GRID_MANIFESTS</key>
+    <string>/srv/helm/wx-packs/current.manifest.json</string>
+  </dict>
+  <key>RunAtLoad</key>
+  <false/>
+  <key>KeepAlive</key>
+  <true/>
+  <key>StandardOutPath</key>
+  <string>/var/log/helm/helm-envd.log</string>
+  <key>StandardErrorPath</key>
+  <string>/var/log/helm/helm-envd.err.log</string>
+</dict>
+</plist>

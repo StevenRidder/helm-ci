@@ -237,5 +237,7 @@ The runtime-service policy is accepted only after the HELMC++ gate passes:
   crash/restart, dependency-footprint, and soak evidence;
 - `scripts/helmcxx-maintainability-audit.mjs` passes and warning dispositions are carried into the
   final dossier;
-- packaging works on fresh machines without Docker;
+- `scripts/helmcxx-packaging-proof.sh` passes and
+  [`HELMCXX-PACKAGING.md`](HELMCXX-PACKAGING.md) documents fresh-machine
+  macOS plus Linux/Raspberry-Pi-style install paths without Docker;
 - performance, reliability, soak, and maintainability evidence is recorded.

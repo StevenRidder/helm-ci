@@ -257,6 +257,20 @@ Packaging proof must show:
 - codesign/notarization path where applicable;
 - smoke proof that a user can install, start, inspect health, load local packs, and shut down cleanly.
 
+`HELMC++-6` records the concrete install path in
+[`HELMCXX-PACKAGING.md`](HELMCXX-PACKAGING.md). The repeatable guard is:
+
+```bash
+scripts/helmcxx-packaging-proof.sh
+```
+
+By default the guard is CI-cheap: it validates the installer, launchd/systemd
+templates, deterministic directories, and a staged install tree without building
+OpenCPN. After a real `engine/bootstrap.sh`, run
+`scripts/helmcxx-packaging-proof.sh --run-smoke` to install real C++ binaries
+into a staging root, start `helm-server` and `helm-packd` on private ports, check
+health/catalog/local-pack catalog, and shut down cleanly.
+
 ## Maintainability bar
 
 Every C++ runtime service must be boring, bounded, and reviewable:

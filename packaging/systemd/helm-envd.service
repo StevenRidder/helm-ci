@@ -1,0 +1,27 @@
+[Unit]
+Description=Helm C++ environmental grid-pack service
+After=network-online.target
+Wants=network-online.target
+ConditionPathExists=/etc/helm/helm-envd-manifests.env
+
+[Service]
+Type=simple
+User=helm
+Group=helm
+EnvironmentFile=/etc/helm/helm-runtime.env
+EnvironmentFile=/etc/helm/helm-envd-manifests.env
+Environment=HELM_BIND=0.0.0.0
+WorkingDirectory=/opt/helm
+ExecStart=/opt/helm/bin/helm-envd 8094
+Restart=on-failure
+RestartSec=3
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=full
+ProtectHome=read-only
+ReadWritePaths=/etc/helm /var/lib/helm /var/cache/helm /var/log/helm /srv/helm
+StandardOutput=append:/var/log/helm/helm-envd.log
+StandardError=append:/var/log/helm/helm-envd.err.log
+
+[Install]
+WantedBy=multi-user.target
