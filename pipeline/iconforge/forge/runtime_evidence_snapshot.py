@@ -22,9 +22,13 @@ SNAPSHOT_MD = CATALOG / "runtime_evidence_snapshot.md"
 SCHEMA = "helm.iconforge.runtime_evidence_snapshot.v1"
 
 
+def canonical_json(payload: dict[str, Any]) -> str:
+    return json.dumps(payload, separators=(",", ":"), sort_keys=True) + "\n"
+
+
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(payload, separators=(",", ":"), sort_keys=True) + "\n")
+    path.write_text(canonical_json(payload))
 
 
 def _unique(values: list[str]) -> list[str]:
@@ -136,7 +140,7 @@ def _snapshot_row(
     }
 
 
-def build_snapshot(*, limit: int = 10000) -> dict[str, Any]:
+def build_snapshot(*, limit: int = 10000, write_reports: bool = True) -> dict[str, Any]:
     review = db_review_api.build_review_payload(limit=limit)
     runtime = runtime_promotion_gate.build_runtime_export(limit=limit)
     hard_pile = {int(row["row_id"]): row for row in runtime["hard_pile"]}
@@ -197,7 +201,8 @@ def build_snapshot(*, limit: int = 10000) -> dict[str, Any]:
         },
         "rows": rows,
     }
-    _write_reports(payload)
+    if write_reports:
+        _write_reports(payload)
     return payload
 
 

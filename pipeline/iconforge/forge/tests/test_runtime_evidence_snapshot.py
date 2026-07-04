@@ -10,7 +10,10 @@ from .. import runtime_evidence_snapshot
 
 
 def main() -> None:
-    payload = runtime_evidence_snapshot.build_snapshot()
+    saved = json.loads(runtime_evidence_snapshot.SNAPSHOT_JSON.read_text())
+    saved_mtime = runtime_evidence_snapshot.SNAPSHOT_JSON.stat().st_mtime_ns
+
+    payload = runtime_evidence_snapshot.build_snapshot(write_reports=False)
     assert payload["schema"] == "helm.iconforge.runtime_evidence_snapshot.v1"
     assert payload["status"] == "snapshot_ready"
     assert payload["policy"]["browser_business_logic_allowed"] is False
@@ -52,7 +55,9 @@ def main() -> None:
     non_s101 = rows["VRMEBL01"]
     assert non_s101["blocker_categories"]["non_s101_scope_boundary"] >= 1
 
-    saved = json.loads(runtime_evidence_snapshot.SNAPSHOT_JSON.read_text())
+    assert saved == payload
+    assert runtime_evidence_snapshot.SNAPSHOT_JSON.read_text() == runtime_evidence_snapshot.canonical_json(payload)
+    assert runtime_evidence_snapshot.SNAPSHOT_JSON.stat().st_mtime_ns == saved_mtime
     assert saved["summary"]["matches_runtime_promotion_gate"] is True
     assert runtime_evidence_snapshot.SNAPSHOT_MD.exists()
 
