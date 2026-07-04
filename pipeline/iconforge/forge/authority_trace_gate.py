@@ -73,6 +73,160 @@ NON_S101_CLASSES = {
     "non_s101_or_inland_extension",
 }
 
+WARNING_ONLY_REASONS: set[str] = set()
+
+
+def _reason_category(reason: str) -> tuple[str, str, str, str]:
+    """Return category, source layer, severity, remediation hint for a gap reason."""
+    if reason == "authority_trace:s101_feature_catalogue_missing":
+        return (
+            "s101_feature_catalogue_source_missing",
+            "s101_feature_catalogue",
+            "blocker",
+            "Provide a local S-101 FeatureCatalogue.xml path so it can be hashed and parsed as authority evidence.",
+        )
+    if reason == "authority_trace:s101_feature_catalogue_unparsed":
+        return (
+            "malformed_authority_source",
+            "s101_feature_catalogue",
+            "blocker",
+            "Repair or replace the local S-101 FeatureCatalogue.xml; parsed feature bindings are required.",
+        )
+    if reason in {
+        "authority_trace:s101_feature_catalogue_feature_not_found",
+        "authority_trace:s101_feature_type_missing",
+    }:
+        return (
+            "s101_feature_catalogue_binding_missing",
+            "s101_feature_catalogue",
+            "blocker",
+            "Add or verify the S-101 feature binding used by the resolver row.",
+        )
+    if reason in {
+        "authority_trace:s101_rule_file_missing",
+        "authority_trace:s101_rule_file_not_hashed",
+    }:
+        return (
+            "s101_rule_file_missing",
+            "s101_lua_rule",
+            "blocker",
+            "Provide the referenced local S-101 Lua rule file so it can be hashed as evidence.",
+        )
+    if reason.startswith("authority_trace:unknown_dictionary_code:"):
+        return (
+            "s57_dictionary_decode_gap",
+            "s57_dictionary",
+            "blocker",
+            "Extend the decoded S-57/S-52 dictionary table from a hashed source dictionary.",
+        )
+    if reason in {
+        "authority_trace:s57_attribute_predicates_empty",
+        "authority_trace:semantic_tuple_missing",
+    }:
+        return (
+            "s57_semantic_evidence_missing",
+            "s57_semantic_tuple",
+            "blocker",
+            "Repair ingestion/normalization so the S-57 object and attribute tuple is explicit.",
+        )
+    if reason.startswith("authority_trace:s52_ast_") or reason == "authority_trace:s52_instruction_missing":
+        return (
+            "s52_instruction_evidence_missing",
+            "s52_instruction_ast",
+            "blocker",
+            "Repair S-52 instruction parsing before the row can be runtime eligible.",
+        )
+    if reason in {
+        "authority_trace:s101_resolver_row_missing",
+        "authority_trace:s101_crosswalk_class_unresolved",
+        "authority_trace:s101_resolver_unresolved_reasons_present",
+    }:
+        return (
+            "s101_resolver_evidence_missing",
+            "s101_resolver",
+            "blocker",
+            "Resolve the S-101 mapping class and unresolved resolver reasons.",
+        )
+    if reason in {
+        "authority_trace:non_s101_runtime_construct",
+        "authority_trace:non_s101_or_inland_extension",
+    }:
+        return (
+            "non_s101_scope_boundary",
+            "s101_resolver",
+            "blocker",
+            "Keep out of S-101 chart-runtime export unless a signed scope exception says otherwise.",
+        )
+    if reason in {
+        "authority_trace:helm_recipe_sidecar_missing",
+        "authority_trace:helm_recipe_not_ready",
+    }:
+        return (
+            "helm_recipe_evidence_missing",
+            "helm_recipe",
+            "blocker",
+            "Generate or review the Helm symbol recipe before runtime export.",
+        )
+    if reason == "authority_trace:helm_interpretation_not_ready":
+        return (
+            "helm_interpretation_missing",
+            "helm_interpretation",
+            "blocker",
+            "Generate and review the stored Helm interpretation text.",
+        )
+    if reason in {
+        "authority_trace:colour_authority_missing",
+        "authority_trace:colour_authority_blocks_runtime",
+        "authority_trace:colour_authority_pending",
+    }:
+        return (
+            "colour_authority_blocker",
+            "colour_authority",
+            "blocker",
+            "Resolve colour authority from feature predicates and visual recipe evidence.",
+        )
+    if reason == "authority_trace:runtime_candidate_not_eligible":
+        return (
+            "runtime_eligibility_blocker",
+            "runtime_candidate",
+            "blocker",
+            "The DB runtime candidate is not eligible; all required runtime gates must pass.",
+        )
+    if reason.startswith("authority_trace:runtime_gate_visual_approval"):
+        return (
+            "visual_human_approval_blocker",
+            "runtime_gate",
+            "blocker",
+            "Complete the visual/human approval gate; this classifier does not approve artwork.",
+        )
+    if reason.startswith("authority_trace:runtime_gate_topmark_daymark_special_cases"):
+        return (
+            "visual_special_case_blocker",
+            "runtime_gate",
+            "blocker",
+            "Resolve topmark/daymark special-case review before runtime export.",
+        )
+    if reason.startswith("authority_trace:runtime_gate_"):
+        return (
+            "runtime_gate_blocker",
+            "runtime_gate",
+            "blocker",
+            "Resolve the named backend runtime gate before export.",
+        )
+    if reason == "authority_trace:semantic_sidecar_missing":
+        return (
+            "semantic_sidecar_missing",
+            "semantic_sidecar",
+            "blocker",
+            "Regenerate semantic sidecar evidence for this row.",
+        )
+    return (
+        "unclassified_authority_gap",
+        "authority_trace",
+        "blocker",
+        "Add a classifier case or repair the underlying evidence source; unknown gaps fail closed.",
+    )
+
 
 def _read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
@@ -641,6 +795,78 @@ def _trace_status(reason_codes: list[str], runtime_blocker: bool) -> str:
     return "trace_ready"
 
 
+def _reason_evidence(reason: str, row: dict[str, Any]) -> dict[str, Any]:
+    s101 = row.get("s101_mapping") or {}
+    dictionary = row.get("s57_dictionary_decode") or {}
+    runtime_gate = row.get("runtime_gate") or {}
+    if "s101_feature_catalogue" in reason:
+        return {
+            "path": s101.get("feature_catalogue_local_path") or "",
+            "sha256": s101.get("feature_catalogue_sha256"),
+            "parse_status": s101.get("feature_catalogue_parse_status"),
+            "feature_type": s101.get("feature_type"),
+        }
+    if "s101_rule_file" in reason:
+        return {
+            "path": s101.get("rule_file_local_path") or "",
+            "sha256": s101.get("rule_file_sha256"),
+            "rule_file": s101.get("rule_file"),
+        }
+    if reason.startswith("authority_trace:unknown_dictionary_code:"):
+        return {
+            "source": dictionary.get("source") or "",
+            "source_hash": dictionary.get("source_hash"),
+            "attdecode_sha256": dictionary.get("attdecode_sha256"),
+        }
+    if reason.startswith("authority_trace:runtime_gate_"):
+        gate_name = reason.removeprefix("authority_trace:runtime_gate_").rsplit("_", 1)[0]
+        gate = next((item for item in runtime_gate.get("gates") or [] if item.get("name") == gate_name), {})
+        return {
+            "gate_name": gate.get("name") or gate_name,
+            "gate_status": gate.get("status") or "",
+            "detail": gate.get("detail") or "",
+        }
+    return {}
+
+
+def _classify_reason(reason: str, row: dict[str, Any]) -> dict[str, Any]:
+    category, source_layer, severity, hint = _reason_category(reason)
+    blocks_runtime = reason not in WARNING_ONLY_REASONS and severity != "warning"
+    return {
+        "reason_code": reason,
+        "blocker_category": category,
+        "source_layer": source_layer,
+        "severity": severity,
+        "runtime_effect": "blocks_runtime" if blocks_runtime else "warning_only",
+        "blocks_runtime": blocks_runtime,
+        "remediation_hint": hint,
+        "evidence": _reason_evidence(reason, row),
+    }
+
+
+def _classifications_for_row(row: dict[str, Any]) -> list[dict[str, Any]]:
+    return [_classify_reason(reason, row) for reason in row["reason_codes"]]
+
+
+def _blocker_summary(classifications: list[dict[str, Any]]) -> dict[str, Any]:
+    category_counts = Counter(item["blocker_category"] for item in classifications)
+    layer_counts = Counter(item["source_layer"] for item in classifications)
+    effect_counts = Counter(item["runtime_effect"] for item in classifications)
+    severity_counts = Counter(item["severity"] for item in classifications)
+    blocking = [item for item in classifications if item["blocks_runtime"]]
+    return {
+        "gap_count": len(classifications),
+        "blocking_gap_count": len(blocking),
+        "warning_gap_count": len(classifications) - len(blocking),
+        "runtime_blocker": bool(blocking),
+        "blocker_category_counts": dict(sorted(category_counts.items())),
+        "source_layer_counts": dict(sorted(layer_counts.items())),
+        "runtime_effect_counts": dict(sorted(effect_counts.items())),
+        "severity_counts": dict(sorted(severity_counts.items())),
+        "top_blocker_categories": dict(category_counts.most_common(8)),
+    }
+
+
 def _row_trace(
     db_row: sqlite3.Row,
     gates: list[dict[str, Any]],
@@ -713,7 +939,7 @@ def _row_trace(
             reason_codes.append(f"authority_trace:runtime_gate_{gate['name']}_{gate['status']}")
 
     runtime_blocker = bool(reason_codes)
-    return {
+    trace = {
         "schema": SCHEMA,
         "trace_id": f"s52_lookup:{db_row['s52_lookup_id']}",
         "s52_lookup_id": db_row["s52_lookup_id"],
@@ -822,6 +1048,10 @@ def _row_trace(
             ],
         },
     }
+    classifications = _classifications_for_row(trace)
+    trace["gap_classifications"] = classifications
+    trace["blocker_summary"] = _blocker_summary(classifications)
+    return trace
 
 
 def _asset_summaries(
@@ -846,8 +1076,10 @@ def _asset_summaries(
         traces = traces_by_symbol.get(asset, [])
         status_counts = Counter(trace["authority_status"] for trace in traces)
         reason_counts: Counter[str] = Counter()
+        category_counts: Counter[str] = Counter()
         for trace in traces:
             reason_counts.update(trace["reason_codes"])
+            category_counts.update((trace.get("blocker_summary") or {}).get("blocker_category_counts") or {})
         runtime_blocker = not traces or any(trace["runtime_blocker"] for trace in traces)
         summaries.append({
             "asset": asset,
@@ -862,6 +1094,7 @@ def _asset_summaries(
             "trace_row_count": len(traces),
             "status_counts": dict(sorted(status_counts.items())),
             "top_reason_codes": dict(reason_counts.most_common(12)),
+            "top_blocker_categories": dict(category_counts.most_common(12)),
             "unresolved_reasons": _json_value(row["unresolved_reasons"], []),
             "representative_trace_ids": [trace["trace_id"] for trace in traces[:5]],
         })
@@ -871,7 +1104,12 @@ def _asset_summaries(
 def _gap_rows(trace_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
     gaps = []
     for row in trace_rows:
+        classifications = {
+            item["reason_code"]: item
+            for item in row.get("gap_classifications") or []
+        }
         for reason in row["reason_codes"]:
+            classification = classifications.get(reason) or _classify_reason(reason, row)
             gaps.append({
                 "schema": "helm.iconforge.authority_trace_gap.v1",
                 "trace_id": row["trace_id"],
@@ -880,6 +1118,13 @@ def _gap_rows(trace_rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
                 "symbol_id": row["symbol_id"],
                 "object_class": row["object_class"],
                 "reason_code": reason,
+                "blocker_category": classification["blocker_category"],
+                "source_layer": classification["source_layer"],
+                "severity": classification["severity"],
+                "runtime_effect": classification["runtime_effect"],
+                "blocks_runtime": classification["blocks_runtime"],
+                "remediation_hint": classification["remediation_hint"],
+                "evidence": classification["evidence"],
                 "gate_status": "blocked" if row["runtime_blocker"] else "warn",
             })
     return gaps
@@ -906,11 +1151,25 @@ def build(
         asset_summaries = _asset_summaries(conn, trace_rows)
 
     reason_counts: Counter[str] = Counter()
+    category_counts: Counter[str] = Counter()
+    layer_counts: Counter[str] = Counter()
+    effect_counts: Counter[str] = Counter()
+    severity_counts: Counter[str] = Counter()
     status_counts = Counter(row["authority_status"] for row in trace_rows)
     asset_status_counts = Counter(row["authority_status"] for row in asset_summaries)
     for row in trace_rows:
         reason_counts.update(row["reason_codes"])
+        summary = row.get("blocker_summary") or {}
+        category_counts.update(summary.get("blocker_category_counts") or {})
+        layer_counts.update(summary.get("source_layer_counts") or {})
+        effect_counts.update(summary.get("runtime_effect_counts") or {})
+        severity_counts.update(summary.get("severity_counts") or {})
     gaps = _gap_rows(trace_rows)
+    runtime_blocker_rows_from_classifier = sum(
+        1
+        for row in trace_rows
+        if (row.get("blocker_summary") or {}).get("runtime_blocker")
+    )
 
     payload = {
         "schema": SCHEMA,
@@ -943,7 +1202,12 @@ def build(
             "authority_status_counts": dict(sorted(status_counts.items())),
             "asset_authority_status_counts": dict(sorted(asset_status_counts.items())),
             "reason_counts": dict(sorted(reason_counts.items())),
+            "blocker_category_counts": dict(sorted(category_counts.items())),
+            "source_layer_counts": dict(sorted(layer_counts.items())),
+            "runtime_effect_counts": dict(sorted(effect_counts.items())),
+            "severity_counts": dict(sorted(severity_counts.items())),
             "runtime_blocker_rows": sum(1 for row in trace_rows if row["runtime_blocker"]),
+            "runtime_blocker_rows_from_classifier": runtime_blocker_rows_from_classifier,
             "runtime_trace_ready_rows": sum(1 for row in trace_rows if not row["runtime_blocker"]),
         },
         "golden_fixtures": {
@@ -997,6 +1261,7 @@ def _write_reports(payload: dict[str, Any]) -> None:
         f"- authority_trace_gap_rows: `{summary['authority_trace_gap_rows']}`",
         f"- asset_summary_rows: `{summary['asset_summary_rows']}`",
         f"- runtime_blocker_rows: `{summary['runtime_blocker_rows']}`",
+        f"- runtime_blocker_rows_from_classifier: `{summary['runtime_blocker_rows_from_classifier']}`",
         "",
         "## Policy",
         "",
@@ -1021,6 +1286,15 @@ def _write_reports(payload: dict[str, Any]) -> None:
     ])
     for reason, count in Counter(summary["reason_counts"]).most_common(20):
         lines.append(f"| `{reason}` | {count} |")
+    lines.extend([
+        "",
+        "## Top Blocker Categories",
+        "",
+        "| Category | Count |",
+        "| --- | ---: |",
+    ])
+    for category, count in Counter(summary["blocker_category_counts"]).most_common(20):
+        lines.append(f"| `{category}` | {count} |")
     lines.extend([
         "",
         "## Golden Fixture Coverage",

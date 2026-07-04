@@ -9,6 +9,7 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 - authority_trace_gap_rows: `17326`
 - asset_summary_rows: `824`
 - runtime_blocker_rows: `3057`
+- runtime_blocker_rows_from_classifier: `3057`
 
 ## Policy
 
@@ -47,6 +48,26 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 | `authority_trace:non_s101_runtime_construct` | 119 |
 | `authority_trace:s101_crosswalk_class_unresolved` | 78 |
 | `authority_trace:runtime_gate_topmark_daymark_special_cases_pending` | 71 |
+
+## Top Blocker Categories
+
+| Category | Count |
+| --- | ---: |
+| `runtime_eligibility_blocker` | 3057 |
+| `visual_human_approval_blocker` | 3057 |
+| `s101_feature_catalogue_source_missing` | 2043 |
+| `helm_interpretation_missing` | 1710 |
+| `helm_recipe_evidence_missing` | 1653 |
+| `s101_resolver_evidence_missing` | 1333 |
+| `runtime_gate_blocker` | 1155 |
+| `s57_semantic_evidence_missing` | 698 |
+| `s101_rule_file_missing` | 553 |
+| `non_s101_scope_boundary` | 515 |
+| `s101_feature_catalogue_binding_missing` | 453 |
+| `colour_authority_blocker` | 421 |
+| `semantic_sidecar_missing` | 421 |
+| `visual_special_case_blocker` | 198 |
+| `s52_instruction_evidence_missing` | 59 |
 
 ## Golden Fixture Coverage
 

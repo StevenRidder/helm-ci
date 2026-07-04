@@ -64,6 +64,8 @@ def main():
     assert "render_colour_authority" in db_html
     assert "Authority trace" in db_html
     assert "authority_trace" in db_html
+    assert "Authority blockers" in db_html
+    assert "blocker_category" in db_html
 
     rows = list(csv.DictReader(csv_path.open()))
     assert len(rows) == 12

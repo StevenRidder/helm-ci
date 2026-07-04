@@ -139,9 +139,12 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
     promoted = []
     hard_pile = []
     reason_counts: Counter[str] = Counter()
+    authority_blocker_category_counts: Counter[str] = Counter()
     for row in review["rows"]:
         reasons = _reason_codes(row)
         if reasons:
+            authority_summary = (row["qa"].get("authority_trace") or {}).get("blocker_summary") or {}
+            authority_blocker_category_counts.update(authority_summary.get("blocker_category_counts") or {})
             hard_pile.append({
                 "row_id": row["row_id"],
                 "row_key": row["row_key"],
@@ -149,6 +152,7 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
                 "helm_catalog_id": row["helm_catalog_id"],
                 "candidate_status": row["status"],
                 "reason_codes": reasons,
+                "authority_blocker_summary": authority_summary,
                 "gate_summary": {
                     "blocking": row["qa"]["blocking_gate_count"],
                     "pending": row["qa"]["pending_gate_count"],
@@ -170,6 +174,7 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
             "runtime_eligible_db_rows": review["summary"]["runtime_eligible"],
             "runtime_portrayal_db_rows": review["summary"]["runtime_portrayal_rows"],
             "reason_counts": dict(sorted(reason_counts.items())),
+            "authority_blocker_category_counts": dict(sorted(authority_blocker_category_counts.items())),
             "promotion_rule": (
                 "Export only rows with DB runtime_eligible=true, no blocking/pending gates, "
                 "recipe_ready, helm_interpretation_ready, style_contract pass, "

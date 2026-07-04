@@ -738,9 +738,10 @@ function gateList(row) {
   const style = row.qa.style_contract || {};
   const colour = row.qa.colour_authority || {};
   const authority = row.qa.authority_trace || {};
+  const authorityCategories = authority.blocker_summary?.top_blocker_categories || authority.blocker_summary?.blocker_category_counts || {};
   const styleGate = `<li class="${esc(style.gate_status || "pending")}"><strong>style_contract</strong>: ${esc(style.gate_status || "pending")} - ${esc(style.status || "missing")} ${esc((style.issues || []).join(", "))}</li>`;
   const colourGate = `<li class="${esc(colour.gate_status || "pending")}"><strong>colour_authority</strong>: ${esc(colour.gate_status || "pending")} - ${esc(colour.status || "missing")} feature=[${esc((colour.feature_colour_sequence || []).join(", "))}] visual=[${esc((colour.visual_colour_sequence || []).join(", "))}] missing=[${esc((colour.missing_feature_colours || []).join(", "))}] extra=[${esc((colour.extra_visual_colours || []).join(", "))}] authority=${esc(colour.render_colour_authority || "missing")}</li>`;
-  const authorityGate = `<li class="${esc(authority.gate_status || "blocked")}"><strong>authority_trace</strong>: ${esc(authority.gate_status || "blocked")} - ${esc(authority.authority_status || "missing")} reasons=${esc((authority.reason_codes || []).slice(0, 5).join(", "))}</li>`;
+  const authorityGate = `<li class="${esc(authority.gate_status || "blocked")}"><strong>authority_trace</strong>: ${esc(authority.gate_status || "blocked")} - ${esc(authority.authority_status || "missing")} reasons=${esc((authority.reason_codes || []).slice(0, 5).join(", "))} categories=${esc(JSON.stringify(authorityCategories))}</li>`;
   return styleGate + colourGate + authorityGate + (row.qa.gates || []).map(gate =>
     `<li class="${esc(gate.status)}"><strong>${esc(gate.name)}</strong>: ${esc(gate.status)} - ${esc(gate.detail)}</li>`
   ).join("");
@@ -758,6 +759,7 @@ function renderRow(row) {
       colour.status, colour.gate_status, colour.render_colour_authority,
       (colour.feature_colour_sequence || []).join(" "), (colour.visual_colour_sequence || []).join(" "),
       authority.authority_status, authority.gate_status, (authority.reason_codes || []).join(" "),
+      JSON.stringify(authority.blocker_summary || {}),
       missing.join(" ")
     ].join(" ").toLowerCase())}">
     <div class="report">
@@ -773,6 +775,7 @@ function renderRow(row) {
         <div class="small"><strong>Style contract:</strong> ${text(style.status)} / ${text(style.gate_status)}</div>
         <div class="small"><strong>Colour authority:</strong> ${text(colour.status)} / ${text(colour.gate_status)} / ${text(colour.render_colour_authority)}</div>
         <div class="small"><strong>Authority trace:</strong> ${text(authority.authority_status)} / ${text(authority.gate_status)}</div>
+        <div class="small"><strong>Authority blockers:</strong> ${text(authority.blocker_summary?.top_blocker_categories || authority.blocker_summary?.blocker_category_counts || {})}</div>
       </div>
       <div class="images">
         ${image("Helm", row.images.helm.backend_url)}

@@ -36,6 +36,9 @@ def main() -> None:
         assert row["qa"]["authority_trace"]["schema"] == "helm.iconforge.authority_trace_gate.v1"
         assert row["qa"]["authority_trace"]["gate_status"] == "blocked"
         assert row["qa"]["authority_trace"]["runtime_blocker"] is True
+        assert row["qa"]["authority_trace"]["blocker_summary"]["runtime_blocker"] is True
+        assert row["qa"]["authority_trace"]["gap_classifications"]
+        assert all(item["blocker_category"] for item in row["qa"]["authority_trace"]["gap_classifications"])
         assert row["qa"]["authority_trace"]["s52_lookup"]["instruction"]
         assert row["qa"]["authority_trace"]["s57_dictionary_decode"]["source"]
         assert row["qa"]["authority_trace"]["s101_mapping"]["source_boundary"]
@@ -51,6 +54,11 @@ def main() -> None:
     assert rows["BOYLAT25"]["qa"]["colour_authority"]["status"] == "aligned"
     assert rows["BOYLAT25"]["qa"]["authority_trace"]["s101_mapping"]["feature_type"] == "LateralBuoy"
     assert "authority_trace:runtime_candidate_not_eligible" in rows["BOYLAT25"]["qa"]["authority_trace"]["reason_codes"]
+    assert rows["BOYLAT25"]["qa"]["authority_trace"]["blocker_summary"]["blocker_category_counts"]["runtime_eligibility_blocker"] == 1
+    assert any(
+        item["blocker_category"] == "s101_feature_catalogue_source_missing"
+        for item in rows["BOYLAT25"]["qa"]["authority_trace"]["gap_classifications"]
+    )
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["status"] == "feature_colour_dropped"
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["missing_feature_colours"] == ["green"]
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["extra_visual_colours"] == ["white"]

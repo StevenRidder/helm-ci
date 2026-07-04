@@ -29,9 +29,13 @@ def main() -> None:
     assert "authority_trace_runtime_blocker" in payload["summary"]["reason_counts"]
     assert "authority_trace_missing" not in payload["summary"]["reason_counts"]
     assert "authority_trace:runtime_candidate_not_eligible" in payload["summary"]["reason_counts"]
+    assert payload["summary"]["authority_blocker_category_counts"]["runtime_eligibility_blocker"] == 3057
+    assert payload["summary"]["authority_blocker_category_counts"]["visual_human_approval_blocker"] == 3057
     assert any(reason.startswith("gate:visual_approval:pending") for reason in payload["summary"]["reason_counts"])
     assert not payload["rows"]
     assert payload["hard_pile"][0]["reason_codes"]
+    assert payload["hard_pile"][0]["authority_blocker_summary"]["runtime_blocker"] is True
+    assert payload["hard_pile"][0]["authority_blocker_summary"]["blocker_category_counts"]
     assert not any(reason.startswith("colour_authority") for reason in payload["summary"]["reason_counts"])
     assert any(reason.startswith("authority_trace:") for reason in payload["summary"]["reason_counts"])
 

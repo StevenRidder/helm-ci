@@ -66,6 +66,10 @@ def _exercise_feature_catalogue_present() -> None:
         assert bcns["s101_mapping"]["feature_type"] == "CardinalBeacon"
         assert bcns["s101_mapping"]["feature_catalogue_feature_present"] is False
         assert "authority_trace:s101_feature_catalogue_feature_not_found" in bcns["reason_codes"]
+        assert any(
+            item["blocker_category"] == "s101_feature_catalogue_binding_missing"
+            for item in bcns["gap_classifications"]
+        )
 
 
 def _exercise_feature_catalogue_malformed() -> None:
@@ -87,6 +91,10 @@ def _exercise_feature_catalogue_malformed() -> None:
         boylat25 = _by_symbol(payload["rows"])["BOYLAT25"][0]
         assert "authority_trace:s101_feature_catalogue_unparsed" in boylat25["reason_codes"]
         assert "authority_trace:s101_feature_catalogue_missing" not in boylat25["reason_codes"]
+        assert any(
+            item["blocker_category"] == "malformed_authority_source"
+            for item in boylat25["gap_classifications"]
+        )
 
 
 def main() -> None:
@@ -101,6 +109,7 @@ def main() -> None:
     assert payload["summary"]["asset_summary_rows"] == 824
     assert payload["summary"]["authority_trace_gap_rows"] > 0
     assert payload["summary"]["runtime_blocker_rows"] == 3057
+    assert payload["summary"]["runtime_blocker_rows_from_classifier"] == 3057
     assert payload["tables"]["authority_trace"]["row_count"] == payload["summary"]["authority_trace_rows"]
     assert payload["tables"]["authority_trace_gap"]["row_count"] == payload["summary"]["authority_trace_gap_rows"]
     assert payload["tables"]["authority_asset_summary"]["row_count"] == payload["summary"]["asset_summary_rows"]
@@ -113,6 +122,13 @@ def main() -> None:
     assert payload["source"]["s57_dictionary_decode"]["attdecode_sha256"]
     assert payload["source"]["s57_dictionary_decode"]["attdecode_colpat_values"]["5"] == "stripes (direction unknown)"
     assert payload["source"]["s57_dictionary_decode"]["attdecode_colpat_values"]["6"] == "border stripe"
+    categories = payload["summary"]["blocker_category_counts"]
+    assert categories["runtime_eligibility_blocker"] == 3057
+    assert categories["s101_feature_catalogue_source_missing"] == reasons["authority_trace:s101_feature_catalogue_missing"]
+    assert categories["visual_human_approval_blocker"] == reasons["authority_trace:runtime_gate_visual_approval_pending"]
+    assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == payload["summary"]["authority_trace_gap_rows"]
+    assert payload["summary"]["severity_counts"]["blocker"] == payload["summary"]["authority_trace_gap_rows"]
+    assert all(row["blocker_category"] and row["runtime_effect"] for row in payload["gap_rows"])
 
     rows_by_symbol = _by_symbol(payload["rows"])
     for symbol_id in payload["golden_fixtures"]["required_symbols"]:
@@ -153,6 +169,14 @@ def main() -> None:
     assert boylat25["s101_mapping"]["feature_type"] == "LateralBuoy"
     assert boylat25["helm_recipe"]["status"] in {"recipe_ready", "manual_exception_required", "missing"}
     assert "authority_trace:runtime_candidate_not_eligible" in boylat25["reason_codes"]
+    assert boylat25["blocker_summary"]["runtime_blocker"] is True
+    assert boylat25["blocker_summary"]["blocker_category_counts"]["runtime_eligibility_blocker"] == 1
+    assert any(
+        item["reason_code"] == "authority_trace:runtime_candidate_not_eligible"
+        and item["blocker_category"] == "runtime_eligibility_blocker"
+        and item["blocks_runtime"] is True
+        for item in boylat25["gap_classifications"]
+    )
 
     topshp = rows_by_symbol["TOPSHP28"][0]
     assert topshp["s57_feature"]["object_class"]
@@ -172,6 +196,13 @@ def main() -> None:
         if row["symbol_id"] == "BOYLAT13"
     }
     assert "authority_trace:runtime_candidate_not_eligible" in malformed_gap
+    classified_gap = next(
+        row for row in payload["gap_rows"]
+        if row["symbol_id"] == "BOYLAT13" and row["reason_code"] == "authority_trace:runtime_candidate_not_eligible"
+    )
+    assert classified_gap["blocker_category"] == "runtime_eligibility_blocker"
+    assert classified_gap["runtime_effect"] == "blocks_runtime"
+    assert classified_gap["blocks_runtime"] is True
 
     saved = json.loads((ROOT / "catalog" / "authority_trace_gate.json").read_text())
     assert saved["summary"]["authority_trace_rows"] == 3057
