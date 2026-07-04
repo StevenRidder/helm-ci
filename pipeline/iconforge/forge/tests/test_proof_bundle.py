@@ -44,6 +44,12 @@ def main() -> None:
         assert manifest["approval_workflow"]["endpoints"]["save_review"] == "/api/save-review"
         assert manifest["approval_workflow"]["endpoints"]["save_signoff"] == "/api/save-signoff"
         assert manifest["source_boundary"]["publish_gate"].startswith("only accepted")
+        assert manifest["specification"]["source"] == "SPEC-0001-clean-room-symbol-package.md"
+        assert manifest["specification"]["proof_relative_link"] == "../SPEC-0001-clean-room-symbol-package.md"
+        assert manifest["registry_manifest"]["schema"] == "helm.symbol.cleanroom-registry.v1"
+        assert manifest["registry_manifest"]["summary"]["symbols"] == 2636
+        assert manifest["source_expansion_manifest"]["schema"] == "helm.iconforge.source_expansion_manifest.v1"
+        assert manifest["source_expansion_manifest"]["summary"]["rows"] == 55
         assert manifest["coverage"]["s101_crosswalk_class_counts"]["non_s101_or_inland_extension"] == 123
         serialized_manifest = json.dumps(manifest)
         for dirty in [
@@ -78,6 +84,9 @@ def main() -> None:
         compare = (out / "compare-opencpn.html").read_text()
         assert "Helm Clean-room Symbol Catalog" in index
         assert "Helm/OpenCPN Symbol Proof" in compare
+        assert "../SPEC-0001-clean-room-symbol-package.md" in index
+        assert "../registry/symbols.json" in index
+        assert "../catalog/source_expansion_manifest.json" in compare
         assert "comparison target only" in compare
     print("proof bundle: OK")
 

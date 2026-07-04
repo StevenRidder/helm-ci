@@ -52,6 +52,29 @@
     },
     "total": 824
   },
+  "registry_manifest": {
+    "path": "registry/symbols.json",
+    "schema": "helm.symbol.cleanroom-registry.v1",
+    "status": "provisional_review_package",
+    "summary": {
+      "blocked_non_symbol_candidates": 421,
+      "db_candidates": 3057,
+      "hard_pile_rows": 3057,
+      "qa_status_counts": {
+        "blocked": 328,
+        "needs_review": 2308
+      },
+      "runtime_rows": 0,
+      "semantic_review_counts": {
+        "accepted": 1225,
+        "needs_review": 1411
+      },
+      "symbols": 2636,
+      "visual_parity_counts": {
+        "needs_review": 2636
+      }
+    }
+  },
   "render_targets": [
     "OpenCPN/Vulkan",
     "Helm C++",
@@ -73,10 +96,46 @@
     "generated_outputs": "Forge generated-owned SVG candidates and palette-resolved exports",
     "publish_gate": "only accepted/final_approved rows may become runtime defaults"
   },
+  "source_expansion_manifest": {
+    "path": "catalog/source_expansion_manifest.json",
+    "schema": "helm.iconforge.source_expansion_manifest.v1",
+    "status": "planning_only_not_artwork",
+    "summary": {
+      "candidate_status_counts": {
+        "chart1_parity_witness_needed": 2,
+        "judge_pass_pending_final_approval": 21,
+        "manual_policy_exception": 2,
+        "missing": 8,
+        "portrayal_rule_registry": 15,
+        "style_primitive_registry": 4,
+        "witness_needed_official_symbol": 3
+      },
+      "license_tag_counts": {
+        "apache-design-inspiration": 36,
+        "license_pending_reference": 127,
+        "public-domain-import": 55
+      },
+      "no_helm_candidate_rows": 0,
+      "ready_rows": 0,
+      "rows": 55,
+      "selection_reason_counts": {
+        "candidate_status:chart1_parity_witness_needed": 2,
+        "candidate_status:manual_policy_exception": 2,
+        "candidate_status:portrayal_rule_registry": 15,
+        "candidate_status:style_primitive_registry": 4,
+        "candidate_status:witness_needed_official_symbol": 3,
+        "standard_source_row_missing": 8,
+        "triad_reference_gap:any_false": 41,
+        "triad_reference_gap:opencpn_false": 47,
+        "triad_row_missing": 8
+      }
+    }
+  },
   "specification": {
     "label": "SPEC 0001: Clean-room Maritime Symbol Package",
+    "proof_relative_link": "../SPEC-0001-clean-room-symbol-package.md",
     "role": "package/profile contract",
-    "source": "/Users/steveridder/Documents/Codex/2026-07-01/is-this-useful-rfc-draft-0001/SPEC-0001-clean-room-symbol-package.md"
+    "source": "SPEC-0001-clean-room-symbol-package.md"
   },
   "standards_profile": {
     "opencpn": "comparison target only",

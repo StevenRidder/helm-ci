@@ -26,13 +26,13 @@ ROOT = Path(__file__).resolve().parent.parent
 THREE_WAY = ROOT / "catalog" / "standards_three_way_proof.json"
 TOPMARK_GATE = ROOT / "catalog" / "topmark_contradiction_gate.json"
 ALIGNMENT_GATE = ROOT / "catalog" / "standards_alignment_gate.json"
+REGISTRY_MANIFEST = ROOT / "registry" / "symbols.json"
+SOURCE_EXPANSION_MANIFEST = ROOT / "catalog" / "source_expansion_manifest.json"
 DEFAULT_OUT = ROOT / "proof"
 PALETTES = ("day", "dusk", "night")
 SPEC_LABEL = "SPEC 0001: Clean-room Maritime Symbol Package"
-SPEC_SOURCE = (
-    "/Users/steveridder/Documents/Codex/2026-07-01/"
-    "is-this-useful-rfc-draft-0001/SPEC-0001-clean-room-symbol-package.md"
-)
+SPEC_SOURCE = "SPEC-0001-clean-room-symbol-package.md"
+SPEC_LINK = "../SPEC-0001-clean-room-symbol-package.md"
 
 _VAR = re.compile(r"var\(--([A-Za-z0-9_-]+)\)")
 
@@ -68,6 +68,18 @@ def _topmark_rows() -> dict[str, dict[str, Any]]:
         return {}
     data = _read(TOPMARK_GATE)
     return {str(row.get("asset")): row for row in data.get("rows") or []}
+
+
+def _optional_summary(path: Path) -> dict[str, Any]:
+    if not path.exists():
+        return {"path": _display_path(path), "status": "missing"}
+    payload = _read(path)
+    return {
+        "path": _display_path(path),
+        "schema": payload.get("schema"),
+        "status": payload.get("status"),
+        "summary": payload.get("summary") or {},
+    }
 
 
 def _row_status(row: dict[str, Any], topmark: dict[str, Any] | None) -> tuple[str, list[str]]:
@@ -205,8 +217,11 @@ def _manifest(rows: list[dict[str, Any]], coverage: dict[str, Any], source: dict
         "specification": {
             "label": SPEC_LABEL,
             "source": SPEC_SOURCE,
+            "proof_relative_link": SPEC_LINK,
             "role": "package/profile contract",
         },
+        "registry_manifest": _optional_summary(REGISTRY_MANIFEST),
+        "source_expansion_manifest": _optional_summary(SOURCE_EXPANSION_MANIFEST),
         "standards_profile": {
             "s52": "comparison and symbol vocabulary",
             "s57": "object-class and attribute vocabulary",
@@ -317,6 +332,18 @@ def _summary_pills(coverage: dict[str, Any]) -> str:
     return "".join(f"<span class='pill'>{html.escape(k)} {v}</span>" for k, v in labels)
 
 
+def _artifact_links() -> str:
+    links = [
+        (SPEC_LINK, "SPEC 0001"),
+        ("manifest.json", "manifest"),
+        ("coverage.json", "coverage"),
+        ("missing-hard-pile.json", "hard pile"),
+        ("../registry/symbols.json", "registry"),
+        ("../catalog/source_expansion_manifest.json", "source expansion"),
+    ]
+    return "".join(f"<a href='{html.escape(href)}'>{html.escape(label)}</a>" for href, label in links)
+
+
 def _base_css() -> str:
     return """
 body{font-family:system-ui,-apple-system,Segoe UI,sans-serif;margin:0;background:#f6f7f8;color:#20252b}
@@ -361,7 +388,7 @@ def _index_html(rows: list[dict[str, Any]], coverage: dict[str, Any]) -> str:
         f"<style>{_base_css()}</style></head><body><header>",
         "<h1>Helm Clean-room Symbol Catalog</h1>",
         f"<div class='summary'>{_summary_pills(coverage)}</div>",
-        "<div class='toolbar'><input id='q' type='search' placeholder='Search symbols'><select id='status'><option value=''>all statuses</option><option value='needs_review'>needs_review</option><option value='accepted'>accepted</option><option value='missing'>missing</option></select><a href='compare-opencpn.html'>OpenCPN comparison</a></div>",
+        f"<div class='toolbar'><input id='q' type='search' placeholder='Search symbols'><select id='status'><option value=''>all statuses</option><option value='needs_review'>needs_review</option><option value='accepted'>accepted</option><option value='missing'>missing</option></select><a href='compare-opencpn.html'>OpenCPN comparison</a>{_artifact_links()}</div>",
         "</header><main><section class='grid' id='grid'>",
         *cards,
         "</section></main><script>",
@@ -397,7 +424,7 @@ def _compare_html(rows: list[dict[str, Any]], coverage: dict[str, Any]) -> str:
         "<h1>Helm/OpenCPN Symbol Proof</h1>",
         f"<div class='summary'>{_summary_pills(coverage)}</div>",
         "<p class='meta'>OpenCPN renders are comparison targets only. Helm SVGs are generated-owned candidates. Rows remain out of runtime defaults until accepted and final-approved.</p>",
-        "<div class='toolbar'><a href='index.html'>Catalog</a><a href='manifest.json'>Manifest</a><a href='chartplotter-rule-input.json'>Chartplotter rule input</a></div>",
+        f"<div class='toolbar'><a href='index.html'>Catalog</a><a href='chartplotter-rule-input.json'>Chartplotter rule input</a>{_artifact_links()}</div>",
         "</header><main>",
         *blocks,
         "</main></body></html>",
