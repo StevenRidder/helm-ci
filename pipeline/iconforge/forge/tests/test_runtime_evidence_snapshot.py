@@ -31,6 +31,8 @@ def main() -> None:
     assert payload["summary"]["blocker_category_counts"]["runtime_eligibility_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["visual_human_approval_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["s101_feature_catalogue_source_missing"] == 2043
+    assert "/private/tmp/" not in json.dumps(payload["source"], sort_keys=True)
+    assert payload["source"]["review"]["db"] == "artifacts/opencpn_s52_portrayal.sqlite"
 
     rows = {row["symbol_id"]: row for row in payload["rows"]}
     boylat25 = rows["BOYLAT25"]

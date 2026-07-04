@@ -1,0 +1,706 @@
+{
+  "current_snapshot": {
+    "audit_status_counts": {
+      "pass": 33
+    },
+    "db": "artifacts/opencpn_s52_portrayal.sqlite",
+    "db_sha256": "dd43382e82a9f808016e03dcfbd2148238b9bf153fef2d8915bf857b05263d27",
+    "foreign_key_violations": 0,
+    "integrity_check": "ok",
+    "runtime_candidate_counts": {
+      "blocked|0": 336,
+      "review_candidate|0": 2721
+    },
+    "runtime_gate_counts": {
+      "s101_crosswalk_evidence|pass": 1805,
+      "s101_crosswalk_evidence|pending": 1040,
+      "s101_crosswalk_evidence|warn": 212,
+      "s52_instruction_ast|blocked": 7,
+      "s52_instruction_ast|pass": 3050,
+      "s57_semantic_tuple|blocked": 206,
+      "s57_semantic_tuple|pass": 2851,
+      "source_provenance|pass": 3057,
+      "topmark_daymark_special_cases|blocked": 127,
+      "topmark_daymark_special_cases|pass": 2859,
+      "topmark_daymark_special_cases|pending": 71,
+      "visual_approval|pending": 3057
+    },
+    "runtime_symbol_portrayal_v1_rows": 0,
+    "s52_instruction_ast_counts": {
+      "complete": 3050,
+      "partial": 7
+    },
+    "source_metadata": {
+      "chartsymbols_sha256": "e6876a2d3db415bd8800302d3f195450c709e9210b086fa200d8d3035e442334",
+      "runtime_contract": "runtime_symbol_candidate_v1 is browse/review evidence; runtime_symbol_portrayal_v1 is strict serving surface",
+      "s101_mapping_type_counts": "{\"acceptable_deviation\":324,\"rule_derived_equivalent\":510,\"semantic_only\":2223}",
+      "s52_instruction_ast_status_counts": "{\"complete\":3050,\"partial\":7}",
+      "semantic_tuple_status_counts": "{\"complete\":2851,\"partial\":206}",
+      "source_git_sha": "6d120d5627dd751e63d7d463fd372cc583b7bfcd"
+    },
+    "spot_checks": {
+      "BOYISD_BOYCON77": [
+        "BOYISD",
+        "BOYCON77",
+        "BuoyIsolatedDanger",
+        "{\"buoyShape\":\"conical\",\"colour\":[\"white\",\"orange\"],\"colourPattern\":\"horizontal_bands\",\"s57_buoy_shape\":1,\"s57_colour\":[1,11],\"s57_colour_pattern\":1}"
+      ],
+      "BOYSPP_BOYCAN60": [
+        "BOYSPP",
+        "BOYCAN60",
+        "BuoySpecialPurposeGeneral",
+        "{\"buoyShape\":\"can\",\"colour\":[\"red\"],\"colourPattern\":\"solid\",\"s57_buoy_shape\":2,\"s57_category_of_special_purpose_mark\":8,\"s57_colour\":3}"
+      ]
+    }
+  },
+  "findings": [
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "already_fixed_current_main",
+      "current_status": "not reproduced in current runtime DB",
+      "evidence": "Current DB maps BOYISD/BOYCON77 to BuoyIsolatedDanger and BOYSPP/BOYCAN60 to BuoySpecialPurposeGeneral; stale semantic_tuple_normalizer.py and s101_equivalence_resolver.py are not present on origin/main.",
+      "id": "F48-001",
+      "next_action": "none for the stale module; keep validating through the runtime DB/electronic Chart 1 proof.",
+      "source_line": 57,
+      "source_severity": "CRITICAL",
+      "title": "Free-text description outranks authoritative S-57 object_class in _category: isolated-danger row claimed as lateral aid with zero unresolved reasons"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-002",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 64,
+      "source_severity": "MAJOR",
+      "title": "Unknown attribute codes yield sentinel strings but tuple_status stays 'complete'; valid S-57 COLPAT code 6 missing from table"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-003",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 71,
+      "source_severity": "MAJOR",
+      "title": "Authoritative BCNSHP beacon-shape codes silently ignored; identical codes produce divergent shapes from free text"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-004",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 78,
+      "source_severity": "MAJOR",
+      "title": "Condition prefixes silently dropped from tuple; dangerous vs non-dangerous wrecks produce identical semantic tuples"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-005",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 85,
+      "source_severity": "MAJOR",
+      "title": "Text-sniffed colour_sequence emitted in hardcoded alias order and deduplicated"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-006",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 92,
+      "source_severity": "MAJOR",
+      "title": "Smoke test exercises none of the risky paths and pins the category bug"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-007",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 99,
+      "source_severity": "MINOR",
+      "title": "Substring heuristics without word boundaries misfire"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-008",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 106,
+      "source_severity": "MINOR",
+      "title": "Bare COLOUR condition falls through to description sniffing and is marked complete"
+    },
+    {
+      "area": "semantic tuple normalizer",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-009",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 113,
+      "source_severity": "INFO",
+      "title": "build() crashes with bare ValueError when --input is outside the repo root"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "already_fixed_current_main",
+      "current_status": "not reproduced in current runtime DB",
+      "evidence": "Current DB maps BOYISD/BOYCON77 to BuoyIsolatedDanger and BOYSPP/BOYCAN60 to BuoySpecialPurposeGeneral; stale semantic_tuple_normalizer.py and s101_equivalence_resolver.py are not present on origin/main.",
+      "id": "F48-010",
+      "next_action": "none for the stale module; keep validating through the runtime DB/electronic Chart 1 proof.",
+      "source_line": 125,
+      "source_severity": "MAJOR",
+      "title": "Text-keyword category overrides authoritative object class: BOYISD isolated-danger classified as BuoyLateral"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-011",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 132,
+      "source_severity": "MAJOR",
+      "title": "Rows with missing required evidence are classified acceptable_deviation"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-012",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 139,
+      "source_severity": "MAJOR",
+      "title": "Line-style rows with hazard object classes bypass the semantic_only fence"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-013",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 146,
+      "source_severity": "MAJOR",
+      "title": "Duplicated divergent resolver implementations contradict runtime DB rows"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "already_fixed_current_main",
+      "current_status": "not reproduced in current runtime DB",
+      "evidence": "Current DB maps BOYISD/BOYCON77 to BuoyIsolatedDanger and BOYSPP/BOYCAN60 to BuoySpecialPurposeGeneral; stale semantic_tuple_normalizer.py and s101_equivalence_resolver.py are not present on origin/main.",
+      "id": "F48-014",
+      "next_action": "none for the stale module; keep validating through the runtime DB/electronic Chart 1 proof.",
+      "source_line": 153,
+      "source_severity": "MINOR",
+      "title": "Test enshrines BOYSPP lookup as BuoyLateral misclassification"
+    },
+    {
+      "area": "S-101 equivalence resolver",
+      "classification": "superseded_by_current_main",
+      "current_status": "stale module finding",
+      "evidence": "Current origin/main uses scripts/augment-opencpn-s52-s101-semantics.py plus runtime DB gates; the reviewed semantic_tuple_normalizer.py/s101_equivalence_resolver.py lineage is absent.",
+      "id": "F48-015",
+      "next_action": "do not revive stale module; express any remaining semantic issue as a DB gate/audit test.",
+      "source_line": 160,
+      "source_severity": "MINOR",
+      "title": "semantic_only branch drops tuple missing-data reasons"
+    },
+    {
+      "area": "proof bundle",
+      "classification": "still_current_followup",
+      "current_status": "proof-bundle hardening remains useful",
+      "evidence": "Current proof_bundle.py still leaves unresolved CSS var() tokens unchanged and the manifest still lacks per-file content hashes.",
+      "id": "F48-016",
+      "next_action": "carry into clean-public-package/proof-bundle hardening: fail unresolved palette tokens, test all exports, add sha256 inventory.",
+      "source_line": 172,
+      "source_severity": "MAJOR",
+      "title": "Unresolved palette tokens are silently masked instead of failing the build"
+    },
+    {
+      "area": "proof bundle",
+      "classification": "still_current_followup",
+      "current_status": "proof-bundle hardening remains useful",
+      "evidence": "Current proof_bundle.py still leaves unresolved CSS var() tokens unchanged and the manifest still lacks per-file content hashes.",
+      "id": "F48-017",
+      "next_action": "carry into clean-public-package/proof-bundle hardening: fail unresolved palette tokens, test all exports, add sha256 inventory.",
+      "source_line": 179,
+      "source_severity": "MINOR",
+      "title": "Test checks only the alphabetically-first SVG per palette for unresolved tokens"
+    },
+    {
+      "area": "proof bundle",
+      "classification": "still_current_followup",
+      "current_status": "proof-bundle hardening remains useful",
+      "evidence": "Current proof_bundle.py still leaves unresolved CSS var() tokens unchanged and the manifest still lacks per-file content hashes.",
+      "id": "F48-018",
+      "next_action": "carry into clean-public-package/proof-bundle hardening: fail unresolved palette tokens, test all exports, add sha256 inventory.",
+      "source_line": 186,
+      "source_severity": "MINOR",
+      "title": "No test that day/dusk/night exports actually differ"
+    },
+    {
+      "area": "proof bundle",
+      "classification": "still_current_followup",
+      "current_status": "proof-bundle hardening remains useful",
+      "evidence": "Current proof_bundle.py still leaves unresolved CSS var() tokens unchanged and the manifest still lacks per-file content hashes.",
+      "id": "F48-019",
+      "next_action": "carry into clean-public-package/proof-bundle hardening: fail unresolved palette tokens, test all exports, add sha256 inventory.",
+      "source_line": 193,
+      "source_severity": "MINOR",
+      "title": "Manifest has no content hashes or file inventory; --no-clean can leave stale files"
+    },
+    {
+      "area": "three-way colour authority",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-020",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 205,
+      "source_severity": "MAJOR",
+      "title": "Alignment check ignores colour_pattern: orientation conflict labelled aligned"
+    },
+    {
+      "area": "three-way colour authority",
+      "classification": "already_fixed_or_replaced",
+      "current_status": "old DB-layer mechanism replaced",
+      "evidence": "Current colour_authority_contract reads generated SVG recipes directly and has explicit unresolved/pending cases for missing SVG or missing visual sequence; authority_trace still blocks runtime.",
+      "id": "F48-021",
+      "next_action": "keep authority trace as the runtime blocker; add focused tests for rows with no independent witness.",
+      "source_line": 212,
+      "source_severity": "MAJOR",
+      "title": "Visual witness fabricated from feature colours when no standard-source row joins"
+    },
+    {
+      "area": "three-way colour authority",
+      "classification": "partially_current_hardening",
+      "current_status": "not a current runtime escape, but policy needs tightening",
+      "evidence": "runtime_symbol_portrayal_v1 has 0 rows and authority_trace blocks every runtime row; however warn is still an allowed colour-authority gate value in promotion code.",
+      "id": "F48-022",
+      "next_action": "make runtime promotion require explicit colour-authority resolution, not pass-or-warn.",
+      "source_line": 219,
+      "source_severity": "MAJOR",
+      "title": "Colour-conflict warn does not block runtime eligibility"
+    },
+    {
+      "area": "three-way colour authority",
+      "classification": "already_fixed_current_main",
+      "current_status": "current DB audit is green",
+      "evidence": "Current artifacts/opencpn_s52_portrayal.sqlite has s52_s101_import_audit pass|27 and runtime_symbol_portrayal_v1 count 0.",
+      "id": "F48-023",
+      "next_action": "keep audit all-pass in CI; do not merge stale DB artifacts.",
+      "source_line": 226,
+      "source_severity": "MAJOR",
+      "title": "Rebuilt DB ships with failing audit check and nothing fails loudly"
+    },
+    {
+      "area": "three-way colour authority",
+      "classification": "already_fixed_or_replaced",
+      "current_status": "old DB-layer mechanism replaced",
+      "evidence": "Current colour_authority_contract reads generated SVG recipes directly and has explicit unresolved/pending cases for missing SVG or missing visual sequence; authority_trace still blocks runtime.",
+      "id": "F48-024",
+      "next_action": "keep authority trace as the runtime blocker; add focused tests for rows with no independent witness.",
+      "source_line": 233,
+      "source_severity": "MAJOR",
+      "title": "Colour-bearing rows labelled not_colour_bearing and gate-passed with zero colour evidence"
+    },
+    {
+      "area": "three-way proof",
+      "classification": "superseded_by_current_main",
+      "current_status": "old three_way_proof path replaced",
+      "evidence": "Current main uses standards_three_way_proof.py and DB-backed review surfaces; stale three_way_proof.py is absent.",
+      "id": "F48-025",
+      "next_action": "do not reintroduce the old three_way_proof.py path.",
+      "source_line": 240,
+      "source_severity": "INFO",
+      "title": "false_gap metric is degenerate"
+    },
+    {
+      "area": "three-way proof",
+      "classification": "superseded_by_current_main",
+      "current_status": "old three_way_proof path replaced",
+      "evidence": "Current main uses standards_three_way_proof.py and DB-backed review surfaces; stale three_way_proof.py is absent.",
+      "id": "F48-026",
+      "next_action": "do not reintroduce the old three_way_proof.py path.",
+      "source_line": 247,
+      "source_severity": "INFO",
+      "title": "HTML render crashes with TypeError if proof row has null s52_symbol_id"
+    },
+    {
+      "area": "DB augment script",
+      "classification": "already_fixed_current_main",
+      "current_status": "current DB audit is green",
+      "evidence": "Current artifacts/opencpn_s52_portrayal.sqlite has s52_s101_import_audit pass|27 and runtime_symbol_portrayal_v1 count 0.",
+      "id": "F48-027",
+      "next_action": "keep audit all-pass in CI; do not merge stale DB artifacts.",
+      "source_line": 259,
+      "source_severity": "MAJOR",
+      "title": "Audit failures never fail the build"
+    },
+    {
+      "area": "DB augment script",
+      "classification": "partially_current_hardening",
+      "current_status": "not a current runtime escape, but policy needs tightening",
+      "evidence": "runtime_symbol_portrayal_v1 has 0 rows and authority_trace blocks every runtime row; however warn is still an allowed colour-authority gate value in promotion code.",
+      "id": "F48-028",
+      "next_action": "make runtime promotion require explicit colour-authority resolution, not pass-or-warn.",
+      "source_line": 265,
+      "source_severity": "MAJOR",
+      "title": "colour_authority warn does not affect runtime eligibility"
+    },
+    {
+      "area": "DB augment script",
+      "classification": "already_fixed_or_replaced",
+      "current_status": "old DB-layer mechanism replaced",
+      "evidence": "Current colour_authority_contract reads generated SVG recipes directly and has explicit unresolved/pending cases for missing SVG or missing visual sequence; authority_trace still blocks runtime.",
+      "id": "F48-029",
+      "next_action": "keep authority trace as the runtime blocker; add focused tests for rows with no independent witness.",
+      "source_line": 271,
+      "source_severity": "MAJOR",
+      "title": "render_colour_authority=s52_symbol_visual_witness backed by templated semantic_brief"
+    },
+    {
+      "area": "DB augment script",
+      "classification": "already_fixed_or_replaced",
+      "current_status": "old DB-layer mechanism replaced",
+      "evidence": "Current colour_authority_contract reads generated SVG recipes directly and has explicit unresolved/pending cases for missing SVG or missing visual sequence; authority_trace still blocks runtime.",
+      "id": "F48-030",
+      "next_action": "keep authority trace as the runtime blocker; add focused tests for rows with no independent witness.",
+      "source_line": 277,
+      "source_severity": "MINOR",
+      "title": "visual_colour_sequence fabricated by copying feature colours when no witness exists"
+    },
+    {
+      "area": "DB augment script",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-031",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 283,
+      "source_severity": "MINOR",
+      "title": "In-place rebuild can leave a gutted but valid-looking artifact"
+    },
+    {
+      "area": "DB contract",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-032",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 294,
+      "source_severity": "MAJOR",
+      "title": "Strict runtime view trusts stored runtime_eligible column with no enforcement tying it to gate rows"
+    },
+    {
+      "area": "DB contract",
+      "classification": "already_fixed_current_main",
+      "current_status": "current DB audit is green",
+      "evidence": "Current artifacts/opencpn_s52_portrayal.sqlite has s52_s101_import_audit pass|27 and runtime_symbol_portrayal_v1 count 0.",
+      "id": "F48-033",
+      "next_action": "keep audit all-pass in CI; do not merge stale DB artifacts.",
+      "source_line": 301,
+      "source_severity": "MAJOR",
+      "title": "Shipped DB contains a failing audit check and audit() never fails the build"
+    },
+    {
+      "area": "DB contract",
+      "classification": "confirmed_source_context_not_current_main",
+      "current_status": "true of stale source checkout, not fresh FORGE-48 branch",
+      "evidence": "FORGE-48 was created from fresh origin/main; the stale source branch was behind and dirty, but this worktree starts from current main evidence.",
+      "id": "F48-034",
+      "next_action": "leave stale branch unmerged; use this ledger as the reconciliation artifact.",
+      "source_line": 308,
+      "source_severity": "MAJOR",
+      "title": "Working-tree rebuild stale lineage deletes origin/main s52_instruction_ast parser gate"
+    },
+    {
+      "area": "DB contract",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-035",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 315,
+      "source_severity": "MINOR",
+      "title": "Unresolved feature-vs-visual colour conflicts are only non-blocking warnings"
+    },
+    {
+      "area": "DB contract",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-036",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 322,
+      "source_severity": "MINOR",
+      "title": "s101_crosswalk_evidence gate passes on any resolved linked asset"
+    },
+    {
+      "area": "DB contract",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-037",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 328,
+      "source_severity": "MINOR",
+      "title": "authority_status aligned asserted for rows with no independent visual witness"
+    },
+    {
+      "area": "DB contract",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-038",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 334,
+      "source_severity": "MINOR",
+      "title": "schema.sql contains sqlite_sequence DDL"
+    },
+    {
+      "area": "DB contract",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-039",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 340,
+      "source_severity": "INFO",
+      "title": "Referential and gate-set integrity relies on per-connection PRAGMA foreign_keys"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "confirmed_source_context_not_current_main",
+      "current_status": "true of stale source checkout, not fresh FORGE-48 branch",
+      "evidence": "FORGE-48 was created from fresh origin/main; the stale source branch was behind and dirty, but this worktree starts from current main evidence.",
+      "id": "F48-040",
+      "next_action": "leave stale branch unmerged; use this ledger as the reconciliation artifact.",
+      "source_line": 351,
+      "source_severity": "CRITICAL",
+      "title": "Entire day's work built on stale base behind canonical origin/main"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "already_fixed_current_main",
+      "current_status": "current DB audit is green",
+      "evidence": "Current artifacts/opencpn_s52_portrayal.sqlite has s52_s101_import_audit pass|27 and runtime_symbol_portrayal_v1 count 0.",
+      "id": "F48-041",
+      "next_action": "keep audit all-pass in CI; do not merge stale DB artifacts.",
+      "source_line": 357,
+      "source_severity": "MAJOR",
+      "title": "Rebuilt runtime DB ships failing import-audit check while script exits 0"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "partially_current_hardening",
+      "current_status": "not a current runtime escape, but policy needs tightening",
+      "evidence": "runtime_symbol_portrayal_v1 has 0 rows and authority_trace blocks every runtime row; however warn is still an allowed colour-authority gate value in promotion code.",
+      "id": "F48-042",
+      "next_action": "make runtime promotion require explicit colour-authority resolution, not pass-or-warn.",
+      "source_line": 363,
+      "source_severity": "MAJOR",
+      "title": "colour_authority warn is non-blocking for unresolved correct rendering colour"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "requires_policy_followup",
+      "current_status": "not resolved by this ledger",
+      "evidence": "Clean-IP/counsel boundary is policy-critical and should be audited against the public package contract, not inferred from stale branch diffs.",
+      "id": "F48-043",
+      "next_action": "include explicit clean-IP forbidden-source and counsel-review gates in the public symbol package checklist.",
+      "source_line": 369,
+      "source_severity": "MAJOR",
+      "title": "Counsel-review distribution gate and forbidden-source list removed from provenance manifest"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "already_fixed_current_main",
+      "current_status": "not reproduced in current runtime DB",
+      "evidence": "BOYSPP/BOYCAN60 is currently rule-derived as BuoySpecialPurposeGeneral with category_of_special_purpose_mark evidence, not BuoyLateral.",
+      "id": "F48-044",
+      "next_action": "none beyond keeping the DB spot check in future conformance tests.",
+      "source_line": 375,
+      "source_severity": "MINOR",
+      "title": "FORGE-22/23 classify BOYSPP special-purpose buoy as lateral"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-045",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 381,
+      "source_severity": "MINOR",
+      "title": "Committed runtime DB built from uncommitted /private/tmp approval root"
+    },
+    {
+      "area": "docs honesty",
+      "classification": "informational",
+      "current_status": "context recorded",
+      "evidence": "No code defect asserted in this finding; keep as lineage and environment context.",
+      "id": "F48-046",
+      "next_action": "none.",
+      "source_line": 387,
+      "source_severity": "INFO",
+      "title": "Part 2 verification: no new import-time cairosvg dependency; determinism guards intact"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "confirmed_source_context_not_current_main",
+      "current_status": "true of stale source checkout, not fresh FORGE-48 branch",
+      "evidence": "FORGE-48 was created from fresh origin/main; the stale source branch was behind and dirty, but this worktree starts from current main evidence.",
+      "id": "F48-047",
+      "next_action": "leave stale branch unmerged; use this ledger as the reconciliation artifact.",
+      "source_line": 398,
+      "source_severity": "CRITICAL",
+      "title": "Branch is stale parallel lineage that regresses merged FORGE-25 runtime DB contract"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "already_fixed_current_main",
+      "current_status": "current DB audit is green",
+      "evidence": "Current artifacts/opencpn_s52_portrayal.sqlite has s52_s101_import_audit pass|27 and runtime_symbol_portrayal_v1 count 0.",
+      "id": "F48-048",
+      "next_action": "keep audit all-pass in CI; do not merge stale DB artifacts.",
+      "source_line": 404,
+      "source_severity": "MAJOR",
+      "title": "Rebuilt DB ships failing audit while build exits 0"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "confirmed_source_context_not_current_main",
+      "current_status": "true of stale source checkout, not fresh FORGE-48 branch",
+      "evidence": "FORGE-48 was created from fresh origin/main; the stale source branch was behind and dirty, but this worktree starts from current main evidence.",
+      "id": "F48-049",
+      "next_action": "leave stale branch unmerged; use this ledger as the reconciliation artifact.",
+      "source_line": 410,
+      "source_severity": "MAJOR",
+      "title": "Untracked files collide with newer origin/main files"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "confirmed_source_context_not_current_main",
+      "current_status": "true of stale source checkout, not fresh FORGE-48 branch",
+      "evidence": "FORGE-48 was created from fresh origin/main; the stale source branch was behind and dirty, but this worktree starts from current main evidence.",
+      "id": "F48-050",
+      "next_action": "leave stale branch unmerged; use this ledger as the reconciliation artifact.",
+      "source_line": 416,
+      "source_severity": "MAJOR",
+      "title": "Untracked proof bundle is stale scaffold-era bundle"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-051",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 422,
+      "source_severity": "MAJOR",
+      "title": "Colour-authority classifier masks rows with no colour evidence as not_colour_bearing"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "partially_current_hardening",
+      "current_status": "runtime remains blocked; contract can be stricter",
+      "evidence": "Current authority_trace_gate blocks all 3057 runtime rows, but colour_authority_contract still has warning/pass classes that should be resolved before runtime promotion.",
+      "id": "F48-052",
+      "next_action": "tighten FORGE runtime promotion/colour-authority gates so warn or missing witness cannot become runtime eligible without recorded resolution.",
+      "source_line": 428,
+      "source_severity": "MINOR",
+      "title": "colour_authority_gate falls through to pass for unhandled status"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "already_fixed_or_replaced",
+      "current_status": "current backend review pages include colour authority fields",
+      "evidence": "human_review_page.py and db_review_api.py expose colour_authority and authority_trace from backend payloads; no static colour_authority_warnings.html is needed.",
+      "id": "F48-053",
+      "next_action": "continue the backend-first Tabler cleanup rather than restoring a stale static page.",
+      "source_line": 434,
+      "source_severity": "MINOR",
+      "title": "Board-claimed colour_authority_warnings.html review page absent"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "still_current_followup",
+      "current_status": "tooling/contract hardening still relevant",
+      "evidence": "Current augment script writes the DB in place, schema.sql includes sqlite_sequence, and the default approval root remains /private/tmp based.",
+      "id": "F48-054",
+      "next_action": "build DB through atomic temp output, enforce required evidence roots, and make replayable schema artifacts clean.",
+      "source_line": 440,
+      "source_severity": "MINOR",
+      "title": "DB rebuild silently degrades when /private/tmp approval root is missing"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "superseded_by_current_main",
+      "current_status": "old three_way_proof path replaced",
+      "evidence": "Current main uses standards_three_way_proof.py and DB-backed review surfaces; stale three_way_proof.py is absent.",
+      "id": "F48-055",
+      "next_action": "do not reintroduce the old three_way_proof.py path.",
+      "source_line": 446,
+      "source_severity": "MINOR",
+      "title": "FORGE-24 accepted deliverables not on main; second three-way-proof implementation"
+    },
+    {
+      "area": "plan-board acceptance",
+      "classification": "informational",
+      "current_status": "context recorded",
+      "evidence": "No code defect asserted in this finding; keep as lineage and environment context.",
+      "id": "F48-056",
+      "next_action": "none.",
+      "source_line": 452,
+      "source_severity": "INFO",
+      "title": "Board status of reviewed tasks"
+    }
+  ],
+  "git": {
+    "ahead": 0,
+    "behind": 0,
+    "branch": "codex/FORGE-48-audit-ledger",
+    "head": "c8a0efececccd1e137ad46996b7f953d8b377037",
+    "origin_main": "c8a0efececccd1e137ad46996b7f953d8b377037"
+  },
+  "schema": "helm.iconforge.forge48_current_findings_ledger.v1",
+  "source_audit": {
+    "line_count": 503,
+    "path": "/Users/steveridder/.codex/attachments/6d3507bb-f434-4256-a5f2-d25a61a865f5/pasted-text.txt",
+    "sha256": "03292c7fcc01ca5d9b1a86b32a4ffe15b7c037aca95088526ec6575bf9fa73a3"
+  },
+  "status": "current_findings_ledger_ready",
+  "summary": {
+    "classification_counts": {
+      "already_fixed_current_main": 9,
+      "already_fixed_or_replaced": 5,
+      "confirmed_source_context_not_current_main": 5,
+      "informational": 2,
+      "partially_current_hardening": 9,
+      "requires_policy_followup": 1,
+      "still_current_followup": 10,
+      "superseded_by_current_main": 15
+    },
+    "db_audit_status_counts": {
+      "pass": 33
+    },
+    "finding_count": 56,
+    "strict_runtime_rows": 0
+  },
+  "task": "FORGE-48"
+}

@@ -48,6 +48,13 @@ def _sha256(path: Path) -> str:
     return digest.hexdigest()
 
 
+def _display_path(path: Path) -> str:
+    try:
+        return path.relative_to(ROOT.parent.parent).as_posix()
+    except ValueError:
+        return path.as_posix()
+
+
 def _semantic_indexes() -> tuple[dict[str, dict[str, Any]], dict[str, dict[str, Any]], dict[str, dict[str, Any]]]:
     payload = _read_json(SEMANTIC_DB)
     rows = payload.get("rows") or []
@@ -290,6 +297,24 @@ def _root_path_exists(value: str | None) -> bool:
     return candidate.exists()
 
 
+def _s101_reference_path(portrayal_evidence: dict[str, Any] | None) -> str | None:
+    direct = ((portrayal_evidence or {}).get("direct_symbol") or {})
+    symbol_id = str(direct.get("symbol_id") or "")
+    if not symbol_id:
+        symbol_file = str(direct.get("symbol_file") or "")
+        if symbol_file:
+            symbol_id = Path(symbol_file).stem
+    if not symbol_id:
+        return None
+    for candidate in (
+        ROOT / "assets" / "svg" / "official_q20_q25" / f"{symbol_id}.svg",
+        ROOT / "assets" / "svg" / "source_priority" / "s101_exact" / f"{symbol_id}.svg",
+    ):
+        if candidate.exists():
+            return candidate.relative_to(ROOT).as_posix()
+    return None
+
+
 def _connect(db_path: Path = DB_PATH) -> sqlite3.Connection:
     conn = sqlite3.connect(db_path)
     conn.row_factory = sqlite3.Row
@@ -328,7 +353,7 @@ def _summary(conn: sqlite3.Connection, db_path: Path) -> dict[str, Any]:
         "SELECT count(*) FROM s52_instruction_ast WHERE parse_status != 'complete'"
     ).fetchone()[0]
     return {
-        "db_path": str(db_path),
+        "db_path": _display_path(db_path),
         "db_sha256": _sha256(db_path),
         "total_candidates": total,
         "runtime_eligible": eligible,
@@ -429,6 +454,15 @@ def _image_paths(
         or ((semantic.get("s101_rule_contract") or {}).get("shape_witness") or {})
         or {}
     )
+    if not s101:
+        reference_path = _s101_reference_path(portrayal_evidence)
+        if reference_path:
+            direct = ((portrayal_evidence or {}).get("direct_symbol") or {})
+            s101 = {
+                "symbol_id": direct.get("symbol_id") or Path(reference_path).stem,
+                "local_reference_path": reference_path,
+                "source": "runtime_db_direct_symbol_reference",
+            }
     helm_path = candidate.get("canonical_svg") or generated.get("canonical_svg")
     opencpn_paths = ((comparison.get("opencpn") or {}).get("paths") or {})
     opencpn_path = opencpn_paths.get("day") or next(iter(opencpn_paths.values()), None)
@@ -477,9 +511,12 @@ def _review_row(
     symbol_id = str(db_row["s52_symbol_id"] or "")
     semantic_tuple = _json_value(db_row["semantic_tuple"], {})
     source_refs = _json_value(db_row["source_refs"], {})
-    s101_attributes = _json_value(db_row["resolver_s101_attributes"], None)
-    if s101_attributes is None:
-        s101_attributes = _json_value(db_row["s101_attributes"], {})
+    candidate_s101_attributes = _json_value(db_row["s101_attributes"], {})
+    resolver_s101_attributes = _json_value(db_row["resolver_s101_attributes"], {})
+    s101_attributes = {
+        **(resolver_s101_attributes if isinstance(resolver_s101_attributes, dict) else {}),
+        **(candidate_s101_attributes if isinstance(candidate_s101_attributes, dict) else {}),
+    }
     portrayal_evidence = _json_value(db_row["portrayal_evidence"], {})
     unresolved = _json_value(db_row["resolver_unresolved_reasons"], [])
     if not unresolved:
@@ -642,13 +679,13 @@ def build_review_payload(
         return {
             "schema": SCHEMA,
             "source": {
-                "db": str(db_path),
+                "db": _display_path(db_path),
                 "db_sha256": _sha256(db_path),
-                "semantic_evidence": str(SEMANTIC_DB),
-                "proof_manifest": str(PROOF_MANIFEST),
-                "style_audit": str(STYLE_AUDIT),
-                "colour_authority": str(COLOUR_AUTHORITY),
-                "authority_trace": str(AUTHORITY_TRACE),
+                "semantic_evidence": _display_path(SEMANTIC_DB),
+                "proof_manifest": _display_path(PROOF_MANIFEST),
+                "style_audit": _display_path(STYLE_AUDIT),
+                "colour_authority": _display_path(COLOUR_AUTHORITY),
+                "authority_trace": _display_path(AUTHORITY_TRACE),
                 "sidecars_are_display_evidence_only": True,
             },
             "summary": _summary(conn, db_path),
