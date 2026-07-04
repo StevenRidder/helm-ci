@@ -1,0 +1,129 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch14-local",
+  "batch_id": "standard_judge_batch_014_rerun",
+  "created_at": "2026-07-01T07:22:01Z",
+  "project": "vulkan",
+  "schema_version": "standard_visual_judge_rerun.v1",
+  "selection": {
+    "actual_total": 4,
+    "expected_total": 4,
+    "filter": {
+      "helm_candidate.candidate_status": "repaired_pending_judge_rerun",
+      "helm_candidate.source_batch": "catalog/owned_repair_batch14.json"
+    },
+    "input_table": "pipeline/iconforge/catalog/standard_source_table.json",
+    "repair_batch": "pipeline/iconforge/catalog/owned_repair_batch14.json",
+    "shape_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 3,
+    "final_approved": 0,
+    "pass": 1,
+    "selected": 4,
+    "source_batch": "catalog/owned_repair_batch14.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.82,
+      "expected": "BOYCON74 is conical buoy,gw,full-chart. Required geometry: conical/nun buoy body. Required colours: green, white, green, white, green, all visible in order inside the cone with no external scaffolding.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The repair fixed the protruding-stroke artifact but did not make all load-bearing colour bands visually legible against the OpenCPN/source-priority witnesses and semantic brief. Not final-approved.",
+      "observed": "Conical/nun body is clipped cleanly and the previous external separator bars are gone, but the visible symbol still reads as white-green-white with only tiny apex/base green slivers. It does not clearly preserve the required green-white-green-white-green five-band sequence.",
+      "pass": false,
+      "required_change": "Redraw or proportion the conical body so the five ordered green-white-green-white-green bands are visibly present inside the cone; keep the clipping/no-external-strokes fix.",
+      "safety_reason_codes": [
+        "missing_visible_colour_bands",
+        "wrong_colour_order_readability",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON74",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch14/BOYCON74.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch6/renders/BOYCON74__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYCON74__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYCON74__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYCON74/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON74",
+      "symbol_id": "BOYCON74"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.76,
+      "expected": "BOYCON81 is conical buoy,gw,full-chart. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with the special-purpose horizontal/vertical stripe treatment clear enough to distinguish the intended S-52 symbol.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The repair removed external separator spill but the mixed stripe contract is still not visually resolved. A special-purpose conical buoy with this pattern is safety-sensitive because a muddled stripe layout can read as the wrong buoy variant. Not final-approved.",
+      "observed": "Conical/nun body is clipped and includes blue/red/white/blue colours, but the semi-transparent vertical overlays and internal grid produce a muddy cross-stripe pattern that still does not match the OpenCPN witness or the simpler source-priority rendering.",
+      "pass": false,
+      "required_change": "Redraw BOYCON81 against the OpenCPN/reference witness so the blue-red-white-blue horizontal/vertical stripe pattern is unambiguous; remove any internal grid lines or translucent overlays that are not part of the reference symbol.",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "unsafe_special_purpose_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON81",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch14/BOYCON81.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch6/renders/BOYCON81__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYCON81__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYCON81__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYCON81/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON81",
+      "symbol_id": "BOYCON81"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.84,
+      "expected": "BOYPIL78 is a special-purpose pillar buoy. Required geometry: pillar buoy body. Required colours: red and white with a squared/checkered pattern in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The candidate preserves the required pillar class and red/white checkered visual cue while staying within the silhouette. Styling remains Helm-owned and this is not final approval.",
+      "observed": "Pillar buoy body with red/white checkered squares clipped inside the silhouette, black outline, and stem; the previous external checker/grid spill is gone.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL78",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch14/BOYPIL78.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch6/renders/BOYPIL78__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYPIL78__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYPIL78__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYPIL78/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL78",
+      "symbol_id": "BOYPIL78"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.78,
+      "expected": "BOYSPH79 requires a resolved reference contract before approval: if the semantic brief/S-57 BOYSHP1 mapping is authoritative, the symbol should be a conical/nun red-over-green buoy; if the S-101/Chart No.1 witnesses are authoritative, the row mapping must be corrected before visual pass.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "This is semantically improved, but the reference set conflicts with the repaired candidate and lacks the OpenCPN render needed to arbitrate the class/shape. Do not promote while reference evidence disagrees. Not final-approved.",
+      "observed": "Candidate now uses a conical/nun red-over-green body, fixing the prior spherical Helm render relative to the semantic brief. However, the OpenCPN reference render is absent locally and the available source-priority/Chart No.1 witnesses still show a circular/spherical red-green cue, so visual parity cannot be proven.",
+      "pass": false,
+      "required_change": "Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPH79 and reconcile the row's conical-versus-spherical contract; then rerun visual judging before any pass.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "conflicting_reference_witness",
+        "approval_blocked_reference_gap"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH79",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch14/BOYSPH79.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch6/renders/BOYSPH79__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSPH79__day.png:missing",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSPH79__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSPH79/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH79",
+      "symbol_id": "BOYSPH79"
+    }
+  ]
+}

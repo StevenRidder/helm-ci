@@ -1,0 +1,185 @@
+"""Repair batch35 judge failures into owned repair batch 36.
+
+Run:
+  python3 -m forge.standard_repair_batch28 --render
+"""
+from __future__ import annotations
+
+import argparse
+import ctypes.util
+import json
+import re
+from pathlib import Path
+
+from . import render
+from .style_contract import OPENBRIDGE_NAV_PALETTES, OPENBRIDGE_STYLE_ID
+
+
+ROOT = Path(__file__).resolve().parent.parent
+CATALOG = ROOT / "catalog"
+SOURCE_TABLE = CATALOG / "standard_source_table.json"
+OUT = ROOT / "out" / "standard_repair_batch28"
+SVG_OUT = ROOT / "assets" / "svg" / "owned_repair_batch36"
+REPORT = CATALOG / "owned_repair_batch36.json"
+SUMMARY = CATALOG / "owned_repair_batch36.md"
+PALETTES = ("day", "dusk", "night")
+HOMEBREW_CAIRO = Path("/opt/homebrew/lib/libcairo.2.dylib")
+REPAIRS = ("SNDWAV02", "TIDCUR01")
+
+
+def _safe(text: str) -> str:
+    return re.sub(r"[^A-Za-z0-9_.-]+", "_", text).strip("_") or "unnamed_asset"
+
+
+def _colour(name: str) -> str:
+    return f"var(--{name})"
+
+
+def _wrap(asset: str, body: str) -> str:
+    return (
+        '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" '
+        f'data-origin="generated-owned-artwork" data-style-contract="{OPENBRIDGE_STYLE_ID}" '
+        'data-repair-batch="standard-repair-batch28">'
+        f"<title>{asset} repair batch 36 candidate</title>"
+        '<g stroke-linecap="round" stroke-linejoin="round">'
+        f"{body}</g></svg>\n"
+    )
+
+
+def _sand_wavelets() -> str:
+    c = _colour("gray")
+    return (
+        f'<path d="M9 36 H17 L21 25 L25 36 H33 L37 25 L41 36 H49 L53 25 L57 36" '
+        f'fill="none" stroke="{c}" stroke-width="3.1"/>'
+    )
+
+
+def _predicted_current() -> str:
+    c = _colour("orange")
+    return (
+        f'<path d="M32 55 V48 M32 41 V34 M32 27 V20" fill="none" stroke="{c}" stroke-width="3"/>'
+        f'<path d="M21 23 L32 11 L43 23" fill="none" stroke="{c}" stroke-width="3"/>'
+        f'<path d="M22 36 L32 26 L42 36 M23 48 L32 39 L41 48" fill="none" stroke="{c}" stroke-width="2.8"/>'
+    )
+
+
+def _redraw(asset: str) -> str:
+    if asset == "SNDWAV02":
+        return _wrap(asset, _sand_wavelets())
+    if asset == "TIDCUR01":
+        return _wrap(asset, _predicted_current())
+    raise KeyError(asset)
+
+
+def _ensure_cairo_library() -> None:
+    if ctypes.util.find_library("cairo") or not HOMEBREW_CAIRO.exists():
+        return
+    original_find_library = ctypes.util.find_library
+
+    def find_library(name: str) -> str | None:
+        if name in {"cairo", "cairo-2", "libcairo-2"}:
+            return str(HOMEBREW_CAIRO)
+        return original_find_library(name)
+
+    ctypes.util.find_library = find_library
+
+
+def _render_svg(svg: str, asset: str, palette: str) -> str:
+    _ensure_cairo_library()
+    out = OUT / "renders" / f"{_safe(asset)}__after__{palette}.png"
+    out.parent.mkdir(parents=True, exist_ok=True)
+    out.write_bytes(render.rasterize(svg, OPENBRIDGE_NAV_PALETTES[palette], size=160))
+    return str(out.relative_to(ROOT))
+
+
+def _source_rows() -> dict[str, dict]:
+    table = json.loads(SOURCE_TABLE.read_text())
+    return {row["asset"]: row for row in table.get("rows", [])}
+
+
+def build(*, render_outputs: bool = False) -> dict:
+    source_rows = _source_rows()
+    missing_source = sorted(set(REPAIRS) - set(source_rows))
+    if missing_source:
+        raise RuntimeError(f"source table missing repair target(s): {missing_source}")
+    SVG_OUT.mkdir(parents=True, exist_ok=True)
+    rows = []
+    for asset in sorted(REPAIRS):
+        source_row = source_rows[asset]
+        helm = source_row.get("helm_candidate") or {}
+        judge = (source_row.get("judge") or {}).get("latest") or {}
+        svg = _redraw(asset)
+        svg_path = SVG_OUT / f"{_safe(asset)}.svg"
+        svg_path.write_text(svg)
+        renders = {}
+        if render_outputs:
+            for palette in PALETTES:
+                renders[palette] = _render_svg(svg, asset, palette)
+        rows.append({
+            "asset": asset,
+            "name": source_row.get("name"),
+            "queue_action": "judge_failure_consumed",
+            "risk_bucket": "batch35_followup_repair_batch36",
+            "candidate_strategy": "owned_redraw_from_standard_judge_batch_035_feedback",
+            "candidate_source": helm.get("canonical_svg"),
+            "before_svg": helm.get("canonical_svg"),
+            "after_svg": str(svg_path.relative_to(ROOT)),
+            "after_renders": renders,
+            "required_change": judge.get("required_change"),
+            "safety_reason_codes": judge.get("safety_reason_codes", []),
+            "semantic_brief": source_row.get("semantic_brief"),
+            "visual_examples": source_row.get("reference_providers", {}),
+            "qa": {
+                "semantic_pass": False,
+                "structural_pass": True,
+                "visual_parity": "repaired_pending_judge_rerun",
+                "final_approved": False,
+            },
+            "provenance": {
+                "origin": "generated-owned-artwork",
+                "source_priority_basis": "standard_judge_batch_035_rerun_feedback",
+                "style_contract_id": OPENBRIDGE_STYLE_ID,
+                "generator": "forge.standard_repair_batch28",
+                "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+            },
+            "source_judge": "catalog/standard_judge_batch_035_rerun.json",
+        })
+    result = {
+        "schema_version": 1,
+        "status": "repair_batch_pending_judge_rerun",
+        "outputs": {
+            "svg_dir": str(SVG_OUT.relative_to(ROOT)),
+            "catalog": str(REPORT.relative_to(ROOT)),
+            "renders": str((OUT / "renders").relative_to(ROOT)) if render_outputs else None,
+        },
+        "summary": {"failed_repaired": len(rows), "visual_parity": "repaired_pending_judge_rerun"},
+        "symbols": rows,
+        "blockers": [],
+    }
+    REPORT.write_text(json.dumps(result, indent=2, sort_keys=True) + "\n")
+    _write_summary(result)
+    return result
+
+
+def _write_summary(result: dict) -> None:
+    lines = ["# Standard Repair Batch 28 / Owned Repair Batch 36", "", "Owned redraws for two batch35 judge failures.", ""]
+    for key, value in result["summary"].items():
+        lines.append(f"- {key}: `{value}`")
+    lines.extend(["", "## Repaired", ""])
+    for row in result["symbols"]:
+        lines.append(f"- `{row['asset']}`: {row.get('required_change')}")
+    lines.extend(["", "Rows remain pending judge rerun; none are final-approved."])
+    SUMMARY.write_text("\n".join(lines) + "\n")
+
+
+def main(argv: list[str] | None = None) -> int:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--render", action="store_true")
+    args = parser.parse_args(argv)
+    result = build(render_outputs=args.render)
+    print(json.dumps({"status": result["status"], "summary": result["summary"], "outputs": result["outputs"]}, indent=2, sort_keys=True))
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

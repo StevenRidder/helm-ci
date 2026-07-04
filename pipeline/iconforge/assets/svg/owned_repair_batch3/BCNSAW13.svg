@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BCNSAW13 beacon">
+  <title>BCNSAW13 beacon</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BCNSAW13" data-shape="beacon">
+  <defs><clipPath id="clip-BCNSAW13"><path d="M26 11 H38 L43 51 H21 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BCNSAW13)">
+  <rect x="0" y="0" width="64" height="64" fill="var(--black)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M26 11 H38 L43 51 H21 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

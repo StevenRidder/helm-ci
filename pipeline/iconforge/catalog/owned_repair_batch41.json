@@ -1,0 +1,1144 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch41.json",
+    "renders": "out/standard_repair_batch33/renders",
+    "svg_dir": "assets/svg/owned_repair_batch41"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 15,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH02__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH02__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH02.svg",
+      "asset": "NMKPRH02",
+      "before_svg": "assets/svg/triad_generated/NMKPRH02.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH02.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "entry prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw as the NMKPRH02 rectangular red/white entry-prohibited sign.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH02 is entry prohibited. It is used as a entry prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "entry prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH02__day.png",
+            "label": "entry prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH02__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH02__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH06__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH06__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH06__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH06.svg",
+      "asset": "NMKPRH06",
+      "before_svg": "assets/svg/triad_generated/NMKPRH06.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH06.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, passing and overtaking prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKPRH06 prohibition board, including arrows and red slash.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH06 is notice mark, passing and overtaking prohibited. It is used as a notice mark, passing and overtaking prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, passing and overtaking prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH06__day.png",
+            "label": "notice mark, passing and overtaking prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH06__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH06__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH06__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH07__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH07__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH07__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH07.svg",
+      "asset": "NMKPRH07",
+      "before_svg": "assets/svg/triad_generated/NMKPRH07.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH07.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, berthing prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKPRH07 berthing-prohibited board and slash glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH07 is notice mark, berthing prohibited. It is used as a notice mark, berthing prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, berthing prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH07__day.png",
+            "label": "notice mark, berthing prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH07__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH07__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH07__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH08__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH08__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH08__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH08.svg",
+      "asset": "NMKPRH08",
+      "before_svg": "assets/svg/triad_generated/NMKPRH08.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH08.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, anchoring prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Place the anchor in the NMKPRH08 red prohibition-board frame with the diagonal slash.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "missing_notice_board"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH08 is notice mark, anchoring prohibited. It is used as a notice mark, anchoring prohibited. Required geometry: anchor/anchorage symbol. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "anchor/anchorage symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, anchoring prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH08__day.png",
+            "label": "notice mark, anchoring prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH08__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH08__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH08__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH10__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH10__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH10.svg",
+      "asset": "NMKPRH10",
+      "before_svg": "assets/svg/triad_generated/NMKPRH10.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH10.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, turning prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKPRH10 turning-prohibited board and slash glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH10 is notice mark, turning prohibited. It is used as a notice mark, turning prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, turning prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH10__day.png",
+            "label": "notice mark, turning prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH10__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH10__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH11__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH11__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH11.svg",
+      "asset": "NMKPRH11",
+      "before_svg": "assets/svg/triad_generated/NMKPRH11.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH11.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, avoid wave wash",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKPRH11 avoid-wave-wash prohibition board.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH11 is notice mark, avoid wave wash. It is used as a notice mark, avoid wave wash. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, avoid wave wash"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH11__day.png",
+            "label": "notice mark, avoid wave wash",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH11__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH11__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH12__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH12__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH12.svg",
+      "asset": "NMKPRH12",
+      "before_svg": "assets/svg/triad_generated/NMKPRH12.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH12.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "passing on left side prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw as the NMKPRH12 left-side passing-prohibited split diamond without the center-dot placeholder.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH12 is passing on left side prohibited. It is used as a passing on left side prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "passing on left side prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH12__day.png",
+            "label": "passing on left side prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH12__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH12__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH13__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH13__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH13.svg",
+      "asset": "NMKPRH13",
+      "before_svg": "assets/svg/triad_generated/NMKPRH13.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH13.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "passing on right side prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw as the NMKPRH13 right-side passing-prohibited split diamond without the center-dot placeholder.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH13 is passing on right side prohibited. It is used as a passing on right side prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "passing on right side prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH13__day.png",
+            "label": "passing on right side prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH13__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH13__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKPRH14__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKPRH14__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKPRH14__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKPRH14.svg",
+      "asset": "NMKPRH14",
+      "before_svg": "assets/svg/triad_generated/NMKPRH14.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKPRH14.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, boats with engine prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKPRH14 engine-boats-prohibited board and slash glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKPRH14 is notice mark, boats with engine prohibited. It is used as a notice mark, boats with engine prohibited. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, boats with engine prohibited"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKPRH14__day.png",
+            "label": "notice mark, boats with engine prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKPRH14__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKPRH14__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKPRH14__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD01__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD01__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD01.svg",
+      "asset": "NMKRCD01",
+      "before_svg": "assets/svg/triad_generated/NMKRCD01.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD01.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "recommended passage for both directions",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKRCD01 as the reference-scale yellow recommended-passage diamond, removing the oversized center-ring glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD01 is recommended passage for both directions. It is used as a recommended passage for both directions. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "recommended passage for both directions"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD01__day.png",
+            "label": "recommended passage for both directions",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD01__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD01__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD02__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD02__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD02.svg",
+      "asset": "NMKRCD02",
+      "before_svg": "assets/svg/triad_generated/NMKRCD02.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD02.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "recommended passage for only one direction",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKRCD02 as the paired yellow recommended-passage diamonds and preserve the one-direction count cue.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "lost_count_semantics",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD02 is recommended passage for only one direction. It is used as a recommended passage for only one direction. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "recommended passage for only one direction"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD02__day.png",
+            "label": "recommended passage for only one direction",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD02__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD02__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD03__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD03__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD03.svg",
+      "asset": "NMKRCD03",
+      "before_svg": "assets/svg/triad_generated/NMKRCD03.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD03.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "recommended passage on right side",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKRCD03 as the right-side green/white split recommended-passage diamond without the center-ring placeholder.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_variant",
+        "lost_side_semantics",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD03 is recommended passage on right side. It is used as a recommended passage on right side. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "use_case": "recommended passage on right side"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD03__day.png",
+            "label": "recommended passage on right side",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD03__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD03__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD04__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD04__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD04.svg",
+      "asset": "NMKRCD04",
+      "before_svg": "assets/svg/triad_generated/NMKRCD04.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD04.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "recommended passage on left side",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKRCD04 as the left-side green/white split recommended-passage diamond without the center-ring placeholder.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_variant",
+        "lost_side_semantics",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD04 is recommended passage on left side. It is used as a recommended passage on left side. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "use_case": "recommended passage on left side"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD04__day.png",
+            "label": "recommended passage on left side",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD04__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD04__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD05__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD05__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD05.svg",
+      "asset": "NMKRCD05",
+      "before_svg": "assets/svg/triad_generated/NMKRCD05.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD05.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, recommended traffic direction, left",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKRCD05 left-direction recommended-traffic notice glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "missing_directional_arrow",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD05 is notice mark, recommended traffic direction, left. It is used as a notice mark, recommended traffic direction, left. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, recommended traffic direction, left"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD05__day.png",
+            "label": "notice mark, recommended traffic direction, left",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD05__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD05__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch33/renders/NMKRCD06__after__day.png",
+        "dusk": "out/standard_repair_batch33/renders/NMKRCD06__after__dusk.png",
+        "night": "out/standard_repair_batch33/renders/NMKRCD06__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch41/NMKRCD06.svg",
+      "asset": "NMKRCD06",
+      "before_svg": "assets/svg/triad_generated/NMKRCD06.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKRCD06.svg",
+      "candidate_strategy": "owned_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, recommended traffic direction, right",
+      "provenance": {
+        "generator": "forge.standard_repair_batch33",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKPRH/NMKRCD notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKRCD06 right-direction recommended-traffic notice glyph.",
+      "risk_bucket": "prohibition_recommendation_notice_repair_batch41",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "missing_directional_arrow",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKRCD06 is notice mark, recommended traffic direction, right. It is used as a notice mark, recommended traffic direction, right. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, recommended traffic direction, right"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKRCD06__day.png",
+            "label": "notice mark, recommended traffic direction, right",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKRCD06__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKRCD06__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKRCD06__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

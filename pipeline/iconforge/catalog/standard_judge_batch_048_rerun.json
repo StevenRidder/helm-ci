@@ -1,0 +1,1265 @@
+{
+  "schema_version": 1,
+  "project": "vulkan",
+  "task": "FORGE-14",
+  "agent": "codex/FORGE-14-batch48-judge",
+  "created_at": "2026-07-01T21:39:49.390966+00:00",
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "source_batches": [
+      "catalog/owned_repair_batch48.json"
+    ],
+    "selected": 20,
+    "pass": 0,
+    "fail": 20,
+    "final_approved": 0,
+    "failed_assets": [
+      "TOPSHP22",
+      "TOPSHP23",
+      "TOPSHP24",
+      "TOPSHP25",
+      "TOPSHP28",
+      "TOPSHP29",
+      "TOPSHP30",
+      "TOPSHP31",
+      "TOPSHP32",
+      "TOPSHP33",
+      "TOPSHP34",
+      "TOPSHP35",
+      "TOPSHP36",
+      "TOPSHP37",
+      "TOPSHP38",
+      "TOPSHP40",
+      "TOPSHP41",
+      "TOPSHP42",
+      "TOPSHP43",
+      "TOPSHP44"
+    ]
+  },
+  "evidence_notes": [
+    "Actual repaired SVGs were read from pipeline/iconforge/assets/svg/owned_repair_batch48/.",
+    "Candidate day/dusk/night render paths are present under pipeline/iconforge/out/standard_repair_batch40/renders/.",
+    "Prior judge feedback came from pipeline/iconforge/catalog/standard_judge_batch_013.json / .md, which failed these TOPSHP rows for circular placeholders missing board silhouette, orientation, and pattern semantics.",
+    "OpenCPN S-52 day references were present under pipeline/iconforge/out/opencpn_s52_reference/ for all selected rows except TOPSHP33; TOPSHP33 was judged against semantic_brief plus source_variant_matrix/Chart No.1 witnesses and the same repaired SVG template.",
+    "All repaired rows replace the circle placeholder, but with a tall vertical rectangle template whose aspect ratio and board silhouette do not match the compact square-board reference family.",
+    "Passes remain judge_pass_pending_final_approval only; this batch has no passes and grants zero final approvals."
+  ],
+  "verdicts": [
+    {
+      "asset": "TOPSHP22",
+      "batch_index": 1,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP22 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch"
+      ],
+      "notes": "Fail: red fill is present, but the repaired mark is a tall vertical rectangle. The OpenCPN S-52 witness is a compact square board, so the board silhouette/reference family is still wrong.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP22"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP22__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP22/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP22.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP22__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP22.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP23",
+      "batch_index": 2,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP23 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch"
+      ],
+      "notes": "Fail: black fill is present, but the repaired mark is a tall vertical rectangle instead of the compact square board witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP23"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP23__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP23/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP23.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP23__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP23.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP24",
+      "batch_index": 3,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP24 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: green.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch"
+      ],
+      "notes": "Fail: green fill is present, but the repaired mark keeps the same tall-rectangle board template and does not match the square-board reference silhouette.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP24"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP24__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP24/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP24.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP24__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP24.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP25",
+      "batch_index": 4,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP25 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: white, orange with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: the white/orange colours are present, but the candidate uses full-height side-by-side stripes in a tall rectangle. The reference is a compact square board with S-57 pattern-6 treatment, so silhouette and pattern family still mismatch.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP25"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP25__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP25/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP25.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP25__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP25.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP28",
+      "batch_index": 5,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP28 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: green, white, black.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: the listed green/white/black colours are present, but the tall three-stripe rectangle does not match the compact square-board reference family.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP28"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP28__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP28/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP28.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP28__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP28.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP29",
+      "batch_index": 6,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP29 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: red, green, red with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: the red/green/red colour order is present, but the repaired SVG is a tall vertical stripe board rather than the compact square-board pattern-6 witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP29"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP29__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP29/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP29.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP29__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP29.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP30",
+      "batch_index": 7,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP30 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: green, green, yellow with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: the green/green/yellow colour order is present, but the same tall rectangular template remains instead of the compact square-board S-57 pattern-6 witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP30"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP30__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP30/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP30.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP30__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP30.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP31",
+      "batch_index": 8,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP31 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: orange, white with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: orange/white colours are present, but the repaired mark is a tall two-stripe rectangle and not the compact square-board S-57 pattern-6 reference.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP31"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP31__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP31/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP31.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP31__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP31.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP32",
+      "batch_index": 9,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP32 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: red, white with vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: red/white vertical stripes are present, but the board silhouette is the tall rectangle template rather than the compact square-board witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP32"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP32__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP32/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP32.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP32__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP32.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP33",
+      "batch_index": 10,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.88,
+      "required_change": "Redraw TOPSHP33 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: green, red, green with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch",
+        "missing_direct_opencpn_render_in_checkout"
+      ],
+      "notes": "Fail: green/red/green order is present, but the repaired mark uses the same tall vertical rectangle template. The available Chart No.1/source-matrix witness is a compact board family, not this silhouette.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP33"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": false,
+          "used": false,
+          "path": "out/opencpn_s52_reference/TOPSHP33__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP33/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP33.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP33__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP33.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP34",
+      "batch_index": 11,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP34 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: white, orange, white with vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: white/orange/white order is present, but the vertical stripe treatment is inside a tall rectangle instead of the compact square-board reference family.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP34"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP34__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP34/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP34.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP34__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP34.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP35",
+      "batch_index": 12,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP35 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch"
+      ],
+      "notes": "Fail: yellow fill is present, but the repaired board is a tall rectangle and not the compact square board in the OpenCPN witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP35"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP35__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP35/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP35.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP35__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP35.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP36",
+      "batch_index": 13,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP36 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: orange.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch"
+      ],
+      "notes": "Fail: orange fill is present, but the board silhouette remains a tall rectangle instead of the compact square-board reference.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP36"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP36__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP36/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP36.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP36__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP36.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP37",
+      "batch_index": 14,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP37 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: black, black with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: black fill is present, but the candidate does not encode the compact square-board S-57 pattern-6 witness; it remains the tall rectangle template.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP37"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP37__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP37/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP37.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP37__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP37.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP38",
+      "batch_index": 15,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP38 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: orange, white with S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: orange/white checker colours are present, but the candidate is a tall 2x2 rectangle/checker. The OpenCPN witness is a compact square-board checker, so both silhouette and pattern proportions mismatch.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP38"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP38__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP38/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP38.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP38__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP38.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP40",
+      "batch_index": 16,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP40 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: white, black with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: white/black colours are present, but the repaired mark is a tall two-stripe rectangle rather than the compact square-board S-57 pattern-6 witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP40"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP40__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP40/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP40.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP40__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP40.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP41",
+      "batch_index": 17,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP41 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: orange, orange with horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: orange/orange horizontal bands are present, but they are applied to the tall rectangle template. The OpenCPN witness remains a compact square-board family.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP41"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP41__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP41/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP41.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP41__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP41.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP42",
+      "batch_index": 18,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP42 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: red, white with horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: red/white horizontal bands are present, but the tall rectangular board does not match the compact square-board reference silhouette.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP42"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP42__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP42/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP42.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP42__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP42.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP43",
+      "batch_index": 19,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP43 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: green, red, green with S-57 colour pattern 6; horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: green/red/green horizontal bands are present, but the board silhouette is still the tall rectangle template rather than the compact square-board S-57 pattern-6 witness.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP43"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP43__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP43/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP43.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP43__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP43.svg"
+        }
+      ]
+    },
+    {
+      "asset": "TOPSHP44",
+      "batch_index": 20,
+      "verdict": "fail",
+      "pass": false,
+      "confidence": 0.96,
+      "required_change": "Redraw TOPSHP44 as the compact square-board TOPSHP witness, not a tall vertical rectangle; preserve the required colour order/pattern: yellow, yellow with S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_board_silhouette",
+        "wrong_aspect_ratio",
+        "reference_mismatch",
+        "colour_pattern_mismatch"
+      ],
+      "notes": "Fail: yellow fill is present, but the repaired mark remains a tall rectangle and does not match the compact square-board pattern-6 reference family.",
+      "observed": "Repaired SVG/render uses the owned_repair_batch48 tall board template (rect x=19 y=12 width=26 height=40; rendered bbox about 72x108 at 160px).",
+      "expected": "Compact square-board TOPSHP silhouette/reference family from semantic_brief plus OpenCPN/Chart No.1 provider witnesses, with the listed colour order and pattern preserved.",
+      "source_refs_used": [
+        {
+          "provider": "semantic_brief",
+          "available": true,
+          "used": true,
+          "symbol_id": "TOPSHP44"
+        },
+        {
+          "provider": "prior_judge",
+          "available": true,
+          "used": true,
+          "path": "catalog/standard_judge_batch_013.json"
+        },
+        {
+          "provider": "opencpn_render",
+          "available": true,
+          "used": true,
+          "path": "out/opencpn_s52_reference/TOPSHP44__day.png"
+        },
+        {
+          "provider": "chart1/source_variant_matrix",
+          "available": true,
+          "used": true,
+          "path": "out/source_variant_matrix/renders/TOPSHP44/chart1_parity_reference_crop_1.png"
+        },
+        {
+          "provider": "helm_candidate_after_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/owned_repair_batch48/TOPSHP44.svg"
+        },
+        {
+          "provider": "helm_candidate_after_render",
+          "available": true,
+          "used": true,
+          "path": "out/standard_repair_batch40/renders/TOPSHP44__after__day.png"
+        },
+        {
+          "provider": "helm_before_svg",
+          "available": true,
+          "used": true,
+          "path": "assets/svg/triad_generated/TOPSHP44.svg"
+        }
+      ]
+    }
+  ]
+}

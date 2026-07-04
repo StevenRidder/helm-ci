@@ -1,0 +1,4560 @@
+{
+  "rows": [
+    {
+      "asset": "BOYSPR69",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "yellow/black spar buoy, full-chart",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "spar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 1,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7392,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.8613
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1221
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.417,
+        0.845,
+        0.455
+      ],
+      "reference_crop_id": "shape_spar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPR69_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPR69.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP10",
+      "chart1_class": "TOPSHP24 triangle point up",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 2,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.2683,
+        "crop_id": "topmark_cone_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.9245,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 1.2683,
+          "bbox": [
+            32,
+            44,
+            83,
+            84
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.0755
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cone_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.552,
+        0.752,
+        0.578
+      ],
+      "reference_crop_id": "topmark_cone_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP10_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP10.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPMA102",
+      "chart1_class": "TOPSHP24 triangle point up",
+      "class_verdict": "fail",
+      "description": "topmark, beacon, green cone, point up",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 3,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.2683,
+        "crop_id": "topmark_cone_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.9245,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 1.2683,
+          "bbox": [
+            32,
+            44,
+            83,
+            84
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.0755
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cone_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.552,
+        0.752,
+        0.578
+      ],
+      "reference_crop_id": "topmark_cone_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPMA102_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPMA102.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSUP02",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "super buoy, black, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "super_buoy",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 4,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected super_buoy from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_super_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8579,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1145
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_super_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.493,
+        0.845,
+        0.606
+      ],
+      "reference_crop_id": "shape_super_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSUP02_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSUP02.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNLAT22",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "minor lateral beacon, green, simplified",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 5,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BCNLAT22_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNLAT22.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYPIL72",
+      "chart1_class": "isolated-danger mark",
+      "class_verdict": "fail",
+      "description": "pillar buoy,isol.danger-brb,full-chart",
+      "expected_colors": [
+        "black",
+        "red"
+      ],
+      "expected_shape": "isolated_danger",
+      "expected_topmark": "two_spheres",
+      "final_approval": false,
+      "n": 6,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected isolated_danger from Chart No.1 isolated_safe_special; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "missing_expected_chart1_colour_token",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "isolated_safe_special",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          },
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8649,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            3,
+            0,
+            121,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1075
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/isolated_safe_special.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "reference_crop_id": "isolated_safe_special",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        98
+      ],
+      "reference_section": "isolated_safe_special",
+      "render": "out/full_catalog/renders/BOYPIL72_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYPIL72.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNSTK05",
+      "chart1_class": "beacon/dayboard/stake/tower",
+      "class_verdict": "fail",
+      "description": "minor, stake or pole beacon, white, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "beacon",
+      "expected_topmark": "optional_topmark",
+      "final_approval": false,
+      "n": 7,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected beacon from Chart No.1 beacons; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0159,
+        "crop_id": "beacon_general",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.869,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0159,
+          "bbox": [
+            0,
+            2,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1034
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/beacon_general.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.345,
+        0.828,
+        0.455
+      ],
+      "reference_crop_id": "beacon_general",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        92,
+        93,
+        94
+      ],
+      "reference_section": "beacons",
+      "render": "out/full_catalog/renders/BCNSTK05_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNSTK05.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYCAN64",
+      "chart1_class": "can buoy",
+      "class_verdict": "fail",
+      "description": "can buoy,black,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "can",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 8,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected can from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_can_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.731,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2414
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_can_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.302,
+        0.845,
+        0.341
+      ],
+      "reference_crop_id": "shape_can_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCAN64_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCAN64.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNSPP13",
+      "chart1_class": "special-purpose mark",
+      "class_verdict": "fail",
+      "description": "major special purpose beacon, simplified",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "special",
+      "expected_topmark": "x_topmark_optional",
+      "final_approval": false,
+      "n": 9,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected special from Chart No.1 special_purpose_buoys; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "special_purpose_buoys",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6833,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.8613
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            6,
+            0,
+            124,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.178
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/special_purpose_buoys.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.88
+      ],
+      "reference_crop_id": "special_purpose_buoys",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        91
+      ],
+      "reference_section": "special_purpose_buoys",
+      "render": "out/full_catalog/renders/BCNSPP13_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNSPP13.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSPR04",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "white/orange spar buoy, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "spar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 10,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8503,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1221
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.417,
+        0.845,
+        0.455
+      ],
+      "reference_crop_id": "shape_spar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPR04_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPR04.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSPR02",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "spar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 11,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8503,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1221
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.417,
+        0.845,
+        0.455
+      ],
+      "reference_crop_id": "shape_spar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPR02_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPR02.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYDEF03",
+      "chart1_class": "buoy/beacon related Chart No.1 class",
+      "class_verdict": "manual",
+      "description": "default symbol for buoy, simplified",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "manual_crosswalk",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 12,
+      "notes": [
+        "Asset is buoy/beacon related, but needs manual reference-class assignment before strict judging."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "missing_exact_chart1_asset_crosswalk"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.063,
+        "crop_id": "ecdis_summary",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6806,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.937,
+          "bbox": [
+            3,
+            0,
+            121,
+            126
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2918
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.95
+      ],
+      "reference_crop_id": "ecdis_summary",
+      "reference_evidence_status": "manual_exception",
+      "reference_pages": [
+        86
+      ],
+      "reference_section": "ecdis_summary",
+      "render": "out/full_catalog/renders/BOYDEF03_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYDEF03.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "TOPSHQ07",
+      "chart1_class": "TOPSHP7 X-shape",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 13,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.061,
+        "crop_id": "topmark_x_shape",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7968,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 0.939,
+          "bbox": [
+            19,
+            18,
+            95,
+            99
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2032
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_x_shape.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.644,
+        0.752,
+        0.663
+      ],
+      "reference_crop_id": "topmark_x_shape",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHQ07_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHQ07.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYCON62",
+      "chart1_class": "conical buoy",
+      "class_verdict": "fail",
+      "description": "conical buoy,yellow,paper-chart",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "conical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 14,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected conical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_conical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6723,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.8613
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.189
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "reference_crop_id": "shape_conical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCON62_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCON62.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNGEN68",
+      "chart1_class": "beacon/dayboard/stake/tower",
+      "class_verdict": "fail",
+      "description": "beacon in general, black/yellow, full-chart",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "beacon",
+      "expected_topmark": "optional_topmark",
+      "final_approval": false,
+      "n": 15,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected beacon from Chart No.1 beacons; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.3203,
+        "crop_id": "beacon_with_topmark",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7876,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.8613
+        },
+        "reference": {
+          "aspect": 0.6797,
+          "bbox": [
+            35,
+            0,
+            121,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.0737
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/beacon_with_topmark.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.565,
+        0.828,
+        0.84
+      ],
+      "reference_crop_id": "beacon_with_topmark",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        92,
+        93,
+        94
+      ],
+      "reference_section": "beacons",
+      "render": "out/full_catalog/renders/BCNGEN68_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNGEN68.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYCON61",
+      "chart1_class": "conical buoy",
+      "class_verdict": "fail",
+      "description": "conical buoy,lateral-green,full-chart",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "conical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 16,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected conical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_conical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7834,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.189
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "reference_crop_id": "shape_conical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCON61_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCON61.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSPR01",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "default spar buoy, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "spar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 17,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8503,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1221
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.417,
+        0.845,
+        0.455
+      ],
+      "reference_crop_id": "shape_spar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPR01_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPR01.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP13",
+      "chart1_class": "TOPSHP24 triangle point up",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 18,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.2683,
+        "crop_id": "topmark_cone_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.9245,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 1.2683,
+          "bbox": [
+            32,
+            44,
+            83,
+            84
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.0755
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cone_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.552,
+        0.752,
+        0.578
+      ],
+      "reference_crop_id": "topmark_cone_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP13_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP13.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNSAW21",
+      "chart1_class": "safe-water mark",
+      "class_verdict": "fail",
+      "description": "minor safe water beacon, simplified",
+      "expected_colors": [
+        "red",
+        "white"
+      ],
+      "expected_shape": "safe_water",
+      "expected_topmark": "single_sphere",
+      "final_approval": false,
+      "n": 19,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected safe_water from Chart No.1 isolated_safe_special; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "missing_expected_chart1_colour_token",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "isolated_safe_special",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8649,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            3,
+            0,
+            121,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1075
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/isolated_safe_special.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "reference_crop_id": "isolated_safe_special",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        98
+      ],
+      "reference_section": "isolated_safe_special",
+      "render": "out/full_catalog/renders/BCNSAW21_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNSAW21.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSPH71",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "spherical buoy,yby,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "spherical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 20,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spherical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spherical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8133,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1591
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spherical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.341,
+        0.845,
+        0.379
+      ],
+      "reference_crop_id": "shape_spherical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPH71_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPH71.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPI3",
+      "chart1_class": "TOPSHP7 X-shape",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 21,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.061,
+        "crop_id": "topmark_x_shape",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7968,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 0.939,
+          "bbox": [
+            19,
+            18,
+            95,
+            99
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2032
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_x_shape.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.644,
+        0.752,
+        0.663
+      ],
+      "reference_crop_id": "topmark_x_shape",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPI3_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPI3.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPA4",
+      "chart1_class": "TOPSHP21 vertical rectangle",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 22,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPA4_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPA4.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPT8;TE('%s'",
+      "chart1_class": "TOPSHP6 board",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 23,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPT8_TE_s__us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPT8_TE_s_.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYPIL71",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "pillar buoy,cardianl-yby,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "pillar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 24,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected pillar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_pillar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8403,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1321
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_pillar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.379,
+        0.845,
+        0.417
+      ],
+      "reference_crop_id": "shape_pillar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYPIL71_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYPIL71.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHQ28",
+      "chart1_class": "TOPSHP28 T-shape",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 25,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.4268,
+        "crop_id": "topmark_t_shape",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8007,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 1.4268,
+          "bbox": [
+            0,
+            18,
+            116,
+            99
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1993
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_t_shape.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.789,
+        0.752,
+        0.813
+      ],
+      "reference_crop_id": "topmark_t_shape",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHQ28_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHQ28.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP41",
+      "chart1_class": "TOPSHP19 square",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 26,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP41_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP41.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPMAR99",
+      "chart1_class": "TOPSHP12 rhombus",
+      "class_verdict": "fail",
+      "description": "topmark, beacon, Diamond,yellow",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 27,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1951,
+        "crop_id": "topmark_cube_point_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7873,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8049,
+          "bbox": [
+            25,
+            13,
+            90,
+            94
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1949
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cube_point_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.733,
+        0.752,
+        0.752
+      ],
+      "reference_crop_id": "topmark_cube_point_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPMAR99_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPMAR99.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPA1",
+      "chart1_class": "TOPSHP21 vertical rectangle",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 28,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPA1_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPA1.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYCON01",
+      "chart1_class": "conical buoy",
+      "class_verdict": "fail",
+      "description": "conical buoy, general, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "conical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 29,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected conical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_conical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7834,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.189
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "reference_crop_id": "shape_conical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCON01_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCON01.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYLAT14",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "conical lateral buoy, red, simplified",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 30,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BOYLAT14_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYLAT14.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BCNSAW13",
+      "chart1_class": "safe-water mark",
+      "class_verdict": "fail",
+      "description": "major safe water beacon, simplified",
+      "expected_colors": [
+        "red",
+        "white"
+      ],
+      "expected_shape": "safe_water",
+      "expected_topmark": "single_sphere",
+      "final_approval": false,
+      "n": 31,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected safe_water from Chart No.1 isolated_safe_special; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "missing_expected_chart1_colour_token",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "isolated_safe_special",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8649,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            3,
+            0,
+            121,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1075
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/isolated_safe_special.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "reference_crop_id": "isolated_safe_special",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        98
+      ],
+      "reference_section": "isolated_safe_special",
+      "render": "out/full_catalog/renders/BCNSAW13_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNSAW13.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BCNSTK78",
+      "chart1_class": "beacon/dayboard/stake/tower",
+      "class_verdict": "fail",
+      "description": "minor, stake or pole beacon, red/white, full-chart",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "beacon",
+      "expected_topmark": "optional_topmark",
+      "final_approval": false,
+      "n": 32,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected beacon from Chart No.1 beacons; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0159,
+        "crop_id": "beacon_general",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.869,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0159,
+          "bbox": [
+            0,
+            2,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1034
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/beacon_general.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.345,
+        0.828,
+        0.455
+      ],
+      "reference_crop_id": "beacon_general",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        92,
+        93,
+        94
+      ],
+      "reference_section": "beacons",
+      "render": "out/full_catalog/renders/BCNSTK78_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BCNSTK78.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP04",
+      "chart1_class": "TOPSHP22 trapezium up lacks an exact Chart No.1 crop",
+      "class_verdict": "manual",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "manual_topmark_exception",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 33,
+      "notes": [
+        "Asset is buoy/beacon related, but needs manual reference-class assignment before strict judging."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "missing_exact_chart1_asset_crosswalk"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "topmarks",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8501,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            3,
+            0,
+            121,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1321
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmarks.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "topmarks",
+      "reference_evidence_status": "manual_exception",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP04_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP04.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "TOPSHP54",
+      "chart1_class": "TOPSHP12 rhombus",
+      "class_verdict": "fail",
+      "description": "beacon top mark, white-green square board, diagonal",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 34,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1951,
+        "crop_id": "topmark_cube_point_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7873,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8049,
+          "bbox": [
+            25,
+            13,
+            90,
+            94
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1949
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cube_point_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.733,
+        0.752,
+        0.752
+      ],
+      "reference_crop_id": "topmark_cube_point_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP54_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP54.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPA7",
+      "chart1_class": "TOPSHP21 vertical rectangle",
+      "class_verdict": "fail",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 35,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPA7_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPA7.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP55",
+      "chart1_class": "TOPSHP12 rhombus",
+      "class_verdict": "fail",
+      "description": "beacon top mark, white-green square board, diagonal",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 36,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1951,
+        "crop_id": "topmark_cube_point_up",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7873,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8049,
+          "bbox": [
+            25,
+            13,
+            90,
+            94
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1949
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_cube_point_up.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.733,
+        0.752,
+        0.752
+      ],
+      "reference_crop_id": "topmark_cube_point_up",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP55_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP55.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYLAT53",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 37,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BOYLAT53_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYLAT53.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYCON64",
+      "chart1_class": "conical buoy",
+      "class_verdict": "fail",
+      "description": "conical buoy,black,paper-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "conical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 38,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected conical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_conical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7834,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.189
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "reference_crop_id": "shape_conical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCON64_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCON64.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHPD2",
+      "chart1_class": "TOPSHP3 sphere",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 39,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.2969,
+        "crop_id": "topmark_sphere",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7092,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 1.0
+        },
+        "reference": {
+          "aspect": 0.7031,
+          "bbox": [
+            18,
+            0,
+            107,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2908
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_sphere.png",
+      "reference_crop_box_unit": [
+        0.785,
+        0.526,
+        0.807,
+        0.545
+      ],
+      "reference_crop_id": "topmark_sphere",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHPD2_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHPD2.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "TOPSHP43",
+      "chart1_class": "TOPSHP19 square",
+      "class_verdict": "fail",
+      "description": "beacon top mark, red boarded square board, vertical",
+      "expected_colors": [
+        "red"
+      ],
+      "expected_shape": "topmark_only",
+      "expected_topmark": "standalone_topmark",
+      "final_approval": false,
+      "n": 40,
+      "notes": [
+        "Expected topmark_only from Chart No.1 colors_topmarks; observed light_flare."
+      ],
+      "observed_colors": [
+        "ink",
+        "red",
+        "white"
+      ],
+      "observed_shape": "light_flare",
+      "observed_topmark": "light_flare",
+      "palette": "day",
+      "reason_codes": [
+        "non_light_symbol_rendered_as_light_flare",
+        "topmark_not_standalone_chart1_glyph",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.1538,
+        "crop_id": "topmark_vertical_rectangle",
+        "crop_status": "exact_symbol_crop",
+        "expected_color_checks": {
+          "red": {
+            "generated_has": false,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.7654,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9822
+        },
+        "reference": {
+          "aspect": 0.8462,
+          "bbox": [
+            25,
+            21,
+            90,
+            98
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2168
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "reference_crop_box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "reference_crop_id": "topmark_vertical_rectangle",
+      "reference_evidence_status": "exact_symbol_crop",
+      "reference_pages": [
+        87,
+        88
+      ],
+      "reference_section": "colors_topmarks",
+      "render": "out/full_catalog/renders/TOPSHP43_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/TOPSHP43.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYCON69",
+      "chart1_class": "conical buoy",
+      "class_verdict": "fail",
+      "description": "conical buoy,cardinal-north-by,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "conical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 41,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected conical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_conical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.7834,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": true,
+            "yellow": false
+          },
+          "foreground_ratio": 0.189
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "reference_crop_id": "shape_conical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYCON69_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYCON69.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYMOR03",
+      "chart1_class": "mooring buoy",
+      "class_verdict": "fail",
+      "description": "can mooring buoy,generic,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "mooring",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 42,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected mooring from Chart No.1 mooring_buoys; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.063,
+        "crop_id": "mooring_buoys",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.8339,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.937,
+          "bbox": [
+            3,
+            0,
+            121,
+            126
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.1385
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/mooring_buoys.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.58
+      ],
+      "reference_crop_id": "mooring_buoys",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        90
+      ],
+      "reference_section": "mooring_buoys",
+      "render": "out/full_catalog/renders/BOYMOR03_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYMOR03.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYPIL70",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "pillar buoy,cardinal-byb,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "pillar",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 43,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected pillar from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_pillar_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8403,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1321
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_pillar_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.379,
+        0.845,
+        0.417
+      ],
+      "reference_crop_id": "shape_pillar_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYPIL70_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYPIL70.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYINB01",
+      "chart1_class": "buoy/beacon related Chart No.1 class",
+      "class_verdict": "manual",
+      "description": "instructionallation buoy, paper-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "manual_crosswalk",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 44,
+      "notes": [
+        "Asset is buoy/beacon related, but needs manual reference-class assignment before strict judging."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "missing_exact_chart1_asset_crosswalk"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.063,
+        "crop_id": "ecdis_summary",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6806,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.937,
+          "bbox": [
+            3,
+            0,
+            121,
+            126
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2918
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.95
+      ],
+      "reference_crop_id": "ecdis_summary",
+      "reference_evidence_status": "manual_exception",
+      "reference_pages": [
+        86
+      ],
+      "reference_section": "ecdis_summary",
+      "render": "out/full_catalog/renders/BOYINB01_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYINB01.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYLAT26",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 45,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BOYLAT26_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYLAT26.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYPIL62",
+      "chart1_class": "special-purpose mark",
+      "class_verdict": "fail",
+      "description": "pillar buoy,special purpose-y,full-chart",
+      "expected_colors": [
+        "yellow"
+      ],
+      "expected_shape": "special",
+      "expected_topmark": "x_topmark_optional",
+      "final_approval": false,
+      "n": 46,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected special from Chart No.1 special_purpose_buoys; observed generic_body."
+      ],
+      "observed_colors": [
+        "ink",
+        "white",
+        "yellow"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0703,
+        "crop_id": "special_purpose_buoys",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "yellow": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6833,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.8613
+        },
+        "reference": {
+          "aspect": 0.9297,
+          "bbox": [
+            6,
+            0,
+            124,
+            127
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.178
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/special_purpose_buoys.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.88
+      ],
+      "reference_crop_id": "special_purpose_buoys",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        91
+      ],
+      "reference_section": "special_purpose_buoys",
+      "render": "out/full_catalog/renders/BOYPIL62_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYPIL62.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYSPH05",
+      "chart1_class": "specialized buoy body",
+      "class_verdict": "fail",
+      "description": "spherical buoy,white,full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "spherical",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 47,
+      "notes": [
+        "This row has multi_symbol_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected spherical from Chart No.1 buoy_shapes; observed generic_body."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0,
+        "crop_id": "shape_spherical_buoy",
+        "crop_status": "multi_symbol_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.8133,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": true
+          },
+          "foreground_ratio": 0.1591
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/shape_spherical_buoy.png",
+      "reference_crop_box_unit": [
+        0.735,
+        0.341,
+        0.845,
+        0.379
+      ],
+      "reference_crop_id": "shape_spherical_buoy",
+      "reference_evidence_status": "multi_symbol_reference",
+      "reference_pages": [
+        89
+      ],
+      "reference_section": "buoy_shapes",
+      "render": "out/full_catalog/renders/BOYSPH05_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYSPH05.svg",
+      "verdict": "fail"
+    },
+    {
+      "asset": "BOYLAT52",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 48,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BOYLAT52_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYLAT52.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYLAT51",
+      "chart1_class": "lateral buoy/beacon",
+      "class_verdict": "manual",
+      "description": "conical lateral buoy, green, simplified",
+      "expected_colors": [
+        "green"
+      ],
+      "expected_shape": "lateral",
+      "expected_topmark": "optional_lateral_topmark",
+      "final_approval": false,
+      "n": 49,
+      "notes": [
+        "This row has class_panel_reference Chart No.1 evidence, so FORGE-13 cannot treat it as final-approved geometry.",
+        "Expected lateral from Chart No.1 lateral_regions; observed conical."
+      ],
+      "observed_colors": [
+        "green",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "conical",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.0556,
+        "crop_id": "lateral_regions",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "green": {
+            "generated_has": true,
+            "reference_has": true
+          }
+        },
+        "foreground_delta": 0.6274,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.9444,
+          "bbox": [
+            6,
+            0,
+            124,
+            125
+          ],
+          "color_presence": {
+            "black": false,
+            "green": true,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.345
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "reference_crop_id": "lateral_regions",
+      "reference_evidence_status": "class_panel_reference",
+      "reference_pages": [
+        95,
+        96
+      ],
+      "reference_section": "lateral_regions",
+      "render": "out/full_catalog/renders/BOYLAT51_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYLAT51.svg",
+      "verdict": "manual"
+    },
+    {
+      "asset": "BOYGEN03",
+      "chart1_class": "buoy/beacon related Chart No.1 class",
+      "class_verdict": "manual",
+      "description": "default buoy, full-chart",
+      "expected_colors": [
+        "black"
+      ],
+      "expected_shape": "manual_crosswalk",
+      "expected_topmark": null,
+      "final_approval": false,
+      "n": 50,
+      "notes": [
+        "Asset is buoy/beacon related, but needs manual reference-class assignment before strict judging."
+      ],
+      "observed_colors": [
+        "black",
+        "ink",
+        "white"
+      ],
+      "observed_shape": "generic_body",
+      "observed_topmark": null,
+      "palette": "day",
+      "reason_codes": [
+        "missing_exact_chart1_asset_crosswalk"
+      ],
+      "reference_comparison": {
+        "aspect_delta": 0.063,
+        "crop_id": "ecdis_summary",
+        "crop_status": "class_panel_reference",
+        "expected_color_checks": {
+          "black": {
+            "generated_has": true,
+            "reference_has": false
+          }
+        },
+        "foreground_delta": 0.6806,
+        "generated": {
+          "aspect": 1.0,
+          "bbox": [
+            0,
+            0,
+            127,
+            127
+          ],
+          "color_presence": {
+            "black": true,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.9724
+        },
+        "reference": {
+          "aspect": 0.937,
+          "bbox": [
+            3,
+            0,
+            121,
+            126
+          ],
+          "color_presence": {
+            "black": false,
+            "green": false,
+            "red": false,
+            "yellow": false
+          },
+          "foreground_ratio": 0.2918
+        }
+      },
+      "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+      "reference_crop_box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.95
+      ],
+      "reference_crop_id": "ecdis_summary",
+      "reference_evidence_status": "manual_exception",
+      "reference_pages": [
+        86
+      ],
+      "reference_section": "ecdis_summary",
+      "render": "out/full_catalog/renders/BOYGEN03_us-paper_day.png",
+      "style": "us-paper",
+      "svg": "generated/full_catalog/compose/us-paper/BOYGEN03.svg",
+      "verdict": "manual"
+    }
+  ],
+  "seed": 20260630,
+  "size": 50
+}

@@ -1,0 +1,269 @@
+# Standard Repair Batch 12 / Owned Repair Batch 20
+
+Owned redraws for a bounded high-confidence subset of the current 252-row standard repair queue.
+
+- source_queue_rows: `252`
+- expected_queue_rows: `252`
+- failed_repaired: `30`
+- blocked_or_skipped: `222`
+- visual_parity: `repaired_pending_judge_rerun`
+
+## Repaired
+
+- `QUAPOS01`: Replace the dashed plus box with a black PA approximate-position label/cue.
+- `QUARRY01`: Replace the point diamond with the brown crossed quarry glyph.
+- `QUESMRK1`: Replace the dashed plus box with the magenta question-mark symbol.
+- `RACNSP01`: Replace the diamond with a magenta radar-conspicuous starburst glyph.
+- `RADRFL03`: Replace the diamond with a radar-reflector mast and arc glyph.
+- `RASCAN01`: Replace the diamond with a brown radar-scanner glyph at reference scale.
+- `RASCAN11`: Replace the diamond with a black conspicuous radar-scanner glyph.
+- `RCTLPT52`: Replace the diamond with a magenta dashed traffic-direction arrow.
+- `RDOCAL02`: Replace the diamond with a one-direction radio call-in point glyph.
+- `RDOCAL03`: Replace the diamond with a both-direction radio call-in point glyph.
+- `RDOSTA02`: Replace the diamond with a radio-station reference glyph.
+- `RECDEF51`: Replace the diamond with a recommended-track line and unknown-direction cue.
+- `RECTRC55`: Replace the diamond with a recommended two-way track annotation.
+- `RECTRC56`: Replace the diamond with a fixed-mark two-way track annotation.
+- `RECTRC57`: Replace the diamond with a recommended one-way track annotation.
+- `RECTRC58`: Replace the diamond with a fixed-mark one-way track annotation.
+- `REFPNT02`: Replace the diamond with an orange reference-point crosshair.
+- `RETRFL01`: Replace the diamond with a magenta retro-reflector glyph.
+- `RETRFL02`: Replace the diamond with a simplified black retro-reflector glyph.
+- `RSCSTA02`: Replace the diamond with the reference point/star mark.
+- `SCALEB10`: Replace the diamond with a one-mile vertical segmented scalebar.
+- `SCALEB11`: Replace the diamond with a ten-mile horizontal segmented latitude scalebar.
+- `SNDWAV02`: Replace the diamond with a wavy sand-wave line symbol.
+- `SOUNDG02`: Replace the dashed plus box with a compact black sounding-number glyph.
+- `SWPARE51`: Replace the dashed area tile with a swept-area bracket symbol.
+- `TMBYRD01`: Replace the diamond marker with a brown timber-yard grid glyph.
+- `TNKCON02`: Replace the diamond marker with the brown tank circle/ring glyph.
+- `TNKCON12`: Replace the diamond marker with the black tank circle/ring glyph.
+- `TNKFRM01`: Replace the diamond marker with a brown tank-farm clustered-circle glyph.
+- `TNKFRM11`: Replace the dashed area tile with a black tank-farm clustered-circle glyph.
+
+## Blocked / skipped
+
+- `BCNCON81`: blocked_missing_exact_reference - BCNCON81 needs an exact local reference crop/render first; then redraw against that crop rather than approving a generic black post.
+- `BOYCON81`: skipped_batch20_geometry_heavy_navigation_aid_contract - Redraw BOYCON81 against the OpenCPN/reference witness so the blue-red-white-blue horizontal/vertical stripe pattern is unambiguous; remove any internal grid lines or translucent overlays that are not part of the reference symbol.
+- `BOYLAT52`: blocked_missing_or_unverified_reference_render - Regenerate/verify out/opencpn_s52_reference/BOYLAT52__day.png before promoting this row.
+- `BOYLAT53`: blocked_missing_or_unverified_reference_render - Regenerate/verify out/opencpn_s52_reference/BOYLAT53__day.png before promoting this row.
+- `BOYSPH79`: blocked_missing_or_unverified_reference_render - Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPH79 and reconcile the row's conical-versus-spherical contract; then rerun visual judging before any pass.
+- `BOYSPR02`: blocked_missing_or_unverified_reference_render - Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPR02 before passing visual parity.
+- `BOYSPR03`: blocked_missing_or_unverified_reference_render - Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPR03 before passing visual parity.
+- `BOYSUP65`: skipped_batch20_geometry_heavy_navigation_aid_contract - Redraw on the super-buoy platform/trapezoid reference body while preserving vertical red/white order.
+- `BRIDGE01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the BRIDGE01 opening-bridge concentric ring/double-ring witness; remove the diagonal slash and center dash details.
+- `BUNSTA02`: skipped_batch20_low_reference_confidence - Redraw to the OpenCPN water bunker-station bucket/barrel silhouette with blue water band; avoid a standalone faucet/droplet pictogram.
+- `BUNSTA03`: skipped_batch20_low_reference_confidence - Redraw as a readable ballast-station cube/box service symbol with visible face/grid divisions instead of a solid filled mass.
+- `CRANES01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the brown S-101/OpenCPN crane with boom, post, hook, base, and reference colour family.
+- `CURDEF01`: skipped_batch20_tide_current_dedicated_pass - Redraw as the vertical current/stream arrow with side question marks and straight lower barb/stem structure; remove the curved lower arc.
+- `DANGER53`: blocked_missing_exact_reference - Locate/render the authoritative DANGER53 reference, then replace the generic diamond with that hazard silhouette before any visual pass.
+- `DAYSQR21`: skipped_batch20_geometry_heavy_navigation_aid_contract - Redraw DAYSQR21 with the provider/reference daymark colour family and base/ring details; do not substitute a yellow black-outlined board.
+- `DGPS01DRFSTA01`: blocked_missing_exact_reference - Resolve the exact reference for DGPS01DRFSTA01 and replace the generic diamond with that station symbol.
+- `DISMAR03`: skipped_batch20_low_reference_confidence - Replace the diamond with the distance-mark text/marker form shown by the reference.
+- `DISMAR04`: skipped_batch20_low_reference_confidence - Replace the diamond with the distance-point text/marker form from OpenCPN.
+- `DWRTPT51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the DW deep-water-route text mark in the reference style; remove the rounded enclosing placard.
+- `EVENTS02`: skipped_batch20_low_reference_confidence - Replace the diamond with the reference mariner-event mark shape and reference-defined color treatment.
+- `FAIRWY51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the vertical one-way fairway arrow using the reference colour/stroke treatment, not magenta precaution/route styling.
+- `FAIRWY52`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the vertical two-way fairway arrow using the reference colour/stroke treatment, not magenta styling.
+- `FLDSTR01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw with the S-101/OpenCPN upward flood-stream arrow and side-rate barb geometry.
+- `FLGSTF01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw the brown/gold flagstaff with the reference flag shape plus base/ring marker.
+- `FLTHAZ02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw FLTHAZ02 as the magenta circular floating-hazard witness from S-101/OpenCPN; remove the black hull/chevron substitution.
+- `FOGSIG01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the fog-signal arc glyph in the reference purple/magenta treatment; remove the invented bell/horn body.
+- `FOULGND1`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the open foul-ground hash/slash mark; do not use an asterisk/star.
+- `FRYARE51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the ferry-area route/ferry-outline witness; remove the F signboard.
+- `FRYARE52`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the cable-ferry area route/ferry-outline witness; remove the CF signboard.
+- `FSHFAC02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the fishing-stakes frame and angled-stake geometry from the reference.
+- `FSHFAC03`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the fishing-stakes area pattern/comb symbol; remove the triangular stake silhouette.
+- `FSHGRD01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the fishing-ground fish outline from the references; remove the FG lettering and wrong colour family.
+- `FSHHAV01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the fish-haven fish plus dotted boundary witness; remove FH text and wrong colour family.
+- `GATCON03`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the navigable lock-gate geometry.
+- `GATCON04`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the non-navigable lock-gate geometry.
+- `HECMTR01`: skipped_batch20_low_reference_confidence - Replace the diamond with the 100 m hectometre-point symbol shown by OpenCPN.
+- `HECMTR02`: skipped_batch20_low_reference_confidence - Replace the diamond with the 1 km hectometre-point symbol shown by OpenCPN.
+- `HGWTMK01`: skipped_batch20_low_reference_confidence - Replace the diamond with the high-water-mark reference geometry.
+- `HRBFAC09`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the fishing-harbour-specific icon/letter convention from the OpenCPN/S-101 references.
+- `HRBFAC10`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the default harbour-facility reference icon and correct color treatment.
+- `HRBFAC11`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the naval-base facility symbol from the reference.
+- `HRBFAC12`: skipped_batch20_geometry_heavy_navigation_aid_contract - Verify against the OpenCPN ship-yard reference and redraw with the exact facility shape/text/color treatment.
+- `HRBFAC13`: skipped_batch20_geometry_heavy_navigation_aid_contract - Verify against the OpenCPN harbour-master reference and redraw with the exact facility shape/text/color treatment.
+- `HRBFAC14`: skipped_batch20_geometry_heavy_navigation_aid_contract - Verify against the OpenCPN pilot reference and redraw with the exact facility shape/text/color treatment.
+- `HRBFAC15`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the water-police facility reference icon/letter convention.
+- `HRBFAC16`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the customs-office facility symbol from the reference.
+- `HRBFAC17`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the service-and-repair facility reference symbol.
+- `HRBFAC18`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace with the quarantine-station facility reference symbol.
+- `HULKES01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the HULKES01 hulk silhouette from the references; remove the A-like marker and align the hull shape/colour.
+- `INFARE51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the INFARE51 information/restriction-area box glyph; remove the signpost and curved base.
+- `INFORM01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the reference information marker with leader line and origin circle; remove the signpost substitution.
+- `ISODGR51`: skipped_batch20_low_reference_confidence - Replace the diamond with the isolated-danger full/simplified reference symbol.
+- `ITZARE51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the IT inshore-traffic-area text mark in the reference style; remove the double-arrow icon.
+- `LITFLT01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the full-chart light-float reference symbol.
+- `LITFLT02`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the simplified light-float reference symbol.
+- `LITFLT10`: skipped_batch20_low_reference_confidence - Redraw as the red/white light-float full-chart symbol with the correct body and light cue.
+- `LITFLT61`: skipped_batch20_low_reference_confidence - Redraw as the green light-float full-chart symbol with the correct body and light cue.
+- `LITVES01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the full-chart light-vessel reference symbol.
+- `LITVES02`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the simplified light-vessel reference symbol.
+- `LITVES60`: skipped_batch20_low_reference_confidence - Redraw as the red light-vessel reference symbol with ship body and light cue.
+- `LITVES61`: skipped_batch20_low_reference_confidence - Redraw as the green light-vessel reference symbol with ship body and light cue.
+- `LNDARE01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the LNDARE01 land-area point/disk symbol from the references; remove the mound silhouette.
+- `MARCUL02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the MARCUL02 marine-farm fish/net line motif from S-101/OpenCPN.
+- `MONUMT02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the brown MONUMT02 monument silhouette with diagonal bands and base/ring details.
+- `MONUMT12`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the black conspicuous MONUMT12 monument with diagonal bands and base/ring details.
+- `MORFAC03`: skipped_batch20_geometry_heavy_navigation_aid_contract - Redraw as the MORFAC03 mooring dolphin/pile reference symbol rather than a black ring.
+- `MORFAC04`: skipped_batch20_geometry_heavy_navigation_aid_contract - Redraw as the MORFAC04 deviation mooring dolphin structure from the references.
+- `MSTCON04`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the MSTCON04 narrow mast/needle silhouette with base/ring marker and brown reference colour.
+- `MSTCON14`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the MSTCON14 black narrow mast/needle silhouette with base/ring marker.
+- `NEWOBJ 01`: skipped_batch20_low_reference_confidence - Provide a valid reference render/crop for NEWOBJ 01 and replace the placeholder with that reference-defined shape.
+- `NEWOBJ01`: skipped_batch20_low_reference_confidence - Provide a valid reference render/crop for NEWOBJ01 and replace the placeholder with that reference-defined shape.
+- `NMKINF01`: skipped_batch20_notice_board_family_dedicated_pass - Redraw as the NMKINF01 rectangular entry-permitted sign with the green/white vertical-bar pattern.
+- `NMKINF02`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF02 notice board and lightning glyph.
+- `NMKINF03`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF03 notice board and weir glyph.
+- `NMKINF04`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF04 cable-ferry notice-board glyph.
+- `NMKINF05`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF05 ferry notice-board glyph.
+- `NMKINF06`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF06 berthing-permitted notice-board glyph.
+- `NMKINF19`: skipped_batch20_notice_board_family_dedicated_pass - Place the anchor inside the NMKINF19 blue notice-board frame with the reference white anchor treatment.
+- `NMKINF20`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF20 making-fast notice-board glyph.
+- `NMKINF21`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF21 loading/unloading notice-board glyph.
+- `NMKINF22`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the blue NMKINF22 turning-permitted notice-board glyph.
+- `NMKINF23`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF23 blue/white crossing-waterway diagram.
+- `NMKINF24`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF24 right-side secondary-waterway diagram.
+- `NMKINF25`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF25 left-side secondary-waterway diagram.
+- `NMKINF26`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF26 main-fairway-right rectangular diagram.
+- `NMKINF27`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF27 main-fairway-left rectangular diagram.
+- `NMKINF28`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF28 side-waterway-left/main-right diagram.
+- `NMKINF29`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF29 side-waterway-right/main-left diagram.
+- `NMKINF38`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF38 end-of-regulation notice-board slash.
+- `NMKINF40`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF40 telephone notice-board glyph.
+- `NMKINF43`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF43 waterski notice-board glyph.
+- `NMKINF44`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF44 sailing-boats notice-board glyph.
+- `NMKINF45`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF45 non-powered-boat notice-board glyph.
+- `NMKINF46`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF46 windsurfing notice-board glyph.
+- `NMKINF47`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF47 blue VHF notice board.
+- `NMKINF48`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF48 waterscooter/jetski notice-board glyph.
+- `NMKINF49`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF49 high-speed motorboat notice-board glyph.
+- `NMKINF50`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF50 slipping/boat-ramp notice-board glyph.
+- `NMKINF53`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKINF53 blue board carrying three vessel bars.
+- `NMKPRH02`: skipped_batch20_notice_board_family_dedicated_pass - Redraw as the NMKPRH02 rectangular red/white entry-prohibited sign.
+- `NMKPRH06`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKPRH06 prohibition board, including arrows and red slash.
+- `NMKPRH07`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKPRH07 berthing-prohibited board and slash glyph.
+- `NMKPRH08`: skipped_batch20_notice_board_family_dedicated_pass - Place the anchor in the NMKPRH08 red prohibition-board frame with the diagonal slash.
+- `NMKPRH10`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKPRH10 turning-prohibited board and slash glyph.
+- `NMKPRH11`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKPRH11 avoid-wave-wash prohibition board.
+- `NMKPRH12`: skipped_batch20_notice_board_family_dedicated_pass - Redraw as the NMKPRH12 left-side passing-prohibited split diamond without the center-dot placeholder.
+- `NMKPRH13`: skipped_batch20_notice_board_family_dedicated_pass - Redraw as the NMKPRH13 right-side passing-prohibited split diamond without the center-dot placeholder.
+- `NMKPRH14`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKPRH14 engine-boats-prohibited board and slash glyph.
+- `NMKRCD01`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKRCD01 as the reference-scale yellow recommended-passage diamond, removing the oversized center-ring glyph.
+- `NMKRCD02`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKRCD02 as the paired yellow recommended-passage diamonds and preserve the one-direction count cue.
+- `NMKRCD03`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKRCD03 as the right-side green/white split recommended-passage diamond without the center-ring placeholder.
+- `NMKRCD04`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKRCD04 as the left-side green/white split recommended-passage diamond without the center-ring placeholder.
+- `NMKRCD05`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKRCD05 left-direction recommended-traffic notice glyph.
+- `NMKRCD06`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKRCD06 right-direction recommended-traffic notice glyph.
+- `NMKREG01`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKREG01 as the square red regulation notice board with the reference white field/frame.
+- `NMKREG02`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG02 mandatory-left red notice board and arrow glyph.
+- `NMKREG03`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG03 mandatory-right red notice board and arrow glyph.
+- `NMKREG10`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG10 red board and stop-bar glyph.
+- `NMKREG11`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG11 red board and sound-signal pictogram.
+- `NMKREG12`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG12 red special-attention notice board glyph.
+- `NMKREG13`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG13 red give-way fairway diagram board.
+- `NMKREG14`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG14 red crossing/give-way fairway diagram board.
+- `NMKREG15`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG15 red mandatory-radiophone notice board.
+- `NMKREG16`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG16 red restricted-depth notice board.
+- `NMKREG17`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NMKREG17 red vertical-clearance notice board.
+- `NMKREG19`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKREG19 with the left-side restricted-width reference geometry and color order.
+- `NMKREG20`: skipped_batch20_notice_board_family_dedicated_pass - Redraw NMKREG20 with the right-side restricted-width reference geometry and color order.
+- `NORTHAR1`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the NORTHAR1 simple orange north-arrow/stem glyph with reference N placement.
+- `NOTBRD12`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NOTBRD12 yellow notice-board/post silhouette and remove the center-ring detail.
+- `NOTMRK01`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NOTMRK01 square prohibition board and slash.
+- `NOTMRK02`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NOTMRK02 square red regulation/restriction board.
+- `NOTMRK03`: skipped_batch20_notice_board_family_dedicated_pass - Replace the diamond with the NOTMRK03 information/recommendation notice-board reference shape.
+- `OBSTRN03`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw with the reference filled/tinted obstruction circle and dotted perimeter; remove the center-dot-only treatment.
+- `OFSPLF01`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the OFSPLF01 square platform glyph with central dot; remove the legged platform pictogram.
+- `OSPONE02`: skipped_batch20_low_reference_confidence - Replace the diamond with the OSPONE02 one-minute ownship-vector tick mark.
+- `OSPSIX02`: skipped_batch20_low_reference_confidence - Replace the diamond with the OSPSIX02 six-minute ownship-vector tick mark.
+- `OWNSHP01`: skipped_batch20_low_reference_confidence - Replace the diamond with the OWNSHP01 ownship target symbol.
+- `OWNSHP05`: skipped_batch20_low_reference_confidence - Replace the diamond with the OWNSHP05 scaled-ownship/conning-position reference geometry.
+- `PIER0001`: skipped_batch20_low_reference_confidence - Replace the diamond with the PIER0001 blue circular pier symbol and pier extension cue.
+- `PILBOP02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the PILBOP02 magenta circle/diamond pilot-boarding witness; remove the P letter and stem.
+- `PILPNT02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the PILPNT02 black pile/bollard point mark at reference proportions; remove the signpost.
+- `PLNPOS01`: skipped_batch20_low_reference_confidence - Replace the diamond with the PLNPOS01 red/orange surrounding ellipse.
+- `PLNPOS02`: skipped_batch20_low_reference_confidence - Replace the diamond with the PLNPOS02 planned-position crossline.
+- `PLNSPD03`: skipped_batch20_low_reference_confidence - Replace the diamond with the PLNSPD03 planned-route speed box.
+- `PLNSPD04`: skipped_batch20_low_reference_confidence - Replace the diamond with the PLNSPD04 alternate-route speed box.
+- `POSGEN01`: skipped_batch20_outside_bounded_high_confidence_subset - Keep the ring/dot geometry but change POSGEN01 to the reference brown colour family.
+- `POSGEN03`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the POSGEN03 black ring/dot witness; remove crosshair spokes.
+- `POSGEN04`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the POSGEN04 reference ring marker; remove the invented internal triangle.
+- `POSITN02`: skipped_batch20_low_reference_confidence - Replace the diamond with the POSITN02 orange position-fix crosshair.
+- `PRCARE51`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw PRCARE51 as the reference precautionary-area boundary triangle; remove the dashed outline substitution.
+- `PRDINS02`: skipped_batch20_outside_bounded_high_confidence_subset - Redraw as the PRDINS02 brown crossed mine/quarry tools symbol; remove the crossed-circle target.
+- `PRICKE03`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace the diamond with the PRICKE03 porthand withy beacon shape.
+- `PRICKE04`: skipped_batch20_geometry_heavy_navigation_aid_contract - Replace the diamond with the PRICKE04 starboard withy beacon shape.
+- `PSSARE01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the dashed-square placeholder with the PSSARE01 reference area symbol/pattern from S-101/OpenCPN.
+- `RCLDEF01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the RCLDEF01 radio calling-in point and unknown-direction question-mark geometry.
+- `REFDMP01`: skipped_batch20_low_reference_confidence - Replace the diamond with the REFDMP01 green refuse dump can glyph and preserve green/black ordering.
+- `RFNERY01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the RFNERY01 brown refinery symbol.
+- `RFNERY11`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the dashed area tile with the RFNERY11 conspicuous refinery glyph.
+- `ROLROL01`: skipped_batch20_terminal_tank_contract_unclear - Replace the diamond with the ROLROL01 RoRo terminal text label.
+- `RTLDEF51`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the RTLDEF51 dashed route arrow and unknown-direction cues.
+- `RTPBCN02`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the RTPBCN02 magenta transponder-beacon circle/ring glyph.
+- `SILBUI01`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the SILBUI01 small brown silo point mark.
+- `SILBUI11`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the SILBUI11 conspicuous silo point mark.
+- `SISTAT02`: skipped_batch20_low_reference_confidence - Replace the diamond with the SISTAT02 signal-station SS label symbol.
+- `SPRING02`: skipped_batch20_outside_bounded_high_confidence_subset - Replace the diamond with the SPRING02 spring reference glyph.
+- `SSENTR01`: skipped_batch20_low_reference_confidence - Replace the diamond with the SSENTR01 port-entry signal-station board glyph.
+- `SSLOCK01`: skipped_batch20_low_reference_confidence - Replace the diamond with the SSLOCK01 lock signal-station board glyph.
+- `SSWARS01`: skipped_batch20_low_reference_confidence - Replace the diamond with the SSWARS01 wahrschau signal-station board glyph.
+- `STARPT01`: skipped_batch20_low_reference_confidence - Replace the diamond with the STARPT01 black star symbol.
+- `TERMNL01`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL01 passenger-terminal circular glyph.
+- `TERMNL02`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL02 ferry-terminal circular glyph.
+- `TERMNL03`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL03 circular container-terminal glyph, preserving red/black/color detail.
+- `TERMNL04`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL04 circular bulk-terminal glyph with white/black detail.
+- `TERMNL05`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL05 circular oil-terminal label glyph.
+- `TERMNL06`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL06 circular fuel-terminal label glyph.
+- `TERMNL07`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL07 circular chemical-terminal label glyph.
+- `TERMNL08`: skipped_batch20_low_reference_confidence - Replace the diamond with the TERMNL08 circular liquid-goods terminal label glyph.
+- `TERMNL09`: skipped_batch20_low_reference_confidence - Replace the diamond marker with the TERMNL09 circular explosive-goods terminal glyph, preserving red/black detail.
+- `TERMNL10`: skipped_batch20_low_reference_confidence - Replace the diamond marker with the TERMNL10 circular fish-transshipment terminal glyph.
+- `TERMNL11`: skipped_batch20_low_reference_confidence - Replace the diamond marker with the TERMNL11 circular car-transshipment terminal glyph.
+- `TERMNL12`: skipped_batch20_low_reference_confidence - Replace the diamond marker with the TERMNL12 circular general-cargo terminal glyph.
+- `TERMNL13`: skipped_batch20_low_reference_confidence - Replace the diamond marker with the TERMNL13 circular RoRo terminal glyph/text cue.
+- `TIDCUR01`: skipped_batch20_tide_current_dedicated_pass - Replace the diamond marker with the TIDCUR01 orange dashed current-direction arrow stack.
+- `TIDCUR02`: skipped_batch20_tide_current_dedicated_pass - Replace the diamond marker with the TIDCUR02 orange solid current-direction arrow.
+- `TIDCUR03`: skipped_batch20_tide_current_dedicated_pass - Replace the diamond marker with the TIDCUR03 orange current-strength box outline.
+- `TIDEHT01`: skipped_batch20_tide_current_dedicated_pass - Replace the diamond with the TIDEHT01 tide-height wave/level glyph.
+- `TIDSTR01`: skipped_batch20_tide_current_dedicated_pass - Replace the filled diamond/ring with the TIDSTR01 open tidal-stream-table marker.
+- `TOPMA100`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the red downward cone topmark silhouette.
+- `TOPMA102`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the green upward cone topmark silhouette.
+- `TOPMA106`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the vertical square board and preserve the white/red/white order.
+- `TOPMA107`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the red-bordered square board topmark.
+- `TOPMA109`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the diagonal green-boarded square board topmark.
+- `TOPMA111`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the yellow upright cross topmark.
+- `TOPMA113`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the yellow diagonal X-cross topmark.
+- `TOPMA114`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPMA114 reference topmark silhouette and red fill/order.
+- `TOPMA115`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPMA115 exact green topmark silhouette.
+- `TOPMA116`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the red-white-red board topmark and preserve band/order.
+- `TOPMA117`: skipped_batch20_topmark_light_dedicated_pass - Add the missing green portion and match the red/green sphere from the references.
+- `TOPMAR01`: skipped_batch20_topmark_light_dedicated_pass - Replace the single red disk with the TOPMAR01 red/green reference topmark.
+- `TOPMAR87`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the black point-down besom topmark.
+- `TOPMAR88`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the black point-up besom topmark.
+- `TOPMAR90`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the TOPMAR90 point-down Pricken topmark silhouette.
+- `TOPMAR91`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the TOPMAR91 reference topmark silhouette.
+- `TOPMAR92`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the TOPMAR92 reference topmark silhouette.
+- `TOPMAR93`: skipped_batch20_topmark_light_dedicated_pass - Replace the disk with the TOPMAR93 point-up Pricken topmark silhouette.
+- `TOPMAR98`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the diagonal square board topmark and preserve its color pattern.
+- `TOPMAR99`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the yellow diamond topmark.
+- `TOPSHP00`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP00 reference board silhouette and color order.
+- `TOPSHP01`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP01 board/trapezoid topmark and preserve orange/white detail.
+- `TOPSHP02`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP02 red/black board topmark.
+- `TOPSHP03`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP03 orange/white board topmark.
+- `TOPSHP04`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP04 red/black board topmark.
+- `TOPSHP05`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP05 orange/black downward triangular topmark.
+- `TOPSHP07`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP07 orange downward triangular topmark.
+- `TOPSHP08`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP08 triangular red/yellow topmark.
+- `TOPSHP09;TE('%s'`: skipped_batch20_topmark_light_dedicated_pass - Replace the black disk with the TOPSHP09 reference topmark shape and restore red/red/green color semantics plus the text cue where required.
+- `TOPSHP10`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP10 yellow upward triangular topmark.
+- `TOPSHP11`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP11 orange upward triangular topmark.
+- `TOPSHP12`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP12 red upward triangular topmark.
+- `TOPSHP13`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP13 orange/black triangular topmark.
+- `TOPSHP15;TE('%s'`: skipped_batch20_topmark_light_dedicated_pass - Replace the black disk with the TOPSHP15 reference topmark shape and restore red/red/yellow color semantics plus the text cue where required.
+- `TOPSHP16`: skipped_batch20_topmark_light_dedicated_pass - Replace the circle with the TOPSHP16 red/white triangular topmark and preserve the color pattern.
+
+Rows remain pending judge rerun; none are final-approved.

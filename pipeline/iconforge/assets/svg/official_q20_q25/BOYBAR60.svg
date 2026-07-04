@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYBAR60 Q25 barrel/tun">
+  <title>BOYBAR60 Q25 barrel/tun</title>
+  <g data-origin="generated-owned-artwork" data-int1="Q25"
+     data-s52-asset="BOYBAR60" data-primitive="barrel_buoy">
+  <defs><clipPath id="clip-BOYBAR60"><path d="M19 24 Q32 12 45 24 L45 45 Q32 56 19 45 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYBAR60)">
+    <rect x="0" y="0" width="64" height="64" fill="var(--red)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linejoin="round"><path d="M19 24 Q32 12 45 24 L45 45 Q32 56 19 45 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

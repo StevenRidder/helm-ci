@@ -1,0 +1,1973 @@
+format: helm.iconforge.symbols.v1
+style_contract_id: helm-s52-owned-svg-v1
+scope: owned-symbol-batch50
+status: generated-owned-draft-visual-parity-pending
+symbols:
+  - id: SMCFAC_CATSCF_12
+    name: "Water tap"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: SMCFAC
+        conditions: [CATSCF=12]
+        instruction: null
+    asset:
+      canonical: assets/svg/owned_batch50/SMCFAC_CATSCF_12.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_12__day.png
+        dusk: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_12__dusk.png
+        night: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_12__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: SMCFAC_CATSCF_16
+    name: Showers
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: SMCFAC
+        conditions: [CATSCF=16]
+        instruction: null
+    asset:
+      canonical: assets/svg/owned_batch50/SMCFAC_CATSCF_16.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_16__day.png
+        dusk: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_16__dusk.png
+        night: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_16__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: SMCFAC_CATSCF_21
+    name: "Refuse bin"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: SMCFAC
+        conditions: [CATSCF=21]
+        instruction: null
+    asset:
+      canonical: assets/svg/owned_batch50/SMCFAC_CATSCF_21.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_21__day.png
+        dusk: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_21__dusk.png
+        night: out/owned_symbol_batch50/renders/SMCFAC_CATSCF_21__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: SMCFAC02
+    name: "yacht harbour, marina"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: HRBFAC
+        conditions: [CATHAF5]
+        instruction: "SY(SMCFAC02)"
+      -
+        s101: SMCFAC02
+        symbol_file: PortrayalCatalog/Symbols/SMCFAC02.svg
+        license_status: license_pending_reference
+      -
+        int1: Q45
+    asset:
+      canonical: assets/svg/owned_batch50/SMCFAC02.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/SMCFAC02__day.png
+        dusk: out/owned_symbol_batch50/renders/SMCFAC02__dusk.png
+        night: out/owned_symbol_batch50/renders/SMCFAC02__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: HRBFAC09
+    name: "fishing harbour"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: HRBFAC
+        conditions: [CATHAF4]
+        instruction: "SY(HRBFAC09)"
+      -
+        s101: HRBFAC09
+        symbol_file: PortrayalCatalog/Symbols/HRBFAC09.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/HRBFAC09.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/HRBFAC09__day.png
+        dusk: out/owned_symbol_batch50/renders/HRBFAC09__dusk.png
+        night: out/owned_symbol_batch50/renders/HRBFAC09__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: HRBFAC12
+    name: "harbour facilitiy, ship yard"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: hrbfac
+        conditions: [cathaf9]
+        instruction: "AC(CHBRN,3);SY(HRBFAC12)"
+    asset:
+      canonical: assets/svg/owned_batch50/HRBFAC12.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/HRBFAC12__day.png
+        dusk: out/owned_symbol_batch50/renders/HRBFAC12__dusk.png
+        night: out/owned_symbol_batch50/renders/HRBFAC12__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: HRBFAC13
+    name: "harbour facilitiy, harbour-master's office"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: hrbfac
+        conditions: [cathaf12]
+        instruction: "AC(CHBRN,3);SY(HRBFAC13)"
+    asset:
+      canonical: assets/svg/owned_batch50/HRBFAC13.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/HRBFAC13__day.png
+        dusk: out/owned_symbol_batch50/renders/HRBFAC13__dusk.png
+        night: out/owned_symbol_batch50/renders/HRBFAC13__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: HRBFAC14
+    name: "harbour facilitiy, pilot"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: hrbfac
+        conditions: [cathaf13]
+        instruction: "AC(CHBRN,3);SY(HRBFAC14)"
+    asset:
+      canonical: assets/svg/owned_batch50/HRBFAC14.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/HRBFAC14__day.png
+        dusk: out/owned_symbol_batch50/renders/HRBFAC14__dusk.png
+        night: out/owned_symbol_batch50/renders/HRBFAC14__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: HRBFAC16
+    name: "harbour facilitiy, custom office"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: hrbfac
+        conditions: [cathaf15]
+        instruction: "AC(CHBRN,3);SY(HRBFAC16)"
+    asset:
+      canonical: assets/svg/owned_batch50/HRBFAC16.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/HRBFAC16__day.png
+        dusk: out/owned_symbol_batch50/renders/HRBFAC16__dusk.png
+        night: out/owned_symbol_batch50/renders/HRBFAC16__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: ACHARE02
+    name: "anchorage area as a point at small scale, or anchor points of mooring trot at large scale"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: OBSTRN
+        conditions: [CATOBS9, VALSOU]
+        instruction: "SY(ACHARE02)"
+      -
+        s101: ACHARE02
+        symbol_file: PortrayalCatalog/Symbols/ACHARE02.svg
+        license_status: license_pending_reference
+      -
+        int1: Q44
+    asset:
+      canonical: assets/svg/owned_batch50/ACHARE02.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/ACHARE02__day.png
+        dusk: out/owned_symbol_batch50/renders/ACHARE02__dusk.png
+        night: out/owned_symbol_batch50/renders/ACHARE02__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: ACHARE51
+    name: "boundary of an anchorage area"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: ACHARE
+        conditions: []
+        instruction: "SY(ACHARE51);CS(RESARE02)"
+      -
+        s101: ACHARE51
+        symbol_file: PortrayalCatalog/Symbols/ACHARE51.svg
+        license_status: license_pending_reference
+      -
+        int1: Q44
+    asset:
+      canonical: assets/svg/owned_batch50/ACHARE51.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/ACHARE51__day.png
+        dusk: out/owned_symbol_batch50/renders/ACHARE51__dusk.png
+        night: out/owned_symbol_batch50/renders/ACHARE51__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: ACHBRT07
+    name: "designated anchor berth for a single vessel"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: ACHBRT
+        conditions: []
+        instruction: "SY(ACHBRT07);TE('%s','OBJNAM',3,1,2,'15110',1,0,CHBLK,29);LS(DASH,2,CHMGF)"
+      -
+        s101: ACHBRT07
+        symbol_file: PortrayalCatalog/Symbols/ACHBRT07.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/ACHBRT07.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/ACHBRT07__day.png
+        dusk: out/owned_symbol_batch50/renders/ACHBRT07__dusk.png
+        night: out/owned_symbol_batch50/renders/ACHBRT07__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: MORFAC03
+    name: "mooring dolphin"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: SLCONS
+        conditions: []
+        instruction: "SY(MORFAC03);CS(SLCONS03)"
+      -
+        s101: MORFAC03
+        symbol_file: PortrayalCatalog/Symbols/MORFAC03.svg
+        license_status: license_pending_reference
+      -
+        int1: Q40
+      -
+        int1: Q41
+      -
+        int1: Q42
+      -
+        int1: Q43
+    asset:
+      canonical: assets/svg/owned_batch50/MORFAC03.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/MORFAC03__day.png
+        dusk: out/owned_symbol_batch50/renders/MORFAC03__dusk.png
+        night: out/owned_symbol_batch50/renders/MORFAC03__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: MORFAC04
+    name: "deviation mooring dolphin"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: MORFAC
+        conditions: [CATMOR2]
+        instruction: "SY(MORFAC04)"
+      -
+        s101: MORFAC04
+        symbol_file: PortrayalCatalog/Symbols/MORFAC04.svg
+        license_status: license_pending_reference
+      -
+        int1: Q40
+      -
+        int1: Q41
+      -
+        int1: Q42
+      -
+        int1: Q43
+    asset:
+      canonical: assets/svg/owned_batch50/MORFAC04.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/MORFAC04__day.png
+        dusk: out/owned_symbol_batch50/renders/MORFAC04__dusk.png
+        night: out/owned_symbol_batch50/renders/MORFAC04__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYCAN01
+    name: "can buoy, paper-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYCAR
+        conditions: [BOYSHP2]
+        instruction: "SY(BOYCAN01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYCAN01
+        symbol_file: PortrayalCatalog/Symbols/BOYCAN01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYCAN01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYCAN01__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYCAN01__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYCAN01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYCON01
+    name: "conical buoy, general, full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYCAR
+        conditions: [BOYSHP1]
+        instruction: "SY(BOYCON01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYCON01
+        symbol_file: PortrayalCatalog/Symbols/BOYCON01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYCON01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYCON01__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYCON01__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYCON01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYSPH01
+    name: "spherical buoy,general ,full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYCAR
+        conditions: [BOYSHP3]
+        instruction: "SY(BOYSPH01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYSPH01
+        symbol_file: PortrayalCatalog/Symbols/BOYSPH01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYSPH01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYSPH01__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYSPH01__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYSPH01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYBAR01
+    name: "barrel buoy, black full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYCAR
+        conditions: [BOYSHP6]
+        instruction: "SY(BOYBAR01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYBAR01
+        symbol_file: PortrayalCatalog/Symbols/BOYBAR01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYBAR01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYBAR01__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYBAR01__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYBAR01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYSPR60
+    name: "red spar buoy, full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYLAT
+        conditions: [BOYSHP5, COLOUR3]
+        instruction: "SY(BOYSPR60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYSPR60
+        symbol_file: PortrayalCatalog/Symbols/BOYSPR60.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYSPR60.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYSPR60__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYSPR60__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYSPR60__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYINB01
+    name: "instructionallation buoy, paper-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYINB
+        conditions: []
+        instruction: "SY(BOYINB01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYINB01
+        symbol_file: PortrayalCatalog/Symbols/BOYINB01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYINB01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYINB01__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYINB01__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYINB01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYLAT23
+    name: "can shape lateral buoy, green, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYLAT
+        conditions: [BOYSHP2, "COLOUR4,3,4"]
+        instruction: "SY(BOYLAT23);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYLAT23
+        symbol_file: PortrayalCatalog/Symbols/BOYLAT23.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYLAT23.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYLAT23__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYLAT23__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYLAT23__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYLAT24
+    name: "can shape lateral buoy, red, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYLAT
+        conditions: [BOYSHP2, "COLOUR3,4,3"]
+        instruction: "SY(BOYLAT24);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BOYLAT24
+        symbol_file: PortrayalCatalog/Symbols/BOYLAT24.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYLAT24.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYLAT24__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYLAT24__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYLAT24__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYLAT25
+    name: "red-green lateral buoy, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: boylat
+        conditions: [catlam10, "COLOUR3,4"]
+        instruction: "SY(BOYLAT25);TE('by %s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYLAT25.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYLAT25__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYLAT25__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYLAT25__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYLAT26
+    name: BOYLAT26
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: boylat
+        conditions: [catlam15, "COLOUR1,3"]
+        instruction: "SY(BOYLAT26);TE('by %s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYLAT26.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYLAT26__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYLAT26__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYLAT26__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYLAT27
+    name: BOYLAT27
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: boylat
+        conditions: [catlam16, "COLOUR1,4"]
+        instruction: "SY(BOYLAT27);TE('by %s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYLAT27.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYLAT27__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYLAT27__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYLAT27__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BOYMOR03
+    name: "can mooring buoy,generic,full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BOYSPP
+        conditions: [CATSPM14, BOYSHP2]
+        instruction: "SY(BOYMOR03);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      -
+        s101: BOYMOR03
+        symbol_file: PortrayalCatalog/Symbols/BOYMOR03.svg
+        license_status: license_pending_reference
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q11
+      -
+        int1: Q20
+    asset:
+      canonical: assets/svg/owned_batch50/BOYMOR03.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BOYMOR03__day.png
+        dusk: out/owned_symbol_batch50/renders/BOYMOR03__dusk.png
+        night: out/owned_symbol_batch50/renders/BOYMOR03__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNCAR01
+    name: "cardinal beacon, north, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BCNCAR
+        conditions: [CATCAM1]
+        instruction: "SY(BCNCAR01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BCNCAR01
+        symbol_file: PortrayalCatalog/Symbols/BCNCAR01.svg
+        license_status: license_pending_reference
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q110
+    asset:
+      canonical: assets/svg/owned_batch50/BCNCAR01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNCAR01__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNCAR01__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNCAR01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNLAT15
+    name: "major lateral beacon, red, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BCNLAT
+        conditions: ["COLOUR3,4,3", BCNSHP3]
+        instruction: "SY(BCNLAT15);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BCNLAT15
+        symbol_file: PortrayalCatalog/Symbols/BCNLAT15.svg
+        license_status: license_pending_reference
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q91
+    asset:
+      canonical: assets/svg/owned_batch50/BCNLAT15.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNLAT15__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNLAT15__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNLAT15__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNLAT16
+    name: "major lateral beacon, green, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BCNLAT
+        conditions: ["COLOUR4,3,4", BCNSHP3]
+        instruction: "SY(BCNLAT16);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BCNLAT16
+        symbol_file: PortrayalCatalog/Symbols/BCNLAT16.svg
+        license_status: license_pending_reference
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q91
+    asset:
+      canonical: assets/svg/owned_batch50/BCNLAT16.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNLAT16__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNLAT16__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNLAT16__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNGEN60
+    name: "beacon in general, red, full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: bcnlat
+        conditions: [BCNSHP5, COLOUR3]
+        instruction: "SY(BCNGEN60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q110
+    asset:
+      canonical: assets/svg/owned_batch50/BCNGEN60.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNGEN60__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNGEN60__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNGEN60__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNSTK08
+    name: "minor, stake or pole beacon,yellow full-chart"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BCNSPP
+        conditions: [BCNSHP1, COLOUR6]
+        instruction: "SY(BCNSTK08);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q110
+    asset:
+      canonical: assets/svg/owned_batch50/BCNSTK08.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNSTK08__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNSTK08__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNSTK08__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: BCNSAW13
+    name: "major safe water beacon, simplified"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: BCNSAW
+        conditions: [BCNSHP3]
+        instruction: "SY(BCNSAW13);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        s101: BCNSAW13
+        symbol_file: PortrayalCatalog/Symbols/BCNSAW13.svg
+        license_status: license_pending_reference
+      -
+        int1: Q7
+      -
+        int1: Q8
+      -
+        int1: Q80
+      -
+        int1: Q81
+      -
+        int1: Q82
+      -
+        int1: Qe
+      -
+        int1: Q90
+      -
+        int1: Q110
+    asset:
+      canonical: assets/svg/owned_batch50/BCNSAW13.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/BCNSAW13__day.png
+        dusk: out/owned_symbol_batch50/renders/BCNSAW13__dusk.png
+        night: out/owned_symbol_batch50/renders/BCNSAW13__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA102
+    name: "topmark, beacon, green cone, point up"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP24, COLOUR4]
+        instruction: "SY(TOPMA102);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA102.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA102__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA102__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA102__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA100
+    name: "topmark, beacon, red cone, point down"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP25, COLOUR3]
+        instruction: "SY(TOPMA100);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA100.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA100__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA100__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA100__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA107
+    name: "beacon top mark, red boarded square board, vertical"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP19, COLPAT6, "COLOUR1,3"]
+        instruction: "SY(TOPMA107);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA107.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA107__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA107__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA107__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA113
+    name: "beacon top mark, yellow Andreas cross"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP7, COLOUR6]
+        instruction: "SY(TOPMA113);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA113.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA113__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA113__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA113__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA114
+    name: TOPMA114
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: TOPMAR
+        conditions: [TOPSHP5, COLOUR3]
+        instruction: "SY(TOPMA114);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA114.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA114__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA114__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA114__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPMA115
+    name: TOPMA115
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: TOPMAR
+        conditions: [TOPSHP1, COLOUR4]
+        instruction: "SY(TOPMA115);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPMA115.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPMA115__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPMA115__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPMA115__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPSHP19
+    name: "beacon top mark, red boarded square board, vertical"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP24, COLPAT6, "COLOUR3,6"]
+        instruction: "SY(TOPSHP19);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPSHP19.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPSHP19__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPSHP19__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPSHP19__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPSHP24
+    name: "beacon top mark, red boarded square board, vertical"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP19, COLOUR4]
+        instruction: "SY(TOPSHP24);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPSHP24.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPSHP24__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPSHP24__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPSHP24__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: TOPSHP31
+    name: "beacon top mark, red boarded square board, vertical"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: DAYMAR
+        conditions: [TOPSHP19, COLPAT6, "COLOUR11,1"]
+        instruction: "SY(TOPSHP31);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      -
+        int1: Q2
+      -
+        int1: Q3
+      -
+        int1: Q4
+      -
+        int1: Q5
+      -
+        int1: Q9
+      -
+        int1: Q10
+      -
+        int1: Q11
+      -
+        int1: Q50
+    asset:
+      canonical: assets/svg/owned_batch50/TOPSHP31.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/TOPSHP31__day.png
+        dusk: out/owned_symbol_batch50/renders/TOPSHP31__dusk.png
+        night: out/owned_symbol_batch50/renders/TOPSHP31__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: LIGHTS05
+    name: LIGHTS05
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: LIGHTS
+        conditions: []
+        instruction: "CS(LIGHTS05)"
+      -
+        int1: Q41
+    asset:
+      canonical: assets/svg/owned_batch50/LIGHTS05.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/LIGHTS05__day.png
+        dusk: out/owned_symbol_batch50/renders/LIGHTS05__dusk.png
+        night: out/owned_symbol_batch50/renders/LIGHTS05__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: FOGSIG01
+    name: "fog signal"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: FOGSIG
+        conditions: []
+        instruction: "SY(FOGSIG01)"
+      -
+        s101: FOGSIG01
+        symbol_file: PortrayalCatalog/Symbols/FOGSIG01.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/FOGSIG01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/FOGSIG01__day.png
+        dusk: out/owned_symbol_batch50/renders/FOGSIG01__dusk.png
+        night: out/owned_symbol_batch50/renders/FOGSIG01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: RTPBCN02
+    name: "radar transponder beacon"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: RTPBCN
+        conditions: []
+        instruction: "SY(RTPBCN02)"
+      -
+        s101: RTPBCN02
+        symbol_file: PortrayalCatalog/Symbols/RTPBCN02.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/RTPBCN02.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/RTPBCN02__day.png
+        dusk: out/owned_symbol_batch50/renders/RTPBCN02__dusk.png
+        night: out/owned_symbol_batch50/renders/RTPBCN02__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: RACNSP01
+    name: "symbol indicating this object is radar conspicuous"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: CBLOHD
+        conditions: [CONRAD1, VERCLR]
+        instruction: "LS(DASH,4,CHGRD);SY(RACNSP01);TE('clr %4.1lf','VERCLR',3,1,2,'15110',1,0,CHBLK,11)"
+      -
+        s101: RACNSP01
+        symbol_file: PortrayalCatalog/Symbols/RACNSP01.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/RACNSP01.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/RACNSP01__day.png
+        dusk: out/owned_symbol_batch50/renders/RACNSP01__dusk.png
+        night: out/owned_symbol_batch50/renders/RACNSP01__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: RADRFL03
+    name: "radar reflector"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: RADRFL
+        conditions: []
+        instruction: "SY(RADRFL03)"
+      -
+        s101: RADRFL03
+        symbol_file: PortrayalCatalog/Symbols/RADRFL03.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/RADRFL03.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/RADRFL03__day.png
+        dusk: out/owned_symbol_batch50/renders/RADRFL03__dusk.png
+        night: out/owned_symbol_batch50/renders/RADRFL03__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: RDOCAL03
+    name: "radio calling-in point for traffic in both directions"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: RDOCAL
+        conditions: [TRAFIC4, "ORIENT "]
+        instruction: "LS(DASH,1,TRFCD);SY(RDOCAL03,ORIENT);TE('%s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21);TE('ch %s','COMCHA',3,1,2,'15110',1,1,CHBLK,11)"
+      -
+        s101: RDOCAL03
+        symbol_file: PortrayalCatalog/Symbols/RDOCAL03.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/RDOCAL03.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/RDOCAL03__day.png
+        dusk: out/owned_symbol_batch50/renders/RDOCAL03__dusk.png
+        night: out/owned_symbol_batch50/renders/RDOCAL03__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: RDOSTA02
+    name: "radio station"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: RADSTA
+        conditions: [CATRAS2]
+        instruction: "SY(RDOSTA02);TE('ch %s','COMCHA',3,1,2,'15110',0,0,CHBLK,11)"
+      -
+        s101: RDOSTA02
+        symbol_file: PortrayalCatalog/Symbols/RDOSTA02.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/RDOSTA02.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/RDOSTA02__day.png
+        dusk: out/owned_symbol_batch50/renders/RDOSTA02__dusk.png
+        night: out/owned_symbol_batch50/renders/RDOSTA02__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: WRECKS04
+    name: "non-dangerous wreck, depth unknown"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: "$CSYMB"
+        conditions: ["$SCODEWRECKS04"]
+        instruction: "SY(WRECKS04)"
+      -
+        s101: WRECKS04
+        symbol_file: PortrayalCatalog/Symbols/WRECKS04.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/WRECKS04.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/WRECKS04__day.png
+        dusk: out/owned_symbol_batch50/renders/WRECKS04__dusk.png
+        night: out/owned_symbol_batch50/renders/WRECKS04__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50
+  - id: UWTROC04
+    name: "rock which covers and uncovers or is awash at low water"
+    kind: chart-symbol
+    tier: chart-artifact
+    source_refs:
+      -
+        s57: "$CSYMB"
+        conditions: ["$SCODEUWTROC04"]
+        instruction: "SY(UWTROC04)"
+      -
+        s101: UWTROC04
+        symbol_file: PortrayalCatalog/Symbols/UWTROC04.svg
+        license_status: license_pending_reference
+    asset:
+      canonical: assets/svg/owned_batch50/UWTROC04.svg
+      renders:
+        day: out/owned_symbol_batch50/renders/UWTROC04__day.png
+        dusk: out/owned_symbol_batch50/renders/UWTROC04__dusk.png
+        night: out/owned_symbol_batch50/renders/UWTROC04__night.png
+    qa:
+      semantic_pass: true
+      structural_pass: true
+      visual_parity: pending_visual_model_and_human_review
+    provenance:
+      origin: generated-owned-artwork
+      allowed_sources:
+        - public-domain Chart No.1 reference
+        - local metadata lookup
+        - OpenCPN/S-101/Commons/emoji/icon references for comparison only
+      forbidden_sources:
+        - direct trace or extraction of GPL or license-pending artwork
+      generator: forge.owned_symbol_batch50

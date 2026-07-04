@@ -1,0 +1,882 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch15-local",
+  "batch_id": "standard_judge_batch_015_rerun",
+  "created_at": "2026-07-01T07:32:25Z",
+  "project": "vulkan",
+  "schema_version": 1,
+  "selection": {
+    "branch": "codex/FORGE-14-exact-crops",
+    "candidate_status": "repaired_pending_judge_rerun",
+    "input_head": "27ab9f4",
+    "rows": 35,
+    "source_batch": "pipeline/iconforge/catalog/owned_repair_batch15.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 14,
+    "final_approved": 0,
+    "pass": 21,
+    "selected": 35,
+    "source_batch": "catalog/owned_repair_batch15.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.84,
+      "expected": "BOYSPR01 is default spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: white, black. Required geometry: spar buoy body. Required colours: white, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Repaired spar body is clipped cleanly: white upper band over black lower body inside the spar silhouette, with no external separator strokes.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BOYSPR01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BOYSPR01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSPR01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSPR01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSPR01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR01",
+      "symbol_id": "BOYSPR01"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.86,
+      "expected": "BOYSPR70 is black/yellow/black spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: black, yellow, black. Required geometry: spar buoy body. Required colours: black, yellow, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Repaired spar body preserves black-yellow-black vertical band order inside the spar silhouette; the previous outside separator strokes are gone.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR70",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BOYSPR70.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BOYSPR70__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSPR70__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSPR70__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSPR70/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR70",
+      "symbol_id": "BOYSPR70"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.86,
+      "expected": "BOYSPR71 is yellow/black/yellow spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: yellow, black, yellow. Required geometry: spar buoy body. Required colours: yellow, black, yellow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Repaired spar body preserves yellow-black-yellow band order inside the spar silhouette; the previous outside separator strokes are gone.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR71",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BOYSPR71.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BOYSPR71__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSPR71__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSPR71__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSPR71/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR71",
+      "symbol_id": "BOYSPR71"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.86,
+      "expected": "BOYSPR72 is black/red/black spar buoy, full-chart. It is used as a isolated-danger buoy used to mark a hazard with navigable water around it. Required geometry: spar buoy body. Required colours: black, red, black. Required geometry: spar buoy body. Required colours: black, red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Repaired spar body preserves black-red-black band order inside the spar silhouette; the previous outside separator strokes are gone.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR72",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BOYSPR72.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BOYSPR72__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSPR72__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSPR72__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSPR72/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR72",
+      "symbol_id": "BOYSPR72"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.78,
+      "expected": "BRTHNO01 is berth number symbol. It is used as a berth number symbol. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Magenta circular berth cue is restored and the invented text is removed. The small center dot is a local placeholder detail, not a symbol-class change.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BRTHNO01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BRTHNO01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BRTHNO01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BRTHNO01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BRTHNO01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BRTHNO01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BRTHNO01",
+      "symbol_id": "BRTHNO01"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.88,
+      "expected": "BUAARE02 is built-up area. It is used as a built-up area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate is still a three-dot/building cluster with a baseline; OpenCPN and S-101 read as a compact filled brown built-up-area dot/area cue.",
+      "pass": false,
+      "required_change": "Redraw as a single compact brown filled built-up-area dot/area cue; remove the multi-circle cluster and baseline.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUAARE02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUAARE02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUAARE02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUAARE02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUAARE02__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUAARE02/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUAARE02",
+      "symbol_id": "BUAARE02"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.87,
+      "expected": "BUIREL01 is non-conspicuous religious building, Christian. It is used as a non-conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate is a simple Latin cross with base, while OpenCPN/S-101 witnesses use the four-lobed Christian religious-building schematic.",
+      "pass": false,
+      "required_change": "Redraw to the brown Christian religious-building schematic silhouette from OpenCPN/S-101 rather than a plain Latin cross.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL01",
+      "symbol_id": "BUIREL01"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.9,
+      "expected": "BUIREL04 is non-conspicuous religious building, non-Christian. It is used as a non-conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate uses a domed/cross-topped shape, while the non-Christian witness is the rectangular/hourglass temple schematic.",
+      "pass": false,
+      "required_change": "Redraw to the brown non-Christian religious-building rectangular/hourglass schematic; remove the dome and cross-like top.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_religious_variant",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL04",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL04.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL04__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL04__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL04__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL04/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL04",
+      "symbol_id": "BUIREL04"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.88,
+      "expected": "BUIREL05 is mosque or minaret. It is used as a mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate invents side minarets and a side crescent, while OpenCPN/S-101 show a crescent over a vertical stem and circular base/dot cue.",
+      "pass": false,
+      "required_change": "Redraw to the brown mosque/minaret reference silhouette: crescent over stem with circular base/dot, without extra side minarets.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL05__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL05__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL05__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL05/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL05",
+      "symbol_id": "BUIREL05"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.87,
+      "expected": "BUIREL13 is conspicuous religious building, Christian. It is used as a conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate is a black Latin cross with base, while conspicuous Christian references use the black/grey four-lobed religious-building schematic.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous black Christian religious-building schematic silhouette from OpenCPN/S-101 rather than a plain Latin cross.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL13",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL13.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL13__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL13__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL13__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL13/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL13",
+      "symbol_id": "BUIREL13"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.9,
+      "expected": "BUIREL14 is conspicuous religious building, non-Christian. It is used as a conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate uses a black domed/cross-topped shape, while conspicuous non-Christian references use the black rectangular/hourglass schematic.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous black non-Christian rectangular/hourglass schematic; remove the dome and cross-like top.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_religious_variant",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL14",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL14.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL14__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL14__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL14__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL14/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL14",
+      "symbol_id": "BUIREL14"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.88,
+      "expected": "BUIREL15 is conspicuous mosque or minaret. It is used as a conspicuous mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate invents side minarets and side crescent; conspicuous mosque/minaret references show a crescent-over-stem and circular base/dot cue.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous black mosque/minaret reference silhouette: crescent over stem with circular base/dot, without extra side minarets.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL15",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUIREL15.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUIREL15__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL15__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL15__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL15/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL15",
+      "symbol_id": "BUIREL15"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.84,
+      "expected": "BUISGL01 is single building. It is used as a single building. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Compact brown square/building cue is restored, with no roof or door pictogram; scale/stroke differences are stylistic.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BUISGL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUISGL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUISGL01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUISGL01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUISGL01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUISGL01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUISGL01",
+      "symbol_id": "BUISGL01"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.84,
+      "expected": "BUISGL11 is conspicuous single building. It is used as a conspicuous single building. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Compact black square conspicuous-building cue is restored, with no roof or door pictogram.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BUISGL11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUISGL11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUISGL11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUISGL11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUISGL11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUISGL11/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUISGL11",
+      "symbol_id": "BUISGL11"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.86,
+      "expected": "BUNSTA02 is bunker station, water. It is used as a bunker station, water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate reads as a faucet and droplet; OpenCPN witness is a bucket/barrel service symbol with a blue water band.",
+      "pass": false,
+      "required_change": "Redraw to the OpenCPN water bunker-station bucket/barrel silhouette with blue water band; avoid a standalone faucet/droplet pictogram.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUNSTA02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUNSTA02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUNSTA02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUNSTA02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUNSTA02__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUNSTA02/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUNSTA02",
+      "symbol_id": "BUNSTA02"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.85,
+      "expected": "BUNSTA03 is bunker station, ballast. It is used as a bunker station, ballast. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate collapses into a solid black hexagon/cube mass; OpenCPN witness needs a readable cube/box with face divisions.",
+      "pass": false,
+      "required_change": "Redraw as a readable ballast-station cube/box service symbol with visible face/grid divisions instead of a solid filled mass.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "lost_internal_structure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUNSTA03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/BUNSTA03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/BUNSTA03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUNSTA03__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUNSTA03__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUNSTA03/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUNSTA03",
+      "symbol_id": "BUNSTA03"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.8,
+      "expected": "CBLARE51 is boundary of a submarine cable area. It is used as a boundary of a submarine cable area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Magenta submarine-cable zig-zag boundary line is restored; remaining kink count and stroke weight differences do not change the line-symbol class.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CBLARE51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CBLARE51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CBLARE51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CBLARE51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CBLARE51__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CBLARE51/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CBLARE51",
+      "symbol_id": "CBLARE51"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.83,
+      "expected": "CHCRDEL1 is this line has been deleted by a manual update. It is used as a this line has been deleted by a manual update. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Orange diagonal manual-delete line is restored; thickness differs from provider renders but the symbol class and orientation match.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHCRDEL1",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHCRDEL1.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHCRDEL1__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHCRDEL1__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHCRDEL1__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHCRDEL1/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHCRDEL1",
+      "symbol_id": "CHCRDEL1"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.86,
+      "expected": "CHCRID01 is this line has been manually updated. It is used as a this line has been manually updated. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Orange vertical update marker with ring base matches the S-101/OpenCPN structure.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHCRID01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHCRID01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHCRID01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHCRID01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHCRID01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHCRID01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHCRID01",
+      "symbol_id": "CHCRID01"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.85,
+      "expected": "CHINFO06 is HO caution note. It is used as a HO caution note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Magenta circular caution-note symbol with exclamation mark matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO06",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO06.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO06__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO06__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO06__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO06/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO06",
+      "symbol_id": "CHINFO06"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.85,
+      "expected": "CHINFO07 is HO information note. It is used as a HO information note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Magenta square information-note symbol with i glyph matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO07",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO07.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO07__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO07__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO07__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO07/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO07",
+      "symbol_id": "CHINFO07"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.85,
+      "expected": "CHINFO08 is mariner's information note. It is used as a mariner's information note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Orange square mariner information-note symbol with i glyph matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO08",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO08.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO08__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO08__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO08__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO08/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO08",
+      "symbol_id": "CHINFO08"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.85,
+      "expected": "CHINFO09 is mariners caution note. It is used as a mariners caution note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Orange circular mariner caution-note symbol with exclamation mark matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO09",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO09.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO09__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO09__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO09__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO09/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO09",
+      "symbol_id": "CHINFO09"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.85,
+      "expected": "CHINFO10 is manufacturer's information note. It is used as a manufacturer's information note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Olive/brown square manufacturer information-note symbol with i glyph matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO10",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO10.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO10__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO10__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO10__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO10/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO10",
+      "symbol_id": "CHINFO10"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.85,
+      "expected": "CHINFO11 is manufacturer's caution note. It is used as a manufacturer's caution note. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Olive/brown circular manufacturer caution-note symbol with exclamation mark matches the provider class and text cue.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHINFO11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHINFO11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHINFO11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHINFO11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHINFO11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHINFO11/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHINFO11",
+      "symbol_id": "CHINFO11"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.82,
+      "expected": "CHKSYM01 is test symbol for checking symbol sizes, should measure 5mm by 5mm. It is used as a test symbol for checking symbol sizes, should measure 5mm by 5mm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Solid black square size-check symbol is restored; scale follows Helm render style while preserving the class.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHKSYM01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CHKSYM01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CHKSYM01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHKSYM01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHKSYM01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHKSYM01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CHKSYM01",
+      "symbol_id": "CHKSYM01"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.88,
+      "expected": "CURSRA01 is ordinary cursor. It is used as a ordinary cursor. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Orange plus-shaped ordinary cursor matches the provider silhouette and color family.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CURSRA01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CURSRA01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CURSRA01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CURSRA01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CURSRA01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CURSRA01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CURSRA01",
+      "symbol_id": "CURSRA01"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.9,
+      "expected": "CURSRB01 is cursor with open centre. It is used as a cursor with open centre. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate adds a circular ring around the open center; OpenCPN/S-101 show a segmented orange crosshair with an empty central gap and no ring.",
+      "pass": false,
+      "required_change": "Remove the circular center ring and render four separated orange cursor arms with an open center gap.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:CURSRB01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CURSRB01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CURSRB01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CURSRB01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CURSRB01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CURSRB01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CURSRB01",
+      "symbol_id": "CURSRB01"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.88,
+      "expected": "CUSTOM01 is customs. It is used as a customs. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate renders two overlapping red circles; OpenCPN customs witness is a single circular red/white roundel with a horizontal white band.",
+      "pass": false,
+      "required_change": "Redraw as a single red/white customs roundel with the central white band; do not use overlapping circles.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:CUSTOM01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/CUSTOM01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/CUSTOM01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CUSTOM01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CUSTOM01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CUSTOM01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CUSTOM01",
+      "symbol_id": "CUSTOM01"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.79,
+      "expected": "DANGER51 is underwater hazard with a defined depth, full-chart and simplified. It is used as a underwater hazard with a defined depth, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Black dotted danger boundary is restored. The candidate is rounder and unfilled compared with OpenCPN, but preserves the hazard-boundary symbol class.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:DANGER51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/DANGER51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/DANGER51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DANGER51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DANGER51__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DANGER51/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DANGER51",
+      "symbol_id": "DANGER51"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.76,
+      "expected": "DANGER52 is underwater hazard with a defined depth less than safety contour, full-chart and simplified. It is used as a underwater hazard with a defined depth less than safety contour, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Black dotted danger boundary with central hazard dot preserves the intended less-than-safety-contour danger cue, despite OpenCPN/S-101 reference disagreement.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved; revisit only if a stronger exact DANGER52 witness rejects the center dot.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:DANGER52",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/DANGER52.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/DANGER52__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DANGER52__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DANGER52__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DANGER52/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DANGER52",
+      "symbol_id": "DANGER52"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.9,
+      "expected": "DAYSQR01 is square or rectangular daymark, simplified. It is used as a square or rectangular daymark, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate has the square-on-stem geometry but uses black styling and an invented horizontal bar; provider witnesses use colored daymark outlines/stems without that internal bar.",
+      "pass": false,
+      "required_change": "Redraw as the provider-colored square/rectangular daymark on stem and remove the invented horizontal bar.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYSQR01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/DAYSQR01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/DAYSQR01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYSQR01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYSQR01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYSQR01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYSQR01",
+      "symbol_id": "DAYSQR01"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.88,
+      "expected": "DAYTRI01 is triangular daymark, point up, simplified. It is used as a triangular daymark, point up, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate has the upright triangle-on-stem geometry but renders it black; OpenCPN/S-101 witnesses use the colored daymark outline/stem.",
+      "pass": false,
+      "required_change": "Redraw the point-up triangular daymark with the provider color family while preserving upright orientation and stem.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYTRI01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/DAYTRI01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/DAYTRI01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYTRI01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYTRI01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYTRI01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYTRI01",
+      "symbol_id": "DAYTRI01"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.88,
+      "expected": "DAYTRI05 is triangular daymark, point down, simplified. It is used as a triangular daymark, point down, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate still fails the rerun visual gate; do not promote to final approval.",
+      "observed": "Candidate has the inverted triangle-on-stem geometry but renders it black; OpenCPN/S-101 witnesses use the colored daymark outline/stem.",
+      "pass": false,
+      "required_change": "Redraw the point-down triangular daymark with the provider color family while preserving inverted orientation and stem.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYTRI05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/DAYTRI05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/DAYTRI05__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYTRI05__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYTRI05__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYTRI05/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYTRI05",
+      "symbol_id": "DAYTRI05"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.8,
+      "expected": "EBLVRM11 is point of origin for an offset EBL or VRM. It is used as a point of origin for an offset EBL or VRM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch15.json",
+      "judge_comments": "Candidate preserves required class/shape/color order for visual rerun; this is not final approval.",
+      "observed": "Filled orange circular EBL/VRM origin marker is restored. The black outline is a style difference and does not change the symbol class.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:EBLVRM11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch15/EBLVRM11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch7/renders/EBLVRM11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/EBLVRM11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/EBLVRM11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/EBLVRM11/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:EBLVRM11",
+      "symbol_id": "EBLVRM11"
+    }
+  ]
+}

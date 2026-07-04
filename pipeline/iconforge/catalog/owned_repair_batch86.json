@@ -1,0 +1,584 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch86.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch86"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 7,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/NMKINF38.svg",
+      "asset": "NMKINF38",
+      "before_svg": "assets/svg/owned_repair_batch86/NMKINF38.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF38.svg",
+      "candidate_strategy": "owned_notice_end_single_slash_redraw_from_judge_feedback",
+      "name": "notice mark, end of prohibition or regulation",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_039_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw NMKINF38 as the end-of-prohibition/regulation notice mark: blue square panel with one single diagonal white slash only, not an X.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "catnmk90",
+          "fnctnm5"
+        ],
+        "lookup_id": "1507",
+        "lookup_rcid": "31559",
+        "object_class": "notmrk",
+        "s52_instruction": "SY(NMKINF38)"
+      },
+      "safety_reason_codes": [
+        "wrong_notice_mark_silhouette",
+        "extra_stroke_changes_meaning",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF38 is notice mark, end of prohibition or regulation. It is used as a notice mark, end of prohibition or regulation. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, end of prohibition or regulation"
+      },
+      "source_judge": "catalog/standard_judge_batch_039_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF38__day.png",
+            "label": "notice mark, end of prohibition or regulation",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF38__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF38__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF38__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/NMKINF53.svg",
+      "asset": "NMKINF53",
+      "before_svg": "assets/svg/owned_repair_batch86/NMKINF53.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF53.svg",
+      "candidate_strategy": "owned_notice_three_vessels_bars_redraw_from_judge_feedback",
+      "name": "notice mark, maximum number ov vessels side by side, 3 vessels",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_039_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw NMKINF53 as the maximum number of vessels side-by-side marker with three vertical white bars in the notice panel; do not use stacked hull shapes.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "catnmk58",
+          "fnctnm5",
+          "addmrk2,4"
+        ],
+        "lookup_id": "2659",
+        "lookup_rcid": "30727",
+        "object_class": "notmrk",
+        "s52_instruction": "SY(NMKINF53);SY(ADDMRK05);SY(ADDMRK02)"
+      },
+      "safety_reason_codes": [
+        "wrong_notice_mark_silhouette",
+        "wrong_symbol_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF53 is notice mark, maximum number ov vessels side by side, 3 vessels. It is used as a notice mark, maximum number ov vessels side by side, 3 vessels. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, maximum number ov vessels side by side, 3 vessels"
+      },
+      "source_judge": "catalog/standard_judge_batch_039_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF53__day.png",
+            "label": "notice mark, maximum number ov vessels side by side, 3 vessels",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF53__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF53__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF53__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/SCALEB10.svg",
+      "asset": "SCALEB10",
+      "before_svg": "assets/svg/owned_repair_batch86/SCALEB10.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB10.svg",
+      "candidate_strategy": "owned_one_mile_segmented_scale_bar_redraw_from_judge_feedback",
+      "name": "one mile scalebar for display scales larger than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_078_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw SCALEB10 as the segmented one-mile vertical scale bar witness with alternating ticks/segments; do not use a solid capped I-beam.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "$SCODESCALEB10"
+        ],
+        "lookup_id": "1666",
+        "lookup_rcid": "31718",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(SCALEB10)"
+      },
+      "safety_reason_codes": [
+        "wrong_scalebar_silhouette",
+        "missing_segment_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB10 is one mile scalebar for display scales larger than 1/80,000. It is used as a one mile scalebar for display scales larger than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "one mile scalebar for display scales larger than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_078_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+            "label": "one mile scalebar for display scales larger than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB10__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB10.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB10.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB10"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/SCALEB11.svg",
+      "asset": "SCALEB11",
+      "before_svg": "assets/svg/owned_repair_batch86/SCALEB11.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB11.svg",
+      "candidate_strategy": "owned_ten_mile_segmented_scale_bar_redraw_from_judge_feedback",
+      "name": "10 mile latitude scale for display scales smaller than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_078_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw SCALEB11 as the segmented 10-mile vertical latitude scale witness with visible tick/dash segments; do not use a solid capped I-beam.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "$SCODESCALEB11"
+        ],
+        "lookup_id": "1667",
+        "lookup_rcid": "31719",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(SCALEB11)"
+      },
+      "safety_reason_codes": [
+        "wrong_scalebar_silhouette",
+        "missing_segment_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB11 is 10 mile latitude scale for display scales smaller than 1/80,000. It is used as a 10 mile latitude scale for display scales smaller than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "10 mile latitude scale for display scales smaller than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_078_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+            "label": "10 mile latitude scale for display scales smaller than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB11__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/TOPMAR90.svg",
+      "asset": "TOPMAR90",
+      "before_svg": "assets/svg/owned_repair_batch86/TOPMAR90.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMAR90.svg",
+      "candidate_strategy": "owned_pricken_point_down_redraw_from_judge_feedback",
+      "name": "topmark for beacons, Pricken point down, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_072_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw TOPMAR90 as the pricken point-down topmark from the witness: stem with side/barb detail and downward orientation, not a plain arrow.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP16"
+        ],
+        "lookup_id": "12701",
+        "lookup_rcid": "31537",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMAR90);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "wrong_topmark_silhouette",
+        "missing_pricken_barbs",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMAR90 is topmark for beacons, Pricken point down, paper-chart. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_072_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMAR90__day.png",
+            "label": "topmark for beacons, Pricken point down, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMAR90__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMAR90__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMAR90__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/TOPMAR93.svg",
+      "asset": "TOPMAR93",
+      "before_svg": "assets/svg/owned_repair_batch86/TOPMAR93.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMAR93.svg",
+      "candidate_strategy": "owned_pricken_point_up_redraw_from_judge_feedback",
+      "name": "topmark for beacons, Pricken point up, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_072_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw TOPMAR93 as the pricken point-up topmark from the witness: stem with side/barb detail and upward orientation, not a plain arrow.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP15"
+        ],
+        "lookup_id": "12702",
+        "lookup_rcid": "31538",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMAR93);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "wrong_topmark_silhouette",
+        "missing_pricken_barbs",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMAR93 is topmark for beacons, Pricken point up, paper-chart. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_072_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMAR93__day.png",
+            "label": "topmark for beacons, Pricken point up, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMAR93__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMAR93__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMAR93__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch86/WATTUR02.svg",
+      "asset": "WATTUR02",
+      "before_svg": "assets/svg/owned_repair_batch86/WATTUR02.svg",
+      "candidate_source": "assets/svg/triad_generated/WATTUR02.svg",
+      "candidate_strategy": "owned_three_wave_turbulence_redraw_from_judge_feedback",
+      "name": "overfalls, eddies and breakers",
+      "provenance": {
+        "generator": "forge.standard_repair_batch86",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "catalog/standard_judge_batch_079_rerun.json precise repair feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_precise_failure_consumed",
+      "required_change": "Redraw WATTUR02 as the three-wave overfalls/eddies/breakers mark from the witness; keep the compact grey water-turbulence silhouette and do not collapse it to two generic waves.",
+      "risk_bucket": "precise_symbol_repair_batch86",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "238",
+        "lookup_rcid": "32273",
+        "object_class": "WATTUR",
+        "s52_instruction": "SY(WATTUR02);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "wrong_wave_count",
+        "oversimplified_symbol",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WATTUR02 is overfalls, eddies and breakers. It is used as a overfalls, eddies and breakers. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "overfalls, eddies and breakers"
+      },
+      "source_judge": "catalog/standard_judge_batch_079_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WATTUR02__day.png",
+            "label": "overfalls, eddies and breakers",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WATTUR02__day.png",
+              "dusk": "out/opencpn_s52_reference/WATTUR02__dusk.png",
+              "night": "out/opencpn_s52_reference/WATTUR02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WATTUR02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WATTUR02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WATTUR02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WATTUR02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WATTUR02"
+          }
+        ]
+      }
+    }
+  ]
+}

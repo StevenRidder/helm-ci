@@ -1,0 +1,962 @@
+{
+  "batch_id": "standard_judge_batch_002",
+  "schema_version": "helm.iconforge.standard_judge_batch.v1",
+  "status": "batch_judged_pending_repairs_not_final_approval",
+  "summary": {
+    "fail_count": 28,
+    "final_approved_count": 0,
+    "pass_count": 22,
+    "review_basis": "opencpn_s52_spine, s57_structure, S-101 refs where present, Aqua Map refs where present, OpenCPN day renders, Helm candidate SVG/day render",
+    "selected_count": 50,
+    "selection_rule": "first 50 rows in standard_source_table.json where helm_candidate.candidate_status == pending_judge",
+    "top_repair_themes": [
+      "multi-band beacon/tower/stake rows collapsed to two bands",
+      "lateral red/green candidates invented the opposite lateral colour",
+      "isolated-danger and safe-water rows used generic beacon bodies instead of known topmark/family cues",
+      "tower/lattice rows sometimes lost the tower/lattice body family",
+      "metadata labels occasionally conflict with structured S-57 conditions; renderer should follow structure and visual refs"
+    ],
+    "write_scope": "pipeline/iconforge/out/standard_source_table/standard_judge_batch_002.*"
+  },
+  "verdicts": [
+    {
+      "confidence": 0.91,
+      "expected": "OpenCPN/S-52 spine requires the green/white full-chart beacon from COLOUR4,1,4,1: alternating green/white/green/white banding in the BCNGEN beacon body.",
+      "judge_comments": "OpenCPN visual and S-57 conditions both show an alternating multi-band mark; the Helm candidate lost two bands.",
+      "observed": "Helm renders a large generic beacon body with only one green band over one white band.",
+      "pass": false,
+      "required_change": "Redraw with four ordered horizontal bands green/white/green/white inside the BCNGEN beacon body; keep black outline/stem but do not collapse to two bands.",
+      "safety_reason_codes": [
+        "wrong_colour_order",
+        "missing_colour_bands",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon in general, green/white, full-chart:out/opencpn_s52_reference/BCNGEN65__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN65.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN65__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN65",
+      "symbol_id": "BCNGEN65"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNGEN68 should read as black/yellow general beacon.",
+      "judge_comments": "Band order and family are recognizable against OpenCPN-only reference.",
+      "observed": "Helm renders black over yellow in the generic beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional tighten to OpenCPN tiny-chart proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, black/yellow, full-chart:out/opencpn_s52_reference/BCNGEN68__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN68.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN68__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN68",
+      "symbol_id": "BCNGEN68"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNGEN69 should read as yellow/black general beacon.",
+      "judge_comments": "Band order and family are recognizable against OpenCPN-only reference.",
+      "observed": "Helm renders yellow over black in the generic beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional tighten to OpenCPN tiny-chart proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, yellow/black, full-chart:out/opencpn_s52_reference/BCNGEN69__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN69.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN69__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN69",
+      "symbol_id": "BCNGEN69"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNGEN70 is black/yellow/black cardinal-style banding.",
+      "judge_comments": "The lower black band is absent, changing the cardinal/specialized cue.",
+      "observed": "Helm renders only black over yellow.",
+      "pass": false,
+      "required_change": "Render three ordered horizontal bands black/yellow/black; bottom black band must be visible.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon in general, black/yellow/back, full-chart:out/opencpn_s52_reference/BCNGEN70__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN70.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN70__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN70",
+      "symbol_id": "BCNGEN70"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNGEN71 is yellow/black/yellow banding.",
+      "judge_comments": "The candidate collapses a three-band mark into two bands.",
+      "observed": "Helm renders yellow over black without the lower yellow band.",
+      "pass": false,
+      "required_change": "Render three ordered horizontal bands yellow/black/yellow; bottom yellow band must be visible.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon in general, yellow/back/yellow, full-chart:out/opencpn_s52_reference/BCNGEN71__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN71.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN71",
+      "symbol_id": "BCNGEN71"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNGEN76 should be black/red/black.",
+      "judge_comments": "The isolated-danger style band sequence is incomplete.",
+      "observed": "Helm renders black over red with no lower black band.",
+      "pass": false,
+      "required_change": "Render three ordered horizontal bands black/red/black in the BCNGEN beacon body.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon in general, black/red/back, full-chart:out/opencpn_s52_reference/BCNGEN76__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN76.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN76__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN76",
+      "symbol_id": "BCNGEN76"
+    },
+    {
+      "confidence": 0.78,
+      "expected": "BCNGEN79 is an orange/special-purpose general beacon per OpenCPN row.",
+      "judge_comments": "OpenCPN visual is tiny, but S-57 condition COLOUR11 and the candidate agree on single-colour special mark.",
+      "observed": "Helm renders a single orange general beacon.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional confirm orange token against the source palette.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, orange, full-chart:out/opencpn_s52_reference/BCNGEN79__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN79.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN79__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN79",
+      "symbol_id": "BCNGEN79"
+    },
+    {
+      "confidence": 0.78,
+      "expected": "BCNGEN80 is a black general beacon per COLOUR2 and OpenCPN render.",
+      "judge_comments": "The table label says orange, but the S-57 structure and OpenCPN ref support black; judge follows the structured source.",
+      "observed": "Helm renders a single black general beacon.",
+      "pass": true,
+      "required_change": "No semantic repair required; correct stale label text that says orange if metadata is refreshed.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, orange, full-chart:out/opencpn_s52_reference/BCNGEN80__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNGEN80.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNGEN80__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN80",
+      "symbol_id": "BCNGEN80"
+    },
+    {
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN/AquaMap isolated danger beacon cue is two vertically stacked red/black danger balls/dots.",
+      "judge_comments": "S-101 quicklook and OpenCPN render both show the two-dot isolated-danger cue; Helm drew the wrong family.",
+      "observed": "Helm renders a red/black trapezoid beacon without isolated-danger balls.",
+      "pass": false,
+      "required_change": "Redraw as the isolated-danger beacon symbol: two aligned circular danger marks/topmarks, matching S-101/OpenCPN, not a striped generic beacon.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "missing_topmark",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNISD21.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNISD21.svg",
+        "aquamap:Buoy Isolated Danger:reference_sources/aquamap_map_symbols/images/BCNISD1.png",
+        "opencpn:isolated danger beacon, simplified:out/opencpn_s52_reference/BCNISD21__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNISD21.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNISD21__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNISD21",
+      "symbol_id": "BCNISD21"
+    },
+    {
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN BCNLAT15 is a simple red major lateral beacon mark.",
+      "judge_comments": "The candidate invents green on a red lateral mark.",
+      "observed": "Helm renders red over green bands.",
+      "pass": false,
+      "required_change": "Remove green band; render red lateral beacon body with the S-101/OpenCPN black pivot/detail cue if needed.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNLAT15.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNLAT15.svg",
+        "opencpn:major lateral beacon, red, simplified:out/opencpn_s52_reference/BCNLAT15__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT15.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT15__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT15",
+      "symbol_id": "BCNLAT15"
+    },
+    {
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN BCNLAT16 is a simple green major lateral beacon mark.",
+      "judge_comments": "The candidate invents red on a green lateral mark.",
+      "observed": "Helm renders green over red bands.",
+      "pass": false,
+      "required_change": "Remove red band; render green lateral beacon body with the S-101/OpenCPN cue.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNLAT16.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNLAT16.svg",
+        "opencpn:major lateral beacon, green, simplified:out/opencpn_s52_reference/BCNLAT16__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT16.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT16__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT16",
+      "symbol_id": "BCNLAT16"
+    },
+    {
+      "confidence": 0.96,
+      "expected": "BCNLAT21 should be a minor red lateral beacon/pole mark, not red-green banded.",
+      "judge_comments": "S-101/OpenCPN indicate a red minor lateral mark; candidate adds green and uses generic body.",
+      "observed": "Helm renders red over green bands.",
+      "pass": false,
+      "required_change": "Remove green band and use the compact minor lateral red beacon/stake geometry from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNLAT21.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNLAT21.svg",
+        "opencpn:minor lateral beacon, red, simplified:out/opencpn_s52_reference/BCNLAT21__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT21.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT21__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT21",
+      "symbol_id": "BCNLAT21"
+    },
+    {
+      "confidence": 0.96,
+      "expected": "BCNLAT22 should be a minor green lateral beacon/pole mark, not green-red banded.",
+      "judge_comments": "S-101/OpenCPN indicate a green minor lateral mark; candidate adds red.",
+      "observed": "Helm renders green over red bands.",
+      "pass": false,
+      "required_change": "Remove red band and use compact minor lateral green beacon/stake geometry from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNLAT22.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNLAT22.svg",
+        "opencpn:minor lateral beacon, green, simplified:out/opencpn_s52_reference/BCNLAT22__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT22.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT22__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT22",
+      "symbol_id": "BCNLAT22"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "BCNLAT23 should be the red-green lateral bifurcation mark shown by OpenCPN, without unrelated black/blue bands.",
+      "judge_comments": "The candidate includes colours not present in the row source structure.",
+      "observed": "Helm renders red/green/black/blue bands.",
+      "pass": false,
+      "required_change": "Render only the ordered red/green lateral cue indicated by the OpenCPN reference and lookup; remove black/blue bands.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_extra_colours",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:minor lateral beacon, red-green, simplified:out/opencpn_s52_reference/BCNLAT23__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT23.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT23__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT23",
+      "symbol_id": "BCNLAT23"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "OpenCPN river beacon stake/pole reference is a compact black stake/pole cue, not blue-banded.",
+      "judge_comments": "Candidate reused a generic spar palette instead of the OpenCPN stake cue.",
+      "observed": "Helm renders a black/blue spar body.",
+      "pass": false,
+      "required_change": "Redraw as a plain black river stake/pole beacon; remove blue fill and keep stake proportions.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family"
+      ],
+      "source_refs_used": [
+        "opencpn:river beacon stake - pole:out/opencpn_s52_reference/BCNLAT50__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLAT50.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLAT50__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLAT50",
+      "symbol_id": "BCNLAT50"
+    },
+    {
+      "confidence": 0.92,
+      "expected": "BCNLTC01 is a lattice beacon; S-101/OpenCPN show black lattice/tower structure, not blue-banded generic fill.",
+      "judge_comments": "The body family is the important cue here and it is missing.",
+      "observed": "Helm renders a generic black/blue trapezoid beacon.",
+      "pass": false,
+      "required_change": "Draw the lattice beacon/tower structure in black using thin OpenBridge-style strokes; remove blue band.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_colour_family",
+        "missing_lattice"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNLTC01.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNLTC01.svg",
+        "opencpn:lattice beacon, full-chart:out/opencpn_s52_reference/BCNLTC01__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNLTC01.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNLTC01__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNLTC01",
+      "symbol_id": "BCNLTC01"
+    },
+    {
+      "confidence": 0.97,
+      "expected": "Safe-water beacon should carry the safe-water cue from S-101/AquaMap/OpenCPN, not a black general beacon.",
+      "judge_comments": "All provider refs disagree with the black generic body.",
+      "observed": "Helm renders a solid black generic beacon body.",
+      "pass": false,
+      "required_change": "Redraw from S-101/AquaMap safe-water reference: preserve the safe-water topmark/body cue and correct red/white semantics.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNSAW13.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNSAW13.svg",
+        "aquamap:Buoy Safe Water:reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+        "aquamap:Buoy Safe Water:reference_sources/aquamap_map_symbols/images/BOYSAW1.png",
+        "opencpn:major safe water beacon, simplified:out/opencpn_s52_reference/BCNSAW13__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSAW13.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSAW13__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSAW13",
+      "symbol_id": "BCNSAW13"
+    },
+    {
+      "confidence": 0.97,
+      "expected": "Minor safe-water beacon should carry the safe-water cue from S-101/AquaMap/OpenCPN.",
+      "judge_comments": "Candidate fails the known safe-water symbol family.",
+      "observed": "Helm renders a solid black generic beacon body.",
+      "pass": false,
+      "required_change": "Redraw minor safe-water beacon from S-101/OpenCPN, preserving the safe-water cue and not using a solid black general body.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNSAW21.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNSAW21.svg",
+        "aquamap:Buoy Safe Water:reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+        "opencpn:minor safe water beacon, simplified:out/opencpn_s52_reference/BCNSAW21__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSAW21.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSAW21__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSAW21",
+      "symbol_id": "BCNSAW21"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "S-101/OpenCPN major special-purpose beacon is a yellow beacon mark, not yellow/black banded.",
+      "judge_comments": "The extra black band changes the meaning.",
+      "observed": "Helm renders yellow over black bands.",
+      "pass": false,
+      "required_change": "Remove black lower band; render yellow special-purpose beacon with the compact S-101/OpenCPN body.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNSPP13.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNSPP13.svg",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+        "opencpn:major special purpose beacon, simplified:out/opencpn_s52_reference/BCNSPP13__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSPP13.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSPP13__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSPP13",
+      "symbol_id": "BCNSPP13"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "S-101/OpenCPN minor special-purpose beacon is yellow with minor beacon/stake proportions.",
+      "judge_comments": "Candidate is a generic two-band beacon, not the minor special-purpose mark.",
+      "observed": "Helm renders yellow over black bands.",
+      "pass": false,
+      "required_change": "Remove black band and use minor yellow special-purpose beacon geometry.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNSPP21.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNSPP21.svg",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+        "opencpn:minor special purpose beacon, simplified:out/opencpn_s52_reference/BCNSPP21__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSPP21.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSPP21__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSPP21",
+      "symbol_id": "BCNSPP21"
+    },
+    {
+      "confidence": 0.83,
+      "expected": "BCNSPR62 should read as a yellow spar beacon.",
+      "judge_comments": "Single-colour spar family is recognizable.",
+      "observed": "Helm renders a yellow spar/stake beacon.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional tighten height/outline to OpenCPN.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:yellow spar beacon, full-chart:out/opencpn_s52_reference/BCNSPR62__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSPR62.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSPR62__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSPR62",
+      "symbol_id": "BCNSPR62"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "BCNSTK02 stake/pole reference is a compact black stake/pole cue.",
+      "judge_comments": "The blue lower band is not supported by the references.",
+      "observed": "Helm renders black/blue spar.",
+      "pass": false,
+      "required_change": "Remove blue band; redraw as the black minor stake/pole beacon shown by S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNSTK02.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNSTK02.svg",
+        "opencpn:minor, stake or pole beacon, full-chart:out/opencpn_s52_reference/BCNSTK02__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK02.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK02__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK02",
+      "symbol_id": "BCNSTK02"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "BCNSTK03 river stake/pole should be a compact black stake/pole cue.",
+      "judge_comments": "Candidate carries an invented blue band.",
+      "observed": "Helm renders black/blue spar.",
+      "pass": false,
+      "required_change": "Remove blue band and draw plain black stake/pole geometry.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_family"
+      ],
+      "source_refs_used": [
+        "opencpn:river beacon stake - pole:out/opencpn_s52_reference/BCNSTK03__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK03.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK03__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK03",
+      "symbol_id": "BCNSTK03"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNSTK05 is a white stake/pole beacon.",
+      "judge_comments": "Colour and stake family are recognizable.",
+      "observed": "Helm renders a white stake/pole with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional match OpenCPN slimmer stake proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, white, full-chart:out/opencpn_s52_reference/BCNSTK05__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK05.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK05__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK05",
+      "symbol_id": "BCNSTK05"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "BCNSTK08 is a yellow stake/pole beacon.",
+      "judge_comments": "Colour and stake family are recognizable.",
+      "observed": "Helm renders a yellow stake/pole with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional match OpenCPN slimmer stake proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon,yellow full-chart:out/opencpn_s52_reference/BCNSTK08__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK08.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK08__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK08",
+      "symbol_id": "BCNSTK08"
+    },
+    {
+      "confidence": 0.85,
+      "expected": "BCNSTK60 is a red stake/pole beacon.",
+      "judge_comments": "Colour and stake family are recognizable.",
+      "observed": "Helm renders a red stake/pole with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional match OpenCPN slimmer stake proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, red, full-chart:out/opencpn_s52_reference/BCNSTK60__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK60.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK60__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK60",
+      "symbol_id": "BCNSTK60"
+    },
+    {
+      "confidence": 0.85,
+      "expected": "BCNSTK61 is a green stake/pole beacon.",
+      "judge_comments": "Colour and stake family are recognizable.",
+      "observed": "Helm renders a green stake/pole with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional match OpenCPN slimmer stake proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, green, full-chart:out/opencpn_s52_reference/BCNSTK61__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK61.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK61__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK61",
+      "symbol_id": "BCNSTK61"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "BCNSTK62 is a yellow stake/pole beacon.",
+      "judge_comments": "Colour and stake family are recognizable.",
+      "observed": "Helm renders a yellow stake/pole with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional match OpenCPN slimmer stake proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, yellow, full-chart:out/opencpn_s52_reference/BCNSTK62__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK62.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK62__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK62",
+      "symbol_id": "BCNSTK62"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "OpenCPN/S-57 structure indicates a green/white/green/white or green-leading stake cue; top of the candidate is white.",
+      "judge_comments": "The leading color/order is safety-relevant for lateral marks.",
+      "observed": "Helm renders white over green.",
+      "pass": false,
+      "required_change": "Correct the ordered bands to match the source structure, green-leading with all required alternating green/white bands.",
+      "safety_reason_codes": [
+        "wrong_colour_order",
+        "missing_colour_bands"
+      ],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, green/white, full-chart:out/opencpn_s52_reference/BCNSTK77__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK77.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK77__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK77",
+      "symbol_id": "BCNSTK77"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "BCNSTK78 should read as red/white stake/pole.",
+      "judge_comments": "The main red/white order matches OpenCPN.",
+      "observed": "Helm renders red over white stake/pole.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional confirm whether OpenCPN expects any repeated lower stripe.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, red/white, full-chart:out/opencpn_s52_reference/BCNSTK78__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK78.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK78__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK78",
+      "symbol_id": "BCNSTK78"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNSTK79 should be red/green/red.",
+      "judge_comments": "Candidate dropped the bottom red band.",
+      "observed": "Helm renders only red over green.",
+      "pass": false,
+      "required_change": "Render three ordered horizontal stake bands red/green/red.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, red/green/red, full-chart:out/opencpn_s52_reference/BCNSTK79__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK79.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK79__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK79",
+      "symbol_id": "BCNSTK79"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNSTK80 should be green/red/green.",
+      "judge_comments": "Candidate dropped the bottom green band.",
+      "observed": "Helm renders only green over red.",
+      "pass": false,
+      "required_change": "Render three ordered horizontal stake bands green/red/green.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, green/red/green, full-chart:out/opencpn_s52_reference/BCNSTK80__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK80.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK80__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK80",
+      "symbol_id": "BCNSTK80"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNSTK81 source structure is green/white stake/pole despite stale row label.",
+      "judge_comments": "Structured conditions and OpenCPN render agree with green/white.",
+      "observed": "Helm renders green over white stake/pole.",
+      "pass": true,
+      "required_change": "No semantic repair required; optionally correct stale display name text.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, red/white, full-chart:out/opencpn_s52_reference/BCNSTK81__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK81.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK81__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK81",
+      "symbol_id": "BCNSTK81"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "BCNSTK82 should read as red/green stake/pole.",
+      "judge_comments": "Colour order and stake family match OpenCPN.",
+      "observed": "Helm renders red over green stake/pole.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, red/green, full-chart:out/opencpn_s52_reference/BCNSTK82__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK82.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK82__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK82",
+      "symbol_id": "BCNSTK82"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNSTK83 should read as green/red stake/pole.",
+      "judge_comments": "Colour order and stake family match the OpenCPN cue.",
+      "observed": "Helm renders green over red stake/pole.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional trim black footer.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:minor, stake or pole beacon, green/red, full-chart:out/opencpn_s52_reference/BCNSTK83__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNSTK83.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNSTK83__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNSTK83",
+      "symbol_id": "BCNSTK83"
+    },
+    {
+      "confidence": 0.92,
+      "expected": "BCNTOW01 is a black beacon tower/lattice cue from S-101/OpenCPN.",
+      "judge_comments": "Tower/lattice family is lost.",
+      "observed": "Helm renders a generic black/blue trapezoid beacon.",
+      "pass": false,
+      "required_change": "Draw tower/lattice body in black; remove blue band and avoid generic wedge body.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_colour_family",
+        "missing_lattice"
+      ],
+      "source_refs_used": [
+        "s101:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNTOW01.svg",
+        "s101:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNTOW01.svg",
+        "opencpn:beacon tower, full-chart:out/opencpn_s52_reference/BCNTOW01__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW01.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW01__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW01",
+      "symbol_id": "BCNTOW01"
+    },
+    {
+      "confidence": 0.81,
+      "expected": "BCNTOW05 is a white beacon tower.",
+      "judge_comments": "Colour and tower/beacon family are recognizable.",
+      "observed": "Helm renders a white tower-like beacon body with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional add small tower foot/base detail from OpenCPN.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon tower, white, full-chart:out/opencpn_s52_reference/BCNTOW05__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW05.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW05__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW05",
+      "symbol_id": "BCNTOW05"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNTOW60 is a red beacon tower.",
+      "judge_comments": "Colour and tower/beacon family are recognizable.",
+      "observed": "Helm renders red tower-like beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional add small tower foot/base detail from OpenCPN.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon tower, red, full-chart:out/opencpn_s52_reference/BCNTOW60__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW60.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW60__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW60",
+      "symbol_id": "BCNTOW60"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNTOW61 is a green beacon tower.",
+      "judge_comments": "Colour and tower/beacon family are recognizable.",
+      "observed": "Helm renders green tower-like beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional add small tower foot/base detail from OpenCPN.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon tower, green, full-chart:out/opencpn_s52_reference/BCNTOW61__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW61.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW61__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW61",
+      "symbol_id": "BCNTOW61"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNTOW62 is a yellow beacon tower.",
+      "judge_comments": "Colour and tower/beacon family are recognizable.",
+      "observed": "Helm renders yellow tower-like beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional add small tower foot/base detail from OpenCPN.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon yellow, red, full-chart:out/opencpn_s52_reference/BCNTOW62__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW62.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW62__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW62",
+      "symbol_id": "BCNTOW62"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "OpenCPN/S-57 striped tower cue for BCNTOW63 has repeated white/red alternating bands.",
+      "judge_comments": "The repeated stripe cue is missing.",
+      "observed": "Helm renders white over red only.",
+      "pass": false,
+      "required_change": "Render the full alternating white/red/white/red tower band pattern; do not collapse to two bands.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon tower, red/white, full-chart:out/opencpn_s52_reference/BCNTOW63__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW63.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW63__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW63",
+      "symbol_id": "BCNTOW63"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNTOW64 should read as red/white tower.",
+      "judge_comments": "Main colour order is correct.",
+      "observed": "Helm renders red over white tower.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional confirm if repeated stripe is needed by exact OpenCPN crop.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon tower, red/white, full-chart:out/opencpn_s52_reference/BCNTOW64__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW64.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW64__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW64",
+      "symbol_id": "BCNTOW64"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "BCNTOW65 should read as green/white tower.",
+      "judge_comments": "Main colour order is correct.",
+      "observed": "Helm renders green over white tower.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional confirm if repeated stripe is needed by exact OpenCPN crop.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon tower, green/white, full-chart:out/opencpn_s52_reference/BCNTOW65__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW65.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW65__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW65",
+      "symbol_id": "BCNTOW65"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "OpenCPN crop shows repeated white/green tower striping for this row.",
+      "judge_comments": "Candidate likely captures leading colours but not the repeated stripe cue.",
+      "observed": "Helm renders white over green only.",
+      "pass": false,
+      "required_change": "Render the repeated white/green/white/green tower banding visible in OpenCPN, or verify and encode the exact stripe count from the bitmap crop.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon tower, green/white, full-chart:out/opencpn_s52_reference/BCNTOW66__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW66.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW66__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW66",
+      "symbol_id": "BCNTOW66"
+    },
+    {
+      "confidence": 0.8,
+      "expected": "BCNTOW68 should read as black/yellow tower/beacon.",
+      "judge_comments": "Colour family and order are recognizable.",
+      "observed": "Helm renders black over yellow tower/beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional tighten tower foot.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon by, full-chart:out/opencpn_s52_reference/BCNTOW68__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW68.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW68__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW68",
+      "symbol_id": "BCNTOW68"
+    },
+    {
+      "confidence": 0.8,
+      "expected": "BCNTOW69 should read as yellow/black tower/beacon.",
+      "judge_comments": "Colour family and order are recognizable.",
+      "observed": "Helm renders yellow over black tower/beacon body.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional tighten tower foot.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon yb, full-chart:out/opencpn_s52_reference/BCNTOW69__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW69.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW69__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW69",
+      "symbol_id": "BCNTOW69"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNTOW70 should be black/yellow/black tower banding.",
+      "judge_comments": "Candidate dropped the bottom black band.",
+      "observed": "Helm renders black over yellow only.",
+      "pass": false,
+      "required_change": "Render three ordered tower bands black/yellow/black.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon byb, full-chart:out/opencpn_s52_reference/BCNTOW70__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW70.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW70__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW70",
+      "symbol_id": "BCNTOW70"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNTOW71 should be yellow/black/yellow or repeated yellow/black/yellow tower banding per source.",
+      "judge_comments": "Candidate collapses a multi-band cue.",
+      "observed": "Helm renders yellow/black but lacks complete alternating tower banding.",
+      "pass": false,
+      "required_change": "Render the complete yellow/black/yellow band sequence in the tower body.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon yby, full-chart:out/opencpn_s52_reference/BCNTOW71__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW71.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW71",
+      "symbol_id": "BCNTOW71"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNTOW74 should be red/green/red tower banding.",
+      "judge_comments": "Candidate dropped the lower red band.",
+      "observed": "Helm renders red over green only.",
+      "pass": false,
+      "required_change": "Render three ordered tower bands red/green/red.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon tower, grg, full-chart:out/opencpn_s52_reference/BCNTOW74__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW74.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW74__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW74",
+      "symbol_id": "BCNTOW74"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "BCNTOW76 should be black/red/black tower banding.",
+      "judge_comments": "Candidate dropped the lower black band.",
+      "observed": "Helm renders black over red only.",
+      "pass": false,
+      "required_change": "Render three ordered tower bands black/red/black.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:beacon tower, brb, full-chart:out/opencpn_s52_reference/BCNTOW76__day.png",
+        "helm_candidate:assets/svg/triad_generated/BCNTOW76.svg",
+        "helm_candidate_render:out/triad_reference_candidate_pack/renders/BCNTOW76__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW76",
+      "symbol_id": "BCNTOW76"
+    }
+  ]
+}

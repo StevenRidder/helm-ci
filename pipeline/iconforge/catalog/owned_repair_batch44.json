@@ -1,0 +1,1047 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch44.json",
+    "renders": "out/standard_repair_batch36/renders",
+    "svg_dir": "assets/svg/owned_repair_batch44"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 14,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/ROLROL01__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/ROLROL01__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/ROLROL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/ROLROL01.svg",
+      "asset": "ROLROL01",
+      "before_svg": "assets/svg/triad_generated/ROLROL01.svg",
+      "candidate_source": "assets/svg/triad_generated/ROLROL01.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "RoRo terminal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the ROLROL01 RoRo terminal text label.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "ROLROL01 is RoRo terminal. It is used as a harbour facility or service point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/ROLROL01__day.png",
+            "label": "RoRo terminal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/ROLROL01__day.png",
+              "dusk": "out/opencpn_s52_reference/ROLROL01__dusk.png",
+              "night": "out/opencpn_s52_reference/ROLROL01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "ROLROL01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/ROLROL01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "ROLROL01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/ROLROL01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "ROLROL01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL01__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL01__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL01.svg",
+      "asset": "TERMNL01",
+      "before_svg": "assets/svg/triad_generated/TERMNL01.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL01.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, passanger terminal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL01 passenger-terminal circular glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL01 is terminal, passanger terminal. It is used as a terminal, passanger terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, passanger terminal"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL01__day.png",
+            "label": "terminal, passanger terminal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL01__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL01__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL02__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL02__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL02.svg",
+      "asset": "TERMNL02",
+      "before_svg": "assets/svg/triad_generated/TERMNL02.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL02.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, ferry terminal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL02 ferry-terminal circular glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL02 is terminal, ferry terminal. It is used as a terminal, ferry terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, ferry terminal"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL02__day.png",
+            "label": "terminal, ferry terminal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL02__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL02__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL03__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL03__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL03.svg",
+      "asset": "TERMNL03",
+      "before_svg": "assets/svg/triad_generated/TERMNL03.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL03.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Container transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL03 circular container-terminal glyph, preserving red/black/color detail.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_container_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL03 is terminal, Container transshipment. It is used as a terminal, Container transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "terminal, Container transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL03__day.png",
+            "label": "terminal, Container transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL03__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL03__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL04__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL04__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL04.svg",
+      "asset": "TERMNL04",
+      "before_svg": "assets/svg/triad_generated/TERMNL04.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL04.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Bulk transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL04 circular bulk-terminal glyph with white/black detail.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL04 is terminal, Bulk transshipment. It is used as a terminal, Bulk transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "terminal, Bulk transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL04__day.png",
+            "label": "terminal, Bulk transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL04__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL04__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL05__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL05__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL05.svg",
+      "asset": "TERMNL05",
+      "before_svg": "assets/svg/triad_generated/TERMNL05.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL05.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Oil transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL05 circular oil-terminal label glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL05 is terminal, Oil transshipment. It is used as a terminal, Oil transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Oil transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL05__day.png",
+            "label": "terminal, Oil transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL05__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL05__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL06__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL06__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL06__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL06.svg",
+      "asset": "TERMNL06",
+      "before_svg": "assets/svg/triad_generated/TERMNL06.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL06.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Fuel transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL06 circular fuel-terminal label glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL06 is terminal, Fuel transshipment. It is used as a terminal, Fuel transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Fuel transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL06__day.png",
+            "label": "terminal, Fuel transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL06__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL06__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL06__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL07__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL07__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL07__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL07.svg",
+      "asset": "TERMNL07",
+      "before_svg": "assets/svg/triad_generated/TERMNL07.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL07.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Chemical transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL07 circular chemical-terminal label glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL07 is terminal, Chemical transshipment. It is used as a terminal, Chemical transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Chemical transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL07__day.png",
+            "label": "terminal, Chemical transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL07__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL07__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL07__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL08__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL08__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL08__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL08.svg",
+      "asset": "TERMNL08",
+      "before_svg": "assets/svg/triad_generated/TERMNL08.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL08.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Liquid Goods transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the TERMNL08 circular liquid-goods terminal label glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL08 is terminal, Liquid Goods transshipment. It is used as a terminal, Liquid Goods transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Liquid Goods transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL08__day.png",
+            "label": "terminal, Liquid Goods transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL08__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL08__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL08__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL09__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL09__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL09__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL09.svg",
+      "asset": "TERMNL09",
+      "before_svg": "assets/svg/triad_generated/TERMNL09.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL09.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Explosive goods transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond marker with the TERMNL09 circular explosive-goods terminal glyph, preserving red/black detail.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL09 is terminal, Explosive goods transshipment. It is used as a terminal, Explosive goods transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "terminal, Explosive goods transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_012.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL09__day.png",
+            "label": "terminal, Explosive goods transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL09__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL09__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL09__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL10__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL10__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL10.svg",
+      "asset": "TERMNL10",
+      "before_svg": "assets/svg/triad_generated/TERMNL10.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL10.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Fish transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond marker with the TERMNL10 circular fish-transshipment terminal glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL10 is terminal, Fish transshipment. It is used as a terminal, Fish transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Fish transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_012.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL10__day.png",
+            "label": "terminal, Fish transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL10__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL10__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL11__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL11__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL11.svg",
+      "asset": "TERMNL11",
+      "before_svg": "assets/svg/triad_generated/TERMNL11.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL11.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, Car transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond marker with the TERMNL11 circular car-transshipment terminal glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_vehicle_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL11 is terminal, Car transshipment. It is used as a terminal, Car transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Car transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_012.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL11__day.png",
+            "label": "terminal, Car transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL11__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL11__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL12__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL12__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL12.svg",
+      "asset": "TERMNL12",
+      "before_svg": "assets/svg/triad_generated/TERMNL12.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL12.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, General Cargo transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond marker with the TERMNL12 circular general-cargo terminal glyph.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_cargo_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL12 is terminal, General Cargo transshipment. It is used as a terminal, General Cargo transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, General Cargo transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_012.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL12__day.png",
+            "label": "terminal, General Cargo transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL12__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL12__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL13__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL13__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL13.svg",
+      "asset": "TERMNL13",
+      "before_svg": "assets/svg/triad_generated/TERMNL13.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL13.svg",
+      "candidate_strategy": "owned_terminal_glyph_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "terminal, RoRo Terminal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch36",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue terminal slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond marker with the TERMNL13 circular RoRo terminal glyph/text cue.",
+      "risk_bucket": "terminal_repair_batch44",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL13 is terminal, RoRo Terminal. It is used as a terminal, RoRo Terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, RoRo Terminal"
+      },
+      "source_judge": "catalog/standard_judge_batch_012.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL13__day.png",
+            "label": "terminal, RoRo Terminal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL13__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL13__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

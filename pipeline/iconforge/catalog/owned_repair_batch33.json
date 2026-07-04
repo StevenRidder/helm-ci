@@ -1,0 +1,926 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch33.json",
+    "renders": "out/standard_repair_batch25/renders",
+    "svg_dir": "assets/svg/owned_repair_batch33"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 11,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/DAYSQR01__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/DAYSQR01__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/DAYSQR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/DAYSQR01.svg",
+      "asset": "DAYSQR01",
+      "before_svg": "assets/svg/triad_generated/DAYSQR01.svg",
+      "candidate_source": "assets/svg/triad_generated/DAYSQR01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "square or rectangular daymark, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "DAYSQR01 is square or rectangular daymark, simplified. It is used as a square or rectangular daymark, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "square or rectangular daymark, simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DAYSQR01__day.png",
+            "label": "square or rectangular daymark, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DAYSQR01__day.png",
+              "dusk": "out/opencpn_s52_reference/DAYSQR01__dusk.png",
+              "night": "out/opencpn_s52_reference/DAYSQR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "DAYSQR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/DAYSQR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "DAYSQR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/DAYSQR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "DAYSQR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/DAYSQR21__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/DAYSQR21__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/DAYSQR21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/DAYSQR21.svg",
+      "asset": "DAYSQR21",
+      "before_svg": "assets/svg/triad_generated/DAYSQR21.svg",
+      "candidate_source": "assets/svg/triad_generated/DAYSQR21.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "square or rectangular daymark, paper chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "DAYSQR21 is square or rectangular daymark, paper chart. It is used as a square or rectangular daymark, paper chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "square or rectangular daymark, paper chart"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DAYSQR21__day.png",
+            "label": "square or rectangular daymark, paper chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DAYSQR21__day.png",
+              "dusk": "out/opencpn_s52_reference/DAYSQR21__dusk.png",
+              "night": "out/opencpn_s52_reference/DAYSQR21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "DAYSQR21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/DAYSQR21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "DAYSQR21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/DAYSQR21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "DAYSQR21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/DAYTRI01__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/DAYTRI01__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/DAYTRI01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/DAYTRI01.svg",
+      "asset": "DAYTRI01",
+      "before_svg": "assets/svg/triad_generated/DAYTRI01.svg",
+      "candidate_source": "assets/svg/triad_generated/DAYTRI01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "triangular daymark, point up, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "DAYTRI01 is triangular daymark, point up, simplified. It is used as a triangular daymark, point up, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "triangular daymark, point up, simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DAYTRI01__day.png",
+            "label": "triangular daymark, point up, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DAYTRI01__day.png",
+              "dusk": "out/opencpn_s52_reference/DAYTRI01__dusk.png",
+              "night": "out/opencpn_s52_reference/DAYTRI01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "DAYTRI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/DAYTRI01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "DAYTRI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/DAYTRI01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "DAYTRI01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/DAYTRI05__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/DAYTRI05__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/DAYTRI05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/DAYTRI05.svg",
+      "asset": "DAYTRI05",
+      "before_svg": "assets/svg/triad_generated/DAYTRI05.svg",
+      "candidate_source": "assets/svg/triad_generated/DAYTRI05.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "triangular daymark, point down, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "DAYTRI05 is triangular daymark, point down, simplified. It is used as a triangular daymark, point down, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "triangular daymark, point down, simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DAYTRI05__day.png",
+            "label": "triangular daymark, point down, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DAYTRI05__day.png",
+              "dusk": "out/opencpn_s52_reference/DAYTRI05__dusk.png",
+              "night": "out/opencpn_s52_reference/DAYTRI05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "DAYTRI05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/DAYTRI05.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "DAYTRI05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/DAYTRI05.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "DAYTRI05"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/LITFLT01__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/LITFLT01__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/LITFLT01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/LITFLT01.svg",
+      "asset": "LITFLT01",
+      "before_svg": "assets/svg/triad_generated/LITFLT01.svg",
+      "candidate_source": "assets/svg/triad_generated/LITFLT01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "light float, full-chart.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "LITFLT01 is light float, full-chart.. It is used as a light float, full-chart.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "light float, full-chart."
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITFLT01__day.png",
+            "label": "light float, full-chart.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITFLT01__day.png",
+              "dusk": "out/opencpn_s52_reference/LITFLT01__dusk.png",
+              "night": "out/opencpn_s52_reference/LITFLT01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LITFLT01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LITFLT01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LITFLT01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LITFLT01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LITFLT01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/LITFLT02__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/LITFLT02__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/LITFLT02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/LITFLT02.svg",
+      "asset": "LITFLT02",
+      "before_svg": "assets/svg/triad_generated/LITFLT02.svg",
+      "candidate_source": "assets/svg/triad_generated/LITFLT02.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "light float, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "LITFLT02 is light float, simplified. It is used as a light float, simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "light float, simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITFLT02__day.png",
+            "label": "light float, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITFLT02__day.png",
+              "dusk": "out/opencpn_s52_reference/LITFLT02__dusk.png",
+              "night": "out/opencpn_s52_reference/LITFLT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LITFLT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LITFLT02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LITFLT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LITFLT02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LITFLT02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/LITVES01__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/LITVES01__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/LITVES01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/LITVES01.svg",
+      "asset": "LITVES01",
+      "before_svg": "assets/svg/triad_generated/LITVES01.svg",
+      "candidate_source": "assets/svg/triad_generated/LITVES01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "light vessel, full-chart.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "LITVES01 is light vessel, full-chart.. It is used as a light vessel, full-chart.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "light vessel, full-chart."
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITVES01__day.png",
+            "label": "light vessel, full-chart.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITVES01__day.png",
+              "dusk": "out/opencpn_s52_reference/LITVES01__dusk.png",
+              "night": "out/opencpn_s52_reference/LITVES01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LITVES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LITVES01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LITVES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LITVES01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LITVES01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/LITVES02__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/LITVES02__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/LITVES02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/LITVES02.svg",
+      "asset": "LITVES02",
+      "before_svg": "assets/svg/triad_generated/LITVES02.svg",
+      "candidate_source": "assets/svg/triad_generated/LITVES02.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "light vessel, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "LITVES02 is light vessel, simplified. It is used as a light vessel, simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "light vessel, simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITVES02__day.png",
+            "label": "light vessel, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITVES02__day.png",
+              "dusk": "out/opencpn_s52_reference/LITVES02__dusk.png",
+              "night": "out/opencpn_s52_reference/LITVES02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LITVES02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LITVES02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LITVES02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LITVES02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LITVES02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/RADRFL03__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/RADRFL03__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/RADRFL03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/RADRFL03.svg",
+      "asset": "RADRFL03",
+      "before_svg": "assets/svg/triad_generated/RADRFL03.svg",
+      "candidate_source": "assets/svg/triad_generated/RADRFL03.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "radar reflector",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "RADRFL03 is radar reflector. It is used as a radar reflector. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "radar reflector"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Radar Reflector",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/RadarReflector1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RADRFL03__day.png",
+            "label": "radar reflector",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RADRFL03__day.png",
+              "dusk": "out/opencpn_s52_reference/RADRFL03__dusk.png",
+              "night": "out/opencpn_s52_reference/RADRFL03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RADRFL03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RADRFL03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RADRFL03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RADRFL03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RADRFL03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/RASCAN01__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/RASCAN01__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/RASCAN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/RASCAN01.svg",
+      "asset": "RASCAN01",
+      "before_svg": "assets/svg/triad_generated/RASCAN01.svg",
+      "candidate_source": "assets/svg/triad_generated/RASCAN01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "radar scanner",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "RASCAN01 is radar scanner. It is used as a radar scanner. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "radar scanner"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RASCAN01__day.png",
+            "label": "radar scanner",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RASCAN01__day.png",
+              "dusk": "out/opencpn_s52_reference/RASCAN01__dusk.png",
+              "night": "out/opencpn_s52_reference/RASCAN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RASCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RASCAN01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RASCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RASCAN01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RASCAN01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch25/renders/RASCAN11__after__day.png",
+        "dusk": "out/standard_repair_batch25/renders/RASCAN11__after__dusk.png",
+        "night": "out/standard_repair_batch25/renders/RASCAN11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch33/RASCAN11.svg",
+      "asset": "RASCAN11",
+      "before_svg": "assets/svg/triad_generated/RASCAN11.svg",
+      "candidate_source": "assets/svg/triad_generated/RASCAN11.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_witnesses",
+      "judge_required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "name": "conspicuous radar scanner",
+      "provenance": {
+        "generator": "forge.standard_repair_batch25",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue daymark/light/radar slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "daymark_light_radar_repair_batch33",
+      "semantic_brief": {
+        "brief": "RASCAN11 is conspicuous radar scanner. It is used as a conspicuous radar scanner. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous radar scanner"
+      },
+      "source_judge": "catalog/standard_judge_batch_033_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RASCAN11__day.png",
+            "label": "conspicuous radar scanner",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RASCAN11__day.png",
+              "dusk": "out/opencpn_s52_reference/RASCAN11__dusk.png",
+              "night": "out/opencpn_s52_reference/RASCAN11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RASCAN11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RASCAN11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RASCAN11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RASCAN11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RASCAN11"
+          }
+        ]
+      }
+    }
+  ]
+}

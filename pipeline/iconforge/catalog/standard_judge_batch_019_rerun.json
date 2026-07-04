@@ -1,0 +1,690 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch19-local",
+  "batch_id": "standard_judge_batch_019_rerun",
+  "created_at": "2026-07-01T00:00:00Z",
+  "project": "vulkan",
+  "schema_version": "standard_judge_batch.v1",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "selected_count": 26,
+    "selection_note": "All repaired rows from owned_repair_batch19; visual rerun only, no human-final approval claimed.",
+    "source_batch": "pipeline/iconforge/catalog/owned_repair_batch19.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 18,
+    "final_approved": 0,
+    "pass": 8,
+    "selected": 26,
+    "source_batch": "catalog/owned_repair_batch19.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.88,
+      "expected": "BOYSUP01 is super buoy, general, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: super-buoy body. Required colours: red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate has the red/black super-buoy colors and lower ring cue, but the body is still a tall buoy pictogram rather than the low platform/trapezoid super-buoy witness in S-101/OpenCPN/Chart No.1.",
+      "pass": false,
+      "required_change": "Super-buoy symbol must use the low platform/trapezoid body with ring cue from the references; reduce the tall buoy body and preserve red/black load-bearing colors.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "unsafe_buoy_family_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BOYSUP01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BOYSUP01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSUP01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSUP01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP01",
+      "symbol_id": "BOYSUP01"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.88,
+      "expected": "BOYSUP02 is super buoy, black, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a tall black buoy body with ring, while the references show a low black super-buoy platform/trapezoid silhouette.",
+      "pass": false,
+      "required_change": "Redraw BOYSUP02 as the black low platform/trapezoid super-buoy silhouette with the reference ring/body proportions, not a tall generic buoy body.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "unsafe_buoy_family_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BOYSUP02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BOYSUP02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSUP02__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSUP02/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP02",
+      "symbol_id": "BOYSUP02"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.86,
+      "expected": "BOYSUP03 is LANBY, super-buoy, paper-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate adds the LANBY star topmark and red/black colors, but the base remains a tall buoy body instead of the low super-buoy platform/trapezoid witness.",
+      "pass": false,
+      "required_change": "Keep the LANBY star/asterisk topmark and red/black semantics, but redraw the body as the low super-buoy platform/trapezoid reference silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BOYSUP03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BOYSUP03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BOYSUP03__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BOYSUP03/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP03",
+      "symbol_id": "BOYSUP03"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.88,
+      "expected": "BUIREL01 is non-conspicuous religious building, Christian. It is used as a non-conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a plain Latin cross on a stem with a ring base; S-101/OpenCPN show a compact Christian religious-building witness with flared/cross arms and no long stem/ring substitution.",
+      "pass": false,
+      "required_change": "Redraw as the compact brown Christian religious-building witness shape from S-101/OpenCPN; remove the long stem and circular base ring.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_stem_ring",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL01",
+      "symbol_id": "BUIREL01"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.8,
+      "expected": "BUIREL04 is non-conspicuous religious building, non-Christian. It is used as a non-conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate is a horizontal brown rectangular/hourglass witness with crossed interior, matching the non-Christian religious-building class and orientation; styling is heavier but semantic silhouette is aligned.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BUIREL04",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL04.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL04__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL04__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL04__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL04/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL04",
+      "symbol_id": "BUIREL04"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.88,
+      "expected": "BUIREL05 is mosque or minaret. It is used as a mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate still reads as a side crescent on a stem with ring base; the S-101/OpenCPN mosque/minaret witness places the crescent over the stem with a circular base/dot cue.",
+      "pass": false,
+      "required_change": "Redraw with the crescent over the stem and the circular base/dot cue from the S-101/OpenCPN mosque/minaret witness; do not use a side moon glyph.",
+      "safety_reason_codes": [
+        "wrong_crescent_orientation",
+        "missing_circular_base",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL05__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL05__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL05__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL05/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL05",
+      "symbol_id": "BUIREL05"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.88,
+      "expected": "BUIREL13 is conspicuous religious building, Christian. It is used as a conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a black Latin cross on a stem with a ring base; the conspicuous Christian reference is the compact flared/cross witness, not the stemmed church-cross pictogram.",
+      "pass": false,
+      "required_change": "Redraw as the compact black conspicuous Christian religious-building witness shape from S-101/OpenCPN; remove the long stem and circular base ring.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_stem_ring",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL13",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL13.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL13__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL13__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL13__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL13/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL13",
+      "symbol_id": "BUIREL13"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.8,
+      "expected": "BUIREL14 is conspicuous religious building, non-Christian. It is used as a conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate is a black horizontal rectangle/hourglass with crossed interior, preserving the conspicuous non-Christian religious-building class and orientation.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BUIREL14",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL14.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL14__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL14__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL14__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL14/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL14",
+      "symbol_id": "BUIREL14"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.88,
+      "expected": "BUIREL15 is conspicuous mosque or minaret. It is used as a conspicuous mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate remains a side crescent on a stem with ring base; reference witness uses a crescent-over-stem shape with circular base/dot geometry.",
+      "pass": false,
+      "required_change": "Redraw with the black crescent over the stem and the circular base/dot cue from the conspicuous mosque/minaret witness; do not use a side moon glyph.",
+      "safety_reason_codes": [
+        "wrong_crescent_orientation",
+        "missing_circular_base",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL15",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/BUIREL15.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/BUIREL15__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BUIREL15__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/BUIREL15__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BUIREL15/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL15",
+      "symbol_id": "BUIREL15"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.82,
+      "expected": "CHIMNY01 is chimney. It is used as a chimney. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate now reads as a brown chimney/stack with top smoke form and lower origin ring; it preserves the chimney class rather than a generic tower.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHIMNY01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/CHIMNY01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/CHIMNY01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHIMNY01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHIMNY01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHIMNY01/chart1_parity_reference_crop_1.png",
+        "aquamap:pipeline/iconforge/reference_sources/aquamap_map_symbols/images/Chimney1.png"
+      ],
+      "source_table_id": "opencpn-s52:CHIMNY01",
+      "symbol_id": "CHIMNY01"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.82,
+      "expected": "CHIMNY11 is conspicuous chimney. It is used as a conspicuous chimney. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate now reads as the black conspicuous chimney/stack with top smoke form and lower origin ring; proportions are stylized but class and key visual cues match.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CHIMNY11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/CHIMNY11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/CHIMNY11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CHIMNY11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CHIMNY11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CHIMNY11/chart1_parity_reference_crop_1.png",
+        "aquamap:pipeline/iconforge/reference_sources/aquamap_map_symbols/images/Chimney1.png"
+      ],
+      "source_table_id": "opencpn-s52:CHIMNY11",
+      "symbol_id": "CHIMNY11"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.84,
+      "expected": "CURSRB01 is cursor with open centre. It is used as a cursor with open centre. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate removes the center dot and leaves a clean open center between four orange cursor arms, matching the open-centre cursor references.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CURSRB01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/CURSRB01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/CURSRB01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CURSRB01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CURSRB01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CURSRB01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CURSRB01",
+      "symbol_id": "CURSRB01"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.78,
+      "expected": "CUSTOM01 is customs. It is used as a customs. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate is a single red/white customs roundel with central white band, matching the OpenCPN/semantic customs cue and avoiding the prior overlapping-circle substitution.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:CUSTOM01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/CUSTOM01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/CUSTOM01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CUSTOM01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/CUSTOM01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/CUSTOM01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:CUSTOM01",
+      "symbol_id": "CUSTOM01"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.9,
+      "expected": "DAYSQR01 is square or rectangular daymark, simplified. It is used as a square or rectangular daymark, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is still a black/yellow generic dayboard, while S-101/OpenCPN references use the provider-colored square/rectangular daymark treatment with the lower node/stem cue.",
+      "pass": false,
+      "required_change": "Redraw as the provider/reference-colored square or rectangular daymark on stem, including the lower node/base cue; do not use a black/yellow generic dayboard.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_style_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYSQR01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/DAYSQR01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/DAYSQR01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYSQR01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYSQR01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYSQR01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYSQR01",
+      "symbol_id": "DAYSQR01"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.88,
+      "expected": "DAYTRI01 is triangular daymark, point up, simplified. It is used as a triangular daymark, point up, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate preserves point-up triangle shape but uses a yellow/black generic dayboard treatment; references use the provider/reference color family for the simplified triangular daymark.",
+      "pass": false,
+      "required_change": "Redraw the point-up triangular daymark in the provider/reference color family while preserving the upright triangle and stem.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYTRI01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/DAYTRI01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/DAYTRI01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYTRI01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYTRI01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYTRI01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYTRI01",
+      "symbol_id": "DAYTRI01"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.88,
+      "expected": "DAYTRI05 is triangular daymark, point down, simplified. It is used as a triangular daymark, point down, simplified. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate preserves point-down triangle shape but uses a yellow/black generic dayboard treatment; references use the provider/reference color family for the inverted triangular daymark.",
+      "pass": false,
+      "required_change": "Redraw the point-down triangular daymark in the provider/reference color family while preserving the inverted triangle and stem.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:DAYTRI05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/DAYTRI05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/DAYTRI05__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DAYTRI05__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/DAYTRI05__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/DAYTRI05/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:DAYTRI05",
+      "symbol_id": "DAYTRI05"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.9,
+      "expected": "ESSARE01 is ESSA or PSSA boundary. It is used as a ESSA or PSSA boundary. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate adds a boxed ESSA sign with dotted/baseline decoration; references call for the ESSA/PSSA boundary text/line marker, not an enclosed signboard pictogram.",
+      "pass": false,
+      "required_change": "Replace the boxed ESSA sign with the ESSA/PSSA boundary text/line marker from the references; remove the invented enclosure and baseline decoration.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "invented_enclosure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:ESSARE01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/ESSARE01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/ESSARE01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/ESSARE01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/ESSARE01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/ESSARE01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:ESSARE01",
+      "symbol_id": "ESSARE01"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.86,
+      "expected": "FORSTC01 is fortified structure. It is used as a fortified structure. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is now a square fortified-structure mark but adds interior horizontal bars; S-101/OpenCPN witnesses are a simple brown square/outline without those invented internal marks.",
+      "pass": false,
+      "required_change": "Redraw as the brown fortified-structure square/outline witness from S-101/OpenCPN; remove invented internal bars.",
+      "safety_reason_codes": [
+        "invented_internal_marks",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:FORSTC01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/FORSTC01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/FORSTC01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FORSTC01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/FORSTC01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/FORSTC01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:FORSTC01",
+      "symbol_id": "FORSTC01"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.86,
+      "expected": "FORSTC11 is conspicuous fortified structure. It is used as a conspicuous fortified structure. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a black square fortified-structure mark but adds interior horizontal bars; the conspicuous reference is a simple black square/outline.",
+      "pass": false,
+      "required_change": "Redraw as the black conspicuous fortified-structure square/outline witness from S-101/OpenCPN; remove invented internal bars.",
+      "safety_reason_codes": [
+        "invented_internal_marks",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:FORSTC11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/FORSTC11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/FORSTC11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FORSTC11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/FORSTC11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/FORSTC11/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:FORSTC11",
+      "symbol_id": "FORSTC11"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.8,
+      "expected": "HILTOP01 is hill or mountain top. It is used as a hill or mountain top. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate is a brown radial hill/mountain-top starburst and no longer substitutes a mountain-arch landform pictogram; semantic class and radial cue match the references.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:HILTOP01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/HILTOP01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/HILTOP01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/HILTOP01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/HILTOP01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/HILTOP01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:HILTOP01",
+      "symbol_id": "HILTOP01"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.8,
+      "expected": "HILTOP11 is conspicuous hill or mountain top. It is used as a conspicuous hill or mountain top. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Candidate passes this automated visual rerun on symbol class, silhouette/color semantics, and reference parity. This is not final human approval.",
+      "observed": "Candidate is a black radial conspicuous hill/mountain-top starburst and no longer substitutes a mountain-arch landform pictogram.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:HILTOP11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/HILTOP11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/HILTOP11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/HILTOP11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/HILTOP11__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/HILTOP11/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:HILTOP11",
+      "symbol_id": "HILTOP11"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.92,
+      "expected": "LOCMAG01 is cursor pick site for a magnetic anomaly at a point. It is used as a cursor pick site for a magnetic anomaly at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a large magenta A/M sign with dot and crossbar; references show a narrow magnetic-anomaly wedge/line point witness without the letter-sign enclosure.",
+      "pass": false,
+      "required_change": "Redraw as the LOCMAG01 magenta wedge/line magnetic-anomaly point witness; remove the A/M sign, crossbar, and dot.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:LOCMAG01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/LOCMAG01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/LOCMAG01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/LOCMAG01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/LOCMAG01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/LOCMAG01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:LOCMAG01",
+      "symbol_id": "LOCMAG01"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.92,
+      "expected": "LOCMAG51 is cursor pick site for a magnetic anomaly along a line or over an area. It is used as a cursor pick site for a magnetic anomaly along a line or over an area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a large magenta A/M sign with baseline marks; references show a magnetic-anomaly line/area wedge/line witness.",
+      "pass": false,
+      "required_change": "Redraw as the LOCMAG51 magenta magnetic-anomaly line/area wedge/line witness; remove the A/M sign and invented baseline marks.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:LOCMAG51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/LOCMAG51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/LOCMAG51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/LOCMAG51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/LOCMAG51__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/LOCMAG51/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:LOCMAG51",
+      "symbol_id": "LOCMAG51"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.86,
+      "expected": "LOWACC01 is safety contour of low accuracy in position. It is used as a safety contour of low accuracy in position. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate has the question mark and diagonal line, but adds a dashed baseline/contour segment not present in the S-101/OpenCPN low-accuracy contour witness.",
+      "pass": false,
+      "required_change": "Keep the question-mark plus diagonal line/leader cue, but remove the invented dashed baseline/contour segment.",
+      "safety_reason_codes": [
+        "invented_baseline",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:LOWACC01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/LOWACC01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/LOWACC01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/LOWACC01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/LOWACC01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/LOWACC01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:LOWACC01",
+      "symbol_id": "LOWACC01"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.92,
+      "expected": "MAGVAR01 is cursor pick site for magnetic variation at a point. It is used as a cursor pick site for magnetic variation at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a large magenta A/V sign with dot and crossbar; references show the magnetic-variation wedge/line point glyph.",
+      "pass": false,
+      "required_change": "Redraw as the MAGVAR01 magenta wedge/line magnetic-variation point glyph; remove the A/V sign, crossbar, and dot.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:MAGVAR01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/MAGVAR01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/MAGVAR01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/MAGVAR01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/MAGVAR01__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/MAGVAR01/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:MAGVAR01",
+      "symbol_id": "MAGVAR01"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.92,
+      "expected": "MAGVAR51 is cursor pick site for magnetic variation along a line or over an area. It is used as a cursor pick site for magnetic variation along a line or over an area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch19.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a large magenta A/V sign with baseline marks; references show the magnetic-variation line/area wedge/line glyph.",
+      "pass": false,
+      "required_change": "Redraw as the MAGVAR51 magenta magnetic-variation line/area wedge/line glyph; remove the A/V sign and invented baseline marks.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:MAGVAR51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch19/MAGVAR51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch11/renders/MAGVAR51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/MAGVAR51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/MAGVAR51__day.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/MAGVAR51/chart1_parity_reference_crop_1.png",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:MAGVAR51",
+      "symbol_id": "MAGVAR51"
+    }
+  ]
+}

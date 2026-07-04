@@ -1,0 +1,3010 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-012-local",
+  "batch_id": "standard_judge_batch_012",
+  "created_at": "2026-07-01T07:57:02.810Z",
+  "project": "vulkan",
+  "selection": {
+    "count": 50,
+    "first_symbol": "TERMNL09",
+    "input_branch": "codex/FORGE-14-exact-crops",
+    "input_pushed_head": "7a0ef37",
+    "last_symbol": "TOPSHP16",
+    "prior_archived_batch": "standard_judge_batch_011",
+    "prior_archived_last_symbol": "TERMNL08",
+    "semantic_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "status_filter": "helm_candidate.candidate_status == pending_judge"
+  },
+  "summary": {
+    "blockers": [
+      "Terminal rows TERMNL09-TERMNL13 still render as generic diamonds instead of circular terminal glyphs with cargo-specific detail.",
+      "Tide/current/tank rows TIDCUR01-TNKFRM11 mostly collapse to diamonds or a dashed area tile instead of arrows, boxes, wave/table markers, tank rings, or tank-farm clusters.",
+      "Topmark rows TOPMA100-TOPSHP16 mostly collapse to filled/open circles; references require cones/triangles, square boards, crosses, besoms, Pricken stakes, diamonds, or multi-color sphere/order semantics.",
+      "No row in this slice is human-final approved; all 50 need repair before final approval can be considered."
+    ],
+    "fail": 50,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 0
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.98,
+      "expected": "Explosive-goods terminal should be the circular terminal symbol with explosive-goods red/black detail from the OpenCPN/Chart No.1 witnesses.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond point marker with a white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TERMNL09 circular explosive-goods terminal glyph, preserving red/black detail.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL09",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL09",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Explosive goods transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL09__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TERMNL09",
+          "path": "out/source_variant_matrix/renders/TERMNL09/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL09.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TERMNL09/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL09.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL09",
+      "symbol_id": "TERMNL09"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.98,
+      "expected": "Fish-transshipment terminal should be a circular terminal symbol with fish/cargo detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TERMNL10 circular fish-transshipment terminal glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Fish transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TERMNL10",
+          "path": "out/source_variant_matrix/renders/TERMNL10/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TERMNL10/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL10",
+      "symbol_id": "TERMNL10"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.98,
+      "expected": "Car-transshipment terminal should be a circular terminal symbol with vehicle detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TERMNL11 circular car-transshipment terminal glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_vehicle_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Car transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TERMNL11",
+          "path": "out/source_variant_matrix/renders/TERMNL11/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TERMNL11/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL11",
+      "symbol_id": "TERMNL11"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.98,
+      "expected": "General-cargo terminal should be a circular terminal symbol with cargo detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TERMNL12 circular general-cargo terminal glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_cargo_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, General Cargo transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TERMNL12",
+          "path": "out/source_variant_matrix/renders/TERMNL12/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TERMNL12/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL12",
+      "symbol_id": "TERMNL12"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.98,
+      "expected": "RoRo terminal should show the circular RoRo terminal label/glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TERMNL13 circular RoRo terminal glyph/text cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL13",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL13",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, RoRo Terminal",
+          "path": "out/opencpn_s52_reference/TERMNL13__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TERMNL13",
+          "path": "out/source_variant_matrix/renders/TERMNL13/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL13.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TERMNL13/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL13.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL13",
+      "symbol_id": "TERMNL13"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.99,
+      "expected": "Predicted tidal stream/current should be the orange dashed upward current-arrow stack witnessed by OpenCPN and S-101.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TIDCUR01 orange dashed current-direction arrow stack.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TIDCUR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TIDCUR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR01",
+          "path": "assets/svg/source_priority/s101_exact/TIDCUR01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TIDCUR01",
+          "path": "PortrayalCatalog/Symbols/TIDCUR01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "predicted tidal stream or current direction",
+          "path": "out/opencpn_s52_reference/TIDCUR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR01",
+          "path": "out/source_variant_matrix/renders/TIDCUR01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TIDCUR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TIDCUR01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch5/TIDCUR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TIDCUR01",
+      "symbol_id": "TIDCUR01"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.99,
+      "expected": "Actual tidal stream/current should be the orange solid current arrow with chevrons/stem.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TIDCUR02 orange solid current-direction arrow.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TIDCUR02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TIDCUR02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR02",
+          "path": "assets/svg/source_priority/s101_exact/TIDCUR02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TIDCUR02",
+          "path": "PortrayalCatalog/Symbols/TIDCUR02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "actual tidal stream or current direction",
+          "path": "out/opencpn_s52_reference/TIDCUR02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR02",
+          "path": "out/source_variant_matrix/renders/TIDCUR02/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TIDCUR02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TIDCUR02/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch5/TIDCUR02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TIDCUR02",
+      "symbol_id": "TIDCUR02"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.99,
+      "expected": "Current-strength box should be an orange rectangular box, not a point diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TIDCUR03 orange current-strength box outline.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_box_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TIDCUR03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TIDCUR03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR03",
+          "path": "assets/svg/source_priority/s101_exact/TIDCUR03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TIDCUR03",
+          "path": "PortrayalCatalog/Symbols/TIDCUR03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "box for current strength",
+          "path": "out/opencpn_s52_reference/TIDCUR03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDCUR03",
+          "path": "out/source_variant_matrix/renders/TIDCUR03/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TIDCUR03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TIDCUR03/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TIDCUR03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TIDCUR03",
+      "symbol_id": "TIDCUR03"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.98,
+      "expected": "Tide-height information should use the water-level/wave line glyph from the references.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a gray filled diamond with a center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TIDEHT01 tide-height wave/level glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_wave_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TIDEHT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TIDEHT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDEHT01",
+          "path": "assets/svg/source_priority/s101_exact/TIDEHT01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TIDEHT01",
+          "path": "PortrayalCatalog/Symbols/TIDEHT01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "point for which tide height information is available",
+          "path": "out/opencpn_s52_reference/TIDEHT01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDEHT01",
+          "path": "out/source_variant_matrix/renders/TIDEHT01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TIDEHT01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TIDEHT01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TIDEHT01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TIDEHT01",
+      "symbol_id": "TIDEHT01"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.94,
+      "expected": "Tidal-stream table point should be a small open diamond/table marker at reference scale.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray filled diamond with a center ring.",
+      "pass": false,
+      "required_change": "Replace the filled diamond/ring with the TIDSTR01 open tidal-stream-table marker.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_fill",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TIDSTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TIDSTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDSTR01",
+          "path": "assets/svg/source_priority/s101_exact/TIDSTR01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TIDSTR01",
+          "path": "PortrayalCatalog/Symbols/TIDSTR01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "point or area for which a tidal stream table is available",
+          "path": "out/opencpn_s52_reference/TIDSTR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TIDSTR01",
+          "path": "out/source_variant_matrix/renders/TIDSTR01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TIDSTR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TIDSTR01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TIDSTR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TIDSTR01",
+      "symbol_id": "TIDSTR01"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.98,
+      "expected": "Timber yard should use the brown timber-stack/hash grid symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TMBYRD01 brown timber-yard grid glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TMBYRD01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TMBYRD01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TMBYRD01",
+          "path": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TMBYRD01",
+          "path": "PortrayalCatalog/Symbols/TMBYRD01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "timber yard",
+          "path": "out/opencpn_s52_reference/TMBYRD01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TMBYRD01",
+          "path": "out/source_variant_matrix/renders/TMBYRD01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TMBYRD01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TMBYRD01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TMBYRD01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TMBYRD01",
+      "symbol_id": "TMBYRD01"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.98,
+      "expected": "Tank should be a brown circular tank/ring symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TNKCON02 brown tank circle/ring glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TNKCON02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TNKCON02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKCON02",
+          "path": "assets/svg/source_priority/s101_exact/TNKCON02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TNKCON02",
+          "path": "PortrayalCatalog/Symbols/TNKCON02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "tank",
+          "path": "out/opencpn_s52_reference/TNKCON02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKCON02",
+          "path": "out/source_variant_matrix/renders/TNKCON02/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TNKCON02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TNKCON02/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TNKCON02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TNKCON02",
+      "symbol_id": "TNKCON02"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.98,
+      "expected": "Conspicuous tank should be a black circular tank/ring symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TNKCON12 black tank ring glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TNKCON12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TNKCON12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKCON12",
+          "path": "assets/svg/source_priority/s101_exact/TNKCON12.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TNKCON12",
+          "path": "PortrayalCatalog/Symbols/TNKCON12.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous tank",
+          "path": "out/opencpn_s52_reference/TNKCON12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKCON12",
+          "path": "out/source_variant_matrix/renders/TNKCON12/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TNKCON12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TNKCON12/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TNKCON12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TNKCON12",
+      "symbol_id": "TNKCON12"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.98,
+      "expected": "Tank farm should be the brown circular cluster of tank dots.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond point marker with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond marker with the TNKFRM01 brown tank-farm clustered-circle glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TNKFRM01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TNKFRM01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKFRM01",
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TNKFRM01",
+          "path": "PortrayalCatalog/Symbols/TNKFRM01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "tank farm",
+          "path": "out/opencpn_s52_reference/TNKFRM01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKFRM01",
+          "path": "out/source_variant_matrix/renders/TNKFRM01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TNKFRM01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TNKFRM01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TNKFRM01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TNKFRM01",
+      "symbol_id": "TNKFRM01"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.99,
+      "expected": "Conspicuous tank farm should be the black circular cluster of tank dots.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a gray dashed area tile with a diagonal dash.",
+      "pass": false,
+      "required_change": "Replace the dashed area tile with the TNKFRM11 black tank-farm clustered-circle glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TNKFRM11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TNKFRM11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKFRM11",
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TNKFRM11",
+          "path": "PortrayalCatalog/Symbols/TNKFRM11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous tank farm",
+          "path": "out/opencpn_s52_reference/TNKFRM11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TNKFRM11",
+          "path": "out/source_variant_matrix/renders/TNKFRM11/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TNKFRM11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TNKFRM11/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch6/TNKFRM11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TNKFRM11",
+      "symbol_id": "TNKFRM11"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.99,
+      "expected": "TOPMA100 must be a red cone/triangle point down.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the red downward cone topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA100",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA100",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark, beacon, red cone, point down",
+          "path": "out/opencpn_s52_reference/TOPMA100__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA100",
+          "path": "out/source_variant_matrix/renders/TOPMA100/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA100.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA100/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA100.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA100",
+      "symbol_id": "TOPMA100"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.99,
+      "expected": "TOPMA102 must be a green cone/triangle point up.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a green filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the green upward cone topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA102",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA102",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark, beacon, green cone, point up",
+          "path": "out/opencpn_s52_reference/TOPMA102__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA102",
+          "path": "out/source_variant_matrix/renders/TOPMA102/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA102.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA102/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA102.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA102",
+      "symbol_id": "TOPMA102"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.99,
+      "expected": "TOPMA106 must be the white-red-white vertical square/board topmark, not a circle.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the vertical square board and preserve the white/red/white order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA106",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA106",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-red square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPMA106__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA106",
+          "path": "out/source_variant_matrix/renders/TOPMA106/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA106.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA106/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA106.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA106",
+      "symbol_id": "TOPMA106"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.99,
+      "expected": "TOPMA107 must be a red-boarded square board topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the red-bordered square board topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA107",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA107",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPMA107__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA107",
+          "path": "out/source_variant_matrix/renders/TOPMA107/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA107.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA107/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA107.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA107",
+      "symbol_id": "TOPMA107"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.99,
+      "expected": "TOPMA109 must be a green-boarded diagonal square/diamond board.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the diagonal green-boarded square board topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_orientation",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA109",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA109",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, green boarded square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPMA109__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA109",
+          "path": "out/source_variant_matrix/renders/TOPMA109/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA109.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA109/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA109.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA109",
+      "symbol_id": "TOPMA109"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.99,
+      "expected": "TOPMA111 must be a yellow St. George cross.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a yellow filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the yellow upright cross topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_cross_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA111",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA111",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, yellow St.Georg cross",
+          "path": "out/opencpn_s52_reference/TOPMA111__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA111",
+          "path": "out/source_variant_matrix/renders/TOPMA111/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA111.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA111/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA111.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA111",
+      "symbol_id": "TOPMA111"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.99,
+      "expected": "TOPMA113 must be a yellow St. Andrew cross.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a yellow filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the yellow diagonal X-cross topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_cross_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA113",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA113",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, yellow Andreas cross",
+          "path": "out/opencpn_s52_reference/TOPMA113__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA113",
+          "path": "out/source_variant_matrix/renders/TOPMA113/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA113.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA113/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA113.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA113",
+      "symbol_id": "TOPMA113"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.97,
+      "expected": "TOPMA114 must match the exact red topmark silhouette in the references rather than a generic disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPMA114 reference topmark silhouette and red fill/order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA114",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA114",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA114",
+          "path": "out/opencpn_s52_reference/TOPMA114__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA114",
+          "path": "out/source_variant_matrix/renders/TOPMA114/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA114.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA114/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA114.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA114",
+      "symbol_id": "TOPMA114"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.97,
+      "expected": "TOPMA115 must match the green cone/triangle-style reference topmark, not a disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a green filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPMA115 exact green topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA115",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA115",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA115",
+          "path": "out/opencpn_s52_reference/TOPMA115__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA115",
+          "path": "out/source_variant_matrix/renders/TOPMA115/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA115.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA115/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA115.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA115",
+      "symbol_id": "TOPMA115"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.99,
+      "expected": "TOPMA116 must be a red-white-red entry-prohibited board topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the red-white-red board topmark and preserve band/order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA116",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA116",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark, buoy, red-white-red board, entry prohibited",
+          "path": "out/opencpn_s52_reference/TOPMA116__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA116",
+          "path": "out/source_variant_matrix/renders/TOPMA116/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA116.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA116/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA116.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA116",
+      "symbol_id": "TOPMA116"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.97,
+      "expected": "TOPMA117 must be a red-green spherical topmark with both colors present.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a plain red filled circle.",
+      "pass": false,
+      "required_change": "Add the missing green portion and match the red/green sphere from the references.",
+      "safety_reason_codes": [
+        "wrong_colour_order",
+        "missing_required_colour",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMA117",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMA117",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark, buoy, red-grean shere",
+          "path": "out/opencpn_s52_reference/TOPMA117__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMA117",
+          "path": "out/source_variant_matrix/renders/TOPMA117/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMA117.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMA117/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPMA117.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMA117",
+      "symbol_id": "TOPMA117"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.96,
+      "expected": "TOPMAR01 requires the red/green topmark semantics from the row metadata/reference witnesses, not a single-color disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a plain red filled circle.",
+      "pass": false,
+      "required_change": "Replace the single red disk with the TOPMAR01 red/green reference topmark.",
+      "safety_reason_codes": [
+        "missing_required_colour",
+        "wrong_colour_order",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR01",
+          "path": "out/opencpn_s52_reference/TOPMAR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR01",
+          "path": "out/source_variant_matrix/renders/TOPMAR01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR01",
+      "symbol_id": "TOPMAR01"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.99,
+      "expected": "TOPMAR87 must be a black besom point-down topmark with a multi-stroke broom silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the black point-down besom topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "missing_besom_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR87",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR87",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR87",
+          "path": "assets/svg/source_priority/s101_exact/TOPMAR87.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TOPMAR87",
+          "path": "PortrayalCatalog/Symbols/TOPMAR87.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark for beacons, besom point down, paper-chart",
+          "path": "out/opencpn_s52_reference/TOPMAR87__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR87",
+          "path": "out/source_variant_matrix/renders/TOPMAR87/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR87.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR87/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR87.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR87",
+      "symbol_id": "TOPMAR87"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.99,
+      "expected": "TOPMAR88 must be a black besom point-up topmark with the upward multi-stroke broom silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the black point-up besom topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "missing_besom_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR88",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR88",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR88",
+          "path": "assets/svg/source_priority/s101_exact/TOPMAR88.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TOPMAR88",
+          "path": "PortrayalCatalog/Symbols/TOPMAR88.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark for beacons, besom point up, paper-chart",
+          "path": "out/opencpn_s52_reference/TOPMAR88__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR88",
+          "path": "out/source_variant_matrix/renders/TOPMAR88/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR88.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR88/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR88.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR88",
+      "symbol_id": "TOPMAR88"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.98,
+      "expected": "TOPMAR90 must be the Pricken point-down/stake-like topmark, not a disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the TOPMAR90 point-down Pricken topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR90",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR90",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark for beacons, Pricken point down, paper-chart",
+          "path": "out/opencpn_s52_reference/TOPMAR90__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR90",
+          "path": "out/source_variant_matrix/renders/TOPMAR90/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR90.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR90/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR90.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR90",
+      "symbol_id": "TOPMAR90"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.96,
+      "expected": "TOPMAR91 must match the exact red topmark reference, not a generic disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the TOPMAR91 reference topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR91",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR91",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR91",
+          "path": "out/opencpn_s52_reference/TOPMAR91__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR91",
+          "path": "out/source_variant_matrix/renders/TOPMAR91/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR91.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR91/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR91.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR91",
+      "symbol_id": "TOPMAR91"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.96,
+      "expected": "TOPMAR92 must match the exact green topmark reference, not a generic disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a green filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the TOPMAR92 reference topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "generic_circle_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR92",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR92",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR92",
+          "path": "out/opencpn_s52_reference/TOPMAR92__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR92",
+          "path": "out/source_variant_matrix/renders/TOPMAR92/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR92.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR92/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR92.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR92",
+      "symbol_id": "TOPMAR92"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.98,
+      "expected": "TOPMAR93 must be the Pricken point-up/stake-like topmark, not a disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the disk with the TOPMAR93 point-up Pricken topmark silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR93",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR93",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark for beacons, Pricken point up, paper-chart",
+          "path": "out/opencpn_s52_reference/TOPMAR93__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR93",
+          "path": "out/source_variant_matrix/renders/TOPMAR93/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR93.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR93/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR93.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR93",
+      "symbol_id": "TOPMAR93"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.99,
+      "expected": "TOPMAR98 must be a diagonal white-green square board/topmark, not a circle.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the diagonal square board topmark and preserve its color pattern.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_orientation",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR98",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR98",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPMAR98__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR98",
+          "path": "out/source_variant_matrix/renders/TOPMAR98/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR98.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR98/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR98.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR98",
+      "symbol_id": "TOPMAR98"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.99,
+      "expected": "TOPMAR99 must be a yellow diamond topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the yellow diamond topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_diamond_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPMAR99",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPMAR99",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "topmark, beacon, Diamond,yellow",
+          "path": "out/opencpn_s52_reference/TOPMAR99__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPMAR99",
+          "path": "out/source_variant_matrix/renders/TOPMAR99/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPMAR99.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPMAR99/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch1/TOPMAR99.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR99",
+      "symbol_id": "TOPMAR99"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.99,
+      "expected": "TOPSHP00 must be a red-boarded/target-like square-board topmark, not a circular outline.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP00 reference board silhouette and color order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP00",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP00",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP00__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP00",
+          "path": "out/source_variant_matrix/renders/TOPSHP00/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP00.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP00/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP00.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP00",
+      "symbol_id": "TOPSHP00"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.98,
+      "expected": "TOPSHP01 must be an orange/white board-style topmark, not a circle.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP01 board/trapezoid topmark and preserve orange/white detail.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP01",
+          "path": "out/source_variant_matrix/renders/TOPSHP01/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP01/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP01",
+      "symbol_id": "TOPSHP01"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.99,
+      "expected": "TOPSHP02 must be a red/black vertical board/trapezoid topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP02 red/black board topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP02",
+          "path": "out/source_variant_matrix/renders/TOPSHP02/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP02/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP02",
+      "symbol_id": "TOPSHP02"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.98,
+      "expected": "TOPSHP03 must be an orange/white board/trapezoid topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a white open circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP03 orange/white board topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP03",
+          "path": "out/source_variant_matrix/renders/TOPSHP03/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP03/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP03",
+      "symbol_id": "TOPSHP03"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.99,
+      "expected": "TOPSHP04 must be a red/black board/trapezoid topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP04 red/black board topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_board_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP04",
+          "path": "out/source_variant_matrix/renders/TOPSHP04/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP04/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP04",
+      "symbol_id": "TOPSHP04"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.99,
+      "expected": "TOPSHP05 must be an orange/black downward cone/triangle topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders an orange filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP05 orange/black downward triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "wrong_colour_order",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP05",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP05",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP05__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP05",
+          "path": "out/source_variant_matrix/renders/TOPSHP05/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP05.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP05/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP05.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP05",
+      "symbol_id": "TOPSHP05"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.99,
+      "expected": "TOPSHP07 must be an orange downward triangle/cone topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders an orange filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP07 orange downward triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP07",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP07",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP07__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP07",
+          "path": "out/source_variant_matrix/renders/TOPSHP07/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP07.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP07/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP07.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP07",
+      "symbol_id": "TOPSHP07"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.99,
+      "expected": "TOPSHP08 must be a red/yellow triangular topmark with the reference color order.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP08 triangular red/yellow topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_triangle_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP08",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP08",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP08__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP08",
+          "path": "out/source_variant_matrix/renders/TOPSHP08/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP08.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP08/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP08.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP08",
+      "symbol_id": "TOPSHP08"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.99,
+      "expected": "TOPSHP09 text-bearing topmark row requires red/red/green semantics and a triangular/topmark reference shape, not a black disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the black disk with the TOPSHP09 reference topmark shape and restore red/red/green color semantics plus the text cue where required.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_required_colour",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP09;TE('%s'",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP09;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TOPSHP09;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHP09_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP09;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHP09;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP09_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP09;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP09_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP09;TE('%s'",
+      "symbol_id": "TOPSHP09;TE('%s'"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.99,
+      "expected": "TOPSHP10 must be a yellow upward triangle/cone topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a yellow filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP10 yellow upward triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP10",
+          "path": "out/source_variant_matrix/renders/TOPSHP10/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP10/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP10",
+      "symbol_id": "TOPSHP10"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.99,
+      "expected": "TOPSHP11 must be an orange upward triangle/cone topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders an orange filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP11 orange upward triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP11",
+          "path": "out/source_variant_matrix/renders/TOPSHP11/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP11/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP11",
+      "symbol_id": "TOPSHP11"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.99,
+      "expected": "TOPSHP12 must be a red upward triangle/cone topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP12 red upward triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP12",
+          "path": "out/source_variant_matrix/renders/TOPSHP12/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP12/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP12",
+      "symbol_id": "TOPSHP12"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.99,
+      "expected": "TOPSHP13 must be an orange/black narrow triangular topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders an orange filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP13 orange/black triangular topmark.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_triangle_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP13",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP13",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP13",
+          "path": "out/opencpn_s52_reference/TOPSHP13__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP13",
+          "path": "out/source_variant_matrix/renders/TOPSHP13/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP13.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP13/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP13.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP13",
+      "symbol_id": "TOPSHP13"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.99,
+      "expected": "TOPSHP15 text-bearing topmark row requires red/red/yellow semantics and a triangular/topmark reference shape, not a black disk.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a black filled circle.",
+      "pass": false,
+      "required_change": "Replace the black disk with the TOPSHP15 reference topmark shape and restore red/red/yellow color semantics plus the text cue where required.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_required_colour",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP15;TE('%s'",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP15;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "TOPSHP15;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHP15_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP15;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHP15;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP15_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP15;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP15_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP15;TE('%s'",
+      "symbol_id": "TOPSHP15;TE('%s'"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.99,
+      "expected": "TOPSHP16 must be a red/white upward triangle/cone-style topmark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, required shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a red filled circle.",
+      "pass": false,
+      "required_change": "Replace the circle with the TOPSHP16 red/white triangular topmark and preserve the color pattern.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_triangle_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP16",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP16",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP16__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP16",
+          "path": "out/source_variant_matrix/renders/TOPSHP16/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP16.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP16/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP16.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP16",
+      "symbol_id": "TOPSHP16"
+    }
+  ]
+}

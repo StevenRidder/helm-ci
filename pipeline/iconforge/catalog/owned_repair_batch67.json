@@ -1,0 +1,1524 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch67.json",
+    "renders": "out/standard_repair_batch59/renders",
+    "svg_dir": "assets/svg/owned_repair_batch67"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 14,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH01__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH01__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH01.svg",
+      "asset": "BOYSPH01",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH01.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "commons_pd_candidate_needs_review",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,general ,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3"
+        ],
+        "lookup_id": "1855",
+        "lookup_rcid": "30137",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSPH01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH01 is spherical buoy,general ,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH01__day.png",
+            "label": "spherical buoy,general ,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYSPH01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYSPH01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYSPH01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYSPH01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYSPH01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH05__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH05__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH05.svg",
+      "asset": "BOYSPH05",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH05.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH05.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,white,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR1"
+        ],
+        "lookup_id": "1972",
+        "lookup_rcid": "30243",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSPH05);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH05 is spherical buoy,white,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: spherical buoy body. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH05__day.png",
+            "label": "spherical buoy,white,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH05__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH05__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH60__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH60__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH60.svg",
+      "asset": "BOYSPH60",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH60.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH60.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "license_blocked_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,lateral-r,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR3"
+        ],
+        "lookup_id": "1973",
+        "lookup_rcid": "30244",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSPH60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH60 is spherical buoy,lateral-r,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: spherical buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH60__day.png",
+            "label": "spherical buoy,lateral-r,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH60__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH60__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYSPH60",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYSPH60.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYSPH60",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYSPH60.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYSPH60"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH62__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH62__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH62.svg",
+      "asset": "BOYSPH62",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH62.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,yellow,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "CATLAM23",
+          "COLOUR6"
+        ],
+        "lookup_id": "1890",
+        "lookup_rcid": "93817",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYSPH62);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH62 is spherical buoy,yellow,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spherical buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH62__day.png",
+            "label": "spherical buoy,yellow,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH65__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH65__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH65.svg",
+      "asset": "BOYSPH65",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH65.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH65.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,red-white,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR3,1",
+          "COLPAT2"
+        ],
+        "lookup_id": "1926",
+        "lookup_rcid": "30203",
+        "object_class": "BOYSAW",
+        "s52_instruction": "SY(BOYSPH65);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH65 is spherical buoy,red-white,full-chart. It is used as a safe-water buoy used to mark navigable water. Required geometry: spherical buoy body. Required colours: red, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "safe-water buoy used to mark navigable water"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH65__day.png",
+            "label": "spherical buoy,red-white,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH65__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH65__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH66__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH66__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH66__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH66.svg",
+      "asset": "BOYSPH66",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH66.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH66.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,rgr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR3,4,3",
+          "COLPAT1"
+        ],
+        "lookup_id": "1943",
+        "lookup_rcid": "30217",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSPH66);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH66 is spherical buoy,rgr,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: spherical buoy body. Required colours: red, green, red with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green",
+          "red"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH66__day.png",
+            "label": "spherical buoy,rgr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH66__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH66__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH66__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH68__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH68__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH68__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH68.svg",
+      "asset": "BOYSPH68",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH68.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH68.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,by,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR2,6"
+        ],
+        "lookup_id": "1839",
+        "lookup_rcid": "30121",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSPH68);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH68 is spherical buoy,by,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH68__day.png",
+            "label": "spherical buoy,by,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH68__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH68__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH68__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH69__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH69__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH69__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH69.svg",
+      "asset": "BOYSPH69",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH69.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH69.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,yb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR6,2"
+        ],
+        "lookup_id": "1840",
+        "lookup_rcid": "30122",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSPH69);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH69 is spherical buoy,yb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH69__day.png",
+            "label": "spherical buoy,yb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH69__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH69__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH69__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH70__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH70__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH70__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH70.svg",
+      "asset": "BOYSPH70",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH70.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH70.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,byb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR2,6,2"
+        ],
+        "lookup_id": "1829",
+        "lookup_rcid": "30111",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSPH70);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH70 is spherical buoy,byb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: black, yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow",
+          "black"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH70__day.png",
+            "label": "spherical buoy,byb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH70__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH70__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH71__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH71__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH71__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH71.svg",
+      "asset": "BOYSPH71",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH71.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH71.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,yby,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR6,2,6"
+        ],
+        "lookup_id": "1830",
+        "lookup_rcid": "30112",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSPH71);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH71 is spherical buoy,yby,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: yellow, black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black",
+          "yellow"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH71__day.png",
+            "label": "spherical buoy,yby,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH71__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH71__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH74__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH74__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH74__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH74.svg",
+      "asset": "BOYSPH74",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH74.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH74.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,rg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR3,4",
+          "COLPAT1"
+        ],
+        "lookup_id": "1887",
+        "lookup_rcid": "30165",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYSPH74);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH74 is spherical buoy,rg,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spherical buoy body. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH74__day.png",
+            "label": "spherical buoy,rg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH74__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH74__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH75__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH75__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH75__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH75.svg",
+      "asset": "BOYSPH75",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH75.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH75.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,gr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR4,3",
+          "COLPAT1"
+        ],
+        "lookup_id": "1888",
+        "lookup_rcid": "30166",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYSPH75);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH75 is spherical buoy,gr,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spherical buoy body. Required colours: green, red with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "red"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH75__day.png",
+            "label": "spherical buoy,gr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH75__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH75__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH75__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH77__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH77__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH77__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH77.svg",
+      "asset": "BOYSPH77",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH77.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH77.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "spherical buoy,wo,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP3",
+          "COLOUR1,11",
+          "COLPAT1"
+        ],
+        "lookup_id": "1946",
+        "lookup_rcid": "30220",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSPH77);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH77 is spherical buoy,wo,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: spherical buoy body. Required colours: white, orange with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "spherical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH77__day.png",
+            "label": "spherical buoy,wo,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH77__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH77__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH77__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch59/renders/BOYSPH79__after__day.png",
+        "dusk": "out/standard_repair_batch59/renders/BOYSPH79__after__dusk.png",
+        "night": "out/standard_repair_batch59/renders/BOYSPH79__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch67/BOYSPH79.svg",
+      "asset": "BOYSPH79",
+      "before_svg": "assets/svg/owned_repair_batch67/BOYSPH79.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH79.svg",
+      "candidate_strategy": "owned_spherical_buoy_redraw_from_s57_colour_order_and_chart1_parity_gate",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_spherical_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "BOYSPH79",
+      "provenance": {
+        "generator": "forge.standard_repair_batch59",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 spherical/conical buoy metadata plus provider images drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue Chart No.1 parity blocker for BOYSPH rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_chart1_parity_spherical_buoy_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "chart1_spherical_buoy_repair_batch67",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR3,4",
+          "COLPAT1"
+        ],
+        "lookup_id": "1886",
+        "lookup_rcid": "93804",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYSPH79);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH79 is BOYSPH79. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH79__day.png",
+            "label": "BOYSPH79",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH79__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH79__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH79__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

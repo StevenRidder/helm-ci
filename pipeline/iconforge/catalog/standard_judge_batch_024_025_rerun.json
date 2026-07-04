@@ -1,0 +1,319 @@
+{
+  "batch_id": "standard_judge_batch_024_025_rerun",
+  "judge_batch": "standard_judge_batch_024_025_rerun",
+  "schema_version": 1,
+  "scope": {
+    "excluded_superseded_assets": [
+      "MORFAC03",
+      "MORFAC04",
+      "MSTCON04",
+      "MSTCON14",
+      "POSGEN04"
+    ],
+    "final_approval_marked": false,
+    "repair_batches": [
+      "pipeline/iconforge/catalog/owned_repair_batch24.json",
+      "pipeline/iconforge/catalog/owned_repair_batch25.json"
+    ],
+    "selection_rule": "Only assets from owned_repair_batch24/25 whose current helm_candidate.candidate_status is repaired_pending_judge_rerun.",
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "fail": 6,
+    "final_approved": 0,
+    "judged": 19,
+    "pass": 13
+  },
+  "verdicts": [
+    {
+      "confidence": 0.88,
+      "expected": "Non-conspicuous Christian religious building should read as the brown/gold compact Christian cross witness, not as a generic building outline.",
+      "judge_comments": "The candidate preserves the religious-building class and improves the prior house/body substitution. Scale is larger than the OpenCPN witness but semantics are clear.",
+      "observed": "Gold Jerusalem/potent cross-style Christian religious-building mark with compact symmetric arms and small terminal crosses.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BUIREL01__day.png",
+        "semantic_brief:standard_source_table:BUIREL01"
+      ],
+      "symbol_id": "BUIREL01"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "Conspicuous Christian religious building should read as the black compact Christian cross witness.",
+      "judge_comments": "The candidate is a clear row-specific Christian cross and keeps the conspicuous/black distinction.",
+      "observed": "Black Jerusalem/potent cross-style Christian religious-building mark with compact symmetric arms and small terminal crosses.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BUIREL13__day.png",
+        "semantic_brief:standard_source_table:BUIREL13"
+      ],
+      "symbol_id": "BUIREL13"
+    },
+    {
+      "confidence": 0.81,
+      "expected": "Navigable lock gate should use the magenta circular lock-gate witness with internal gate leaves, not a generic gate or diamond.",
+      "judge_comments": "The internal geometry is stylized and heavier than the OpenCPN witness, but it reads as the intended navigable lock-gate class and preserves magenta.",
+      "observed": "Magenta circled navigable lock-gate mark with internal opposed gate/leaf geometry.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/GATCON03__day.png",
+        "semantic_brief:standard_source_table:GATCON03"
+      ],
+      "symbol_id": "GATCON03"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "Non-navigable lock gate should match the magenta circle-plus witness.",
+      "judge_comments": "The candidate matches the reference class and color with acceptable Helm-style scaling.",
+      "observed": "Magenta circle with centered crossbar/plus lock-gate mark.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/GATCON04__day.png",
+        "semantic_brief:standard_source_table:GATCON04"
+      ],
+      "symbol_id": "GATCON04"
+    },
+    {
+      "confidence": 0.86,
+      "expected": "Hulk should be the compact brown hulk silhouette from the reference, a low horizontal hull-like mark rather than an upright leaf or vessel profile.",
+      "judge_comments": "The candidate still changes the chart symbol into a decorative upright hull/leaf. It is visually pleasant, but the semantic shape does not match the HULKES01 witness.",
+      "observed": "Brown upright leaf/boat-outline shape with internal ribs.",
+      "pass": false,
+      "required_change": "Redraw HULKES01 as the compact brown hulk silhouette from OpenCPN/S-52: low horizontal hull body, no upright leaf outline, no tree-like internal ribs.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/HULKES01__day.png",
+        "semantic_brief:standard_source_table:HULKES01"
+      ],
+      "symbol_id": "HULKES01"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "Additional-information cursor mark should show the magenta leader from cursor point to an information box.",
+      "judge_comments": "Candidate is clearly the INFORM01 callout and preserves the reference semantics.",
+      "observed": "Magenta information callout: cursor ring, diagonal leader, and boxed lowercase i.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/INFORM01__day.png",
+        "semantic_brief:standard_source_table:INFORM01"
+      ],
+      "symbol_id": "INFORM01"
+    },
+    {
+      "confidence": 0.92,
+      "expected": "Inshore traffic area symbol should read as the IT letter pair in magenta.",
+      "judge_comments": "Candidate preserves the symbol identity; style weight is acceptable.",
+      "observed": "Magenta IT letters, bold and compact.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ITZARE51__day.png",
+        "semantic_brief:standard_source_table:ITZARE51"
+      ],
+      "symbol_id": "ITZARE51"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "Land as a point at small scale should be the tiny point/dot witness, not a target or ring.",
+      "judge_comments": "The outer ring invents a target-like symbol and changes the simple point semantics.",
+      "observed": "Gold target/bullseye ring.",
+      "pass": false,
+      "required_change": "Redraw LNDARE01 as a small point/dot marker matching the reference; remove the outer ring and bullseye treatment.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_target_ring",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/LNDARE01__day.png",
+        "semantic_brief:standard_source_table:LNDARE01"
+      ],
+      "symbol_id": "LNDARE01"
+    },
+    {
+      "confidence": 0.96,
+      "expected": "Magnetic anomaly cursor pick at a point should be the small magenta wedge/vertical-line glyph from the witness.",
+      "judge_comments": "The candidate is still an A-letter/triangle substitute and does not match the magnetic-anomaly cursor glyph.",
+      "observed": "Large magenta A-shaped triangle with baseline.",
+      "pass": false,
+      "required_change": "Redraw LOCMAG01 as the reference magenta wedge/line glyph; remove the A-shaped triangle, crossbar, and baseline.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "letter_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/LOCMAG01__day.png",
+        "semantic_brief:standard_source_table:LOCMAG01"
+      ],
+      "symbol_id": "LOCMAG01"
+    },
+    {
+      "confidence": 0.96,
+      "expected": "Magnetic anomaly along a line/area should be the reference magenta wedge/line glyph variant.",
+      "judge_comments": "The same A-letter substitution remains and is not the LOCMAG51 witness shape.",
+      "observed": "Large magenta A-shaped triangle with baseline.",
+      "pass": false,
+      "required_change": "Redraw LOCMAG51 as the reference magenta magnetic-anomaly line/area wedge/line glyph; remove the A-shaped body and baseline.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "letter_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/LOCMAG51__day.png",
+        "semantic_brief:standard_source_table:LOCMAG51"
+      ],
+      "symbol_id": "LOCMAG51"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "Low-accuracy safety contour cue should be a black question mark plus diagonal line without invented endpoint ring.",
+      "judge_comments": "Candidate is heavier and more icon-like than the witness, but it keeps the question/diagonal-line semantics and no longer includes the rejected endpoint ring.",
+      "observed": "Black diagonal contour/leader stroke with question-mark-like uncertainty cue.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/LOWACC01__day.png",
+        "semantic_brief:standard_source_table:LOWACC01"
+      ],
+      "symbol_id": "LOWACC01"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "Magnetic variation point cursor should be the compact magenta filled wedge/vertical-line witness, not a generic flagpole icon.",
+      "judge_comments": "The candidate is closer than the old monogram, but it over-renders the witness as a flag with a pole and loses the tiny cursor-pick glyph proportions.",
+      "observed": "Large magenta flag on a pole.",
+      "pass": false,
+      "required_change": "Redraw MAGVAR01 as the compact filled magenta wedge with short vertical reference line matching OpenCPN; avoid a generic flag-on-pole silhouette.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "generic_flag_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/MAGVAR01__day.png",
+        "semantic_brief:standard_source_table:MAGVAR01"
+      ],
+      "symbol_id": "MAGVAR01"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "Magnetic variation line/area cursor should be the compact filled wedge/vertical-line witness variant.",
+      "judge_comments": "The generic flagpole treatment does not match the reference cursor glyph and risks confusing the row with a point/flag feature.",
+      "observed": "Large magenta flag on a pole with baseline.",
+      "pass": false,
+      "required_change": "Redraw MAGVAR51 as the compact magenta wedge/vertical-line line-or-area glyph from the reference; remove the flagpole/base icon treatment.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "generic_flag_substitution",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/MAGVAR51__day.png",
+        "semantic_brief:standard_source_table:MAGVAR51"
+      ],
+      "symbol_id": "MAGVAR51"
+    },
+    {
+      "confidence": 0.86,
+      "expected": "Marine farm pattern should read as the gridded culture/farm witness with central oval/cage structure.",
+      "judge_comments": "Candidate is larger and more stylized but preserves the marine-farm grid/cage semantics.",
+      "observed": "Gold rectangular marine-farm lattice with central oval and repeated posts.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/MARCUL02__day.png",
+        "semantic_brief:standard_source_table:MARCUL02"
+      ],
+      "symbol_id": "MARCUL02"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "Non-conspicuous monument should use the brown/gold monument witness silhouette.",
+      "judge_comments": "Candidate preserves the monument silhouette and non-conspicuous color distinction.",
+      "observed": "Gold monument/pylon shape with base ring.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/MONUMT02__day.png",
+        "semantic_brief:standard_source_table:MONUMT02"
+      ],
+      "symbol_id": "MONUMT02"
+    },
+    {
+      "confidence": 0.89,
+      "expected": "Conspicuous monument should use the black monument witness silhouette.",
+      "judge_comments": "Candidate preserves the conspicuous monument class and black color.",
+      "observed": "Black monument/pylon shape with base ring.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/MONUMT12__day.png",
+        "semantic_brief:standard_source_table:MONUMT12"
+      ],
+      "symbol_id": "MONUMT12"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "North arrow should clearly show an orange north-pointing arrow and N marker.",
+      "judge_comments": "Candidate is simplified but preserves the north-arrow direction and label semantics.",
+      "observed": "Orange north arrow with centered N below the arrowhead.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/NORTHAR1__day.png",
+        "semantic_brief:standard_source_table:NORTHAR1"
+      ],
+      "symbol_id": "NORTHAR1"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "Conspicuous point position should be the circle-with-center-dot witness.",
+      "judge_comments": "Candidate matches the core point-feature mark with acceptable scaling.",
+      "observed": "Black concentric circle with filled center dot.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/POSGEN03__day.png",
+        "semantic_brief:standard_source_table:POSGEN03"
+      ],
+      "symbol_id": "POSGEN03"
+    },
+    {
+      "confidence": 0.89,
+      "expected": "Precautionary-area boundary should read as the magenta caution triangle/exclamation witness.",
+      "judge_comments": "Candidate preserves the warning-triangle class and magenta safety styling.",
+      "observed": "Magenta warning triangle with exclamation mark.",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/PRCARE51__day.png",
+        "semantic_brief:standard_source_table:PRCARE51"
+      ],
+      "symbol_id": "PRCARE51"
+    }
+  ]
+}

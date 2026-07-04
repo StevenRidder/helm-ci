@@ -1,0 +1,424 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch74.json",
+    "renders": "out/standard_repair_batch66/renders",
+    "svg_dir": "assets/svg/owned_repair_batch74"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 5,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch66/renders/TERMNL01__after__day.png",
+        "dusk": "out/standard_repair_batch66/renders/TERMNL01__after__dusk.png",
+        "night": "out/standard_repair_batch66/renders/TERMNL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch74/TERMNL01.svg",
+      "asset": "TERMNL01",
+      "before_svg": "assets/svg/owned_repair_batch74/TERMNL01.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL01.svg",
+      "candidate_strategy": "owned_terminal_badge_redraw_from_opencpn_reference",
+      "name": "terminal, passanger terminal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch66",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN terminal badge witness and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TERMNL terminal blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_termnl_reference_consumed",
+      "required_change": "Replace the generic person/cross glyph with the TERMNL01 passenger-terminal circular vessel/passenger detail matching the provider witness.",
+      "risk_bucket": "terminal_reference_repair_batch74",
+      "s57_structure": {
+        "conditions": [
+          "cathaf8"
+        ],
+        "lookup_id": "296",
+        "lookup_rcid": "32331",
+        "object_class": "termnl",
+        "s52_instruction": "AC(CHGRF,3);SY(TERMNL01)"
+      },
+      "safety_reason_codes": [
+        "wrong_glyph_semantics",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL01 is terminal, passanger terminal. It is used as a terminal, passanger terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, passanger terminal"
+      },
+      "source_judge": "catalog/standard_judge_batch_044_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL01__day.png",
+            "label": "terminal, passanger terminal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL01__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL01__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch66/renders/TERMNL03__after__day.png",
+        "dusk": "out/standard_repair_batch66/renders/TERMNL03__after__dusk.png",
+        "night": "out/standard_repair_batch66/renders/TERMNL03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch74/TERMNL03.svg",
+      "asset": "TERMNL03",
+      "before_svg": "assets/svg/owned_repair_batch74/TERMNL03.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL03.svg",
+      "candidate_strategy": "owned_terminal_badge_redraw_from_opencpn_reference",
+      "name": "terminal, Container transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch66",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN terminal badge witness and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TERMNL terminal blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_termnl_reference_consumed",
+      "required_change": "Replace the red-only bars with the TERMNL03 circular multicolour container-stack glyph matching the provider witness colour/detail family.",
+      "risk_bucket": "terminal_reference_repair_batch74",
+      "s57_structure": {
+        "conditions": [
+          "cattml3",
+          "trshgd1"
+        ],
+        "lookup_id": "282",
+        "lookup_rcid": "32317",
+        "object_class": "termnl",
+        "s52_instruction": "AC(CHGRF,3);SY(TERMNL03)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "missing_container_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL03 is terminal, Container transshipment. It is used as a terminal, Container transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "terminal, Container transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_044_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL03__day.png",
+            "label": "terminal, Container transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL03__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL03__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch66/renders/TERMNL04__after__day.png",
+        "dusk": "out/standard_repair_batch66/renders/TERMNL04__after__dusk.png",
+        "night": "out/standard_repair_batch66/renders/TERMNL04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch74/TERMNL04.svg",
+      "asset": "TERMNL04",
+      "before_svg": "assets/svg/owned_repair_batch74/TERMNL04.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL04.svg",
+      "candidate_strategy": "owned_terminal_badge_redraw_from_opencpn_reference",
+      "name": "terminal, Bulk transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch66",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN terminal badge witness and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TERMNL terminal blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_termnl_reference_consumed",
+      "required_change": "Replace the generic triangle with the TERMNL04 circular bulk/material terminal glyph preserving the provider witness black/white pile/handling detail.",
+      "risk_bucket": "terminal_reference_repair_batch74",
+      "s57_structure": {
+        "conditions": [
+          "cattml3",
+          "trshgd2"
+        ],
+        "lookup_id": "283",
+        "lookup_rcid": "32318",
+        "object_class": "termnl",
+        "s52_instruction": "AC(CHGRF,3);SY(TERMNL04)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL04 is terminal, Bulk transshipment. It is used as a terminal, Bulk transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "terminal, Bulk transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_044_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL04__day.png",
+            "label": "terminal, Bulk transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL04__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL04__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch66/renders/TERMNL07__after__day.png",
+        "dusk": "out/standard_repair_batch66/renders/TERMNL07__after__dusk.png",
+        "night": "out/standard_repair_batch66/renders/TERMNL07__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch74/TERMNL07.svg",
+      "asset": "TERMNL07",
+      "before_svg": "assets/svg/owned_repair_batch74/TERMNL07.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL07.svg",
+      "candidate_strategy": "owned_terminal_badge_redraw_from_opencpn_reference",
+      "name": "terminal, Chemical transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch66",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN terminal badge witness and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TERMNL terminal blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_termnl_reference_consumed",
+      "required_change": "Replace the CH label with the TERMNL07 circular chemical-terminal label matching the provider witness text cue.",
+      "risk_bucket": "terminal_reference_repair_batch74",
+      "s57_structure": {
+        "conditions": [
+          "cattml3",
+          "trshgd5"
+        ],
+        "lookup_id": "286",
+        "lookup_rcid": "32321",
+        "object_class": "termnl",
+        "s52_instruction": "AC(CHGRF,3);SY(TERMNL07)"
+      },
+      "safety_reason_codes": [
+        "wrong_text_glyph",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL07 is terminal, Chemical transshipment. It is used as a terminal, Chemical transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Chemical transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_044_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL07__day.png",
+            "label": "terminal, Chemical transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL07__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL07__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL07__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch66/renders/TERMNL12__after__day.png",
+        "dusk": "out/standard_repair_batch66/renders/TERMNL12__after__dusk.png",
+        "night": "out/standard_repair_batch66/renders/TERMNL12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch74/TERMNL12.svg",
+      "asset": "TERMNL12",
+      "before_svg": "assets/svg/owned_repair_batch74/TERMNL12.svg",
+      "candidate_source": "assets/svg/triad_generated/TERMNL12.svg",
+      "candidate_strategy": "owned_terminal_badge_redraw_from_opencpn_reference",
+      "name": "terminal, General Cargo transshipment",
+      "provenance": {
+        "generator": "forge.standard_repair_batch66",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN terminal badge witness and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TERMNL terminal blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_termnl_reference_consumed",
+      "required_change": "Replace the plain box with the TERMNL12 circular general-cargo terminal glyph preserving the provider witness cargo-handling detail.",
+      "risk_bucket": "terminal_reference_repair_batch74",
+      "s57_structure": {
+        "conditions": [
+          "cattml3",
+          "trshgd10"
+        ],
+        "lookup_id": "281",
+        "lookup_rcid": "32316",
+        "object_class": "termnl",
+        "s52_instruction": "AC(CHGRF,3);SY(TERMNL12)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_cargo_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL12 is terminal, General Cargo transshipment. It is used as a terminal, General Cargo transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, General Cargo transshipment"
+      },
+      "source_judge": "catalog/standard_judge_batch_044_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TERMNL12__day.png",
+            "label": "terminal, General Cargo transshipment",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TERMNL12__day.png",
+              "dusk": "out/opencpn_s52_reference/TERMNL12__dusk.png",
+              "night": "out/opencpn_s52_reference/TERMNL12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

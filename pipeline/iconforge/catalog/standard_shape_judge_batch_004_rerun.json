@@ -1,0 +1,372 @@
+{
+  "schema_version": "forge.standard_shape_semantic_judge.rerun.v1",
+  "source_batch": "catalog/owned_repair_batch10.json",
+  "status": "complete",
+  "summary": {
+    "blockers": [],
+    "fail_count": 4,
+    "notes": "Shape-semantic rerun only. SVGs were not edited. Repaired after_renders from owned_repair_batch10 were used because standard_source_table render paths still point at the pre-repair triad pack.",
+    "pass_count": 16,
+    "selected_from": "standard_source_table rows where helm_candidate.candidate_status == repaired_pending_judge_rerun and helm_candidate.source_batch == catalog/owned_repair_batch10.json",
+    "total_verdicts": 20
+  },
+  "verdicts": [
+    {
+      "confidence": 0.84,
+      "expected_shape": "lattice/tower beacon for beacon yb/full-chart; semantic_brief requires brown load-bearing body colour.",
+      "judge_comments": "Repair removed the previous black-body failure. The simplified trapezoid tower is acceptable for this shape-semantic gate because it preserves beacon/tower family and brown body cue.",
+      "observed_shape": "Compact brown/yellow-brown tower beacon body with black outline and stem; no wrong buoy/body family.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; optional lattice/detail polish can wait for visual/style QA.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BCNTOW90",
+        "helm_candidate:assets/svg/owned_repair_batch10/BCNTOW90.svg",
+        "helm_render:out/standard_repair_batch2/renders/BCNTOW90__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BCNTOW90__day.png"
+      ],
+      "symbol_id": "BCNTOW90",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.98,
+      "expected_shape": "Square brightness/contrast adjustment swatch matching the S-52/S-101/OpenCPN utility-symbol family.",
+      "judge_comments": "The repaired candidate is no longer a diamond/point marker and now matches the required utility swatch family.",
+      "observed_shape": "Black square control swatch with a smaller dark/gray inner square.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BLKADJ01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BLKADJ01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BLKADJ01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BLKADJ01__day.png"
+      ],
+      "symbol_id": "BLKADJ01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.96,
+      "expected_shape": "Thin diagonal red/white border strip, not a point marker or closed body.",
+      "judge_comments": "The repaired candidate preserves the border-line symbol family and red/white ordering from the reference witness.",
+      "observed_shape": "Thin diagonal red strip with white center line.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BORDER01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BORDER01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BORDER01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BORDER01__day.png"
+      ],
+      "symbol_id": "BORDER01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.72,
+      "expected_shape": "barrel buoy body; semantic_brief lists required colours red and black for BOYBAR01.",
+      "judge_comments": "Shape family is repaired, but this strict semantic-brief rerun cannot pass it because the current candidate only carries black outline/white fill while the brief says red and black are required colours.",
+      "observed_shape": "Barrel buoy outline/body with white fill and black outline; no red fill or red/black load-bearing colour pair.",
+      "pass": false,
+      "required_change": "Resolve the brief/reference conflict, then render the barrel buoy with the required red/black colour semantics if the current semantic_brief is authoritative.",
+      "safety_reason_codes": [
+        "wrong_colour",
+        "missing_required_colour",
+        "brief_reference_conflict"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYBAR01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYBAR01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYBAR01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYBAR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYBAR01.svg"
+      ],
+      "symbol_id": "BOYBAR01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.86,
+      "expected_shape": "can/cylindrical buoy body for BOYCAN01 paper-chart black can symbol.",
+      "judge_comments": "The repair fixes the previous filled full-chart body problem; black is carried by the paper-chart outline, and the can family is clear.",
+      "observed_shape": "Paper-chart can/cylindrical buoy outline with black stroke and no wrong conical/barrel substitution.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYCAN01.svg"
+      ],
+      "symbol_id": "BOYCAN01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.78,
+      "expected_shape": "can/cylindrical buoy body with semantic_brief required colours green and black.",
+      "judge_comments": "The family is now correct and there are no invented bands, but the repaired candidate does not satisfy the current brief colour requirement.",
+      "observed_shape": "Can/cylindrical buoy outline with white fill and black outline; no green load-bearing colour is present.",
+      "pass": false,
+      "required_change": "Add the required green/black colour semantics, or correct the semantic_brief if BOYCAN62 is intentionally an uncoloured generic/paper-style can.",
+      "safety_reason_codes": [
+        "wrong_colour",
+        "missing_required_colour",
+        "brief_reference_conflict"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN62",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN62.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN62__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN62__day.png"
+      ],
+      "symbol_id": "BOYCAN62",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.97,
+      "expected_shape": "can/cylindrical buoy body with red-green-red horizontal band order.",
+      "judge_comments": "Band count and order now match the RGR semantic brief.",
+      "observed_shape": "Can buoy with three horizontal bands red, green, red.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN72",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN72.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN72__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN72__day.png"
+      ],
+      "symbol_id": "BOYCAN72",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.97,
+      "expected_shape": "can/cylindrical buoy body with green-red-green horizontal band order.",
+      "judge_comments": "Band count and order now match the GRG semantic brief.",
+      "observed_shape": "Can buoy with three horizontal bands green, red, green.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN73",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN73.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN73__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN73__day.png"
+      ],
+      "symbol_id": "BOYCAN73",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.86,
+      "expected_shape": "can/cylindrical buoy body preserving red/white lateral colour order from the semantic brief and reference witness.",
+      "judge_comments": "The source colour list is longer, but the repaired candidate matches the explicit repair/reference expectation of a visible RWR lateral can cue.",
+      "observed_shape": "Can buoy with visible horizontal red-white-red band sequence.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; later visual QA may decide whether the full repeated source colour list needs more than the rendered RWR cue.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN74",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN74.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN74__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN74__day.png"
+      ],
+      "symbol_id": "BOYCAN74",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.98,
+      "expected_shape": "isolated-danger can/cylindrical buoy with black-red-black order.",
+      "judge_comments": "The safety-critical isolated-danger BRB order is now visible and correct.",
+      "observed_shape": "Can buoy with three horizontal bands black, red, black.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN76",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN76.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN76__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN76__day.png"
+      ],
+      "symbol_id": "BOYCAN76",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.88,
+      "expected_shape": "can/cylindrical buoy body preserving the white/orange special-purpose band semantics.",
+      "judge_comments": "The candidate no longer collapses to two bands and preserves the white/orange repeated cue used by the references/repair instruction.",
+      "observed_shape": "Can buoy with white-orange-white horizontal band cue.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN77",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN77.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN77__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN77__day.png"
+      ],
+      "symbol_id": "BOYCAN77",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.98,
+      "expected_shape": "can/cylindrical buoy body with white-orange-white horizontal band order.",
+      "judge_comments": "Band count and WOW order now match the semantic brief.",
+      "observed_shape": "Can buoy with three horizontal bands white, orange, white.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN78",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN78.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN78__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN78__day.png"
+      ],
+      "symbol_id": "BOYCAN78",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.93,
+      "expected_shape": "can/cylindrical buoy body with required orange colour.",
+      "judge_comments": "The shape family is correct, but the load-bearing colour is wrong: the SVG uses var(--yellow) and the semantic brief requires orange.",
+      "observed_shape": "Can/cylindrical buoy body filled yellow with black outline.",
+      "pass": false,
+      "required_change": "Change BOYCAN79 body fill from yellow to orange while preserving the can body and black outline/stem.",
+      "safety_reason_codes": [
+        "wrong_colour"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN79",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN79.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN79__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN79__day.png"
+      ],
+      "symbol_id": "BOYCAN79",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.84,
+      "expected_shape": "can/cylindrical buoy body preserving the special-purpose orange/white or white/orange repeated reference cue.",
+      "judge_comments": "The current brief and earlier repair wording disagree on whether to describe the row as orange/white or white/orange/white. The repaired SVG matches the explicit repair/reference expectation and is the correct can family.",
+      "observed_shape": "Can buoy with white-orange-white repeated horizontal band cue.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; keep this row flagged for later visual QA if the source colour order ambiguity must be resolved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN81",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN81.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN81__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN81__day.png"
+      ],
+      "symbol_id": "BOYCAN81",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.86,
+      "expected_shape": "can/cylindrical buoy body preserving red/white lateral colour order from the semantic brief and reference witness.",
+      "judge_comments": "The candidate now has the expected RWR visual cue from the repair/reference contract; the longer source colour list is not treated as a semantic failure at this gate.",
+      "observed_shape": "Can buoy with visible horizontal red-white-red band sequence.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; later visual QA may decide whether the full repeated source colour list needs more than the rendered RWR cue.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN82",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN82.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN82__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN82__day.png"
+      ],
+      "symbol_id": "BOYCAN82",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.85,
+      "expected_shape": "can/cylindrical buoy body preserving red/white lateral colour order from the semantic brief and reference witness.",
+      "judge_comments": "The candidate now carries the visible RWR lateral cue and the correct can body family. The source colour list is longer than the visible cue, but prior reference/repair text calls for RWR.",
+      "observed_shape": "Can buoy with visible horizontal red-white-red band sequence.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; later visual QA may decide whether the full repeated source colour list needs more than the rendered RWR cue.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN83",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN83.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN83__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN83__day.png"
+      ],
+      "symbol_id": "BOYCAN83",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.72,
+      "expected_shape": "conical/nun buoy body; semantic_brief lists required colours red and black for BOYCON01.",
+      "judge_comments": "Shape family is repaired, but this strict semantic-brief rerun cannot pass it because the current candidate only carries black outline/white fill while the brief says red and black are required colours.",
+      "observed_shape": "Conical/nun buoy outline with white fill and black outline; no red fill or red/black load-bearing colour pair.",
+      "pass": false,
+      "required_change": "Resolve the brief/reference conflict, then render the conical buoy with the required red/black colour semantics if the current semantic_brief is authoritative.",
+      "safety_reason_codes": [
+        "wrong_colour",
+        "missing_required_colour",
+        "brief_reference_conflict"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYCON01.svg"
+      ],
+      "symbol_id": "BOYCON01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.98,
+      "expected_shape": "isolated-danger conical/nun buoy with black-red-black order.",
+      "judge_comments": "The safety-critical isolated-danger BRB order is now visible and correct on the conical body.",
+      "observed_shape": "Conical/nun buoy with three horizontal bands black, red, black.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON63",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON63.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON63__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON63__day.png"
+      ],
+      "symbol_id": "BOYCON63",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.97,
+      "expected_shape": "conical/nun buoy body with red-green-red horizontal band order.",
+      "judge_comments": "Band count and order now match the RGR semantic brief without can/cone family confusion.",
+      "observed_shape": "Conical/nun buoy with three horizontal bands red, green, red.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON66",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON66.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON66__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON66__day.png"
+      ],
+      "symbol_id": "BOYCON66",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.97,
+      "expected_shape": "conical/nun buoy body with green-red-green horizontal band order.",
+      "judge_comments": "Band count and order now match the GRG semantic brief without can/cone family confusion.",
+      "observed_shape": "Conical/nun buoy with three horizontal bands green, red, green.",
+      "pass": true,
+      "required_change": "No semantic repair required.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON67",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON67.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON67__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON67__day.png"
+      ],
+      "symbol_id": "BOYCON67",
+      "wrong_family_if_any": null
+    }
+  ]
+}

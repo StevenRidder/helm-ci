@@ -1,0 +1,63 @@
+{
+  "agent_id": "codex/FORGE-14-judge-batch34",
+  "batch_id": "standard_judge_batch_034_rerun",
+  "created_at": "2026-07-01T18:27:31Z",
+  "project": "vulkan",
+  "schema_version": 1,
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "selected_asset_ids": [
+      "BCNGEN64"
+    ],
+    "selection_note": "Judged only owned repair batch 34 against full standard_source_table metadata, semantic_brief, S-57/OpenCPN structure, OpenCPN provider witnesses, Chart No.1 parity crop where available, and actual batch-34 Helm candidate SVG/renders on branch.",
+    "source_batches": [
+      "pipeline/iconforge/catalog/owned_repair_batch34.json"
+    ],
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 1,
+    "selected": 1,
+    "source_batches": [
+      "catalog/owned_repair_batch34.json"
+    ]
+  },
+  "task_id": "FORGE-14",
+  "verdicts": [
+    {
+      "batch_index": 34,
+      "confidence": 0.94,
+      "expected": "BCNGEN64 is a BOYLAT/BCNGEN red-white full-chart mark with BOYSHP5 and COLOUR3,1,3,1; it must preserve the compact BCNGEN beacon/spar body and four ordered horizontal bands red/white/red/white.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch34.json",
+      "judge_comments": "Semantic gate passes before style review: the candidate preserves the BCNGEN/BOYLAT beacon class, compact spar-like body, black outline and stem, and exactly four horizontal bands in the required red/white/red/white order. Visual parity is acceptable in Helm style; the candidate is cleaner/larger than the tiny OpenCPN raster witness, but does not create dangerous beacon, buoy, topmark, or colour-pattern confusion. No final approval implied.",
+      "observed": "Candidate render is a compact vertical BCNGEN beacon/spar body with black outline and stem. The body is divided into four ordered horizontal bands: red, white, red, white, matching the COLOUR3,1,3,1 repair requirement from the prior failed judge pass.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch34.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BCNGEN64",
+        "s57_structure:BOYLAT/SY(BCNGEN64);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21);BOYSHP5;COLOUR3,1,3,1",
+        "prior_failed_judge:standard_judge_batch_007_009_beacon_rerun",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch34/BCNGEN64.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch26/renders/BCNGEN64__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch26/renders/BCNGEN64__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch26/renders/BCNGEN64__after__night.png",
+        "triad_candidate_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/BCNGEN64__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BCNGEN64__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BCNGEN64__dusk.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BCNGEN64__night.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/BCNGEN64/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BCNGEN64",
+      "symbol_id": "BCNGEN64"
+    }
+  ]
+}

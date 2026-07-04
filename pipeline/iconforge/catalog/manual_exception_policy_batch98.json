@@ -1,0 +1,121 @@
+{
+  "description": "Placeholder rows that need an explicit product/manual policy before any publishable asset.",
+  "project": "vulkan",
+  "records": [
+    {
+      "asset": "NEWOBJ 01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/NEWOBJ_01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ_01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "manual_exception_newobj_placeholder",
+      "evidence_required": [
+        "product_policy_decision",
+        "manual_exception_reason",
+        "final_human_signoff_if_published"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ 01",
+      "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "manual_exception_policy_batch98",
+      "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+      "routing_bucket": "manual_policy_exception",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1189",
+        "lookup_rcid": "31241",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ 01)"
+      },
+      "semantic_brief": {
+        "brief": "NEWOBJ 01 is NEWOBJ 01. It is used as a NEWOBJ 01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "NEWOBJ 01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "NEWOBJ01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/NEWOBJ01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "manual_exception_newobj_placeholder",
+      "evidence_required": [
+        "product_policy_decision",
+        "manual_exception_reason",
+        "final_human_signoff_if_published"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ01",
+      "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "manual_exception_policy_batch98",
+      "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+      "routing_bucket": "manual_policy_exception",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "119",
+        "lookup_rcid": "32155",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)"
+      },
+      "semantic_brief": {
+        "brief": "NEWOBJ01 is NEWOBJ01. It is used as a NEWOBJ01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "NEWOBJ01"
+      },
+      "still_normal_icon_art_queue": false
+    }
+  ],
+  "schema_version": 1,
+  "status": "batch98_registry_written",
+  "summary": {
+    "rows": 2
+  },
+  "task_id": "FORGE-15",
+  "title": "Manual Exception Policy Batch 98"
+}

@@ -1,0 +1,344 @@
+{
+  "outputs": {
+    "contact_sheet": "out/beacon_family_template_preview/beacon_family_template_preview_day.png",
+    "renders": "out/beacon_family_template_preview/renders",
+    "svg_dir": "assets/svg/beacon_family_template_preview"
+  },
+  "policy": "Preview only: does not replace beacon family assets until human approves the template.",
+  "project": "vulkan",
+  "samples": [
+    {
+      "asset": "BCNGEN01",
+      "fills": [
+        "black"
+      ],
+      "label": "black general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN01__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN01__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN01__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN01.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN03",
+      "fills": [
+        "black"
+      ],
+      "label": "black default paper-chart beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN03__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN03__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN03__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN03.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN05",
+      "fills": [
+        "white"
+      ],
+      "label": "white general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN05__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN05__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN05__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN05.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN60",
+      "fills": [
+        "red"
+      ],
+      "label": "red general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN60__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN60__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN60__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN60.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN61",
+      "fills": [
+        "green"
+      ],
+      "label": "green general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN61__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN61__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN61__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN61.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN64",
+      "fills": [
+        "red",
+        "white",
+        "red",
+        "white"
+      ],
+      "label": "red/white general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN64__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN64__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN64__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN64.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN65",
+      "fills": [
+        "green",
+        "white",
+        "green",
+        "white"
+      ],
+      "label": "green/white general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN65__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN65__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN65__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN65.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN68",
+      "fills": [
+        "black",
+        "yellow"
+      ],
+      "label": "black/yellow beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN68__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN68__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN68__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN68.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN69",
+      "fills": [
+        "yellow",
+        "black"
+      ],
+      "label": "yellow/black beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN69__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN69__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN69__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN69.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN70",
+      "fills": [
+        "black",
+        "yellow",
+        "black"
+      ],
+      "label": "black/yellow/black beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN70__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN70__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN70__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN70.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN71",
+      "fills": [
+        "yellow",
+        "black",
+        "yellow"
+      ],
+      "label": "yellow/black/yellow beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN71__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN71__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN71__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN71.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN76",
+      "fills": [
+        "black",
+        "red",
+        "black"
+      ],
+      "label": "black/red/black beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN76__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN76__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN76__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN76.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN79",
+      "fills": [
+        "orange"
+      ],
+      "label": "orange beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN79__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN79__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN79__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN79.svg",
+      "template_role": "beacon_family_geometry_preview"
+    },
+    {
+      "asset": "BCNGEN80",
+      "fills": [
+        "black"
+      ],
+      "label": "black general beacon",
+      "provenance": {
+        "generator": "forge.beacon_family_template_preview",
+        "origin": "generated-owned-artwork",
+        "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+        "source_art_role": "user_created_shape_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "reference_family": "BCNGEN",
+      "renders": {
+        "day": "out/beacon_family_template_preview/renders/BCNGEN80__template__day.png",
+        "dusk": "out/beacon_family_template_preview/renders/BCNGEN80__template__dusk.png",
+        "night": "out/beacon_family_template_preview/renders/BCNGEN80__template__night.png"
+      },
+      "svg": "assets/svg/beacon_family_template_preview/BCNGEN80.svg",
+      "template_role": "beacon_family_geometry_preview"
+    }
+  ],
+  "schema_version": 1,
+  "source_art": "/Users/steveridder/Downloads/BCNGEN6.svg",
+  "status": "beacon_family_template_preview_written",
+  "summary": {
+    "palette_count": 3,
+    "render_count": 42,
+    "sample_count": 14,
+    "status": "awaiting_human_template_approval",
+    "template_shape": "post_plus_foot_plus_round_head_from_user_BCNGEN6"
+  },
+  "task_id": "FORGE-15"
+}

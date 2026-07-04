@@ -1,0 +1,1502 @@
+{
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch9.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch9"
+  },
+  "schema_version": 1,
+  "source_judge": "catalog/standard_judge_batch_002.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 28,
+    "source_judge_failed_rows": 28,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNGEN65.svg",
+      "asset": "BCNGEN65",
+      "before_svg": "assets/svg/triad_generated/BCNGEN65.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN65.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon in general, green/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Redraw with four ordered horizontal bands green/white/green/white inside the BCNGEN beacon body; keep black outline/stem but do not collapse to two bands.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN65__day.png",
+            "label": "beacon in general, green/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN65__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN65__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNGEN70.svg",
+      "asset": "BCNGEN70",
+      "before_svg": "assets/svg/triad_generated/BCNGEN70.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN70.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon in general, black/yellow/back, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered horizontal bands black/yellow/black; bottom black band must be visible.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN70__day.png",
+            "label": "beacon in general, black/yellow/back, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN70__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN70__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNGEN71.svg",
+      "asset": "BCNGEN71",
+      "before_svg": "assets/svg/triad_generated/BCNGEN71.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN71.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon in general, yellow/back/yellow, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered horizontal bands yellow/black/yellow; bottom yellow band must be visible.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN71__day.png",
+            "label": "beacon in general, yellow/back/yellow, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN71__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN71__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNGEN76.svg",
+      "asset": "BCNGEN76",
+      "before_svg": "assets/svg/triad_generated/BCNGEN76.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN76.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon in general, black/red/back, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered horizontal bands black/red/black in the BCNGEN beacon body.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN76__day.png",
+            "label": "beacon in general, black/red/back, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN76__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN76__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN76__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNISD21.svg",
+      "asset": "BCNISD21",
+      "before_svg": "assets/svg/triad_generated/BCNISD21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNISD21.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "isolated danger beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Redraw as the isolated-danger beacon symbol: two aligned circular danger marks/topmarks, matching S-101/OpenCPN, not a striped generic beacon.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Isolated Danger",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNISD1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNISD21__day.png",
+            "label": "isolated danger beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNISD21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNISD21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNISD21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNISD21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNISD21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNISD21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNISD21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNISD21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT15.svg",
+      "asset": "BCNLAT15",
+      "before_svg": "assets/svg/triad_generated/BCNLAT15.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT15.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "major lateral beacon, red, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove green band; render red lateral beacon body with the S-101/OpenCPN black pivot/detail cue if needed.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT15__day.png",
+            "label": "major lateral beacon, red, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT15__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT15__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT15__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLAT15",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLAT15.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLAT15",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLAT15.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLAT15"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT16.svg",
+      "asset": "BCNLAT16",
+      "before_svg": "assets/svg/triad_generated/BCNLAT16.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT16.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "major lateral beacon, green, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove red band; render green lateral beacon body with the S-101/OpenCPN cue.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT16__day.png",
+            "label": "major lateral beacon, green, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT16__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT16__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT16__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLAT16",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLAT16.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLAT16",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLAT16.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLAT16"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT21.svg",
+      "asset": "BCNLAT21",
+      "before_svg": "assets/svg/triad_generated/BCNLAT21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT21.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor lateral beacon, red, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove green band and use the compact minor lateral red beacon/stake geometry from S-101/OpenCPN.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT21__day.png",
+            "label": "minor lateral beacon, red, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLAT21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLAT21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLAT21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLAT21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLAT21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT22.svg",
+      "asset": "BCNLAT22",
+      "before_svg": "assets/svg/triad_generated/BCNLAT22.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT22.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor lateral beacon, green, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove red band and use compact minor lateral green beacon/stake geometry from S-101/OpenCPN.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT22__day.png",
+            "label": "minor lateral beacon, green, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT22__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT22__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT22__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLAT22",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLAT22.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLAT22",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLAT22.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLAT22"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT23.svg",
+      "asset": "BCNLAT23",
+      "before_svg": "assets/svg/triad_generated/BCNLAT23.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT23.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor lateral beacon, red-green, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render only the ordered red/green lateral cue indicated by the OpenCPN reference and lookup; remove black/blue bands.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT23__day.png",
+            "label": "minor lateral beacon, red-green, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT23__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT23__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT23__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLAT50.svg",
+      "asset": "BCNLAT50",
+      "before_svg": "assets/svg/triad_generated/BCNLAT50.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLAT50.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "river beacon stake - pole",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Redraw as a plain black river stake/pole beacon; remove blue fill and keep stake proportions.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLAT50__day.png",
+            "label": "river beacon stake - pole",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLAT50__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLAT50__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLAT50__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNLTC01.svg",
+      "asset": "BCNLTC01",
+      "before_svg": "assets/svg/triad_generated/BCNLTC01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLTC01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "lattice beacon, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Draw the lattice beacon/tower structure in black using thin OpenBridge-style strokes; remove blue band.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLTC01__day.png",
+            "label": "lattice beacon, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLTC01__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLTC01__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLTC01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLTC01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLTC01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLTC01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSAW13.svg",
+      "asset": "BCNSAW13",
+      "before_svg": "assets/svg/triad_generated/BCNSAW13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSAW13.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "major safe water beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Redraw from S-101/AquaMap safe-water reference: preserve the safe-water topmark/body cue and correct red/white semantics.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BOYSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSAW13__day.png",
+            "label": "major safe water beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSAW13__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSAW13__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSAW13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSAW13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSAW13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSAW13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSAW13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSAW13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSAW21.svg",
+      "asset": "BCNSAW21",
+      "before_svg": "assets/svg/triad_generated/BCNSAW21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSAW21.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor safe water beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Redraw minor safe-water beacon from S-101/OpenCPN, preserving the safe-water cue and not using a solid black general body.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSAW21__day.png",
+            "label": "minor safe water beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSAW21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSAW21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSAW21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSAW21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSAW21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSAW21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSAW21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSAW21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSPP13.svg",
+      "asset": "BCNSPP13",
+      "before_svg": "assets/svg/triad_generated/BCNSPP13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSPP13.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "major special purpose beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove black lower band; render yellow special-purpose beacon with the compact S-101/OpenCPN body.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSPP13__day.png",
+            "label": "major special purpose beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSPP13__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSPP13__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSPP13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSPP13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSPP13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSPP13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSPP13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSPP13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSPP21.svg",
+      "asset": "BCNSPP21",
+      "before_svg": "assets/svg/triad_generated/BCNSPP21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSPP21.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor special purpose beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove black band and use minor yellow special-purpose beacon geometry.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSPP21__day.png",
+            "label": "minor special purpose beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSPP21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSPP21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSPP21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSPP21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSPP21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSPP21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSPP21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSPP21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSTK02.svg",
+      "asset": "BCNSTK02",
+      "before_svg": "assets/svg/triad_generated/BCNSTK02.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK02.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor, stake or pole beacon, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove blue band; redraw as the black minor stake/pole beacon shown by S-101/OpenCPN.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK02__day.png",
+            "label": "minor, stake or pole beacon, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK02__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK02__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSTK02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSTK02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSTK02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSTK02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSTK02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSTK03.svg",
+      "asset": "BCNSTK03",
+      "before_svg": "assets/svg/triad_generated/BCNSTK03.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK03.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "river beacon stake - pole",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Remove blue band and draw plain black stake/pole geometry.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK03__day.png",
+            "label": "river beacon stake - pole",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK03__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK03__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSTK77.svg",
+      "asset": "BCNSTK77",
+      "before_svg": "assets/svg/triad_generated/BCNSTK77.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK77.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor, stake or pole beacon, green/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Correct the ordered bands to match the source structure, green-leading with all required alternating green/white bands.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK77__day.png",
+            "label": "minor, stake or pole beacon, green/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK77__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK77__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK77__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSTK79.svg",
+      "asset": "BCNSTK79",
+      "before_svg": "assets/svg/triad_generated/BCNSTK79.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK79.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor, stake or pole beacon, red/green/red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered horizontal stake bands red/green/red.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK79__day.png",
+            "label": "minor, stake or pole beacon, red/green/red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK79__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK79__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK79__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNSTK80.svg",
+      "asset": "BCNSTK80",
+      "before_svg": "assets/svg/triad_generated/BCNSTK80.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK80.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "minor, stake or pole beacon, green/red/green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered horizontal stake bands green/red/green.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK80__day.png",
+            "label": "minor, stake or pole beacon, green/red/green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK80__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK80__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK80__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW01.svg",
+      "asset": "BCNTOW01",
+      "before_svg": "assets/svg/triad_generated/BCNTOW01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon tower, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Draw tower/lattice body in black; remove blue band and avoid generic wedge body.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW01__day.png",
+            "label": "beacon tower, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW01__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW01__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNTOW01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNTOW01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNTOW01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNTOW01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNTOW01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW63.svg",
+      "asset": "BCNTOW63",
+      "before_svg": "assets/svg/triad_generated/BCNTOW63.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW63.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon tower, red/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render the full alternating white/red/white/red tower band pattern; do not collapse to two bands.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW63__day.png",
+            "label": "beacon tower, red/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW63__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW63__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW63__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW66.svg",
+      "asset": "BCNTOW66",
+      "before_svg": "assets/svg/triad_generated/BCNTOW66.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW66.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon tower, green/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render the repeated white/green/white/green tower banding visible in OpenCPN, or verify and encode the exact stripe count from the bitmap crop.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW66__day.png",
+            "label": "beacon tower, green/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW66__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW66__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW66__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW70.svg",
+      "asset": "BCNTOW70",
+      "before_svg": "assets/svg/triad_generated/BCNTOW70.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW70.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon byb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered tower bands black/yellow/black.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW70__day.png",
+            "label": "beacon byb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW70__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW70__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW71.svg",
+      "asset": "BCNTOW71",
+      "before_svg": "assets/svg/triad_generated/BCNTOW71.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW71.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon yby, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render the complete yellow/black/yellow band sequence in the tower body.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW71__day.png",
+            "label": "beacon yby, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW71__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW71__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW74.svg",
+      "asset": "BCNTOW74",
+      "before_svg": "assets/svg/triad_generated/BCNTOW74.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW74.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon tower, grg, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered tower bands red/green/red.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW74__day.png",
+            "label": "beacon tower, grg, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW74__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW74__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch9/BCNTOW76.svg",
+      "asset": "BCNTOW76",
+      "before_svg": "assets/svg/triad_generated/BCNTOW76.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW76.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "beacon tower, brb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three ordered tower bands black/red/black.",
+      "risk_bucket": "standard_judge_batch_002_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW76__day.png",
+            "label": "beacon tower, brb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW76__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW76__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW76__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

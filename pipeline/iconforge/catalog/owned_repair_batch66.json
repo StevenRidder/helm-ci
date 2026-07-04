@@ -1,0 +1,99 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch66.json",
+    "renders": "out/standard_repair_batch58/renders",
+    "svg_dir": "assets/svg/owned_repair_batch66"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 1,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch58/renders/TOPSHQ31__after__day.png",
+        "dusk": "out/standard_repair_batch58/renders/TOPSHQ31__after__dusk.png",
+        "night": "out/standard_repair_batch58/renders/TOPSHQ31__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch66/TOPSHQ31.svg",
+      "asset": "TOPSHQ31",
+      "before_svg": "assets/svg/owned_repair_batch66/TOPSHQ31.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHQ31.svg",
+      "candidate_strategy": "owned_lozenge_over_circle_topmark_redraw",
+      "name": "TOPSHQ31",
+      "provenance": {
+        "generator": "forge.standard_repair_batch58",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge64 required_change requires lozenge/diamond over lower circle",
+        "source_priority_basis": "standard_judge_batch_064_rerun TOPSHQ31 lozenge-over-circle feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_064_failure_consumed",
+      "required_change": "Replace the upper circle with the witnessed diamond/lozenge element above the lower circle; preserve the compound diamond-over-circle order, red/white/black cues, and black outline treatment.",
+      "risk_bucket": "topshq31_lozenge_repair_batch66",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP31"
+        ],
+        "lookup_id": "2163",
+        "lookup_rcid": "93933",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPSHQ31);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_silhouette",
+        "missing_compound_element"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHQ31 is TOPSHQ31. It is used as a TOPSHQ31. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "TOPSHQ31"
+      },
+      "source_judge": "catalog/standard_judge_batch_064_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHQ31__day.png",
+            "label": "TOPSHQ31",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHQ31__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHQ31__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHQ31__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

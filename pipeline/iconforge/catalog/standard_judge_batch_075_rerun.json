@@ -1,0 +1,415 @@
+{
+  "agent_id": "codex/judge75-icon-forge",
+  "batch_id": "standard_judge_batch_075_rerun",
+  "created_at": "2026-07-01T23:04:17Z",
+  "evidence_notes": [
+    "Judged only repaired TERMNL rows from owned_repair_batch74 after commit 38a856d3.",
+    "Each verdict checks row metadata, semantic_brief, S-57/S-52 names and conditions, local OpenCPN S-52 reference renders, repaired SVG geometry, and Helm repaired renders.",
+    "Passes are judge_pass_pending_final_approval only; this artifact grants zero final approvals.",
+    "Terminal badge identity was judged strictly: each row must retain the circular terminal badge and the specific passenger, container, bulk, chemical, or general-cargo subtype cue."
+  ],
+  "project": "helm-icon-forge",
+  "schema_version": 1,
+  "selection": {
+    "assets": [
+      "TERMNL01",
+      "TERMNL03",
+      "TERMNL04",
+      "TERMNL07",
+      "TERMNL12"
+    ],
+    "risk_bucket": "terminal_reference_repair_batch74",
+    "source_batch": "catalog/owned_repair_batch74.json"
+  },
+  "summary": {
+    "candidate_status": "repair_batch_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 5,
+    "selected": 5,
+    "source_batches": [
+      "catalog/owned_repair_batch74.json"
+    ]
+  },
+  "task_id": "standard_source_table_judge_batch_075_rerun",
+  "verdicts": [
+    {
+      "batch_index": 1,
+      "confidence": 0.94,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": null,
+        "generic_placeholder_detected": false,
+        "helm_candidate_geometry": "circle cx=32 cy=32 r=20 plus vessel hull path M18 34 H46 L40 40 H24 Z, cabin arc M22 33 Q32 24 42 33, and deck line M23 37 H41",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL01.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__night.png"
+        ],
+        "missing_circle_badge_detected": false,
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [],
+        "s101_refs_present": false,
+        "terminal_class": "passenger terminal circular badge with ferry/passenger-vessel detail",
+        "warnings": [],
+        "wrong_terminal_subtype_detected": false
+      },
+      "expected": "TERMNL01 must be terminal, passanger terminal: a circular terminal badge with passenger/vessel/ferry-like detail, not a person/cross glyph. Required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"cathaf8\"],\"lookup_id\":\"296\",\"lookup_rcid\":\"32331\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL01)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch74.json",
+      "judge_comments": "Pass pending human: TERMNL01 now preserves the passenger-terminal badge identity. The repair replaces the unsafe generic person/cross cue with a chart-readable vessel/passenger motif inside the required circle, matching the OpenCPN witness family without copying pixels. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a circular badge containing a ferry/passenger-vessel silhouette with hull, cabin arc, and deck line. No person or cross glyph remains.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TERMNL01 now preserves the passenger-terminal badge identity. The repair replaces the unsafe generic person/cross cue with a chart-readable vessel/passenger motif inside the required circle, matching the OpenCPN witness family without copying pixels.",
+      "repair_batch_catalog": "catalog/owned_repair_batch74.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TERMNL01",
+        "name:terminal, passanger terminal",
+        "semantic_brief:{\"brief\":\"TERMNL01 is terminal, passanger terminal. It is used as a terminal, passanger terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.\",\"required_colours\":[\"black\"],\"required_shape\":\"symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference\",\"use_case\":\"terminal, passanger terminal\"}",
+        "s57_structure:{\"conditions\":[\"cathaf8\"],\"lookup_id\":\"296\",\"lookup_rcid\":\"32331\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL01)\"}",
+        "required_change_input:Replace the generic person/cross glyph with the TERMNL01 passenger-terminal circular vessel/passenger detail matching the provider witness.",
+        "reference_providers:OpenCPN",
+        "helm_candidate:TERMNL01:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL01.svg",
+        "helm_candidate_source:TERMNL01:pipeline/iconforge/assets/svg/triad_generated/TERMNL01.svg",
+        "helm_before_svg:TERMNL01:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL01.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch74.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:TERMNL01:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__day.png",
+        "helm_repaired_render:TERMNL01:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__dusk.png",
+        "helm_repaired_render:TERMNL01:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL01__after__night.png",
+        "opencpn_render:TERMNL01:pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__day.png",
+        "opencpn_render:TERMNL01:pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__dusk.png",
+        "opencpn_render:TERMNL01:pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__night.png"
+      ],
+      "source_table_id": "opencpn-s52:TERMNL01",
+      "symbol_id": "TERMNL01",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.95,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": "stacked multicolour container blocks with black outlines",
+        "generic_placeholder_detected": false,
+        "helm_candidate_geometry": "circle cx=32 cy=32 r=20 plus container rects at 21,25; 30,25; 25,34; 34,34 and base line M22 42 H43",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL03.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__night.png"
+        ],
+        "missing_circle_badge_detected": false,
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__night.png"
+        ],
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "s101_refs": [],
+        "s101_refs_present": false,
+        "terminal_class": "container transshipment circular badge with stacked colored container blocks",
+        "warnings": [],
+        "wrong_terminal_subtype_detected": false
+      },
+      "expected": "TERMNL03 must be terminal, Container transshipment: a circular badge with stacked colored container blocks, not plain bars. Required colours ['red','black']; S-57/S-52 structure: {\"conditions\":[\"cattml3\",\"trshgd1\"],\"lookup_id\":\"282\",\"lookup_rcid\":\"32317\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL03)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch74.json",
+      "judge_comments": "Pass pending human: TERMNL03 now carries the required container-transshipment identity. The colored stacked block motif and outer terminal circle remove the prior red-bar ambiguity and align with the OpenCPN container witness family at rendered scale. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a circular badge with four stacked container rectangles in red, green, yellow, and red, each outlined in black, plus a black base line. The mark reads as container blocks rather than plain bars.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TERMNL03 now carries the required container-transshipment identity. The colored stacked block motif and outer terminal circle remove the prior red-bar ambiguity and align with the OpenCPN container witness family at rendered scale.",
+      "repair_batch_catalog": "catalog/owned_repair_batch74.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TERMNL03",
+        "name:terminal, Container transshipment",
+        "semantic_brief:{\"brief\":\"TERMNL03 is terminal, Container transshipment. It is used as a terminal, Container transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.\",\"required_colours\":[\"red\",\"black\"],\"required_shape\":\"symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference\",\"use_case\":\"terminal, Container transshipment\"}",
+        "s57_structure:{\"conditions\":[\"cattml3\",\"trshgd1\"],\"lookup_id\":\"282\",\"lookup_rcid\":\"32317\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL03)\"}",
+        "required_change_input:Replace the red-only bars with the TERMNL03 circular multicolour container-stack glyph matching the provider witness colour/detail family.",
+        "reference_providers:OpenCPN",
+        "helm_candidate:TERMNL03:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL03.svg",
+        "helm_candidate_source:TERMNL03:pipeline/iconforge/assets/svg/triad_generated/TERMNL03.svg",
+        "helm_before_svg:TERMNL03:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL03.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch74.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:TERMNL03:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__day.png",
+        "helm_repaired_render:TERMNL03:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__dusk.png",
+        "helm_repaired_render:TERMNL03:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL03__after__night.png",
+        "opencpn_render:TERMNL03:pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__day.png",
+        "opencpn_render:TERMNL03:pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__dusk.png",
+        "opencpn_render:TERMNL03:pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__night.png"
+      ],
+      "source_table_id": "opencpn-s52:TERMNL03",
+      "symbol_id": "TERMNL03",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.93,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": "black and white bulk pile/handling motif",
+        "generic_placeholder_detected": false,
+        "helm_candidate_geometry": "circle cx=32 cy=32 r=20 plus filled pile M20 42 L29 25 L34 42 Z, outlined pile M30 42 L38 27 L46 42 Z, and handling/cross detail M32 21 V31 M27 26 H37",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL04.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__night.png"
+        ],
+        "missing_circle_badge_detected": false,
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__night.png"
+        ],
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "s101_refs": [],
+        "s101_refs_present": false,
+        "terminal_class": "bulk transshipment circular badge with material pile and handling cue",
+        "warnings": [],
+        "wrong_terminal_subtype_detected": false
+      },
+      "expected": "TERMNL04 must be terminal, Bulk transshipment: a circular badge with bulk/material pile or handling motif, not a generic triangle. Required colours ['white','black']; S-57/S-52 structure: {\"conditions\":[\"cattml3\",\"trshgd2\"],\"lookup_id\":\"283\",\"lookup_rcid\":\"32318\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL04)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch74.json",
+      "judge_comments": "Pass pending human: TERMNL04 now has a bulk terminal motif inside the required circular badge. Although the Helm redraw is stylized, the paired pile and handling detail preserve the intended bulk/material identity and avoid the unsafe single-triangle placeholder. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a circular badge with two pile shapes and a small handling/cross detail above them. The mark reads as bulk/material handling rather than a lone generic triangle.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TERMNL04 now has a bulk terminal motif inside the required circular badge. Although the Helm redraw is stylized, the paired pile and handling detail preserve the intended bulk/material identity and avoid the unsafe single-triangle placeholder.",
+      "repair_batch_catalog": "catalog/owned_repair_batch74.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TERMNL04",
+        "name:terminal, Bulk transshipment",
+        "semantic_brief:{\"brief\":\"TERMNL04 is terminal, Bulk transshipment. It is used as a terminal, Bulk transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.\",\"required_colours\":[\"white\",\"black\"],\"required_shape\":\"symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference\",\"use_case\":\"terminal, Bulk transshipment\"}",
+        "s57_structure:{\"conditions\":[\"cattml3\",\"trshgd2\"],\"lookup_id\":\"283\",\"lookup_rcid\":\"32318\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL04)\"}",
+        "required_change_input:Replace the generic triangle with the TERMNL04 circular bulk/material terminal glyph preserving the provider witness black/white pile/handling detail.",
+        "reference_providers:OpenCPN",
+        "helm_candidate:TERMNL04:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL04.svg",
+        "helm_candidate_source:TERMNL04:pipeline/iconforge/assets/svg/triad_generated/TERMNL04.svg",
+        "helm_before_svg:TERMNL04:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL04.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch74.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:TERMNL04:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__day.png",
+        "helm_repaired_render:TERMNL04:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__dusk.png",
+        "helm_repaired_render:TERMNL04:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL04__after__night.png",
+        "opencpn_render:TERMNL04:pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__day.png",
+        "opencpn_render:TERMNL04:pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__dusk.png",
+        "opencpn_render:TERMNL04:pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__night.png"
+      ],
+      "source_table_id": "opencpn-s52:TERMNL04",
+      "symbol_id": "TERMNL04",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.96,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": null,
+        "generic_placeholder_detected": false,
+        "helm_candidate_geometry": "circle cx=32 cy=32 r=20 plus centered text 'che' at x=32 y=36",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL07.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__night.png"
+        ],
+        "missing_circle_badge_detected": false,
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [],
+        "s101_refs_present": false,
+        "terminal_class": "chemical transshipment circular badge with lower-case che label cue",
+        "warnings": [],
+        "wrong_terminal_subtype_detected": false
+      },
+      "expected": "TERMNL07 must be terminal, Chemical transshipment: a circular chemical-terminal badge preserving the small chemical label cue, preferably lower-case 'che' matching the witness. Required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"cattml3\",\"trshgd5\"],\"lookup_id\":\"286\",\"lookup_rcid\":\"32321\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL07)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch74.json",
+      "judge_comments": "Pass pending human: TERMNL07 preserves the chemical-transshipment label identity with the requested lower-case 'che' cue inside the terminal circle. The rendered mark is clear and is not ambiguous with a generic text placeholder or another terminal subtype. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a circular badge with a bold lower-case 'che' text cue centered in black. The prior CH abbreviation is gone.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TERMNL07 preserves the chemical-transshipment label identity with the requested lower-case 'che' cue inside the terminal circle. The rendered mark is clear and is not ambiguous with a generic text placeholder or another terminal subtype.",
+      "repair_batch_catalog": "catalog/owned_repair_batch74.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TERMNL07",
+        "name:terminal, Chemical transshipment",
+        "semantic_brief:{\"brief\":\"TERMNL07 is terminal, Chemical transshipment. It is used as a terminal, Chemical transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.\",\"required_colours\":[\"black\"],\"required_shape\":\"symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference\",\"use_case\":\"terminal, Chemical transshipment\"}",
+        "s57_structure:{\"conditions\":[\"cattml3\",\"trshgd5\"],\"lookup_id\":\"286\",\"lookup_rcid\":\"32321\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL07)\"}",
+        "required_change_input:Replace the CH label with the TERMNL07 circular chemical-terminal label matching the provider witness text cue.",
+        "reference_providers:OpenCPN",
+        "helm_candidate:TERMNL07:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL07.svg",
+        "helm_candidate_source:TERMNL07:pipeline/iconforge/assets/svg/triad_generated/TERMNL07.svg",
+        "helm_before_svg:TERMNL07:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL07.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch74.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:TERMNL07:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__day.png",
+        "helm_repaired_render:TERMNL07:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__dusk.png",
+        "helm_repaired_render:TERMNL07:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL07__after__night.png",
+        "opencpn_render:TERMNL07:pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__day.png",
+        "opencpn_render:TERMNL07:pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__dusk.png",
+        "opencpn_render:TERMNL07:pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__night.png"
+      ],
+      "source_table_id": "opencpn-s52:TERMNL07",
+      "symbol_id": "TERMNL07",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.92,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": null,
+        "generic_placeholder_detected": false,
+        "helm_candidate_geometry": "circle cx=32 cy=32 r=20 plus cargo outline M24 44 V23 H36, box M24 27 H38 V42 H24, hoist arm M36 23 L43 29 V36, and hook dot cx=43 cy=38",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL12.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__night.png"
+        ],
+        "missing_circle_badge_detected": false,
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [],
+        "s101_refs_present": false,
+        "terminal_class": "general cargo circular badge with cargo block and hoist/handling motif",
+        "warnings": [],
+        "wrong_terminal_subtype_detected": false
+      },
+      "expected": "TERMNL12 must be terminal, General Cargo transshipment: a circular badge with a cargo/handling/crane-like motif, not a plain box. Required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"cattml3\",\"trshgd10\"],\"lookup_id\":\"281\",\"lookup_rcid\":\"32316\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL12)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch74.json",
+      "judge_comments": "Pass pending human: TERMNL12 now has a general-cargo handling cue within the required terminal badge. The cargo block plus hoist/hook detail gives the terminal subtype enough chart-readable specificity and avoids the unsafe plain-box placeholder. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a circular badge with a cargo block outline plus a handling/hoist arm and small hook/dot. It is no longer just a plain box.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TERMNL12 now has a general-cargo handling cue within the required terminal badge. The cargo block plus hoist/hook detail gives the terminal subtype enough chart-readable specificity and avoids the unsafe plain-box placeholder.",
+      "repair_batch_catalog": "catalog/owned_repair_batch74.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TERMNL12",
+        "name:terminal, General Cargo transshipment",
+        "semantic_brief:{\"brief\":\"TERMNL12 is terminal, General Cargo transshipment. It is used as a terminal, General Cargo transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.\",\"required_colours\":[\"black\"],\"required_shape\":\"symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference\",\"use_case\":\"terminal, General Cargo transshipment\"}",
+        "s57_structure:{\"conditions\":[\"cattml3\",\"trshgd10\"],\"lookup_id\":\"281\",\"lookup_rcid\":\"32316\",\"object_class\":\"termnl\",\"s52_instruction\":\"AC(CHGRF,3);SY(TERMNL12)\"}",
+        "required_change_input:Replace the plain box with the TERMNL12 circular general-cargo terminal glyph preserving the provider witness cargo-handling detail.",
+        "reference_providers:OpenCPN",
+        "helm_candidate:TERMNL12:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL12.svg",
+        "helm_candidate_source:TERMNL12:pipeline/iconforge/assets/svg/triad_generated/TERMNL12.svg",
+        "helm_before_svg:TERMNL12:pipeline/iconforge/assets/svg/owned_repair_batch74/TERMNL12.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch74.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:TERMNL12:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__day.png",
+        "helm_repaired_render:TERMNL12:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__dusk.png",
+        "helm_repaired_render:TERMNL12:pipeline/iconforge/out/standard_repair_batch66/renders/TERMNL12__after__night.png",
+        "opencpn_render:TERMNL12:pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__day.png",
+        "opencpn_render:TERMNL12:pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__dusk.png",
+        "opencpn_render:TERMNL12:pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__night.png"
+      ],
+      "source_table_id": "opencpn-s52:TERMNL12",
+      "symbol_id": "TERMNL12",
+      "verdict": "pass"
+    }
+  ]
+}

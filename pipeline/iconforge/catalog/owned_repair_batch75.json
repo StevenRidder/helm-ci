@@ -1,0 +1,446 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch75.json",
+    "renders": "out/standard_repair_batch67/renders",
+    "svg_dir": "assets/svg/owned_repair_batch75"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 4,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch67/renders/BOYBAR01__after__day.png",
+        "dusk": "out/standard_repair_batch67/renders/BOYBAR01__after__dusk.png",
+        "night": "out/standard_repair_batch67/renders/BOYBAR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch75/BOYBAR01.svg",
+      "asset": "BOYBAR01",
+      "before_svg": "assets/svg/owned_repair_batch75/BOYBAR01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR01.svg",
+      "candidate_strategy": "owned_barrel_buoy_redraw_from_chart1_opencpn_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_barrel_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "commons_pd_candidate_needs_review",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "barrel buoy, black full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch67",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYBAR barrel-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boybar_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "barrel_buoy_reference_repair_batch75",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6"
+        ],
+        "lookup_id": "1858",
+        "lookup_rcid": "30140",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYBAR01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYBAR01 is barrel buoy, black full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: barrel buoy body. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+            "label": "barrel buoy, black full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYBAR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYBAR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYBAR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch67/renders/BOYBAR60__after__day.png",
+        "dusk": "out/standard_repair_batch67/renders/BOYBAR60__after__dusk.png",
+        "night": "out/standard_repair_batch67/renders/BOYBAR60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch75/BOYBAR60.svg",
+      "asset": "BOYBAR60",
+      "before_svg": "assets/svg/owned_repair_batch75/BOYBAR60.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR60.svg",
+      "candidate_strategy": "owned_barrel_buoy_redraw_from_chart1_opencpn_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_barrel_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "barrel buoy, red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch67",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYBAR barrel-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boybar_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "barrel_buoy_reference_repair_batch75",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR3"
+        ],
+        "lookup_id": "1979",
+        "lookup_rcid": "30250",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYBAR60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYBAR60 is barrel buoy, red, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: barrel buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR60__day.png",
+            "label": "barrel buoy, red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR60__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR60__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch67/renders/BOYBAR61__after__day.png",
+        "dusk": "out/standard_repair_batch67/renders/BOYBAR61__after__dusk.png",
+        "night": "out/standard_repair_batch67/renders/BOYBAR61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch75/BOYBAR61.svg",
+      "asset": "BOYBAR61",
+      "before_svg": "assets/svg/owned_repair_batch75/BOYBAR61.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR61.svg",
+      "candidate_strategy": "owned_barrel_buoy_redraw_from_chart1_opencpn_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_barrel_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "barrel buoy, green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch67",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYBAR barrel-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boybar_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "barrel_buoy_reference_repair_batch75",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR4"
+        ],
+        "lookup_id": "1980",
+        "lookup_rcid": "30251",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYBAR61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYBAR61 is barrel buoy, green, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: barrel buoy body. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR61__day.png",
+            "label": "barrel buoy, green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR61__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR61__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch67/renders/BOYBAR62__after__day.png",
+        "dusk": "out/standard_repair_batch67/renders/BOYBAR62__after__dusk.png",
+        "night": "out/standard_repair_batch67/renders/BOYBAR62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch75/BOYBAR62.svg",
+      "asset": "BOYBAR62",
+      "before_svg": "assets/svg/owned_repair_batch75/BOYBAR62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR62.svg",
+      "candidate_strategy": "owned_barrel_buoy_redraw_from_chart1_opencpn_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_barrel_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "barrel buoy, yellow, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch67",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYBAR barrel-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boybar_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "barrel_buoy_reference_repair_batch75",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR6"
+        ],
+        "lookup_id": "1862",
+        "lookup_rcid": "30144",
+        "object_class": "BOYINB",
+        "s52_instruction": "SY(BOYBAR62);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYBAR62 is barrel buoy, yellow, full-chart. It is used as a installation buoy. Required geometry: barrel buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "installation buoy"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR62__day.png",
+            "label": "barrel buoy, yellow, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

@@ -1,0 +1,89 @@
+{
+  "schema_version": "1.0",
+  "source_batch": "catalog/owned_repair_batch11.json",
+  "status": "complete",
+  "summary": {
+    "blockers": [],
+    "fail_count": 0,
+    "notes": "Shape-semantic rerun only. SVGs were not edited. Current batch11 candidates and regenerated triad renders were used for the four repaired shape-rerun rows.",
+    "pass_count": 4,
+    "selected_from": "standard_source_table rows where helm_candidate.candidate_status == repaired_pending_shape_rerun and helm_candidate.source_batch == catalog/owned_repair_batch11.json",
+    "total_verdicts": 4
+  },
+  "verdicts": [
+    {
+      "confidence": 0.91,
+      "expected_shape": "barrel buoy body with semantic_brief required colours red and black.",
+      "judge_comments": "The batch11 repair resolves the previous missing-colour failure. Although the provider reference is a black outline witness, the current semantic_brief requires red and black load-bearing colours, and the candidate now carries both without changing the barrel buoy family.",
+      "observed_shape": "Barrel buoy body with black outline and stem; body is split red over black.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; continue to visual parity/final approval if needed.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYBAR01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYBAR01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYBAR01__after__day.png",
+        "triad_render:out/triad_reference_candidate_pack/renders/BOYBAR01__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYBAR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYBAR01.svg"
+      ],
+      "symbol_id": "BOYBAR01",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.92,
+      "expected_shape": "can/cylindrical buoy body with semantic_brief required colours green and black.",
+      "judge_comments": "The repaired candidate preserves the can family and now includes both required load-bearing colours. It does not collapse into a conical/nun buoy and has no invented topmark.",
+      "observed_shape": "Can/cylindrical buoy body with black outline and stem; body is split green over black.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; continue to visual parity/final approval if needed.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN62",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCAN62.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCAN62__after__day.png",
+        "triad_render:out/triad_reference_candidate_pack/renders/BOYCAN62__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN62__day.png"
+      ],
+      "symbol_id": "BOYCAN62",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.97,
+      "expected_shape": "can/cylindrical buoy body with required orange colour.",
+      "judge_comments": "The batch11 candidate fixes the previous yellow/orange colour error while preserving the can silhouette and black outline/stem.",
+      "observed_shape": "Can/cylindrical buoy body with black outline and stem; body is filled orange.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; continue to visual parity/final approval if needed.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN79",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCAN79.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCAN79__after__day.png",
+        "triad_render:out/triad_reference_candidate_pack/renders/BOYCAN79__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN79__day.png"
+      ],
+      "symbol_id": "BOYCAN79",
+      "wrong_family_if_any": null
+    },
+    {
+      "confidence": 0.91,
+      "expected_shape": "conical/nun buoy body with semantic_brief required colours red and black.",
+      "judge_comments": "The batch11 repair resolves the previous missing-colour failure. Although the provider reference is a black outline witness, the current semantic_brief requires red and black load-bearing colours, and the candidate now carries both without changing the conical/nun buoy family.",
+      "observed_shape": "Conical/nun buoy body with black outline and stem; body is split red over black.",
+      "pass": true,
+      "required_change": "No shape-semantic repair required; continue to visual parity/final approval if needed.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON01__after__day.png",
+        "triad_render:out/triad_reference_candidate_pack/renders/BOYCON01__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYCON01.svg"
+      ],
+      "symbol_id": "BOYCON01",
+      "wrong_family_if_any": null
+    }
+  ]
+}

@@ -1,0 +1,101 @@
+{
+  "agent_id": "codex/FORGE-15-judge-loop-current",
+  "batch_id": "standard_judge_batch_085_rerun",
+  "created_at": "2026-07-03T00:00:00Z",
+  "evidence_notes": [
+    "Judged current repaired rows from owned_repair_batch85.",
+    "Pass means judge_pass_pending_final_approval only; this artifact grants zero final approvals.",
+    "The repair specifically resolves the double-chevron versus single-chevron through-water vector confusion."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "VECWTR01",
+      "VECWTR21"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "source_batches": [
+      "catalog/owned_repair_batch85.json"
+    ],
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 2,
+    "passed_assets": [
+      "VECWTR01",
+      "VECWTR21"
+    ],
+    "selected": 2,
+    "source_batches": [
+      "catalog/owned_repair_batch85.json"
+    ]
+  },
+  "task_id": "FORGE-15",
+  "verdicts": [
+    {
+      "batch_index": 85,
+      "confidence": 0.92,
+      "expected": "VECWTR01 must preserve symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference; colours reference-defined.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch85.json",
+      "judge_comments": "Pass pending human: black through-water vector now preserves the single-chevron witness shape. No final approval is granted.",
+      "observed": "After SVG/render shows black through-water vector now preserves the single-chevron witness shape.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch85.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:VECWTR01",
+        "s57_conditions:$SCODEVECWTR01",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/VECWTR01.svg",
+        "source_svg:assets/svg/owned_repair_batch85/VECWTR01.svg",
+        "repair_catalog:catalog/owned_repair_batch85.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/VECWTR01__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/VECWTR01/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/VECWTR01/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:VECWTR01",
+      "symbol_id": "VECWTR01"
+    },
+    {
+      "batch_index": 85,
+      "confidence": 0.92,
+      "expected": "VECWTR21 must preserve symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference; colours reference-defined.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch85.json",
+      "judge_comments": "Pass pending human: green through-water vector now preserves the single-chevron witness shape. No final approval is granted.",
+      "observed": "After SVG/render shows green through-water vector now preserves the single-chevron witness shape.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch85.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:VECWTR21",
+        "s57_conditions:$SCODEVECWTR21",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/VECWTR21.svg",
+        "source_svg:assets/svg/owned_repair_batch85/VECWTR21.svg",
+        "repair_catalog:catalog/owned_repair_batch85.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/VECWTR21__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/VECWTR21/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/VECWTR21/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:VECWTR21",
+      "symbol_id": "VECWTR21"
+    }
+  ]
+}

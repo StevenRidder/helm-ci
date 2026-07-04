@@ -1,0 +1,1492 @@
+{
+  "project": "vulkan",
+  "records": [
+    {
+      "asset": "ARCSLN01",
+      "classification": "style_primitive_not_standalone_icon",
+      "confidence": 0.86,
+      "family": "areas_patterns_lines",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "ARCSLN01",
+      "next_action": "cover_by_renderer_style_contract_and_exclude_from_icon_art_gate",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "arc/sector line style primitive; renderer stroke contract, not a standalone icon",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "7",
+        "lookup_rcid": "32043",
+        "object_class": "ARCSLN",
+        "s52_instruction": "LC(ARCSLN01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "BCNCON81",
+      "classification": "renderable_from_s57_symbolspec",
+      "confidence": 0.78,
+      "family": "buoy_beacon_marks",
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "BCNCON81",
+      "next_action": "render_batch_from_symbolspec",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/BCNCON81.svg",
+          "status": "renderable_from_s57_symbolspec"
+        },
+        "generation": {
+          "confidence": 0.78,
+          "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+          "status": "render_batch_from_symbolspec"
+        },
+        "geometry": {
+          "colour_pattern": "horizontal_bands",
+          "colours": [
+            "blue",
+            "red",
+            "white",
+            "blue"
+          ],
+          "colpat": [
+            "1",
+            "2"
+          ],
+          "primitive": "conical_beacon_or_buoy_body",
+          "required_marks": [
+            "OBJNAM text remains separate label, not part of canonical icon"
+          ]
+        },
+        "id": "BCNCON81",
+        "kind": "symbol",
+        "name": "BCNCON81",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": true,
+          "visual_parity": "ready_for_batch96_render"
+        },
+        "s52_token": "BCNCON81",
+        "s57": {
+          "conditions": [
+            "BOYSHP1",
+            "COLPAT1,2",
+            "COLOUR5,3,1,5"
+          ],
+          "instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)",
+          "lookup_id": "1781",
+          "lookup_rcid": "93806",
+          "object_class": "BCNSPP"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "BCNCON81",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "chart-artifact"
+      }
+    },
+    {
+      "asset": "DANGER53",
+      "classification": "reference_blocked_official_symbol",
+      "confidence": 0.34,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DANGER53",
+      "next_action": "attach_tight_reference_before_render",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEDANGER03"
+        ],
+        "lookup_id": "1630",
+        "lookup_rcid": "31682",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(DANGER53)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/DANGER53.svg",
+          "status": "reference_blocked_official_symbol"
+        },
+        "generation": {
+          "confidence": 0.34,
+          "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+          "status": "attach_tight_reference_before_render"
+        },
+        "geometry": {
+          "colours": [
+            "black"
+          ],
+          "primitive": "unknown_danger_symbol",
+          "required_marks": [
+            "do not promote a generic diamond without official witness"
+          ]
+        },
+        "id": "DANGER53",
+        "kind": "symbol",
+        "name": "DANGER53",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": false,
+          "visual_parity": "blocked_until_reference_or_next_render"
+        },
+        "s52_token": "DANGER53",
+        "s57": {
+          "conditions": [
+            "$SCODEDANGER03"
+          ],
+          "instruction": "SY(DANGER53)",
+          "lookup_id": "1630",
+          "lookup_rcid": "31682",
+          "object_class": "$CSYMB"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "DANGER53",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "reference-blocked-or-manual-exception"
+      }
+    },
+    {
+      "asset": "DASH",
+      "classification": "style_primitive_not_standalone_icon",
+      "confidence": 0.86,
+      "family": "areas_patterns_lines",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DASH",
+      "next_action": "cover_by_renderer_style_contract_and_exclude_from_icon_art_gate",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "generic dashed line primitive used by many lookups; style contract, not a standalone icon",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "DATCVR01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DATCVR01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "data-coverage conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "100",
+        "lookup_rcid": "32136",
+        "object_class": "M_COVR",
+        "s52_instruction": "CS(DATCVR01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "DEPARE01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "wreck_rock_obstruction",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPARE01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "depth-area conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "40",
+        "lookup_rcid": "32076",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPARE01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "DEPARE02",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "wreck_rock_obstruction",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPARE02",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "depth-area conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "253",
+        "lookup_rcid": "32288",
+        "object_class": "depare",
+        "s52_instruction": "CS(DEPARE02)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "DEPCNT02",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "wreck_rock_obstruction",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPCNT02",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "depth-contour conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "728",
+        "lookup_rcid": "31804",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPCNT02)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "classification": "reference_blocked_official_symbol",
+      "confidence": 0.4,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DGPS01DRFSTA01",
+      "next_action": "split_or_attach_dgps_and_radio_station_reference",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+      "s57_structure": {
+        "conditions": [
+          "CATROS10"
+        ],
+        "lookup_id": "1232",
+        "lookup_rcid": "31284",
+        "object_class": "RDOSTA",
+        "s52_instruction": "SY(DGPS01DRFSTA01)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+          "status": "reference_blocked_official_symbol"
+        },
+        "generation": {
+          "confidence": 0.4,
+          "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+          "status": "split_or_attach_dgps_and_radio_station_reference"
+        },
+        "geometry": {
+          "colours": [
+            "magenta",
+            "black"
+          ],
+          "primitive": "dgps_radio_station_composite",
+          "required_marks": [
+            "DGPS/radio-station semantics must be confirmed before drawing"
+          ]
+        },
+        "id": "DGPS01DRFSTA01",
+        "kind": "symbol",
+        "name": "DGPS01DRFSTA01",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": false,
+          "visual_parity": "blocked_until_reference_or_next_render"
+        },
+        "s52_token": "DGPS01DRFSTA01",
+        "s57": {
+          "conditions": [
+            "CATROS10"
+          ],
+          "instruction": "SY(DGPS01DRFSTA01)",
+          "lookup_id": "1232",
+          "lookup_rcid": "31284",
+          "object_class": "RDOSTA"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "DGPS01DRFSTA01",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "reference-blocked-or-manual-exception"
+      }
+    },
+    {
+      "asset": "DOTT",
+      "classification": "style_primitive_not_standalone_icon",
+      "confidence": 0.86,
+      "family": "wreck_rock_obstruction",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DOTT",
+      "next_action": "cover_by_renderer_style_contract_and_exclude_from_icon_art_gate",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "LEGLIN02",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "LEGLIN02",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "leg-line conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "886",
+        "lookup_rcid": "31962",
+        "object_class": "leglin",
+        "s52_instruction": "CS(LEGLIN02)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "NEWOBJ 01",
+      "classification": "manual_exception_newobj_placeholder",
+      "confidence": 0.7,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ 01",
+      "next_action": "manual_exception_or_runtime_placeholder_policy",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1189",
+        "lookup_rcid": "31241",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ 01)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/NEWOBJ_01.svg",
+          "status": "manual_exception_newobj_placeholder"
+        },
+        "generation": {
+          "confidence": 0.7,
+          "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+          "status": "manual_exception_or_runtime_placeholder_policy"
+        },
+        "geometry": {
+          "colours": [
+            "magenta"
+          ],
+          "primitive": "new_object_placeholder",
+          "required_marks": [
+            "do not treat as finished chart symbology without product policy"
+          ]
+        },
+        "id": "NEWOBJ 01",
+        "kind": "symbol",
+        "name": "NEWOBJ 01",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": false,
+          "visual_parity": "blocked_until_reference_or_next_render"
+        },
+        "s52_token": "NEWOBJ 01",
+        "s57": {
+          "conditions": [],
+          "instruction": "SY(NEWOBJ 01)",
+          "lookup_id": "1189",
+          "lookup_rcid": "31241",
+          "object_class": "NEWOBJ"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "NEWOBJ 01",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "reference-blocked-or-manual-exception"
+      }
+    },
+    {
+      "asset": "NEWOBJ01",
+      "classification": "manual_exception_newobj_placeholder",
+      "confidence": 0.7,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ01",
+      "next_action": "manual_exception_or_runtime_placeholder_policy",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "119",
+        "lookup_rcid": "32155",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/NEWOBJ01.svg",
+          "status": "manual_exception_newobj_placeholder"
+        },
+        "generation": {
+          "confidence": 0.7,
+          "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+          "status": "manual_exception_or_runtime_placeholder_policy"
+        },
+        "geometry": {
+          "colours": [
+            "magenta"
+          ],
+          "line_style": "DASH,2,CHMGD",
+          "primitive": "new_object_area_placeholder",
+          "required_marks": [
+            "do not promote as normal chart artifact without product policy"
+          ]
+        },
+        "id": "NEWOBJ01",
+        "kind": "symbol",
+        "name": "NEWOBJ01",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": false,
+          "visual_parity": "blocked_until_reference_or_next_render"
+        },
+        "s52_token": "NEWOBJ01",
+        "s57": {
+          "conditions": [],
+          "instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)",
+          "lookup_id": "119",
+          "lookup_rcid": "32155",
+          "object_class": "NEWOBJ"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "NEWOBJ01",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "reference-blocked-or-manual-exception"
+      }
+    },
+    {
+      "asset": "OWNSHP02",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "OWNSHP02",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "own-ship conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1529",
+        "lookup_rcid": "31581",
+        "object_class": "ownshp",
+        "s52_instruction": "CS(OWNSHP02)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "QUAPOS01;TX(OBJNAM",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "areas_patterns_lines",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "QUAPOS01;TX(OBJNAM",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "quality-of-position/text conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1134",
+        "lookup_rcid": "31186",
+        "object_class": "LNDARE",
+        "s52_instruction": "SY(LNDARE01);CS(QUAPOS01;TX(OBJNAM,1,2,3,'15118',-1,-1,CHBLK,26))"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "RESARE01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "areas_patterns_lines",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESARE01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "restricted-area conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "342",
+        "lookup_rcid": "32377",
+        "object_class": "ACHARE",
+        "s52_instruction": "SY(ACHARE51);LC(ACHARE51);CS(RESARE01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "RESARE02",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "areas_patterns_lines",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESARE02",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "restricted-area conditional procedure",
+      "s57_structure": {
+        "conditions": [
+          "CATREA4"
+        ],
+        "lookup_id": "166",
+        "lookup_rcid": "93668",
+        "object_class": "RESARE",
+        "s52_instruction": "TX(OBJNAM,3,1,2,'15110',1,0,CHMGD,29);CS(RESARE02)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "RESTRN01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESTRN01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "restriction conditional procedure",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "SLCONS03",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "SLCONS03",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "shoreline-construction conditional procedure",
+      "s57_structure": {
+        "conditions": [
+          "CATSLC4"
+        ],
+        "lookup_id": "1564",
+        "lookup_rcid": "31616",
+        "object_class": "slcons",
+        "s52_instruction": "SY(PIER0001);CS(SLCONS03)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "SOLD",
+      "classification": "style_primitive_not_standalone_icon",
+      "confidence": 0.86,
+      "family": "wreck_rock_obstruction",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "SOLD",
+      "next_action": "cover_by_renderer_style_contract_and_exclude_from_icon_art_gate",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "generic solid line primitive used by many area/contour rules; style contract, not a standalone icon",
+      "s57_structure": {
+        "conditions": [
+          "DRVAL1?",
+          "DRVAL2?"
+        ],
+        "lookup_id": "39",
+        "lookup_rcid": "32075",
+        "object_class": "DEPARE",
+        "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "SYMINS01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "SYMINS01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "symbol-instruction conditional procedure",
+      "s57_structure": {
+        "conditions": [
+          "SYMINS"
+        ],
+        "lookup_id": "118",
+        "lookup_rcid": "32154",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "CS(SYMINS01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "TOPMARI1",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "lights_daymarks_topmarks",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "TOPMARI1",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "topmark conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1597",
+        "lookup_rcid": "31649",
+        "object_class": "topmar",
+        "s52_instruction": "CS(TOPMARI1)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "VEHTRF01",
+      "classification": "reference_blocked_official_symbol",
+      "confidence": 0.42,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch84.json",
+      "kind": "symbol",
+      "name": "VEHTRF01",
+      "next_action": "attach_tight_reference_before_render",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf",
+        "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/VEHTRF01.svg",
+          "status": "reference_blocked_official_symbol"
+        },
+        "generation": {
+          "confidence": 0.42,
+          "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+          "status": "attach_tight_reference_before_render"
+        },
+        "geometry": {
+          "colours": [
+            "gray"
+          ],
+          "line_style": "DASH,1,CHGRF",
+          "primitive": "vehicle_traffic_area",
+          "required_marks": [
+            "vehicle/traffic geometry must be confirmed before drawing"
+          ]
+        },
+        "id": "VEHTRF01",
+        "kind": "symbol",
+        "name": "VEHTRF01",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": false,
+          "visual_parity": "blocked_until_reference_or_next_render"
+        },
+        "s52_token": "VEHTRF01",
+        "s57": {
+          "conditions": [],
+          "instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)",
+          "lookup_id": "311",
+          "lookup_rcid": "32346",
+          "object_class": "vehtrf"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "VEHTRF01",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "reference-blocked-or-manual-exception"
+      }
+    },
+    {
+      "asset": "VESSEL01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "VESSEL01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "vessel conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1601",
+        "lookup_rcid": "31653",
+        "object_class": "vessel",
+        "s52_instruction": "CS(VESSEL01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "VRMEBL01",
+      "classification": "portrayal_rule_not_standalone_icon",
+      "confidence": 0.84,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "VRMEBL01",
+      "next_action": "track_in_rule_registry_not_icon_art_queue",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "VRM/EBL conditional procedure",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "877",
+        "lookup_rcid": "31953",
+        "object_class": "ebline",
+        "s52_instruction": "CS(VRMEBL01)"
+      },
+      "symbol_spec": null
+    },
+    {
+      "asset": "boyspp50",
+      "classification": "renderable_from_s57_symbolspec",
+      "confidence": 0.72,
+      "family": "ugly_attribute_edges",
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "boyspp50",
+      "next_action": "render_batch_from_symbolspec",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/boyspp50.svg",
+          "status": "renderable_from_s57_symbolspec"
+        },
+        "generation": {
+          "confidence": 0.72,
+          "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+          "status": "render_batch_from_symbolspec"
+        },
+        "geometry": {
+          "colours": [
+            "yellow"
+          ],
+          "conditions": [
+            "catwwm19",
+            "COLOUR6"
+          ],
+          "primitive": "special_purpose_buoy_or_waterway_marker",
+          "required_marks": [
+            "OBJNAM text remains separate label, not part of canonical icon"
+          ]
+        },
+        "id": "boyspp50",
+        "kind": "symbol",
+        "name": "boyspp50",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": true,
+          "visual_parity": "ready_for_batch96_render"
+        },
+        "s52_token": "boyspp50",
+        "s57": {
+          "conditions": [
+            "catwwm19",
+            "COLOUR6"
+          ],
+          "instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+          "lookup_id": "1383",
+          "lookup_rcid": "31435",
+          "object_class": "boywtw"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "boyspp50",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "chart-artifact"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source_table": "catalog/standard_source_table.json",
+  "status": "reference_resolution_batch96_written",
+  "summary": {
+    "classification_counts": {
+      "manual_exception_newobj_placeholder": 2,
+      "portrayal_rule_not_standalone_icon": 15,
+      "reference_blocked_official_symbol": 3,
+      "renderable_from_s57_symbolspec": 2,
+      "style_primitive_not_standalone_icon": 4
+    },
+    "manual_exception_newobj_placeholder": 2,
+    "portrayal_rule_not_standalone_icon": 15,
+    "reference_blocked_official_symbol": 3,
+    "renderable_from_s57_symbolspec": 2,
+    "rows_classified": 26,
+    "style_primitive_not_standalone_icon": 4,
+    "symbol_specs": 7
+  },
+  "symbol_specs": [
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/BCNCON81.svg",
+        "status": "renderable_from_s57_symbolspec"
+      },
+      "generation": {
+        "confidence": 0.78,
+        "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+        "status": "render_batch_from_symbolspec"
+      },
+      "geometry": {
+        "colour_pattern": "horizontal_bands",
+        "colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "colpat": [
+          "1",
+          "2"
+        ],
+        "primitive": "conical_beacon_or_buoy_body",
+        "required_marks": [
+          "OBJNAM text remains separate label, not part of canonical icon"
+        ]
+      },
+      "id": "BCNCON81",
+      "kind": "symbol",
+      "name": "BCNCON81",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "visual_parity": "ready_for_batch96_render"
+      },
+      "s52_token": "BCNCON81",
+      "s57": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)",
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "BCNCON81",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "chart-artifact"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/DANGER53.svg",
+        "status": "reference_blocked_official_symbol"
+      },
+      "generation": {
+        "confidence": 0.34,
+        "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+        "status": "attach_tight_reference_before_render"
+      },
+      "geometry": {
+        "colours": [
+          "black"
+        ],
+        "primitive": "unknown_danger_symbol",
+        "required_marks": [
+          "do not promote a generic diamond without official witness"
+        ]
+      },
+      "id": "DANGER53",
+      "kind": "symbol",
+      "name": "DANGER53",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "visual_parity": "blocked_until_reference_or_next_render"
+      },
+      "s52_token": "DANGER53",
+      "s57": {
+        "conditions": [
+          "$SCODEDANGER03"
+        ],
+        "instruction": "SY(DANGER53)",
+        "lookup_id": "1630",
+        "lookup_rcid": "31682",
+        "object_class": "$CSYMB"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "DANGER53",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "reference-blocked-or-manual-exception"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+        "status": "reference_blocked_official_symbol"
+      },
+      "generation": {
+        "confidence": 0.4,
+        "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+        "status": "split_or_attach_dgps_and_radio_station_reference"
+      },
+      "geometry": {
+        "colours": [
+          "magenta",
+          "black"
+        ],
+        "primitive": "dgps_radio_station_composite",
+        "required_marks": [
+          "DGPS/radio-station semantics must be confirmed before drawing"
+        ]
+      },
+      "id": "DGPS01DRFSTA01",
+      "kind": "symbol",
+      "name": "DGPS01DRFSTA01",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "visual_parity": "blocked_until_reference_or_next_render"
+      },
+      "s52_token": "DGPS01DRFSTA01",
+      "s57": {
+        "conditions": [
+          "CATROS10"
+        ],
+        "instruction": "SY(DGPS01DRFSTA01)",
+        "lookup_id": "1232",
+        "lookup_rcid": "31284",
+        "object_class": "RDOSTA"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "DGPS01DRFSTA01",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "reference-blocked-or-manual-exception"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/NEWOBJ_01.svg",
+        "status": "manual_exception_newobj_placeholder"
+      },
+      "generation": {
+        "confidence": 0.7,
+        "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+        "status": "manual_exception_or_runtime_placeholder_policy"
+      },
+      "geometry": {
+        "colours": [
+          "magenta"
+        ],
+        "primitive": "new_object_placeholder",
+        "required_marks": [
+          "do not treat as finished chart symbology without product policy"
+        ]
+      },
+      "id": "NEWOBJ 01",
+      "kind": "symbol",
+      "name": "NEWOBJ 01",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "visual_parity": "blocked_until_reference_or_next_render"
+      },
+      "s52_token": "NEWOBJ 01",
+      "s57": {
+        "conditions": [],
+        "instruction": "SY(NEWOBJ 01)",
+        "lookup_id": "1189",
+        "lookup_rcid": "31241",
+        "object_class": "NEWOBJ"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "NEWOBJ 01",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "reference-blocked-or-manual-exception"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/NEWOBJ01.svg",
+        "status": "manual_exception_newobj_placeholder"
+      },
+      "generation": {
+        "confidence": 0.7,
+        "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+        "status": "manual_exception_or_runtime_placeholder_policy"
+      },
+      "geometry": {
+        "colours": [
+          "magenta"
+        ],
+        "line_style": "DASH,2,CHMGD",
+        "primitive": "new_object_area_placeholder",
+        "required_marks": [
+          "do not promote as normal chart artifact without product policy"
+        ]
+      },
+      "id": "NEWOBJ01",
+      "kind": "symbol",
+      "name": "NEWOBJ01",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "visual_parity": "blocked_until_reference_or_next_render"
+      },
+      "s52_token": "NEWOBJ01",
+      "s57": {
+        "conditions": [],
+        "instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)",
+        "lookup_id": "119",
+        "lookup_rcid": "32155",
+        "object_class": "NEWOBJ"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "NEWOBJ01",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "reference-blocked-or-manual-exception"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/VEHTRF01.svg",
+        "status": "reference_blocked_official_symbol"
+      },
+      "generation": {
+        "confidence": 0.42,
+        "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+        "status": "attach_tight_reference_before_render"
+      },
+      "geometry": {
+        "colours": [
+          "gray"
+        ],
+        "line_style": "DASH,1,CHGRF",
+        "primitive": "vehicle_traffic_area",
+        "required_marks": [
+          "vehicle/traffic geometry must be confirmed before drawing"
+        ]
+      },
+      "id": "VEHTRF01",
+      "kind": "symbol",
+      "name": "VEHTRF01",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "visual_parity": "blocked_until_reference_or_next_render"
+      },
+      "s52_token": "VEHTRF01",
+      "s57": {
+        "conditions": [],
+        "instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)",
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "VEHTRF01",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "reference-blocked-or-manual-exception"
+    },
+    {
+      "asset": {
+        "canonical": "assets/svg/triad_generated/boyspp50.svg",
+        "status": "renderable_from_s57_symbolspec"
+      },
+      "generation": {
+        "confidence": 0.72,
+        "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+        "status": "render_batch_from_symbolspec"
+      },
+      "geometry": {
+        "colours": [
+          "yellow"
+        ],
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "primitive": "special_purpose_buoy_or_waterway_marker",
+        "required_marks": [
+          "OBJNAM text remains separate label, not part of canonical icon"
+        ]
+      },
+      "id": "boyspp50",
+      "kind": "symbol",
+      "name": "boyspp50",
+      "provenance": {
+        "allowed_sources": [
+          "OpenCPN S-52 lookup metadata",
+          "S-57 condition metadata",
+          "future public-domain Chart No.1 or locally rendered tight witness when required"
+        ],
+        "forbidden_sources": [
+          "do not import OpenCPN raster pixels as canonical art"
+        ],
+        "origin": "generated-owned-artwork-plan"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "visual_parity": "ready_for_batch96_render"
+      },
+      "s52_token": "boyspp50",
+      "s57": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw"
+      },
+      "source_refs": {
+        "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+        "s52": "boyspp50",
+        "standard_source_table": "catalog/standard_source_table.json"
+      },
+      "tier": "chart-artifact"
+    }
+  ],
+  "task_id": "FORGE-15"
+}

@@ -1,0 +1,572 @@
+{
+  "schema_version": 1,
+  "status": "archived_first_triad_llm_judge_batch",
+  "summary": {
+    "failed_repaired": 26,
+    "judged": 30,
+    "passed_without_repair": 4,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "verdicts": [
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHARE02.svg",
+      "confidence": 0.96,
+      "expected": "Small magenta S-52/S-101 anchorage/obstruction anchor motif: magenta vertical shank, crossbar, and compact flukes; preserve magenta hazard/area styling.",
+      "judge_comments": "Semantic anchor is present, but colour and scale are wrong versus S-101/OpenCPN. Aqua Map anchoring-prohibited is not the right primary reference for this row.",
+      "observed": "Black large anchor with circular ring and rounded flukes.",
+      "pass": false,
+      "required_change": "Redraw from S-101/OpenCPN ACHARE02: compact magenta anchor, no black stroke, correct tiny-chart proportions.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_scale",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/ACHARE02.svg",
+        "s101:PortrayalCatalog/Symbols/ACHARE02.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHARE02__day.png"
+      ],
+      "symbol_id": "ACHARE02"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHARE51.svg",
+      "confidence": 0.97,
+      "expected": "Boundary anchorage area symbol is a pale/magenta S-52 anchor/boundary reference, larger than ACHARE02 but still magenta and shaped like S-101 ACHARE51.",
+      "judge_comments": "Candidate reuses the wrong black point-anchor and ignores the ACHARE51 S-101/OpenCPN boundary form.",
+      "observed": "Same black large anchor reused from ACHARE02.",
+      "pass": false,
+      "required_change": "Redraw ACHARE51 specifically from S-101/OpenCPN, preserving magenta boundary colour and the broader anchor outline.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "duplicate_wrong_symbol",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/ACHARE51.svg",
+        "s101:PortrayalCatalog/Symbols/ACHARE51.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHARE51__day.png"
+      ],
+      "symbol_id": "ACHARE51"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHBRT07.svg",
+      "confidence": 0.95,
+      "expected": "Designated anchor berth reference uses a compact magenta anchor with circular berth ring and crossbar details.",
+      "judge_comments": "The berth ring detail exists in the source but the candidate is black, oversized, and not the S-101 berth silhouette.",
+      "observed": "Same black generic anchor reused.",
+      "pass": false,
+      "required_change": "Redraw as ACHBRT07: magenta compact anchor with circular berth ring and reference-matched proportions.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "missing_berth_detail",
+        "duplicate_wrong_symbol",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/ACHBRT07.svg",
+        "s101:PortrayalCatalog/Symbols/ACHBRT07.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHBRT07__day.png"
+      ],
+      "symbol_id": "ACHBRT07"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHPNT01.svg",
+      "confidence": 0.92,
+      "expected": "OpenCPN/S-52 anchor-point symbol is compact light-magenta/purple anchor, not black.",
+      "judge_comments": "Semantic anchor is plausible but not colour-safe or chart-standard for this row.",
+      "observed": "Black anchor with large ring and heavy stroke.",
+      "pass": false,
+      "required_change": "Redraw ACHPNT01 as compact magenta/purple anchor point; keep it visually distinct from anchorage area variants.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_scale",
+        "semantic_variant_not_distinguished"
+      ],
+      "source_refs_used": [
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHPNT01__day.png"
+      ],
+      "symbol_id": "ACHPNT01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHRES61.svg",
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN ACHRES61 shows a magenta anchorage-restriction symbol with diagonal prohibition slash plus caution/other-caution mark.",
+      "judge_comments": "Candidate omits the restriction semantics entirely; this is a navigation-safety failure.",
+      "observed": "Plain black anchor only; no prohibition slash/caution modifier.",
+      "pass": false,
+      "required_change": "Redraw with magenta anchor, diagonal restriction slash, and ACHRES61 caution modifier exactly as S-101/OpenCPN shows.",
+      "safety_reason_codes": [
+        "missing_hazard_modifier",
+        "wrong_colour_family",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/ACHRES61.svg",
+        "s101:PortrayalCatalog/Symbols/ACHRES61.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHRES61__day.png"
+      ],
+      "symbol_id": "ACHRES61"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ACHRES71.svg",
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN ACHRES71 shows magenta anchorage restriction with diagonal slash and information marker.",
+      "judge_comments": "Candidate collapses restricted anchoring into ordinary anchoring, which is unsafe.",
+      "observed": "Plain black anchor only; no information/restriction modifier.",
+      "pass": false,
+      "required_change": "Redraw with magenta anchor, diagonal restriction slash, and ACHRES71 information marker from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "missing_restriction_modifier",
+        "wrong_colour_family",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/ACHRES71.svg",
+        "s101:PortrayalCatalog/Symbols/ACHRES71.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHRES71__day.png"
+      ],
+      "symbol_id": "ACHRES71"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ADDMRK01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN ADDMRK01 is a small right-facing additional-mark triangle/board element, not a diamond hazard marker.",
+      "judge_comments": "Generic placeholder; no match to direction or board geometry.",
+      "observed": "Black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with right-facing triangular additional mark matching OpenCPN ADDMRK01 proportions and light fill/black edge.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_orientation",
+        "wrong_marine_silhouette"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK01__day.png"
+      ],
+      "symbol_id": "ADDMRK01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ADDMRK02.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN ADDMRK02 is the left-facing additional-mark triangle/board element.",
+      "judge_comments": "Candidate does not encode left direction and duplicates ADDMRK01.",
+      "observed": "Black diamond with white center dot, identical to ADDMRK01.",
+      "pass": false,
+      "required_change": "Replace with left-facing triangular additional mark matching OpenCPN ADDMRK02.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_orientation",
+        "duplicate_wrong_symbol"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK02__day.png"
+      ],
+      "symbol_id": "ADDMRK02"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ADDMRK05.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN ADDMRK05 is a horizontal/bottom board element.",
+      "judge_comments": "Candidate is unrelated to a bottom board mark.",
+      "observed": "Black diamond with white center dot, identical to ADDMRK01/02.",
+      "pass": false,
+      "required_change": "Replace with horizontal bottom board/plate mark matching OpenCPN ADDMRK05.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_marine_silhouette",
+        "duplicate_wrong_symbol"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK05__day.png"
+      ],
+      "symbol_id": "ADDMRK05"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AIRARE02.svg",
+      "confidence": 0.98,
+      "expected": "S-101/OpenCPN airport area pattern is a brown/land-colour circle containing an airplane silhouette.",
+      "judge_comments": "Candidate is explicitly a placeholder and misses the aircraft silhouette.",
+      "observed": "Dashed square with grey plus/cross placeholder.",
+      "pass": false,
+      "required_change": "Redraw AIRARE02 as circular land-colour airport symbol with centered aircraft silhouette from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "placeholder_art",
+        "wrong_marine_silhouette",
+        "missing_required_pictogram"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/AIRARE02.svg",
+        "s101:PortrayalCatalog/Symbols/AIRARE02.svg",
+        "opencpn:out/opencpn_s52_reference/AIRARE02__day.png"
+      ],
+      "symbol_id": "AIRARE02"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AISDEF01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN AISDEF01 is a green AIS target shape with unknown heading/course/question-mark styling.",
+      "judge_comments": "Wrong colour family and wrong AIS target geometry; could be confused with generic hazard/notice mark.",
+      "observed": "Large magenta diamond with white center dot.",
+      "pass": false,
+      "required_change": "Redraw as AISDEF01 from OpenCPN: green AIS target glyph with unknown-heading/question indication.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_colour_family",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/AISDEF01__day.png"
+      ],
+      "symbol_id": "AISDEF01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AISONE01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN AISONE01 is a small green one-minute vector tick/mark.",
+      "judge_comments": "Candidate is unrelated to vector time marks.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with small green one-minute AIS vector mark matching OpenCPN.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_scale",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/AISONE01__day.png"
+      ],
+      "symbol_id": "AISONE01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AISSIX01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN AISSIX01 is a small green six-minute AIS vector mark, visually distinct from AISONE01.",
+      "judge_comments": "Candidate is unrelated and duplicates the one-minute candidate.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with small green six-minute AIS vector mark matching OpenCPN and distinct from AISONE01.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "duplicate_wrong_symbol",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/AISSIX01__day.png"
+      ],
+      "symbol_id": "AISSIX01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AISSLP01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN AISSLP01 is a green sleeping AIS target glyph.",
+      "judge_comments": "Candidate gives no sleeping/target semantics and uses wrong colour.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Redraw as green sleeping AIS target matching OpenCPN silhouette.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_colour_family",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/AISSLP01__day.png"
+      ],
+      "symbol_id": "AISSLP01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/AISVES01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN AISVES01 is a green active AIS vessel target with vector/heading line semantics.",
+      "judge_comments": "Candidate omits vessel target and vector/heading semantics.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Redraw as green active AIS vessel target with heading/vector shape from OpenCPN.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "missing_vector_semantics",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/AISVES01__day.png"
+      ],
+      "symbol_id": "AISVES01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ARPATG01.svg",
+      "confidence": 0.98,
+      "expected": "OpenCPN ARPATG01 is a green ARPA target marker/circle/target glyph.",
+      "judge_comments": "Generic diamond does not match radar target symbology.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with OpenCPN ARPA target silhouette in the correct green target style.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_target_class",
+        "wrong_marine_silhouette"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ARPATG01__day.png"
+      ],
+      "symbol_id": "ARPATG01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ARPONE01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN ARPONE01 is a tiny green one-minute ARPA vector tick/line.",
+      "judge_comments": "Candidate is unrelated and too large.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with small green one-minute ARPA vector tick matching OpenCPN.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "wrong_scale",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ARPONE01__day.png"
+      ],
+      "symbol_id": "ARPONE01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/ARPSIX01.svg",
+      "confidence": 0.99,
+      "expected": "OpenCPN ARPSIX01 is a tiny green six-minute ARPA vector tick/line.",
+      "judge_comments": "Candidate is unrelated and duplicates ARPONE01.",
+      "observed": "Large black diamond with white center dot.",
+      "pass": false,
+      "required_change": "Replace with small green six-minute ARPA vector tick matching OpenCPN and distinct from ARPONE01.",
+      "safety_reason_codes": [
+        "generic_placeholder",
+        "duplicate_wrong_symbol",
+        "wrong_target_class"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/ARPSIX01__day.png"
+      ],
+      "symbol_id": "ARPSIX01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNCAR01.svg",
+      "confidence": 0.86,
+      "expected": "North cardinal topmark: two cones/triangles points up; yellow fill with black outline in references.",
+      "judge_comments": "Orientation and semantic topmark are correct. Stroke/scale should be normalized later, but this is not a wrong-quadrant hazard.",
+      "observed": "Two yellow triangles both pointing up, black outline, Helm stroke heavier/larger than source.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass can reduce stroke/scale to match S-101/OpenCPN proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNCAR01.svg",
+        "s101:PortrayalCatalog/Symbols/BCNCAR01.svg",
+        "aquamap:North cardinal mark:reference_sources/aquamap_map_symbols/images/BCNCARBY1.png",
+        "opencpn:out/opencpn_s52_reference/BCNCAR01__day.png"
+      ],
+      "symbol_id": "BCNCAR01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNCAR02.svg",
+      "confidence": 0.86,
+      "expected": "East cardinal topmark: two cones points away from each other.",
+      "judge_comments": "Orientation is correct and matches S-101/OpenCPN/Aqua Map. Style can be tightened later.",
+      "observed": "Two yellow triangles pointing away from each other; black outline, Helm stroke heavier/larger than source.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass can reduce stroke/scale.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNCAR02.svg",
+        "s101:PortrayalCatalog/Symbols/BCNCAR02.svg",
+        "aquamap:East cardinal mark:reference_sources/aquamap_map_symbols/images/BCNCARBYB1.png",
+        "opencpn:out/opencpn_s52_reference/BCNCAR02__day.png"
+      ],
+      "symbol_id": "BCNCAR02"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNCAR03.svg",
+      "confidence": 0.87,
+      "expected": "South cardinal topmark: two cones/triangles points down.",
+      "judge_comments": "Correct quadrant/topmark orientation; passes safety semantics.",
+      "observed": "Two yellow triangles both pointing down; black outline, Helm stroke heavier/larger than source.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass can reduce stroke/scale.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNCAR03.svg",
+        "s101:PortrayalCatalog/Symbols/BCNCAR03.svg",
+        "aquamap:South cardinal mark:reference_sources/aquamap_map_symbols/images/BCNCARYB1.png",
+        "opencpn:out/opencpn_s52_reference/BCNCAR03__day.png"
+      ],
+      "symbol_id": "BCNCAR03"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNCAR04.svg",
+      "confidence": 0.86,
+      "expected": "West cardinal topmark: two cones points toward each other.",
+      "judge_comments": "Correct quadrant/topmark orientation; passes safety semantics.",
+      "observed": "Two yellow triangles pointing toward each other; black outline, Helm stroke heavier/larger than source.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass can reduce stroke/scale.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNCAR04.svg",
+        "s101:PortrayalCatalog/Symbols/BCNCAR04.svg",
+        "aquamap:West cardinal mark:reference_sources/aquamap_map_symbols/images/BCNCARYBY1.png",
+        "opencpn:out/opencpn_s52_reference/BCNCAR04__day.png"
+      ],
+      "symbol_id": "BCNCAR04"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNCON81.svg",
+      "confidence": 0.7,
+      "expected": "BCNCON81 must be verified against its exact OpenCPN/S-52 reference before approval; packet metadata says BCNSPP/BOYSHP conditions, not enough to approve a buoy-body drawing.",
+      "judge_comments": "No local reference render was available and the candidate may be using a buoy body for a beacon symbol. Conservative fail.",
+      "observed": "Large conical buoy body filled blue/red/white stripes; no local OpenCPN reference render found.",
+      "pass": false,
+      "required_change": "Regenerate source reference for BCNCON81, then redraw exactly to the reference; do not approve from inferred metadata alone.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_traceability",
+        "possible_object_class_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BCNCON81__day.png"
+      ],
+      "symbol_id": "BCNCON81"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNDEF13.svg",
+      "confidence": 0.96,
+      "expected": "S-101/OpenCPN default beacon is a small gray rectangular beacon/unknown marker with magenta question mark, not a large striped body.",
+      "judge_comments": "Candidate shape, scale, and colour bands do not match the default beacon reference.",
+      "observed": "Large tapered beacon body with black/magenta/gray horizontal fills.",
+      "pass": false,
+      "required_change": "Redraw BCNDEF13 from S-101/OpenCPN: compact default beacon rectangle plus magenta question mark/unknown styling.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale",
+        "wrong_colour_pattern"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNDEF13.svg",
+        "s101:PortrayalCatalog/Symbols/BCNDEF13.svg",
+        "opencpn:out/opencpn_s52_reference/BCNDEF13__day.png"
+      ],
+      "symbol_id": "BCNDEF13"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN01.svg",
+      "confidence": 0.95,
+      "expected": "S-101/OpenCPN beacon general full-chart is a small black post with circle/base marks, not a coloured body.",
+      "judge_comments": "Candidate invents colour bands and body shape absent from the reference.",
+      "observed": "Large tapered beacon body filled black/blue with stem.",
+      "pass": false,
+      "required_change": "Redraw as compact black general beacon post/circle silhouette from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_colour_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNGEN01.svg",
+        "s101:PortrayalCatalog/Symbols/BCNGEN01.svg",
+        "opencpn:out/opencpn_s52_reference/BCNGEN01__day.png"
+      ],
+      "symbol_id": "BCNGEN01"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN03.svg",
+      "confidence": 0.96,
+      "expected": "S-101/OpenCPN paper-chart beacon default is a compact black beacon/post plus magenta question mark/unknown marker.",
+      "judge_comments": "Candidate misses the question-mark/default-paper beacon form and uses an unrelated filled tower.",
+      "observed": "Large tapered beacon body filled black/magenta.",
+      "pass": false,
+      "required_change": "Redraw BCNGEN03 from S-101/OpenCPN: compact beacon/post with magenta question mark marker.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale",
+        "missing_question_mark_modifier"
+      ],
+      "source_refs_used": [
+        "s101:assets/svg/source_priority/s101_exact/BCNGEN03.svg",
+        "s101:PortrayalCatalog/Symbols/BCNGEN03.svg",
+        "opencpn:out/opencpn_s52_reference/BCNGEN03__day.png"
+      ],
+      "symbol_id": "BCNGEN03"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN05.svg",
+      "confidence": 0.92,
+      "expected": "OpenCPN white beacon general is a small compact beacon/post symbol with white/outlined colour semantics.",
+      "judge_comments": "Colour is plausible but silhouette/scale is not the OpenCPN chart-standard mark.",
+      "observed": "Large white tapered beacon body with black outline and stem.",
+      "pass": false,
+      "required_change": "Redraw as compact OpenCPN BCNGEN05 beacon/post, preserving white colour semantics without oversized tower body.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN05__day.png"
+      ],
+      "symbol_id": "BCNGEN05"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN60.svg",
+      "confidence": 0.92,
+      "expected": "OpenCPN red beacon general is a small compact beacon/post symbol with red colour cue.",
+      "judge_comments": "Colour family is plausible, but the candidate uses wrong silhouette and scale.",
+      "observed": "Large red tapered beacon body with black outline and stem.",
+      "pass": false,
+      "required_change": "Redraw as compact OpenCPN BCNGEN60 beacon/post with red cue.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN60__day.png"
+      ],
+      "symbol_id": "BCNGEN60"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN61.svg",
+      "confidence": 0.92,
+      "expected": "OpenCPN green beacon general is a small compact beacon/post symbol with green colour cue.",
+      "judge_comments": "Colour family is plausible, but the silhouette and scale are not the reference.",
+      "observed": "Large green tapered beacon body with black outline and stem.",
+      "pass": false,
+      "required_change": "Redraw as compact OpenCPN BCNGEN61 beacon/post with green cue.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN61__day.png"
+      ],
+      "symbol_id": "BCNGEN61"
+    },
+    {
+      "candidate_svg": "assets/svg/triad_generated/BCNGEN64.svg",
+      "confidence": 0.93,
+      "expected": "OpenCPN red/white beacon general is a small compact beacon/post symbol with red/white cue.",
+      "judge_comments": "Candidate is an oversized body rendering and does not match the chart-standard compact mark.",
+      "observed": "Large red-over-white tapered beacon body with black outline and stem.",
+      "pass": false,
+      "required_change": "Redraw as compact OpenCPN BCNGEN64 beacon/post with red/white cue; avoid buoy/tower body unless the exact reference shows it.",
+      "safety_reason_codes": [
+        "wrong_marine_silhouette",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN64__day.png"
+      ],
+      "symbol_id": "BCNGEN64"
+    }
+  ]
+}

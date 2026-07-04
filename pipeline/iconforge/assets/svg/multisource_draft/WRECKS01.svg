@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="WRECKS01 wreck">
+  <title>WRECKS01 wreck</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="WRECKS01" data-shape="wreck">
+<path d="M18 42 L7.5 28 L53 42 L35.5 42 L35.15 40.6 L34.45 39.55 L33.4 38.85 L32 38.5 L29.9 39.2 L28.8 40.25 L28.5 42 Z" fill="var(--black)" stroke="var(--black)" stroke-width="1.2" stroke-linejoin="round"/>
+<circle cx="32" cy="42" r="3.5" fill="none" stroke="var(--black)" stroke-width="5.6"/>
+<path d="M7.5 42 H28.5 M35.5 42 H53 M31.3 35 L35.5 21" fill="none" stroke="var(--black)" stroke-width="5.6" stroke-linecap="round" stroke-linejoin="round"/>
+  </g>
+</svg>

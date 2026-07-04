@@ -1,0 +1,2689 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-009-local",
+  "batch_id": "standard_judge_batch_009",
+  "created_at": "2026-07-01T00:00:00Z",
+  "project": "vulkan",
+  "selection": {
+    "count": 50,
+    "criteria": "first 50 current rows where helm_candidate.candidate_status == pending_judge after batch008 archive; excludes repair queue, repaired rerun, no-candidate, and already passed rows",
+    "end_symbol": "NMKPRH14",
+    "queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "start_symbol": "LOCMAG51",
+    "symbol_ids": [
+      "LOCMAG51",
+      "LOWACC01",
+      "MAGVAR01",
+      "MAGVAR51",
+      "MARCUL02",
+      "MONUMT02",
+      "MONUMT12",
+      "MORFAC03",
+      "MORFAC04",
+      "MSTCON04",
+      "MSTCON14",
+      "NEWOBJ 01",
+      "NEWOBJ01",
+      "NMKINF01",
+      "NMKINF02",
+      "NMKINF03",
+      "NMKINF04",
+      "NMKINF05",
+      "NMKINF06",
+      "NMKINF19",
+      "NMKINF20",
+      "NMKINF21",
+      "NMKINF22",
+      "NMKINF23",
+      "NMKINF24",
+      "NMKINF25",
+      "NMKINF26",
+      "NMKINF27",
+      "NMKINF28",
+      "NMKINF29",
+      "NMKINF38",
+      "NMKINF40",
+      "NMKINF43",
+      "NMKINF44",
+      "NMKINF45",
+      "NMKINF46",
+      "NMKINF47",
+      "NMKINF48",
+      "NMKINF49",
+      "NMKINF50",
+      "NMKINF53",
+      "NMKPRH02",
+      "NMKPRH06",
+      "NMKPRH07",
+      "NMKPRH08",
+      "NMKPRH10",
+      "NMKPRH11",
+      "NMKPRH12",
+      "NMKPRH13",
+      "NMKPRH14"
+    ]
+  },
+  "summary": {
+    "blockers": [
+      "Generic diamond placeholders remain for magnetic/monument/mast/new-object rows and most notice marks.",
+      "Notice marks mostly lack the required rectangular blue/red/green board container and interior pictogram/text/diagram.",
+      "Mooring dolphin rows are confused with circular mooring-buoy/ring geometry.",
+      "NEWOBJ rows lack usable provider reference renders and cannot be visually approved from placeholder artwork."
+    ],
+    "fail": 50,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 0
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.94,
+      "expected": "Magnetic-anomaly line/area pick site should use the magenta local-magnetism reference shape, not a generic point diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the LOCMAG51 magnetic-anomaly line/area reference shape and magenta treatment.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LOCMAG51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LOCMAG51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LOCMAG51",
+          "path": "assets/svg/source_priority/s101_exact/LOCMAG51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "LOCMAG51",
+          "path": "PortrayalCatalog/Symbols/LOCMAG51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "cursor pick site for a magnetic anomaly along a line or over an area",
+          "path": "out/opencpn_s52_reference/LOCMAG51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LOCMAG51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LOCMAG51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/LOCMAG51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LOCMAG51",
+      "symbol_id": "LOCMAG51"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.96,
+      "expected": "Safety contour of low positional accuracy should show the black question-mark/low-accuracy contour cue from OpenCPN/S-101.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the low-accuracy contour/question-mark reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_question_mark_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LOWACC01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LOWACC01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LOWACC01",
+          "path": "assets/svg/source_priority/s101_exact/LOWACC01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "LOWACC01",
+          "path": "PortrayalCatalog/Symbols/LOWACC01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "safety contour of low accuracy in position",
+          "path": "out/opencpn_s52_reference/LOWACC01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LOWACC01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LOWACC01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/LOWACC01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LOWACC01",
+      "symbol_id": "LOWACC01"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.95,
+      "expected": "Magnetic-variation point pick site should use the magenta flag/variation marker from the references.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the MAGVAR01 magnetic-variation point reference glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MAGVAR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MAGVAR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MAGVAR01",
+          "path": "assets/svg/source_priority/s101_exact/MAGVAR01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MAGVAR01",
+          "path": "PortrayalCatalog/Symbols/MAGVAR01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "cursor pick site for magnetic variation at a point",
+          "path": "out/opencpn_s52_reference/MAGVAR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MAGVAR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MAGVAR01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MAGVAR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MAGVAR01",
+      "symbol_id": "MAGVAR01"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.95,
+      "expected": "Magnetic-variation line/area pick site should use the magenta line/area variation marker, not a point diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the MAGVAR51 magnetic-variation line/area reference glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MAGVAR51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MAGVAR51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MAGVAR51",
+          "path": "assets/svg/source_priority/s101_exact/MAGVAR51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MAGVAR51",
+          "path": "PortrayalCatalog/Symbols/MAGVAR51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "cursor pick site for magnetic variation along a line or over an area",
+          "path": "out/opencpn_s52_reference/MAGVAR51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MAGVAR51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MAGVAR51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MAGVAR51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MAGVAR51",
+      "symbol_id": "MAGVAR51"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.9,
+      "expected": "Marine farm pattern should match the reference net/farm pattern cell, not a dashed node grid.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a dashed square grid with black circular nodes.",
+      "pass": false,
+      "required_change": "Redraw as the MARCUL02 marine-farm pattern from S-101/OpenCPN, preserving the reference line/net motif.",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "wrong_shape",
+        "reference_mismatch",
+        "unproven_visual_parity"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MARCUL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MARCUL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MARCUL02",
+          "path": "assets/svg/source_priority/s101_exact/MARCUL02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MARCUL02",
+          "path": "PortrayalCatalog/Symbols/MARCUL02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "pattern of symbols for a marine farm",
+          "path": "out/opencpn_s52_reference/MARCUL02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MARCUL02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MARCUL02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/MARCUL02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MARCUL02",
+      "symbol_id": "MARCUL02"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.96,
+      "expected": "Monument should show the brown monument/structure silhouette in the reference.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the MONUMT02 monument silhouette and reference-defined color.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MONUMT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MONUMT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MONUMT02",
+          "path": "assets/svg/source_priority/s101_exact/MONUMT02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MONUMT02",
+          "path": "PortrayalCatalog/Symbols/MONUMT02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "monument",
+          "path": "out/opencpn_s52_reference/MONUMT02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MONUMT02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MONUMT02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MONUMT02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MONUMT02",
+      "symbol_id": "MONUMT02"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.96,
+      "expected": "Conspicuous monument should show the black conspicuous monument silhouette, not a generic diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the black conspicuous MONUMT12 monument silhouette.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MONUMT12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MONUMT12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MONUMT12",
+          "path": "assets/svg/source_priority/s101_exact/MONUMT12.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MONUMT12",
+          "path": "PortrayalCatalog/Symbols/MONUMT12.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous monument",
+          "path": "out/opencpn_s52_reference/MONUMT12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MONUMT12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MONUMT12__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MONUMT12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MONUMT12",
+      "symbol_id": "MONUMT12"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.93,
+      "expected": "Mooring dolphin should show the dolphin/pile facility shape, with AquaMap pile/mooring witnesses and OpenCPN square dolphin cue; it is not a circular mooring buoy.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a large black ring/circle.",
+      "pass": false,
+      "required_change": "Redraw as the MORFAC03 mooring dolphin/pile reference symbol rather than a black ring.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "unsafe_symbol_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MORFAC03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MORFAC03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MORFAC03",
+          "path": "assets/svg/source_priority/s101_exact/MORFAC03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MORFAC03",
+          "path": "PortrayalCatalog/Symbols/MORFAC03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "mooring dolphin",
+          "path": "out/opencpn_s52_reference/MORFAC03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MORFAC03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MORFAC03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/MORFAC03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MORFAC03",
+      "symbol_id": "MORFAC03"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.94,
+      "expected": "Deviation mooring dolphin should show the tripod/dolphin structure in OpenCPN, not a circular mooring buoy.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a large black ring/circle.",
+      "pass": false,
+      "required_change": "Redraw as the MORFAC04 deviation mooring dolphin structure from the references.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "unsafe_symbol_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MORFAC04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MORFAC04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MORFAC04",
+          "path": "assets/svg/source_priority/s101_exact/MORFAC04.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MORFAC04",
+          "path": "PortrayalCatalog/Symbols/MORFAC04.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "deviation mooring dolphin",
+          "path": "out/opencpn_s52_reference/MORFAC04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MORFAC04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MORFAC04__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/MORFAC04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MORFAC04",
+      "symbol_id": "MORFAC04"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.96,
+      "expected": "Mast should be the brown mast/needle silhouette from the references.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the MSTCON04 mast silhouette and reference-defined color.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MSTCON04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MSTCON04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MSTCON04",
+          "path": "assets/svg/source_priority/s101_exact/MSTCON04.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MSTCON04",
+          "path": "PortrayalCatalog/Symbols/MSTCON04.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "mast",
+          "path": "out/opencpn_s52_reference/MSTCON04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MSTCON04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MSTCON04__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MSTCON04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MSTCON04",
+      "symbol_id": "MSTCON04"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.96,
+      "expected": "Conspicuous mast should be the black mast/needle silhouette from the references.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the black conspicuous MSTCON14 mast silhouette.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "MSTCON14",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "MSTCON14",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "MSTCON14",
+          "path": "assets/svg/source_priority/s101_exact/MSTCON14.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "MSTCON14",
+          "path": "PortrayalCatalog/Symbols/MSTCON14.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous mast",
+          "path": "out/opencpn_s52_reference/MSTCON14__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/MSTCON14.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/MSTCON14__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/MSTCON14.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:MSTCON14",
+      "symbol_id": "MSTCON14"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.78,
+      "expected": "NEWOBJ 01 cannot be visually approved without a real provider reference; a generic diamond does not prove class or shape parity.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot, and no usable OpenCPN/S-101 render was available in the reference set.",
+      "pass": false,
+      "required_change": "Provide a valid reference render/crop for NEWOBJ 01 and replace the placeholder with that reference-defined shape.",
+      "safety_reason_codes": [
+        "placeholder_artwork",
+        "missing_provider_reference",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NEWOBJ 01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NEWOBJ 01",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "NEWOBJ 01",
+          "path": "out/opencpn_s52_reference/NEWOBJ_01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NEWOBJ_01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NEWOBJ_01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ_01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NEWOBJ 01",
+      "symbol_id": "NEWOBJ 01"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.78,
+      "expected": "NEWOBJ01 cannot be visually approved without a real provider reference; a generic diamond does not prove class or shape parity.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot, and no usable OpenCPN/S-101 render was available in the reference set.",
+      "pass": false,
+      "required_change": "Provide a valid reference render/crop for NEWOBJ01 and replace the placeholder with that reference-defined shape.",
+      "safety_reason_codes": [
+        "placeholder_artwork",
+        "missing_provider_reference",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NEWOBJ01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NEWOBJ01",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "NEWOBJ01",
+          "path": "out/opencpn_s52_reference/NEWOBJ01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NEWOBJ01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NEWOBJ01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NEWOBJ01",
+      "symbol_id": "NEWOBJ01"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.97,
+      "expected": "Entry permitted should be a rectangular green/white notice-board sign, not a diamond marker.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a green diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the NMKINF01 rectangular entry-permitted sign with the green/white vertical-bar pattern.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "entry permitted",
+          "path": "out/opencpn_s52_reference/NMKINF01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF01",
+      "symbol_id": "NMKINF01"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.98,
+      "expected": "Overhead power-line crossing notice should be a blue rectangular board with the white lightning glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF02 notice board and lightning glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, overhead power line crossing",
+          "path": "out/opencpn_s52_reference/NMKINF02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF02",
+      "symbol_id": "NMKINF02"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.98,
+      "expected": "Weir notice should be a blue rectangular board with the weir/bar glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF03 notice board and weir glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, weir",
+          "path": "out/opencpn_s52_reference/NMKINF03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF03",
+      "symbol_id": "NMKINF03"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.98,
+      "expected": "Cable ferry notice should be a blue rectangular board with ferry/cable glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF04 cable-ferry notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, cable ferry",
+          "path": "out/opencpn_s52_reference/NMKINF04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF04__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF04",
+      "symbol_id": "NMKINF04"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.98,
+      "expected": "Ferry notice should be a blue rectangular board with ferry glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF05 ferry notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF05",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF05",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, ferry",
+          "path": "out/opencpn_s52_reference/NMKINF05__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF05.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF05__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF05.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF05",
+      "symbol_id": "NMKINF05"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.98,
+      "expected": "Berthing permitted should be a blue rectangular board with the white berth/P-style glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF06 berthing-permitted notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF06",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF06",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, berthing permitted",
+          "path": "out/opencpn_s52_reference/NMKINF06__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF06.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF06__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF06.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF06",
+      "symbol_id": "NMKINF06"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.96,
+      "expected": "Anchoring permitted should be a blue rectangular notice board containing the white anchor glyph; the sign container and blue color are missing.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a standalone black anchor.",
+      "pass": false,
+      "required_change": "Place the anchor inside the NMKINF19 blue notice-board frame with the reference white anchor treatment.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_notice_board"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF19",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF19",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, anchoring permitted",
+          "path": "out/opencpn_s52_reference/NMKINF19__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF19.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF19__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF19.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF19",
+      "symbol_id": "NMKINF19"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.98,
+      "expected": "Making fast to the bank permitted should be a blue rectangular notice board with the mooring/bank glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF20 making-fast notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF20",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF20",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, making fast to the bank permitted",
+          "path": "out/opencpn_s52_reference/NMKINF20__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF20.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF20__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF20.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF20",
+      "symbol_id": "NMKINF20"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.98,
+      "expected": "Loading/unloading vehicles should be a blue rectangular notice board with car/loading glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF21 loading/unloading notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF21",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF21",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, facilities for loading and unloading vehicles",
+          "path": "out/opencpn_s52_reference/NMKINF21__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF21.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF21__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF21.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF21",
+      "symbol_id": "NMKINF21"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.98,
+      "expected": "Turning permitted should be a blue rectangular notice board with circular turn arrow glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the blue NMKINF22 turning-permitted notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF22",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF22",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, turning permitted",
+          "path": "out/opencpn_s52_reference/NMKINF22__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF22.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF22__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF22.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF22",
+      "symbol_id": "NMKINF22"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.98,
+      "expected": "Crossing with secondary waterway ahead should be a blue rectangular fairway-diagram board with white cross layout.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF23 blue/white crossing-waterway diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF23",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF23",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, crossing with secondary waterway ahead",
+          "path": "out/opencpn_s52_reference/NMKINF23__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF23.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF23__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF23.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF23",
+      "symbol_id": "NMKINF23"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.98,
+      "expected": "Secondary waterway ahead on the right should be a blue rectangular diagram with the side branch on the right.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF24 right-side secondary-waterway diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF24",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF24",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway ahead on the right",
+          "path": "out/opencpn_s52_reference/NMKINF24__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF24.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF24__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF24.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF24",
+      "symbol_id": "NMKINF24"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.98,
+      "expected": "Secondary waterway ahead on the left should be a blue rectangular diagram with the side branch on the left.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF25 left-side secondary-waterway diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF25",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF25",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway ahead on the left",
+          "path": "out/opencpn_s52_reference/NMKINF25__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF25.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF25__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF25.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF25",
+      "symbol_id": "NMKINF25"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.97,
+      "expected": "Secondary waterway ahead with main fairway right should be a blue/white rectangular waterway diagram, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a black-outlined white diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF26 main-fairway-right rectangular diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF26",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF26",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway ahead (main fairway right)",
+          "path": "out/opencpn_s52_reference/NMKINF26__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF26.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF26__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF26.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF26",
+      "symbol_id": "NMKINF26"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.97,
+      "expected": "Secondary waterway ahead with main fairway left should be a blue/white rectangular waterway diagram, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a black-outlined white diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF27 main-fairway-left rectangular diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF27",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF27",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway ahead (main fairway left)",
+          "path": "out/opencpn_s52_reference/NMKINF27__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF27.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF27__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF27.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF27",
+      "symbol_id": "NMKINF27"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.98,
+      "expected": "Secondary waterway left with main fairway right should be a blue/white rectangular side-waterway diagram.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF28 side-waterway-left/main-right diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF28",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF28",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway left (main fairway right)",
+          "path": "out/opencpn_s52_reference/NMKINF28__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF28.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF28__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF28.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF28",
+      "symbol_id": "NMKINF28"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.98,
+      "expected": "Secondary waterway right with main fairway left should be a blue/white rectangular side-waterway diagram.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF29 side-waterway-right/main-left diagram.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF29",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF29",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, secondary waterway right (main fairway left)",
+          "path": "out/opencpn_s52_reference/NMKINF29__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF29.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF29__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF29.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF29",
+      "symbol_id": "NMKINF29"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.98,
+      "expected": "End of prohibition/regulation should be a blue rectangular board with a white diagonal end-slash cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF38 end-of-regulation notice-board slash.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF38",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF38",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, end of prohibition or regulation",
+          "path": "out/opencpn_s52_reference/NMKINF38__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF38.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF38__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF38.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF38",
+      "symbol_id": "NMKINF38"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.98,
+      "expected": "Telephone notice should be a blue rectangular board with white telephone handset glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF40 telephone notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF40",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF40",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, telephone",
+          "path": "out/opencpn_s52_reference/NMKINF40__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF40.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF40__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF40.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF40",
+      "symbol_id": "NMKINF40"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.98,
+      "expected": "Waterski notice should be a blue rectangular board with waterski glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF43 waterski notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF43",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF43",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, waterski",
+          "path": "out/opencpn_s52_reference/NMKINF43__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF43.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF43__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF43.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF43",
+      "symbol_id": "NMKINF43"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.98,
+      "expected": "Sailing boats notice should be a blue rectangular board with sailboat glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF44 sailing-boats notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF44",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF44",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, sailing boats",
+          "path": "out/opencpn_s52_reference/NMKINF44__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF44.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF44__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF44.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF44",
+      "symbol_id": "NMKINF44"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.98,
+      "expected": "Boats without engine or sails notice should be a blue rectangular board with the non-powered boat glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF45 non-powered-boat notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF45",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF45",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, boats without engine or sails",
+          "path": "out/opencpn_s52_reference/NMKINF45__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF45.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF45__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF45.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF45",
+      "symbol_id": "NMKINF45"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.98,
+      "expected": "Windsurfing notice should be a blue rectangular board with windsurf glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF46 windsurfing notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF46",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF46",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, windsurfing",
+          "path": "out/opencpn_s52_reference/NMKINF46__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF46.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF46__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF46.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF46",
+      "symbol_id": "NMKINF46"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.98,
+      "expected": "Nautical radio information should be a blue rectangular board with VHF text.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF47 blue VHF notice board.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF47",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF47",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, nautical radio information",
+          "path": "out/opencpn_s52_reference/NMKINF47__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF47.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF47__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF47.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF47",
+      "symbol_id": "NMKINF47"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.98,
+      "expected": "Waterscooters/jetskis notice should be a blue rectangular board with jetski glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF48 waterscooter/jetski notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF48",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF48",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, waterscooters, jetskis",
+          "path": "out/opencpn_s52_reference/NMKINF48__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF48.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF48__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF48.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF48",
+      "symbol_id": "NMKINF48"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.98,
+      "expected": "High speed motorboats permitted should be a blue rectangular board with motorboat glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF49 high-speed motorboat notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF49",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF49",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, High speed motorboats permitted",
+          "path": "out/opencpn_s52_reference/NMKINF49__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF49.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF49__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF49.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF49",
+      "symbol_id": "NMKINF49"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.98,
+      "expected": "Slipping of boats permitted should be a blue rectangular board with slipway/boat-ramp glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF50 slipping/boat-ramp notice-board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF50",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF50",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, Slipping of boats permitted",
+          "path": "out/opencpn_s52_reference/NMKINF50__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF50.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF50__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF50.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF50",
+      "symbol_id": "NMKINF50"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.98,
+      "expected": "Maximum three vessels side by side should be a blue rectangular board with three white vertical bars.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a solid black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKINF53 blue board carrying three vessel bars.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_count_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKINF53",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKINF53",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, maximum number ov vessels side by side, 3 vessels",
+          "path": "out/opencpn_s52_reference/NMKINF53__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKINF53.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKINF53__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKINF53.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKINF53",
+      "symbol_id": "NMKINF53"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.97,
+      "expected": "Entry prohibited should be a red/white rectangular prohibition sign with horizontal bars, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the NMKPRH02 rectangular red/white entry-prohibited sign.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "entry prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH02",
+      "symbol_id": "NMKPRH02"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.98,
+      "expected": "Passing and overtaking prohibited should be a red rectangular prohibition board with vessel arrows and diagonal slash.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKPRH06 prohibition board, including arrows and red slash.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH06",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH06",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, passing and overtaking prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH06__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH06.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH06__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH06.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH06",
+      "symbol_id": "NMKPRH06"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.98,
+      "expected": "Berthing prohibited should be a red rectangular prohibition board with berth glyph and diagonal slash.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKPRH07 berthing-prohibited board and slash glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH07",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH07",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, berthing prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH07__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH07.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH07__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH07.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH07",
+      "symbol_id": "NMKPRH07"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.97,
+      "expected": "Anchoring prohibited should be a red prohibition board containing anchor glyph and diagonal slash; both the board and slash are missing.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a standalone black anchor.",
+      "pass": false,
+      "required_change": "Place the anchor in the NMKPRH08 red prohibition-board frame with the diagonal slash.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "missing_notice_board"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH08",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH08",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, anchoring prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH08__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH08.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH08__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH08.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH08",
+      "symbol_id": "NMKPRH08"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.98,
+      "expected": "Turning prohibited should be a red rectangular prohibition board with turn arrow and diagonal slash.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKPRH10 turning-prohibited board and slash glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, turning prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH10__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH10",
+      "symbol_id": "NMKPRH10"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.98,
+      "expected": "Avoid wave wash should be a red rectangular prohibition board with wave glyph and diagonal slash.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKPRH11 avoid-wave-wash prohibition board.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, avoid wave wash",
+          "path": "out/opencpn_s52_reference/NMKPRH11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH11",
+      "symbol_id": "NMKPRH11"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.94,
+      "expected": "Passing on left side prohibited should be the side-specific red/white diamond split marker, not a generic center-dot diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the NMKPRH12 left-side passing-prohibited split diamond without the center-dot placeholder.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "passing on left side prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH12__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH12",
+      "symbol_id": "NMKPRH12"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.94,
+      "expected": "Passing on right side prohibited should be the side-specific red/white diamond split marker mirrored from NMKPRH12.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the NMKPRH13 right-side passing-prohibited split diamond without the center-dot placeholder.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH13",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH13",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "passing on right side prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH13__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH13.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH13__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH13.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH13",
+      "symbol_id": "NMKPRH13"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.98,
+      "expected": "Boats with engine prohibited should be a red rectangular prohibition board with motorboat glyph and diagonal slash.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the NMKPRH14 engine-boats-prohibited board and slash glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_prohibition_slash",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "NMKPRH14",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "NMKPRH14",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "notice mark, boats with engine prohibited",
+          "path": "out/opencpn_s52_reference/NMKPRH14__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/NMKPRH14.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/NMKPRH14__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/NMKPRH14.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:NMKPRH14",
+      "symbol_id": "NMKPRH14"
+    }
+  ]
+}

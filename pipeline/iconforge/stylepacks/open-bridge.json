@@ -1,37 +1,49 @@
 {
   "id": "open-bridge",
-  "stroke_width": 2.6,
+  "stroke_width": 1.8,
   "corner_radius": 4,
   "fill_mode": "filled",
   "line_treatment": "soft",
   "shadow": false,
   "palettes": {
     "day": {
-      "black": "#23201c",
-      "yellow": "#e8b53b",
-      "red": "#cf3b32",
-      "green": "#1f8b4c",
-      "white": "#f7f3ea",
-      "magenta": "#b23a86",
-      "ink": "#23201c"
+      "black": "#070707",
+      "yellow": "#f4da48",
+      "red": "#f15469",
+      "green": "#68e456",
+      "blue": "#8fb5d9",
+      "white": "#ffffff",
+      "magenta": "#c545c3",
+      "orange": "#eb7d36",
+      "brown": "#b19139",
+      "gray": "#7d898c",
+      "ink": "#070707"
     },
     "dusk": {
-      "black": "#2e2a30",
-      "yellow": "#bf9a3a",
-      "red": "#a8474a",
-      "green": "#39784d",
-      "white": "#e4ddcf",
-      "magenta": "#8f4a78",
-      "ink": "#2e2a30"
+      "black": "#14120f",
+      "yellow": "#d3b84a",
+      "red": "#d65550",
+      "green": "#63b565",
+      "blue": "#7695ab",
+      "white": "#d7d2c5",
+      "magenta": "#a959a0",
+      "orange": "#c9793c",
+      "brown": "#9a7c3d",
+      "gray": "#777b78",
+      "ink": "#14120f"
     },
     "night": {
-      "black": "#3c3942",
-      "yellow": "#6f5f2a",
-      "red": "#743a3e",
-      "green": "#2c563b",
-      "white": "#87837a",
-      "magenta": "#5b3f56",
-      "ink": "#6a6470"
+      "black": "#050505",
+      "yellow": "#8c7a34",
+      "red": "#8f3338",
+      "green": "#3f7c43",
+      "blue": "#455e76",
+      "white": "#b9b0a1",
+      "magenta": "#6c3f6e",
+      "orange": "#7f4a2b",
+      "brown": "#66502f",
+      "gray": "#4e5452",
+      "ink": "#050505"
     }
   }
 }

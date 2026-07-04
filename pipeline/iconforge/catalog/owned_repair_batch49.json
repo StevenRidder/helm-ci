@@ -1,0 +1,1526 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch49.json",
+    "renders": "out/standard_repair_batch41/renders",
+    "svg_dir": "assets/svg/owned_repair_batch49"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 20,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP47__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP47__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP47__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP47.svg",
+      "asset": "TOPSHP47",
+      "before_svg": "assets/svg/triad_generated/TOPSHP47.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP47.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, red boarded square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, red.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP47 is beacon top mark, red boarded square board, vertical. It is used as a beacon top mark, red boarded square board, vertical. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "beacon top mark, red boarded square board, vertical"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP47__day.png",
+            "label": "beacon top mark, red boarded square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP47__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP47__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP47__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP48__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP48__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP48__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP48.svg",
+      "asset": "TOPSHP48",
+      "before_svg": "assets/svg/triad_generated/TOPSHP48.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP48.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, red boarded square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, green using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP48 is beacon top mark, red boarded square board, vertical. It is used as a beacon top mark, red boarded square board, vertical. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: green, green with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "green",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "beacon top mark, red boarded square board, vertical"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP48__day.png",
+            "label": "beacon top mark, red boarded square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP48__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP48__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP48__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP51__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP51__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP51.svg",
+      "asset": "TOPSHP51",
+      "before_svg": "assets/svg/triad_generated/TOPSHP51.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP51.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, black, white using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP51 is beacon top mark, white-green square board, diagonal. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, black, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "black",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP51__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP51__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP51__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP52__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP52__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP52__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP52.svg",
+      "asset": "TOPSHP52",
+      "before_svg": "assets/svg/triad_generated/TOPSHP52.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP52.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: black.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP52 is beacon top mark, white-green square board, diagonal. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP52__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP52__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP52__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP53__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP53__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP53__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP53.svg",
+      "asset": "TOPSHP53",
+      "before_svg": "assets/svg/triad_generated/TOPSHP53.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP53.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, yellow square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: yellow.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP53 is beacon top mark, yellow square board, diagonal. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP53__day.png",
+            "label": "beacon top mark, yellow square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP53__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP53__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP53__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP54__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP54__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP54__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP54.svg",
+      "asset": "TOPSHP54",
+      "before_svg": "assets/svg/triad_generated/TOPSHP54.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP54.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP54 is beacon top mark, white-green square board, diagonal. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP54__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP54__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP54__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP54__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP55__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP55__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP55__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP55.svg",
+      "asset": "TOPSHP55",
+      "before_svg": "assets/svg/triad_generated/TOPSHP55.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP55.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP55 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: orange with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "orange"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "orange"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP55__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP55__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP55__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP55__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP58__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP58__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP58__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP58.svg",
+      "asset": "TOPSHP58",
+      "before_svg": "assets/svg/triad_generated/TOPSHP58.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP58.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red, white using horizontal bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP58 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP58__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP58__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP58__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP58__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP61__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP61__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP61.svg",
+      "asset": "TOPSHP61",
+      "before_svg": "assets/svg/triad_generated/TOPSHP61.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP61.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange, white using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP61 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: orange, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "orange",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "orange",
+          "white"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP61__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP61__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP61__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP62__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP62__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP62.svg",
+      "asset": "TOPSHP62",
+      "before_svg": "assets/svg/triad_generated/TOPSHP62.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP62.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, orange using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP62 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, orange with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP62__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP62__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP62__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP63__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP63__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP63__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP63.svg",
+      "asset": "TOPSHP63",
+      "before_svg": "assets/svg/triad_generated/TOPSHP63.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP63.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red, white using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP63 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red, white with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "white",
+          "red",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP63__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP63__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP63__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP63__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP64__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP64__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP64.svg",
+      "asset": "TOPSHP64",
+      "before_svg": "assets/svg/triad_generated/TOPSHP64.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP64.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, green, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP64 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, green, white with S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+        "colour_pattern": "S-57 colour pattern 6; squared/checkered pattern in the listed colour order",
+        "required_colours": [
+          "white",
+          "green",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "green"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP64__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP64__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP64__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP64__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP65__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP65__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP65.svg",
+      "asset": "TOPSHP65",
+      "before_svg": "assets/svg/triad_generated/TOPSHP65.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP65.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP65 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP65__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP65__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP65__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP67__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP67__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP67__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP67.svg",
+      "asset": "TOPSHP67",
+      "before_svg": "assets/svg/triad_generated/TOPSHP67.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP67.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange, white using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP67 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: orange, white with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "orange",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "orange",
+          "white"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP67__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP67__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP67__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP67__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP69__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP69__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP69__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP69.svg",
+      "asset": "TOPSHP69",
+      "before_svg": "assets/svg/triad_generated/TOPSHP69.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP69.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP69 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP69__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP69__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP69__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP69__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP70__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP70__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP70__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP70.svg",
+      "asset": "TOPSHP70",
+      "before_svg": "assets/svg/triad_generated/TOPSHP70.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP70.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: yellow, yellow using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP70 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: yellow, yellow with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "yellow",
+          "yellow"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP70__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP70__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP70__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP71__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP71__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP71__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP71.svg",
+      "asset": "TOPSHP71",
+      "before_svg": "assets/svg/triad_generated/TOPSHP71.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP71.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, orange using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP71 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, orange with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP71__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP71__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP71__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP72__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP72__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP72__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP72.svg",
+      "asset": "TOPSHP72",
+      "before_svg": "assets/svg/triad_generated/TOPSHP72.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP72.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP72 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red, white with S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+        "colour_pattern": "S-57 colour pattern 6; squared/checkered pattern in the listed colour order",
+        "required_colours": [
+          "white",
+          "red",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP72__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP72__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP72__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP72__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP73_TE_s__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP73_TE_s__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP73_TE_s__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP73_TE_s.svg",
+      "asset": "TOPSHP73;TE('%s'",
+      "before_svg": "assets/svg/triad_generated/TOPSHP73_TE_s.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP73_TE_s.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHP73;TE('%s'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, black, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP73;TE('%s' is TOPSHP73;TE('%s'. It is used as a TOPSHP73;TE('%s'. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, black, white with S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+        "colour_pattern": "S-57 colour pattern 6; squared/checkered pattern in the listed colour order",
+        "required_colours": [
+          "white",
+          "black",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "TOPSHP73;TE('%s'"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP73_TE_s__day.png",
+            "label": "TOPSHP73;TE('%s'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP73_TE_s__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP73_TE_s__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP73_TE_s__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch41/renders/TOPSHP74__after__day.png",
+        "dusk": "out/standard_repair_batch41/renders/TOPSHP74__after__dusk.png",
+        "night": "out/standard_repair_batch41/renders/TOPSHP74__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch49/TOPSHP74.svg",
+      "asset": "TOPSHP74",
+      "before_svg": "assets/svg/triad_generated/TOPSHP74.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP74.svg",
+      "candidate_strategy": "owned_topshape_diagonal_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, white-green square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch41",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red, white, white, red using squared/checkered pattern in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch49",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP74 is beacon top mark, white-green square board, diagonal. It is used as a beacon top mark, white-green square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white, white, red with squared/checkered pattern in the listed colour order.",
+        "colour_pattern": "squared/checkered pattern in the listed colour order",
+        "required_colours": [
+          "red",
+          "white",
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "beacon top mark, white-green square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_013.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP74__day.png",
+            "label": "beacon top mark, white-green square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP74__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP74__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

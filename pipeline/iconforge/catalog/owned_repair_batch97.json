@@ -1,0 +1,272 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch97.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch97"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 2,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch97/BCNCON81.svg",
+      "asset": "BCNCON81",
+      "before_svg": "assets/svg/owned_repair_batch97/BCNCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNCON81.svg",
+      "candidate_strategy": "owned_conical_beacon_or_buoy_body_from_batch96_symbolspec",
+      "name": "BCNCON81",
+      "provenance": {
+        "generator": "forge.standard_repair_batch97",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No external art imported; S-57 conditions and batch96 SymbolSpec drive generated-owned redraw",
+        "source_priority_basis": "standard_judge_batch_083_084_rerun failure resolved by batch96 SymbolSpec generated from S-57/S-52 metadata",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "batch96_symbolspec_rendered",
+      "required_change": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+      "risk_bucket": "symbolspec_render_batch97",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "symbolspec_generated_from_s57_metadata"
+      ],
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_083_084_rerun.json",
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/BCNCON81.svg",
+          "status": "renderable_from_s57_symbolspec"
+        },
+        "generation": {
+          "confidence": 0.78,
+          "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+          "status": "render_batch_from_symbolspec"
+        },
+        "geometry": {
+          "colour_pattern": "horizontal_bands",
+          "colours": [
+            "blue",
+            "red",
+            "white",
+            "blue"
+          ],
+          "colpat": [
+            "1",
+            "2"
+          ],
+          "primitive": "conical_beacon_or_buoy_body",
+          "required_marks": [
+            "OBJNAM text remains separate label, not part of canonical icon"
+          ]
+        },
+        "id": "BCNCON81",
+        "kind": "symbol",
+        "name": "BCNCON81",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": true,
+          "visual_parity": "ready_for_batch96_render"
+        },
+        "s52_token": "BCNCON81",
+        "s57": {
+          "conditions": [
+            "BOYSHP1",
+            "COLPAT1,2",
+            "COLOUR5,3,1,5"
+          ],
+          "instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)",
+          "lookup_id": "1781",
+          "lookup_rcid": "93806",
+          "object_class": "BCNSPP"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "BCNCON81",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "chart-artifact"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch97/boyspp50.svg",
+      "asset": "boyspp50",
+      "before_svg": "assets/svg/owned_repair_batch97/boyspp50.svg",
+      "candidate_source": "assets/svg/triad_generated/boyspp50.svg",
+      "candidate_strategy": "owned_special_purpose_buoy_or_waterway_marker_from_batch96_symbolspec",
+      "name": "boyspp50",
+      "provenance": {
+        "generator": "forge.standard_repair_batch97",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No external art imported; S-57 conditions and batch96 SymbolSpec drive generated-owned redraw",
+        "source_priority_basis": "standard_judge_batch_083_084_rerun failure resolved by batch96 SymbolSpec generated from S-57/S-52 metadata",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "batch96_symbolspec_rendered",
+      "required_change": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+      "risk_bucket": "symbolspec_render_batch97",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "symbolspec_generated_from_s57_metadata"
+      ],
+      "semantic_brief": {
+        "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "boyspp50"
+      },
+      "source_judge": "catalog/standard_judge_batch_083_084_rerun.json",
+      "symbol_spec": {
+        "asset": {
+          "canonical": "assets/svg/triad_generated/boyspp50.svg",
+          "status": "renderable_from_s57_symbolspec"
+        },
+        "generation": {
+          "confidence": 0.72,
+          "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+          "status": "render_batch_from_symbolspec"
+        },
+        "geometry": {
+          "colours": [
+            "yellow"
+          ],
+          "conditions": [
+            "catwwm19",
+            "COLOUR6"
+          ],
+          "primitive": "special_purpose_buoy_or_waterway_marker",
+          "required_marks": [
+            "OBJNAM text remains separate label, not part of canonical icon"
+          ]
+        },
+        "id": "boyspp50",
+        "kind": "symbol",
+        "name": "boyspp50",
+        "provenance": {
+          "allowed_sources": [
+            "OpenCPN S-52 lookup metadata",
+            "S-57 condition metadata",
+            "future public-domain Chart No.1 or locally rendered tight witness when required"
+          ],
+          "forbidden_sources": [
+            "do not import OpenCPN raster pixels as canonical art"
+          ],
+          "origin": "generated-owned-artwork-plan"
+        },
+        "qa": {
+          "final_approved": false,
+          "semantic_pass": true,
+          "visual_parity": "ready_for_batch96_render"
+        },
+        "s52_token": "boyspp50",
+        "s57": {
+          "conditions": [
+            "catwwm19",
+            "COLOUR6"
+          ],
+          "instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+          "lookup_id": "1383",
+          "lookup_rcid": "31435",
+          "object_class": "boywtw"
+        },
+        "source_refs": {
+          "opencpn_s52_spine": "chartsymbols.xml lookup metadata only; no raster/vector art imported",
+          "s52": "boyspp50",
+          "standard_source_table": "catalog/standard_source_table.json"
+        },
+        "tier": "chart-artifact"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    }
+  ]
+}

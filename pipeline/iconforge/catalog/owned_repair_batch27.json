@@ -1,0 +1,606 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch27.json",
+    "renders": "out/standard_repair_batch19/renders",
+    "svg_dir": "assets/svg/owned_repair_batch27"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 5,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch19/renders/UWTROC03__after__day.png",
+        "dusk": "out/standard_repair_batch19/renders/UWTROC03__after__dusk.png",
+        "night": "out/standard_repair_batch19/renders/UWTROC03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch27/UWTROC03.svg",
+      "asset": "UWTROC03",
+      "before_svg": "assets/svg/triad_generated/UWTROC03.svg",
+      "candidate_source": "assets/svg/triad_generated/UWTROC03.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_shape_witnesses",
+      "name": "dangerous underwater rock of uncertain depth",
+      "provenance": {
+        "generator": "forge.standard_repair_batch19",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_aquamap_visual_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: dangerous underwater rock with danger-depth fill, perimeter dots, and cross cue.",
+      "required_change": "Replace the placeholder with the exact underwater-rock hazard geometry and required colour semantics: black.",
+      "risk_bucket": "wreck_rock_hazard_repair_batch27",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_underwater_rock_geometry",
+        "reference_mismatch",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "UWTROC03 is dangerous underwater rock of uncertain depth. It is used as a dangerous underwater rock of uncertain depth. Required geometry: recognized rock/underwater rock symbol, not a generic mountain or star. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "recognized rock/underwater rock symbol, not a generic mountain or star",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "dangerous underwater rock of uncertain depth"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/UWTROC03__day.png",
+            "label": "dangerous underwater rock of uncertain depth",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/UWTROC03__day.png",
+              "dusk": "out/opencpn_s52_reference/UWTROC03__dusk.png",
+              "night": "out/opencpn_s52_reference/UWTROC03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "UWTROC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/UWTROC03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "UWTROC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/UWTROC03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "UWTROC03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch19/renders/UWTROC04__after__day.png",
+        "dusk": "out/standard_repair_batch19/renders/UWTROC04__after__dusk.png",
+        "night": "out/standard_repair_batch19/renders/UWTROC04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch27/UWTROC04.svg",
+      "asset": "UWTROC04",
+      "before_svg": "assets/svg/triad_generated/UWTROC04.svg",
+      "candidate_source": "assets/svg/triad_generated/UWTROC04.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_shape_witnesses",
+      "name": "rock which covers and uncovers or is awash at low water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch19",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_aquamap_visual_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: awash rock X/asterisk witness; no mountain or generic rock outline.",
+      "required_change": "Replace the placeholder with the exact underwater-rock hazard geometry and required colour semantics: black.",
+      "risk_bucket": "wreck_rock_hazard_repair_batch27",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_underwater_rock_geometry",
+        "reference_mismatch",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "UWTROC04 is rock which covers and uncovers or is awash at low water. It is used as a rock which covers and uncovers or is awash at low water. Required geometry: recognized rock/underwater rock symbol, not a generic mountain or star. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "recognized rock/underwater rock symbol, not a generic mountain or star",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "rock which covers and uncovers or is awash at low water"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Rock",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedRock11.png",
+            "section": "Rocks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/UWTROC04__day.png",
+            "label": "rock which covers and uncovers or is awash at low water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/UWTROC04__day.png",
+              "dusk": "out/opencpn_s52_reference/UWTROC04__dusk.png",
+              "night": "out/opencpn_s52_reference/UWTROC04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "UWTROC04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/UWTROC04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "UWTROC04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/UWTROC04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "UWTROC04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch19/renders/WRECKS01__after__day.png",
+        "dusk": "out/standard_repair_batch19/renders/WRECKS01__after__dusk.png",
+        "night": "out/standard_repair_batch19/renders/WRECKS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch27/WRECKS01.svg",
+      "asset": "WRECKS01",
+      "before_svg": "assets/svg/triad_generated/WRECKS01.svg",
+      "candidate_source": "assets/svg/triad_generated/WRECKS01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_shape_witnesses",
+      "name": "wreck showing any portion of hull or superstructure at level of chart datum",
+      "provenance": {
+        "generator": "forge.standard_repair_batch19",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_aquamap_visual_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: exposed wreck/hull-superstructure witness in black; no generic triangle-over-curve substitute.",
+      "required_change": "Redraw WRECKS01 as the exposed wreck/hull-superstructure cue from the OpenCPN/S-101 references; do not reuse the generic triangle-over-curve wreck substitute.",
+      "risk_bucket": "wreck_rock_hazard_repair_batch27",
+      "safety_reason_codes": [
+        "wrong_wreck_variant",
+        "wrong_shape",
+        "generic_wreck_substitute",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS01 is wreck showing any portion of hull or superstructure at level of chart datum. It is used as a wreck showing any portion of hull or superstructure at level of chart datum. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "wreck showing any portion of hull or superstructure at level of chart datum"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WRECKS01__day.png",
+            "label": "wreck showing any portion of hull or superstructure at level of chart datum",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WRECKS01__day.png",
+              "dusk": "out/opencpn_s52_reference/WRECKS01__dusk.png",
+              "night": "out/opencpn_s52_reference/WRECKS01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WRECKS01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WRECKS01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WRECKS01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WRECKS01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WRECKS01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch19/renders/WRECKS04__after__day.png",
+        "dusk": "out/standard_repair_batch19/renders/WRECKS04__after__dusk.png",
+        "night": "out/standard_repair_batch19/renders/WRECKS04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch27/WRECKS04.svg",
+      "asset": "WRECKS04",
+      "before_svg": "assets/svg/triad_generated/WRECKS04.svg",
+      "candidate_source": "assets/svg/triad_generated/WRECKS04.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_shape_witnesses",
+      "name": "non-dangerous wreck, depth unknown",
+      "provenance": {
+        "generator": "forge.standard_repair_batch19",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_aquamap_visual_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: non-dangerous depth-unknown wreck hash/fence geometry in black.",
+      "required_change": "Redraw WRECKS04 as the non-dangerous wreck, depth-unknown reference geometry; preserve the black wreck cue and do not substitute the triangular danger-style wreck mark.",
+      "risk_bucket": "wreck_rock_hazard_repair_batch27",
+      "safety_reason_codes": [
+        "wrong_wreck_variant",
+        "wrong_shape",
+        "generic_wreck_substitute",
+        "missing_hash_wreck_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS04 is non-dangerous wreck, depth unknown. It is used as a non-dangerous wreck, depth unknown. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "non-dangerous wreck, depth unknown"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WRECKS04__day.png",
+            "label": "non-dangerous wreck, depth unknown",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WRECKS04__day.png",
+              "dusk": "out/opencpn_s52_reference/WRECKS04__dusk.png",
+              "night": "out/opencpn_s52_reference/WRECKS04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WRECKS04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WRECKS04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WRECKS04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WRECKS04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WRECKS04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch19/renders/WRECKS05__after__day.png",
+        "dusk": "out/standard_repair_batch19/renders/WRECKS05__after__dusk.png",
+        "night": "out/standard_repair_batch19/renders/WRECKS05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch27/WRECKS05.svg",
+      "asset": "WRECKS05",
+      "before_svg": "assets/svg/triad_generated/WRECKS05.svg",
+      "candidate_source": "assets/svg/triad_generated/WRECKS05.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_shape_witnesses",
+      "name": "dangerous wreck, depth unknown",
+      "provenance": {
+        "generator": "forge.standard_repair_batch19",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_aquamap_visual_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: dangerous depth-unknown wreck with danger-depth fill, perimeter dots, and internal hash grid.",
+      "required_change": "Redraw WRECKS05 as the dangerous wreck reference geometry with the gridded/dotted hazard treatment; do not reuse the generic triangle-over-curve mark.",
+      "risk_bucket": "wreck_rock_hazard_repair_batch27",
+      "safety_reason_codes": [
+        "wrong_wreck_variant",
+        "wrong_shape",
+        "generic_wreck_substitute",
+        "missing_dangerous_wreck_grid",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS05 is dangerous wreck, depth unknown. It is used as a dangerous wreck, depth unknown. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "dangerous wreck, depth unknown"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WRECKS05__day.png",
+            "label": "dangerous wreck, depth unknown",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WRECKS05__day.png",
+              "dusk": "out/opencpn_s52_reference/WRECKS05__dusk.png",
+              "night": "out/opencpn_s52_reference/WRECKS05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WRECKS05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WRECKS05.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WRECKS05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WRECKS05.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WRECKS05"
+          }
+        ]
+      }
+    }
+  ]
+}

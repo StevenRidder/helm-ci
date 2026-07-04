@@ -1,0 +1,130 @@
+{
+  "agent_id": "codex/FORGE-14-judge-batch61",
+  "batch_id": "standard_judge_batch_061_rerun",
+  "created_at": "2026-07-01T22:18:42Z",
+  "evidence_notes": [
+    "Actual repaired SVGs were read from pipeline/iconforge/assets/svg/owned_repair_batch61/ in the detached copy.",
+    "Candidate day/dusk/night renders were read from pipeline/iconforge/out/standard_repair_batch53/renders and OpenCPN/source-variant references from pipeline/iconforge/out.",
+    "Each verdict was checked against pipeline/iconforge/catalog/standard_source_table.json row metadata, semantic_brief, S-57 shape/color/pattern conditions, repaired SVGs, prior latest judge history, and available candidate/reference renders.",
+    "The batch61 repair constrains the prior failing diagonal stripe geometry inside the tapered tower body for TOWERS55, TOWERS94, and TOWERS97.",
+    "Rendered alpha bounds for all three day renders are away from the canvas edges at x=29..130, y=26..149, addressing the prior x=0 pattern-escape failure.",
+    "Passes are judge_pass_pending_final_approval only and grant zero final approvals."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "TOWERS55",
+      "TOWERS94",
+      "TOWERS97"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "repair_batch_catalog": "pipeline/iconforge/catalog/owned_repair_batch61.json",
+    "selection_note": "Judged owned_repair_batch61 against row metadata, semantic_brief, S-57 shape/color/pattern conditions, source/provider references, repaired SVGs, prior latest judge history, and available candidate/reference renders. Scope is exactly the 3 bounded diagonal TOWERS repairs in owned_repair_batch61.",
+    "source_batch": "catalog/owned_repair_batch61.json",
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 3,
+    "selected": 3,
+    "source_batches": [
+      "catalog/owned_repair_batch61.json"
+    ]
+  },
+  "task_id": "FORGE-14",
+  "verdicts": [
+    {
+      "batch_index": 61,
+      "confidence": 0.9,
+      "expected": "TOWERS55 must preserve the tower landmark silhouette from the strongest references and required colours yellow, black with diagonal stripes in the listed colour order; S-57/S-52 conditions: COLOUR6,2, COLPAT3.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch61.json",
+      "judge_comments": "Pass pending human: tapered tower silhouette is preserved, yellow/black diagonal stripe semantics are carried inside the tower body, and the rendered alpha no longer escapes to the canvas edge. Available OpenCPN/source references match closely enough for judge_pass_pending_final_approval. No final approval is granted.",
+      "observed": "After SVG/render shows a tapered tower body with yellow base and black diagonal panels bounded inside the silhouette; day render alpha bounds are x=29..130 and y=26..149 with zero edge-alpha pixels.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch61.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TOWERS55",
+        "s57_conditions:COLOUR6,2,COLPAT3",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch61/TOWERS55.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch61.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "prior_latest:standard_judge_batch_059_rerun",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch53/renders/TOWERS55__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOWERS55__day.png",
+        "source_variant_opencpn:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS55/opencpn_s52_reference_render_1.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS55/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOWERS55",
+      "symbol_id": "TOWERS55"
+    },
+    {
+      "batch_index": 61,
+      "confidence": 0.9,
+      "expected": "TOWERS94 must preserve the tower landmark silhouette from the strongest references and required colours black, white with diagonal stripes in the listed colour order; S-57/S-52 conditions: CATLMK17, COLPAT3, FUNCTN33, COLOUR2,1.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch61.json",
+      "judge_comments": "Pass pending human: tapered tower silhouette is preserved, black/white diagonal stripe semantics are carried inside the tower body, and the visible off-body wedge from the prior rerun is gone. Available OpenCPN/source references match closely enough for judge_pass_pending_final_approval. No final approval is granted.",
+      "observed": "After SVG/render shows a tapered tower body with black base and white diagonal panels bounded inside the silhouette; day render alpha bounds are x=29..130 and y=26..149 with zero edge-alpha pixels.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch61.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TOWERS94",
+        "s57_conditions:CATLMK17,COLPAT3,FUNCTN33,COLOUR2,1",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch61/TOWERS94.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch61.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "prior_latest:standard_judge_batch_059_rerun",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch53/renders/TOWERS94__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOWERS94__day.png",
+        "source_variant_opencpn:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS94/opencpn_s52_reference_render_1.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS94/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOWERS94",
+      "symbol_id": "TOWERS94"
+    },
+    {
+      "batch_index": 61,
+      "confidence": 0.9,
+      "expected": "TOWERS97 must preserve the tower landmark silhouette from the strongest references and required colours white, black with diagonal stripes in the listed colour order; S-57/S-52 conditions: CATLMK17, COLPAT3, COLOUR1,2.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch61.json",
+      "judge_comments": "Pass pending human: tapered tower silhouette is preserved, white/black diagonal stripe semantics are carried inside the tower body, and the visible off-body wedges from the prior rerun are gone. Available OpenCPN/source references match closely enough for judge_pass_pending_final_approval. No final approval is granted.",
+      "observed": "After SVG/render shows a tapered tower body with white base and black diagonal panels bounded inside the silhouette; day render alpha bounds are x=29..130 and y=26..149 with zero edge-alpha pixels.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch61.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TOWERS97",
+        "s57_conditions:CATLMK17,COLPAT3,COLOUR1,2",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch61/TOWERS97.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch61.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "prior_latest:standard_judge_batch_059_rerun",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch53/renders/TOWERS97__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOWERS97__day.png",
+        "source_variant_opencpn:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS97/opencpn_s52_reference_render_1.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/TOWERS97/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOWERS97",
+      "symbol_id": "TOWERS97"
+    }
+  ]
+}

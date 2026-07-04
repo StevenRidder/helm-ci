@@ -1,0 +1,345 @@
+{
+  "chart1_parity": {
+    "crop_count": 36,
+    "evidence_counts": {
+      "class_panel_reference": 20,
+      "exact_symbol_crop": 139,
+      "manual_exception": 28,
+      "multi_symbol_reference": 175,
+      "out_of_scope": 462
+    },
+    "final_approved": 0,
+    "gate_assets": 362,
+    "hard_pile_entries": 362,
+    "pdf_sha256": "0967d6cac35faf54caaff474fc85e90b05964474088b57dd1431585d78a4a1c3",
+    "pdf_url": "https://repository.library.noaa.gov/view/noaa/2719/noaa_2719_DS1.pdf",
+    "rows": 824,
+    "status": "review_required",
+    "verdict_counts": {
+      "deferred": 462,
+      "fail": 306,
+      "manual": 56
+    }
+  },
+  "clean_room_boundary": {
+    "allowed": [
+      "Chart No.1 reference crop metadata and hashes",
+      "S-52/S-57 object, lookup, and symbol vocabulary",
+      "S-101 feature/rule references as standards evidence",
+      "Helm-generated SVG candidates and judge results"
+    ],
+    "not_bundled_as_source_artwork": [
+      "OpenCPN GPL raster sprites",
+      "official IHO SVG artwork",
+      "IHO Feature Catalogue XML",
+      "IHO Portrayal Catalogue XML",
+      "IHO Lua portrayal rule files",
+      "private ENC, S-63, or oeSENC data"
+    ]
+  },
+  "downstream_policy": {
+    "FORGE-22": "may use semantic tuple scaffolds, but stays blocked until this gate is ready or a human explicitly accepts provisional unblock",
+    "FORGE-23": "may use rule-derived equivalence scaffolds, but cannot claim final S-101 portrayal equivalence until this gate and official rule evidence are accepted",
+    "FORGE-24": "may publish a proof scaffold, but final parity proof requires approved S-52/OpenCPN, S-101, and Helm render evidence per row"
+  },
+  "hard_pile_sample": [
+    {
+      "asset": "BCNCAR01",
+      "final_approval": false,
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNCAR02",
+      "final_approval": false,
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNCAR03",
+      "final_approval": false,
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNCAR04",
+      "final_approval": false,
+      "reason_codes": [
+        "no_exact_symbol_crop_final_pass_forbidden"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNCON81",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNDEF13",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN01",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN03",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN05",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN60",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN61",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN64",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN65",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN68",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN69",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN70",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN71",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN76",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN79",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    },
+    {
+      "asset": "BCNGEN80",
+      "final_approval": false,
+      "reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "reference_evidence_status": "multi_symbol_reference"
+    }
+  ],
+  "inputs": {
+    "chart1_crop_review": "out/chart1_parity/crop_review.json",
+    "chart1_hard_pile": "out/chart1_parity/hard_pile.json",
+    "chart1_parity": "out/chart1_parity/report.json",
+    "s52_s57_s101_crosswalk": "catalog/s52_s57_s101_crosswalk.json",
+    "standard_source_table": "catalog/standard_source_table.json",
+    "topmark_standards_pass": "catalog/topmark_standards_pass.json"
+  },
+  "purpose": "Align Chart No.1, S-52/S-57, S-101, topmark, and judge evidence before unblocking FORGE-22/23/24.",
+  "review_state": {
+    "blockers": [
+      "chart1_parity_status_not_pass",
+      "no_final_approved_chart1_rows",
+      "chart1_hard_pile_not_empty",
+      "topmark_unresolved_rows_not_empty"
+    ],
+    "state": "review_required"
+  },
+  "s52_s57_s101_crosswalk": {
+    "counts": {
+      "commons_public_domain_candidate_rows": 34,
+      "rows": 824,
+      "s101_exact_symbol_matches": 244,
+      "s101_feature_rule_candidates": 545
+    }
+  },
+  "schema": "helm.forge.standards-alignment-gate.v1",
+  "standard_source_table": {
+    "status": "normalized_source_table_routing_enforced",
+    "summary": {
+      "aquamap_rows": 109,
+      "candidate_status_counts": {
+        "chart1_parity_witness_needed": 2,
+        "judge_pass_pending_final_approval": 798,
+        "manual_policy_exception": 2,
+        "portrayal_rule_registry": 15,
+        "style_primitive_registry": 4,
+        "witness_needed_official_symbol": 3
+      },
+      "judge_queue_rows": 798,
+      "opencpn_definitions_total": 856,
+      "opencpn_lookup_links_total": 3169,
+      "opencpn_rows": 777,
+      "repair_queue_rows": 0,
+      "routed_queue_rows": 26,
+      "routing_bucket_counts": {
+        "chart1_parity_witness_needed": 2,
+        "manual_policy_exception": 2,
+        "portrayal_rule_registry": 15,
+        "style_primitive_registry": 4,
+        "witness_needed_official_symbol": 3
+      },
+      "rows": 824,
+      "s101_rows": 244,
+      "semantic_shape_judge_queue_rows": 798
+    }
+  },
+  "status": "review_required",
+  "task": "FORGE-14",
+  "topmark_standards": {
+    "status": "topmark_standards_pass_written",
+    "summary": {
+      "ambiguous_or_unresolved_rows": 3,
+      "basis_counts": {
+        "legacy_topma_row_requires_manual_mapping": 1,
+        "row_name_inferred_circle": 1,
+        "s57_structure_conditions_TOPSHP": 133,
+        "topmar_symbol_not_present_in_s101_topmar02_map": 2
+      },
+      "candidate_png_rendered_rows": 137,
+      "candidate_status_counts": {
+        "judge_pass_pending_final_approval": 136,
+        "portrayal_rule_registry": 1
+      },
+      "human_rejected_rows": 0,
+      "resolved_exact_or_inferred_shape_rows": 134,
+      "rows_with_s101_witnesses": 134,
+      "s101_topmark_png_rendered": 32,
+      "s101_topmark_svg_entries": 32,
+      "s101_topmark_svg_sources_found": 32,
+      "shape_counts": {
+        "TOPSHP01": 1,
+        "TOPSHP03": 3,
+        "TOPSHP05": 1,
+        "TOPSHP06": 10,
+        "TOPSHP07": 4,
+        "TOPSHP08": 2,
+        "TOPSHP12": 24,
+        "TOPSHP15": 2,
+        "TOPSHP16": 2,
+        "TOPSHP17": 2,
+        "TOPSHP19": 24,
+        "TOPSHP20": 10,
+        "TOPSHP21": 21,
+        "TOPSHP22": 3,
+        "TOPSHP23": 3,
+        "TOPSHP24": 15,
+        "TOPSHP25": 2,
+        "TOPSHP26": 3,
+        "TOPSHP33": 2,
+        "unresolved": 3
+      },
+      "standard_shape_refs": 33,
+      "topmark_rows_needing_special_pass": 137
+    }
+  }
+}

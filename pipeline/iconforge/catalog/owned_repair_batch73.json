@@ -1,0 +1,692 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch73.json",
+    "renders": "out/standard_repair_batch65/renders",
+    "svg_dir": "assets/svg/owned_repair_batch73"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 6,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP01__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP01__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP01.svg",
+      "asset": "BOYSUP01",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP01.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "license_blocked_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "super buoy, general, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP7"
+        ],
+        "lookup_id": "1859",
+        "lookup_rcid": "30141",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYSUP01);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP01 is super buoy, general, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: super-buoy body. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "super-buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP01__day.png",
+            "label": "super buoy, general, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYSUP01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYSUP01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYSUP01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYSUP01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYSUP01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP02__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP02__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP02.svg",
+      "asset": "BOYSUP02",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP02.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP02.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "license_blocked_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "super buoy, black, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP7"
+        ],
+        "lookup_id": "1061",
+        "lookup_rcid": "31113",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSUP02);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP02 is super buoy, black, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "super-buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP02__day.png",
+            "label": "super buoy, black, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP02__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP02__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYSUP02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYSUP02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYSUP02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYSUP02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYSUP02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP03__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP03__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP03.svg",
+      "asset": "BOYSUP03",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP03.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP03.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "license_blocked_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "LANBY, super-buoy, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "CATSPM15"
+        ],
+        "lookup_id": "1983",
+        "lookup_rcid": "30254",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSUP03);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP03 is LANBY, super-buoy, paper-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP03__day.png",
+            "label": "LANBY, super-buoy, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP03__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP03__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYSUP03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYSUP03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYSUP03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYSUP03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYSUP03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP62__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP62__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP62.svg",
+      "asset": "BOYSUP62",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP62.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "super buoy, yellow, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP7",
+          "COLOUR6"
+        ],
+        "lookup_id": "1863",
+        "lookup_rcid": "30145",
+        "object_class": "BOYINB",
+        "s52_instruction": "SY(BOYSUP62);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP62 is super buoy, yellow, full-chart. It is used as a installation buoy. Required geometry: super-buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "super-buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "installation buoy"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP62__day.png",
+            "label": "super buoy, yellow, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP65__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP65__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP65.svg",
+      "asset": "BOYSUP65",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP65.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP65.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "super buoy, red, white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP7",
+          "COLPAT2",
+          "COLOUR3,1"
+        ],
+        "lookup_id": "1954",
+        "lookup_rcid": "30233",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSUP65);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP65 is super buoy, red, white, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: red, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "super-buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP65__day.png",
+            "label": "super buoy, red, white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP65__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP65__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch65/renders/BOYSUP66__after__day.png",
+        "dusk": "out/standard_repair_batch65/renders/BOYSUP66__after__dusk.png",
+        "night": "out/standard_repair_batch65/renders/BOYSUP66__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch73/BOYSUP66.svg",
+      "asset": "BOYSUP66",
+      "before_svg": "assets/svg/owned_repair_batch73/BOYSUP66.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSUP66.svg",
+      "candidate_strategy": "owned_super_buoy_redraw_from_s57_colour_and_chart1_opencpn_reference",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_evidence_status": "multi_symbol_reference",
+        "chart1_gate_status": "multi_symbol_reference_only",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q7",
+          "Q8",
+          "Q11",
+          "Q20"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "generic_placeholder_body",
+          "no_exact_symbol_crop_final_pass_forbidden",
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "super buoy, red, white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch65",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/S-101/Chart No.1 witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue BOYSUP super-buoy blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_boysup_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "super_buoy_reference_repair_batch73",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP7",
+          "COLPAT1",
+          "COLOUR3,1"
+        ],
+        "lookup_id": "1953",
+        "lookup_rcid": "93967",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYSUP66);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSUP66 is super buoy, red, white, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "super-buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSUP66__day.png",
+            "label": "super buoy, red, white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSUP66__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSUP66__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSUP66__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

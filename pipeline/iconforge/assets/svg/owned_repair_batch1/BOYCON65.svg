@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYCON65 conical_buoy">
+  <title>BOYCON65 conical_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BOYCON65" data-shape="conical_buoy">
+  <defs><clipPath id="clip-BOYCON65"><path d="M32 11 L49 49 Q32 56 15 49 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYCON65)">
+  <rect x="0" y="7.0" width="64" height="26.25" fill="var(--green)"/>
+  <rect x="0" y="33.0" width="64" height="26.25" fill="var(--white)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M32 11 L49 49 Q32 56 15 49 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

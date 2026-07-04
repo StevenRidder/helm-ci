@@ -1,0 +1,214 @@
+{
+  "agent_id": "codex/FORGE-18-visual-semantic-judge-batches28-29",
+  "batch_id": "standard_judge_batch_028_029_rerun",
+  "created_at": "2026-07-01T16:59:41Z",
+  "project": "vulkan",
+  "schema_version": "standard.visual_judge.v1",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "selected_asset_ids": [
+      "TSSCRS51",
+      "TSSLPT51",
+      "TSSRON51",
+      "TWRDEF51",
+      "TWRTPT52",
+      "TWRTPT53",
+      "WRECKS01"
+    ],
+    "selection_note": "Judged only repaired icon batches 28 and 29 against standard_source_table semantic_brief plus S-101/OpenCPN/provider witnesses and actual repaired SVG/renders on branch.",
+    "source_batches": [
+      "pipeline/iconforge/catalog/owned_repair_batch28.json",
+      "pipeline/iconforge/catalog/owned_repair_batch29.json"
+    ],
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "final_approved": 0,
+    "pass": 7,
+    "selected": 7,
+    "source_batches": [
+      "catalog/owned_repair_batch28.json",
+      "catalog/owned_repair_batch29.json"
+    ]
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 28,
+      "confidence": 0.9,
+      "expected": "TSSCRS51 is traffic crossing area. Required geometry is the traffic crossing/caution marker silhouette from the S-101/OpenCPN witnesses, not a generic buoy, beacon, or route arrow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. Helm line weight and ring size are style differences; do not mark final human approval.",
+      "observed": "Candidate is a magenta traffic crossing marker with circular enclosure and vertical exclamation-like crossing cue. It preserves the traffic-area family and reads like the S-101/OpenCPN witness at small size.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TSSCRS51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TSSCRS51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSCRS51__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSCRS51__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSCRS51__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TSSCRS51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TSSCRS51.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TSSCRS51__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TSSCRS51",
+      "symbol_id": "TSSCRS51"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.93,
+      "expected": "TSSLPT51 is traffic direction in a one way lane of a traffic separation scheme. Required geometry is one clear lane arrow in the traffic-magenta family.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. Outline-vs-filled treatment is an acceptable Helm style difference because the one-way upward arrow semantics are clear.",
+      "observed": "Candidate is a single upward magenta lane arrow. Directionality, one-way count, and traffic-separation class match the S-101/OpenCPN witnesses.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TSSLPT51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TSSLPT51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSLPT51__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSLPT51__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSLPT51__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TSSLPT51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TSSLPT51.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TSSLPT51__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TSSLPT51",
+      "symbol_id": "TSSLPT51"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.92,
+      "expected": "TSSRON51 is traffic roundabout. Required geometry is a roundabout/circular traffic direction arrow, not a generic dashed box or ordinary circular area.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. Helm simplifies the S-101 sweep but preserves the required roundabout semantics.",
+      "observed": "Candidate is a magenta circular traffic roundabout arrow. It preserves the circular motion, arrow head, and traffic roundabout family from the S-101/OpenCPN witnesses.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TSSRON51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TSSRON51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSRON51__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSRON51__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TSSRON51__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TSSRON51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TSSRON51.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TSSRON51__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TSSRON51",
+      "symbol_id": "TSSRON51"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.88,
+      "expected": "TWRDEF51 is a two way route of a traffic separation scheme with direction not defined in the data. Required geometry is reciprocal/paired route arrows plus an undefined-direction cue.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. The exact dash spacing differs from S-101, but the route class, reciprocal geometry, and question-mark undefined cue are present.",
+      "observed": "Candidate shows reciprocal traffic-route arrowheads with central route marks and flanking question marks. The undefined-direction cue and two-way traffic-route class match the S-101/OpenCPN witnesses.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TWRDEF51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TWRDEF51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRDEF51__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRDEF51__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRDEF51__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TWRDEF51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TWRDEF51.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TWRDEF51__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TWRDEF51",
+      "symbol_id": "TWRDEF51"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.9,
+      "expected": "TWRTPT52 is reciprocal traffic directions in a two-way route of a traffic separation scheme. Required geometry is paired opposing route arrows, not a single direction symbol.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. The candidate is a simplified Helm redraw, but the opposing-arrow semantics are clear.",
+      "observed": "Candidate shows paired reciprocal up/down arrowheads with central route ticks. It preserves the two-way reciprocal directionality from the S-101/OpenCPN witnesses.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TWRTPT52",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TWRTPT52.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT52__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT52__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT52__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TWRTPT52__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TWRTPT52.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TWRTPT52__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TWRTPT52",
+      "symbol_id": "TWRTPT52"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.88,
+      "expected": "TWRTPT53 is single traffic direction in a two-way route part of a traffic separation scheme. Required geometry is a single route-direction arrow with two-way-route context, not a reciprocal pair.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch28.json",
+      "judge_comments": "Visual/semantic rerun pass only. The simplified dashed stem is acceptable because the single-arrow variant is not confused with TWRTPT52.",
+      "observed": "Candidate shows one traffic-direction arrowhead over a dashed route stem. It preserves the single-direction-in-two-way-route semantics from the S-101/OpenCPN witnesses.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch28.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TWRTPT53",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch28/TWRTPT53.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT53__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT53__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch20/renders/TWRTPT53__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TWRTPT53__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/TWRTPT53.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TWRTPT53__day.png"
+      ],
+      "source_table_id": "opencpn-s52:TWRTPT53",
+      "symbol_id": "TWRTPT53"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.9,
+      "expected": "WRECKS01 is wreck showing any portion of hull or superstructure at level of chart datum. Required geometry is the recognized exposed-wreck hull/superstructure silhouette from S-101/OpenCPN.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch29.json",
+      "judge_comments": "Visual/semantic rerun pass only. The candidate now matches the marine-standard wreck variant closely enough for human final review.",
+      "observed": "Candidate is a black exposed-wreck silhouette with low horizontal hull and sloped wreckage/mast. The bad white circular aperture is gone and the symbol no longer reads as a generic sail or decorative icon.",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch29.json",
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:WRECKS01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch29/WRECKS01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch21/renders/WRECKS01__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch21/renders/WRECKS01__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch21/renders/WRECKS01__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/WRECKS01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/WRECKS01.svg",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/WRECKS01__day.png"
+      ],
+      "source_table_id": "opencpn-s52:WRECKS01",
+      "symbol_id": "WRECKS01"
+    }
+  ]
+}

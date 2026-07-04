@@ -1,0 +1,926 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch71.json",
+    "renders": "out/standard_repair_batch63/renders",
+    "svg_dir": "assets/svg/owned_repair_batch71"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 10,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA100__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA100__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA100__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA100.svg",
+      "asset": "TOPMA100",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA100.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA100.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "topmark_cone_down",
+        "chart1_evidence_status": "exact_symbol_crop",
+        "chart1_gate_status": "exact_crop_failed_verifier",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q9",
+          "Q10",
+          "Q11",
+          "Q50"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "topmark, beacon, red cone, point down",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP25",
+          "COLOUR3"
+        ],
+        "lookup_id": "2139",
+        "lookup_rcid": "93811",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPMA100);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA100 is topmark, beacon, red cone, point down. It is used as a topmark, beacon, red cone, point down. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "topmark, beacon, red cone, point down"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA100__day.png",
+            "label": "topmark, beacon, red cone, point down",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA100__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA100__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA100__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA102__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA102__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA102__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA102.svg",
+      "asset": "TOPMA102",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA102.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA102.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "topmark_cone_up",
+        "chart1_evidence_status": "exact_symbol_crop",
+        "chart1_gate_status": "exact_crop_failed_verifier",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q9",
+          "Q10",
+          "Q11",
+          "Q50"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "topmark, beacon, green cone, point up",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP24",
+          "COLOUR4"
+        ],
+        "lookup_id": "2137",
+        "lookup_rcid": "30348",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPMA102);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA102 is topmark, beacon, green cone, point up. It is used as a topmark, beacon, green cone, point up. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "topmark, beacon, green cone, point up"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA102__day.png",
+            "label": "topmark, beacon, green cone, point up",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA102__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA102__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA102__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA106__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA106__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA106__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA106.svg",
+      "asset": "TOPMA106",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA106.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA106.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "beacon top mark, white-red square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA106 as the exact white-red-white square-board topmark/proportions from the reference, not a tall rectangular sign.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP6",
+          "COLPAT1",
+          "COLOUR1,3,1"
+        ],
+        "lookup_id": "3011",
+        "lookup_rcid": "3063028",
+        "object_class": "topmar",
+        "s52_instruction": "SY(TOPMA106);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_board_proportion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA106 is beacon top mark, white-red square board, vertical. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "red",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA106__day.png",
+            "label": "beacon top mark, white-red square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA106__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA106__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA106__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA107__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA107__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA107__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA107.svg",
+      "asset": "TOPMA107",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA107.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA107.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "beacon top mark, red boarded square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA107 as the exact red-bordered square-board topmark with square proportions.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP19",
+          "COLPAT6",
+          "COLOUR1,3"
+        ],
+        "lookup_id": "2090",
+        "lookup_rcid": "93800",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPMA107);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_board_proportion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA107 is beacon top mark, red boarded square board, vertical. It is used as a beacon top mark, red boarded square board, vertical. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "beacon top mark, red boarded square board, vertical"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA107__day.png",
+            "label": "beacon top mark, red boarded square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA107__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA107__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA107__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA109__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA109__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA109__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA109.svg",
+      "asset": "TOPMA109",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA109.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA109.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "beacon top mark, green boarded square board, diagonal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA109 as the exact green-boarded diagonal square/diamond board topmark, preserving white/green pattern semantics.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP12",
+          "COLOUR1,4",
+          "COLPAT6"
+        ],
+        "lookup_id": "2991",
+        "lookup_rcid": "3063008",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPMA109);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_orientation",
+        "wrong_colour_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA109 is beacon top mark, green boarded square board, diagonal. It is used as a beacon top mark, green boarded square board, diagonal. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, green with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "white",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "green"
+        ],
+        "use_case": "beacon top mark, green boarded square board, diagonal"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA109__day.png",
+            "label": "beacon top mark, green boarded square board, diagonal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA109__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA109__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA109__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA113__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA113__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA113__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA113.svg",
+      "asset": "TOPMA113",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA113.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA113.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "topmark_x_shape",
+        "chart1_evidence_status": "exact_symbol_crop",
+        "chart1_gate_status": "exact_crop_failed_verifier",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q9",
+          "Q10",
+          "Q11",
+          "Q50"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "beacon top mark, yellow Andreas cross",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP7",
+          "COLOUR6"
+        ],
+        "lookup_id": "2992",
+        "lookup_rcid": "3063009",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPMA113);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA113 is beacon top mark, yellow Andreas cross. It is used as a beacon top mark, yellow Andreas cross. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "beacon top mark, yellow Andreas cross"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA113__day.png",
+            "label": "beacon top mark, yellow Andreas cross",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA113__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA113__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA113__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA114__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA114__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA114__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA114.svg",
+      "asset": "TOPMA114",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA114.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA114.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "TOPMA114",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA114 to the exact narrow red topmark silhouette/proportions from the reference, not a generic rectangle.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP5",
+          "COLOUR3"
+        ],
+        "lookup_id": "2411",
+        "lookup_rcid": "93828",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMA114);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_reference_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA114 is TOPMA114. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA114__day.png",
+            "label": "TOPMA114",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA114__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA114__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA114__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA115__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA115__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA115__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA115.svg",
+      "asset": "TOPMA115",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA115.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA115.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "TOPMA115",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA115 as the exact green cone/triangle-style topmark silhouette from the reference.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP1",
+          "COLOUR4"
+        ],
+        "lookup_id": "2406",
+        "lookup_rcid": "93872",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMA115);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA115 is TOPMA115. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA115__day.png",
+            "label": "TOPMA115",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA115__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA115__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA115__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA116__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA116__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA116__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA116.svg",
+      "asset": "TOPMA116",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA116.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA116.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": null,
+      "name": "topmark, buoy, red-white-red board, entry prohibited",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Redraw TOPMA116 as the exact red-white-red entry-prohibited board topmark with correct board proportions and band order.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP6",
+          "COLPAT1",
+          "COLOUR3,1,3"
+        ],
+        "lookup_id": "3013",
+        "lookup_rcid": "3063030",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMA116);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_board_proportion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA116 is topmark, buoy, red-white-red board, entry prohibited. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white, red with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA116__day.png",
+            "label": "topmark, buoy, red-white-red board, entry prohibited",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA116__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA116__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA116__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch63/renders/TOPMA117__after__day.png",
+        "dusk": "out/standard_repair_batch63/renders/TOPMA117__after__dusk.png",
+        "night": "out/standard_repair_batch63/renders/TOPMA117__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch71/TOPMA117.svg",
+      "asset": "TOPMA117",
+      "before_svg": "assets/svg/owned_repair_batch71/TOPMA117.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPMA117.svg",
+      "candidate_strategy": "owned_topmark_redraw_from_opencpn_chart1_reference_and_s57_colours",
+      "chart1_parity_gate": {
+        "chart1_crop_id": "topmark_sphere",
+        "chart1_evidence_status": "exact_symbol_crop",
+        "chart1_gate_status": "exact_crop_failed_verifier",
+        "chart1_mappings_int1_refs": [
+          "Q2",
+          "Q3",
+          "Q4",
+          "Q5",
+          "Q9",
+          "Q10",
+          "Q11",
+          "Q50"
+        ],
+        "chart1_verdict": "fail",
+        "reason_codes": [
+          "wrong_silhouette_or_symbol_body"
+        ],
+        "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "status": "blocked_by_chart1_parity_gate"
+      },
+      "name": "topmark, buoy, red-grean shere",
+      "provenance": {
+        "generator": "forge.standard_repair_batch63",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN/Chart No.1 witness and S-57 colour metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue TOPMA1 topmark blocker",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_topma1_reference_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "topma1_reference_repair_batch71",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP26",
+          "COLPAT1",
+          "COLOUR3,4"
+        ],
+        "lookup_id": "3030",
+        "lookup_rcid": "3063046",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(TOPMA117);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMA117 is topmark, buoy, red-grean shere. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_046_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPMA117__day.png",
+            "label": "topmark, buoy, red-grean shere",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPMA117__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPMA117__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPMA117__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

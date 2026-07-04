@@ -1,0 +1,242 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch12-local",
+  "batch_id": "standard_judge_batch_012_rerun",
+  "created_at": "2026-07-01T06:59:05Z",
+  "project": "vulkan",
+  "schema_version": 1,
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "selected_symbol_ids": [
+      "BOYCAN81",
+      "BOYCON74",
+      "BOYCON81",
+      "BOYINB01",
+      "BOYISD12",
+      "BOYMOR01",
+      "BOYMOR11",
+      "BOYPIL78",
+      "BOYSAW12"
+    ],
+    "semantic_shape_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source_batch": "catalog/owned_repair_batch12.json",
+    "source_repair_batch": "pipeline/iconforge/catalog/owned_repair_batch12.json",
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "blockers": [],
+    "fail_count": 3,
+    "final_approved_count": 0,
+    "notes": "Visual rerun only after owned batch12 repairs; no SVG edits and no final approvals. Candidate repair renders from out/standard_repair_batch4/renders were used because source-table triad render paths still point at older candidates.",
+    "pass_count": 6,
+    "top_failure_themes": [
+      "unclipped grey separator/grid strokes protrude outside repaired buoy silhouettes",
+      "BOYCON81 special-purpose mixed stripe pattern still needs exact-reference resolution"
+    ],
+    "total_verdicts": 9
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.91,
+      "expected": "can buoy,lateral white/orange,full-chart. Required can/cylindrical buoy body; colours orange-white with horizontal bands in listed order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 resolves the prior visible order failure. The repaired can body carries the required orange-over-white order and preserves the can/cylindrical class. Not final-approved.",
+      "observed": "Can/cylindrical buoy with orange upper band, white lower band, black outline, and black stem.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN81",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYCAN81.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYCAN81__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN81__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN81__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN81",
+      "symbol_id": "BOYCAN81"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.84,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; colours green-white-green-white-green, with no external visual scaffolding outside the buoy silhouette.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The repair addresses the semantic band count/order, but the visible grey bars are not present in OpenCPN/S-101 witnesses and break visual parity by adding extra chart marks around the buoy.",
+      "observed": "Conical/nun buoy body now has green-white-green-white-green fills, but grey horizontal separator strokes protrude well outside both sides of the cone.",
+      "pass": false,
+      "required_change": "Clip or remove the separator strokes so no grey horizontal bars protrude outside the conical silhouette; preserve the ordered green-white-green-white-green body.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON74",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYCON74.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYCON74__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON74__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON74__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON74",
+      "symbol_id": "BOYCON74"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.78,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; colours blue-red-white-blue with the exact special-purpose horizontal/vertical stripe treatment, and no external scaffolding.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The repair added the missing final blue cue, but the mixed pattern remains visually unresolved against the reference render and the external grey grid lines are not part of the chart symbol.",
+      "observed": "Conical/nun buoy with blue-red-white-blue horizontal colour order and translucent vertical overlays, plus grey grid/separator strokes protruding outside the body.",
+      "pass": false,
+      "required_change": "Resolve BOYCON81's exact special-purpose stripe pattern against the reference render, then clip or remove all grid/separator strokes outside the conical silhouette.",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "unsafe_special_purpose_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON81",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYCON81.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYCON81__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON81__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON81__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON81",
+      "symbol_id": "BOYCON81"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.88,
+      "expected": "instructionallation buoy, paper-chart. Required black installation/buoy-family symbol matching S-101/OpenCPN silhouette.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 replaces the prior generic filled buoy with the installation-buoy line geometry seen in S-101/OpenCPN. Stroke weight is Helm-styled but the load-bearing shape is correct. Not final-approved.",
+      "observed": "Black installation-buoy line symbol with top ring, lower ring, baseline arms, and trapezoid frame.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYINB01",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYINB01.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYINB01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYINB01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYINB01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYINB01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYINB01",
+      "symbol_id": "BOYINB01"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.9,
+      "expected": "isolated danger buoy, simplified. Required simplified isolated-danger cue with paired red marks; no single-ball substitute.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 removes the incorrect single-topmark buoy substitute and matches the paired simplified isolated-danger cue shown by S-101/OpenCPN. Not final-approved.",
+      "observed": "Two red circular isolated-danger disks with black outlines, arranged diagonally.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYISD12",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYISD12.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYISD12__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYISD12__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYISD12__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYISD12.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/BOYISD1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYISD12",
+      "symbol_id": "BOYISD12"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.86,
+      "expected": "mooring buoy, barrel shape, full-chart. Required black mooring buoy/facility cue from S-101/Aqua Map/OpenCPN.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 replaces the plain sphere with the recognizable mooring/facility witness shape. The line weight is lighter than S-101 but the symbol class and visual cue are correct. Not final-approved.",
+      "observed": "Black mooring facility line cue with upper ring, lower ring, arched body stroke, and baseline arms.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYMOR01",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYMOR01.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYMOR01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYMOR01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYMOR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYMOR01.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/Mooring1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR01",
+      "symbol_id": "BOYMOR01"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.88,
+      "expected": "instructionallation buoy and mooring buoy, simplified. Required black simplified mooring facility/buoy symbol.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 removes the target-ring substitute and now matches the compact filled simplified mooring cue used by the reference render. Not final-approved.",
+      "observed": "Compact black simplified mooring symbol: filled trapezoid body with a black top disk.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYMOR11",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYMOR11.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYMOR11__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYMOR11__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYMOR11__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYMOR11.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/Mooring1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR11",
+      "symbol_id": "BOYMOR11"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.82,
+      "expected": "BOYPIL78. Required pillar buoy body with red-white squared/checkered pattern clipped inside the pillar silhouette.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The repair addresses the requested checker pattern, but the visible grey grid outside the buoy silhouette is not present in the references and prevents visual parity.",
+      "observed": "Pillar buoy body now uses a red/white squared pattern, but grey vertical and horizontal grid strokes protrude outside the body like scaffolding.",
+      "pass": false,
+      "required_change": "Clip or remove the checker/grid separator strokes so they stay inside the pillar body; preserve the red-white squared/checkered pattern.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_grid_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL78",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYPIL78.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYPIL78__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL78__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL78__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL78",
+      "symbol_id": "BOYPIL78"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.9,
+      "expected": "safe water buoy, simplified. Required compact red safe-water simplified cue matching S-101/OpenCPN; no red-white buoy body substitute.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Batch12 removes the split body/topmark substitute and matches the compact safe-water simplified cue. Not final-approved.",
+      "observed": "Compact red disk with black outline and small black center point.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSAW12",
+        "helm_candidate:assets/svg/owned_repair_batch12/BOYSAW12.svg",
+        "helm_render:out/standard_repair_batch4/renders/BOYSAW12__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSAW12__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSAW12__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSAW12.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/BOYSAW1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSAW12",
+      "symbol_id": "BOYSAW12"
+    }
+  ]
+}

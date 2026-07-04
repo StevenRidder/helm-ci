@@ -1,0 +1,565 @@
+{
+  "blockers": [
+    {
+      "asset": "BCNCON81",
+      "reference_providers": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNCON81__day.png",
+            "label": "BCNCON81",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNCON81__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNCON81__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNCON81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      },
+      "required_change": "BCNCON81 needs an exact local reference crop/render first; then redraw against that crop rather than approving a generic black post.",
+      "safety_reason_codes": [
+        "missing_exact_reference",
+        "unsafe_symbol_confusion",
+        "insufficient_visual_evidence"
+      ],
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "status": "hard_blocked_missing_exact_reference"
+    },
+    {
+      "asset": "BOYLAT52",
+      "reference_providers": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYLAT52__day.png",
+            "label": "BOYLAT52",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYLAT52__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYLAT52__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYLAT52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      },
+      "required_change": "Regenerate/verify out/opencpn_s52_reference/BOYLAT52__day.png before promoting this row.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_visual_evidence"
+      ],
+      "semantic_brief": {
+        "brief": "BOYLAT52 is BOYLAT52. It is used as a BOYLAT52. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: red, green, red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "green",
+          "red"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "BOYLAT52"
+      },
+      "status": "blocked_missing_opencpn_day_render"
+    },
+    {
+      "asset": "BOYLAT53",
+      "reference_providers": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYLAT53__day.png",
+            "label": "BOYLAT53",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYLAT53__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYLAT53__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYLAT53__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      },
+      "required_change": "Regenerate/verify out/opencpn_s52_reference/BOYLAT53__day.png before promoting this row.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_visual_evidence"
+      ],
+      "semantic_brief": {
+        "brief": "BOYLAT53 is BOYLAT53. It is used as a BOYLAT53. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: green, red, green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "red",
+          "green"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "BOYLAT53"
+      },
+      "status": "blocked_missing_opencpn_day_render"
+    },
+    {
+      "asset": "BOYSPR02",
+      "reference_providers": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPR02__day.png",
+            "label": "BOYSPR02",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPR02__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPR02__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPR02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      },
+      "required_change": "Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPR02 before passing visual parity.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_source_refs"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPR02 is BOYSPR02. It is used as a BOYSPR02. Required geometry: spar buoy body. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "spar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "BOYSPR02"
+      },
+      "status": "blocked_missing_opencpn_or_s101_reference"
+    },
+    {
+      "asset": "BOYSPR03",
+      "reference_providers": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPR03__day.png",
+            "label": "BOYSPR03",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPR03__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPR03__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPR03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      },
+      "required_change": "Regenerate or attach the exact OpenCPN/S-101 reference for BOYSPR03 before passing visual parity.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_source_refs"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPR03 is BOYSPR03. It is used as a BOYSPR03. Required geometry: spar buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "spar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "BOYSPR03"
+      },
+      "status": "blocked_missing_opencpn_or_s101_reference"
+    }
+  ],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch14.json",
+    "renders": "out/standard_repair_batch6/renders",
+    "svg_dir": "assets/svg/owned_repair_batch14"
+  },
+  "schema_version": 1,
+  "source_queue": "catalog/standard_repair_queue.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "blocked_or_skipped": 5,
+    "expected_queue_rows": 9,
+    "failed_repaired": 4,
+    "source_queue_rows": 9,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch6/renders/BOYCON74__after__day.png",
+        "dusk": "out/standard_repair_batch6/renders/BOYCON74__after__dusk.png",
+        "night": "out/standard_repair_batch6/renders/BOYCON74__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch14/BOYCON74.svg",
+      "asset": "BOYCON74",
+      "before_svg": "assets/svg/triad_generated/BOYCON74.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON74.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "conical buoy,gw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "semantic_brief/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "queued_for_render_repair",
+      "repair_note": "Redraw the green-white-green-white-green conical body with all band boundaries clipped inside the cone; no separator bars protrude outside the silhouette.",
+      "required_change": "Clip or remove the separator strokes so no grey horizontal bars protrude outside the conical silhouette; preserve the ordered green-white-green-white-green body.",
+      "risk_bucket": "standard_repair_queue_batch14",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BOYCON74 is conical buoy,gw,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: green, white, green, white, green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "white",
+          "green",
+          "white",
+          "green"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_012_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON74__day.png",
+            "label": "conical buoy,gw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON74__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON74__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch6/renders/BOYCON81__after__day.png",
+        "dusk": "out/standard_repair_batch6/renders/BOYCON81__after__dusk.png",
+        "night": "out/standard_repair_batch6/renders/BOYCON81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch14/BOYCON81.svg",
+      "asset": "BOYCON81",
+      "before_svg": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "conical buoy,gw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "semantic_brief/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "queued_for_render_repair",
+      "repair_note": "Use the local OpenCPN witness plus semantic brief to keep the blue-red-white-blue special-purpose conical cross-stripe cue while clipping all grid marks inside the cone.",
+      "required_change": "Resolve BOYCON81's exact special-purpose stripe pattern against the reference render, then clip or remove all grid/separator strokes outside the conical silhouette.",
+      "risk_bucket": "standard_repair_queue_batch14",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "unsafe_special_purpose_confusion"
+      ],
+      "semantic_brief": {
+        "brief": "BOYCON81 is conical buoy,gw,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_012_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+            "label": "conical buoy,gw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON81__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch6/renders/BOYPIL78__after__day.png",
+        "dusk": "out/standard_repair_batch6/renders/BOYPIL78__after__dusk.png",
+        "night": "out/standard_repair_batch6/renders/BOYPIL78__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch14/BOYPIL78.svg",
+      "asset": "BOYPIL78",
+      "before_svg": "assets/svg/triad_generated/BOYPIL78.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYPIL78.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "BOYPIL78",
+      "provenance": {
+        "generator": "forge.standard_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "semantic_brief/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "queued_for_render_repair",
+      "repair_note": "Redraw the red-white checkered pillar with the checker grid clipped inside the pillar body.",
+      "required_change": "Clip or remove the checker/grid separator strokes so they stay inside the pillar body; preserve the red-white squared/checkered pattern.",
+      "risk_bucket": "standard_repair_queue_batch14",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_grid_strokes",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BOYPIL78 is BOYPIL78. It is used as a special-purpose buoy used for named local purposes. Required geometry: pillar buoy body. Required colours: red, white with squared/checkered pattern in the listed colour order.",
+        "colour_pattern": "squared/checkered pattern in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "pillar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_012_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYPIL78__day.png",
+            "label": "BOYPIL78",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYPIL78__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYPIL78__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYPIL78__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch6/renders/BOYSPH79__after__day.png",
+        "dusk": "out/standard_repair_batch6/renders/BOYSPH79__after__dusk.png",
+        "night": "out/standard_repair_batch6/renders/BOYSPH79__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch14/BOYSPH79.svg",
+      "asset": "BOYSPH79",
+      "before_svg": "assets/svg/triad_generated/BOYSPH79.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYSPH79.svg",
+      "candidate_strategy": "owned_redraw_from_standard_repair_queue",
+      "name": "BOYSPH79",
+      "provenance": {
+        "generator": "forge.standard_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "semantic_brief/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "queued_for_render_repair",
+      "repair_note": "Replace the wrong spherical body with a semantic conical/nun buoy body using red over green; keeps missing-reference reason codes pending visual rerun.",
+      "required_change": "Replace the spherical body with the required conical/nun red/green buoy and regenerate/verify the OpenCPN reference render before promotion.",
+      "risk_bucket": "standard_repair_queue_batch14",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_shape",
+        "missing_reference_render"
+      ],
+      "semantic_brief": {
+        "brief": "BOYSPH79 is BOYSPH79. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_006.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYSPH79__day.png",
+            "label": "BOYSPH79",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYSPH79__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYSPH79__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYSPH79__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

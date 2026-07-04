@@ -1,0 +1,992 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch77.json",
+    "renders": "out/standard_repair_batch69/renders",
+    "svg_dir": "assets/svg/owned_repair_batch77"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 12,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/EVENTS02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/EVENTS02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/EVENTS02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/EVENTS02.svg",
+      "asset": "EVENTS02",
+      "before_svg": "assets/svg/owned_repair_batch77/EVENTS02.svg",
+      "candidate_source": "assets/svg/triad_generated/EVENTS02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "mariner's event mark",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the reference mariner-event mark shape and reference-defined color treatment.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEEVENTS02"
+        ],
+        "lookup_id": "1637",
+        "lookup_rcid": "31689",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(EVENTS02)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "EVENTS02 is mariner's event mark. It is used as a mariner's event mark. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "mariner's event mark"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/EVENTS02__day.png",
+            "label": "mariner's event mark",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/EVENTS02__day.png",
+              "dusk": "out/opencpn_s52_reference/EVENTS02__dusk.png",
+              "night": "out/opencpn_s52_reference/EVENTS02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/HECMTR01__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/HECMTR01__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/HECMTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/HECMTR01.svg",
+      "asset": "HECMTR01",
+      "before_svg": "assets/svg/owned_repair_batch77/HECMTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/HECMTR01.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "hectometre point, 100m",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the 100 m hectometre-point symbol shown by OpenCPN.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "CATDIS3",
+          "hunits4"
+        ],
+        "lookup_id": "1404",
+        "lookup_rcid": "31456",
+        "object_class": "dismar",
+        "s52_instruction": "SY(HECMTR01);TX(wtwdis,3,1,2,'14106',1,0,CHMGD,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "HECMTR01 is hectometre point, 100m. It is used as a hectometre point, 100m. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "hectometre point, 100m"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HECMTR01__day.png",
+            "label": "hectometre point, 100m",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HECMTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/HECMTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/HECMTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/HECMTR02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/HECMTR02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/HECMTR02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/HECMTR02.svg",
+      "asset": "HECMTR02",
+      "before_svg": "assets/svg/owned_repair_batch77/HECMTR02.svg",
+      "candidate_source": "assets/svg/triad_generated/HECMTR02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "hectometre point, 1km",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the 1 km hectometre-point symbol shown by OpenCPN.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "CATDIS3",
+          "hunits3"
+        ],
+        "lookup_id": "1403",
+        "lookup_rcid": "31455",
+        "object_class": "dismar",
+        "s52_instruction": "SY(HECMTR02);TX(wtwdis,3,1,2,'14106',1,0,CHMGD,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "HECMTR02 is hectometre point, 1km. It is used as a hectometre point, 1km. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "hectometre point, 1km"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HECMTR02__day.png",
+            "label": "hectometre point, 1km",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HECMTR02__day.png",
+              "dusk": "out/opencpn_s52_reference/HECMTR02__dusk.png",
+              "night": "out/opencpn_s52_reference/HECMTR02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/HGWTMK01__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/HGWTMK01__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/HGWTMK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/HGWTMK01.svg",
+      "asset": "HGWTMK01",
+      "before_svg": "assets/svg/owned_repair_batch77/HGWTMK01.svg",
+      "candidate_source": "assets/svg/triad_generated/HGWTMK01.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "high water mark",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the high-water-mark reference geometry.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "catsiw15"
+        ],
+        "lookup_id": "1560",
+        "lookup_rcid": "31612",
+        "object_class": "sistaw",
+        "s52_instruction": "SY(HGWTMK01)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HGWTMK01 is high water mark. It is used as a high water mark. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "high water mark"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HGWTMK01__day.png",
+            "label": "high water mark",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HGWTMK01__day.png",
+              "dusk": "out/opencpn_s52_reference/HGWTMK01__dusk.png",
+              "night": "out/opencpn_s52_reference/HGWTMK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/ISODGR51__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/ISODGR51__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/ISODGR51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/ISODGR51.svg",
+      "asset": "ISODGR51",
+      "before_svg": "assets/svg/owned_repair_batch77/ISODGR51.svg",
+      "candidate_source": "assets/svg/triad_generated/ISODGR51.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "isolated danger symbol, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the isolated-danger full/simplified reference symbol.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEISODGR01"
+        ],
+        "lookup_id": "1639",
+        "lookup_rcid": "31691",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(ISODGR51)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "ISODGR51 is isolated danger symbol, full-chart and simplified. It is used as a isolated danger symbol, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "isolated danger symbol, full-chart and simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/ISODGR51__day.png",
+            "label": "isolated danger symbol, full-chart and simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/ISODGR51__day.png",
+              "dusk": "out/opencpn_s52_reference/ISODGR51__dusk.png",
+              "night": "out/opencpn_s52_reference/ISODGR51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/NOTMRK03__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/NOTMRK03__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/NOTMRK03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/NOTMRK03.svg",
+      "asset": "NOTMRK03",
+      "before_svg": "assets/svg/owned_repair_batch77/NOTMRK03.svg",
+      "candidate_source": "assets/svg/triad_generated/NOTMRK03.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "notice mark, information, recommendation",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace with the NOTMRK03 reference information/recommendation notice-board shape and preserve the blue/black reference colour family or provide explicit metadata justifying the alternate white-board convention.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "fnctnm4"
+        ],
+        "lookup_id": "1526",
+        "lookup_rcid": "31578",
+        "object_class": "notmrk",
+        "s52_instruction": "SY(NOTMRK03)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NOTMRK03 is notice mark, information, recommendation. It is used as a notice mark, information, recommendation. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "notice mark, information, recommendation"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NOTMRK03__day.png",
+            "label": "notice mark, information, recommendation",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NOTMRK03__day.png",
+              "dusk": "out/opencpn_s52_reference/NOTMRK03__dusk.png",
+              "night": "out/opencpn_s52_reference/NOTMRK03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/OSPONE02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/OSPONE02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/OSPONE02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/OSPONE02.svg",
+      "asset": "OSPONE02",
+      "before_svg": "assets/svg/owned_repair_batch77/OSPONE02.svg",
+      "candidate_source": "assets/svg/triad_generated/OSPONE02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "one minute mark for ownship vector",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Use the OSPONE02 one-minute vector tick as a short reference-aligned black tick/line, or record explicit orientation/colour metadata before rerun approval.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEOSPONE02"
+        ],
+        "lookup_id": "1646",
+        "lookup_rcid": "31698",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(OSPONE02)"
+      },
+      "safety_reason_codes": [
+        "wrong_line_orientation",
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_ownship_confusion"
+      ],
+      "semantic_brief": {
+        "brief": "OSPONE02 is one minute mark for ownship vector. It is used as a one minute mark for ownship vector. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "one minute mark for ownship vector"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OSPONE02__day.png",
+            "label": "one minute mark for ownship vector",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OSPONE02__day.png",
+              "dusk": "out/opencpn_s52_reference/OSPONE02__dusk.png",
+              "night": "out/opencpn_s52_reference/OSPONE02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/OSPSIX02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/OSPSIX02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/OSPSIX02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/OSPSIX02.svg",
+      "asset": "OSPSIX02",
+      "before_svg": "assets/svg/owned_repair_batch77/OSPSIX02.svg",
+      "candidate_source": "assets/svg/triad_generated/OSPSIX02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "six minute mark for ownship vector",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the hash/grid mark with the OSPSIX02 six-minute vector tick/line geometry matching the reference line semantics.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEOSPSIX02"
+        ],
+        "lookup_id": "1647",
+        "lookup_rcid": "31699",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(OSPSIX02)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_line_semantics",
+        "invented_detail",
+        "unsafe_ownship_confusion"
+      ],
+      "semantic_brief": {
+        "brief": "OSPSIX02 is six minute mark for ownship vector. It is used as a six minute mark for ownship vector. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "six minute mark for ownship vector"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OSPSIX02__day.png",
+            "label": "six minute mark for ownship vector",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OSPSIX02__day.png",
+              "dusk": "out/opencpn_s52_reference/OSPSIX02__dusk.png",
+              "night": "out/opencpn_s52_reference/OSPSIX02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/PLNPOS02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/PLNPOS02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/PLNPOS02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/PLNPOS02.svg",
+      "asset": "PLNPOS02",
+      "before_svg": "assets/svg/owned_repair_batch77/PLNPOS02.svg",
+      "candidate_source": "assets/svg/triad_generated/PLNPOS02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "crossline for planned position",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the plus/crosshair with the PLNPOS02 planned-position crossline geometry, preserving the single-line/oriented-line semantics from the reference.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1530",
+        "lookup_rcid": "31582",
+        "object_class": "plnpos",
+        "s52_instruction": "SY(PLNPOS01);SY(PLNPOS02,ORIENT);TX(plndat,1,2,2,'15110',4,3,CHBLK,50);"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_line_semantics",
+        "invented_detail",
+        "missing_planned_route_annotation"
+      ],
+      "semantic_brief": {
+        "brief": "PLNPOS02 is crossline for planned position. It is used as a crossline for planned position. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "crossline for planned position"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PLNPOS02__day.png",
+            "label": "crossline for planned position",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PLNPOS02__day.png",
+              "dusk": "out/opencpn_s52_reference/PLNPOS02__dusk.png",
+              "night": "out/opencpn_s52_reference/PLNPOS02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/POSITN02__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/POSITN02__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/POSITN02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/POSITN02.svg",
+      "asset": "POSITN02",
+      "before_svg": "assets/svg/owned_repair_batch77/POSITN02.svg",
+      "candidate_source": "assets/svg/triad_generated/POSITN02.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "ownship position fix",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diagonal X with the POSITN02 orthogonal position-fix crosshair/plus geometry while preserving the orange colour family.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEPOSITN02"
+        ],
+        "lookup_id": "1653",
+        "lookup_rcid": "31705",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(POSITN02)"
+      },
+      "safety_reason_codes": [
+        "wrong_line_semantics",
+        "wrong_shape",
+        "unsafe_ownship_confusion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "POSITN02 is ownship position fix. It is used as a ownship position fix. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ownship position fix"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/POSITN02__day.png",
+            "label": "ownship position fix",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/POSITN02__day.png",
+              "dusk": "out/opencpn_s52_reference/POSITN02__dusk.png",
+              "night": "out/opencpn_s52_reference/POSITN02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/PRICKE03__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/PRICKE03__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/PRICKE03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/PRICKE03.svg",
+      "asset": "PRICKE03",
+      "before_svg": "assets/svg/owned_repair_batch77/PRICKE03.svg",
+      "candidate_source": "assets/svg/triad_generated/PRICKE03.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "withy, porthand, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the PRICKE03 porthand withy beacon shape.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP2",
+          "CATLAM1"
+        ],
+        "lookup_id": "1750",
+        "lookup_rcid": "30038",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(PRICKE03);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "PRICKE03 is withy, porthand, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: withy beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "withy beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PRICKE03__day.png",
+            "label": "withy, porthand, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PRICKE03__day.png",
+              "dusk": "out/opencpn_s52_reference/PRICKE03__dusk.png",
+              "night": "out/opencpn_s52_reference/PRICKE03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "PRICKE03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/PRICKE03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "PRICKE03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/PRICKE03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "PRICKE03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch69/renders/PRICKE04__after__day.png",
+        "dusk": "out/standard_repair_batch69/renders/PRICKE04__after__dusk.png",
+        "night": "out/standard_repair_batch69/renders/PRICKE04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch77/PRICKE04.svg",
+      "asset": "PRICKE04",
+      "before_svg": "assets/svg/owned_repair_batch77/PRICKE04.svg",
+      "candidate_source": "assets/svg/triad_generated/PRICKE04.svg",
+      "candidate_strategy": "owned_small_symbol_redraw_from_opencpn_reference",
+      "name": "withy, starboard hand, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch69",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN point/line witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue small point/line symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_point_symbol_reference_consumed",
+      "required_change": "Replace the diamond with the PRICKE04 starboard withy beacon shape.",
+      "risk_bucket": "point_line_symbol_repair_batch77",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP2",
+          "CATLAM2"
+        ],
+        "lookup_id": "1751",
+        "lookup_rcid": "30039",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(PRICKE04);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "PRICKE04 is withy, starboard hand, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: withy beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "withy beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PRICKE04__day.png",
+            "label": "withy, starboard hand, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PRICKE04__day.png",
+              "dusk": "out/opencpn_s52_reference/PRICKE04__dusk.png",
+              "night": "out/opencpn_s52_reference/PRICKE04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "PRICKE04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/PRICKE04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "PRICKE04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/PRICKE04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "PRICKE04"
+          }
+        ]
+      }
+    }
+  ]
+}

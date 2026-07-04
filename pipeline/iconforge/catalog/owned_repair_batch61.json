@@ -1,0 +1,352 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch61.json",
+    "renders": "out/standard_repair_batch53/renders",
+    "svg_dir": "assets/svg/owned_repair_batch61"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 3,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch53/renders/TOWERS55__after__day.png",
+        "dusk": "out/standard_repair_batch53/renders/TOWERS55__after__dusk.png",
+        "night": "out/standard_repair_batch53/renders/TOWERS55__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch61/TOWERS55.svg",
+      "asset": "TOWERS55",
+      "before_svg": "assets/svg/owned_repair_batch59/TOWERS55.svg",
+      "candidate_source": "assets/svg/triad_generated/TOWERS55.svg",
+      "candidate_strategy": "bounded_owned_diagonal_tower_redraw",
+      "name": "tower, black/yellow/black, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch53",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge59 required_change requires diagonal stripes constrained inside tower silhouette",
+        "source_priority_basis": "standard_judge_batch_059_rerun diagonal stripe clip feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_059_failure_consumed",
+      "required_change": "Constrain the yellow/black diagonal stripe fills to the tapered tower body, verify the rendered alpha stays inside the silhouette/outline, then rerun the judge; do not final-approve this artifact.",
+      "risk_bucket": "tower_bounded_diagonal_repair_batch61",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR6,2",
+          "COLPAT3"
+        ],
+        "lookup_id": "2464",
+        "lookup_rcid": "93978",
+        "object_class": "TOWERS",
+        "s52_instruction": "SY(TOWERS55);TX(OBJNAM,3,2,2,'15110',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "stripe_geometry_outside_silhouette",
+        "pattern_clip_failure",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOWERS55 is tower, black/yellow/black, full-chart and simplified. It is used as a tower, black/yellow/black, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: yellow, black with diagonal stripes in the listed colour order.",
+        "colour_pattern": "diagonal stripes in the listed colour order",
+        "required_colours": [
+          "yellow",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "tower, black/yellow/black, full-chart and simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_059_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Tower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Water Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOWERS55__day.png",
+            "label": "tower, black/yellow/black, full-chart and simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOWERS55__day.png",
+              "dusk": "out/opencpn_s52_reference/TOWERS55__dusk.png",
+              "night": "out/opencpn_s52_reference/TOWERS55__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch53/renders/TOWERS94__after__day.png",
+        "dusk": "out/standard_repair_batch53/renders/TOWERS94__after__dusk.png",
+        "night": "out/standard_repair_batch53/renders/TOWERS94__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch61/TOWERS94.svg",
+      "asset": "TOWERS94",
+      "before_svg": "assets/svg/owned_repair_batch59/TOWERS94.svg",
+      "candidate_source": "assets/svg/triad_generated/TOWERS94.svg",
+      "candidate_strategy": "bounded_owned_diagonal_tower_redraw",
+      "name": "tower, black/yellow/black, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch53",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge59 required_change requires diagonal stripes constrained inside tower silhouette",
+        "source_priority_basis": "standard_judge_batch_059_rerun diagonal stripe clip feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_059_failure_consumed",
+      "required_change": "Constrain the black/white diagonal stripe fills to the tapered tower body, verify the rendered alpha stays inside the silhouette/outline, then rerun the judge; do not final-approve this artifact.",
+      "risk_bucket": "tower_bounded_diagonal_repair_batch61",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK17",
+          "COLPAT3",
+          "FUNCTN33",
+          "COLOUR2,1"
+        ],
+        "lookup_id": "2219",
+        "lookup_rcid": "30395",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(TOWERS94)"
+      },
+      "safety_reason_codes": [
+        "stripe_geometry_outside_silhouette",
+        "pattern_clip_failure",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOWERS94 is tower, black/yellow/black, full-chart and simplified. It is used as a tower, black/yellow/black, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black, white with diagonal stripes in the listed colour order.",
+        "colour_pattern": "diagonal stripes in the listed colour order",
+        "required_colours": [
+          "black",
+          "white"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "white"
+        ],
+        "use_case": "tower, black/yellow/black, full-chart and simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_059_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Tower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Water Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOWERS94__day.png",
+            "label": "tower, black/yellow/black, full-chart and simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOWERS94__day.png",
+              "dusk": "out/opencpn_s52_reference/TOWERS94__dusk.png",
+              "night": "out/opencpn_s52_reference/TOWERS94__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch53/renders/TOWERS97__after__day.png",
+        "dusk": "out/standard_repair_batch53/renders/TOWERS97__after__dusk.png",
+        "night": "out/standard_repair_batch53/renders/TOWERS97__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch61/TOWERS97.svg",
+      "asset": "TOWERS97",
+      "before_svg": "assets/svg/owned_repair_batch59/TOWERS97.svg",
+      "candidate_source": "assets/svg/triad_generated/TOWERS97.svg",
+      "candidate_strategy": "bounded_owned_diagonal_tower_redraw",
+      "name": "tower, black/yellow/black, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch53",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge59 required_change requires diagonal stripes constrained inside tower silhouette",
+        "source_priority_basis": "standard_judge_batch_059_rerun diagonal stripe clip feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_059_failure_consumed",
+      "required_change": "Constrain the white/black diagonal stripe fills to the tapered tower body, verify the rendered alpha stays inside the silhouette/outline, then rerun the judge; do not final-approve this artifact.",
+      "risk_bucket": "tower_bounded_diagonal_repair_batch61",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK17",
+          "COLPAT3",
+          "COLOUR1,2"
+        ],
+        "lookup_id": "2231",
+        "lookup_rcid": "93964",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(TOWERS97)"
+      },
+      "safety_reason_codes": [
+        "stripe_geometry_outside_silhouette",
+        "pattern_clip_failure",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOWERS97 is tower, black/yellow/black, full-chart and simplified. It is used as a tower, black/yellow/black, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black with diagonal stripes in the listed colour order.",
+        "colour_pattern": "diagonal stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "tower, black/yellow/black, full-chart and simplified"
+      },
+      "source_judge": "catalog/standard_judge_batch_059_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Tower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Water Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOWERS97__day.png",
+            "label": "tower, black/yellow/black, full-chart and simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOWERS97__day.png",
+              "dusk": "out/opencpn_s52_reference/TOWERS97__dusk.png",
+              "night": "out/opencpn_s52_reference/TOWERS97__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

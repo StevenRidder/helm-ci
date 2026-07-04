@@ -1,0 +1,1971 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch60.json",
+    "renders": "out/standard_repair_batch52/renders",
+    "svg_dir": "assets/svg/owned_repair_batch60"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 24,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK05__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK05__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK05.svg",
+      "asset": "BCNSTK05",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK05.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK05.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP1",
+          "COLOUR1"
+        ],
+        "lookup_id": "1789",
+        "lookup_rcid": "30076",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNSTK05);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK05 is minor, stake or pole beacon, white, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: stake/perch beacon. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "stake/perch beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK05__day.png",
+            "label": "minor, stake or pole beacon, white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK05__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK05__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK08__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK08__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK08__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK08.svg",
+      "asset": "BCNSTK08",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK08.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK08.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon,yellow full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP1",
+          "COLOUR6"
+        ],
+        "lookup_id": "1792",
+        "lookup_rcid": "30079",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNSTK08);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK08 is minor, stake or pole beacon,yellow full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: stake/perch beacon. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "stake/perch beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK08__day.png",
+            "label": "minor, stake or pole beacon,yellow full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK08__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK08__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK08__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK60__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK60__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK60.svg",
+      "asset": "BCNSTK60",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK60.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK60.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP5",
+          "CATLAM2",
+          "COLOUR3"
+        ],
+        "lookup_id": "1744",
+        "lookup_rcid": "30028",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNSTK60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK60 is minor, stake or pole beacon, red, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: pile beacon. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "pile beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK60__day.png",
+            "label": "minor, stake or pole beacon, red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK60__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK60__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK61__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK61__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK61.svg",
+      "asset": "BCNSTK61",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK61.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK61.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP5",
+          "CATLAM1",
+          "COLOUR4"
+        ],
+        "lookup_id": "1743",
+        "lookup_rcid": "30027",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNSTK61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK61 is minor, stake or pole beacon, green, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: pile beacon. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "pile beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK61__day.png",
+            "label": "minor, stake or pole beacon, green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK61__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK61__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK62__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK62__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK62.svg",
+      "asset": "BCNSTK62",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK62.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK62.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, yellow, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP7",
+          "COLOUR6"
+        ],
+        "lookup_id": "1804",
+        "lookup_rcid": "30086",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNSTK62);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK62 is minor, stake or pole beacon, yellow, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: buoyant beacon. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoyant beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK62__day.png",
+            "label": "minor, stake or pole beacon, yellow, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK62__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK62__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK78__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK78__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK78__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK78.svg",
+      "asset": "BCNSTK78",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK78.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK78.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, red/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP5",
+          "COLOUR3,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "3028",
+        "lookup_rcid": "3063044",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BCNSTK78);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK78 is minor, stake or pole beacon, red/white, full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spar buoy body. Required colours: red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "spar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK78__day.png",
+            "label": "minor, stake or pole beacon, red/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK78__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK78__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK78__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK81__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK81__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK81.svg",
+      "asset": "BCNSTK81",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK81.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK81.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, red/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP5",
+          "COLOUR4,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "3029",
+        "lookup_rcid": "3063045",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BCNSTK81);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK81 is minor, stake or pole beacon, red/white, full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spar buoy body. Required colours: green, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "white"
+        ],
+        "required_shape": "spar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK81__day.png",
+            "label": "minor, stake or pole beacon, red/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK81__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK81__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK82__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK82__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK82__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK82.svg",
+      "asset": "BCNSTK82",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK82.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK82.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, red/green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "COLPAT1",
+          "COLOUR3,4"
+        ],
+        "lookup_id": "3021",
+        "lookup_rcid": "3063054",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNSTK82);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK82 is minor, stake or pole beacon, red/green, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: spar/stake vertical body. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK82__day.png",
+            "label": "minor, stake or pole beacon, red/green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK82__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK82__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK82__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNSTK83__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNSTK83__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNSTK83__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNSTK83.svg",
+      "asset": "BCNSTK83",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNSTK83.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK83.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "minor, stake or pole beacon, green/red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "COLPAT1",
+          "COLOUR4,3"
+        ],
+        "lookup_id": "3022",
+        "lookup_rcid": "3063038",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNSTK83);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNSTK83 is minor, stake or pole beacon, green/red, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: spar/stake vertical body. Required colours: green, red with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "red"
+        ],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK83__day.png",
+            "label": "minor, stake or pole beacon, green/red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK83__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK83__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK83__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW05__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW05__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW05.svg",
+      "asset": "BCNTOW05",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW05.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW05.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP7",
+          "COLOUR1"
+        ],
+        "lookup_id": "1759",
+        "lookup_rcid": "30047",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNTOW05);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW05 is beacon tower, white, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: buoyant beacon. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "buoyant beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW05__day.png",
+            "label": "beacon tower, white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW05__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW05__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW60__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW60__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW60.svg",
+      "asset": "BCNTOW60",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW60.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW60.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLOUR3"
+        ],
+        "lookup_id": "1752",
+        "lookup_rcid": "30040",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNTOW60);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW60 is beacon tower, red, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: beacon tower. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW60__day.png",
+            "label": "beacon tower, red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW60__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW60__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW61__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW61__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW61.svg",
+      "asset": "BCNTOW61",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW61.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW61.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLOUR4"
+        ],
+        "lookup_id": "1753",
+        "lookup_rcid": "30041",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNTOW61);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW61 is beacon tower, green, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: beacon tower. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW61__day.png",
+            "label": "beacon tower, green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW61__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW61__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW62__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW62__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW62.svg",
+      "asset": "BCNTOW62",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW62.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW62.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yellow, red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLOUR6"
+        ],
+        "lookup_id": "1796",
+        "lookup_rcid": "93979",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW62);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW62 is beacon yellow, red, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon tower. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW62__day.png",
+            "label": "beacon yellow, red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW62__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW62__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW64__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW64__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW64.svg",
+      "asset": "BCNTOW64",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW64.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW64.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, red/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "CATLAM2",
+          "COLPAT1",
+          "COLOUR3,1"
+        ],
+        "lookup_id": "1742",
+        "lookup_rcid": "30034",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNTOW64);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW64 is beacon tower, red/white, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: beacon tower. Required colours: red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW64__day.png",
+            "label": "beacon tower, red/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW64__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW64__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW64__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW65__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW65__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW65.svg",
+      "asset": "BCNTOW65",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW65.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW65.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, green/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "CATLAM1",
+          "COLPAT1",
+          "COLOUR4,1"
+        ],
+        "lookup_id": "1740",
+        "lookup_rcid": "30035",
+        "object_class": "BCNLAT",
+        "s52_instruction": "SY(BCNTOW65);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW65 is beacon tower, green/white, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: beacon tower. Required colours: green, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "white"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW65__day.png",
+            "label": "beacon tower, green/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW65__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW65__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW68__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW68__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW68__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW68.svg",
+      "asset": "BCNTOW68",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW68.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW68.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon by, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR2,6",
+          "BCNSHP3"
+        ],
+        "lookup_id": "1718",
+        "lookup_rcid": "30007",
+        "object_class": "BCNCAR",
+        "s52_instruction": "SY(BCNTOW68);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW68 is beacon by, full-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: beacon tower. Required colours: black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW68__day.png",
+            "label": "beacon by, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW68__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW68__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW68__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW69__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW69__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW69__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW69.svg",
+      "asset": "BCNTOW69",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW69.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW69.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR6,2",
+          "BCNSHP3"
+        ],
+        "lookup_id": "1719",
+        "lookup_rcid": "30008",
+        "object_class": "BCNCAR",
+        "s52_instruction": "SY(BCNTOW69);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW69 is beacon yb, full-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: beacon tower. Required colours: yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW69__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW69__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW69__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW69__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW85__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW85__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW85__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW85.svg",
+      "asset": "BCNTOW85",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW85.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW85.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon tower, green/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLOUR4,1",
+          "COLPAT2"
+        ],
+        "lookup_id": "1783",
+        "lookup_rcid": "30070",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW85);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW85 is beacon tower, green/white, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon tower. Required colours: green, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "white"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW85__day.png",
+            "label": "beacon tower, green/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW85__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW85__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW85__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW86__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW86__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW86__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW86.svg",
+      "asset": "BCNTOW86",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW86.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW86.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP4",
+          "COLOUR1,2"
+        ],
+        "lookup_id": "1786",
+        "lookup_rcid": "30073",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW86);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW86 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: lattice/tower beacon. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "lattice/tower beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW86__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW86__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW86__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW86__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW87__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW87__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW87__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW87.svg",
+      "asset": "BCNTOW87",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW87.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW87.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLPAT1",
+          "COLOUR2,1,2"
+        ],
+        "lookup_id": "1782",
+        "lookup_rcid": "30069",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW87);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW87 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon tower. Required colours: black, white, black with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "black",
+          "white",
+          "black"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW87__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW87__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW87__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW87__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW88__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW88__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW88__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW88.svg",
+      "asset": "BCNTOW88",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW88.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW88.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP4",
+          "COLOUR2,1"
+        ],
+        "lookup_id": "1787",
+        "lookup_rcid": "30074",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW88);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW88 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: lattice/tower beacon. Required colours: black, white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "white"
+        ],
+        "required_shape": "lattice/tower beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW88__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW88__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW88__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW88__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW89__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW89__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW89__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW89.svg",
+      "asset": "BCNTOW89",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW89.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW89.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP3",
+          "COLOUR2"
+        ],
+        "lookup_id": "1794",
+        "lookup_rcid": "93977",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW89);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW89 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon tower. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW89__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW89__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW89__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW89__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW90__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW90__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW90__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW90.svg",
+      "asset": "BCNTOW90",
+      "before_svg": "assets/svg/owned_repair_batch10/BCNTOW90.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW90.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP4",
+          "COLOUR8"
+        ],
+        "lookup_id": "1800",
+        "lookup_rcid": "30083",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW90);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW90 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: lattice/tower beacon. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "lattice/tower beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW90__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW90__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW90__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW90__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch52/renders/BCNTOW91__after__day.png",
+        "dusk": "out/standard_repair_batch52/renders/BCNTOW91__after__dusk.png",
+        "night": "out/standard_repair_batch52/renders/BCNTOW91__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch60/BCNTOW91.svg",
+      "asset": "BCNTOW91",
+      "before_svg": "assets/svg/owned_repair_batch1/BCNTOW91.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW91.svg",
+      "candidate_strategy": "queued_bcntow_bcnstk_owned_silhouette_redraw",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch52",
+        "origin": "generated-owned-artwork",
+        "reference_role": "repair queue required_change plus semantic colour/pattern metadata drive tower/stake redraw",
+        "source_priority_basis": "standard_repair_queue BCNTOW/BCNSTK exact-silhouette feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_beacon_tower_stake_consumed",
+      "required_change": "Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+      "risk_bucket": "beacon_tower_stake_repair_batch60",
+      "s57_structure": {
+        "conditions": [
+          "BCNSHP4",
+          "COLOUR1"
+        ],
+        "lookup_id": "1797",
+        "lookup_rcid": "30081",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNTOW91);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "generic_placeholder_body",
+        "no_exact_symbol_crop_final_pass_forbidden",
+        "wrong_silhouette_or_symbol_body"
+      ],
+      "semantic_brief": {
+        "brief": "BCNTOW91 is beacon yb, full-chart. It is used as a special-purpose beacon used for named local purposes. Required geometry: lattice/tower beacon. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "lattice/tower beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW91__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW91__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW91__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW91__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

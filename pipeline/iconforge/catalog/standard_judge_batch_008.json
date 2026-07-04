@@ -1,0 +1,2998 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-008-local",
+  "batch_id": "standard_judge_batch_008",
+  "created_at": "2026-07-01T07:22:55+00:00",
+  "project": "vulkan",
+  "selection": {
+    "count": 50,
+    "criteria": "first 50 current rows where helm_candidate.candidate_status == pending_judge; excludes repair queue, repaired rerun, no-candidate, and already passed rows",
+    "end_symbol": "LOCMAG01",
+    "queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "start_symbol": "EVENTS02",
+    "symbol_ids": [
+      "EVENTS02",
+      "FAIRWY51",
+      "FAIRWY52",
+      "FLASTK01",
+      "FLASTK11",
+      "FLDSTR01",
+      "FLGSTF01",
+      "FLTHAZ02",
+      "FOGSIG01",
+      "FORSTC01",
+      "FORSTC11",
+      "FOULGND1",
+      "FRYARE51",
+      "FRYARE52",
+      "FSHFAC02",
+      "FSHFAC03",
+      "FSHGRD01",
+      "FSHHAV01",
+      "GATCON03",
+      "GATCON04",
+      "HECMTR01",
+      "HECMTR02",
+      "HGWTMK01",
+      "HILTOP01",
+      "HILTOP11",
+      "HRBFAC09",
+      "HRBFAC10",
+      "HRBFAC11",
+      "HRBFAC12",
+      "HRBFAC13",
+      "HRBFAC14",
+      "HRBFAC15",
+      "HRBFAC16",
+      "HRBFAC17",
+      "HRBFAC18",
+      "HULKES01",
+      "INFARE51",
+      "INFORM01",
+      "ISODGR51",
+      "ITZARE51",
+      "LITFLT01",
+      "LITFLT02",
+      "LITFLT10",
+      "LITFLT61",
+      "LITVES01",
+      "LITVES02",
+      "LITVES60",
+      "LITVES61",
+      "LNDARE01",
+      "LOCMAG01"
+    ]
+  },
+  "summary": {
+    "blockers": [
+      "Generic diamond placeholders remain across fairway/current/facility/light-vessel/area rows.",
+      "Several service/facility rows use generic or unverified harbor badges instead of exact reference glyphs and color treatment.",
+      "Light float/light vessel rows lack vessel or float silhouette and light cues.",
+      "Fishing/foul-ground rows confuse buoy or anchor families with the required reference symbols."
+    ],
+    "fail": 50,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 0
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.91,
+      "expected": "Mariner's event mark must use the OpenCPN event-mark silhouette, not a generic point diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the reference mariner-event mark shape and reference-defined color treatment.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "EVENTS02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "EVENTS02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "mariner's event mark",
+          "path": "out/opencpn_s52_reference/EVENTS02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/EVENTS02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/EVENTS02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/EVENTS02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:EVENTS02",
+      "symbol_id": "EVENTS02"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.97,
+      "expected": "One-way fairway should be the S-101/OpenCPN single direction arrow/shaft symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the one-way fairway arrow symbol in the reference orientation/style.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FAIRWY51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FAIRWY51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FAIRWY51",
+          "path": "assets/svg/source_priority/s101_exact/FAIRWY51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FAIRWY51",
+          "path": "PortrayalCatalog/Symbols/FAIRWY51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fairway with one-way traffic in direction indicated",
+          "path": "out/opencpn_s52_reference/FAIRWY51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FAIRWY51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FAIRWY51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FAIRWY51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FAIRWY51",
+      "symbol_id": "FAIRWY51"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.96,
+      "expected": "Two-way fairway should show the two-way/opposing fairway direction symbol, not a single generic marker.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the two-way fairway directional reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FAIRWY52",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FAIRWY52",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FAIRWY52",
+          "path": "assets/svg/source_priority/s101_exact/FAIRWY52.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FAIRWY52",
+          "path": "PortrayalCatalog/Symbols/FAIRWY52.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fairway with two-way traffic",
+          "path": "out/opencpn_s52_reference/FAIRWY52__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FAIRWY52.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FAIRWY52__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FAIRWY52.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FAIRWY52",
+      "symbol_id": "FAIRWY52"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.95,
+      "expected": "Flare stack should be the flare-stack tower/flame silhouette from S-101/OpenCPN.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the flare stack structure with stack/flame geometry, removing the diamond.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FLASTK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FLASTK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLASTK01",
+          "path": "assets/svg/source_priority/s101_exact/FLASTK01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLASTK01",
+          "path": "PortrayalCatalog/Symbols/FLASTK01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "flare stack",
+          "path": "out/opencpn_s52_reference/FLASTK01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FLASTK01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FLASTK01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FLASTK01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FLASTK01",
+      "symbol_id": "FLASTK01"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.95,
+      "expected": "Conspicuous flare stack should be the black conspicuous flare-stack silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the black conspicuous flare stack with stack/flame geometry.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FLASTK11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FLASTK11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLASTK11",
+          "path": "assets/svg/source_priority/s101_exact/FLASTK11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLASTK11",
+          "path": "PortrayalCatalog/Symbols/FLASTK11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous flare stack",
+          "path": "out/opencpn_s52_reference/FLASTK11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FLASTK11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FLASTK11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FLASTK11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FLASTK11",
+      "symbol_id": "FLASTK11"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.95,
+      "expected": "Flood stream rate at spring tides should be a current/stream arrow mark, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace with the flood-stream arrow/rate symbol matching S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FLDSTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FLDSTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLDSTR01",
+          "path": "assets/svg/source_priority/s101_exact/FLDSTR01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLDSTR01",
+          "path": "PortrayalCatalog/Symbols/FLDSTR01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "flood stream, rate at spring tides",
+          "path": "out/opencpn_s52_reference/FLDSTR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FLDSTR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FLDSTR01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FLDSTR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FLDSTR01",
+      "symbol_id": "FLDSTR01"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.95,
+      "expected": "Flagstaff/flagpole should show the flagpole mast and flag silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as a flagstaff/flagpole with the flag form shown in the references.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FLGSTF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FLGSTF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLGSTF01",
+          "path": "assets/svg/source_priority/s101_exact/FLGSTF01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLGSTF01",
+          "path": "PortrayalCatalog/Symbols/FLGSTF01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "flagstaff, flagpole",
+          "path": "out/opencpn_s52_reference/FLGSTF01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FLGSTF01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FLGSTF01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FLGSTF01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FLGSTF01",
+      "symbol_id": "FLGSTF01"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.93,
+      "expected": "Floating hazard must use the specific floating-hazard reference symbol, not a generic marker.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the FLTHAZ02 hazard shape from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FLTHAZ02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FLTHAZ02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLTHAZ02",
+          "path": "assets/svg/source_priority/s101_exact/FLTHAZ02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLTHAZ02",
+          "path": "PortrayalCatalog/Symbols/FLTHAZ02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FLTHAZ02",
+          "path": "out/opencpn_s52_reference/FLTHAZ02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FLTHAZ02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FLTHAZ02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/FLTHAZ02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FLTHAZ02",
+      "symbol_id": "FLTHAZ02"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.95,
+      "expected": "Fog signal should follow the fog-signal/bell/horn reference symbol, including the auxiliary signal cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the fog-signal reference icon; preserve the signal class and reference-defined color.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FOGSIG01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FOGSIG01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FOGSIG01",
+          "path": "assets/svg/source_priority/s101_exact/FOGSIG01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FOGSIG01",
+          "path": "PortrayalCatalog/Symbols/FOGSIG01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Fog signal (Bell, Horn, Whistle, Gong, Explosive, Diaphone, Siren, Reed, Typhon ...)",
+          "path": "reference_sources/aquamap_map_symbols/images/BELL1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fog signal",
+          "path": "out/opencpn_s52_reference/FOGSIG01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FOGSIG01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FOGSIG01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/FOGSIG01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FOGSIG01",
+      "symbol_id": "FOGSIG01"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.95,
+      "expected": "Fortified structure should be a fort/castle-like structure silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the fortified-structure outline from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FORSTC01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FORSTC01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FORSTC01",
+          "path": "assets/svg/source_priority/s101_exact/FORSTC01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FORSTC01",
+          "path": "PortrayalCatalog/Symbols/FORSTC01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fortified structure",
+          "path": "out/opencpn_s52_reference/FORSTC01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FORSTC01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FORSTC01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FORSTC01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FORSTC01",
+      "symbol_id": "FORSTC01"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.95,
+      "expected": "Conspicuous fortified structure should be the black conspicuous fort silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the black conspicuous fortified-structure outline.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FORSTC11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FORSTC11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FORSTC11",
+          "path": "assets/svg/source_priority/s101_exact/FORSTC11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FORSTC11",
+          "path": "PortrayalCatalog/Symbols/FORSTC11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous fortified structure",
+          "path": "out/opencpn_s52_reference/FORSTC11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FORSTC11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FORSTC11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FORSTC11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FORSTC11",
+      "symbol_id": "FORSTC11"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.97,
+      "expected": "Foul ground should be the S-101/OpenCPN hash/grid foul-ground mark, not an anchorage anchor.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a black recreational anchor with a top ring.",
+      "pass": false,
+      "required_change": "Replace the anchor with the black foul-ground hash/grid symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "unsafe_symbol_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FOULGND1",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FOULGND1",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FOULGND1",
+          "path": "assets/svg/source_priority/s101_exact/FOULGND1.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FOULGND1",
+          "path": "PortrayalCatalog/Symbols/FOULGND1.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "foul area of seabed safe for navigation but not for anchoring",
+          "path": "out/opencpn_s52_reference/FOULGND1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FOULGND1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FOULGND1__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/FOULGND1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FOULGND1",
+      "symbol_id": "FOULGND1"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.94,
+      "expected": "Ferry area should use the ferry/route area symbol from S-101/OpenCPN.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the ferry-area reference symbol and route cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FRYARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FRYARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FRYARE51",
+          "path": "assets/svg/source_priority/s101_exact/FRYARE51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FRYARE51",
+          "path": "PortrayalCatalog/Symbols/FRYARE51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "ferry area",
+          "path": "out/opencpn_s52_reference/FRYARE51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FRYARE51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FRYARE51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FRYARE51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FRYARE51",
+      "symbol_id": "FRYARE51"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.94,
+      "expected": "Cable ferry area should use the cable-ferry reference symbol, preserving the cable/ferry cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the cable-ferry area symbol from the references.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_cable_or_route_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FRYARE52",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FRYARE52",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FRYARE52",
+          "path": "assets/svg/source_priority/s101_exact/FRYARE52.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FRYARE52",
+          "path": "PortrayalCatalog/Symbols/FRYARE52.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "cable ferry area",
+          "path": "out/opencpn_s52_reference/FRYARE52__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FRYARE52.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FRYARE52__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FRYARE52.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FRYARE52",
+      "symbol_id": "FRYARE52"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.96,
+      "expected": "Fishing stakes should show the fishing-stake frame/angled-stake symbol, not a buoy body.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray vertical spar-buoy body.",
+      "pass": false,
+      "required_change": "Redraw as the fishing-stakes reference geometry with frame/angled stake.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "unsafe_symbol_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FSHFAC02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FSHFAC02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHFAC02",
+          "path": "assets/svg/source_priority/s101_exact/FSHFAC02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHFAC02",
+          "path": "PortrayalCatalog/Symbols/FSHFAC02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fishing stakes",
+          "path": "out/opencpn_s52_reference/FSHFAC02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FSHFAC02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FSHFAC02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FSHFAC02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FSHFAC02",
+      "symbol_id": "FSHFAC02"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.95,
+      "expected": "Fishing-stakes area pattern should use the fishing-stake pattern/reference geometry, not a single buoy.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a single gray vertical spar-buoy body.",
+      "pass": false,
+      "required_change": "Replace with the fishing-stakes area pattern symbol and remove the buoy silhouette.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_pattern",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FSHFAC03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FSHFAC03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHFAC03",
+          "path": "assets/svg/source_priority/s101_exact/FSHFAC03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHFAC03",
+          "path": "PortrayalCatalog/Symbols/FSHFAC03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "pattern of symbols for an area with fishing stakes",
+          "path": "out/opencpn_s52_reference/FSHFAC03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FSHFAC03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FSHFAC03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FSHFAC03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FSHFAC03",
+      "symbol_id": "FSHFAC03"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.94,
+      "expected": "Fishing ground should use the fishing-ground reference mark, not a generic diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the S-101/OpenCPN fishing-ground symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FSHGRD01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FSHGRD01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHGRD01",
+          "path": "assets/svg/source_priority/s101_exact/FSHGRD01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHGRD01",
+          "path": "PortrayalCatalog/Symbols/FSHGRD01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fishing ground",
+          "path": "out/opencpn_s52_reference/FSHGRD01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FSHGRD01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FSHGRD01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FSHGRD01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FSHGRD01",
+      "symbol_id": "FSHGRD01"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.94,
+      "expected": "Fish haven should use the fish-haven reference symbol, not a generic diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a gray diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the fish-haven symbol from the references.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "FSHHAV01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "FSHHAV01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHHAV01",
+          "path": "assets/svg/source_priority/s101_exact/FSHHAV01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "FSHHAV01",
+          "path": "PortrayalCatalog/Symbols/FSHHAV01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fish haven",
+          "path": "out/opencpn_s52_reference/FSHHAV01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/FSHHAV01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/FSHHAV01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/FSHHAV01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:FSHHAV01",
+      "symbol_id": "FSHHAV01"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.94,
+      "expected": "Navigable lock gate should show the navigable/open lock-gate reference symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the navigable lock-gate geometry.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "GATCON03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "GATCON03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "GATCON03",
+          "path": "assets/svg/source_priority/s101_exact/GATCON03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "GATCON03",
+          "path": "PortrayalCatalog/Symbols/GATCON03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "navigable lock gate",
+          "path": "out/opencpn_s52_reference/GATCON03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/GATCON03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/GATCON03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/GATCON03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:GATCON03",
+      "symbol_id": "GATCON03"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.94,
+      "expected": "Non-navigable lock gate should show the non-navigable/closed lock-gate reference symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the non-navigable lock-gate geometry.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "GATCON04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "GATCON04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "GATCON04",
+          "path": "assets/svg/source_priority/s101_exact/GATCON04.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "GATCON04",
+          "path": "PortrayalCatalog/Symbols/GATCON04.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "non-navigable lock gate",
+          "path": "out/opencpn_s52_reference/GATCON04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/GATCON04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/GATCON04__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/GATCON04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:GATCON04",
+      "symbol_id": "GATCON04"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.91,
+      "expected": "100 m hectometre point should carry the hectometre point reference marker/text convention.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the 100 m hectometre-point symbol shown by OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HECMTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HECMTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "hectometre point, 100m",
+          "path": "out/opencpn_s52_reference/HECMTR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HECMTR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HECMTR01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/HECMTR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HECMTR01",
+      "symbol_id": "HECMTR01"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.91,
+      "expected": "1 km hectometre point should carry the kilometre/hectometre reference marker convention.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the 1 km hectometre-point symbol shown by OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HECMTR02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HECMTR02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "hectometre point, 1km",
+          "path": "out/opencpn_s52_reference/HECMTR02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HECMTR02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HECMTR02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/HECMTR02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HECMTR02",
+      "symbol_id": "HECMTR02"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.92,
+      "expected": "High water mark should use the high-water-mark line/marker reference symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the high-water-mark reference geometry.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HGWTMK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HGWTMK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "high water mark",
+          "path": "out/opencpn_s52_reference/HGWTMK01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HGWTMK01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HGWTMK01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/HGWTMK01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HGWTMK01",
+      "symbol_id": "HGWTMK01"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.95,
+      "expected": "Hill or mountain top should be the peak/hilltop reference silhouette.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the hill/mountain-top symbol from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HILTOP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HILTOP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HILTOP01",
+          "path": "assets/svg/source_priority/s101_exact/HILTOP01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HILTOP01",
+          "path": "PortrayalCatalog/Symbols/HILTOP01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "hill or mountain top",
+          "path": "out/opencpn_s52_reference/HILTOP01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HILTOP01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HILTOP01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/HILTOP01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HILTOP01",
+      "symbol_id": "HILTOP01"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.95,
+      "expected": "Conspicuous hill or mountain top should be the black conspicuous peak/hilltop symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Redraw as the black conspicuous hill/mountain-top reference silhouette.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HILTOP11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HILTOP11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HILTOP11",
+          "path": "assets/svg/source_priority/s101_exact/HILTOP11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HILTOP11",
+          "path": "PortrayalCatalog/Symbols/HILTOP11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous hill or mountain top",
+          "path": "out/opencpn_s52_reference/HILTOP11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HILTOP11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HILTOP11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/HILTOP11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HILTOP11",
+      "symbol_id": "HILTOP11"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.9,
+      "expected": "Fishing harbour should preserve the fishing-harbour facility cue, not a pilot/default harbour placard.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard with a P-like glyph.",
+      "pass": false,
+      "required_change": "Replace with the fishing-harbour-specific icon/letter convention from the OpenCPN/S-101 references.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC09",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC09",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HRBFAC09",
+          "path": "assets/svg/source_priority/s101_exact/HRBFAC09.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HRBFAC09",
+          "path": "PortrayalCatalog/Symbols/HRBFAC09.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "fishing harbour",
+          "path": "out/opencpn_s52_reference/HRBFAC09__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC09.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC09__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC09.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC09",
+      "symbol_id": "HRBFAC09"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.88,
+      "expected": "Default harbour facility should match the reference harbour-facility glyph and required black treatment.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the default harbour-facility reference icon and correct color treatment.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "default harbour facilitiy",
+          "path": "out/opencpn_s52_reference/HRBFAC10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC10__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC10",
+      "symbol_id": "HRBFAC10"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.88,
+      "expected": "Naval base should use the naval-base harbour-facility cue, not the generic harbour-service placeholder.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the naval-base facility symbol from the reference.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, naval base",
+          "path": "out/opencpn_s52_reference/HRBFAC11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC11",
+      "symbol_id": "HRBFAC11"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.86,
+      "expected": "Ship yard must match the OpenCPN harbour-facility convention and required reference color, not an unverified magenta badge.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta circled SY text mark.",
+      "pass": false,
+      "required_change": "Verify against the OpenCPN ship-yard reference and redraw with the exact facility shape/text/color treatment.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC12",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC12",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, ship yard",
+          "path": "out/opencpn_s52_reference/HRBFAC12__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC12__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC12",
+      "symbol_id": "HRBFAC12"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.86,
+      "expected": "Harbour-master office must match the OpenCPN harbour-facility convention and required reference color, not an unverified magenta badge.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta circled HM text mark.",
+      "pass": false,
+      "required_change": "Verify against the OpenCPN harbour-master reference and redraw with the exact facility shape/text/color treatment.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC13",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC13",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, harbour-master's office",
+          "path": "out/opencpn_s52_reference/HRBFAC13__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC13.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC13__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC13.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC13",
+      "symbol_id": "HRBFAC13"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.86,
+      "expected": "Pilot facility must match the OpenCPN pilot-station convention and required reference color, not an unverified magenta badge.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta circled P text mark.",
+      "pass": false,
+      "required_change": "Verify against the OpenCPN pilot reference and redraw with the exact facility shape/text/color treatment.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC14",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC14",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, pilot",
+          "path": "out/opencpn_s52_reference/HRBFAC14__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC14.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC14__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC14.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC14",
+      "symbol_id": "HRBFAC14"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.88,
+      "expected": "Water police facility should have the water-police harbour-service cue, not a generic placard.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the water-police facility reference icon/letter convention.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC15",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC15",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, water police",
+          "path": "out/opencpn_s52_reference/HRBFAC15__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC15.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC15__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC15.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC15",
+      "symbol_id": "HRBFAC15"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.88,
+      "expected": "Customs office facility should have the customs-office harbour-service cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the customs-office facility symbol from the reference.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC16",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC16",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, custom office",
+          "path": "out/opencpn_s52_reference/HRBFAC16__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC16.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC16__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC16.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC16",
+      "symbol_id": "HRBFAC16"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.88,
+      "expected": "Service and repair facility should have the service/repair harbour-service cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the service-and-repair facility reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC17",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC17",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, service and repair",
+          "path": "out/opencpn_s52_reference/HRBFAC17__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC17.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC17__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC17.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC17",
+      "symbol_id": "HRBFAC17"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.88,
+      "expected": "Quarantine station should have the quarantine harbour-service cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic harbour-service placard.",
+      "pass": false,
+      "required_change": "Replace with the quarantine-station facility reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HRBFAC18",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HRBFAC18",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "harbour facilitiy, quarantine station",
+          "path": "out/opencpn_s52_reference/HRBFAC18__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HRBFAC18.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HRBFAC18__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/HRBFAC18.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC18",
+      "symbol_id": "HRBFAC18"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.94,
+      "expected": "Hulk should use the hulk/wreck-like structure reference symbol, not a brown generic marker.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a brown diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the HULKES01 hulk silhouette from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "HULKES01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "HULKES01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HULKES01",
+          "path": "assets/svg/source_priority/s101_exact/HULKES01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "HULKES01",
+          "path": "PortrayalCatalog/Symbols/HULKES01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "hulk",
+          "path": "out/opencpn_s52_reference/HULKES01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/HULKES01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/HULKES01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/HULKES01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:HULKES01",
+      "symbol_id": "HULKES01"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.92,
+      "expected": "Information/restriction area should use the reference information-area symbol/boundary cue, not the generic dashed area placeholder.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a translucent dashed square with a diagonal dashed line.",
+      "pass": false,
+      "required_change": "Replace with the INFARE51 reference area symbol, preserving the information/restriction cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_line_pattern",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "INFARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "INFARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "INFARE51",
+          "path": "assets/svg/source_priority/s101_exact/INFARE51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "INFARE51",
+          "path": "PortrayalCatalog/Symbols/INFARE51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "area with minor restrictions or information notices",
+          "path": "out/opencpn_s52_reference/INFARE51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/INFARE51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/INFARE51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/INFARE51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:INFARE51",
+      "symbol_id": "INFARE51"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.94,
+      "expected": "Additional-information object should be the information symbol/glyph from S-101/OpenCPN.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the information glyph/marker reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "INFORM01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "INFORM01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "INFORM01",
+          "path": "assets/svg/source_priority/s101_exact/INFORM01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "INFORM01",
+          "path": "PortrayalCatalog/Symbols/INFORM01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "this object has additional information available by cursor query",
+          "path": "out/opencpn_s52_reference/INFORM01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/INFORM01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/INFORM01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/INFORM01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:INFORM01",
+      "symbol_id": "INFORM01"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.93,
+      "expected": "Isolated danger should use the isolated-danger reference symbol, not a generic diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the isolated-danger full/simplified reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "ISODGR51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "ISODGR51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "isolated danger symbol, full-chart and simplified",
+          "path": "out/opencpn_s52_reference/ISODGR51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/ISODGR51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/ISODGR51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/ISODGR51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:ISODGR51",
+      "symbol_id": "ISODGR51"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.94,
+      "expected": "Inshore traffic area should use the ITZ area reference symbol/traffic cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the inshore-traffic-area reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "ITZARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "ITZARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "ITZARE51",
+          "path": "assets/svg/source_priority/s101_exact/ITZARE51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "ITZARE51",
+          "path": "PortrayalCatalog/Symbols/ITZARE51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "area of inshore traffic",
+          "path": "out/opencpn_s52_reference/ITZARE51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/ITZARE51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/ITZARE51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/ITZARE51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:ITZARE51",
+      "symbol_id": "ITZARE51"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.95,
+      "expected": "Light float full-chart should show a light-float vessel/float silhouette with light cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the full-chart light-float reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITFLT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITFLT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITFLT01",
+          "path": "assets/svg/source_priority/s101_exact/LITFLT01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITFLT01",
+          "path": "PortrayalCatalog/Symbols/LITFLT01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light float, full-chart.",
+          "path": "out/opencpn_s52_reference/LITFLT01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITFLT01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITFLT01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/LITFLT01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITFLT01",
+      "symbol_id": "LITFLT01"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.95,
+      "expected": "Light float simplified should show the simplified light-float symbol with light cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the simplified light-float reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITFLT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITFLT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITFLT02",
+          "path": "assets/svg/source_priority/s101_exact/LITFLT02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITFLT02",
+          "path": "PortrayalCatalog/Symbols/LITFLT02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light float, simplified",
+          "path": "out/opencpn_s52_reference/LITFLT02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITFLT02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITFLT02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/LITFLT02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITFLT02",
+      "symbol_id": "LITFLT02"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.94,
+      "expected": "Red/white light float should show the light-float silhouette and red/white pattern, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the red/white light-float full-chart symbol with the correct body and light cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_light_cue"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITFLT10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITFLT10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light float, red/white, full-chart.",
+          "path": "out/opencpn_s52_reference/LITFLT10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITFLT10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITFLT10__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/LITFLT10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITFLT10",
+      "symbol_id": "LITFLT10"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.94,
+      "expected": "Green light float should show the light-float silhouette with green body/light cue, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a green diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the green light-float full-chart symbol with the correct body and light cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITFLT61",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITFLT61",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light float, green, full-chart.",
+          "path": "out/opencpn_s52_reference/LITFLT61__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITFLT61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITFLT61__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/LITFLT61.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITFLT61",
+      "symbol_id": "LITFLT61"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.95,
+      "expected": "Light vessel full-chart should show the light-vessel ship silhouette and light cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the full-chart light-vessel reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITVES01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITVES01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITVES01",
+          "path": "assets/svg/source_priority/s101_exact/LITVES01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITVES01",
+          "path": "PortrayalCatalog/Symbols/LITVES01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light vessel, full-chart.",
+          "path": "out/opencpn_s52_reference/LITVES01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITVES01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITVES01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/LITVES01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITVES01",
+      "symbol_id": "LITVES01"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.95,
+      "expected": "Light vessel simplified should show the simplified light-vessel symbol and light cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a generic black diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the simplified light-vessel reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITVES02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITVES02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITVES02",
+          "path": "assets/svg/source_priority/s101_exact/LITVES02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LITVES02",
+          "path": "PortrayalCatalog/Symbols/LITVES02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light vessel, simplified",
+          "path": "out/opencpn_s52_reference/LITVES02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITVES02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITVES02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/LITVES02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITVES02",
+      "symbol_id": "LITVES02"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.94,
+      "expected": "Red light vessel should show the light-vessel ship silhouette with red color treatment.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a red diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the red light-vessel reference symbol with ship body and light cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITVES60",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITVES60",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light vessel. red, full-chart",
+          "path": "out/opencpn_s52_reference/LITVES60__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITVES60.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITVES60__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/LITVES60.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITVES60",
+      "symbol_id": "LITVES60"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.94,
+      "expected": "Green light vessel should show the light-vessel ship silhouette with green color treatment.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a green diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Redraw as the green light-vessel reference symbol with ship body and light cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LITVES61",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LITVES61",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "light vessel. green, full-chart",
+          "path": "out/opencpn_s52_reference/LITVES61__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LITVES61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LITVES61__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/LITVES61.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LITVES61",
+      "symbol_id": "LITVES61"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.91,
+      "expected": "Land area point at small scale should use the land-area point/reference symbol, not a generic area placeholder.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a translucent dashed black square with a diagonal dashed line.",
+      "pass": false,
+      "required_change": "Replace the dashed-area placeholder with the LNDARE01 land-area reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_line_pattern",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LNDARE01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LNDARE01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LNDARE01",
+          "path": "assets/svg/source_priority/s101_exact/LNDARE01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LNDARE01",
+          "path": "PortrayalCatalog/Symbols/LNDARE01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "land as a point at small scale",
+          "path": "out/opencpn_s52_reference/LNDARE01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LNDARE01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LNDARE01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/LNDARE01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LNDARE01",
+      "symbol_id": "LNDARE01"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.94,
+      "expected": "Magnetic anomaly cursor-pick site should use the magnetic-anomaly/local-magnetism reference symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class/shape/topmark/color order is not proven. Not final-approved.",
+      "observed": "Helm renders a magenta diamond with a center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the LOCMAG01 magnetic anomaly reference symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "LOCMAG01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "LOCMAG01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LOCMAG01",
+          "path": "assets/svg/source_priority/s101_exact/LOCMAG01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "LOCMAG01",
+          "path": "PortrayalCatalog/Symbols/LOCMAG01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "cursor pick site for a magnetic anomaly at a point",
+          "path": "out/opencpn_s52_reference/LOCMAG01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/LOCMAG01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/LOCMAG01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/LOCMAG01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:LOCMAG01",
+      "symbol_id": "LOCMAG01"
+    }
+  ]
+}

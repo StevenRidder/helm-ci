@@ -1,0 +1,3514 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch53.json",
+    "renders": "out/standard_repair_batch45/renders",
+    "svg_dir": "assets/svg/owned_repair_batch53"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 43,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYBAR01__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYBAR01__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYBAR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYBAR01.svg",
+      "asset": "BOYBAR01",
+      "before_svg": "assets/svg/triad_generated/BOYBAR01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR01.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "barrel buoy, black full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6"
+        ],
+        "lookup_id": "1858",
+        "lookup_rcid": "30140",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYBAR01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYBAR01 is barrel buoy, black full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: barrel buoy body. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+            "label": "barrel buoy, black full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYBAR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYBAR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYBAR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYBAR60__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYBAR60__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYBAR60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYBAR60.svg",
+      "asset": "BOYBAR60",
+      "before_svg": "assets/svg/triad_generated/BOYBAR60.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR60.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "barrel buoy, red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR3"
+        ],
+        "lookup_id": "1979",
+        "lookup_rcid": "30250",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYBAR60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYBAR60 is barrel buoy, red, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: barrel buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR60__day.png",
+            "label": "barrel buoy, red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR60__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR60__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYBAR61__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYBAR61__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYBAR61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYBAR61.svg",
+      "asset": "BOYBAR61",
+      "before_svg": "assets/svg/triad_generated/BOYBAR61.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR61.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "barrel buoy, green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR4"
+        ],
+        "lookup_id": "1980",
+        "lookup_rcid": "30251",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYBAR61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYBAR61 is barrel buoy, green, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: barrel buoy body. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR61__day.png",
+            "label": "barrel buoy, green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR61__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR61__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYBAR62__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYBAR62__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYBAR62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYBAR62.svg",
+      "asset": "BOYBAR62",
+      "before_svg": "assets/svg/triad_generated/BOYBAR62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR62.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "barrel buoy, yellow, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP6",
+          "COLOUR6"
+        ],
+        "lookup_id": "1862",
+        "lookup_rcid": "30144",
+        "object_class": "BOYINB",
+        "s52_instruction": "SY(BOYBAR62);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYBAR62 is barrel buoy, yellow, full-chart. It is used as a installation buoy. Required geometry: barrel buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "barrel buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "installation buoy"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR62__day.png",
+            "label": "barrel buoy, yellow, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN01__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN01__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN01.svg",
+      "asset": "BOYCAN01",
+      "before_svg": "assets/svg/triad_generated/BOYCAN01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN01.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2"
+        ],
+        "lookup_id": "1854",
+        "lookup_rcid": "30136",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCAN01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN01 is can buoy, paper-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: can/cylindrical buoy body. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN01__day.png",
+            "label": "can buoy, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYCAN01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYCAN01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYCAN01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN60__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN60__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN60.svg",
+      "asset": "BOYCAN60",
+      "before_svg": "assets/svg/triad_generated/BOYCAN60.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN60.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral-r,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "CATSPM8",
+          "BOYSHP2",
+          "COLOUR3"
+        ],
+        "lookup_id": "1956",
+        "lookup_rcid": "30227",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN60 is can buoy,lateral-r,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN60__day.png",
+            "label": "can buoy,lateral-r,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN60__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN60__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN61__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN61__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN61.svg",
+      "asset": "BOYCAN61",
+      "before_svg": "assets/svg/triad_generated/BOYCAN61.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN61.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral-g,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR4"
+        ],
+        "lookup_id": "1908",
+        "lookup_rcid": "30185",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN61 is can buoy,lateral-g,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN61__day.png",
+            "label": "can buoy,lateral-g,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN61__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN61__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN62__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN62__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN62.svg",
+      "asset": "BOYCAN62",
+      "before_svg": "assets/svg/triad_generated/BOYCAN62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN62.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,generic,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2"
+        ],
+        "lookup_id": "1985",
+        "lookup_rcid": "30256",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN62);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN62 is can buoy,generic,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: green, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "black"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN62__day.png",
+            "label": "can buoy,generic,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN63__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN63__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN63__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN63.svg",
+      "asset": "BOYCAN63",
+      "before_svg": "assets/svg/triad_generated/BOYCAN63.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN63.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,yellow,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR6"
+        ],
+        "lookup_id": "1909",
+        "lookup_rcid": "30186",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN63);TX(OBJNAM,2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN63 is can buoy,yellow,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN63__day.png",
+            "label": "can buoy,yellow,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN63__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN63__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN63__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN64__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN64__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN64.svg",
+      "asset": "BOYCAN64",
+      "before_svg": "assets/svg/triad_generated/BOYCAN64.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN64.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,black,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR2"
+        ],
+        "lookup_id": "1968",
+        "lookup_rcid": "30239",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN64);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN64 is can buoy,black,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN64__day.png",
+            "label": "can buoy,black,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN64__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN64__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN64__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN65__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN65__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN65.svg",
+      "asset": "BOYCAN65",
+      "before_svg": "assets/svg/triad_generated/BOYCAN65.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN65.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,yellow,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR1"
+        ],
+        "lookup_id": "1967",
+        "lookup_rcid": "30238",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN65);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN65 is can buoy,yellow,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN65__day.png",
+            "label": "can buoy,yellow,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN65__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN65__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN68__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN68__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN68__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN68.svg",
+      "asset": "BOYCAN68",
+      "before_svg": "assets/svg/triad_generated/BOYCAN68.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN68.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,cardinal north by,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR2,6"
+        ],
+        "lookup_id": "1837",
+        "lookup_rcid": "30119",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCAN68);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN68 is can buoy,cardinal north by,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: can/cylindrical buoy body. Required colours: black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN68__day.png",
+            "label": "can buoy,cardinal north by,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN68__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN68__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN68__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN69__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN69__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN69__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN69.svg",
+      "asset": "BOYCAN69",
+      "before_svg": "assets/svg/triad_generated/BOYCAN69.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN69.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,cardinal south yb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR6,2"
+        ],
+        "lookup_id": "1838",
+        "lookup_rcid": "30120",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCAN69);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN69 is can buoy,cardinal south yb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: can/cylindrical buoy body. Required colours: yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN69__day.png",
+            "label": "can buoy,cardinal south yb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN69__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN69__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN69__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN70__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN70__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN70__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN70.svg",
+      "asset": "BOYCAN70",
+      "before_svg": "assets/svg/triad_generated/BOYCAN70.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN70.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,cardinal east byb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR2,6,2"
+        ],
+        "lookup_id": "1827",
+        "lookup_rcid": "30109",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCAN70);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN70 is can buoy,cardinal east byb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: can/cylindrical buoy body. Required colours: black, yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow",
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN70__day.png",
+            "label": "can buoy,cardinal east byb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN70__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN70__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN71__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN71__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN71__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN71.svg",
+      "asset": "BOYCAN71",
+      "before_svg": "assets/svg/triad_generated/BOYCAN71.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN71.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,cardinal west yby,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR6,2,6"
+        ],
+        "lookup_id": "1828",
+        "lookup_rcid": "30110",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCAN71);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN71 is can buoy,cardinal west yby,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: can/cylindrical buoy body. Required colours: yellow, black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black",
+          "yellow"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN71__day.png",
+            "label": "can buoy,cardinal west yby,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN71__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN71__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN73__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN73__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN73__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN73.svg",
+      "asset": "BOYCAN73",
+      "before_svg": "assets/svg/triad_generated/BOYCAN73.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN73.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral grg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR4,3,4",
+          "COLPAT1"
+        ],
+        "lookup_id": "1883",
+        "lookup_rcid": "30162",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN73);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN73 is can buoy,lateral grg,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: green, red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "red",
+          "green"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN73__day.png",
+            "label": "can buoy,lateral grg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN73__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN73__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN73__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN74__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN74__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN74__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN74.svg",
+      "asset": "BOYCAN74",
+      "before_svg": "assets/svg/triad_generated/BOYCAN74.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN74.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR3,1,3,1,3"
+        ],
+        "lookup_id": "1892",
+        "lookup_rcid": "30169",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN74);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN74 is can buoy,lateral-rw,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: red, white, red, white, red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "red",
+          "white",
+          "red"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN74__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN74__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN74__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN75__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN75__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN75__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN75.svg",
+      "asset": "BOYCAN75",
+      "before_svg": "assets/svg/triad_generated/BOYCAN75.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN75.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral rg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR3,4",
+          "COLPAT1"
+        ],
+        "lookup_id": "1950",
+        "lookup_rcid": "93959",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN75);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN75 is can buoy,lateral rg,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: red, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN75__day.png",
+            "label": "can buoy,lateral rg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN75__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN75__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN75__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN76__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN76__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN76__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN76.svg",
+      "asset": "BOYCAN76",
+      "before_svg": "assets/svg/triad_generated/BOYCAN76.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN76.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,isolated danger brb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR2,3,2"
+        ],
+        "lookup_id": "1867",
+        "lookup_rcid": "30148",
+        "object_class": "BOYISD",
+        "s52_instruction": "SY(BOYCAN76);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN76 is can buoy,isolated danger brb,full-chart. It is used as a isolated-danger buoy used to mark a hazard with navigable water around it. Required geometry: can/cylindrical buoy body. Required colours: black, red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "red",
+          "black"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "red"
+        ],
+        "use_case": "isolated-danger buoy used to mark a hazard with navigable water around it"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN76__day.png",
+            "label": "can buoy,isolated danger brb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN76__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN76__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN76__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN77__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN77__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN77__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN77.svg",
+      "asset": "BOYCAN77",
+      "before_svg": "assets/svg/triad_generated/BOYCAN77.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN77.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral white/orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR1,11",
+          "COLPAT1"
+        ],
+        "lookup_id": "1944",
+        "lookup_rcid": "30218",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN77);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN77 is can buoy,lateral white/orange,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: white, orange with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN77__day.png",
+            "label": "can buoy,lateral white/orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN77__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN77__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN77__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN78__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN78__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN78__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN78.svg",
+      "asset": "BOYCAN78",
+      "before_svg": "assets/svg/triad_generated/BOYCAN78.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN78.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral wow,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR1,11,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "1942",
+        "lookup_rcid": "30216",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN78);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN78 is can buoy,lateral wow,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: white, orange, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange",
+          "white"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN78__day.png",
+            "label": "can buoy,lateral wow,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN78__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN78__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN78__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN79__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN79__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN79__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN79.svg",
+      "asset": "BOYCAN79",
+      "before_svg": "assets/svg/triad_generated/BOYCAN79.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN79.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR11"
+        ],
+        "lookup_id": "1962",
+        "lookup_rcid": "30234",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN79);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN79 is can buoy,orange,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: orange.",
+        "colour_pattern": null,
+        "required_colours": [
+          "orange"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "orange"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN79__day.png",
+            "label": "can buoy,orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN79__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN79__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN79__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN80__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN80__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN80__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN80.svg",
+      "asset": "BOYCAN80",
+      "before_svg": "assets/svg/triad_generated/BOYCAN80.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN80.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,red-white,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR3,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "1949",
+        "lookup_rcid": "30223",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN80);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN80 is can buoy,red-white,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: red, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN80__day.png",
+            "label": "can buoy,red-white,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN80__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN80__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN80__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN81__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN81__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN81.svg",
+      "asset": "BOYCAN81",
+      "before_svg": "assets/svg/triad_generated/BOYCAN81.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN81.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral white/orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "COLOUR11,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "1945",
+        "lookup_rcid": "30219",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCAN81);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN81 is can buoy,lateral white/orange,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: orange, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "orange",
+          "white"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "orange",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_012_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN81__day.png",
+            "label": "can buoy,lateral white/orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN81__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN81__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN82__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN82__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN82__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN82.svg",
+      "asset": "BOYCAN82",
+      "before_svg": "assets/svg/triad_generated/BOYCAN82.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN82.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "CATLAM7",
+          "COLOUR3,1,3,1,3"
+        ],
+        "lookup_id": "1880",
+        "lookup_rcid": "93823",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN82);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN82 is can buoy,lateral-rw,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: red, white, red, white, red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "red",
+          "white",
+          "red"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN82__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN82__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN82__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN82__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCAN83__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCAN83__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCAN83__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCAN83.svg",
+      "asset": "BOYCAN83",
+      "before_svg": "assets/svg/triad_generated/BOYCAN83.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN83.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP2",
+          "CATLAM7",
+          "COLOUR3,1,3,1"
+        ],
+        "lookup_id": "1881",
+        "lookup_rcid": "93816",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCAN83);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCAN83 is can buoy,lateral-rw,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: can/cylindrical buoy body. Required colours: red, white, red, white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "red",
+          "white"
+        ],
+        "required_shape": "can/cylindrical buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Can/cylindrical buoy rows must not be rendered as conical/nun buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN83__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN83__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN83__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN83__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON01__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON01__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON01.svg",
+      "asset": "BOYCON01",
+      "before_svg": "assets/svg/triad_generated/BOYCON01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON01.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy, general, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1"
+        ],
+        "lookup_id": "1853",
+        "lookup_rcid": "30135",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCON01);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON01 is conical buoy, general, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: conical/nun buoy body. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON01__day.png",
+            "label": "conical buoy, general, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYCON01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYCON01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYCON01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON60__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON60__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON60.svg",
+      "asset": "BOYCON60",
+      "before_svg": "assets/svg/triad_generated/BOYCON60.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON60.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-red,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR3"
+        ],
+        "lookup_id": "1904",
+        "lookup_rcid": "30181",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON60);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON60 is conical buoy,lateral-red,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON60__day.png",
+            "label": "conical buoy,lateral-red,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON60__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON60__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON61__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON61__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON61.svg",
+      "asset": "BOYCON61",
+      "before_svg": "assets/svg/triad_generated/BOYCON61.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON61.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-green,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR4"
+        ],
+        "lookup_id": "1905",
+        "lookup_rcid": "30182",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON61 is conical buoy,lateral-green,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON61__day.png",
+            "label": "conical buoy,lateral-green,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON61__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON61__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON62__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON62__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON62.svg",
+      "asset": "BOYCON62",
+      "before_svg": "assets/svg/triad_generated/BOYCON62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON62.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,yellow,paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR6"
+        ],
+        "lookup_id": "1906",
+        "lookup_rcid": "30183",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON62);TX(OBJNAM,2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON62 is conical buoy,yellow,paper-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON62__day.png",
+            "label": "conical buoy,yellow,paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON63__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON63__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON63__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON63.svg",
+      "asset": "BOYCON63",
+      "before_svg": "assets/svg/triad_generated/BOYCON63.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON63.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-balck-red-black,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR2.3.2"
+        ],
+        "lookup_id": "1866",
+        "lookup_rcid": "30147",
+        "object_class": "BOYISD",
+        "s52_instruction": "SY(BOYCON63);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON63 is conical buoy,lateral-balck-red-black,full-chart. It is used as a isolated-danger buoy used to mark a hazard with navigable water around it. Required geometry: conical/nun buoy body. Required colours: black, red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "red",
+          "black"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "red"
+        ],
+        "use_case": "isolated-danger buoy used to mark a hazard with navigable water around it"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON63__day.png",
+            "label": "conical buoy,lateral-balck-red-black,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON63__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON63__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON63__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON64__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON64__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON64.svg",
+      "asset": "BOYCON64",
+      "before_svg": "assets/svg/triad_generated/BOYCON64.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON64.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,black,paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR2"
+        ],
+        "lookup_id": "1903",
+        "lookup_rcid": "30180",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON64);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON64 is conical buoy,black,paper-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON64__day.png",
+            "label": "conical buoy,black,paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON64__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON64__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON64__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON65__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON65__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON65__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON65.svg",
+      "asset": "BOYCON65",
+      "before_svg": "assets/svg/triad_generated/BOYCON65.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON65.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,green-white,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR4,1,4,1,4",
+          "COLPAT1"
+        ],
+        "lookup_id": "1939",
+        "lookup_rcid": "93898",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCON65);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON65 is conical buoy,green-white,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: green, white, green, white, green with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "white",
+          "green",
+          "white",
+          "green"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON65__day.png",
+            "label": "conical buoy,green-white,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON65__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON65__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON65__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON66__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON66__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON66__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON66.svg",
+      "asset": "BOYCON66",
+      "before_svg": "assets/svg/triad_generated/BOYCON66.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON66.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-rgr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR3,4,3",
+          "COLPAT1"
+        ],
+        "lookup_id": "1882",
+        "lookup_rcid": "30161",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON66);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON66 is conical buoy,lateral-rgr,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: red, green, red with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "green",
+          "red"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON66__day.png",
+            "label": "conical buoy,lateral-rgr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON66__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON66__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON66__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON68__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON68__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON68__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON68.svg",
+      "asset": "BOYCON68",
+      "before_svg": "assets/svg/triad_generated/BOYCON68.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON68.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-gr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR4,3"
+        ],
+        "lookup_id": "1899",
+        "lookup_rcid": "30176",
+        "object_class": "BOYLAT",
+        "s52_instruction": "SY(BOYCON68);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON68 is conical buoy,lateral-gr,full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: conical/nun buoy body. Required colours: green, red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "red"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_004.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON68__day.png",
+            "label": "conical buoy,lateral-gr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON68__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON68__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON68__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON69__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON69__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON69__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON69.svg",
+      "asset": "BOYCON69",
+      "before_svg": "assets/svg/triad_generated/BOYCON69.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON69.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,cardinal-north-by,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR2,6"
+        ],
+        "lookup_id": "1835",
+        "lookup_rcid": "30117",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCON69);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON69 is conical buoy,cardinal-north-by,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: conical/nun buoy body. Required colours: black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_005.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON69__day.png",
+            "label": "conical buoy,cardinal-north-by,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON69__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON69__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON69__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON70__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON70__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON70__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON70.svg",
+      "asset": "BOYCON70",
+      "before_svg": "assets/svg/triad_generated/BOYCON70.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON70.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,cardinal-south-yb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR6,2"
+        ],
+        "lookup_id": "1836",
+        "lookup_rcid": "30118",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCON70);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON70 is conical buoy,cardinal-south-yb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: conical/nun buoy body. Required colours: yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_005.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON70__day.png",
+            "label": "conical buoy,cardinal-south-yb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON70__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON70__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON70__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON71__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON71__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON71__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON71.svg",
+      "asset": "BOYCON71",
+      "before_svg": "assets/svg/triad_generated/BOYCON71.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON71.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,cardinal-east-byb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR2,6,2"
+        ],
+        "lookup_id": "1825",
+        "lookup_rcid": "30107",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCON71);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON71 is conical buoy,cardinal-east-byb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: conical/nun buoy body. Required colours: black, yellow, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "yellow",
+          "black"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "black",
+          "yellow"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON71__day.png",
+            "label": "conical buoy,cardinal-east-byb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON71__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON71__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON71__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON72__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON72__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON72__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON72.svg",
+      "asset": "BOYCON72",
+      "before_svg": "assets/svg/triad_generated/BOYCON72.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON72.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,cardinal-west-yby,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR6,2,6"
+        ],
+        "lookup_id": "1826",
+        "lookup_rcid": "30108",
+        "object_class": "BOYCAR",
+        "s52_instruction": "SY(BOYCON72);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON72 is conical buoy,cardinal-west-yby,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: conical/nun buoy body. Required colours: yellow, black, yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow",
+          "black",
+          "yellow"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "yellow",
+          "black"
+        ],
+        "use_case": "cardinal buoy used to indicate the safe side of danger"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON72__day.png",
+            "label": "conical buoy,cardinal-west-yby,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON72__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON72__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON72__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON73__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON73__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON73__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON73.svg",
+      "asset": "BOYCON73",
+      "before_svg": "assets/svg/triad_generated/BOYCON73.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON73.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,gw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR4,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "1948",
+        "lookup_rcid": "30222",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCON73);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON73 is conical buoy,gw,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: green, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "green",
+          "white"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_005.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON73__day.png",
+            "label": "conical buoy,gw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON73__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON73__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON73__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON77__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON77__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON77__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON77.svg",
+      "asset": "BOYCON77",
+      "before_svg": "assets/svg/triad_generated/BOYCON77.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON77.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-wo,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1",
+          "COLOUR1,11"
+        ],
+        "lookup_id": "1865",
+        "lookup_rcid": "93803",
+        "object_class": "BOYISD",
+        "s52_instruction": "SY(BOYCON77);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON77 is conical buoy,lateral-wo,full-chart. It is used as a isolated-danger buoy used to mark a hazard with navigable water around it. Required geometry: conical/nun buoy body. Required colours: white, orange with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "isolated-danger buoy used to mark a hazard with navigable water around it"
+      },
+      "source_judge": "catalog/standard_judge_batch_005.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON77__day.png",
+            "label": "conical buoy,lateral-wo,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON77__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON77__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON77__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON80__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON80__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON80__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON80.svg",
+      "asset": "BOYCON80",
+      "before_svg": "assets/svg/triad_generated/BOYCON80.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON80.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,lateral-grg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR1,11,1",
+          "COLPAT1"
+        ],
+        "lookup_id": "1941",
+        "lookup_rcid": "93805",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCON80);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BOYCON80 is conical buoy,lateral-grg,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: white, orange, white with horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "orange",
+          "white"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_011_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON80__day.png",
+            "label": "conical buoy,lateral-grg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON80__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON80__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON80__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch45/renders/BOYCON81__after__day.png",
+        "dusk": "out/standard_repair_batch45/renders/BOYCON81__after__dusk.png",
+        "night": "out/standard_repair_batch45/renders/BOYCON81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch53/BOYCON81.svg",
+      "asset": "BOYCON81",
+      "before_svg": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_strategy": "table_driven_owned_buoy_redraw_from_s57_shape_and_colour_conditions",
+      "name": "conical buoy,gw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch45",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 conditions drive shape/color; provider refs remain visual witnesses",
+        "source_priority_basis": "standard_repair_queue buoy/beacon family slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw BOYCON81 against the OpenCPN/reference witness so the blue-red-white-blue horizontal/vertical stripe pattern is unambiguous; remove any internal grid lines or translucent overlays that are not part of the reference symbol.",
+      "risk_bucket": "buoy_table_repair_batch53",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR5,3,1,5",
+          "COLPAT1,2"
+        ],
+        "lookup_id": "1940",
+        "lookup_rcid": "93807",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "unsafe_special_purpose_confusion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BOYCON81 is conical buoy,gw,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_014_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+            "label": "conical buoy,gw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON81__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

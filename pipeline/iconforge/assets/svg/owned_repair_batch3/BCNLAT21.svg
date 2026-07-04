@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BCNLAT21 beacon">
+  <title>BCNLAT21 beacon</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BCNLAT21" data-shape="beacon">
+  <defs><clipPath id="clip-BCNLAT21"><path d="M26 11 H38 L43 51 H21 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BCNLAT21)">
+  <rect x="0" y="7.0" width="64" height="26.25" fill="var(--red)"/>
+  <rect x="0" y="33.0" width="64" height="26.25" fill="var(--green)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M26 11 H38 L43 51 H21 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

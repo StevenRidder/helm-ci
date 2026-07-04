@@ -1,0 +1,92 @@
+# Topmark Contradiction Gate
+
+Status: `manual_review_required`
+
+- rows: `137`
+- manual_review_required: `110`
+- gate_status_counts: `{'manual_review_required': 110, 'no_contradiction_detected': 27}`
+- finding_counts: `{'human_rejected_is_pass_pending': 4, 'primary_s101_witness_contradicts_expected_shape': 79, 'row_name_contradicts_expected_shape': 51, 'same_asset_s101_witness_contradicts_expected_shape': 2, 'unresolved_shape_is_pass_pending': 2}`
+
+Rows below must not be final-approved until the contradiction is resolved.
+
+- `TOPMA107` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPMA109` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPMA113` -> `TOPSHP07`: row_name_contradicts_expected_shape
+- `TOPMAR87` -> `TOPSHP15`: human_rejected_is_pass_pending, row_name_contradicts_expected_shape, same_asset_s101_witness_contradicts_expected_shape
+- `TOPMAR88` -> `TOPSHP16`: human_rejected_is_pass_pending, row_name_contradicts_expected_shape, same_asset_s101_witness_contradicts_expected_shape
+- `TOPMAR91` -> `unresolved`: unresolved_shape_is_pass_pending, human_rejected_is_pass_pending
+- `TOPMAR92` -> `unresolved`: unresolved_shape_is_pass_pending, human_rejected_is_pass_pending
+- `TOPMAR98` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPMAR99` -> `TOPSHP12`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP01` -> `TOPSHP23`: row_name_contradicts_expected_shape
+- `TOPSHP02` -> `TOPSHP23`: row_name_contradicts_expected_shape
+- `TOPSHP03` -> `TOPSHP22`: row_name_contradicts_expected_shape
+- `TOPSHP04` -> `TOPSHP22`: row_name_contradicts_expected_shape
+- `TOPSHP05` -> `TOPSHP25`: row_name_contradicts_expected_shape
+- `TOPSHP07` -> `TOPSHP23`: row_name_contradicts_expected_shape
+- `TOPSHP08` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP10` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP11` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP12` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP16` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP17` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP18` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP19` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP20` -> `TOPSHP24`: row_name_contradicts_expected_shape
+- `TOPSHP21` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP22` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP23` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP24` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP25` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP28` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP29` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP30` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP31` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP32` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP33` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP34` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP35` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP36` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP37` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP38` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP40` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP41` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP42` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP43` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP44` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP47` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP48` -> `TOPSHP19`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP51` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP52` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP53` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP54` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP55` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP58` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP61` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP62` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP63` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP64` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP65` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP67` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP69` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP70` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP71` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP72` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP73;TE('%s'` -> `TOPSHP12`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP74` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP76` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP77` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP78` -> `TOPSHP12`: row_name_contradicts_expected_shape, primary_s101_witness_contradicts_expected_shape
+- `TOPSHP79` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP80` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP81;TE('%s'` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP82` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP83` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP84` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP85` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP87` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP88` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP89;TE('%s'` -> `TOPSHP20`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP90` -> `TOPSHP21`: primary_s101_witness_contradicts_expected_shape
+- `TOPSHP91` -> `TOPSHP21`: primary_s101_witness_contradicts_expected_shape
+- ... 30 more rows

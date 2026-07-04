@@ -1,0 +1,3669 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-014-local",
+  "batch_id": "standard_judge_batch_014",
+  "created_at": "2026-07-01T08:20:05Z",
+  "project": "vulkan",
+  "selection": {
+    "chart1_parity_gate": "respected: no final-pass eligibility for class-reference-only/manual rows or rows without exact crop final-pass clearance",
+    "count": 50,
+    "first_symbol": "TOPSHP81;TE('%s'",
+    "input_branch": "codex/FORGE-14-exact-crops",
+    "input_pushed_head": "0cbe96e",
+    "last_symbol": "TOPSHPU1",
+    "prior_archived_batch": "standard_judge_batch_013",
+    "prior_archived_last_symbol": "TOPSHP80",
+    "semantic_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "status_filter": "helm_candidate.candidate_status == pending_judge"
+  },
+  "summary": {
+    "blockers": [
+      "All 50 batch014 rows fail first-pass visual parity: Helm candidates render as generic circles while references require exact topmark silhouettes such as slanted board/diamond, round-board-with-center-mark, cross, oblique staff/slash, or triangle.",
+      "Rows with vertical/horizontal/diagonal/S-57 pattern-6, checkered, or multi-colour semantics do not encode the required internal pattern or colour order.",
+      "TOPSHPP2 and TOPSHPR1 only have broad class-panel Chart No.1 witness crops in this pass; they are not final-pass eligible under chart1_parity_gate.",
+      "No row in this slice is human-final approved; all 50 need repair before final approval can be considered."
+    ],
+    "fail": 50,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 0
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.99,
+      "expected": "TOPSHP81;TE('%s' must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: orange, black using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain orange circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: orange, black using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP81;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP81;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP81;TE('%s'",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP81;TE('%s'",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP81;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHP81_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP81;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHP81;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP81_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP81;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP81_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP81;TE('%s'",
+      "symbol_id": "TOPSHP81;TE('%s'"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.99,
+      "expected": "TOPSHP82 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP82",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP82",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP82",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP82",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP82",
+          "path": "out/opencpn_s52_reference/TOPSHP82__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP82",
+          "path": "out/source_variant_matrix/renders/TOPSHP82/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP82.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP82/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP82.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP82",
+      "symbol_id": "TOPSHP82"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.99,
+      "expected": "TOPSHP83 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, black using squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black using squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP83",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP83",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP83",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP83",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP83",
+          "path": "out/opencpn_s52_reference/TOPSHP83__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP83",
+          "path": "out/source_variant_matrix/renders/TOPSHP83/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP83.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP83/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP83.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP83",
+      "symbol_id": "TOPSHP83"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.99,
+      "expected": "TOPSHP84 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: orange, white using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain orange circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: orange, white using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP84",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP84",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP84",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP84",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP84",
+          "path": "out/opencpn_s52_reference/TOPSHP84__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP84",
+          "path": "out/source_variant_matrix/renders/TOPSHP84/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP84.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP84/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP84.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP84",
+      "symbol_id": "TOPSHP84"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.99,
+      "expected": "TOPSHP85 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP85",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP85",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP85",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP85",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP85",
+          "path": "out/opencpn_s52_reference/TOPSHP85__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP85",
+          "path": "out/source_variant_matrix/renders/TOPSHP85/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP85.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP85/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP85.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP85",
+      "symbol_id": "TOPSHP85"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.99,
+      "expected": "TOPSHP87 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP87",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP87",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP87",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP87",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP87",
+          "path": "out/opencpn_s52_reference/TOPSHP87__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP87",
+          "path": "out/source_variant_matrix/renders/TOPSHP87/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP87.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP87/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP87.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP87",
+      "symbol_id": "TOPSHP87"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.99,
+      "expected": "TOPSHP88 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP88",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP88",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP88",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP88",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP88",
+          "path": "out/opencpn_s52_reference/TOPSHP88__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP88",
+          "path": "out/source_variant_matrix/renders/TOPSHP88/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP88.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP88/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP88.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP88",
+      "symbol_id": "TOPSHP88"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.99,
+      "expected": "TOPSHP89;TE('%s' must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP89;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP89;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP89;TE('%s'",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP89;TE('%s'",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP89;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHP89_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP89;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHP89;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP89_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP89;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP89_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP89;TE('%s'",
+      "symbol_id": "TOPSHP89;TE('%s'"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.99,
+      "expected": "TOPSHP90 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white, red using border stripe pattern in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white, red using border stripe pattern in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP90",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP90",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP90",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP90",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP90",
+          "path": "out/opencpn_s52_reference/TOPSHP90__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP90",
+          "path": "out/source_variant_matrix/renders/TOPSHP90/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP90.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP90/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP90.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP90",
+      "symbol_id": "TOPSHP90"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.99,
+      "expected": "TOPSHP91 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP91",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP91",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP91",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP91",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP91",
+          "path": "out/opencpn_s52_reference/TOPSHP91__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP91",
+          "path": "out/source_variant_matrix/renders/TOPSHP91/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP91.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP91/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP91.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP91",
+      "symbol_id": "TOPSHP91"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.99,
+      "expected": "TOPSHP92 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP92",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP92",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP92",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP92",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP92",
+          "path": "out/opencpn_s52_reference/TOPSHP92__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP92",
+          "path": "out/source_variant_matrix/renders/TOPSHP92/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP92.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP92/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP92.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP92",
+      "symbol_id": "TOPSHP92"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.99,
+      "expected": "TOPSHP93 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, green using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, green using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP93",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP93",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP93",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP93",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP93",
+          "path": "out/opencpn_s52_reference/TOPSHP93__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP93",
+          "path": "out/source_variant_matrix/renders/TOPSHP93/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP93.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP93/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP93.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP93",
+      "symbol_id": "TOPSHP93"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.99,
+      "expected": "TOPSHP94 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, red, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, red, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP94",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP94",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP94",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP94",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP94",
+          "path": "out/opencpn_s52_reference/TOPSHP94__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP94",
+          "path": "out/source_variant_matrix/renders/TOPSHP94/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP94.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP94/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP94.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP94",
+      "symbol_id": "TOPSHP94"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.99,
+      "expected": "TOPSHP95 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP95",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP95",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP95",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP95",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP95",
+          "path": "out/opencpn_s52_reference/TOPSHP95__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP95",
+          "path": "out/source_variant_matrix/renders/TOPSHP95/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP95.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP95/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP95.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP95",
+      "symbol_id": "TOPSHP95"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.99,
+      "expected": "TOPSHP96 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white, red, yellow using border stripe pattern in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white, red, yellow using border stripe pattern in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP96",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP96",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP96",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP96",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP96",
+          "path": "out/opencpn_s52_reference/TOPSHP96__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP96",
+          "path": "out/source_variant_matrix/renders/TOPSHP96/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP96.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP96/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP96.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP96",
+      "symbol_id": "TOPSHP96"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.99,
+      "expected": "TOPSHP97 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: yellow, black, yellow using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain yellow circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: yellow, black, yellow using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP97",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP97",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP97",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP97",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP97",
+          "path": "out/opencpn_s52_reference/TOPSHP97__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP97",
+          "path": "out/source_variant_matrix/renders/TOPSHP97/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP97.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP97/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP97.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP97",
+      "symbol_id": "TOPSHP97"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.99,
+      "expected": "TOPSHP98 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, black using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, black using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP98",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP98",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP98",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP98",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP98",
+          "path": "out/opencpn_s52_reference/TOPSHP98__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP98",
+          "path": "out/source_variant_matrix/renders/TOPSHP98/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP98.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP98/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHP98.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP98",
+      "symbol_id": "TOPSHP98"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.99,
+      "expected": "TOPSHP99 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, black using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP99",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHP99",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP99",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP99",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP99",
+          "path": "out/opencpn_s52_reference/TOPSHP99__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHP99",
+          "path": "out/source_variant_matrix/renders/TOPSHP99/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP99.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP99/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHP99.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP99",
+      "symbol_id": "TOPSHP99"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.99,
+      "expected": "TOPSHPA0 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, black, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, black, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA0",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA0",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA0",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA0",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA0",
+          "path": "out/opencpn_s52_reference/TOPSHPA0__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA0",
+          "path": "out/source_variant_matrix/renders/TOPSHPA0/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA0.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA0/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA0.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA0",
+      "symbol_id": "TOPSHPA0"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.99,
+      "expected": "TOPSHPA1 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: black, white, black using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black, white, black using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA1",
+          "path": "out/opencpn_s52_reference/TOPSHPA1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA1",
+          "path": "out/source_variant_matrix/renders/TOPSHPA1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA1",
+      "symbol_id": "TOPSHPA1"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.99,
+      "expected": "TOPSHPA2 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, green using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, green using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA2",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA2",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA2",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA2",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA2",
+          "path": "out/opencpn_s52_reference/TOPSHPA2__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA2",
+          "path": "out/source_variant_matrix/renders/TOPSHPA2/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA2.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA2/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA2.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA2",
+      "symbol_id": "TOPSHPA2"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.99,
+      "expected": "TOPSHPA3 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, green, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, green, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA3",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA3",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA3",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA3",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA3",
+          "path": "out/opencpn_s52_reference/TOPSHPA3__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA3",
+          "path": "out/source_variant_matrix/renders/TOPSHPA3/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA3.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA3/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA3.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA3",
+      "symbol_id": "TOPSHPA3"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.99,
+      "expected": "TOPSHPA4 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA4",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA4",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA4",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA4",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA4",
+          "path": "out/opencpn_s52_reference/TOPSHPA4__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA4",
+          "path": "out/source_variant_matrix/renders/TOPSHPA4/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA4.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA4/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA4.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA4",
+      "symbol_id": "TOPSHPA4"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.99,
+      "expected": "TOPSHPA5 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, black, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA5",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA5",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA5",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA5",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA5",
+          "path": "out/opencpn_s52_reference/TOPSHPA5__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA5",
+          "path": "out/source_variant_matrix/renders/TOPSHPA5/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA5.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA5/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA5.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA5",
+      "symbol_id": "TOPSHPA5"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.99,
+      "expected": "TOPSHPA6 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA6",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA6",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA6",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA6",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA6",
+          "path": "out/opencpn_s52_reference/TOPSHPA6__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA6",
+          "path": "out/source_variant_matrix/renders/TOPSHPA6/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA6.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA6/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA6.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA6",
+      "symbol_id": "TOPSHPA6"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.99,
+      "expected": "TOPSHPA7 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: green, red, green using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain green circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: green, red, green using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA7",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA7",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA7",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA7",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA7",
+          "path": "out/opencpn_s52_reference/TOPSHPA7__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA7",
+          "path": "out/source_variant_matrix/renders/TOPSHPA7/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA7.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA7/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA7.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA7",
+      "symbol_id": "TOPSHPA7"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.99,
+      "expected": "TOPSHPA8 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: green, black using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain green circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: green, black using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA8",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA8",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA8",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA8",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA8",
+          "path": "out/opencpn_s52_reference/TOPSHPA8__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA8",
+          "path": "out/source_variant_matrix/renders/TOPSHPA8/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA8.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA8/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA8.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA8",
+      "symbol_id": "TOPSHPA8"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.99,
+      "expected": "TOPSHPA9 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, red using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, red using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPA9",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPA9",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPA9",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPA9",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPA9",
+          "path": "out/opencpn_s52_reference/TOPSHPA9__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPA9",
+          "path": "out/source_variant_matrix/renders/TOPSHPA9/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPA9.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPA9/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPA9.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPA9",
+      "symbol_id": "TOPSHPA9"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.99,
+      "expected": "TOPSHPB0 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPB0",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPB0",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPB0",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPB0",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPB0",
+          "path": "out/opencpn_s52_reference/TOPSHPB0__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPB0",
+          "path": "out/source_variant_matrix/renders/TOPSHPB0/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPB0.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPB0/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPB0.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPB0",
+      "symbol_id": "TOPSHPB0"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.99,
+      "expected": "TOPSHPD1 must preserve the round-board topmark with the internal center mark/reference detail and required colour semantics: orange.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain orange circle with a black outline. The Chart No.1/OpenCPN witnesses show a round-board topmark with internal center detail; the candidate drops that internal mark and any required multi-colour semantics.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the round-board topmark with the internal center mark/reference detail and encode the required colour order/pattern: orange.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_internal_topmark_detail"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPD1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPD1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPD1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPD1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPD1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPD1",
+          "path": "out/source_variant_matrix/renders/TOPSHPD1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPD1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPD1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPD1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPD1",
+      "symbol_id": "TOPSHPD1"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.99,
+      "expected": "TOPSHPD2 must preserve the round-board topmark with the internal center mark/reference detail and required colour semantics: green, green using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain green circle with a black outline. The Chart No.1/OpenCPN witnesses show a round-board topmark with internal center detail; the candidate drops that internal mark and any required multi-colour semantics.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the round-board topmark with the internal center mark/reference detail and encode the required colour order/pattern: green, green using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_internal_topmark_detail",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPD2",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPD2",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPD2",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPD2",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPD2__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPD2",
+          "path": "out/source_variant_matrix/renders/TOPSHPD2/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPD2.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPD2/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPD2.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPD2",
+      "symbol_id": "TOPSHPD2"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.99,
+      "expected": "TOPSHPD3 must preserve the round-board topmark with the internal center mark/reference detail and required colour semantics: red.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses show a round-board topmark with internal center detail; the candidate drops that internal mark and any required multi-colour semantics.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the round-board topmark with the internal center mark/reference detail and encode the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_internal_topmark_detail"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPD3",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPD3",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPD3",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPD3",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPD3__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPD3",
+          "path": "out/source_variant_matrix/renders/TOPSHPD3/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPD3.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPD3/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPD3.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPD3",
+      "symbol_id": "TOPSHPD3"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.99,
+      "expected": "TOPSHPD5 must preserve the round-board topmark with the internal center mark/reference detail and required colour semantics: red, white, black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses show a round-board topmark with internal center detail; the candidate drops that internal mark and any required multi-colour semantics.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the round-board topmark with the internal center mark/reference detail and encode the required colour order/pattern: red, white, black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_internal_topmark_detail",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPD5",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPD5",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPD5",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPD5",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red/white/red boarded round board",
+          "path": "out/opencpn_s52_reference/TOPSHPD5__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPD5",
+          "path": "out/source_variant_matrix/renders/TOPSHPD5/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPD5.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPD5/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPD5.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPD5",
+      "symbol_id": "TOPSHPD5"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.99,
+      "expected": "TOPSHPI1 must preserve the X/cross topmark silhouette and required colour semantics: yellow.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain yellow circle with a black outline. The Chart No.1/OpenCPN witnesses show an X/cross topmark, so the candidate is the wrong topmark family and silhouette.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the X/cross topmark silhouette and encode the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPI1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPI1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPI1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPI1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPI1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPI1",
+          "path": "out/source_variant_matrix/renders/TOPSHPI1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPI1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPI1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPI1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPI1",
+      "symbol_id": "TOPSHPI1"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.99,
+      "expected": "TOPSHPI2 must preserve the X/cross topmark silhouette and required colour semantics: black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses show an X/cross topmark, so the candidate is the wrong topmark family and silhouette.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the X/cross topmark silhouette and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPI2",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPI2",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPI2",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPI2",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPI2__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPI2",
+          "path": "out/source_variant_matrix/renders/TOPSHPI2/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPI2.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPI2/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPI2.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPI2",
+      "symbol_id": "TOPSHPI2"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.99,
+      "expected": "TOPSHPI3 must preserve the X/cross topmark silhouette and required colour semantics: white, red using diagonal stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses show an X/cross topmark, so the candidate is the wrong topmark family and silhouette.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the X/cross topmark silhouette and encode the required colour order/pattern: white, red using diagonal stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPI3",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPI3",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPI3",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPI3",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPI3__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPI3",
+          "path": "out/source_variant_matrix/renders/TOPSHPI3/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPI3.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPI3/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPI3.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPI3",
+      "symbol_id": "TOPSHPI3"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.99,
+      "expected": "TOPSHPJ1 must preserve the narrow oblique staff/slash topmark silhouette and required colour semantics: yellow.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain yellow circle with a black outline. The Chart No.1/OpenCPN witnesses show a narrow oblique staff/slash-like topmark, not a circular board.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the narrow oblique staff/slash topmark silhouette and encode the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPJ1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPJ1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPJ1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPJ1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPJ1",
+          "path": "out/opencpn_s52_reference/TOPSHPJ1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPJ1",
+          "path": "out/source_variant_matrix/renders/TOPSHPJ1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPJ1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPJ1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPJ1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPJ1",
+      "symbol_id": "TOPSHPJ1"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.99,
+      "expected": "TOPSHPJ3 must preserve the narrow oblique staff/slash topmark silhouette and required colour semantics: white.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses show a narrow oblique staff/slash-like topmark, not a circular board.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the narrow oblique staff/slash topmark silhouette and encode the required colour order/pattern: white.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPJ3",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPJ3",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPJ3",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPJ3",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPJ3",
+          "path": "out/opencpn_s52_reference/TOPSHPJ3__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPJ3",
+          "path": "out/source_variant_matrix/renders/TOPSHPJ3/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPJ3.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPJ3/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPJ3.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPJ3",
+      "symbol_id": "TOPSHPJ3"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.99,
+      "expected": "TOPSHPP2 must preserve the true per-symbol topmark crop; current witness is broad class-panel evidence only and required colour semantics: yellow.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain yellow circle with a black outline. The available Chart No.1 witness is a broad class-panel screenshot rather than a tight exact-symbol crop, and the candidate still lacks a reference-matched topmark silhouette.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the true per-symbol topmark crop; current witness is broad class-panel evidence only and encode the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "chart1_class_reference_only_not_final_eligible"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPP2",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPP2",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPP2",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPP2",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPP2__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPP2",
+          "path": "out/source_variant_matrix/renders/TOPSHPP2/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "class_reference_only_not_final_eligible",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPP2.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPP2/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPP2.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPP2",
+      "symbol_id": "TOPSHPP2"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.99,
+      "expected": "TOPSHPR1 must preserve the true per-symbol topmark crop; current witness is broad class-panel evidence only and required colour semantics: black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The available Chart No.1 witness is a broad class-panel screenshot rather than a tight exact-symbol crop, and the candidate still lacks a reference-matched topmark silhouette.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the true per-symbol topmark crop; current witness is broad class-panel evidence only and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "chart1_class_reference_only_not_final_eligible"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPR1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPR1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPR1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPR1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPR1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPR1",
+          "path": "out/source_variant_matrix/renders/TOPSHPR1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "class_reference_only_not_final_eligible",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPR1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPR1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPR1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPR1",
+      "symbol_id": "TOPSHPR1"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.99,
+      "expected": "TOPSHPS1 must preserve the narrow oblique staff/slash topmark silhouette and required colour semantics: white, red, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses show a narrow oblique staff/slash-like topmark, not a circular board.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the narrow oblique staff/slash topmark silhouette and encode the required colour order/pattern: white, red, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPS1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPS1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPS1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPS1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPS1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPS1",
+          "path": "out/source_variant_matrix/renders/TOPSHPS1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPS1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPS1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPS1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPS1",
+      "symbol_id": "TOPSHPS1"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.99,
+      "expected": "TOPSHPT1 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT1",
+          "path": "out/opencpn_s52_reference/TOPSHPT1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT1",
+          "path": "out/source_variant_matrix/renders/TOPSHPT1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT1",
+      "symbol_id": "TOPSHPT1"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.99,
+      "expected": "TOPSHPT2 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: red, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain red circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT2",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT2",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT2",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT2",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT2",
+          "path": "out/opencpn_s52_reference/TOPSHPT2__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT2",
+          "path": "out/source_variant_matrix/renders/TOPSHPT2/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT2.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT2/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT2.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT2",
+      "symbol_id": "TOPSHPT2"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.99,
+      "expected": "TOPSHPT3 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT3",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT3",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT3",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT3",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT3",
+          "path": "out/opencpn_s52_reference/TOPSHPT3__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT3",
+          "path": "out/source_variant_matrix/renders/TOPSHPT3/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT3.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT3/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT3.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT3",
+      "symbol_id": "TOPSHPT3"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.99,
+      "expected": "TOPSHPT4 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: black, white.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black, white.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT4",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT4",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT4",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT4",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT4",
+          "path": "out/opencpn_s52_reference/TOPSHPT4__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT4",
+          "path": "out/source_variant_matrix/renders/TOPSHPT4/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT4.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT4/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT4.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT4",
+      "symbol_id": "TOPSHPT4"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.99,
+      "expected": "TOPSHPT5 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT5",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT5",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT5",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT5",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT5",
+          "path": "out/opencpn_s52_reference/TOPSHPT5__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT5",
+          "path": "out/source_variant_matrix/renders/TOPSHPT5/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT5.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT5/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT5.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT5",
+      "symbol_id": "TOPSHPT5"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.99,
+      "expected": "TOPSHPT6 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: orange, black.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain orange circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: orange, black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT6",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT6",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT6",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT6",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT6",
+          "path": "out/opencpn_s52_reference/TOPSHPT6__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT6",
+          "path": "out/source_variant_matrix/renders/TOPSHPT6/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT6.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT6/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT6.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT6",
+      "symbol_id": "TOPSHPT6"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.99,
+      "expected": "TOPSHPT7 must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: black, orange.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain black circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black, orange.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT7",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT7",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT7",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT7",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT7",
+          "path": "out/opencpn_s52_reference/TOPSHPT7__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT7",
+          "path": "out/source_variant_matrix/renders/TOPSHPT7/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT7.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT7/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT7.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT7",
+      "symbol_id": "TOPSHPT7"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.99,
+      "expected": "TOPSHPT8;TE('%s' must preserve the slanted square-board/diamond-board topmark silhouette and required colour semantics: white, black, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain white circle with a black outline. The Chart No.1/OpenCPN witnesses require a slanted square-board/diamond-board topmark silhouette with orientation and internal colour/order semantics where listed.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPT8;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPT8;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPT8;TE('%s'",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPT8;TE('%s'",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHPT8;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHPT8_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPT8;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHPT8;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPT8_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPT8;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPT8_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPT8;TE('%s'",
+      "symbol_id": "TOPSHPT8;TE('%s'"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.99,
+      "expected": "TOPSHPU1 must preserve the triangular topmark silhouette and required colour semantics: green, green using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity. Candidate preserves only a generic circular placeholder, while the row metadata and visual witnesses require a specific topmark silhouette/orientation and any listed colour-order semantics. No final human approval claimed.",
+      "observed": "Helm renders a plain green circle with a black outline. The Chart No.1/OpenCPN witnesses show a triangular topmark silhouette, so the candidate is the wrong shape family.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the triangular topmark silhouette and encode the required colour order/pattern: green, green using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHPU1",
+          "used": true
+        },
+        {
+          "available": false,
+          "provider": "semantic_shape_judge_queue",
+          "status": "not_found",
+          "symbol_id": "TOPSHPU1",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHPU1",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHPU1",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHPU1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "final_pass_allowed": false,
+          "label": "TOPSHPU1",
+          "path": "out/source_variant_matrix/renders/TOPSHPU1/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference_not_final_approval",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHPU1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHPU1/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch3/TOPSHPU1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHPU1",
+      "symbol_id": "TOPSHPU1"
+    }
+  ]
+}

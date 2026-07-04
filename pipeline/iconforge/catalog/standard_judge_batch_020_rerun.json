@@ -1,0 +1,824 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch20-local",
+  "batch_id": "standard_judge_batch_020_rerun",
+  "created_at": "2026-07-01T08:20:31.630Z",
+  "project": "vulkan",
+  "schema_version": 1,
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "chart1_parity_gate_note": "Rows with absent/null Chart No.1 exact-crop evidence may pass only as automated rerun evidence; final approval remains 0.",
+    "selected_count": 30,
+    "selection_note": "All repaired rows from owned_repair_batch20; visual rerun only, no human-final approval claimed.",
+    "source_batch": "pipeline/iconforge/catalog/owned_repair_batch20.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 23,
+    "failed_assets": [
+      "QUARRY01",
+      "RADRFL03",
+      "RASCAN01",
+      "RASCAN11",
+      "RDOCAL02",
+      "RDOCAL03",
+      "RDOSTA02",
+      "RECDEF51",
+      "RECTRC55",
+      "RECTRC56",
+      "RECTRC57",
+      "RECTRC58",
+      "RETRFL01",
+      "RETRFL02",
+      "SCALEB10",
+      "SCALEB11",
+      "SNDWAV02",
+      "SWPARE51",
+      "TMBYRD01",
+      "TNKCON02",
+      "TNKCON12",
+      "TNKFRM01",
+      "TNKFRM11"
+    ],
+    "final_approved": 0,
+    "pass": 7,
+    "passed_assets": [
+      "QUAPOS01",
+      "QUESMRK1",
+      "RACNSP01",
+      "RCTLPT52",
+      "REFPNT02",
+      "RSCSTA02",
+      "SOUNDG02"
+    ],
+    "selected": 30,
+    "source_batch": "catalog/owned_repair_batch20.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.8,
+      "expected": "QUAPOS01 is position approximate. It is used as a position approximate. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate presents the black PA approximate-position text cue with a short dashed baseline; this preserves the required PA class cue seen in S-101/OpenCPN, with only Helm styling/scale differences.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:QUAPOS01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/QUAPOS01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/QUAPOS01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/QUAPOS01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/QUAPOS01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:QUAPOS01",
+      "symbol_id": "QUAPOS01"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.88,
+      "expected": "QUARRY01 is quarry. It is used as a quarry. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a brown hourglass/cross with top and bottom bars; S-101/OpenCPN show the quarry as crossed tool/hash geometry inside a compact circular witness, not an hourglass frame.",
+      "pass": false,
+      "required_change": "Redraw QUARRY01 as the compact brown quarry crossed-tool/hash symbol inside the reference circular witness; remove the hourglass top/bottom bars.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_reference_enclosure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:QUARRY01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/QUARRY01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/QUARRY01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/QUARRY01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/QUARRY01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:QUARRY01",
+      "symbol_id": "QUARRY01"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.82,
+      "expected": "QUESMRK1 is object which is not sufficiently described to be symbolized, or for which no symbol exists in the symbol library. It is used as a object which is not sufficiently described to be symbolized, or for which no symbol exists in the symbol library. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is the magenta question-mark cue with a small base/underline, matching the S-101/OpenCPN unknown-object/question-mark semantics.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:QUESMRK1",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/QUESMRK1.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/QUESMRK1__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/QUESMRK1__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/QUESMRK1__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:QUESMRK1",
+      "symbol_id": "QUESMRK1"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.76,
+      "expected": "RACNSP01 is symbol indicating this object is radar conspicuous. It is used as a symbol indicating this object is radar conspicuous. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is a magenta radar-conspicuous starburst/radiating mark with center cue. S-101 uses a larger ringed starburst, but the symbol class, color family, and radial cue are preserved for automated rerun pass.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RACNSP01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RACNSP01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RACNSP01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RACNSP01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RACNSP01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RACNSP01",
+      "symbol_id": "RACNSP01"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.82,
+      "expected": "RADRFL03 is radar reflector. It is used as a radar reflector. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate follows a black reflector/arc motif similar to the AquaMap support image, but S-101/OpenCPN render this row as a magenta radar-reflector/conspicuous starburst witness.",
+      "pass": false,
+      "required_change": "Resolve the provider conflict and redraw RADRFL03 to the S-101/OpenCPN magenta starburst/ring witness, or record an explicit manual exception choosing the AquaMap reflector motif before rerun pass.",
+      "safety_reason_codes": [
+        "conflicting_reference_witness",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RADRFL03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RADRFL03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RADRFL03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RADRFL03__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RADRFL03__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence",
+        "aquamap:Radar Reflector:reference_sources/aquamap_map_symbols/images/RadarReflector1.png"
+      ],
+      "source_table_id": "opencpn-s52:RADRFL03",
+      "symbol_id": "RADRFL03"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.86,
+      "expected": "RASCAN01 is radar scanner. It is used as a radar scanner. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a brown mast with scan arcs and a top loop; S-101/OpenCPN show a rectangular radar-scanner frame with top bar, vertical supports, and lower circular pivot.",
+      "pass": false,
+      "required_change": "Redraw RASCAN01 as the brown rectangular scanner-frame witness with top horizontal bar, vertical supports, and lower pivot circle; remove the broadcast-arc motif.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scanner_structure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RASCAN01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RASCAN01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RASCAN01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RASCAN01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RASCAN01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RASCAN01",
+      "symbol_id": "RASCAN01"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.86,
+      "expected": "RASCAN11 is conspicuous radar scanner. It is used as a conspicuous radar scanner. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a black mast with scan arcs and top loop; the conspicuous reference uses the black rectangular scanner-frame structure with lower pivot circle.",
+      "pass": false,
+      "required_change": "Redraw RASCAN11 as the black conspicuous radar-scanner frame with top bar, vertical supports, and lower pivot circle; remove the broadcast-arc motif.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scanner_structure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RASCAN11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RASCAN11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RASCAN11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RASCAN11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RASCAN11__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RASCAN11",
+      "symbol_id": "RASCAN11"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.78,
+      "expected": "RCTLPT52 is recommended traffic direction between parts of a traffic separation scheme, or for ships not needing a deep water route. It is used as a recommended traffic direction between parts of a traffic separation scheme, or for ships not needing a deep water route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is a magenta dashed traffic-direction arrow. It differs in orientation/curvature from the vertical reference render, but preserves the route-direction class and dashed arrow semantics expected for an oriented traffic-direction symbol.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RCTLPT52",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RCTLPT52.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RCTLPT52__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RCTLPT52__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RCTLPT52__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RCTLPT52",
+      "symbol_id": "RCTLPT52"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.9,
+      "expected": "RDOCAL02 is radio calling-in point for traffic in one direction only. It is used as a radio calling-in point for traffic in one direction only. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a circled R with a right arrow; S-101/OpenCPN show a one-direction radio call-in point as a circle with a single triangular point, and AquaMap shows a call-in point without the R label/arrow enclosure.",
+      "pass": false,
+      "required_change": "Redraw RDOCAL02 as the one-direction radio call-in point witness: circle plus one triangular direction point; remove the R label, arrow, and outer sign circle.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "missing_directional_semantics",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RDOCAL02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RDOCAL02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RDOCAL02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOCAL02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RDOCAL02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence",
+        "aquamap:Radio Call-in Point:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+        "aquamap:Radar Station:reference_sources/aquamap_map_symbols/images/RadarStation1.png"
+      ],
+      "source_table_id": "opencpn-s52:RDOCAL02",
+      "symbol_id": "RDOCAL02"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.9,
+      "expected": "RDOCAL03 is radio calling-in point for traffic in both directions. It is used as a radio calling-in point for traffic in both directions. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a circled R with bidirectional arrows; S-101/OpenCPN show the both-direction call-in point as a circle with opposed triangular points, not an R sign.",
+      "pass": false,
+      "required_change": "Redraw RDOCAL03 as the bidirectional radio call-in point witness with opposed triangular points around the circle; remove the R label, arrows, and enclosing sign circle.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_text",
+        "missing_bidirectional_semantics",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RDOCAL03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RDOCAL03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RDOCAL03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOCAL03__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RDOCAL03__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence",
+        "aquamap:Radio Call-in Point:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+        "aquamap:Radar Station:reference_sources/aquamap_map_symbols/images/RadarStation1.png"
+      ],
+      "source_table_id": "opencpn-s52:RDOCAL03",
+      "symbol_id": "RDOCAL03"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.88,
+      "expected": "RDOSTA02 is radio station. It is used as a radio station. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a radio mast/broadcast icon, but S-101/OpenCPN identify RDOSTA02 as a simple magenta circular radio-station point witness.",
+      "pass": false,
+      "required_change": "Redraw RDOSTA02 as the simple magenta radio-station circle/point witness from S-101/OpenCPN; do not use a mast or broadcast-wave icon.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RDOSTA02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RDOSTA02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RDOSTA02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOSTA02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RDOSTA02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence",
+        "aquamap:Radio Call-in Point:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+        "aquamap:Radar Station:reference_sources/aquamap_map_symbols/images/RadarStation1.png"
+      ],
+      "source_table_id": "opencpn-s52:RDOSTA02",
+      "symbol_id": "RDOSTA02"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.88,
+      "expected": "RECDEF51 is recommended track as an area, direction not defined in data. It is used as a recommended track as an area, direction not defined in data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a magenta dashed arrow with a question mark; S-101/OpenCPN show a neutral/grey recommended-track line with a central unknown-direction question cue, not a one-way arrow.",
+      "pass": false,
+      "required_change": "Redraw RECDEF51 as the recommended-track line with the central unknown-direction question cue; remove the directional arrowhead and magenta dashed-arrow styling.",
+      "safety_reason_codes": [
+        "wrong_direction_semantics",
+        "wrong_colour_family",
+        "missing_track_line",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECDEF51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RECDEF51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RECDEF51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECDEF51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RECDEF51__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RECDEF51",
+      "symbol_id": "RECDEF51"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.86,
+      "expected": "RECTRC55 is recommended two-way track as an area, not based on fixed marks. It is used as a recommended two-way track as an area, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a horizontal dashed two-way arrow; S-101/OpenCPN show the recommended two-way track as a vertical track line with central two-way chevrons.",
+      "pass": false,
+      "required_change": "Redraw RECTRC55 as the two-way recommended-track witness with a track line and central opposed chevrons; remove the standalone horizontal arrow treatment.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_track_line",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC55",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RECTRC55.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RECTRC55__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC55__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RECTRC55__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RECTRC55",
+      "symbol_id": "RECTRC55"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.86,
+      "expected": "RECTRC56 is recommended two-way track as an area, based on fixed marks. It is used as a recommended two-way track as an area, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a horizontal two-way arrow with a center circle; the reference is a fixed-mark two-way track line/chevron witness, not a standalone arrow sign.",
+      "pass": false,
+      "required_change": "Redraw RECTRC56 as the fixed-mark two-way recommended-track reference: track line plus opposed chevrons/fixed-mark cue at reference proportions; remove the standalone arrow sign.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_track_line",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC56",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RECTRC56.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RECTRC56__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC56__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RECTRC56__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RECTRC56",
+      "symbol_id": "RECTRC56"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.86,
+      "expected": "RECTRC57 is recommended one-way track as an area, not based on fixed marks. It is used as a recommended one-way track as an area, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a horizontal dashed one-way arrow; S-101/OpenCPN show a one-way recommended-track line with an arrow/chevron on the track axis.",
+      "pass": false,
+      "required_change": "Redraw RECTRC57 as the one-way recommended-track line witness with arrow/chevron on the track axis; remove the standalone horizontal dashed arrow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_track_line",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC57",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RECTRC57.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RECTRC57__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC57__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RECTRC57__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RECTRC57",
+      "symbol_id": "RECTRC57"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.86,
+      "expected": "RECTRC58 is recommended one-way track as an area, based on fixed marks. It is used as a recommended one-way track as an area, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a horizontal one-way arrow with a center circle; S-101/OpenCPN show a fixed-mark one-way track line with a single direction cue.",
+      "pass": false,
+      "required_change": "Redraw RECTRC58 as the fixed-mark one-way recommended-track line witness with one direction cue; remove the standalone arrow sign and center-circle treatment unless the fixed-mark cue matches the reference.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_track_line",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC58",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RECTRC58.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RECTRC58__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC58__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RECTRC58__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RECTRC58",
+      "symbol_id": "RECTRC58"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.8,
+      "expected": "REFPNT02 is reference point, 'ghost cursor' (user interface). It is used as a reference point, 'ghost cursor' (user interface). Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is an orange reference-point crosshair. The S-101/OpenCPN witness is a simpler orange cross, but the ghost-cursor/reference-point class and color family are preserved.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:REFPNT02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/REFPNT02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/REFPNT02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/REFPNT02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/REFPNT02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:REFPNT02",
+      "symbol_id": "REFPNT02"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.9,
+      "expected": "RETRFL01 is retro reflector, paper chart. It is used as a retro reflector, paper chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a magenta open triangular reflector; S-101/OpenCPN show the retro-reflector paper-chart symbol as an E/comb-like set of horizontal bars on a vertical spine.",
+      "pass": false,
+      "required_change": "Redraw RETRFL01 as the magenta retro-reflector comb/E witness with vertical spine and three horizontal bars; remove the triangular outline.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RETRFL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RETRFL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RETRFL01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RETRFL01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RETRFL01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RETRFL01",
+      "symbol_id": "RETRFL01"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.9,
+      "expected": "RETRFL02 is retro reflector, simplified. It is used as a retro reflector, simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a black open triangle; S-101/OpenCPN show the simplified retro-reflector as the comb/E bar glyph rather than a triangle.",
+      "pass": false,
+      "required_change": "Redraw RETRFL02 as the simplified retro-reflector comb/E witness with vertical spine and horizontal bars; remove the triangular outline.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RETRFL02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RETRFL02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RETRFL02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RETRFL02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RETRFL02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RETRFL02",
+      "symbol_id": "RETRFL02"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.74,
+      "expected": "RSCSTA02 is position approximate. It is used as a position approximate. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is a black reference/star point mark, matching the OpenCPN point cue and the prior repair intent. S-101 differs as a diamond-line mark, so this remains automated rerun evidence only.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RSCSTA02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/RSCSTA02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/RSCSTA02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RSCSTA02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/RSCSTA02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:RSCSTA02",
+      "symbol_id": "RSCSTA02"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.9,
+      "expected": "SCALEB10 is one mile scalebar for display scales larger than 1/80,000. It is used as a one mile scalebar for display scales larger than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a black ladder with a 1M label; S-101/OpenCPN show a vertical segmented orange/grey scalebar without the large black ladder/text treatment.",
+      "pass": false,
+      "required_change": "Redraw SCALEB10 as the vertical segmented one-mile scalebar in the reference color/segment pattern; remove the large black ladder and 1M text label.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_shape",
+        "wrong_scalebar_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:SCALEB10",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/SCALEB10.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/SCALEB10__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/SCALEB10__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/SCALEB10__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:SCALEB10",
+      "symbol_id": "SCALEB10"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.9,
+      "expected": "SCALEB11 is 10 mile latitude scale for display scales smaller than 1/80,000. It is used as a 10 mile latitude scale for display scales smaller than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a horizontal black 10M scale; S-101/OpenCPN show a vertical segmented latitude scalebar.",
+      "pass": false,
+      "required_change": "Redraw SCALEB11 as the vertical segmented 10-mile latitude scalebar at reference proportions; remove the horizontal bar and 10M text treatment.",
+      "safety_reason_codes": [
+        "wrong_orientation",
+        "wrong_shape",
+        "wrong_scalebar_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:SCALEB11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/SCALEB11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/SCALEB11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/SCALEB11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/SCALEB11__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:SCALEB11",
+      "symbol_id": "SCALEB11"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.86,
+      "expected": "SNDWAV02 is sand waves. It is used as a sand waves. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate uses two large smooth brown wave strokes; S-101/OpenCPN show smaller grey angular/repeating sand-wave marks.",
+      "pass": false,
+      "required_change": "Redraw SNDWAV02 as the grey repeating sand-wave reference pattern with angular/short wavelets at reference scale; remove the large two-line brown wave motif.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_wave_pattern",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:SNDWAV02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/SNDWAV02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/SNDWAV02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/SNDWAV02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/SNDWAV02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:SNDWAV02",
+      "symbol_id": "SNDWAV02"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.76,
+      "expected": "SOUNDG02 is for deep soundings, greater than safety depth, full-chart and simplified. It is used as a for deep soundings, greater than safety depth, full-chart and simplified. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Automated visual rerun pass only. No Chart No.1 exact-crop/manual final approval evidence is present, so final human approval remains blocked.",
+      "observed": "Candidate is a sounding-number glyph with main and subscript digits. The exact digit value varies by chart data, and the candidate preserves the sounding-label class cue for automated rerun pass.",
+      "pass": true,
+      "required_change": "No repair required for this automated visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:SOUNDG02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/SOUNDG02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/SOUNDG02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/SOUNDG02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/SOUNDG02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:SOUNDG02",
+      "symbol_id": "SOUNDG02"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.9,
+      "expected": "SWPARE51 is swept area. It is used as a swept area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a magenta rounded enclosure with an internal dash; S-101/OpenCPN show the swept-area symbol as a simple grey U/bracket shape.",
+      "pass": false,
+      "required_change": "Redraw SWPARE51 as the simple grey swept-area U/bracket witness; remove the magenta rounded enclosure and internal dash.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_shape",
+        "invented_internal_mark",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:SWPARE51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/SWPARE51.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/SWPARE51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/SWPARE51__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/SWPARE51__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:SWPARE51",
+      "symbol_id": "SWPARE51"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.84,
+      "expected": "TMBYRD01 is timber yard. It is used as a timber yard. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is a brown enclosed 3x3 grid; S-101/OpenCPN show the timber-yard cue as an open hash/grid without the surrounding square frame.",
+      "pass": false,
+      "required_change": "Redraw TMBYRD01 as the open brown timber-yard hash/grid witness; remove the enclosing square frame and match the reference stroke count/proportions.",
+      "safety_reason_codes": [
+        "invented_enclosure",
+        "wrong_grid_structure",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TMBYRD01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/TMBYRD01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/TMBYRD01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TMBYRD01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TMBYRD01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:TMBYRD01",
+      "symbol_id": "TMBYRD01"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.88,
+      "expected": "TNKCON02 is tank. It is used as a tank. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is an ornate brown multi-oval tank mark; S-101/OpenCPN show a simple circular tank ring.",
+      "pass": false,
+      "required_change": "Redraw TNKCON02 as the simple brown circular tank ring at reference proportions; remove extra side ovals and layered outlines.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TNKCON02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/TNKCON02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/TNKCON02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TNKCON02__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TNKCON02__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:TNKCON02",
+      "symbol_id": "TNKCON02"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.88,
+      "expected": "TNKCON12 is conspicuous tank. It is used as a conspicuous tank. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is an ornate black multi-oval tank mark; S-101/OpenCPN show a simple black conspicuous tank ring/donut.",
+      "pass": false,
+      "required_change": "Redraw TNKCON12 as the simple black conspicuous tank ring/donut at reference proportions; remove extra side ovals and layered outlines.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TNKCON12",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/TNKCON12.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/TNKCON12__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TNKCON12__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TNKCON12__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:TNKCON12",
+      "symbol_id": "TNKCON12"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.9,
+      "expected": "TNKFRM01 is tank farm. It is used as a tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is three touching brown circles without an enclosing ring; S-101/OpenCPN show a tank farm as clustered dots inside a circular enclosure.",
+      "pass": false,
+      "required_change": "Redraw TNKFRM01 as the brown tank-farm circular enclosure containing the reference clustered-dot/circle pattern; do not use three unenclosed touching rings.",
+      "safety_reason_codes": [
+        "missing_reference_enclosure",
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TNKFRM01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/TNKFRM01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/TNKFRM01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TNKFRM01__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TNKFRM01__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:TNKFRM01",
+      "symbol_id": "TNKFRM01"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.9,
+      "expected": "TNKFRM11 is conspicuous tank farm. It is used as a conspicuous tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch20.json",
+      "judge_comments": "Still requires repair before visual approval. This is not final human approval.",
+      "observed": "Candidate is three touching black circles without an enclosing ring; S-101/OpenCPN show the conspicuous tank farm as clustered black dots inside a circular enclosure.",
+      "pass": false,
+      "required_change": "Redraw TNKFRM11 as the black tank-farm circular enclosure containing the reference clustered-dot pattern; do not use three unenclosed touching rings.",
+      "safety_reason_codes": [
+        "missing_reference_enclosure",
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TNKFRM11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch20/TNKFRM11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch12/renders/TNKFRM11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TNKFRM11__day.png",
+        "s101_render:pipeline/iconforge/out/source_priority_icon_pack/renders/TNKFRM11__day.png",
+        "chart1_parity_gate:none_in_standard_source_table_no_final_approval_evidence"
+      ],
+      "source_table_id": "opencpn-s52:TNKFRM11",
+      "symbol_id": "TNKFRM11"
+    }
+  ]
+}

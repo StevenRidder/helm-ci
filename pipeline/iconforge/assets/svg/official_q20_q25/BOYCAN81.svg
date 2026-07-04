@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYCAN81 Q21 can/cylindrical">
+  <title>BOYCAN81 Q21 can/cylindrical</title>
+  <g data-origin="generated-owned-artwork" data-int1="Q21"
+     data-s52-asset="BOYCAN81" data-primitive="can_buoy">
+  <defs><clipPath id="clip-BOYCAN81"><path d="M18 21 Q32 14 46 21 L46 48 Q32 55 18 48 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYCAN81)">
+    <rect x="0" y="10.0" width="64" height="24.25" fill="var(--orange)"/>
+    <rect x="0" y="34.0" width="64" height="24.25" fill="var(--white)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linejoin="round"><path d="M18 21 Q32 14 46 21 L46 48 Q32 55 18 48 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

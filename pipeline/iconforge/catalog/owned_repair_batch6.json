@@ -1,0 +1,2481 @@
+{
+  "batch_offset": 720,
+  "batch_size": 27,
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch6.json",
+    "pdf": "out/source_priority_repair_batch6/before_reference_after.pdf",
+    "report": "out/source_priority_repair_batch6/report.json",
+    "svg_dir": "assets/svg/owned_repair_batch6"
+  },
+  "schema_version": 1,
+  "source_queue": "out/source_priority_repair/repair_queue.json",
+  "status": "candidate_batch_pending_visual_review",
+  "summary": {
+    "generated_fallback_for_s101_reference": 27,
+    "generated_owned_candidates": 27,
+    "generated_placeholder_no_fallback": 0,
+    "license_pending_reference_candidates": 0,
+    "redraw_s101_reference_into_helm_style": 27,
+    "repair_existing_helm_style_svg": 0,
+    "visual_parity": "pending_visual_model_and_human_review"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TIDCUR03__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TIDCUR03__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TIDCUR03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TIDCUR03.svg",
+      "asset": "TIDCUR03",
+      "before_render": "out/source_priority_icon_pack/renders/TIDCUR03__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TIDCUR03.svg",
+      "candidate_source": "assets/svg/multisource_draft/TIDCUR03.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "box for current strength",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDCUR03.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TIDCUR03__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDCUR03.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "box for current strength",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TIDCUR03__day.png",
+            "dusk": "out/opencpn_s52_reference/TIDCUR03__dusk.png",
+            "night": "out/opencpn_s52_reference/TIDCUR03__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TIDCUR03.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TIDCUR03",
+          "title": "TIDCUR03",
+          "viewBox": "-12.66 -0.16 12.82 12.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TIDEHT01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TIDEHT01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TIDEHT01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TIDEHT01.svg",
+      "asset": "TIDEHT01",
+      "before_render": "out/source_priority_icon_pack/renders/TIDEHT01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TIDEHT01.svg",
+      "candidate_source": "assets/svg/multisource_draft/TIDEHT01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "point for which tide height information is available",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDEHT01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TIDEHT01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDEHT01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "point for which tide height information is available",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TIDEHT01__day.png",
+            "dusk": "out/opencpn_s52_reference/TIDEHT01__dusk.png",
+            "night": "out/opencpn_s52_reference/TIDEHT01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TIDEHT01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TIDEHT01",
+          "title": "TIDEHT01",
+          "viewBox": "-4.12 -1.85 9.16 3.68"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TIDSTR01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TIDSTR01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TIDSTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TIDSTR01.svg",
+      "asset": "TIDSTR01",
+      "before_render": "out/source_priority_icon_pack/renders/TIDSTR01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TIDSTR01.svg",
+      "candidate_source": "assets/svg/multisource_draft/TIDSTR01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "point or area for which a tidal stream table is available",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDSTR01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TIDSTR01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TIDSTR01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "point or area for which a tidal stream table is available",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TIDSTR01__day.png",
+            "dusk": "out/opencpn_s52_reference/TIDSTR01__dusk.png",
+            "night": "out/opencpn_s52_reference/TIDSTR01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TIDSTR01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TIDSTR01",
+          "title": "TIDSTR01",
+          "viewBox": "-2.96 -2.97 5.98 5.92"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TMBYRD01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TMBYRD01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TMBYRD01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TMBYRD01.svg",
+      "asset": "TMBYRD01",
+      "before_render": "out/source_priority_icon_pack/renders/TMBYRD01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+      "candidate_source": "assets/svg/multisource_draft/TMBYRD01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "timber yard",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TMBYRD01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "timber yard",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TMBYRD01__day.png",
+            "dusk": "out/opencpn_s52_reference/TMBYRD01__dusk.png",
+            "night": "out/opencpn_s52_reference/TMBYRD01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TMBYRD01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TMBYRD01",
+          "title": "TMBYRD01",
+          "viewBox": "-2.32 -2.32 4.64 4.64"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TNKCON02__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TNKCON02__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TNKCON02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TNKCON02.svg",
+      "asset": "TNKCON02",
+      "before_render": "out/source_priority_icon_pack/renders/TNKCON02__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TNKCON02.svg",
+      "candidate_source": "assets/svg/multisource_draft/TNKCON02.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tank",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKCON02.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TNKCON02__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKCON02.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tank",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TNKCON02__day.png",
+            "dusk": "out/opencpn_s52_reference/TNKCON02__dusk.png",
+            "night": "out/opencpn_s52_reference/TNKCON02__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TNKCON02.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TNKCON02",
+          "title": "TNKCON02",
+          "viewBox": "-1.58 -1.57 3.16 3.16"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TNKCON12__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TNKCON12__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TNKCON12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TNKCON12.svg",
+      "asset": "TNKCON12",
+      "before_render": "out/source_priority_icon_pack/renders/TNKCON12__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TNKCON12.svg",
+      "candidate_source": "assets/svg/multisource_draft/TNKCON12.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspicuous tank",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKCON12.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TNKCON12__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKCON12.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspicuous tank",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TNKCON12__day.png",
+            "dusk": "out/opencpn_s52_reference/TNKCON12__dusk.png",
+            "night": "out/opencpn_s52_reference/TNKCON12__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TNKCON12.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TNKCON12",
+          "title": "TNKCON12",
+          "viewBox": "-1.74 -1.73 3.48 3.48"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TNKFRM01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TNKFRM01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TNKFRM01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TNKFRM01.svg",
+      "asset": "TNKFRM01",
+      "before_render": "out/source_priority_icon_pack/renders/TNKFRM01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+      "candidate_source": "assets/svg/multisource_draft/TNKFRM01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tank farm",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TNKFRM01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tank farm",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TNKFRM01__day.png",
+            "dusk": "out/opencpn_s52_reference/TNKFRM01__dusk.png",
+            "night": "out/opencpn_s52_reference/TNKFRM01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TNKFRM01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TNKFRM01",
+          "title": "TNKFRM01",
+          "viewBox": "-4.06 -4.16 7.98 7.98"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TNKFRM11__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TNKFRM11__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TNKFRM11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TNKFRM11.svg",
+      "asset": "TNKFRM11",
+      "before_render": "out/source_priority_icon_pack/renders/TNKFRM11__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+      "candidate_source": "assets/svg/multisource_draft/TNKFRM11.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspicuous tank farm",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TNKFRM11__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspicuous tank farm",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TNKFRM11__day.png",
+            "dusk": "out/opencpn_s52_reference/TNKFRM11__dusk.png",
+            "night": "out/opencpn_s52_reference/TNKFRM11__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TNKFRM11.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TNKFRM11",
+          "title": "TNKFRM11",
+          "viewBox": "-4.24 -4.37 8.3 8.3"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS01.svg",
+      "asset": "TOWERS01",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS01.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tower, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tower, full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS01__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS01__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS01",
+          "title": "TOWERS01",
+          "viewBox": "-1.89 -5.94 3.77 6.67"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS02__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS02__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS02.svg",
+      "asset": "TOWERS02",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS02__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS02.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS02.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tower, water,  full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS02.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS02__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS02.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tower, water,  full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS02__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS02__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS02__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS02.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS02",
+          "title": "TOWERS02",
+          "viewBox": "-1.66 -5.16 3.32 5.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS03__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS03__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS03.svg",
+      "asset": "TOWERS03",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS03__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS03.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS03.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tower, black, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS03.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS03__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS03.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tower, black, full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS03__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS03__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS03__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS03.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS03",
+          "title": "TOWERS03",
+          "viewBox": "-1.91 -5.95 3.78 6.67"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS05__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS05__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS05.svg",
+      "asset": "TOWERS05",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS05__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS05.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS05.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tower, white, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS05.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS05__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS05.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tower, white, full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS05__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS05__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS05__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS05.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS05",
+          "title": "TOWERS05",
+          "viewBox": "-1.66 -7.16 3.32 7.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS12__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS12__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS12.svg",
+      "asset": "TOWERS12",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS12__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS12.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS12.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "tower, water, black, conspicious, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS12.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS12__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS12.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "tower, water, black, conspicious, full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS12__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS12__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS12__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS12.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS12",
+          "title": "TOWERS12",
+          "viewBox": "-1.66 -5.16 3.32 5.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TOWERS15__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TOWERS15__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TOWERS15__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TOWERS15.svg",
+      "asset": "TOWERS15",
+      "before_render": "out/source_priority_icon_pack/renders/TOWERS15__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TOWERS15.svg",
+      "candidate_source": "assets/svg/multisource_draft/TOWERS15.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspisious tower, radio/television, black, full-chart and simplified",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS15.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TOWERS15__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TOWERS15.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspisious tower, radio/television, black, full-chart and simplified",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TOWERS15__day.png",
+            "dusk": "out/opencpn_s52_reference/TOWERS15__dusk.png",
+            "night": "out/opencpn_s52_reference/TOWERS15__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TOWERS15.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TOWERS15",
+          "title": "TOWERS15",
+          "viewBox": "-1.66 -7.16 3.32 7.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TREPNT04__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TREPNT04__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TREPNT04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TREPNT04.svg",
+      "asset": "TREPNT04",
+      "before_render": "out/source_priority_icon_pack/renders/TREPNT04__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TREPNT04.svg",
+      "candidate_source": "assets/svg/multisource_draft/TREPNT04.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "general symbol for a tree",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TREPNT04.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TREPNT04__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TREPNT04.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "general symbol for a tree",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TREPNT04__day.png",
+            "dusk": "out/opencpn_s52_reference/TREPNT04__dusk.png",
+            "night": "out/opencpn_s52_reference/TREPNT04__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TREPNT04.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TREPNT04",
+          "title": "TREPNT04",
+          "viewBox": "-1.92 -4.17 3.94 4.33"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TREPNT05__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TREPNT05__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TREPNT05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TREPNT05.svg",
+      "asset": "TREPNT05",
+      "before_render": "out/source_priority_icon_pack/renders/TREPNT05__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TREPNT05.svg",
+      "candidate_source": "assets/svg/multisource_draft/TREPNT05.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "mangrove",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TREPNT05.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TREPNT05__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TREPNT05.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "mangrove",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TREPNT05__day.png",
+            "dusk": "out/opencpn_s52_reference/TREPNT05__dusk.png",
+            "night": "out/opencpn_s52_reference/TREPNT05__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TREPNT05.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TREPNT05",
+          "title": "TREPNT05",
+          "viewBox": "-2.16 -3.16 4.32 3.32"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TWRDEF51__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TWRDEF51__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TWRDEF51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TWRDEF51.svg",
+      "asset": "TWRDEF51",
+      "before_render": "out/source_priority_icon_pack/renders/TWRDEF51__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TWRDEF51.svg",
+      "candidate_source": "assets/svg/multisource_draft/TWRDEF51.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "two way route of a traffic separation scheme, with the direction not defined in the data",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRDEF51.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TWRDEF51__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRDEF51.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "two way route of a traffic separation scheme, with the direction not defined in the data",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TWRDEF51__day.png",
+            "dusk": "out/opencpn_s52_reference/TWRDEF51__dusk.png",
+            "night": "out/opencpn_s52_reference/TWRDEF51__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TWRDEF51.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TWRDEF51",
+          "title": "TWRDEF51",
+          "viewBox": "-7.37 -7.42 14.57 14.99"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TWRTPT52__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TWRTPT52__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TWRTPT52__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TWRTPT52.svg",
+      "asset": "TWRTPT52",
+      "before_render": "out/source_priority_icon_pack/renders/TWRTPT52__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TWRTPT52.svg",
+      "candidate_source": "assets/svg/multisource_draft/TWRTPT52.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "reciprocal traffic directions in a two-way route of a traffic separation scheme",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRTPT52.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TWRTPT52__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRTPT52.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "reciprocal traffic directions in a two-way route of a traffic separation scheme",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TWRTPT52__day.png",
+            "dusk": "out/opencpn_s52_reference/TWRTPT52__dusk.png",
+            "night": "out/opencpn_s52_reference/TWRTPT52__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TWRTPT52.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TWRTPT52",
+          "title": "TWRTPT52",
+          "viewBox": "-3.59 -7.42 7.07 14.99"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/TWRTPT53__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/TWRTPT53__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/TWRTPT53__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/TWRTPT53.svg",
+      "asset": "TWRTPT53",
+      "before_render": "out/source_priority_icon_pack/renders/TWRTPT53__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/TWRTPT53.svg",
+      "candidate_source": "assets/svg/multisource_draft/TWRTPT53.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "single traffic direction in a two-way route part of a traffic separation scheme",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRTPT53.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/TWRTPT53__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/TWRTPT53.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "single traffic direction in a two-way route part of a traffic separation scheme",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/TWRTPT53__day.png",
+            "dusk": "out/opencpn_s52_reference/TWRTPT53__dusk.png",
+            "night": "out/opencpn_s52_reference/TWRTPT53__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/TWRTPT53.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "TWRTPT53",
+          "title": "TWRTPT53",
+          "viewBox": "-3.45 -7.42 6.93 14.86"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WATTUR02__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WATTUR02__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WATTUR02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WATTUR02.svg",
+      "asset": "WATTUR02",
+      "before_render": "out/source_priority_icon_pack/renders/WATTUR02__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WATTUR02.svg",
+      "candidate_source": "assets/svg/multisource_draft/WATTUR02.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "overfalls, eddies and breakers",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WATTUR02.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WATTUR02__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WATTUR02.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "overfalls, eddies and breakers",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WATTUR02__day.png",
+            "dusk": "out/opencpn_s52_reference/WATTUR02__dusk.png",
+            "night": "out/opencpn_s52_reference/WATTUR02__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WATTUR02.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WATTUR02",
+          "title": "WATTUR02",
+          "viewBox": "-8.66 -1.65 15.5 3.43"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WEDKLP03__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WEDKLP03__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WEDKLP03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WEDKLP03.svg",
+      "asset": "WEDKLP03",
+      "before_render": "out/source_priority_icon_pack/renders/WEDKLP03__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WEDKLP03.svg",
+      "candidate_source": "assets/svg/multisource_draft/WEDKLP03.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "weed, kelp",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WEDKLP03.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WEDKLP03__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WEDKLP03.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "weed, kelp",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WEDKLP03__day.png",
+            "dusk": "out/opencpn_s52_reference/WEDKLP03__dusk.png",
+            "night": "out/opencpn_s52_reference/WEDKLP03__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WEDKLP03.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WEDKLP03",
+          "title": "WEDKLP03",
+          "viewBox": "-5.16 -1.41 10.32 2.82"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WIMCON01__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WIMCON01__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WIMCON01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WIMCON01.svg",
+      "asset": "WIMCON01",
+      "before_render": "out/source_priority_icon_pack/renders/WIMCON01__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WIMCON01.svg",
+      "candidate_source": "assets/svg/multisource_draft/WIMCON01.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "windmotor",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WIMCON01.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WIMCON01__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WIMCON01.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "windmotor",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WIMCON01__day.png",
+            "dusk": "out/opencpn_s52_reference/WIMCON01__dusk.png",
+            "night": "out/opencpn_s52_reference/WIMCON01__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WIMCON01.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WIMCON01",
+          "title": "WIMCON01",
+          "viewBox": "-1.66 -6.29 4 6.95"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WIMCON11__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WIMCON11__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WIMCON11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WIMCON11.svg",
+      "asset": "WIMCON11",
+      "before_render": "out/source_priority_icon_pack/renders/WIMCON11__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WIMCON11.svg",
+      "candidate_source": "assets/svg/multisource_draft/WIMCON11.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspicuous windmotor",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WIMCON11.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WIMCON11__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WIMCON11.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspicuous windmotor",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WIMCON11__day.png",
+            "dusk": "out/opencpn_s52_reference/WIMCON11__dusk.png",
+            "night": "out/opencpn_s52_reference/WIMCON11__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WIMCON11.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WIMCON11",
+          "title": "WIMCON11",
+          "viewBox": "-1.66 -6.29 4 6.95"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WNDFRM51__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WNDFRM51__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WNDFRM51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WNDFRM51.svg",
+      "asset": "WNDFRM51",
+      "before_render": "out/source_priority_icon_pack/renders/WNDFRM51__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WNDFRM51.svg",
+      "candidate_source": "assets/svg/multisource_draft/WNDFRM51.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "wind generator farm",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDFRM51.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WNDFRM51__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDFRM51.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "wind generator farm",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WNDFRM51__day.png",
+            "dusk": "out/opencpn_s52_reference/WNDFRM51__dusk.png",
+            "night": "out/opencpn_s52_reference/WNDFRM51__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WNDFRM51.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WNDFRM51",
+          "title": "WNDFRM51",
+          "viewBox": "-4.05 -4.06 8.1 8.1"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WNDFRM61__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WNDFRM61__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WNDFRM61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WNDFRM61.svg",
+      "asset": "WNDFRM61",
+      "before_render": "out/source_priority_icon_pack/renders/WNDFRM61__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WNDFRM61.svg",
+      "candidate_source": "assets/svg/multisource_draft/WNDFRM61.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspicuous wind generator farm",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDFRM61.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WNDFRM61__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDFRM61.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspicuous wind generator farm",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WNDFRM61__day.png",
+            "dusk": "out/opencpn_s52_reference/WNDFRM61__dusk.png",
+            "night": "out/opencpn_s52_reference/WNDFRM61__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WNDFRM61.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WNDFRM61",
+          "title": "WNDFRM61",
+          "viewBox": "-4.19 -4.32 8.42 8.42"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WNDMIL02__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WNDMIL02__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WNDMIL02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WNDMIL02.svg",
+      "asset": "WNDMIL02",
+      "before_render": "out/source_priority_icon_pack/renders/WNDMIL02__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WNDMIL02.svg",
+      "candidate_source": "assets/svg/multisource_draft/WNDMIL02.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "windmill",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDMIL02.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WNDMIL02__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDMIL02.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "windmill",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WNDMIL02__day.png",
+            "dusk": "out/opencpn_s52_reference/WNDMIL02__dusk.png",
+            "night": "out/opencpn_s52_reference/WNDMIL02__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WNDMIL02.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WNDMIL02",
+          "title": "WNDMIL02",
+          "viewBox": "-1.66 -3.16 3.32 4.42"
+        }
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/source_priority_repair_batch6/renders/WNDMIL12__after__day.png",
+        "dusk": "out/source_priority_repair_batch6/renders/WNDMIL12__after__dusk.png",
+        "night": "out/source_priority_repair_batch6/renders/WNDMIL12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch6/WNDMIL12.svg",
+      "asset": "WNDMIL12",
+      "before_render": "out/source_priority_icon_pack/renders/WNDMIL12__day.png",
+      "before_svg": "assets/svg/source_priority/s101_exact/WNDMIL12.svg",
+      "candidate_source": "assets/svg/multisource_draft/WNDMIL12.svg",
+      "candidate_strategy": "generated_fallback_for_s101_reference",
+      "name": "conspicuous windmill",
+      "provenance": {
+        "generator": "forge.source_priority_repair_batch6",
+        "origin": "generated-owned-artwork",
+        "reference_role": "familiar_symbol_preserved_as_candidate",
+        "source_priority_basis": "s101_exact_svg",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_visual_model_and_human_review"
+      },
+      "queue_action": "redraw_s101_reference_into_helm_style",
+      "repair_note": "used generated-owned fallback SVG as S-101 redraw candidate; S-101 kept as visual reference only",
+      "risk_bucket": "lower_risk_or_cosmetic",
+      "visual_examples": [
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDMIL12.svg",
+          "priority": 0,
+          "role": "shape_reference_to_redraw",
+          "source": "selected_source_priority_svg",
+          "status": "reference_exact_pending_license"
+        },
+        {
+          "path": "out/source_priority_icon_pack/renders/WNDMIL12__day.png",
+          "priority": 1,
+          "role": "reference_render_to_redraw",
+          "source": "selected_source_priority_render",
+          "status": "rendered"
+        },
+        {
+          "path": "assets/svg/source_priority/s101_exact/WNDMIL12.svg",
+          "priority": 12,
+          "role": "selected_canonical_candidate",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg"
+        },
+        {
+          "asset_description": "conspicuous windmill",
+          "metadata_available": true,
+          "paths": {
+            "day": "out/opencpn_s52_reference/WNDMIL12__day.png",
+            "dusk": "out/opencpn_s52_reference/WNDMIL12__dusk.png",
+            "night": "out/opencpn_s52_reference/WNDMIL12__night.png"
+          },
+          "priority": 13,
+          "role": "local_visual_oracle",
+          "source": "opencpn_s52_reference_render",
+          "status": "pending_render"
+        },
+        {
+          "crop_id": "ecdis_summary",
+          "pages": [
+            86
+          ],
+          "path": "out/chart1_parity/reference/crops/ecdis_summary.png",
+          "priority": 14,
+          "reason_codes": [
+            "outside_forge12_scope"
+          ],
+          "role": "chart_no_1_visual_reference",
+          "source": "chart1_parity_reference_crop",
+          "status": "out_of_scope",
+          "verdict": "deferred"
+        },
+        {
+          "path": "PortrayalCatalog/Symbols/WNDMIL12.svg",
+          "priority": 15,
+          "role": "license_pending_visual_reference",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "WNDMIL12",
+          "title": "WNDMIL12",
+          "viewBox": "-1.82 -3.32 3.64 4.74"
+        }
+      ]
+    }
+  ]
+}

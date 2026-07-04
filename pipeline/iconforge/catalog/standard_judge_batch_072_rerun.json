@@ -1,0 +1,265 @@
+{
+  "agent_id": "codex/FORGE-15-judge-loop-current",
+  "batch_id": "standard_judge_batch_072_rerun",
+  "created_at": "2026-07-03T00:00:00Z",
+  "evidence_notes": [
+    "Judged current repaired rows from owned_repair_batch72.",
+    "Pass means judge_pass_pending_final_approval only; this artifact grants zero final approvals.",
+    "Generic arrows were rejected where the reference requires pricken side/barb detail."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "TOPMAR01",
+      "TOPMAR91",
+      "TOPMAR92",
+      "TOPMAR98",
+      "TOPMAR99",
+      "TOPMAR90",
+      "TOPMAR93"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "source_batches": [
+      "catalog/owned_repair_batch72.json"
+    ],
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 2,
+    "failed_assets": [
+      "TOPMAR90",
+      "TOPMAR93"
+    ],
+    "final_approved": 0,
+    "pass": 5,
+    "passed_assets": [
+      "TOPMAR01",
+      "TOPMAR91",
+      "TOPMAR92",
+      "TOPMAR98",
+      "TOPMAR99"
+    ],
+    "selected": 7,
+    "source_batches": [
+      "catalog/owned_repair_batch72.json"
+    ]
+  },
+  "task_id": "FORGE-15",
+  "verdicts": [
+    {
+      "batch_index": 72,
+      "confidence": 0.84,
+      "expected": "TOPMAR01 must preserve exact topmark silhouette/count/orientation from the references; required colours red, green.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: red/green horizontal-banded circular topmark preserves the required colour order. No final approval is granted.",
+      "observed": "After SVG/render shows red/green horizontal-banded circular topmark preserves the required colour order.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR01",
+        "s57_conditions:TOPSHP3,COLPAT1,COLOUR3,4",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR01.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR01.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR01__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR01/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR01/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR01",
+      "symbol_id": "TOPMAR01"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.84,
+      "expected": "TOPMAR91 must preserve exact topmark silhouette/count/orientation from the references; required colours red.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: red compact rectangular topmark preserves the red topmark cue. No final approval is granted.",
+      "observed": "After SVG/render shows red compact rectangular topmark preserves the red topmark cue.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR91",
+        "s57_conditions:COLOUR3",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR91.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR91.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR91__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR91/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR91/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR91",
+      "symbol_id": "TOPMAR91"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.84,
+      "expected": "TOPMAR92 must preserve exact topmark silhouette/count/orientation from the references; required colours green.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: green compact rectangular topmark preserves the green topmark cue. No final approval is granted.",
+      "observed": "After SVG/render shows green compact rectangular topmark preserves the green topmark cue.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR92",
+        "s57_conditions:COLOUR4",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR92.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR92.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR92__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR92/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR92/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR92",
+      "symbol_id": "TOPMAR92"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.84,
+      "expected": "TOPMAR98 must preserve exact topmark silhouette/count/orientation from the references; required colours white, orange.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: diamond topmark preserves the white/orange diagonal colour cue. No final approval is granted.",
+      "observed": "After SVG/render shows diamond topmark preserves the white/orange diagonal colour cue.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR98",
+        "s57_conditions:TOPSHP12,COLPAT6,COLOUR1,11",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR98.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR98.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR98__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR98/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR98/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR98",
+      "symbol_id": "TOPMAR98"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.84,
+      "expected": "TOPMAR99 must preserve exact topmark silhouette/count/orientation from the references; required colours white, orange.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: diamond topmark preserves the white/orange diagonal colour cue. No final approval is granted.",
+      "observed": "After SVG/render shows diamond topmark preserves the white/orange diagonal colour cue.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR99",
+        "s57_conditions:TOPSHP12,COLOUR1,11",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR99.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR99.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR99__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR99/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR99/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR99",
+      "symbol_id": "TOPMAR99"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.88,
+      "expected": "TOPMAR90 must preserve exact topmark silhouette/count/orientation from the references; colours reference-defined.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "FAIL. The repaired SVG renders as a generic downward arrow, but the OpenCPN witness is a pricken point-down topmark with a stem and side/barb detail.",
+      "observed": "The repaired SVG renders as a generic downward arrow, but the OpenCPN witness is a pricken point-down topmark with a stem and side/barb detail.",
+      "output_candidate_status": "judge_fail_repair_queue",
+      "pass": false,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "Redraw TOPMAR90 as the pricken point-down topmark from the witness: stem with side/barb detail and downward orientation, not a plain arrow.",
+      "safety_reason_codes": [
+        "wrong_topmark_silhouette",
+        "missing_pricken_barbs",
+        "reference_mismatch"
+      ],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR90",
+        "s57_conditions:TOPSHP16",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR90.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR90.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR90__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR90/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR90/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR90",
+      "symbol_id": "TOPMAR90"
+    },
+    {
+      "batch_index": 72,
+      "confidence": 0.88,
+      "expected": "TOPMAR93 must preserve exact topmark silhouette/count/orientation from the references; colours reference-defined.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "FAIL. The repaired SVG renders as a generic upward arrow, but the OpenCPN witness is a pricken point-up topmark with a stem and side/barb detail.",
+      "observed": "The repaired SVG renders as a generic upward arrow, but the OpenCPN witness is a pricken point-up topmark with a stem and side/barb detail.",
+      "output_candidate_status": "judge_fail_repair_queue",
+      "pass": false,
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "Redraw TOPMAR93 as the pricken point-up topmark from the witness: stem with side/barb detail and upward orientation, not a plain arrow.",
+      "safety_reason_codes": [
+        "wrong_topmark_silhouette",
+        "missing_pricken_barbs",
+        "reference_mismatch"
+      ],
+      "source_crop_valid": true,
+      "source_refs_used": [
+        "semantic_brief:TOPMAR93",
+        "s57_conditions:TOPSHP15",
+        "helm_candidate:pipeline/iconforge/assets/svg/triad_generated/TOPMAR93.svg",
+        "source_svg:assets/svg/owned_repair_batch72/TOPMAR93.svg",
+        "repair_catalog:catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:out/triad_reference_candidate_pack/renders/TOPMAR93__day.png",
+        "source_variant_opencpn:out/source_variant_matrix/renders/TOPMAR93/opencpn_s52_reference_render_1.png",
+        "chart1_crop:out/source_variant_matrix/renders/TOPMAR93/chart1_parity_reference_crop_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR93",
+      "symbol_id": "TOPMAR93"
+    }
+  ]
+}

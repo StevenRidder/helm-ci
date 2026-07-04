@@ -1,0 +1,161 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch85.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch85"
+  },
+  "schema_version": 1,
+  "source_judge": "catalog/standard_judge_batch_080_rerun.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 2,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch85/VECWTR01.svg",
+      "asset": "VECWTR01",
+      "before_svg": "assets/svg/owned_repair_batch85/VECWTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/VECWTR01.svg",
+      "candidate_strategy": "owned_single_chevron_redraw_from_opencpn_reference",
+      "name": "arrowhead for ownship vector for course and speed through the water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch85",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN through-water vector witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_judge_batch_080_rerun through-water vector feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_080_failure_consumed",
+      "required_change": "Redraw VECWTR01 as the black single-chevron through-water vector arrowhead; do not reuse the double-chevron over-ground shape.",
+      "risk_bucket": "through_water_vector_arrow_repair_batch85",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECWTR01"
+        ],
+        "lookup_id": "1684",
+        "lookup_rcid": "31736",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECWTR01)"
+      },
+      "safety_reason_codes": [
+        "wrong_vector_arrow_family",
+        "ground_water_vector_confusion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECWTR01 is arrowhead for ownship vector for course and speed through the water. It is used as a arrowhead for ownship vector for course and speed through the water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ownship vector for course and speed through the water"
+      },
+      "source_judge": "catalog/standard_judge_batch_080_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECWTR01__day.png",
+            "label": "arrowhead for ownship vector for course and speed through the water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECWTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/VECWTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/VECWTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch85/VECWTR21.svg",
+      "asset": "VECWTR21",
+      "before_svg": "assets/svg/owned_repair_batch85/VECWTR21.svg",
+      "candidate_source": "assets/svg/triad_generated/VECWTR21.svg",
+      "candidate_strategy": "owned_single_chevron_redraw_from_opencpn_reference",
+      "name": "arrowhead for ARPA or AIS vector for course and speed through the water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch85",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN through-water vector witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_judge_batch_080_rerun through-water vector feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_judge_batch_080_failure_consumed",
+      "required_change": "Redraw VECWTR21 as the green single-chevron through-water vector arrowhead; do not reuse the double-chevron over-ground shape.",
+      "risk_bucket": "through_water_vector_arrow_repair_batch85",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECWTR21"
+        ],
+        "lookup_id": "1685",
+        "lookup_rcid": "31737",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECWTR21,ORIENT)"
+      },
+      "safety_reason_codes": [
+        "wrong_vector_arrow_family",
+        "ground_water_vector_confusion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECWTR21 is arrowhead for ARPA or AIS vector for course and speed through the water. It is used as a arrowhead for ARPA or AIS vector for course and speed through the water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ARPA or AIS vector for course and speed through the water"
+      },
+      "source_judge": "catalog/standard_judge_batch_080_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECWTR21__day.png",
+            "label": "arrowhead for ARPA or AIS vector for course and speed through the water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECWTR21__day.png",
+              "dusk": "out/opencpn_s52_reference/VECWTR21__dusk.png",
+              "night": "out/opencpn_s52_reference/VECWTR21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

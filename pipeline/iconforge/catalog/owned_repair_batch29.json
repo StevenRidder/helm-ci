@@ -1,0 +1,129 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch29.json",
+    "renders": "out/standard_repair_batch21/renders",
+    "svg_dir": "assets/svg/owned_repair_batch29"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 1,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch21/renders/WRECKS01__after__day.png",
+        "dusk": "out/standard_repair_batch21/renders/WRECKS01__after__dusk.png",
+        "night": "out/standard_repair_batch21/renders/WRECKS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch29/WRECKS01.svg",
+      "asset": "WRECKS01",
+      "before_svg": "assets/svg/triad_generated/WRECKS01.svg",
+      "candidate_source": "assets/svg/triad_generated/WRECKS01.svg",
+      "candidate_strategy": "owned_redraw_from_judge_rerun_feedback",
+      "name": "wreck showing any portion of hull or superstructure at level of chart datum",
+      "provenance": {
+        "generator": "forge.standard_repair_batch21",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_026_027_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_rerun_failure_consumed",
+      "repair_note": "Judge rerun repair: remove the invented white aperture and redraw as the exposed wreck low hull plus sloped wreckage/mast witness.",
+      "required_change": "Remove the white circular aperture and redraw closer to the S-101/OpenCPN WRECKS01 exposed-wreck silhouette: low horizontal hull plus sloped wreckage/mast, without a generic filled sail triangle.",
+      "risk_bucket": "wrecks01_rerun_repair_batch29",
+      "safety_reason_codes": [
+        "wrong_wreck_variant_detail",
+        "invented_internal_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS01 is wreck showing any portion of hull or superstructure at level of chart datum. It is used as a wreck showing any portion of hull or superstructure at level of chart datum. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "wreck showing any portion of hull or superstructure at level of chart datum"
+      },
+      "source_judge": "catalog/standard_judge_batch_026_027_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WRECKS01__day.png",
+            "label": "wreck showing any portion of hull or superstructure at level of chart datum",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WRECKS01__day.png",
+              "dusk": "out/opencpn_s52_reference/WRECKS01__dusk.png",
+              "night": "out/opencpn_s52_reference/WRECKS01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WRECKS01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WRECKS01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WRECKS01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WRECKS01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WRECKS01"
+          }
+        ]
+      }
+    }
+  ]
+}

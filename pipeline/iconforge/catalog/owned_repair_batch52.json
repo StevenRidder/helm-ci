@@ -1,0 +1,698 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch52.json",
+    "renders": "out/standard_repair_batch44/renders",
+    "svg_dir": "assets/svg/owned_repair_batch52"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 9,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT2__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT2__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT2__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT2.svg",
+      "asset": "TOPSHPT2",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT2.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT2.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT2",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: red, white using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT2 is TOPSHPT2. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT2__day.png",
+            "label": "TOPSHPT2",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT2__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT2__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT2__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT3__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT3__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT3__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT3.svg",
+      "asset": "TOPSHPT3",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT3.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT3.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT3",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT3 is TOPSHPT3. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT3__day.png",
+            "label": "TOPSHPT3",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT3__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT3__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT3__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT4__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT4__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT4__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT4.svg",
+      "asset": "TOPSHPT4",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT4.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT4.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT4",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black, white.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT4 is TOPSHPT4. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black, white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "white"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT4__day.png",
+            "label": "TOPSHPT4",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT4__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT4__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT4__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT5__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT5__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT5__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT5.svg",
+      "asset": "TOPSHPT5",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT5.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT5.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT5",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT5 is TOPSHPT5. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT5__day.png",
+            "label": "TOPSHPT5",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT5__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT5__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT5__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT6__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT6__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT6__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT6.svg",
+      "asset": "TOPSHPT6",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT6.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT6.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT6",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: orange, black.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT6 is TOPSHPT6. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: orange, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "orange",
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "orange",
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT6__day.png",
+            "label": "TOPSHPT6",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT6__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT6__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT6__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT7__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT7__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT7__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT7.svg",
+      "asset": "TOPSHPT7",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT7.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT7.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT7",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: black, orange.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT7 is TOPSHPT7. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black, orange.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black",
+          "orange"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black",
+          "orange"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT7__day.png",
+            "label": "TOPSHPT7",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT7__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT7__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT7__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPT8_TE_s__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPT8_TE_s__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPT8_TE_s__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPT8_TE_s.svg",
+      "asset": "TOPSHPT8;TE('%s'",
+      "before_svg": "assets/svg/triad_generated/TOPSHPT8_TE_s.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPT8_TE_s.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "TOPSHPT8;TE('%s'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the slanted square-board/diamond-board topmark silhouette and encode the required colour order/pattern: white, black, white using vertical bands/stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPT8;TE('%s' is TOPSHPT8;TE('%s'. It is used as a TOPSHPT8;TE('%s'. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, black, white with vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "black",
+          "white"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "TOPSHPT8;TE('%s'"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPT8_TE_s__day.png",
+            "label": "TOPSHPT8;TE('%s'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPT8_TE_s__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPT8_TE_s__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPT8_TE_s__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPU1__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPU1__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPU1__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPU1.svg",
+      "asset": "TOPSHPU1",
+      "before_svg": "assets/svg/triad_generated/TOPSHPU1.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPU1.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, red boarded square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the triangular topmark silhouette and encode the required colour order/pattern: green, green using S-57 colour pattern 6.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPU1 is beacon top mark, red boarded square board, vertical. It is used as a beacon top mark, red boarded square board, vertical. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: green, green with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "green",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "beacon top mark, red boarded square board, vertical"
+      },
+      "source_judge": "catalog/standard_judge_batch_014.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPU1__day.png",
+            "label": "beacon top mark, red boarded square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPU1__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPU1__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPU1__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch44/renders/TOPSHPU2__after__day.png",
+        "dusk": "out/standard_repair_batch44/renders/TOPSHPU2__after__dusk.png",
+        "night": "out/standard_repair_batch44/renders/TOPSHPU2__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch52/TOPSHPU2.svg",
+      "asset": "TOPSHPU2",
+      "before_svg": "assets/svg/triad_generated/TOPSHPU2.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHPU2.svg",
+      "candidate_strategy": "owned_final_topshape_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "beacon top mark, red boarded square board, vertical",
+      "provenance": {
+        "generator": "forge.standard_repair_batch44",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue topmark slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the circular placeholder with the triangular topmark and encode the required colour/order semantics: white, red using diagonal stripes in the listed colour order.",
+      "risk_bucket": "topshape_repair_batch52",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "reference_mismatch",
+        "missing_reference_orientation",
+        "wrong_topmark_family",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHPU2 is beacon top mark, red boarded square board, vertical. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: white, red with diagonal stripes in the listed colour order.",
+        "colour_pattern": "diagonal stripes in the listed colour order",
+        "required_colours": [
+          "white",
+          "red"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "red"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_015.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHPU2__day.png",
+            "label": "beacon top mark, red boarded square board, vertical",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHPU2__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHPU2__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHPU2__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

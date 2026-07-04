@@ -1,0 +1,3667 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch23-local",
+  "batch_id": "standard_judge_batch_023_rerun",
+  "created_at": "2026-07-01T15:48:17.192887Z",
+  "input_head": "bed3921b33799ff88987b0cc2e96514deae52346",
+  "project": "vulkan",
+  "schema_version": "standard_judge_batch.v1",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "predicate": "symbols[].qa.visual_parity == repaired_pending_judge_rerun",
+    "selected_assets": [
+      "BRIDGE01",
+      "CRANES01",
+      "CURDEF01",
+      "DWRTPT51",
+      "ESSARE01",
+      "FAIRWY51",
+      "FAIRWY52",
+      "FLDSTR01",
+      "FLGSTF01",
+      "FLTHAZ02",
+      "FOGSIG01",
+      "FORSTC01",
+      "FORSTC11",
+      "FRYARE51",
+      "FRYARE52",
+      "FSHFAC02",
+      "FSHFAC03",
+      "FSHHAV01",
+      "HRBFAC09",
+      "OBSTRN03",
+      "OFSPLF01",
+      "PILBOP02",
+      "PILPNT02",
+      "POSGEN01"
+    ],
+    "source_batch": "catalog/owned_repair_batch23.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "chart1_gate": "hard: no final approval without Chart No.1 pass/exact crop or Steve approval; all automated passes remain pass-pending-human",
+    "fail": 8,
+    "failed_assets": [
+      "FAIRWY51",
+      "FAIRWY52",
+      "FLDSTR01",
+      "FRYARE51",
+      "FSHFAC02",
+      "FSHFAC03",
+      "HRBFAC09",
+      "PILPNT02"
+    ],
+    "final_approved": 0,
+    "pass": 16,
+    "passed_assets": [
+      "BRIDGE01",
+      "CRANES01",
+      "CURDEF01",
+      "DWRTPT51",
+      "ESSARE01",
+      "FLGSTF01",
+      "FLTHAZ02",
+      "FOGSIG01",
+      "FORSTC01",
+      "FORSTC11",
+      "FRYARE52",
+      "FSHHAV01",
+      "OBSTRN03",
+      "OFSPLF01",
+      "PILBOP02",
+      "POSGEN01"
+    ],
+    "selected": 24,
+    "source_batch": "catalog/owned_repair_batch23.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.86,
+      "expected": "Clean magenta concentric opening-bridge ring.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "symbol for opening bridge",
+      "observed": "Candidate is a clean magenta concentric opening-bridge ring with no slash or centre clutter, matching the S-101/OpenCPN ring witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/BRIDGE01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/BRIDGE01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/BRIDGE01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/BRIDGE01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/BRIDGE01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/BRIDGE01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/BRIDGE01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/BRIDGE01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/BRIDGE01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BRIDGE01__day.png",
+            "label": "symbol for opening bridge",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BRIDGE01__day.png",
+              "dusk": "out/opencpn_s52_reference/BRIDGE01__dusk.png",
+              "night": "out/opencpn_s52_reference/BRIDGE01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BRIDGE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BRIDGE01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BRIDGE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BRIDGE01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BRIDGE01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as clean magenta concentric opening-bridge rings with no diagonal slash or centre clutter.",
+        "source_required_change": "Remove the diagonal slash and any centre clutter; render BRIDGE01 as the clean magenta concentric opening-bridge ring.",
+        "source_safety_reason_codes": [
+          "invented_detail",
+          "wrong_internal_detail",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "BRIDGE01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/BRIDGE01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "BRIDGE01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "BRIDGE01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/BRIDGE01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "BRIDGE01"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "$SCODEBRIDGE01"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3127",
+        "lookup_id": "1617",
+        "lookup_rcid": "31669",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(BRIDGE01)",
+        "symbol_id": "BRIDGE01",
+        "symbol_name": "symbol for opening bridge"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "BRIDGE01 is symbol for opening bridge. It is used as a symbol for opening bridge. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "symbol for opening bridge"
+      },
+      "source_refs_used": [
+        "semantic_brief:BRIDGE01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/BRIDGE01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/BRIDGE01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/BRIDGE01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/BRIDGE01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BRIDGE01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/BRIDGE01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/BRIDGE01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:BRIDGE01",
+      "symbol_id": "BRIDGE01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 1,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.8,
+      "expected": "Brown quay/gantry crane witness with vertical supports, top beam, trolley/hook, and base.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "cranes",
+      "observed": "Candidate reads as the brown quay/gantry crane family with support legs, top beam, trolley/hook cue, and base, matching the reference class closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/CRANES01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/CRANES01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/CRANES01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/CRANES01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CRANES01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CRANES01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CRANES01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/CRANES01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/CRANES01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [
+          {
+            "label": "Crane",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Crane1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/CRANES01__day.png",
+            "label": "cranes",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/CRANES01__day.png",
+              "dusk": "out/opencpn_s52_reference/CRANES01__dusk.png",
+              "night": "out/opencpn_s52_reference/CRANES01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "CRANES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/CRANES01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "CRANES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/CRANES01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "CRANES01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as a quay/gantry crane with twin vertical legs, top beam, trolley, hook, and base.",
+        "source_required_change": "Redraw CRANES01 as the gantry/quay crane silhouette with vertical support legs and top beam; do not use a generic single-boom crane.",
+        "source_safety_reason_codes": [
+          "wrong_crane_type",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "CRANES01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/CRANES01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "CRANES01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "CRANES01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/CRANES01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "CRANES01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1322",
+        "lookup_id": "1094",
+        "lookup_rcid": "31146",
+        "object_class": "CRANES",
+        "s52_instruction": "SY(CRANES01)",
+        "symbol_id": "CRANES01",
+        "symbol_name": "cranes"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "CRANES01 is cranes. It is used as a cranes. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cranes"
+      },
+      "source_refs_used": [
+        "semantic_brief:CRANES01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/CRANES01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/CRANES01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/CRANES01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/CRANES01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CRANES01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/CRANES01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/CRANES01.svg",
+        "aquamap:Crane:pipeline/iconforge/reference_sources/aquamap_map_symbols/images/Crane1.png",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:CRANES01",
+      "symbol_id": "CRANES01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 2,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.84,
+      "expected": "Gray current/tidal-stream unknown-direction arrow with question marks.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "current or tidal stream whose direction is not known",
+      "observed": "Candidate preserves the gray current arrow and unknown-direction question marks, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/CURDEF01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/CURDEF01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/CURDEF01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/CURDEF01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CURDEF01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CURDEF01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/CURDEF01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/CURDEF01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/CURDEF01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/CURDEF01__day.png",
+            "label": "current or tidal stream whose direction is not known",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/CURDEF01__day.png",
+              "dusk": "out/opencpn_s52_reference/CURDEF01__dusk.png",
+              "night": "out/opencpn_s52_reference/CURDEF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "CURDEF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/CURDEF01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "CURDEF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/CURDEF01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "CURDEF01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Keep the current arrow and unknown-direction question cues, but use the reference gray/slate colour family.",
+        "source_required_change": "Preserve the central current arrow and question marks but move to the reference grey/slate colour family and closer arrow barb proportions.",
+        "source_safety_reason_codes": [
+          "wrong_colour_family",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "CURDEF01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/CURDEF01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "CURDEF01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "CURDEF01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/CURDEF01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "CURDEF01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "3431",
+        "lookup_id": "206",
+        "lookup_rcid": "32241",
+        "object_class": "TS_FEB",
+        "s52_instruction": "SY(CURDEF01);LS(DASH,1,CHGRD)",
+        "symbol_id": "CURDEF01",
+        "symbol_name": "current or tidal stream whose direction is not known"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "CURDEF01 is current or tidal stream whose direction is not known. It is used as a current or tidal stream whose direction is not known. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "current or tidal stream whose direction is not known"
+      },
+      "source_refs_used": [
+        "semantic_brief:CURDEF01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/CURDEF01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/CURDEF01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/CURDEF01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/CURDEF01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/CURDEF01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/CURDEF01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/CURDEF01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:CURDEF01",
+      "symbol_id": "CURDEF01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 3,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.88,
+      "expected": "Magenta DW deep-water-route text cue without underline.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "part of deep water route",
+      "observed": "Candidate is the magenta DW text cue with the invented dashed underline removed, matching the text witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/DWRTPT51__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/DWRTPT51__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/DWRTPT51__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/DWRTPT51.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/DWRTPT51__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/DWRTPT51__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/DWRTPT51__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/DWRTPT51.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/DWRTPT51.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DWRTPT51__day.png",
+            "label": "part of deep water route",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DWRTPT51__day.png",
+              "dusk": "out/opencpn_s52_reference/DWRTPT51__dusk.png",
+              "night": "out/opencpn_s52_reference/DWRTPT51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "DWRTPT51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/DWRTPT51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "DWRTPT51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/DWRTPT51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "DWRTPT51"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Keep only the DW text cue at reference proportions; remove the dashed underline.",
+        "source_required_change": "Remove the dashed underline and keep the DW text cue aligned to the reference proportions/colour.",
+        "source_safety_reason_codes": [
+          "invented_detail",
+          "wrong_line_pattern",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "DWRTPT51",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/DWRTPT51.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "DWRTPT51"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "DWRTPT51",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/DWRTPT51.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "DWRTPT51"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3392",
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)",
+        "symbol_id": "DWRTPT51",
+        "symbol_name": "part of deep water route"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "DWRTPT51 is part of deep water route. It is used as a part of deep water route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "part of deep water route"
+      },
+      "source_refs_used": [
+        "semantic_brief:DWRTPT51",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/DWRTPT51.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/DWRTPT51.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/DWRTPT51__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/DWRTPT51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/DWRTPT51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/DWRTPT51.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/DWRTPT51.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:DWRTPT51",
+      "symbol_id": "DWRTPT51",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 4,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.78,
+      "expected": "Magenta ESSA/PSSA boundary text cue without invented underline.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "ESSA or PSSA boundary",
+      "observed": "Candidate is the magenta ESSA text cue with the invented dashed underline removed, matching the S-101 ESSA text witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/ESSARE01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/ESSARE01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/ESSARE01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/ESSARE01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/ESSARE01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/ESSARE01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/ESSARE01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/ESSARE01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/ESSARE01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/ESSARE01__day.png",
+            "label": "ESSA or PSSA boundary",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/ESSARE01__day.png",
+              "dusk": "out/opencpn_s52_reference/ESSARE01__dusk.png",
+              "night": "out/opencpn_s52_reference/ESSARE01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "ESSARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/ESSARE01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "ESSARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/ESSARE01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "ESSARE01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Use the ESSA text witness only; remove the invented dashed boundary underline.",
+        "source_required_change": "Remove the dashed underline and resolve whether the row should use ESSA text or the boundary-line witness; do not combine invented text underline detail.",
+        "source_safety_reason_codes": [
+          "invented_detail",
+          "conflicting_reference_witness",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "ESSARE01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/ESSARE01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "ESSARE01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "ESSARE01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/ESSARE01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "ESSARE01"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATREA27"
+        ],
+        "definition_kind": "line-style",
+        "definition_rcid": "3192",
+        "lookup_id": "164",
+        "lookup_rcid": "32200",
+        "object_class": "RESARE",
+        "s52_instruction": "SY(ESSARE01);LC(ESSARE01)",
+        "symbol_id": "ESSARE01",
+        "symbol_name": "ESSA or PSSA boundary"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "ESSARE01 is ESSA or PSSA boundary. It is used as a ESSA or PSSA boundary. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ESSA or PSSA boundary"
+      },
+      "source_refs_used": [
+        "semantic_brief:ESSARE01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/ESSARE01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/ESSARE01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/ESSARE01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/ESSARE01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/ESSARE01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/ESSARE01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/ESSARE01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:ESSARE01",
+      "symbol_id": "ESSARE01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 5,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.88,
+      "expected": "Outlined one-way fairway arrow in the gray CHGRD/reference stroke colour.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fairway with one-way traffic in direction indicated",
+      "observed": "Candidate now has the correct hollow one-way arrow silhouette, but it renders black while the S-101/OpenCPN witness is the CHGRD/gray fairway stroke family.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY51__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY51__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY51__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FAIRWY51.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY51__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY51__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY51__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FAIRWY51.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FAIRWY51.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FAIRWY51__day.png",
+            "label": "fairway with one-way traffic in direction indicated",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FAIRWY51__day.png",
+              "dusk": "out/opencpn_s52_reference/FAIRWY51__dusk.png",
+              "night": "out/opencpn_s52_reference/FAIRWY51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FAIRWY51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FAIRWY51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FAIRWY51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FAIRWY51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FAIRWY51"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Keep the hollow one-way arrow geometry, but move FAIRWY51 from black to the CHGRD/gray reference stroke colour.",
+        "source_repair_note": "Redraw as a hollow one-way fairway arrow in the reference stroke colour.",
+        "source_required_change": "Redraw as the outlined one-way fairway arrow with hollow body/head and reference stroke colour.",
+        "source_safety_reason_codes": [
+          "wrong_fill_style",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Keep the hollow one-way arrow geometry, but move FAIRWY51 from black to the CHGRD/gray reference stroke colour.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FAIRWY51",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FAIRWY51.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FAIRWY51"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FAIRWY51",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FAIRWY51.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FAIRWY51"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3184",
+        "lookup_id": "54",
+        "lookup_rcid": "32090",
+        "object_class": "FAIRWY",
+        "s52_instruction": "SY(FAIRWY51,ORIENT);LS(DASH,1,CHGRD);CS(RESTRN01)",
+        "symbol_id": "FAIRWY51",
+        "symbol_name": "fairway with one-way traffic in direction indicated"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FAIRWY51 is fairway with one-way traffic in direction indicated. It is used as a fairway with one-way traffic in direction indicated. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fairway with one-way traffic in direction indicated"
+      },
+      "source_refs_used": [
+        "semantic_brief:FAIRWY51",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FAIRWY51.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FAIRWY51.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY51__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FAIRWY51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FAIRWY51.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FAIRWY51.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FAIRWY51",
+      "symbol_id": "FAIRWY51",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 6,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.88,
+      "expected": "Outlined two-way fairway arrow in the gray CHGRD/reference stroke colour.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fairway with two-way traffic",
+      "observed": "Candidate now has the correct hollow two-way arrow silhouette, but it renders black while the S-101/OpenCPN witness is the CHGRD/gray fairway stroke family.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY52__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY52__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY52__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FAIRWY52.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY52__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY52__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY52__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FAIRWY52.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FAIRWY52.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FAIRWY52__day.png",
+            "label": "fairway with two-way traffic",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FAIRWY52__day.png",
+              "dusk": "out/opencpn_s52_reference/FAIRWY52__dusk.png",
+              "night": "out/opencpn_s52_reference/FAIRWY52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FAIRWY52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FAIRWY52.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FAIRWY52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FAIRWY52.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FAIRWY52"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Keep the hollow two-way arrow geometry, but move FAIRWY52 from black to the CHGRD/gray reference stroke colour.",
+        "source_repair_note": "Redraw as a hollow two-way fairway arrow in the reference stroke colour.",
+        "source_required_change": "Redraw as the outlined two-way fairway arrow with hollow body/head and reference stroke colour.",
+        "source_safety_reason_codes": [
+          "wrong_fill_style",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Keep the hollow two-way arrow geometry, but move FAIRWY52 from black to the CHGRD/gray reference stroke colour.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FAIRWY52",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FAIRWY52.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FAIRWY52"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FAIRWY52",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FAIRWY52.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FAIRWY52"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC4"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3185",
+        "lookup_id": "57",
+        "lookup_rcid": "32093",
+        "object_class": "FAIRWY",
+        "s52_instruction": "SY(FAIRWY52,ORIENT);LS(DASH,1,CHGRD);CS(RESTRN01)",
+        "symbol_id": "FAIRWY52",
+        "symbol_name": "fairway with two-way traffic"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FAIRWY52 is fairway with two-way traffic. It is used as a fairway with two-way traffic. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fairway with two-way traffic"
+      },
+      "source_refs_used": [
+        "semantic_brief:FAIRWY52",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FAIRWY52.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FAIRWY52.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FAIRWY52__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FAIRWY52__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FAIRWY52__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FAIRWY52.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FAIRWY52.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FAIRWY52",
+      "symbol_id": "FAIRWY52",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 7,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.82,
+      "expected": "Gray flood-stream arrow with the reference spring-rate tick marks/proportions.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "flood stream, rate at spring tides",
+      "observed": "Candidate is gray and keeps the flood-stream arrow, but the spring-rate cue is a horizontal crossbar rather than the S-101/OpenCPN slanted tick geometry on the arrow stem.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FLDSTR01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FLDSTR01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FLDSTR01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FLDSTR01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLDSTR01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLDSTR01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLDSTR01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FLDSTR01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FLDSTR01.svg"
+      },
+      "reason_codes": [
+        "wrong_internal_detail",
+        "wrong_rate_marker_geometry",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FLDSTR01__day.png",
+            "label": "flood stream, rate at spring tides",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FLDSTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/FLDSTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/FLDSTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FLDSTR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FLDSTR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FLDSTR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FLDSTR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FLDSTR01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Replace the horizontal rate crossbar with the S-101/OpenCPN spring-rate tick geometry while preserving the gray flood-stream arrow.",
+        "source_repair_note": "Redraw as a gray flood-stream arrow with one spring-rate crossbar, not stacked bars.",
+        "source_required_change": "Redraw FLDSTR01 to the reference flood-stream arrow geometry and colour family; remove extra stacked crossbars.",
+        "source_safety_reason_codes": [
+          "wrong_internal_detail",
+          "wrong_colour_family",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Replace the horizontal rate crossbar with the S-101/OpenCPN spring-rate tick geometry while preserving the gray flood-stream arrow.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLDSTR01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FLDSTR01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FLDSTR01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLDSTR01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FLDSTR01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FLDSTR01"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CAT_TS1",
+          "ORIENT "
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3360",
+        "lookup_id": "203",
+        "lookup_rcid": "32238",
+        "object_class": "TS_FEB",
+        "s52_instruction": "SY(FLDSTR01,ORIENT);TE('%4.1lf kn','CURVEL',3,1,2,'15110',1,-1,CHBLK,31)",
+        "symbol_id": "FLDSTR01",
+        "symbol_name": "flood stream, rate at spring tides"
+      },
+      "safety_reason_codes": [
+        "wrong_internal_detail",
+        "wrong_rate_marker_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FLDSTR01 is flood stream, rate at spring tides. It is used as a flood stream, rate at spring tides. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "flood stream, rate at spring tides"
+      },
+      "source_refs_used": [
+        "semantic_brief:FLDSTR01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FLDSTR01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FLDSTR01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLDSTR01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FLDSTR01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FLDSTR01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FLDSTR01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FLDSTR01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FLDSTR01",
+      "symbol_id": "FLDSTR01",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 8,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.82,
+      "expected": "Brown flagstaff with square flag and base/foot structure.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "flagstaff, flagpole",
+      "observed": "Candidate has the brown flagstaff pole, square flag, and base/foot cue, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FLGSTF01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FLGSTF01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FLGSTF01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FLGSTF01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLGSTF01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLGSTF01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLGSTF01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FLGSTF01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FLGSTF01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FLGSTF01__day.png",
+            "label": "flagstaff, flagpole",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FLGSTF01__day.png",
+              "dusk": "out/opencpn_s52_reference/FLGSTF01__dusk.png",
+              "night": "out/opencpn_s52_reference/FLGSTF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FLGSTF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FLGSTF01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FLGSTF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FLGSTF01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FLGSTF01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as a flagstaff with square flag and foot structure, not a circular base.",
+        "source_required_change": "Replace the circular base with the reference flagstaff base/foot structure and square flag proportions.",
+        "source_safety_reason_codes": [
+          "wrong_base_detail",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLGSTF01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FLGSTF01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FLGSTF01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLGSTF01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FLGSTF01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FLGSTF01"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATLMK5",
+          "CONVIS1"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "1337",
+        "lookup_id": "1161",
+        "lookup_rcid": "31213",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(FLGSTF01)",
+        "symbol_id": "FLGSTF01",
+        "symbol_name": "flagstaff, flagpole"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FLGSTF01 is flagstaff, flagpole. It is used as a flagstaff, flagpole. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "flagstaff, flagpole"
+      },
+      "source_refs_used": [
+        "semantic_brief:FLGSTF01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FLGSTF01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FLGSTF01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLGSTF01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FLGSTF01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FLGSTF01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FLGSTF01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FLGSTF01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FLGSTF01",
+      "symbol_id": "FLGSTF01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 9,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.86,
+      "expected": "Magenta circled-X floating-hazard mark with lower hazard contour.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "FLTHAZ02",
+      "observed": "Candidate has the magenta circled X and lower hazard contour from the S-101 FLTHAZ02 witness; no OpenCPN raster witness is present locally for this row.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FLTHAZ02__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FLTHAZ02__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FLTHAZ02__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FLTHAZ02.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLTHAZ02__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLTHAZ02__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLTHAZ02__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FLTHAZ02.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FLTHAZ02.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FLTHAZ02__day.png",
+            "label": "FLTHAZ02",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FLTHAZ02__day.png",
+              "dusk": "out/opencpn_s52_reference/FLTHAZ02__dusk.png",
+              "night": "out/opencpn_s52_reference/FLTHAZ02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FLTHAZ02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FLTHAZ02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FLTHAZ02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FLTHAZ02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FLTHAZ02"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as the circled-X floating-hazard mark with a lower hazard contour.",
+        "source_required_change": "Redraw as the FLTHAZ02 circled X and lower hazard contour; remove the asterisk/star symbol.",
+        "source_safety_reason_codes": [
+          "wrong_symbol_class",
+          "wrong_internal_detail",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLTHAZ02",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FLTHAZ02.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FLTHAZ02"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FLTHAZ02",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FLTHAZ02.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FLTHAZ02"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATOBS10",
+          "VALSOU"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": null,
+        "lookup_id": "1190",
+        "lookup_rcid": "31242",
+        "object_class": "OBSTRN",
+        "s52_instruction": "SY(FLTHAZ02)",
+        "symbol_id": "FLTHAZ02",
+        "symbol_name": "FLTHAZ02"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FLTHAZ02 is FLTHAZ02. It is used as a obstruction or hazard marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "source_refs_used": [
+        "semantic_brief:FLTHAZ02",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FLTHAZ02.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FLTHAZ02.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FLTHAZ02__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FLTHAZ02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FLTHAZ02__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FLTHAZ02.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FLTHAZ02.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FLTHAZ02",
+      "symbol_id": "FLTHAZ02",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 10,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.87,
+      "expected": "Three magenta fog-signal sound arcs.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fog signal",
+      "observed": "Candidate has the three magenta fog-signal arcs and removes the bell/arch placeholder, matching the S-101/OpenCPN arc family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FOGSIG01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FOGSIG01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FOGSIG01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FOGSIG01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FOGSIG01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FOGSIG01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FOGSIG01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FOGSIG01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FOGSIG01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [
+          {
+            "label": "Fog signal (Bell, Horn, Whistle, Gong, Explosive, Diaphone, Siren, Reed, Typhon ...)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BELL1.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FOGSIG01__day.png",
+            "label": "fog signal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FOGSIG01__day.png",
+              "dusk": "out/opencpn_s52_reference/FOGSIG01__dusk.png",
+              "night": "out/opencpn_s52_reference/FOGSIG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FOGSIG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FOGSIG01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FOGSIG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FOGSIG01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FOGSIG01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as three fog-signal sound arcs without a bell or arch placeholder.",
+        "source_required_change": "Redraw as three fog-signal sound arcs; remove the arch-with-dash/bell placeholder.",
+        "source_safety_reason_codes": [
+          "wrong_shape",
+          "wrong_symbol_semantics",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FOGSIG01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FOGSIG01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FOGSIG01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FOGSIG01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FOGSIG01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FOGSIG01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1338",
+        "lookup_id": "1112",
+        "lookup_rcid": "31164",
+        "object_class": "FOGSIG",
+        "s52_instruction": "SY(FOGSIG01)",
+        "symbol_id": "FOGSIG01",
+        "symbol_name": "fog signal"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FOGSIG01 is fog signal. It is used as a fog signal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fog signal"
+      },
+      "source_refs_used": [
+        "semantic_brief:FOGSIG01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FOGSIG01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FOGSIG01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FOGSIG01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FOGSIG01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FOGSIG01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FOGSIG01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FOGSIG01.svg",
+        "aquamap:Fog signal (Bell, Horn, Whistle, Gong, Explosive, Diaphone, Siren, Reed, Typhon ...):pipeline/iconforge/reference_sources/aquamap_map_symbols/images/BELL1.png",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FOGSIG01",
+      "symbol_id": "FOGSIG01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 11,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.86,
+      "expected": "Plain brown fortified-structure square outline.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fortified structure",
+      "observed": "Candidate is the plain brown fortified-structure square outline without battlements, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FORSTC01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FORSTC01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FORSTC01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FORSTC01__day.png",
+            "label": "fortified structure",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FORSTC01__day.png",
+              "dusk": "out/opencpn_s52_reference/FORSTC01__dusk.png",
+              "night": "out/opencpn_s52_reference/FORSTC01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FORSTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FORSTC01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FORSTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FORSTC01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FORSTC01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as the plain brown fortified-structure square outline without battlements.",
+        "source_required_change": "Remove battlements and render the plain fortified-structure square outline matching the witness.",
+        "source_safety_reason_codes": [
+          "invented_detail",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FORSTC01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FORSTC01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FORSTC01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FORSTC01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FORSTC01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FORSTC01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1339",
+        "lookup_id": "1114",
+        "lookup_rcid": "31166",
+        "object_class": "FORSTC",
+        "s52_instruction": "SY(FORSTC01)",
+        "symbol_id": "FORSTC01",
+        "symbol_name": "fortified structure"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FORSTC01 is fortified structure. It is used as a fortified structure. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fortified structure"
+      },
+      "source_refs_used": [
+        "semantic_brief:FORSTC01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FORSTC01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FORSTC01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FORSTC01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FORSTC01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FORSTC01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FORSTC01",
+      "symbol_id": "FORSTC01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 12,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.86,
+      "expected": "Plain black conspicuous fortified-structure square outline.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "conspicuous fortified structure",
+      "observed": "Candidate is the plain black conspicuous fortified-structure square outline without battlements, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC11__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC11__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC11__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FORSTC11.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC11__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC11__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC11__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FORSTC11.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FORSTC11.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FORSTC11__day.png",
+            "label": "conspicuous fortified structure",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FORSTC11__day.png",
+              "dusk": "out/opencpn_s52_reference/FORSTC11__dusk.png",
+              "night": "out/opencpn_s52_reference/FORSTC11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FORSTC11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FORSTC11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FORSTC11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FORSTC11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FORSTC11"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as the plain black conspicuous fortified-structure square outline without battlements.",
+        "source_required_change": "Remove battlements and render the conspicuous fortified-structure as the bold plain square outline.",
+        "source_safety_reason_codes": [
+          "invented_detail",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FORSTC11",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FORSTC11.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FORSTC11"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FORSTC11",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FORSTC11.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FORSTC11"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CONVIS1"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "1340",
+        "lookup_id": "1113",
+        "lookup_rcid": "31165",
+        "object_class": "FORSTC",
+        "s52_instruction": "SY(FORSTC11)",
+        "symbol_id": "FORSTC11",
+        "symbol_name": "conspicuous fortified structure"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FORSTC11 is conspicuous fortified structure. It is used as a conspicuous fortified structure. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous fortified structure"
+      },
+      "source_refs_used": [
+        "semantic_brief:FORSTC11",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FORSTC11.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FORSTC11.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FORSTC11__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FORSTC11__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FORSTC11__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FORSTC11.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FORSTC11.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FORSTC11",
+      "symbol_id": "FORSTC11",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 13,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.9,
+      "expected": "Dashed ferry-area route with ferry outline in the magenta CHMGF/reference colour family.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "ferry area",
+      "observed": "Candidate has the ferry-on-dashed-route geometry, but it renders black; the S-101/OpenCPN ferry-area witness is magenta/CHMGF.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE51__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE51__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE51__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FRYARE51.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE51__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE51__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE51__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FRYARE51.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FRYARE51.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FRYARE51__day.png",
+            "label": "ferry area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FRYARE51__day.png",
+              "dusk": "out/opencpn_s52_reference/FRYARE51__dusk.png",
+              "night": "out/opencpn_s52_reference/FRYARE51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FRYARE51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FRYARE51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FRYARE51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FRYARE51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FRYARE51"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Keep the ferry-on-dashed-route geometry but change FRYARE51 from black to the magenta CHMGF/reference colour family.",
+        "source_repair_note": "Redraw as a dashed ferry-area route with the ferry outline riding on the line.",
+        "source_required_change": "Redraw as the ferry-area dashed-line witness with the ferry outline on the line; remove wake arcs.",
+        "source_safety_reason_codes": [
+          "missing_route_line",
+          "wrong_line_pattern",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Keep the ferry-on-dashed-route geometry but change FRYARE51 from black to the magenta CHMGF/reference colour family.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FRYARE51",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FRYARE51.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FRYARE51"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FRYARE51",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FRYARE51.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FRYARE51"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "3390",
+        "lookup_id": "60",
+        "lookup_rcid": "32096",
+        "object_class": "FERYRT",
+        "s52_instruction": "SY(FRYARE51);LS(DASH,2,CHMGD)",
+        "symbol_id": "FRYARE51",
+        "symbol_name": "ferry area"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FRYARE51 is ferry area. It is used as a ferry area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ferry area"
+      },
+      "source_refs_used": [
+        "semantic_brief:FRYARE51",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FRYARE51.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FRYARE51.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE51__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE51__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FRYARE51__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FRYARE51.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FRYARE51.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FRYARE51",
+      "symbol_id": "FRYARE51",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 14,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.8,
+      "expected": "Black cable-ferry line witness with ferry outline.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "cable ferry area",
+      "observed": "Candidate has the black cable-ferry line and ferry outline with wake arcs removed, matching the cable-ferry witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE52__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE52__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE52__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FRYARE52.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE52__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE52__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE52__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FRYARE52.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FRYARE52.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FRYARE52__day.png",
+            "label": "cable ferry area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FRYARE52__day.png",
+              "dusk": "out/opencpn_s52_reference/FRYARE52__dusk.png",
+              "night": "out/opencpn_s52_reference/FRYARE52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FRYARE52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FRYARE52.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FRYARE52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FRYARE52.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FRYARE52"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as a cable-ferry horizontal line witness with ferry outline and no wake arcs.",
+        "source_required_change": "Redraw as the cable-ferry horizontal line witness with ferry outline; remove wake arcs and extra clustered dashes.",
+        "source_safety_reason_codes": [
+          "wrong_line_pattern",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FRYARE52",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FRYARE52.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FRYARE52"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FRYARE52",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FRYARE52.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FRYARE52"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATFRY2"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3390",
+        "lookup_id": "59",
+        "lookup_rcid": "32095",
+        "object_class": "FERYRT",
+        "s52_instruction": "SY(FRYARE52);LS(DASH,2,CHBLK)",
+        "symbol_id": "FRYARE52",
+        "symbol_name": "cable ferry area"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FRYARE52 is cable ferry area. It is used as a cable ferry area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cable ferry area"
+      },
+      "source_refs_used": [
+        "semantic_brief:FRYARE52",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FRYARE52.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FRYARE52.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FRYARE52__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FRYARE52__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FRYARE52__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FRYARE52.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FRYARE52.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FRYARE52",
+      "symbol_id": "FRYARE52",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 15,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.9,
+      "expected": "Gray rectangular fishing-stake panel with the single diagonal stake/line witness and no extra lattice cells.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fishing stakes",
+      "observed": "Candidate is a brown rectangular stake panel with extra vertical lattice lines; the S-101/OpenCPN witness is a gray lower rectangle with one diagonal stake/line.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC02__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC02__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC02__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FSHFAC02.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC02__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC02__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC02__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FSHFAC02.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FSHFAC02.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "wrong_pattern",
+        "extra_lattice_detail",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHFAC02__day.png",
+            "label": "fishing stakes",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHFAC02__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHFAC02__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHFAC02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FSHFAC02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FSHFAC02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FSHFAC02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FSHFAC02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FSHFAC02"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Redraw FSHFAC02 in the gray CHGRD/reference colour and remove the extra vertical lattice lines, keeping the simple rectangle plus one diagonal stake/line.",
+        "source_repair_note": "Redraw as a rectangular fishing-stake panel with one diagonal stake/line.",
+        "source_required_change": "Redraw fishing stakes as the rectangular stake panel with one diagonal stake/line; remove lattice/grid cells.",
+        "source_safety_reason_codes": [
+          "wrong_pattern",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Redraw FSHFAC02 in the gray CHGRD/reference colour and remove the extra vertical lattice lines, keeping the simple rectangle plus one diagonal stake/line.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHFAC02",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHFAC02.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FSHFAC02"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHFAC02",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FSHFAC02.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FSHFAC02"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATFIF2"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "1342",
+        "lookup_id": "406",
+        "lookup_rcid": "32441",
+        "object_class": "FSHFAC",
+        "s52_instruction": "SY(FSHFAC02);LC(NAVARE51)",
+        "symbol_id": "FSHFAC02",
+        "symbol_name": "fish trap, fish weir, tunny net"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_pattern",
+        "extra_lattice_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FSHFAC02 is fishing stakes. It is used as a fishing stakes. Required geometry: spar/stake vertical body. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fishing stakes"
+      },
+      "source_refs_used": [
+        "semantic_brief:FSHFAC02",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FSHFAC02.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FSHFAC02.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC02__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FSHFAC02__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHFAC02.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FSHFAC02.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FSHFAC02",
+      "symbol_id": "FSHFAC02",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 16,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.87,
+      "expected": "Low horizontal gray fishing-stakes pattern with reference post height and spacing.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "pattern of symbols for an area with fishing stakes",
+      "observed": "Candidate has the horizontal fishing-stakes family, but it renders as tall brown posts; the S-101/OpenCPN pattern is a low gray row of short stakes.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC03__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC03__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC03__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FSHFAC03.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC03__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC03__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC03__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FSHFAC03.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FSHFAC03.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "wrong_proportions",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHFAC03__day.png",
+            "label": "pattern of symbols for an area with fishing stakes",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHFAC03__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHFAC03__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHFAC03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FSHFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FSHFAC03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FSHFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FSHFAC03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FSHFAC03"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Move FSHFAC03 to the gray CHGRD/reference colour family and compress the posts to the low S-101/OpenCPN fishing-stakes proportions.",
+        "source_repair_note": "Redraw as a horizontal fishing-stakes pattern: baseline with several vertical posts.",
+        "source_required_change": "Stretch/redraw to the horizontal fishing-stakes pattern: baseline with several vertical posts, not a square grid.",
+        "source_safety_reason_codes": [
+          "wrong_aspect_ratio",
+          "wrong_pattern",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Move FSHFAC03 to the gray CHGRD/reference colour family and compress the posts to the low S-101/OpenCPN fishing-stakes proportions.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHFAC03",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHFAC03.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FSHFAC03"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHFAC03",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FSHFAC03.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FSHFAC03"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATFIF1"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "2067",
+        "lookup_id": "405",
+        "lookup_rcid": "32440",
+        "object_class": "FSHFAC",
+        "s52_instruction": "SY(FSHFAC03);LC(NAVARE51)",
+        "symbol_id": "FSHFAC03",
+        "symbol_name": "fish stakes"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_proportions",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FSHFAC03 is pattern of symbols for an area with fishing stakes. It is used as a pattern of symbols for an area with fishing stakes. Required geometry: spar/stake vertical body. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for an area with fishing stakes"
+      },
+      "source_refs_used": [
+        "semantic_brief:FSHFAC03",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FSHFAC03.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FSHFAC03.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHFAC03__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FSHFAC03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FSHFAC03__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHFAC03.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FSHFAC03.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FSHFAC03",
+      "symbol_id": "FSHFAC03",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 17,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.86,
+      "expected": "Fish silhouette inside dotted oval fish-haven enclosure.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fish haven",
+      "observed": "Candidate preserves the fish silhouette inside a dotted oval fish-haven enclosure, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHHAV01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHHAV01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/FSHHAV01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/FSHHAV01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHHAV01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHHAV01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHHAV01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/FSHHAV01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/FSHHAV01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHHAV01__day.png",
+            "label": "fish haven",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHHAV01__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHHAV01__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHHAV01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FSHHAV01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FSHHAV01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FSHHAV01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FSHHAV01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FSHHAV01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Replace the dashed rectangle with a dotted oval fish-haven enclosure around the fish.",
+        "source_required_change": "Replace the dashed rectangle with the dotted oval fish-haven enclosure while preserving the fish silhouette.",
+        "source_safety_reason_codes": [
+          "wrong_enclosure_shape",
+          "wrong_line_pattern",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHHAV01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHHAV01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "FSHHAV01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "FSHHAV01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/FSHHAV01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "FSHHAV01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1343",
+        "lookup_id": "1119",
+        "lookup_rcid": "31171",
+        "object_class": "FSHFAC",
+        "s52_instruction": "SY(FSHHAV01)",
+        "symbol_id": "FSHHAV01",
+        "symbol_name": "fish haven"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "FSHHAV01 is fish haven. It is used as a fish haven. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fish haven"
+      },
+      "source_refs_used": [
+        "semantic_brief:FSHHAV01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/FSHHAV01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/FSHHAV01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/FSHHAV01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/FSHHAV01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/FSHHAV01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/FSHHAV01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/FSHHAV01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:FSHHAV01",
+      "symbol_id": "FSHHAV01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 18,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.91,
+      "expected": "Magenta fishing-harbour fish/arc service mark matching the S-101/OpenCPN witness.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "fishing harbour",
+      "observed": "Candidate is a black circled fish with an added F letter; the S-101/OpenCPN fishing-harbour witness is the magenta fish/arc service mark without the black circle/F substitution.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/HRBFAC09__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/HRBFAC09__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/HRBFAC09__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/HRBFAC09.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/HRBFAC09__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/HRBFAC09__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/HRBFAC09__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/HRBFAC09.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/HRBFAC09.svg"
+      },
+      "reason_codes": [
+        "wrong_colour_family",
+        "invented_text",
+        "wrong_enclosure_shape",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC09__day.png",
+            "label": "fishing harbour",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC09__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC09__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC09__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "HRBFAC09",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/HRBFAC09.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "HRBFAC09",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/HRBFAC09.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "HRBFAC09"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Redraw HRBFAC09 in magenta using the S-101/OpenCPN fish/arc service mark; remove the black enclosing circle and F text.",
+        "source_repair_note": "Redraw as a fishing-harbour facility mark using a fish/letter service convention.",
+        "source_required_change": "Replace with the fishing-harbour-specific icon/letter convention from the OpenCPN/S-101 references.",
+        "source_safety_reason_codes": [
+          "wrong_symbol_class",
+          "wrong_facility_cue",
+          "placeholder_artwork",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Redraw HRBFAC09 in magenta using the S-101/OpenCPN fish/arc service mark; remove the black enclosing circle and F text.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "HRBFAC09",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/HRBFAC09.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "HRBFAC09"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "HRBFAC09",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/HRBFAC09.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "HRBFAC09"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATHAF4"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "2068",
+        "lookup_id": "76",
+        "lookup_rcid": "32112",
+        "object_class": "HRBFAC",
+        "s52_instruction": "SY(HRBFAC09)",
+        "symbol_id": "HRBFAC09",
+        "symbol_name": "fishing harbour"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_text",
+        "wrong_enclosure_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC09 is fishing harbour. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "harbour facility or service point"
+      },
+      "source_refs_used": [
+        "semantic_brief:HRBFAC09",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/HRBFAC09.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/HRBFAC09.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/HRBFAC09__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/HRBFAC09__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/HRBFAC09__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/HRBFAC09.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/HRBFAC09.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:HRBFAC09",
+      "symbol_id": "HRBFAC09",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 19,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.84,
+      "expected": "Filled/tinted obstruction circle with dotted perimeter.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "obstruction which covers and uncovers",
+      "observed": "Candidate has a filled/tinted obstruction circle and dotted perimeter, matching the S-101/OpenCPN obstruction witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/OBSTRN03__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/OBSTRN03__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/OBSTRN03__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/OBSTRN03.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OBSTRN03__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OBSTRN03__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OBSTRN03__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/OBSTRN03.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/OBSTRN03.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [
+          {
+            "label": "Bottom Obstruction",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Obstruction1.png",
+            "section": "Others",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OBSTRN03__day.png",
+            "label": "obstruction which covers and uncovers",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OBSTRN03__day.png",
+              "dusk": "out/opencpn_s52_reference/OBSTRN03__dusk.png",
+              "night": "out/opencpn_s52_reference/OBSTRN03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "OBSTRN03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/OBSTRN03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "OBSTRN03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/OBSTRN03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "OBSTRN03"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw with a filled/tinted obstruction circle and dotted perimeter.",
+        "source_required_change": "Redraw with the reference filled/tinted obstruction circle and dotted perimeter; remove the center-dot-only treatment.",
+        "source_safety_reason_codes": [
+          "missing_fill",
+          "wrong_colour_treatment",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "OBSTRN03",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/OBSTRN03.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "OBSTRN03"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "OBSTRN03",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/OBSTRN03.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "OBSTRN03"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "$SCODEOBSTRN03"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "3611",
+        "lookup_id": "1644",
+        "lookup_rcid": "31696",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(OBSTRN03)",
+        "symbol_id": "OBSTRN03",
+        "symbol_name": "obstruction which covers and uncovers"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "OBSTRN03 is obstruction which covers and uncovers. It is used as a obstruction which covers and uncovers. Required geometry: recognized obstruction hazard symbol. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "recognized obstruction hazard symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "obstruction which covers and uncovers"
+      },
+      "source_refs_used": [
+        "semantic_brief:OBSTRN03",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/OBSTRN03.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/OBSTRN03.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/OBSTRN03__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/OBSTRN03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OBSTRN03__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/OBSTRN03.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/OBSTRN03.svg",
+        "aquamap:Bottom Obstruction:pipeline/iconforge/reference_sources/aquamap_map_symbols/images/Obstruction1.png",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:OBSTRN03",
+      "symbol_id": "OBSTRN03",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 20,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.9,
+      "expected": "Black square offshore-platform glyph with central dot.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "offshore platform",
+      "observed": "Candidate is the square offshore-platform glyph with central dot, matching the S-101/OpenCPN witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/OFSPLF01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/OFSPLF01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/OFSPLF01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/OFSPLF01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OFSPLF01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OFSPLF01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/OFSPLF01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/OFSPLF01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/OFSPLF01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OFSPLF01__day.png",
+            "label": "offshore platform",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OFSPLF01__day.png",
+              "dusk": "out/opencpn_s52_reference/OFSPLF01__dusk.png",
+              "night": "out/opencpn_s52_reference/OFSPLF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "OFSPLF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/OFSPLF01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "OFSPLF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/OFSPLF01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "OFSPLF01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as the square offshore-platform glyph with a central dot.",
+        "source_required_change": "Redraw as the OFSPLF01 square platform glyph with central dot; remove the legged platform pictogram.",
+        "source_safety_reason_codes": [
+          "wrong_shape",
+          "invented_platform_detail",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "OFSPLF01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/OFSPLF01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "OFSPLF01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "OFSPLF01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/OFSPLF01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "OFSPLF01"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1418",
+        "lookup_id": "1200",
+        "lookup_rcid": "31252",
+        "object_class": "OFSPLF",
+        "s52_instruction": "SY(OFSPLF01);TE('Prod %s','OBJNAM',3,1,2,'15110',1,-1,CHBLK,21)",
+        "symbol_id": "OFSPLF01",
+        "symbol_name": "offshore platform"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "OFSPLF01 is offshore platform. It is used as a offshore platform. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "offshore platform"
+      },
+      "source_refs_used": [
+        "semantic_brief:OFSPLF01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/OFSPLF01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/OFSPLF01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/OFSPLF01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/OFSPLF01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OFSPLF01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/OFSPLF01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/OFSPLF01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:OFSPLF01",
+      "symbol_id": "OFSPLF01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 21,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.88,
+      "expected": "Magenta circle/diamond pilot boarding mark.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "Pilot boarding place",
+      "observed": "Candidate is the magenta circle/diamond pilot-boarding witness without P text or stem, matching the reference family closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/PILBOP02__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/PILBOP02__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/PILBOP02__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/PILBOP02.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILBOP02__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILBOP02__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILBOP02__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/PILBOP02.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/PILBOP02.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PILBOP02__day.png",
+            "label": "Pilot boarding place",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PILBOP02__day.png",
+              "dusk": "out/opencpn_s52_reference/PILBOP02__dusk.png",
+              "night": "out/opencpn_s52_reference/PILBOP02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "PILBOP02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/PILBOP02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "PILBOP02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/PILBOP02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "PILBOP02"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Redraw as the magenta circle/diamond pilot-boarding witness without P text or stem.",
+        "source_required_change": "Redraw as the PILBOP02 magenta circle/diamond pilot-boarding witness; remove the P letter and stem.",
+        "source_safety_reason_codes": [
+          "invented_text",
+          "wrong_shape",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "PILBOP02",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/PILBOP02.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "PILBOP02"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "PILBOP02",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/PILBOP02.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "PILBOP02"
+        }
+      ],
+      "s57": {
+        "conditions": [],
+        "definition_kind": "symbol",
+        "definition_rcid": "1423",
+        "lookup_id": "130",
+        "lookup_rcid": "32166",
+        "object_class": "PILBOP",
+        "s52_instruction": "SY(PILBOP02);LS(DASH,2,TRFCF)",
+        "symbol_id": "PILBOP02",
+        "symbol_name": "pilot boarding place"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "PILBOP02 is Pilot boarding place. It is used as a Pilot boarding place. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "Pilot boarding place"
+      },
+      "source_refs_used": [
+        "semantic_brief:PILBOP02",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/PILBOP02.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/PILBOP02.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILBOP02__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/PILBOP02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PILBOP02__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/PILBOP02.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/PILBOP02.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:PILBOP02",
+      "symbol_id": "PILBOP02",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    },
+    {
+      "batch_index": 22,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.92,
+      "expected": "Small filled black pile/bollard point mark, not a tall tapered post.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "pile or bollard",
+      "observed": "Candidate is a tapered bollard/post silhouette, but the S-101/OpenCPN PILPNT02 witness is a small filled black point/circle.",
+      "pass": false,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/PILPNT02__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/PILPNT02__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/PILPNT02__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/PILPNT02.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILPNT02__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILPNT02__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILPNT02__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/PILPNT02.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/PILPNT02.svg"
+      },
+      "reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PILPNT02__day.png",
+            "label": "pile or bollard",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PILPNT02__day.png",
+              "dusk": "out/opencpn_s52_reference/PILPNT02__dusk.png",
+              "night": "out/opencpn_s52_reference/PILPNT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "PILPNT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/PILPNT02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "PILPNT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/PILPNT02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "PILPNT02"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "Redraw PILPNT02 as the small filled black point/circle witness; remove the tapered bollard/post body.",
+        "source_repair_note": "Redraw as the black pile/bollard point mark, not a signpost.",
+        "source_required_change": "Redraw as the PILPNT02 black pile/bollard point mark at reference proportions; remove the signpost.",
+        "source_safety_reason_codes": [
+          "wrong_shape",
+          "invented_stand",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "Redraw PILPNT02 as the small filled black point/circle witness; remove the tapered bollard/post body.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "PILPNT02",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/PILPNT02.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "PILPNT02"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "PILPNT02",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/PILPNT02.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "PILPNT02"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATMOR3"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "1424",
+        "lookup_id": "1183",
+        "lookup_rcid": "31235",
+        "object_class": "MORFAC",
+        "s52_instruction": "SY(PILPNT02)",
+        "symbol_id": "PILPNT02",
+        "symbol_name": "pile or bollard"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "PILPNT02 is pile or bollard. It is used as a mooring facility. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "mooring facility"
+      },
+      "source_refs_used": [
+        "semantic_brief:PILPNT02",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/PILPNT02.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/PILPNT02.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/PILPNT02__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/PILPNT02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PILPNT02__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/PILPNT02.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/PILPNT02.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:PILPNT02",
+      "symbol_id": "PILPNT02",
+      "verdict": "fail",
+      "visual_approval": "failed_repair_rerun"
+    },
+    {
+      "batch_index": 23,
+      "chart1_parity_gate": {
+        "chart1_verdict": null,
+        "exact_crop_present": false,
+        "final_pass_allowed": false,
+        "gate_note": "No Chart No.1 exact-crop/human approval evidence is present in this source row; automated pass is pass-pending-human only.",
+        "human_final_approval": false,
+        "reference_type": null,
+        "source_row_value": null,
+        "visual_approval": "repaired_pending_judge_rerun"
+      },
+      "confidence": 0.9,
+      "expected": "Brown position ring with central dot.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch23.json",
+      "judge_comments": "Automated visual rerun only; human final approval is reserved for Steve and remains false.",
+      "name": "position of a point feature",
+      "observed": "Candidate keeps the position ring/dot geometry in the brown reference colour family, matching the S-101/OpenCPN witness closely enough for automated rerun.",
+      "pass": true,
+      "paths": {
+        "after_renders": {
+          "day": "pipeline/iconforge/out/standard_repair_batch15/renders/POSGEN01__after__day.png",
+          "dusk": "pipeline/iconforge/out/standard_repair_batch15/renders/POSGEN01__after__dusk.png",
+          "night": "pipeline/iconforge/out/standard_repair_batch15/renders/POSGEN01__after__night.png"
+        },
+        "after_svg": "pipeline/iconforge/assets/svg/owned_repair_batch23/POSGEN01.svg",
+        "before_renders": {
+          "day": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/POSGEN01__day.png",
+          "dusk": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/POSGEN01__dusk.png",
+          "night": "pipeline/iconforge/out/triad_reference_candidate_pack/renders/POSGEN01__night.png"
+        },
+        "before_svg": "pipeline/iconforge/assets/svg/triad_generated/POSGEN01.svg",
+        "candidate_source": "pipeline/iconforge/assets/svg/triad_generated/POSGEN01.svg"
+      },
+      "reason_codes": [],
+      "reference_candidates": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/POSGEN01__day.png",
+            "label": "position of a point feature",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/POSGEN01__day.png",
+              "dusk": "out/opencpn_s52_reference/POSGEN01__dusk.png",
+              "night": "out/opencpn_s52_reference/POSGEN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "POSGEN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/POSGEN01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "POSGEN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/POSGEN01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "POSGEN01"
+          }
+        ]
+      },
+      "repair_notes": {
+        "rerun_required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+        "source_repair_note": "Keep ring/dot position geometry but move to the brown reference colour family.",
+        "source_required_change": "Keep the ring/dot geometry but change POSGEN01 to the reference brown colour family.",
+        "source_safety_reason_codes": [
+          "wrong_colour_family",
+          "reference_mismatch"
+        ]
+      },
+      "required_change": "No repair required for this automated visual rerun; keep pending human/chart parity approval and do not mark final-approved.",
+      "s101": [
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "POSGEN01",
+          "path": "pipeline/iconforge/assets/svg/source_priority/s101_exact/POSGEN01.svg",
+          "source": "s101_exact_svg",
+          "status": "selected_s101_exact_svg",
+          "symbol_id": "POSGEN01"
+        },
+        {
+          "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+          "name": "POSGEN01",
+          "path": "pipeline/iconforge/PortrayalCatalog/Symbols/POSGEN01.svg",
+          "source": "s101_portrayal_catalogue_svg",
+          "status": "license_pending_reference",
+          "symbol_id": "POSGEN01"
+        }
+      ],
+      "s57": {
+        "conditions": [
+          "CATLMK20"
+        ],
+        "definition_kind": "symbol",
+        "definition_rcid": "1437",
+        "lookup_id": "2279",
+        "lookup_rcid": "30436",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(POSGEN01)",
+        "symbol_id": "POSGEN01",
+        "symbol_name": "position of a point feature"
+      },
+      "safety_reason_codes": [],
+      "semantic_brief": {
+        "brief": "POSGEN01 is position of a point feature. It is used as a position of a point feature. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "position of a point feature"
+      },
+      "source_refs_used": [
+        "semantic_brief:POSGEN01",
+        "helm_before_svg:pipeline/iconforge/assets/svg/triad_generated/POSGEN01.svg",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch23/POSGEN01.svg",
+        "helm_before_render:pipeline/iconforge/out/triad_reference_candidate_pack/renders/POSGEN01__day.png",
+        "helm_after_render:pipeline/iconforge/out/standard_repair_batch15/renders/POSGEN01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/POSGEN01__day.png",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/POSGEN01.svg",
+        "s101:pipeline/iconforge/PortrayalCatalog/Symbols/POSGEN01.svg",
+        "chart1_parity_gate:no_chart1_exact_crop_or_human_approval_in_source_row"
+      ],
+      "source_table_id": "opencpn-s52:POSGEN01",
+      "symbol_id": "POSGEN01",
+      "verdict": "pass-pending-human",
+      "visual_approval": "pass-pending-human"
+    }
+  ]
+}

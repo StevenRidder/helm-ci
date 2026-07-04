@@ -1,0 +1,796 @@
+{
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "batch_id": "standard_judge_batch_044_rerun",
+  "created_at": "2026-07-01T20:15:50Z",
+  "agent_id": "codex/FORGE-14-batch44-judge",
+  "project": "vulkan",
+  "task_id": "FORGE-14",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "source_batches": [
+      "catalog/owned_repair_batch44.json"
+    ],
+    "asset_ids": [
+      "ROLROL01",
+      "TERMNL01",
+      "TERMNL02",
+      "TERMNL03",
+      "TERMNL04",
+      "TERMNL05",
+      "TERMNL06",
+      "TERMNL07",
+      "TERMNL08",
+      "TERMNL09",
+      "TERMNL10",
+      "TERMNL11",
+      "TERMNL12",
+      "TERMNL13"
+    ],
+    "selection_rule": "Rows from standard_source_table whose helm_candidate.source_batch is catalog/owned_repair_batch44.json and candidate_status is repaired_pending_judge_rerun."
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "source_batches": [
+      "catalog/owned_repair_batch44.json"
+    ],
+    "selected": 14,
+    "pass": 9,
+    "fail": 5,
+    "final_approved": 0,
+    "failed_assets": [
+      "TERMNL01",
+      "TERMNL03",
+      "TERMNL04",
+      "TERMNL07",
+      "TERMNL12"
+    ]
+  },
+  "verdicts": [
+    {
+      "symbol_id": "ROLROL01",
+      "source_table_id": "opencpn-s52:ROLROL01",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.93,
+      "observed": "Repaired candidate is a black RoRo text label with the prior diamond marker removed.",
+      "expected": "RoRo terminal should use the RoRo text/terminal label from the S-101/OpenCPN witnesses.",
+      "judge_comments": "Pass pending human: RoRo text semantics and black colour family are restored. Typography/scale differ from the provider witnesses, so this is not a final approval.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:ROLROL01",
+        "prior_failed_judge:standard_judge_batch_011:ROLROL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/ROLROL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/ROLROL01__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/ROLROL01__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/ROLROL01__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/ROLROL01__day.png",
+        "s101:selected_s101_exact_svg:assets/svg/source_priority/s101_exact/ROLROL01.svg",
+        "s101:license_pending_reference:PortrayalCatalog/Symbols/ROLROL01.svg",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "ROLROL01 is RoRo terminal. It is used as a harbour facility or service point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "before_svg": "assets/svg/triad_generated/ROLROL01.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/ROLROL01.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/ROLROL01__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/ROLROL01__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/ROLROL01__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL01",
+      "source_table_id": "opencpn-s52:TERMNL01",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": false,
+      "confidence": 0.9,
+      "observed": "Repaired candidate is a circular mark containing a generic person/cross glyph.",
+      "expected": "Passenger terminal should use the circular terminal symbol with passenger/ferry/vessel detail shown by the provider witness.",
+      "judge_comments": "Fail: the terminal circle is restored, but the inner glyph changes the passenger/ferry terminal witness into a generic person marker. Required passenger/ferry terminal detail is still missing.",
+      "required_change": "Replace the generic person/cross glyph with the TERMNL01 passenger-terminal circular vessel/passenger detail matching the provider witness.",
+      "safety_reason_codes": [
+        "wrong_glyph_semantics",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TERMNL01",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL01__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL01__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL01__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL01__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL01 is terminal, passanger terminal. It is used as a terminal, passanger terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, passanger terminal"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL01.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL01.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL01__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL01__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL01__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL02",
+      "source_table_id": "opencpn-s52:TERMNL02",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.88,
+      "observed": "Repaired candidate is a circular ferry/boat glyph in the required black family.",
+      "expected": "Ferry terminal should use the circular terminal symbol with ferry detail.",
+      "judge_comments": "Pass pending human: the diamond is gone and the circular ferry/boat detail matches the required ferry-terminal family. Stroke/fill simplification remains for human crop review.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL02",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL02__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL02__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL02__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL02 is terminal, ferry terminal. It is used as a terminal, ferry terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, ferry terminal"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL02.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL02.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL02__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL02__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL02__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL03",
+      "source_table_id": "opencpn-s52:TERMNL03",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": false,
+      "confidence": 0.95,
+      "observed": "Repaired candidate is a circular red-only container/bar glyph with black separators.",
+      "expected": "Container terminal should use the circular multicolor container-terminal symbol and preserve the provider reference colour/detail family.",
+      "judge_comments": "Fail: circular terminal form is restored, but the provider witness is a multicolour container stack. The candidate drops the green/grey/multicolour container detail and changes the reference family.",
+      "required_change": "Replace the red-only bars with the TERMNL03 circular multicolour container-stack glyph matching the provider witness colour/detail family.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "missing_container_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TERMNL03",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL03__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL03__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL03__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL03__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL03 is terminal, Container transshipment. It is used as a terminal, Container transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "terminal, Container transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL03.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL03.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL03__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL03__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL03__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL04",
+      "source_table_id": "opencpn-s52:TERMNL04",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": false,
+      "confidence": 0.91,
+      "observed": "Repaired candidate is a circular mark containing a simple white outlined triangle.",
+      "expected": "Bulk terminal should use the circular bulk/material terminal symbol with black/white material-handling detail.",
+      "judge_comments": "Fail: the candidate keeps a circle and black/white family, but the inner mark is a generic triangle rather than the bulk/material handling witness shape.",
+      "required_change": "Replace the generic triangle with the TERMNL04 circular bulk/material terminal glyph preserving the provider witness black/white pile/handling detail.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TERMNL04",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL04",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL04.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL04__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL04__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL04__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL04__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL04 is terminal, Bulk transshipment. It is used as a terminal, Bulk transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "terminal, Bulk transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL04.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL04.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL04__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL04__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL04__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL05",
+      "source_table_id": "opencpn-s52:TERMNL05",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is a circular OIL label glyph in black.",
+      "expected": "Oil terminal should use the circular terminal mark with oil text/detail.",
+      "judge_comments": "Pass pending human: circular terminal form, oil text semantics, and black colour family are restored. Case/style differences are non-final human-review details.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL05",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL05__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL05__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL05__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL05__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL05 is terminal, Oil transshipment. It is used as a terminal, Oil transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Oil transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL05.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL05.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL05__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL05__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL05__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL06",
+      "source_table_id": "opencpn-s52:TERMNL06",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is a circular FUEL label glyph in black.",
+      "expected": "Fuel terminal should use the circular terminal mark with fuel text/detail.",
+      "judge_comments": "Pass pending human: circular terminal form, fuel label semantics, and black colour family are restored. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL06",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL06",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL06.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL06__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL06__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL06__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL06__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL06 is terminal, Fuel transshipment. It is used as a terminal, Fuel transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Fuel transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL06.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL06.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL06__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL06__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL06__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL07",
+      "source_table_id": "opencpn-s52:TERMNL07",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": false,
+      "confidence": 0.93,
+      "observed": "Repaired candidate is a circular CH label glyph.",
+      "expected": "Chemical terminal should use the circular terminal mark with the chemical label/detail shown by the provider witness.",
+      "judge_comments": "Fail: the provider witness reads as the chemical label Che; shortening it to CH changes the text/glyph semantics for this terminal row.",
+      "required_change": "Replace the CH label with the TERMNL07 circular chemical-terminal label matching the provider witness text cue.",
+      "safety_reason_codes": [
+        "wrong_text_glyph",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TERMNL07",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL07",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL07.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL07__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL07__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL07__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL07__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL07 is terminal, Chemical transshipment. It is used as a terminal, Chemical transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Chemical transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL07.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL07.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL07__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL07__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL07__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL08",
+      "source_table_id": "opencpn-s52:TERMNL08",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.91,
+      "observed": "Repaired candidate is a circular LIQ label glyph in black.",
+      "expected": "Liquid-goods terminal should use the circular terminal mark with liquid-goods text/detail.",
+      "judge_comments": "Pass pending human: circular terminal form and liquid-goods label semantics are restored in the required black family. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL08",
+        "prior_failed_judge:standard_judge_batch_011:TERMNL08",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL08.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL08__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL08__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL08__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL08__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL08 is terminal, Liquid Goods transshipment. It is used as a terminal, Liquid Goods transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Liquid Goods transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL08.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL08.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL08__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL08__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL08__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL09",
+      "source_table_id": "opencpn-s52:TERMNL09",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.84,
+      "observed": "Repaired candidate is a circular explosive-goods mark with red centre and black burst rays.",
+      "expected": "Explosive-goods terminal should be the circular terminal symbol with explosive-goods red/black detail from the OpenCPN/Chart No.1 witnesses.",
+      "judge_comments": "Pass pending human, low confidence: the candidate restores the circular explosive-goods terminal family and required red/black cue. The provider witness has richer flame colour/detail, so this remains human/crop review only.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL09",
+        "prior_failed_judge:standard_judge_batch_012:TERMNL09",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL09.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL09__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL09__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL09__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL09__day.png",
+        "chart1:exact_or_class_crop_reference:pipeline/iconforge/out/source_variant_matrix/renders/TERMNL09/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL09 is terminal, Explosive goods transshipment. It is used as a terminal, Explosive goods transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "black"
+        ],
+        "use_case": "terminal, Explosive goods transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL09.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL09.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL09__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL09__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL09__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL10",
+      "source_table_id": "opencpn-s52:TERMNL10",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.89,
+      "observed": "Repaired candidate is a circular fish glyph in black.",
+      "expected": "Fish-transshipment terminal should be a circular terminal symbol with fish/cargo detail.",
+      "judge_comments": "Pass pending human: fish-terminal semantics, circular terminal family, and black colour family are restored. Fill/style differences remain non-final.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL10",
+        "prior_failed_judge:standard_judge_batch_012:TERMNL10",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL10.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL10__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL10__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL10__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL10__day.png",
+        "chart1:exact_or_class_crop_reference:pipeline/iconforge/out/source_variant_matrix/renders/TERMNL10/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL10 is terminal, Fish transshipment. It is used as a terminal, Fish transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Fish transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL10.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL10.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL10__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL10__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL10__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL11",
+      "source_table_id": "opencpn-s52:TERMNL11",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.9,
+      "observed": "Repaired candidate is a circular vehicle/car glyph in black.",
+      "expected": "Car-transshipment terminal should be a circular terminal symbol with vehicle detail.",
+      "judge_comments": "Pass pending human: vehicle detail and circular terminal family match the required car-transshipment semantics. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL11",
+        "prior_failed_judge:standard_judge_batch_012:TERMNL11",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL11.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL11__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL11__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL11__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL11__day.png",
+        "chart1:exact_or_class_crop_reference:pipeline/iconforge/out/source_variant_matrix/renders/TERMNL11/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL11 is terminal, Car transshipment. It is used as a terminal, Car transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, Car transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL11.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL11.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL11__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL11__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL11__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL12",
+      "source_table_id": "opencpn-s52:TERMNL12",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": false,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is a circular mark containing a plain square/box.",
+      "expected": "General-cargo terminal should be a circular terminal symbol with cargo-handling/detail matching the provider witness.",
+      "judge_comments": "Fail: the plain square is too generic and does not preserve the general-cargo handling/detail witness shown by the reference.",
+      "required_change": "Replace the plain box with the TERMNL12 circular general-cargo terminal glyph preserving the provider witness cargo-handling detail.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_cargo_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:TERMNL12",
+        "prior_failed_judge:standard_judge_batch_012:TERMNL12",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL12.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL12__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL12__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL12__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL12__day.png",
+        "chart1:exact_or_class_crop_reference:pipeline/iconforge/out/source_variant_matrix/renders/TERMNL12/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL12 is terminal, General Cargo transshipment. It is used as a terminal, General Cargo transshipment. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, General Cargo transshipment"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL12.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL12.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL12__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL12__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL12__after__night.png"
+      }
+    },
+    {
+      "symbol_id": "TERMNL13",
+      "source_table_id": "opencpn-s52:TERMNL13",
+      "batch_index": 44,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch44.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch44.json",
+      "pass": true,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is a circular RoRo text label glyph in black.",
+      "expected": "RoRo terminal should show the circular RoRo terminal label/glyph.",
+      "judge_comments": "Pass pending human: circular terminal form, RoRo text cue, and black colour family are restored. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:TERMNL13",
+        "prior_failed_judge:standard_judge_batch_012:TERMNL13",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch44/TERMNL13.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL13__after__day.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL13__after__dusk.png",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch36/renders/TERMNL13__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TERMNL13__day.png",
+        "chart1:exact_or_class_crop_reference:pipeline/iconforge/out/source_variant_matrix/renders/TERMNL13/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "semantic_brief": {
+        "brief": "TERMNL13 is terminal, RoRo Terminal. It is used as a terminal, RoRo Terminal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "terminal, RoRo Terminal"
+      },
+      "before_svg": "assets/svg/triad_generated/TERMNL13.svg",
+      "after_svg": "assets/svg/owned_repair_batch44/TERMNL13.svg",
+      "after_renders": {
+        "day": "out/standard_repair_batch36/renders/TERMNL13__after__day.png",
+        "dusk": "out/standard_repair_batch36/renders/TERMNL13__after__dusk.png",
+        "night": "out/standard_repair_batch36/renders/TERMNL13__after__night.png"
+      }
+    }
+  ]
+}

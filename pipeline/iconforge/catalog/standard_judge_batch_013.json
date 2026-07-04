@@ -1,0 +1,3614 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-013-local",
+  "batch_id": "standard_judge_batch_013",
+  "created_at": "2026-07-01T08:03:40Z",
+  "project": "vulkan",
+  "selection": {
+    "count": 50,
+    "first_symbol": "TOPSHP17",
+    "input_branch": "codex/FORGE-14-exact-crops",
+    "input_pushed_head": "9f2393f",
+    "last_symbol": "TOPSHP80",
+    "prior_archived_batch": "standard_judge_batch_012",
+    "prior_archived_last_symbol": "TOPSHP16",
+    "semantic_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "status_filter": "helm_candidate.candidate_status == pending_judge"
+  },
+  "summary": {
+    "blockers": [
+      "All 50 batch013 rows are TOPSHP topmark/board variants and still render as plain circles rather than the required square-board/diamond-board topmark silhouettes.",
+      "Rows with vertical, horizontal, S-57 pattern-6, squared/checkered, or border-stripe colour semantics do not encode the required internal pattern or colour order.",
+      "No row in this slice is human-final approved; all 50 need repair before final approval can be considered."
+    ],
+    "fail": 50,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 0
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.99,
+      "expected": "TOPSHP17 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, black, orange using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: orange, black, orange using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP17",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP17",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP17",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP17",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP17__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP17",
+          "path": "out/source_variant_matrix/renders/TOPSHP17/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP17.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP17/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP17.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP17",
+      "symbol_id": "TOPSHP17"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.99,
+      "expected": "TOPSHP18 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence yellow, yellow using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain yellow circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: yellow, yellow using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP18",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP18",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP18",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP18",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP18__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP18",
+          "path": "out/source_variant_matrix/renders/TOPSHP18/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP18.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP18/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP18.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP18",
+      "symbol_id": "TOPSHP18"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.99,
+      "expected": "TOPSHP19 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, yellow using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, yellow using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP19",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP19",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP19",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP19",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP19__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP19",
+          "path": "out/source_variant_matrix/renders/TOPSHP19/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP19.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP19/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP19.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP19",
+      "symbol_id": "TOPSHP19"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.99,
+      "expected": "TOPSHP20 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, red using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, red using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP20",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP20",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP20",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP20",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP20__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP20",
+          "path": "out/source_variant_matrix/renders/TOPSHP20/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP20.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP20/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP20.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP20",
+      "symbol_id": "TOPSHP20"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.99,
+      "expected": "TOPSHP21 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: white.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP21",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP21",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP21",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP21",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP21__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP21",
+          "path": "out/source_variant_matrix/renders/TOPSHP21/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP21.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP21/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP21.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP21",
+      "symbol_id": "TOPSHP21"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.99,
+      "expected": "TOPSHP22 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP22",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP22",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP22",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP22",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP22__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP22",
+          "path": "out/source_variant_matrix/renders/TOPSHP22/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP22.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP22/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP22.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP22",
+      "symbol_id": "TOPSHP22"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.99,
+      "expected": "TOPSHP23 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence black.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain black circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP23",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP23",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP23",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP23",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP23__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP23",
+          "path": "out/source_variant_matrix/renders/TOPSHP23/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP23.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP23/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP23.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP23",
+      "symbol_id": "TOPSHP23"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.99,
+      "expected": "TOPSHP24 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP24",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP24",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP24",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP24",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP24__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP24",
+          "path": "out/source_variant_matrix/renders/TOPSHP24/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP24.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP24/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP24.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP24",
+      "symbol_id": "TOPSHP24"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.99,
+      "expected": "TOPSHP25 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, orange using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: white, orange using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP25",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP25",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP25",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP25",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP25__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP25",
+          "path": "out/source_variant_matrix/renders/TOPSHP25/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP25.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP25/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP25.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP25",
+      "symbol_id": "TOPSHP25"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.99,
+      "expected": "TOPSHP28 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green, white, black.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, white, black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP28",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP28",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP28",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP28",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP28__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP28",
+          "path": "out/source_variant_matrix/renders/TOPSHP28/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP28.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP28/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP28.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP28",
+      "symbol_id": "TOPSHP28"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.99,
+      "expected": "TOPSHP29 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, green, red using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, green, red using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP29",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP29",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP29",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP29",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP29__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP29",
+          "path": "out/source_variant_matrix/renders/TOPSHP29/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP29.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP29/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP29.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP29",
+      "symbol_id": "TOPSHP29"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.99,
+      "expected": "TOPSHP30 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green, green, yellow using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, green, yellow using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP30",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP30",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP30",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP30",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP30__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP30",
+          "path": "out/source_variant_matrix/renders/TOPSHP30/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP30.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP30/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP30.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP30",
+      "symbol_id": "TOPSHP30"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.99,
+      "expected": "TOPSHP31 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: orange, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP31",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP31",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP31",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP31",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP31__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP31",
+          "path": "out/source_variant_matrix/renders/TOPSHP31/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP31.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP31/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP31.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP31",
+      "symbol_id": "TOPSHP31"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.99,
+      "expected": "TOPSHP32 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP32",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP32",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP32",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP32",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP32__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP32",
+          "path": "out/source_variant_matrix/renders/TOPSHP32/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP32.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP32/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP32.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP32",
+      "symbol_id": "TOPSHP32"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.99,
+      "expected": "TOPSHP33 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green, red, green using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, red, green using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP33",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP33",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP33",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP33",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP33",
+          "path": "out/opencpn_s52_reference/TOPSHP33__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP33",
+          "path": "out/source_variant_matrix/renders/TOPSHP33/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP33.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP33/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP33.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP33",
+      "symbol_id": "TOPSHP33"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.99,
+      "expected": "TOPSHP34 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, orange, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: white, orange, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP34",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP34",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP34",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP34",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP34__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP34",
+          "path": "out/source_variant_matrix/renders/TOPSHP34/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP34.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP34/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP34.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP34",
+      "symbol_id": "TOPSHP34"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.99,
+      "expected": "TOPSHP35 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence yellow.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain yellow circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP35",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP35",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP35",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP35",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP35__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP35",
+          "path": "out/source_variant_matrix/renders/TOPSHP35/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP35.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP35/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP35.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP35",
+      "symbol_id": "TOPSHP35"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.99,
+      "expected": "TOPSHP36 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: orange.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP36",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP36",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP36",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP36",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP36__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP36",
+          "path": "out/source_variant_matrix/renders/TOPSHP36/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP36.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP36/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP36.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP36",
+      "symbol_id": "TOPSHP36"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.99,
+      "expected": "TOPSHP37 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence black, black using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain black circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: black, black using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP37",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP37",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP37",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP37",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP37__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP37",
+          "path": "out/source_variant_matrix/renders/TOPSHP37/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP37.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP37/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP37.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP37",
+      "symbol_id": "TOPSHP37"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.99,
+      "expected": "TOPSHP38 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: orange, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP38",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP38",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP38",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP38",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP38__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP38",
+          "path": "out/source_variant_matrix/renders/TOPSHP38/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP38.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP38/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP38.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP38",
+      "symbol_id": "TOPSHP38"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.99,
+      "expected": "TOPSHP40 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, black using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: white, black using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP40",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP40",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP40",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP40",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP40__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP40",
+          "path": "out/source_variant_matrix/renders/TOPSHP40/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP40.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP40/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP40.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP40",
+      "symbol_id": "TOPSHP40"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.99,
+      "expected": "TOPSHP41 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, orange using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: orange, orange using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP41",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP41",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP41",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP41",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP41__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP41",
+          "path": "out/source_variant_matrix/renders/TOPSHP41/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP41.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP41/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP41.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP41",
+      "symbol_id": "TOPSHP41"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.99,
+      "expected": "TOPSHP42 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, white using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, white using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP42",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP42",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP42",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP42",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP42__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP42",
+          "path": "out/source_variant_matrix/renders/TOPSHP42/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP42.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP42/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP42.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP42",
+      "symbol_id": "TOPSHP42"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.99,
+      "expected": "TOPSHP43 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green, red, green using S-57 colour pattern 6; horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, red, green using S-57 colour pattern 6; horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP43",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP43",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP43",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP43",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP43__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP43",
+          "path": "out/source_variant_matrix/renders/TOPSHP43/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP43.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP43/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP43.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP43",
+      "symbol_id": "TOPSHP43"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.99,
+      "expected": "TOPSHP44 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence yellow, yellow using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain yellow circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: yellow, yellow using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP44",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP44",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP44",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP44",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP44__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP44",
+          "path": "out/source_variant_matrix/renders/TOPSHP44/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP44.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP44/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP44.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP44",
+      "symbol_id": "TOPSHP44"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.99,
+      "expected": "TOPSHP47 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, red.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: red, red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP47",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP47",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP47",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP47",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP47__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP47",
+          "path": "out/source_variant_matrix/renders/TOPSHP47/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP47.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP47/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP47.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP47",
+      "symbol_id": "TOPSHP47"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.99,
+      "expected": "TOPSHP48 must render as the vertical square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence green, green using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain green circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the vertical square-board topmark reference shape and encode the required colour order/pattern: green, green using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP48",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP48",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP48",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP48",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, red boarded square board, vertical",
+          "path": "out/opencpn_s52_reference/TOPSHP48__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP48",
+          "path": "out/source_variant_matrix/renders/TOPSHP48/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP48.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP48/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP48.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP48",
+      "symbol_id": "TOPSHP48"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.99,
+      "expected": "TOPSHP51 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, black, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, black, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP51",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP51",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP51",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP51",
+          "path": "out/source_variant_matrix/renders/TOPSHP51/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP51/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP51",
+      "symbol_id": "TOPSHP51"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.99,
+      "expected": "TOPSHP52 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence black.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain black circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: black.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP52",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP52",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP52",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP52",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP52__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP52",
+          "path": "out/source_variant_matrix/renders/TOPSHP52/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP52.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP52/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP52.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP52",
+      "symbol_id": "TOPSHP52"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.99,
+      "expected": "TOPSHP53 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence yellow.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain yellow circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: yellow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP53",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP53",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP53",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP53",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, yellow square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP53__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP53",
+          "path": "out/source_variant_matrix/renders/TOPSHP53/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP53.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP53/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP53.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP53",
+      "symbol_id": "TOPSHP53"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.99,
+      "expected": "TOPSHP54 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP54",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP54",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP54",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP54",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP54__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP54",
+          "path": "out/source_variant_matrix/renders/TOPSHP54/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP54.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP54/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP54.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP54",
+      "symbol_id": "TOPSHP54"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.99,
+      "expected": "TOPSHP55 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP55",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP55",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP55",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP55",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP55__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP55",
+          "path": "out/source_variant_matrix/renders/TOPSHP55/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP55.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP55/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP55.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP55",
+      "symbol_id": "TOPSHP55"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.99,
+      "expected": "TOPSHP58 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, white using horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red, white using horizontal bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP58",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP58",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP58",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP58",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP58__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP58",
+          "path": "out/source_variant_matrix/renders/TOPSHP58/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP58.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP58/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP58.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP58",
+      "symbol_id": "TOPSHP58"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.99,
+      "expected": "TOPSHP61 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, white using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange, white using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP61",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP61",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP61",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP61",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP61__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP61",
+          "path": "out/source_variant_matrix/renders/TOPSHP61/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP61/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP61.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP61",
+      "symbol_id": "TOPSHP61"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.99,
+      "expected": "TOPSHP62 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, orange using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, orange using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP62",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP62",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP62",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP62",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP62__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP62",
+          "path": "out/source_variant_matrix/renders/TOPSHP62/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP62.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP62/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP62.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP62",
+      "symbol_id": "TOPSHP62"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.99,
+      "expected": "TOPSHP63 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, red, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP63",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP63",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP63",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP63",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP63__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP63",
+          "path": "out/source_variant_matrix/renders/TOPSHP63/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP63.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP63/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP63.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP63",
+      "symbol_id": "TOPSHP63"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.99,
+      "expected": "TOPSHP64 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, green, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, green, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP64",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP64",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP64",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP64",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP64__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP64",
+          "path": "out/source_variant_matrix/renders/TOPSHP64/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP64.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP64/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP64.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP64",
+      "symbol_id": "TOPSHP64"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.99,
+      "expected": "TOPSHP65 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, red using vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red using vertical bands/stripes in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP65",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP65",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP65",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP65",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP65__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP65",
+          "path": "out/source_variant_matrix/renders/TOPSHP65/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP65.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP65/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP65.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP65",
+      "symbol_id": "TOPSHP65"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.99,
+      "expected": "TOPSHP67 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: orange, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP67",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP67",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP67",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP67",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP67__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP67",
+          "path": "out/source_variant_matrix/renders/TOPSHP67/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP67.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP67/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP67.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP67",
+      "symbol_id": "TOPSHP67"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.99,
+      "expected": "TOPSHP69 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, red using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP69",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP69",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP69",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP69",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP69__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP69",
+          "path": "out/source_variant_matrix/renders/TOPSHP69/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP69.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP69/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP69.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP69",
+      "symbol_id": "TOPSHP69"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.99,
+      "expected": "TOPSHP70 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence yellow, yellow using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain yellow circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: yellow, yellow using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP70",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP70",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP70",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP70",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP70__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP70",
+          "path": "out/source_variant_matrix/renders/TOPSHP70/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP70.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP70/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP70.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP70",
+      "symbol_id": "TOPSHP70"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.99,
+      "expected": "TOPSHP71 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, orange using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, orange using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP71",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP71",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP71",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP71",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP71__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP71",
+          "path": "out/source_variant_matrix/renders/TOPSHP71/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP71.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP71/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP71.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP71",
+      "symbol_id": "TOPSHP71"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.99,
+      "expected": "TOPSHP72 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, red, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, red, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP72",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP72",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP72",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP72",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP72__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP72",
+          "path": "out/source_variant_matrix/renders/TOPSHP72/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP72.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP72/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP72.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP72",
+      "symbol_id": "TOPSHP72"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.99,
+      "expected": "TOPSHP73;TE('%s' must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, black, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, black, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP73;TE('%s'",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP73;TE('%s'",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP73;TE('%s'",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP73;TE('%s'",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP73;TE('%s'",
+          "path": "out/opencpn_s52_reference/TOPSHP73_TE_s__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP73;TE('%s'",
+          "path": "out/source_variant_matrix/renders/TOPSHP73;TE('%s'/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP73_TE_s.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP73;TE('%s'/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP73_TE_s_.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP73;TE('%s'",
+      "symbol_id": "TOPSHP73;TE('%s'"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.99,
+      "expected": "TOPSHP74 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, white, white, red using squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: red, white, white, red using squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP74",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP74",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP74",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP74",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP74__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP74",
+          "path": "out/source_variant_matrix/renders/TOPSHP74/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP74.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP74/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP74.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP74",
+      "symbol_id": "TOPSHP74"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.99,
+      "expected": "TOPSHP76 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, white, red, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, white, red, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP76",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP76",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP76",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP76",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP76__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP76",
+          "path": "out/source_variant_matrix/renders/TOPSHP76/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP76.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP76/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP76.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP76",
+      "symbol_id": "TOPSHP76"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.99,
+      "expected": "TOPSHP77 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, white, black, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, white, black, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP77",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP77",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP77",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP77",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP77__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP77",
+          "path": "out/source_variant_matrix/renders/TOPSHP77/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP77.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP77/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP77.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP77",
+      "symbol_id": "TOPSHP77"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.99,
+      "expected": "TOPSHP78 must render as the diagonal square-board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence white, white, yellow, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain white circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the diagonal square-board topmark reference shape and encode the required colour order/pattern: white, white, yellow, white using S-57 colour pattern 6; squared/checkered pattern in the listed colour order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP78",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP78",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP78",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP78",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "beacon top mark, white-green square board, diagonal",
+          "path": "out/opencpn_s52_reference/TOPSHP78__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP78",
+          "path": "out/source_variant_matrix/renders/TOPSHP78/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP78.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP78/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP78.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP78",
+      "symbol_id": "TOPSHP78"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.99,
+      "expected": "TOPSHP79 must render as the reference-matched square/board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence orange, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain orange circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the reference-matched square/board topmark reference shape and encode the required colour order/pattern: orange, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP79",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP79",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP79",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP79",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP79",
+          "path": "out/opencpn_s52_reference/TOPSHP79__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP79",
+          "path": "out/source_variant_matrix/renders/TOPSHP79/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP79.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP79/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP79.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP79",
+      "symbol_id": "TOPSHP79"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.99,
+      "expected": "TOPSHP80 must render as the reference-matched square/board topmark shown by the OpenCPN/Chart No.1 reference witnesses, preserving the required colour sequence red, white using S-57 colour pattern 6.",
+      "judge_comments": "Fail for first-pass visual parity: topmark class is present only as a generic circle, but the provider/reference witnesses require a board-shaped topmark with exact orientation and color-order semantics. Not final-approved.",
+      "observed": "Helm renders a plain red circle with a black outline; it has no square-board/diamond-board topmark silhouette, no board orientation, and no internal band/checker detail.",
+      "pass": false,
+      "required_change": "Replace the circular placeholder with the reference-matched square/board topmark reference shape and encode the required colour order/pattern: red, white using S-57 colour pattern 6.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_topmark_silhouette",
+        "missing_board_orientation",
+        "reference_mismatch",
+        "missing_colour_pattern",
+        "colour_order_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TOPSHP80",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TOPSHP80",
+          "used": true
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "s101",
+          "symbol_id": "TOPSHP80",
+          "used": false
+        },
+        {
+          "available": false,
+          "count": 0,
+          "provider": "aquamap",
+          "symbol_id": "TOPSHP80",
+          "used": false
+        },
+        {
+          "available": true,
+          "label": "TOPSHP80",
+          "path": "out/opencpn_s52_reference/TOPSHP80__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "TOPSHP80",
+          "path": "out/source_variant_matrix/renders/TOPSHP80/chart1_parity_reference_crop_1.png",
+          "provider": "chart1",
+          "status": "exact_or_class_crop_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TOPSHP80.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/source_variant_matrix/renders/TOPSHP80/helm_generated_draft_svg_1.png",
+          "source_svg": "assets/svg/owned_repair_batch2/TOPSHP80.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TOPSHP80",
+      "symbol_id": "TOPSHP80"
+    }
+  ]
+}

@@ -1,0 +1,426 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch82.json",
+    "renders": "out/standard_repair_batch74/renders",
+    "svg_dir": "assets/svg/owned_repair_batch82"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 5,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch74/renders/BUNSTA02__after__day.png",
+        "dusk": "out/standard_repair_batch74/renders/BUNSTA02__after__dusk.png",
+        "night": "out/standard_repair_batch74/renders/BUNSTA02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch82/BUNSTA02.svg",
+      "asset": "BUNSTA02",
+      "before_svg": "assets/svg/owned_repair_batch82/BUNSTA02.svg",
+      "candidate_source": "assets/svg/triad_generated/BUNSTA02.svg",
+      "candidate_strategy": "owned_signal_bunker_redraw_from_opencpn_reference",
+      "name": "bunker station, water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch74",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN signal/bunker/misc witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue signal/bunker/misc blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_signal_bunker_reference_consumed",
+      "required_change": "Redraw as the water bunker-station bucket/service witness; remove the cylindrical barrel body.",
+      "risk_bucket": "signal_bunker_symbol_repair_batch82",
+      "s57_structure": {
+        "conditions": [
+          "catbun2"
+        ],
+        "lookup_id": "248",
+        "lookup_rcid": "32283",
+        "object_class": "bunsta",
+        "s52_instruction": "SY(BUNSTA02);LS(SOLD,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_semantics",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BUNSTA02 is bunker station, water. It is used as a bunker station, water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "bunker station, water"
+      },
+      "source_judge": "catalog/standard_judge_batch_021_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BUNSTA02__day.png",
+            "label": "bunker station, water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BUNSTA02__day.png",
+              "dusk": "out/opencpn_s52_reference/BUNSTA02__dusk.png",
+              "night": "out/opencpn_s52_reference/BUNSTA02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch74/renders/SSENTR01__after__day.png",
+        "dusk": "out/standard_repair_batch74/renders/SSENTR01__after__dusk.png",
+        "night": "out/standard_repair_batch74/renders/SSENTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch82/SSENTR01.svg",
+      "asset": "SSENTR01",
+      "before_svg": "assets/svg/owned_repair_batch82/SSENTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSENTR01.svg",
+      "candidate_strategy": "owned_signal_bunker_redraw_from_opencpn_reference",
+      "name": "signal station, port entry",
+      "provenance": {
+        "generator": "forge.standard_repair_batch74",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN signal/bunker/misc witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue signal/bunker/misc blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_signal_bunker_reference_consumed",
+      "required_change": "Redraw SSENTR01 as the port-entry signal-station board glyph matching the OpenCPN witness, not a generic PE text sign.",
+      "risk_bucket": "signal_bunker_symbol_repair_batch82",
+      "s57_structure": {
+        "conditions": [
+          "catsit2"
+        ],
+        "lookup_id": "1555",
+        "lookup_rcid": "31607",
+        "object_class": "sistat",
+        "s52_instruction": "SY(SSENTR01)"
+      },
+      "safety_reason_codes": [
+        "wrong_text_glyph",
+        "missing_signal_pictogram",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSENTR01 is signal station, port entry. It is used as a signal station, port entry. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, port entry"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSENTR01__day.png",
+            "label": "signal station, port entry",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSENTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSENTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSENTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch74/renders/SSLOCK01__after__day.png",
+        "dusk": "out/standard_repair_batch74/renders/SSLOCK01__after__dusk.png",
+        "night": "out/standard_repair_batch74/renders/SSLOCK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch82/SSLOCK01.svg",
+      "asset": "SSLOCK01",
+      "before_svg": "assets/svg/owned_repair_batch82/SSLOCK01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSLOCK01.svg",
+      "candidate_strategy": "owned_signal_bunker_redraw_from_opencpn_reference",
+      "name": "signal station, lock",
+      "provenance": {
+        "generator": "forge.standard_repair_batch74",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN signal/bunker/misc witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue signal/bunker/misc blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_signal_bunker_reference_consumed",
+      "required_change": "Redraw SSLOCK01 as the lock signal-station board glyph matching the OpenCPN witness, preserving the lock/two-light detail instead of an LK label.",
+      "risk_bucket": "signal_bunker_symbol_repair_batch82",
+      "s57_structure": {
+        "conditions": [
+          "catsit6"
+        ],
+        "lookup_id": "1556",
+        "lookup_rcid": "31608",
+        "object_class": "sistat",
+        "s52_instruction": "SY(SSLOCK01)"
+      },
+      "safety_reason_codes": [
+        "wrong_text_glyph",
+        "missing_signal_board_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSLOCK01 is signal station, lock. It is used as a signal station, lock. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, lock"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSLOCK01__day.png",
+            "label": "signal station, lock",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSLOCK01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSLOCK01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSLOCK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch74/renders/SSWARS01__after__day.png",
+        "dusk": "out/standard_repair_batch74/renders/SSWARS01__after__dusk.png",
+        "night": "out/standard_repair_batch74/renders/SSWARS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch82/SSWARS01.svg",
+      "asset": "SSWARS01",
+      "before_svg": "assets/svg/owned_repair_batch82/SSWARS01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSWARS01.svg",
+      "candidate_strategy": "owned_signal_bunker_redraw_from_opencpn_reference",
+      "name": "signal station, wahrschau",
+      "provenance": {
+        "generator": "forge.standard_repair_batch74",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN signal/bunker/misc witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue signal/bunker/misc blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_signal_bunker_reference_consumed",
+      "required_change": "Redraw SSWARS01 as the triangular wahrschau signal-station board glyph matching the OpenCPN witness; do not substitute a WS text sign.",
+      "risk_bucket": "signal_bunker_symbol_repair_batch82",
+      "s57_structure": {
+        "conditions": [
+          "catsit10"
+        ],
+        "lookup_id": "1554",
+        "lookup_rcid": "31606",
+        "object_class": "sistat",
+        "s52_instruction": "SY(SSWARS01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_text_glyph",
+        "missing_triangular_signal_board",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSWARS01 is signal station, wahrschau. It is used as a signal station, wahrschau. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, wahrschau"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSWARS01__day.png",
+            "label": "signal station, wahrschau",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSWARS01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSWARS01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSWARS01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch74/renders/ZZZZZZ01__after__day.png",
+        "dusk": "out/standard_repair_batch74/renders/ZZZZZZ01__after__dusk.png",
+        "night": "out/standard_repair_batch74/renders/ZZZZZZ01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch82/ZZZZZZ01.svg",
+      "asset": "ZZZZZZ01",
+      "before_svg": "assets/svg/owned_repair_batch82/ZZZZZZ01.svg",
+      "candidate_source": "assets/svg/triad_generated/ZZZZZZ01.svg",
+      "candidate_strategy": "owned_signal_bunker_redraw_from_opencpn_reference",
+      "name": "ZZZZZZ01",
+      "provenance": {
+        "generator": "forge.standard_repair_batch74",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN signal/bunker/misc witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue signal/bunker/misc blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_signal_bunker_reference_consumed",
+      "required_change": "Redraw as the exact ZZZZZZ01 topmark silhouette and colour order from the OpenCPN/Chart 1 references; do not substitute a circular marker.",
+      "risk_bucket": "signal_bunker_symbol_repair_batch82",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP98"
+        ],
+        "lookup_id": "2439",
+        "lookup_rcid": "93892",
+        "object_class": "TOPMAR",
+        "s52_instruction": "SY(ZZZZZZ01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_topmark_silhouette",
+        "missing_colour_pattern",
+        "colour_order_mismatch",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "ZZZZZZ01 is ZZZZZZ01. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, green, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "green",
+          "white",
+          "black"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green",
+          "white",
+          "black"
+        ],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/ZZZZZZ01__day.png",
+            "label": "ZZZZZZ01",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/ZZZZZZ01__day.png",
+              "dusk": "out/opencpn_s52_reference/ZZZZZZ01__dusk.png",
+              "night": "out/opencpn_s52_reference/ZZZZZZ01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

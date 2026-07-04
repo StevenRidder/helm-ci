@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYCON69 Q20 conical/nun/ogival">
+  <title>BOYCON69 Q20 conical/nun/ogival</title>
+  <g data-origin="generated-owned-artwork" data-int1="Q20"
+     data-s52-asset="BOYCON69" data-primitive="conical_buoy">
+  <defs><clipPath id="clip-BOYCON69"><path d="M32 11 L49 49 Q32 56 15 49 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYCON69)">
+    <rect x="0" y="10.0" width="64" height="24.25" fill="var(--black)"/>
+    <rect x="0" y="34.0" width="64" height="24.25" fill="var(--yellow)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linejoin="round"><path d="M32 11 L49 49 Q32 56 15 49 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

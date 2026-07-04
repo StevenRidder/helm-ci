@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="ACHARE51 anchor">
+  <title>ACHARE51 anchor</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="ACHARE51" data-shape="anchor">
+<circle cx="32" cy="13" r="4" fill="none" stroke="var(--black)" stroke-width="2"/>
+<path d="M32 17 V47 M21 29 H43 M18 42 Q32 55 46 42" fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+<path d="M18 42 L16 34 M46 42 L48 34" fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linecap="round"/>
+  </g>
+</svg>

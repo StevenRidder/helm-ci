@@ -1,0 +1,496 @@
+{
+  "schema_version": 1,
+  "status": "archived_triad_llm_judge_batch_rerun",
+  "summary": {
+    "failed_repaired": 12,
+    "judged": 30,
+    "passed_without_repair": 18,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "verdicts": [
+    {
+      "confidence": 0.94,
+      "expected": "ACHARE02 should match the compact squared S-101/OpenCPN anchorage anchor: vertical shank, crossbar, angular flukes, magenta, no top ring.",
+      "judge_comments": "Repair fixed the black color problem, but the shape is still a generic recreational anchor rather than the S-52/S-101 chart anchor.",
+      "observed": "Magenta generic anchor with top ring, rounded flukes, and broad OpenBridge-style stroke.",
+      "pass": false,
+      "required_change": "Remove top ring, square/straighten flukes, and redraw the compact S-101/OpenCPN ACHARE02 geometry.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:ACHARE02:s101_exact_svg:assets/svg/source_priority/s101_exact/ACHARE02.svg",
+        "s101:ACHARE02:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/ACHARE02.svg",
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:anchorage area as a point at small scale, or anchor points of mooring trot at large scale:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHARE02__day.png"
+      ],
+      "symbol_id": "ACHARE02"
+    },
+    {
+      "confidence": 0.96,
+      "expected": "ACHARE51 is the larger pale/magenta boundary anchorage-area anchor with squared crossbar/shank and angular flukes as shown in S-101/OpenCPN.",
+      "judge_comments": "The candidate collapses ACHARE51 into the same generic point-anchor silhouette and misses the distinct boundary-anchor geometry.",
+      "observed": "Same generic magenta anchor as ACHARE02 with heavier stroke and top ring.",
+      "pass": false,
+      "required_change": "Redraw row-specific ACHARE51 from S-101/OpenCPN, using the larger squared anchor outline and no top ring.",
+      "safety_reason_codes": [
+        "duplicate_wrong_symbol",
+        "shape_mismatch",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:ACHARE51:s101_exact_svg:assets/svg/source_priority/s101_exact/ACHARE51.svg",
+        "s101:ACHARE51:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/ACHARE51.svg",
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:boundary of an anchorage area:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHARE51__day.png"
+      ],
+      "symbol_id": "ACHARE51"
+    },
+    {
+      "confidence": 0.97,
+      "expected": "Designated anchor berth requires the compact anchor with a central berth ring on the shank, not an enclosing outer circle.",
+      "judge_comments": "The berth-circle cue is in the wrong place; this changes the chart-standard visual meaning.",
+      "observed": "Magenta generic anchor with a large outer circle around the whole symbol.",
+      "pass": false,
+      "required_change": "Move the berth ring to the center of the anchor shank and match the compact S-101/OpenCPN ACHBRT07 shape.",
+      "safety_reason_codes": [
+        "wrong_internal_detail",
+        "shape_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "s101:ACHBRT07:s101_exact_svg:assets/svg/source_priority/s101_exact/ACHBRT07.svg",
+        "s101:ACHBRT07:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/ACHBRT07.svg",
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:designated anchor berth for a single vessel:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHBRT07__day.png"
+      ],
+      "symbol_id": "ACHBRT07"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "Anchor point should be the small OpenCPN/S-52 anchor glyph: compact magenta/purple, angular flukes, no recreational top ring.",
+      "judge_comments": "Recognizable as an anchor, but still not the known chart-symbol silhouette.",
+      "observed": "Magenta generic anchor with top ring and rounded flukes.",
+      "pass": false,
+      "required_change": "Redraw as the exact compact OpenCPN ACHPNT01 anchor glyph in Helm stroke/color style.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:anchor:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHPNT01__day.png"
+      ],
+      "symbol_id": "ACHPNT01"
+    },
+    {
+      "confidence": 0.95,
+      "expected": "ACHRES61 should use the S-101/OpenCPN restricted-anchoring anchor geometry, diagonal caution slash, and small caution marker placement.",
+      "judge_comments": "The slash and caution cue are present, but the base anchor remains wrong and the marker is too large/loose.",
+      "observed": "Generic magenta anchor with top ring, prohibition slash, and exclamation mark.",
+      "pass": false,
+      "required_change": "Redraw from ACHRES61 reference: squared anchor, diagonal slash, and reference-matched caution mark placement/scale.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:ACHRES61:s101_exact_svg:assets/svg/source_priority/s101_exact/ACHRES61.svg",
+        "s101:ACHRES61:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/ACHRES61.svg",
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:area where anchoring is prohibited or restricted, with other cautions:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHRES61__day.png"
+      ],
+      "symbol_id": "ACHRES61"
+    },
+    {
+      "confidence": 0.95,
+      "expected": "ACHRES71 should use the S-101/OpenCPN restricted-anchoring anchor geometry, slash, and small information marker placement.",
+      "judge_comments": "The information cue exists, but the anchor silhouette and marker scale are not close enough to the chart references.",
+      "observed": "Generic magenta anchor with top ring, diagonal slash, and a large lowercase i.",
+      "pass": false,
+      "required_change": "Redraw from ACHRES71 reference: squared anchor, slash, and compact info marker in the reference position.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:ACHRES71:s101_exact_svg:assets/svg/source_priority/s101_exact/ACHRES71.svg",
+        "s101:ACHRES71:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/ACHRES71.svg",
+        "aquamap:Anchoring Prohibited:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:area where anchoring is prohibited or restricted, with other information:opencpn_s52_reference_render:out/opencpn_s52_reference/ACHRES71__day.png"
+      ],
+      "symbol_id": "ACHRES71"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "Additional mark triangle to the right: right-pointing white/outlined triangle.",
+      "judge_comments": "Matches the OpenCPN reference semantics and orientation; stroke/scale can be tuned later.",
+      "observed": "White right-pointing triangular board with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass may reduce stroke/scale.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:additional mark, traiangle to the right:opencpn_s52_reference_render:out/opencpn_s52_reference/ADDMRK01__day.png"
+      ],
+      "symbol_id": "ADDMRK01"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "Additional mark triangle to the left: left-pointing white/outlined triangle.",
+      "judge_comments": "Matches the OpenCPN reference semantics and orientation; stroke/scale can be tuned later.",
+      "observed": "White left-pointing triangular board with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass may reduce stroke/scale.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:additional mark, traiangle to the left:opencpn_s52_reference_render:out/opencpn_s52_reference/ADDMRK02__day.png"
+      ],
+      "symbol_id": "ADDMRK02"
+    },
+    {
+      "confidence": 0.89,
+      "expected": "Additional mark board, bottom: small horizontal pale board/rectangle.",
+      "judge_comments": "Shape and orientation match the OpenCPN reference. The Helm blue is stronger than the tiny pale reference but not semantically unsafe.",
+      "observed": "Horizontal blue rectangular board with black outline.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional palette pass can lighten this board if desired.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:additional mark, board, bottom:opencpn_s52_reference_render:out/opencpn_s52_reference/ADDMRK05__day.png"
+      ],
+      "symbol_id": "ADDMRK05"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "Airport area pattern: aircraft silhouette inside land/brown circle.",
+      "judge_comments": "Semantically matches the S-101/OpenCPN airport area reference. The aircraft outline is stylized but remains recognizable and close enough.",
+      "observed": "Brown/gold aircraft inside a circle.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional style pass can square the aircraft silhouette closer to S-101.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:AIRARE02:s101_exact_svg:assets/svg/source_priority/s101_exact/AIRARE02.svg",
+        "s101:AIRARE02:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/AIRARE02.svg",
+        "opencpn:pattern of symbols for an airport area:opencpn_s52_reference_render:out/opencpn_s52_reference/AIRARE02__day.png"
+      ],
+      "symbol_id": "AIRARE02"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "AIS target with heading/course unknown: green AIS target plus unknown/question cue.",
+      "judge_comments": "Matches the OpenCPN reference semantics: target triangle and question mark are both present.",
+      "observed": "Green AIS triangular target with magenta question mark.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale pass may tighten native glyph proportions.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:AIS target whose heading and course are both unknown:opencpn_s52_reference_render:out/opencpn_s52_reference/AISDEF01__day.png"
+      ],
+      "symbol_id": "AISDEF01"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "OpenCPN AIS one-minute vector mark renders as a small green chevron/angled vector mark, not a plain horizontal ARPA-style tick.",
+      "judge_comments": "Candidate confuses AIS vector-minute mark with ARPA tick styling.",
+      "observed": "Single green horizontal tick.",
+      "pass": false,
+      "required_change": "Redraw AISONE01 from the OpenCPN reference as the small angled/chevron AIS vector mark.",
+      "safety_reason_codes": [
+        "wrong_shape_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:one minute mark for AIS vector:opencpn_s52_reference_render:out/opencpn_s52_reference/AISONE01__day.png"
+      ],
+      "symbol_id": "AISONE01"
+    },
+    {
+      "confidence": 0.89,
+      "expected": "OpenCPN AIS six-minute vector mark should follow the AIS angled/chevron vector-marker family, not double ARPA-style bars.",
+      "judge_comments": "Candidate uses the wrong visual vocabulary and does not match the tiny AIS reference.",
+      "observed": "Two green horizontal ticks.",
+      "pass": false,
+      "required_change": "Redraw AISSIX01 from OpenCPN as the six-minute AIS mark, preserving the angled AIS marker form.",
+      "safety_reason_codes": [
+        "wrong_shape_family",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:six minute mark for AIS vector:opencpn_s52_reference_render:out/opencpn_s52_reference/AISSIX01__day.png"
+      ],
+      "symbol_id": "AISSIX01"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "Sleeping AIS target: simple green AIS target triangle without active vector/heading cue.",
+      "judge_comments": "Semantically matches the OpenCPN sleeping AIS target.",
+      "observed": "Green hollow AIS triangular target without vector/heading extension.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional native-scale tuning only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:sleeping AIS target:opencpn_s52_reference_render:out/opencpn_s52_reference/AISSLP01__day.png"
+      ],
+      "symbol_id": "AISSLP01"
+    },
+    {
+      "confidence": 0.91,
+      "expected": "Active AIS target showing vector and/or heading: green target triangle with heading/vector cue.",
+      "judge_comments": "Semantically matches the OpenCPN active AIS target.",
+      "observed": "Green AIS target triangle with short heading/vector extension.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional native-scale tuning only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:active AIS target showing vector and/or heading:opencpn_s52_reference_render:out/opencpn_s52_reference/AISVES01__day.png"
+      ],
+      "symbol_id": "AISVES01"
+    },
+    {
+      "confidence": 0.93,
+      "expected": "ARPA target: green circular target/ring with center mark.",
+      "judge_comments": "Matches the OpenCPN ARPA target reference.",
+      "observed": "Green ring target with central dot.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional stroke/scale polish only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:ARPA target:opencpn_s52_reference_render:out/opencpn_s52_reference/ARPATG01__day.png"
+      ],
+      "symbol_id": "ARPATG01"
+    },
+    {
+      "confidence": 0.87,
+      "expected": "One-minute ARPA vector mark: small horizontal green tick.",
+      "judge_comments": "Matches the OpenCPN ARPA one-minute mark semantics.",
+      "observed": "Single green horizontal tick.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional native-scale tuning only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:one minute mark on ARPA vector:opencpn_s52_reference_render:out/opencpn_s52_reference/ARPONE01__day.png"
+      ],
+      "symbol_id": "ARPONE01"
+    },
+    {
+      "confidence": 0.82,
+      "expected": "Available OpenCPN ARPSIX01 reference presents as a compact horizontal ARPA tick at native size; the repaired double-bar is not source-matched.",
+      "judge_comments": "The six-minute distinction was inferred rather than copied from the available reference. Needs exact source review before approval.",
+      "observed": "Two green horizontal ticks.",
+      "pass": false,
+      "required_change": "Redraw ARPSIX01 from a verified OpenCPN/S-52 source crop; do not use the AIS/AISSIX or guessed double-bar form.",
+      "safety_reason_codes": [
+        "reference_mismatch",
+        "inferred_not_verified"
+      ],
+      "source_refs_used": [
+        "opencpn:six minute mark on ARPA vector:opencpn_s52_reference_render:out/opencpn_s52_reference/ARPSIX01__day.png"
+      ],
+      "symbol_id": "ARPSIX01"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "North cardinal topmark: both cones point up.",
+      "judge_comments": "Cone orientation matches S-101/Aqua Map/OpenCPN. Large stroke/scale is a style issue, not a semantic failure.",
+      "observed": "Two yellow triangles/cones both pointing up.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:BCNCAR01:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNCAR01.svg",
+        "s101:BCNCAR01:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNCAR01.svg",
+        "aquamap:North cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBY1.png",
+        "aquamap:South cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYB1.png",
+        "aquamap:West cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYBY1.png",
+        "aquamap:East cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBYB1.png",
+        "opencpn:cardinal beacon, north, simplified:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNCAR01__day.png"
+      ],
+      "symbol_id": "BCNCAR01"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "East cardinal topmark: cones point away from each other, up and down.",
+      "judge_comments": "Cone orientation matches S-101/Aqua Map/OpenCPN. Large stroke/scale is a style issue, not a semantic failure.",
+      "observed": "Upper yellow triangle points up; lower triangle points down.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:BCNCAR02:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNCAR02.svg",
+        "s101:BCNCAR02:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNCAR02.svg",
+        "aquamap:North cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBY1.png",
+        "aquamap:South cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYB1.png",
+        "aquamap:West cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYBY1.png",
+        "aquamap:East cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBYB1.png",
+        "opencpn:cardinal beacon, east, simplified:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNCAR02__day.png"
+      ],
+      "symbol_id": "BCNCAR02"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "South cardinal topmark: both cones point down.",
+      "judge_comments": "Cone orientation matches S-101/Aqua Map/OpenCPN. Large stroke/scale is a style issue, not a semantic failure.",
+      "observed": "Two yellow triangles/cones both pointing down.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:BCNCAR03:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNCAR03.svg",
+        "s101:BCNCAR03:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNCAR03.svg",
+        "aquamap:North cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBY1.png",
+        "aquamap:South cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYB1.png",
+        "aquamap:West cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYBY1.png",
+        "aquamap:East cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBYB1.png",
+        "opencpn:cardinal beacon, south, simplified:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNCAR03__day.png"
+      ],
+      "symbol_id": "BCNCAR03"
+    },
+    {
+      "confidence": 0.94,
+      "expected": "West cardinal topmark: cones point toward each other.",
+      "judge_comments": "Cone orientation matches S-101/Aqua Map/OpenCPN. Large stroke/scale is a style issue, not a semantic failure.",
+      "observed": "Upper yellow triangle points down; lower triangle points up.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:BCNCAR04:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNCAR04.svg",
+        "s101:BCNCAR04:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNCAR04.svg",
+        "aquamap:North cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBY1.png",
+        "aquamap:South cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYB1.png",
+        "aquamap:West cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARYBY1.png",
+        "aquamap:East cardinal mark:aquamap_map_symbols:reference_sources/aquamap_map_symbols/images/BCNCARBYB1.png",
+        "opencpn:cardinal beacon, west, simplified:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNCAR04__day.png"
+      ],
+      "symbol_id": "BCNCAR04"
+    },
+    {
+      "confidence": 0.78,
+      "expected": "BCNCON81 requires a verified exact OpenCPN/S-52 reference; this queue row lacks an inspectable current reference image and the name alone is insufficient.",
+      "judge_comments": "Do not approve a generic post for an unclear beacon condition symbol without a source crop.",
+      "observed": "Black generic vertical beacon/post.",
+      "pass": false,
+      "required_change": "Regenerate/locate the exact BCNCON81 reference crop, then redraw from it; keep this in hard repair until verified.",
+      "safety_reason_codes": [
+        "missing_reference_visual",
+        "inferred_not_verified",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "opencpn:BCNCON81:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNCON81__day.png"
+      ],
+      "symbol_id": "BCNCON81"
+    },
+    {
+      "confidence": 0.89,
+      "expected": "Default simplified beacon: compact gray/black beacon marker with magenta unknown/question cue.",
+      "judge_comments": "Matches the S-101/OpenCPN default-beacon semantics. Geometry can be tightened, but the required unknown-beacon cue is present.",
+      "observed": "Gray/black beacon post with magenta question mark.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional geometry pass can match S-101 more tightly.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "s101:BCNDEF13:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNDEF13.svg",
+        "s101:BCNDEF13:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNDEF13.svg",
+        "opencpn:default symbol for a beacon, simplified:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNDEF13__day.png"
+      ],
+      "symbol_id": "BCNDEF13"
+    },
+    {
+      "confidence": 0.84,
+      "expected": "S-101/OpenCPN general full-chart beacon includes the compact post with base/circle/crossbar details, not only a filled rectangular post.",
+      "judge_comments": "The candidate is readable as a generic beacon, but it drops the small chart-standard base/circle detail in the S-101 reference.",
+      "observed": "Plain black vertical beacon/post with stem.",
+      "pass": false,
+      "required_change": "Redraw BCNGEN01 with the S-101/OpenCPN compact post, base circle, and side/base marks.",
+      "safety_reason_codes": [
+        "missing_required_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:BCNGEN01:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNGEN01.svg",
+        "s101:BCNGEN01:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNGEN01.svg",
+        "opencpn:beacon in general, full-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN01__day.png"
+      ],
+      "symbol_id": "BCNGEN01"
+    },
+    {
+      "confidence": 0.86,
+      "expected": "Paper-chart default beacon should be the compact black paper-chart beacon form with circle/crossbar plus magenta question mark.",
+      "judge_comments": "Candidate has the question mark, but reuses the generic vertical post instead of the paper-chart beacon geometry.",
+      "observed": "Black generic beacon post with magenta question mark.",
+      "pass": false,
+      "required_change": "Redraw BCNGEN03 from S-101/OpenCPN with paper-chart beacon circle/crossbar geometry and question cue.",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "duplicate_generic_symbol",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "s101:BCNGEN03:s101_exact_svg:assets/svg/source_priority/s101_exact/BCNGEN03.svg",
+        "s101:BCNGEN03:s101_portrayal_catalogue_svg:PortrayalCatalog/Symbols/BCNGEN03.svg",
+        "opencpn:default symbol for beacon, paper-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN03__day.png"
+      ],
+      "symbol_id": "BCNGEN03"
+    },
+    {
+      "confidence": 0.88,
+      "expected": "White general beacon: compact white/outlined beacon post with stem.",
+      "judge_comments": "Matches the OpenCPN reference color semantics and beacon silhouette closely enough for this rerun.",
+      "observed": "White vertical beacon panel with black outline and stem.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, white, full-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN05__day.png"
+      ],
+      "symbol_id": "BCNGEN05"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "Red general beacon: compact red beacon post with black outline/stem.",
+      "judge_comments": "Matches the OpenCPN reference color semantics and beacon silhouette closely enough for this rerun.",
+      "observed": "Red vertical beacon panel with black outline and stem.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, red, full-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN60__day.png"
+      ],
+      "symbol_id": "BCNGEN60"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "Green general beacon: compact green beacon post with black outline/stem.",
+      "judge_comments": "Matches the OpenCPN reference color semantics and beacon silhouette closely enough for this rerun.",
+      "observed": "Green vertical beacon panel with black outline and stem.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, green, full-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN61__day.png"
+      ],
+      "symbol_id": "BCNGEN61"
+    },
+    {
+      "confidence": 0.9,
+      "expected": "Red/white general beacon: compact vertically split red/white beacon post with black outline/stem.",
+      "judge_comments": "Matches the OpenCPN reference color partition and beacon silhouette closely enough for this rerun.",
+      "observed": "Red-over-white vertical beacon panel with black outline and stem.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional scale/stroke pass only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "opencpn:beacon in general, red/white, full-chart:opencpn_s52_reference_render:out/opencpn_s52_reference/BCNGEN64__day.png"
+      ],
+      "symbol_id": "BCNGEN64"
+    }
+  ]
+}

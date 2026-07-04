@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BCNGEN60 beacon">
+  <title>BCNGEN60 beacon</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BCNGEN60" data-shape="beacon">
+  <defs><clipPath id="clip-BCNGEN60"><path d="M26 11 H38 L43 51 H21 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BCNGEN60)">
+  <rect x="0" y="0" width="64" height="64" fill="var(--red)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M26 11 H38 L43 51 H21 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

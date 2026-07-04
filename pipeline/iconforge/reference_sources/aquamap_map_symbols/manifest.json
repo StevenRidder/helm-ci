@@ -1,0 +1,796 @@
+{
+  "format": "helm.iconforge.reference_source.aquamap_map_symbols.v1",
+  "source_name": "Aqua Map Map symbols",
+  "source_url": "https://www.aquamap.app/support/15-basic/24-map-symbols",
+  "source_pdf": "/Users/steveridder/Desktop/Map symbols .pdf",
+  "source_accessed_at": "2026-07-01",
+  "license_status": "Aqua Map support page/images are treated as copyrighted visual references, not canonical importable artwork.",
+  "usage_policy": "Use first for visual comparison and symbol-priority guidance; redraw in Helm/S-52 style and keep provenance. Do not copy raster pixels into canonical SVG.",
+  "image_count": 87,
+  "downloaded_count": 87,
+  "entries": [
+    {
+      "id": "BOYCARBY1",
+      "label": "North cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYCARBY1.png?1661341781162",
+      "local_image": "images/BOYCARBY1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNCARBY1",
+      "label": "North cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNCARBY1.png?1661342627555",
+      "local_image": "images/BCNCARBY1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYCARYB1",
+      "label": "South cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYCARYB1.png?1661341781162",
+      "local_image": "images/BOYCARYB1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNCARYB1",
+      "label": "South cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNCARYB1.png?1661342627555",
+      "local_image": "images/BCNCARYB1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYCARYBY1",
+      "label": "West cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYCARYBY1.png?1661341781162",
+      "local_image": "images/BOYCARYBY1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNCARYBY1",
+      "label": "West cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNCARYBY1.png?1661342627555",
+      "local_image": "images/BCNCARYBY1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYCARBYB1",
+      "label": "East cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYCARBYB1.png?1661341781162",
+      "local_image": "images/BOYCARBYB1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNCARBYB1",
+      "label": "East cardinal mark",
+      "section": "Buoys & Beacons (Cardinal)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNCARBYB1.png?1661342627555",
+      "local_image": "images/BCNCARBYB1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYISD1",
+      "label": "Buoy Isolated Danger",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYISD1.png?1661343142479",
+      "local_image": "images/BOYISD1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNISD1",
+      "label": "Buoy Isolated Danger",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNISD1.png?1661343183490",
+      "local_image": "images/BCNISD1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYSAW1",
+      "label": "Buoy Safe Water",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYSAW1.png?1661343183492",
+      "local_image": "images/BOYSAW1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNSAW1",
+      "label": "Buoy Safe Water",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNSAW1.png?1661343266960",
+      "local_image": "images/BCNSAW1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYSPPY1",
+      "label": "Buoy Special Purpose",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYSPPY1.png?1661343266963",
+      "local_image": "images/BOYSPPY1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNSPPY1",
+      "label": "Buoy Special Purpose",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNSPPY1.png?1661343266962",
+      "local_image": "images/BCNSPPY1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYSPPB1",
+      "label": "Buoy Special Purpose",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYSPPB1.png?1661343266963",
+      "local_image": "images/BOYSPPB1.png",
+      "sequence_in_label": 3,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BCNSPPB1",
+      "label": "Buoy Special Purpose",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BCNSPPB1.png?1661343266960",
+      "local_image": "images/BCNSPPB1.png",
+      "sequence_in_label": 4,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BOYINB1",
+      "label": "Buoy Installation",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BOYINB1.png?1661343266963",
+      "local_image": "images/BOYINB1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Mooring1",
+      "label": "Mooring Buoy",
+      "section": "Other Buoys and Beacons",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Mooring1.png?1661343266959",
+      "local_image": "images/Mooring1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSM11",
+      "label": "Light or Lighted Structure (Single color)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSM11.png?1661344167670",
+      "local_image": "images/LIGHTSM11.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSY11",
+      "label": "Light or Lighted Structure (Single color)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSY11.png?1661344167671",
+      "local_image": "images/LIGHTSY11.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSW11",
+      "label": "Light or Lighted Structure (Single color)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSW11.png?1661344167670",
+      "local_image": "images/LIGHTSW11.png",
+      "sequence_in_label": 3,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSR11",
+      "label": "Light or Lighted Structure (Single color)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSR11.png?1661344167670",
+      "local_image": "images/LIGHTSR11.png",
+      "sequence_in_label": 4,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSG11",
+      "label": "Light or Lighted Structure (Single color)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSG11.png?1661344167670",
+      "local_image": "images/LIGHTSG11.png",
+      "sequence_in_label": 5,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LIGHTSmulti1",
+      "label": "Multi Lights",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LIGHTSmulti1.png?1661344167670",
+      "local_image": "images/LIGHTSmulti1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "FloodLight1",
+      "label": "Flood Light",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/FloodLight1.png?1661344167669",
+      "local_image": "images/FloodLight1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "StripLight1",
+      "label": "Strip Light",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/StripLight1.png?1661344167673",
+      "local_image": "images/StripLight1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LightVessel1",
+      "label": "Light Vessel",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LightVessel1.png?1661344167671",
+      "local_image": "images/LightVessel1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BELL1",
+      "label": "Fog signal (Bell, Horn, Whistle, Gong, Explosive, Diaphone, Siren, Reed, Typhon ...)",
+      "section": "Lights",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BELL1.png?1661344167675",
+      "local_image": "images/BELL1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "EmergedRock11",
+      "label": "Emerged Rock",
+      "section": "Rocks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/EmergedRock11.png?1661344167677",
+      "local_image": "images/EmergedRock11.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "SubmergedRock11",
+      "label": "Submerged Rock",
+      "section": "Rocks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/SubmergedRock11.png?1661344167675",
+      "local_image": "images/SubmergedRock11.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "DangerousRock11",
+      "label": "Dangerous Rock",
+      "section": "Rocks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/DangerousRock11.png?1661344167677",
+      "local_image": "images/DangerousRock11.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "EmergedWreck1",
+      "label": "Emerged Wreck",
+      "section": "Wrecks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/EmergedWreck1.png?1661344167677",
+      "local_image": "images/EmergedWreck1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "SubmergedWreck1",
+      "label": "Submerged Wreck",
+      "section": "Wrecks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/SubmergedWreck1.png?1661344167675",
+      "local_image": "images/SubmergedWreck1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "DangerousWreck1",
+      "label": "Dangerous Wreck",
+      "section": "Wrecks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/DangerousWreck1.png?1661344167677",
+      "local_image": "images/DangerousWreck1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Obstruction1",
+      "label": "Bottom Obstruction",
+      "section": "Others",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Obstruction1.png?1661344167672",
+      "local_image": "images/Obstruction1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "cable1-legenda1",
+      "label": "Cables (if single cable a line, if an area as boundary)",
+      "section": "Others",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/cable1-legenda1.png?1661344167676",
+      "local_image": "images/cable1-legenda1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "AnchoringProhibited1",
+      "label": "Anchoring Prohibited",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/AnchoringProhibited1.png?1661344167675",
+      "local_image": "images/AnchoringProhibited1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "DivingProhibited1",
+      "label": "Diving Prohibited",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/DivingProhibited1.png?1661344167677",
+      "local_image": "images/DivingProhibited1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BoatingProhibited1",
+      "label": "Entry Prohibited",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BoatingProhibited1.png?1661344167675",
+      "local_image": "images/BoatingProhibited1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BoatingRestricted1",
+      "label": "Entry Restricted",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BoatingRestricted1.png?1661344167675",
+      "local_image": "images/BoatingRestricted1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "FishingProhibited1",
+      "label": "Fishing Prohibited",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/FishingProhibited1.png?1661344167677",
+      "local_image": "images/FishingProhibited1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "CautionShield1",
+      "label": "Military practice",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/CautionShield1.png?1661344167676",
+      "local_image": "images/CautionShield1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Seaplane1",
+      "label": "Sea Plan landing",
+      "section": "Restricted and regulated areas",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Seaplane1.png?1661344167673",
+      "local_image": "images/Seaplane1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Marsh1",
+      "label": "Marsh, Swamp",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Marsh1.png?1661345918351",
+      "local_image": "images/Marsh1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Platform1",
+      "label": "Offshore Platform",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Platform1.png?1661345918351",
+      "local_image": "images/Platform1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Piles1",
+      "label": "Pile",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Piles1.png?1661345918352",
+      "local_image": "images/Piles1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "RadarReflector1",
+      "label": "Radar Reflector",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/RadarReflector1.png?1661344167672",
+      "local_image": "images/RadarReflector1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "RadarStation1",
+      "label": "Radar Station",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/RadarStation1.png?1661344167673",
+      "local_image": "images/RadarStation1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "RadioCallinPoint1",
+      "label": "Radio Call-in Point",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/RadioCallinPoint1.png?1661344167673",
+      "local_image": "images/RadioCallinPoint1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "WaterTurbolence1",
+      "label": "Water Turbolences",
+      "section": "Other Marine objects",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/WaterTurbolence1.png?1661344167675",
+      "local_image": "images/WaterTurbolence1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BoatRamp1",
+      "label": "Boat Ramp",
+      "section": "Marine Points Of Interest (POI)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BoatRamp1.png?1661347479534",
+      "local_image": "images/BoatRamp1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "CoastGuard1",
+      "label": "Coast Guard",
+      "section": "Marine Points Of Interest (POI)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/CoastGuard1.png?1661347479535",
+      "local_image": "images/CoastGuard1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Ferry1",
+      "label": "Ferry",
+      "section": "Marine Points Of Interest (POI)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Ferry1.png?1661347479536",
+      "local_image": "images/Ferry1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Marina1",
+      "label": "Marina",
+      "section": "Marine Points Of Interest (POI)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Marina1.png?1661347479532",
+      "local_image": "images/Marina1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "PortAgency1",
+      "label": "Port, Port Agency",
+      "section": "Marine Points Of Interest (POI)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/PortAgency1.png?1661347479532",
+      "local_image": "images/PortAgency1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "BenchMark1",
+      "label": "Benchmark",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/BenchMark1.png?1661347479534",
+      "local_image": "images/BenchMark1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Building1",
+      "label": "Building",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Building1.png?1661347479535",
+      "local_image": "images/Building1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Cemetery1",
+      "label": "Cemetery",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Cemetery1.png?1661347479535",
+      "local_image": "images/Cemetery1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "CheckPoint1",
+      "label": "Check Point",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/CheckPoint1.png?1661347479535",
+      "local_image": "images/CheckPoint1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Chimney1",
+      "label": "Chimney",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Chimney1.png?1661347479535",
+      "local_image": "images/Chimney1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Church1",
+      "label": "Church",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Church1.png?1661347479535",
+      "local_image": "images/Church1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Crane1",
+      "label": "Crane",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Crane1.png?1661347479535",
+      "local_image": "images/Crane1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "DAM1",
+      "label": "Dam",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/DAM1.png?1661347479536",
+      "local_image": "images/DAM1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "DishAerial1_(1)",
+      "label": "Dish Aerial",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/DishAerial1 (1).png",
+      "local_image": "images/DishAerial1_(1).png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Flagpole1",
+      "label": "Flagpole",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Flagpole1.png?1661347479536",
+      "local_image": "images/Flagpole1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "FlareStack1",
+      "label": "Flare Stack",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/FlareStack1.png?1661347479530",
+      "local_image": "images/FlareStack1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "FortifiedStructure1",
+      "label": "Fortified Structure",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/FortifiedStructure1.png?1661348357014",
+      "local_image": "images/FortifiedStructure1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Lighthouse1",
+      "label": "Lighthouse",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Lighthouse1.png?1661347479531",
+      "local_image": "images/Lighthouse1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Mast1",
+      "label": "Mast & Lighted Mast",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Mast1.png?1661348519286",
+      "local_image": "images/Mast1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LightedMast1",
+      "label": "Mast & Lighted Mast",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LightedMast1.png?1661347479531",
+      "local_image": "images/LightedMast1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "ObservationSpot1",
+      "label": "Observation Point",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/ObservationSpot1.png?1661347479532",
+      "local_image": "images/ObservationSpot1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Park1",
+      "label": "Park, Forest",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Park1.png?1661347479532",
+      "local_image": "images/Park1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Silo1",
+      "label": "Silo",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Silo1.png?1661347479533",
+      "local_image": "images/Silo1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "TriangulationPoint1",
+      "label": "Triangulation Point",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/TriangulationPoint1.png?1661347479534",
+      "local_image": "images/TriangulationPoint1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Tower1",
+      "label": "Tower & Lighted Tower",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Tower1.png?1661349187218",
+      "local_image": "images/Tower1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "LightedTower1",
+      "label": "Tower & Lighted Tower",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/LightedTower1.png?1661349187215",
+      "local_image": "images/LightedTower1.png",
+      "sequence_in_label": 2,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "Waterfall1",
+      "label": "Waterfall",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Waterfall1.png?1661349187218",
+      "local_image": "images/Waterfall1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "WaterTower1",
+      "label": "Water Tower",
+      "section": "Landmarks",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/WaterTower1.png?1661349187218",
+      "local_image": "images/WaterTower1.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "pescadaterra2",
+      "label": "On land fishing place or area (Punto o Area di Pesca da terra)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/pescadaterra2.png",
+      "local_image": "images/pescadaterra2.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "pescadabarca2",
+      "label": "On the boat fishing place or area (Punto o Area di Pesca dalla barca)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/pescadabarca2.png",
+      "local_image": "images/pescadabarca2.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "pescasub2",
+      "label": "Spear fishing place or area (Punto o Area di Pesca subacquea)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/pescasub2.png",
+      "local_image": "images/pescasub2.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "alert",
+      "label": "Warning place or area (Punto o Area di Avvertimento",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/alert.png",
+      "local_image": "images/alert.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "divieto",
+      "label": "Forbidden place or area (Punto o Area di Divieto)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/divieto.png",
+      "local_image": "images/divieto.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "rule",
+      "label": "Regulated place or area (Punto o Area di Regolamentazione)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/rule.png",
+      "local_image": "images/rule.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "guardiacostiera",
+      "label": "Coast Guard (Guardia Costiera)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/guardiacostiera.png",
+      "local_image": "images/guardiacostiera.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "fishingshop",
+      "label": "Fishing shop (Negozio di pesca)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/fishingshop.png",
+      "local_image": "images/fishingshop.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    },
+    {
+      "id": "genericinfo",
+      "label": "Generic info (Informazione generica)",
+      "section": "Fishing charts symbols (Italy only)",
+      "source_url": "https://api.aquamap.app/gallery-images/support/map-icon/basic/Pesca-Italia/genericinfo.png",
+      "local_image": "images/genericinfo.png",
+      "sequence_in_label": 1,
+      "status": "copyrighted_visual_reference_not_canonical_art"
+    }
+  ]
+}

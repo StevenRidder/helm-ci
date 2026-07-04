@@ -1,0 +1,538 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch28.json",
+    "renders": "out/standard_repair_batch20/renders",
+    "svg_dir": "assets/svg/owned_repair_batch28"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 6,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TSSCRS51__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TSSCRS51__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TSSCRS51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TSSCRS51.svg",
+      "asset": "TSSCRS51",
+      "before_svg": "assets/svg/triad_generated/TSSCRS51.svg",
+      "candidate_source": "assets/svg/triad_generated/TSSCRS51.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "traffic crossing area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: traffic crossing area circle with short vertical/tick cue in magenta.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TSSCRS51 is traffic crossing area. It is used as a traffic crossing area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "traffic crossing area"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TSSCRS51__day.png",
+            "label": "traffic crossing area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TSSCRS51__day.png",
+              "dusk": "out/opencpn_s52_reference/TSSCRS51__dusk.png",
+              "night": "out/opencpn_s52_reference/TSSCRS51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TSSCRS51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TSSCRS51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TSSCRS51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TSSCRS51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TSSCRS51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TSSLPT51__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TSSLPT51__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TSSLPT51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TSSLPT51.svg",
+      "asset": "TSSLPT51",
+      "before_svg": "assets/svg/triad_generated/TSSLPT51.svg",
+      "candidate_source": "assets/svg/triad_generated/TSSLPT51.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "traffic direction in a one way lane of a traffic separation scheme",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: filled one-way lane arrow, preserving traffic directionality.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TSSLPT51 is traffic direction in a one way lane of a traffic separation scheme. It is used as a traffic direction in a one way lane of a traffic separation scheme. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "traffic direction in a one way lane of a traffic separation scheme"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TSSLPT51__day.png",
+            "label": "traffic direction in a one way lane of a traffic separation scheme",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TSSLPT51__day.png",
+              "dusk": "out/opencpn_s52_reference/TSSLPT51__dusk.png",
+              "night": "out/opencpn_s52_reference/TSSLPT51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TSSLPT51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TSSLPT51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TSSLPT51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TSSLPT51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TSSLPT51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TSSRON51__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TSSRON51__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TSSRON51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TSSRON51.svg",
+      "asset": "TSSRON51",
+      "before_svg": "assets/svg/triad_generated/TSSRON51.svg",
+      "candidate_source": "assets/svg/triad_generated/TSSRON51.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "traffic roundabout",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: traffic roundabout circular arrow, not a generic dashed box.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TSSRON51 is traffic roundabout. It is used as a traffic roundabout. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "traffic roundabout"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TSSRON51__day.png",
+            "label": "traffic roundabout",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TSSRON51__day.png",
+              "dusk": "out/opencpn_s52_reference/TSSRON51__dusk.png",
+              "night": "out/opencpn_s52_reference/TSSRON51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TSSRON51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TSSRON51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TSSRON51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TSSRON51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TSSRON51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TWRDEF51__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TWRDEF51__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TWRDEF51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TWRDEF51.svg",
+      "asset": "TWRDEF51",
+      "before_svg": "assets/svg/triad_generated/TWRDEF51.svg",
+      "candidate_source": "assets/svg/triad_generated/TWRDEF51.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "two way route of a traffic separation scheme, with the direction not defined in the data",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: reciprocal route arrows plus side question marks for undefined direction.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TWRDEF51 is two way route of a traffic separation scheme, with the direction not defined in the data. It is used as a two way route of a traffic separation scheme, with the direction not defined in the data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "two way route of a traffic separation scheme, with the direction not defined in the data"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TWRDEF51__day.png",
+            "label": "two way route of a traffic separation scheme, with the direction not defined in the data",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TWRDEF51__day.png",
+              "dusk": "out/opencpn_s52_reference/TWRDEF51__dusk.png",
+              "night": "out/opencpn_s52_reference/TWRDEF51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TWRDEF51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TWRDEF51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TWRDEF51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TWRDEF51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TWRDEF51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TWRTPT52__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TWRTPT52__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TWRTPT52__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TWRTPT52.svg",
+      "asset": "TWRTPT52",
+      "before_svg": "assets/svg/triad_generated/TWRTPT52.svg",
+      "candidate_source": "assets/svg/triad_generated/TWRTPT52.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "reciprocal traffic directions in a two-way route of a traffic separation scheme",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: reciprocal up/down traffic arrows for a two-way route.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TWRTPT52 is reciprocal traffic directions in a two-way route of a traffic separation scheme. It is used as a reciprocal traffic directions in a two-way route of a traffic separation scheme. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "reciprocal traffic directions in a two-way route of a traffic separation scheme"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TWRTPT52__day.png",
+            "label": "reciprocal traffic directions in a two-way route of a traffic separation scheme",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TWRTPT52__day.png",
+              "dusk": "out/opencpn_s52_reference/TWRTPT52__dusk.png",
+              "night": "out/opencpn_s52_reference/TWRTPT52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TWRTPT52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TWRTPT52.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TWRTPT52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TWRTPT52.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TWRTPT52"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch20/renders/TWRTPT53__after__day.png",
+        "dusk": "out/standard_repair_batch20/renders/TWRTPT53__after__dusk.png",
+        "night": "out/standard_repair_batch20/renders/TWRTPT53__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch28/TWRTPT53.svg",
+      "asset": "TWRTPT53",
+      "before_svg": "assets/svg/triad_generated/TWRTPT53.svg",
+      "candidate_source": "assets/svg/triad_generated/TWRTPT53.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_traffic_geometry_witnesses",
+      "name": "single traffic direction in a two-way route part of a traffic separation scheme",
+      "provenance": {
+        "generator": "forge.standard_repair_batch20",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs are shape/direction witnesses; SVG is owned redraw",
+        "source_priority_basis": "s101_opencpn_traffic_geometry_witnesses",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: single traffic-direction arrow with dashed two-way route stem.",
+      "required_change": "Replace the placeholder with the reference-matched traffic-separation geometry, including arrow direction/count and magenta traffic symbology.",
+      "risk_bucket": "traffic_separation_route_repair_batch28",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_traffic_separation_geometry",
+        "missing_directionality",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TWRTPT53 is single traffic direction in a two-way route part of a traffic separation scheme. It is used as a single traffic direction in a two-way route part of a traffic separation scheme. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "single traffic direction in a two-way route part of a traffic separation scheme"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TWRTPT53__day.png",
+            "label": "single traffic direction in a two-way route part of a traffic separation scheme",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TWRTPT53__day.png",
+              "dusk": "out/opencpn_s52_reference/TWRTPT53__dusk.png",
+              "night": "out/opencpn_s52_reference/TWRTPT53__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TWRTPT53",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TWRTPT53.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TWRTPT53",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TWRTPT53.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TWRTPT53"
+          }
+        ]
+      }
+    }
+  ]
+}

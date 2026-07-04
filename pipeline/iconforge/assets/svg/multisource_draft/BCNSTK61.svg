@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BCNSTK61 spar_buoy">
+  <title>BCNSTK61 spar_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BCNSTK61" data-shape="spar_buoy">
+  <defs><clipPath id="clip-BCNSTK61"><path d="M29 10 L35 10 L38 52 Q32 58 26 52 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BCNSTK61)">
+  <rect x="0" y="0" width="64" height="64" fill="var(--green)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M29 10 L35 10 L38 52 Q32 58 26 52 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

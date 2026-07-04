@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYPIL62 pillar_buoy">
+  <title>BOYPIL62 pillar_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BOYPIL62" data-shape="pillar_buoy">
+  <defs><clipPath id="clip-BOYPIL62"><path d="M24 14 L40 14 L45 49 Q32 56 19 49 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYPIL62)">
+  <rect x="0" y="0" width="64" height="64" fill="var(--yellow)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M24 14 L40 14 L45 49 Q32 56 19 49 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

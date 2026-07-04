@@ -21,6 +21,13 @@ is a navigation hazard, not a style miss. So every symbol splits into two axes:
   fill vs. line, engraving/hand-drawn treatment, the house look. This is where
   "open-bridge feel" vs. "US paper-chart feel" lives.
 
+For Helm's current house look, "OpenBridge feel" means **thin, clean chart
+marks**, not app icons: the canonical `open-bridge` style pack uses a `1.8`
+primary stroke, round caps/joins, semantic CSS-variable colours, simple
+geometric construction, and no cartoon/doodle embellishment. If a reference
+symbol is naturally tiny or spare, preserve that chart-symbol restraint instead
+of enlarging it into a pictogram.
+
 A human holds both axes in their head and hopes. The program makes the
 invariants machine-checked and the aesthetics a parameter. That is the edge —
 and the verifier, not the generator, is the centre of gravity.
@@ -71,6 +78,9 @@ they ultimately feed):
   distinguishing, anchor }`, `reference_image`, `siblings[]` (3 nearest cousins).
 - **StylePack** — `id`, `stroke_width`, `corner_radius`, `fill_mode`,
   `line_treatment`, `shadow`, `palettes{ day|dusk|night → {colour → hex} }`.
+  Helm's `open-bridge` pack is intentionally thin (`stroke_width: 1.8`) so the
+  atlas reads like a nautical chart symbol system rather than a bold mobile-app
+  icon set.
 - **GeneratedSymbol** — keyed `(catalog_id, style, palette)`; carries the SVG
   (colours as CSS variables, so palettes are pure substitution), `anchor`,
   `Verdict`, and `Provenance`.

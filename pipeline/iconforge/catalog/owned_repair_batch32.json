@@ -1,0 +1,994 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch32.json",
+    "renders": "out/standard_repair_batch24/renders",
+    "svg_dir": "assets/svg/owned_repair_batch32"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 11,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNDEF13__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNDEF13__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNDEF13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNDEF13.svg",
+      "asset": "BCNDEF13",
+      "before_svg": "assets/svg/triad_generated/BCNDEF13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNDEF13.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "default symbol for a beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNDEF13 is default symbol for a beacon, simplified. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon/daymark symbol matching the S-57 beacon family. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "beacon/daymark symbol matching the S-57 beacon family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNDEF13__day.png",
+            "label": "default symbol for a beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNDEF13__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNDEF13__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNDEF13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNDEF13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNDEF13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNDEF13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNDEF13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNDEF13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNGEN01__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNGEN01__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNGEN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNGEN01.svg",
+      "asset": "BCNGEN01",
+      "before_svg": "assets/svg/triad_generated/BCNGEN01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "beacon in general, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNGEN01 is beacon in general, full-chart. It is used as a lateral beacon used for channel-side marking. Required geometry: pile beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "pile beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "lateral beacon used for channel-side marking"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN01__day.png",
+            "label": "beacon in general, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN01__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN01__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNGEN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNGEN01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNGEN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNGEN01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNGEN01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNGEN03__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNGEN03__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNGEN03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNGEN03.svg",
+      "asset": "BCNGEN03",
+      "before_svg": "assets/svg/triad_generated/BCNGEN03.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN03.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "default symbol for beacon, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNGEN03 is default symbol for beacon, paper-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: beacon/daymark symbol matching the S-57 beacon family. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "beacon/daymark symbol matching the S-57 beacon family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN03__day.png",
+            "label": "default symbol for beacon, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN03__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN03__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNGEN03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNGEN03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNGEN03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNGEN03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNGEN03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNISD21__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNISD21__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNISD21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNISD21.svg",
+      "asset": "BCNISD21",
+      "before_svg": "assets/svg/triad_generated/BCNISD21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNISD21.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "isolated danger beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNISD21 is isolated danger beacon, simplified. It is used as a isolated-danger beacon used to mark a hazard with navigable water around it. Required geometry: beacon/daymark symbol matching the S-57 beacon family. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "beacon/daymark symbol matching the S-57 beacon family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "isolated-danger beacon used to mark a hazard with navigable water around it"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Isolated Danger",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNISD1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNISD21__day.png",
+            "label": "isolated danger beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNISD21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNISD21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNISD21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNISD21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNISD21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNISD21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNISD21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNISD21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNLTC01__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNLTC01__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNLTC01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNLTC01.svg",
+      "asset": "BCNLTC01",
+      "before_svg": "assets/svg/triad_generated/BCNLTC01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNLTC01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "lattice beacon, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNLTC01 is lattice beacon, full-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: lattice/tower beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "lattice/tower beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNLTC01__day.png",
+            "label": "lattice beacon, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNLTC01__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNLTC01__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNLTC01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNLTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNLTC01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNLTC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNLTC01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNLTC01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNSAW13__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNSAW13__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNSAW13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNSAW13.svg",
+      "asset": "BCNSAW13",
+      "before_svg": "assets/svg/triad_generated/BCNSAW13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSAW13.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "major safe water beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNSAW13 is major safe water beacon, simplified. It is used as a safe-water beacon used to mark navigable water. Required geometry: beacon tower. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "safe-water beacon used to mark navigable water"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BOYSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSAW13__day.png",
+            "label": "major safe water beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSAW13__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSAW13__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSAW13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSAW13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSAW13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSAW13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSAW13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSAW13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNSAW21__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNSAW21__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNSAW21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNSAW21.svg",
+      "asset": "BCNSAW21",
+      "before_svg": "assets/svg/triad_generated/BCNSAW21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSAW21.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "minor safe water beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNSAW21 is minor safe water beacon, simplified. It is used as a safe-water beacon used to mark navigable water. Required geometry: stake/perch beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "stake/perch beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "safe-water beacon used to mark navigable water"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Safe Water",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSAW1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSAW21__day.png",
+            "label": "minor safe water beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSAW21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSAW21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSAW21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSAW21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSAW21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSAW21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSAW21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSAW21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNSPP13__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNSPP13__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNSPP13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNSPP13.svg",
+      "asset": "BCNSPP13",
+      "before_svg": "assets/svg/triad_generated/BCNSPP13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSPP13.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "major special purpose beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNSPP13 is major special purpose beacon, simplified. It is used as a special-purpose beacon used for named local purposes. Required geometry: beacon tower. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSPP13__day.png",
+            "label": "major special purpose beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSPP13__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSPP13__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSPP13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSPP13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSPP13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSPP13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSPP13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSPP13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNSPP21__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNSPP21__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNSPP21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNSPP21.svg",
+      "asset": "BCNSPP21",
+      "before_svg": "assets/svg/triad_generated/BCNSPP21.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSPP21.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "minor special purpose beacon, simplified",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNSPP21 is minor special purpose beacon, simplified. It is used as a special-purpose beacon used for named local purposes. Required geometry: stake/perch beacon. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "stake/perch beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Buoy Special Purpose",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSPP21__day.png",
+            "label": "minor special purpose beacon, simplified",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSPP21__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSPP21__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSPP21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSPP21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSPP21.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSPP21",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSPP21.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSPP21"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNSTK02__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNSTK02__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNSTK02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNSTK02.svg",
+      "asset": "BCNSTK02",
+      "before_svg": "assets/svg/triad_generated/BCNSTK02.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNSTK02.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "minor, stake or pole beacon, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNSTK02 is minor, stake or pole beacon, full-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: stake/perch beacon. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "stake/perch beacon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNSTK02__day.png",
+            "label": "minor, stake or pole beacon, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNSTK02__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNSTK02__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNSTK02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNSTK02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNSTK02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNSTK02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNSTK02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNSTK02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch24/renders/BCNTOW01__after__day.png",
+        "dusk": "out/standard_repair_batch24/renders/BCNTOW01__after__dusk.png",
+        "night": "out/standard_repair_batch24/renders/BCNTOW01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch32/BCNTOW01.svg",
+      "asset": "BCNTOW01",
+      "before_svg": "assets/svg/triad_generated/BCNTOW01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW01.svg",
+      "candidate_strategy": "owned_redraw_from_s101_opencpn_aquamap_witnesses",
+      "name": "beacon tower, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch24",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/AquaMap refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue high-reference beacon slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "chart1_or_judge_failure_consumed",
+      "required_change": null,
+      "risk_bucket": "high_reference_beacon_repair_batch32",
+      "semantic_brief": {
+        "brief": "BCNTOW01 is beacon tower, full-chart. It is used as a cardinal beacon used to indicate the safe side of danger. Required geometry: beacon tower. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "beacon tower",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "cardinal beacon used to indicate the safe side of danger"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW01__day.png",
+            "label": "beacon tower, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW01__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW01__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BCNTOW01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BCNTOW01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BCNTOW01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BCNTOW01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BCNTOW01"
+          }
+        ]
+      }
+    }
+  ]
+}

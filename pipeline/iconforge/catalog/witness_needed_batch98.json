@@ -1,0 +1,308 @@
+{
+  "description": "Rows blocked until an exact Chart No.1/equivalent witness or official reference is attached.",
+  "project": "vulkan",
+  "records": [
+    {
+      "asset": "BCNCON81",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/BCNCON81.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch97/BCNCON81.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "chart1_parity_blocked_after_symbolspec_render",
+      "evidence_required": [
+        "exact_symbol_crop_or_equivalent_tight_witness",
+        "s57_s52_condition_confirmation",
+        "human_manual_exception_only_if_no_official_witness_exists"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "buoy_beacon_marks",
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "BCNCON81",
+      "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DANGER53",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DANGER53.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/DANGER53.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DANGER53",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEDANGER03"
+        ],
+        "lookup_id": "1630",
+        "lookup_rcid": "31682",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(DANGER53)"
+      },
+      "semantic_brief": {
+        "brief": "DANGER53 is DANGER53. It is used as a DANGER53. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DANGER53"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/DGPS01DRFSTA01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DGPS01DRFSTA01",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "CATROS10"
+        ],
+        "lookup_id": "1232",
+        "lookup_rcid": "31284",
+        "object_class": "RDOSTA",
+        "s52_instruction": "SY(DGPS01DRFSTA01)"
+      },
+      "semantic_brief": {
+        "brief": "DGPS01DRFSTA01 is DGPS01DRFSTA01. It is used as a DGPS01DRFSTA01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DGPS01DRFSTA01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "VEHTRF01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/VEHTRF01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch84/VEHTRF01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch84.json",
+      "kind": "symbol",
+      "name": "VEHTRF01",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf",
+        "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      },
+      "semantic_brief": {
+        "brief": "VEHTRF01 is VEHTRF01. It is used as a VEHTRF01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VEHTRF01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "boyspp50",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/boyspp50.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch97/boyspp50.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "chart1_parity_blocked_after_symbolspec_render",
+      "evidence_required": [
+        "exact_symbol_crop_or_equivalent_tight_witness",
+        "s57_s52_condition_confirmation",
+        "human_manual_exception_only_if_no_official_witness_exists"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "boyspp50",
+      "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "semantic_brief": {
+        "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "boyspp50"
+      },
+      "still_normal_icon_art_queue": false
+    }
+  ],
+  "schema_version": 1,
+  "status": "batch98_registry_written",
+  "summary": {
+    "rows": 5
+  },
+  "task_id": "FORGE-15",
+  "title": "Witness Needed Batch 98"
+}

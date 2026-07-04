@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYPIL74 Q23 pillar">
+  <title>BOYPIL74 Q23 pillar</title>
+  <g data-origin="generated-owned-artwork" data-int1="Q23"
+     data-s52-asset="BOYPIL74" data-primitive="pillar_buoy">
+  <defs><clipPath id="clip-BOYPIL74"><path d="M24 14 L40 14 L45 49 Q32 56 19 49 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYPIL74)">
+    <rect x="0" y="10.0" width="64" height="24.25" fill="var(--green)"/>
+    <rect x="0" y="34.0" width="64" height="24.25" fill="var(--red)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linejoin="round"><path d="M24 14 L40 14 L45 49 Q32 56 19 49 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

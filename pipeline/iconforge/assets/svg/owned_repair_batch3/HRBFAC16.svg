@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="HRBFAC16 harbor_service">
+  <title>HRBFAC16 harbor_service</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="HRBFAC16" data-shape="harbor_service">
+<rect x="18" y="18" width="28" height="28" rx="3" fill="var(--white)" stroke="var(--black)" stroke-width="2"/>
+<path d="M24 40 V24 H32 Q39 24 39 31 Q39 38 32 38 H24" fill="none" stroke="var(--black)" stroke-width="2.3" stroke-linejoin="round"/>
+  </g>
+</svg>

@@ -1,0 +1,92 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch34.json",
+    "renders": "out/standard_repair_batch26/renders",
+    "svg_dir": "assets/svg/owned_repair_batch34"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 1,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch26/renders/BCNGEN64__after__day.png",
+        "dusk": "out/standard_repair_batch26/renders/BCNGEN64__after__dusk.png",
+        "night": "out/standard_repair_batch26/renders/BCNGEN64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch34/BCNGEN64.svg",
+      "asset": "BCNGEN64",
+      "before_svg": "assets/svg/triad_generated/BCNGEN64.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN64.svg",
+      "candidate_strategy": "owned_redraw_preserving_compact_beacon_with_four_bands",
+      "name": "beacon in general, red/white, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch26",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and OpenCPN/Chart1 refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_007_009_beacon_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: split beacon body into four ordered bands red/white/red/white for COLOUR3,1,3,1.",
+      "required_change": "Redraw BCNGEN64 with four ordered horizontal bands red/white/red/white (COLOUR3,1,3,1) inside the BCNGEN beacon/spar body; keep the black outline and stem, then rerender day/dusk/night for judge rerun.",
+      "risk_bucket": "single_band_order_repair_batch34",
+      "safety_reason_codes": [
+        "wrong_colour_order",
+        "missing_colour_bands",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BCNGEN64 is beacon in general, red/white, full-chart. It is used as a lateral buoy used for port/starboard channel marking. Required geometry: spar buoy body. Required colours: red, white, red, white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "red",
+          "white"
+        ],
+        "required_shape": "spar buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "lateral buoy used for port/starboard channel marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_007_009_beacon_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNGEN64__day.png",
+            "label": "beacon in general, red/white, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNGEN64__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNGEN64__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNGEN64__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

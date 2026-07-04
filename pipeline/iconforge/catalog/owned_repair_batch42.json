@@ -1,0 +1,1004 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch42.json",
+    "renders": "out/standard_repair_batch34/renders",
+    "svg_dir": "assets/svg/owned_repair_batch42"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 13,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG01__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG01__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG01.svg",
+      "asset": "NMKREG01",
+      "before_svg": "assets/svg/triad_generated/NMKREG01.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG01.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, regulation in genearal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKREG01 as the square red regulation notice board with the reference white field/frame.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG01 is notice mark, regulation in genearal. It is used as a notice mark, regulation in genearal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, regulation in genearal"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG01__day.png",
+            "label": "notice mark, regulation in genearal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG01__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG01__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG02__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG02__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG02.svg",
+      "asset": "NMKREG02",
+      "before_svg": "assets/svg/triad_generated/NMKREG02.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG02.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, mandarory traffic direction, left",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG02 mandatory-left red notice board and arrow glyph.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG02 is notice mark, mandarory traffic direction, left. It is used as a notice mark, mandarory traffic direction, left. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, mandarory traffic direction, left"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG02__day.png",
+            "label": "notice mark, mandarory traffic direction, left",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG02__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG02__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG03__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG03__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG03.svg",
+      "asset": "NMKREG03",
+      "before_svg": "assets/svg/triad_generated/NMKREG03.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG03.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, mandarory traffic direction, right",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG03 mandatory-right red notice board and arrow glyph.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG03 is notice mark, mandarory traffic direction, right. It is used as a notice mark, mandarory traffic direction, right. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, mandarory traffic direction, right"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG03__day.png",
+            "label": "notice mark, mandarory traffic direction, right",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG03__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG03__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG10__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG10__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG10.svg",
+      "asset": "NMKREG10",
+      "before_svg": "assets/svg/triad_generated/NMKREG10.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG10.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, mandarory stop",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG10 red board and stop-bar glyph.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_stop_bar",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG10 is notice mark, mandarory stop. It is used as a notice mark, mandarory stop. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, mandarory stop"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG10__day.png",
+            "label": "notice mark, mandarory stop",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG10__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG10__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG11__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG11__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG11.svg",
+      "asset": "NMKREG11",
+      "before_svg": "assets/svg/triad_generated/NMKREG11.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG11.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, mandarory sound signal",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG11 red board and sound-signal pictogram.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG11 is notice mark, mandarory sound signal. It is used as a notice mark, mandarory sound signal. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, mandarory sound signal"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG11__day.png",
+            "label": "notice mark, mandarory sound signal",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG11__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG11__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG12__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG12__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG12.svg",
+      "asset": "NMKREG12",
+      "before_svg": "assets/svg/triad_generated/NMKREG12.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG12.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, special attention",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG12 red special-attention notice board glyph.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_attention_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG12 is notice mark, special attention. It is used as a notice mark, special attention. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, special attention"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG12__day.png",
+            "label": "notice mark, special attention",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG12__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG12__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG13__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG13__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG13.svg",
+      "asset": "NMKREG13",
+      "before_svg": "assets/svg/triad_generated/NMKREG13.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG13.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, give way other vessels when entering the main fairway",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG13 red give-way fairway diagram board.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG13 is notice mark, give way other vessels when entering the main fairway. It is used as a notice mark, give way other vessels when entering the main fairway. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, give way other vessels when entering the main fairway"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG13__day.png",
+            "label": "notice mark, give way other vessels when entering the main fairway",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG13__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG13__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG14__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG14__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG14__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG14.svg",
+      "asset": "NMKREG14",
+      "before_svg": "assets/svg/triad_generated/NMKREG14.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG14.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, give way other vessels when crossing the main fairway",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG14 red crossing/give-way fairway diagram board.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG14 is notice mark, give way other vessels when crossing the main fairway. It is used as a notice mark, give way other vessels when crossing the main fairway. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, give way other vessels when crossing the main fairway"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG14__day.png",
+            "label": "notice mark, give way other vessels when crossing the main fairway",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG14__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG14__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG14__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG15__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG15__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG15__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG15.svg",
+      "asset": "NMKREG15",
+      "before_svg": "assets/svg/triad_generated/NMKREG15.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG15.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, mandarory radiophone",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG15 red mandatory-radiophone notice board.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG15 is notice mark, mandarory radiophone. It is used as a notice mark, mandarory radiophone. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, mandarory radiophone"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG15__day.png",
+            "label": "notice mark, mandarory radiophone",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG15__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG15__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG15__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG16__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG16__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG16__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG16.svg",
+      "asset": "NMKREG16",
+      "before_svg": "assets/svg/triad_generated/NMKREG16.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG16.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, restricted fairway depth",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG16 red restricted-depth notice board.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_depth_label",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG16 is notice mark, restricted fairway depth. It is used as a notice mark, restricted fairway depth. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, restricted fairway depth"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG16__day.png",
+            "label": "notice mark, restricted fairway depth",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG16__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG16__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG16__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG17__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG17__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG17__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG17.svg",
+      "asset": "NMKREG17",
+      "before_svg": "assets/svg/triad_generated/NMKREG17.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG17.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, restricted vertical clearance",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the NMKREG17 red vertical-clearance notice board.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_clearance_label",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG17 is notice mark, restricted vertical clearance. It is used as a notice mark, restricted vertical clearance. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, restricted vertical clearance"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG17__day.png",
+            "label": "notice mark, restricted vertical clearance",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG17__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG17__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG17__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG19__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG19__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG19__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG19.svg",
+      "asset": "NMKREG19",
+      "before_svg": "assets/svg/triad_generated/NMKREG19.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG19.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "restricted width of the waterway, left side, default",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKREG19 with the left-side restricted-width reference geometry and color order.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_variant",
+        "lost_side_semantics",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG19 is restricted width of the waterway, left side, default. It is used as a restricted width of the waterway, left side, default. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "restricted width of the waterway, left side, default"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG19__day.png",
+            "label": "restricted width of the waterway, left side, default",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG19__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG19__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG19__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch34/renders/NMKREG20__after__day.png",
+        "dusk": "out/standard_repair_batch34/renders/NMKREG20__after__dusk.png",
+        "night": "out/standard_repair_batch34/renders/NMKREG20__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch42/NMKREG20.svg",
+      "asset": "NMKREG20",
+      "before_svg": "assets/svg/triad_generated/NMKREG20.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKREG20.svg",
+      "candidate_strategy": "owned_regulation_notice_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "restricted width of the waterway, right side, default",
+      "provenance": {
+        "generator": "forge.standard_repair_batch34",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKREG notice slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw NMKREG20 with the right-side restricted-width reference geometry and color order.",
+      "risk_bucket": "regulation_notice_repair_batch42",
+      "safety_reason_codes": [
+        "wrong_variant",
+        "lost_side_semantics",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "NMKREG20 is restricted width of the waterway, right side, default. It is used as a restricted width of the waterway, right side, default. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white",
+          "black"
+        ],
+        "use_case": "restricted width of the waterway, right side, default"
+      },
+      "source_judge": "catalog/standard_judge_batch_010.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKREG20__day.png",
+            "label": "restricted width of the waterway, right side, default",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKREG20__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKREG20__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKREG20__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

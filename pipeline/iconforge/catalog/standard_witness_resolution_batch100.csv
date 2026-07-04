@@ -1,0 +1,6 @@
+asset,name,routing_bucket,resolution_status,remaining_blocker,promotion_ready,attached_reference_count,next_action
+BCNCON81,BCNCON81,chart1_parity_witness_needed,equivalent_family_witness_attached_not_exact,no_exact_symbol_witness,False,11,"find or crop exact BCNCON81 one-symbol witness, or get explicit human manual exception before any promotion"
+DANGER53,DANGER53,witness_needed_official_symbol,related_symbol_witness_attached_not_exact,official_symbol_definition_or_exact_render_missing,False,4,attach official DANGER53 symbol definition/render or keep in hard-pile for manual review
+DGPS01DRFSTA01,DGPS01DRFSTA01,witness_needed_official_symbol,composite_parent_witness_attached_not_exact,exact_composite_witness_missing,False,6,split composite into exact DGPS + RDOSTA witnesses or get human-approved composite spec
+VEHTRF01,VEHTRF01,witness_needed_official_symbol,unresolved_no_tight_witness,no_tight_visual_witness_found,False,2,search standards/portrayal catalogues for exact VEHTRF01 witness; otherwise keep blocked for manual exception
+boyspp50,boyspp50,chart1_parity_witness_needed,equivalent_family_witness_attached_not_exact,no_exact_symbol_witness,False,7,find exact boyspp50/BOYWTW witness or approve a manual exception before rendering final art

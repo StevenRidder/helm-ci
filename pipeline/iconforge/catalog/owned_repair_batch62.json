@@ -1,0 +1,740 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch62.json",
+    "renders": "out/standard_repair_batch54/renders",
+    "svg_dir": "assets/svg/owned_repair_batch62"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 9,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC10__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC10__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC10.svg",
+      "asset": "HRBFAC10",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC10.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC10.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "default harbour facilitiy",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the default harbour-facility reference icon and correct color treatment.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "272",
+        "lookup_rcid": "32307",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC10)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC10 is default harbour facilitiy. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC10__day.png",
+            "label": "default harbour facilitiy",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC10__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC10__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC11__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC11__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC11.svg",
+      "asset": "HRBFAC11",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC11.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC11.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, naval base",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the naval-base facility symbol from the reference.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf6"
+        ],
+        "lookup_id": "270",
+        "lookup_rcid": "32305",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC11)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC11 is harbour facilitiy, naval base. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC11__day.png",
+            "label": "harbour facilitiy, naval base",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC11__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC11__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC12__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC12__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC12.svg",
+      "asset": "HRBFAC12",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC12.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC12.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, ship yard",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Verify against the OpenCPN ship-yard reference and redraw with the exact facility shape/text/color treatment.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf9"
+        ],
+        "lookup_id": "271",
+        "lookup_rcid": "32306",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC12)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC12 is harbour facilitiy, ship yard. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC12__day.png",
+            "label": "harbour facilitiy, ship yard",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC12__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC12__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC13__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC13__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC13.svg",
+      "asset": "HRBFAC13",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC13.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC13.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, harbour-master's office",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Verify against the OpenCPN harbour-master reference and redraw with the exact facility shape/text/color treatment.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf12"
+        ],
+        "lookup_id": "263",
+        "lookup_rcid": "32298",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC13)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC13 is harbour facilitiy, harbour-master's office. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC13__day.png",
+            "label": "harbour facilitiy, harbour-master's office",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC13__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC13__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC14__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC14__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC14__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC14.svg",
+      "asset": "HRBFAC14",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC14.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC14.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, pilot",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Verify against the OpenCPN pilot reference and redraw with the exact facility shape/text/color treatment.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf13"
+        ],
+        "lookup_id": "264",
+        "lookup_rcid": "32299",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC14)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "unproven_visual_parity",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC14 is harbour facilitiy, pilot. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC14__day.png",
+            "label": "harbour facilitiy, pilot",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC14__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC14__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC14__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC15__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC15__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC15__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC15.svg",
+      "asset": "HRBFAC15",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC15.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC15.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, water police",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the water-police facility reference icon/letter convention.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf14"
+        ],
+        "lookup_id": "265",
+        "lookup_rcid": "32300",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC15)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC15 is harbour facilitiy, water police. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC15__day.png",
+            "label": "harbour facilitiy, water police",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC15__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC15__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC15__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC16__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC16__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC16__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC16.svg",
+      "asset": "HRBFAC16",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC16.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC16.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, custom office",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the customs-office facility symbol from the reference.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf15"
+        ],
+        "lookup_id": "266",
+        "lookup_rcid": "32301",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC16)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC16 is harbour facilitiy, custom office. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC16__day.png",
+            "label": "harbour facilitiy, custom office",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC16__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC16__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC16__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC17__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC17__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC17__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC17.svg",
+      "asset": "HRBFAC17",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC17.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC17.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, service and repair",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the service-and-repair facility reference symbol.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf16"
+        ],
+        "lookup_id": "267",
+        "lookup_rcid": "32302",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC17)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC17 is harbour facilitiy, service and repair. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC17__day.png",
+            "label": "harbour facilitiy, service and repair",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC17__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC17__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC17__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch54/renders/HRBFAC18__after__day.png",
+        "dusk": "out/standard_repair_batch54/renders/HRBFAC18__after__dusk.png",
+        "night": "out/standard_repair_batch54/renders/HRBFAC18__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch62/HRBFAC18.svg",
+      "asset": "HRBFAC18",
+      "before_svg": "assets/svg/owned_repair_batch62/HRBFAC18.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC18.svg",
+      "candidate_strategy": "owned_opencpn_facility_disk_redraw",
+      "name": "harbour facilitiy, quarantine station",
+      "provenance": {
+        "generator": "forge.standard_repair_batch54",
+        "origin": "generated-owned-artwork",
+        "reference_role": "reference-provider images drive facility glyph vocabulary; Helm SVG remains generated-owned artwork",
+        "source_priority_basis": "standard_repair_queue HRBFAC OpenCPN/S-101/AquaMap facility reference mismatch",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_repair_queue_hrbfac_consumed",
+      "required_change": "Replace with the quarantine-station facility reference symbol.",
+      "risk_bucket": "harbour_facility_reference_repair_batch62",
+      "s57_structure": {
+        "conditions": [
+          "cathaf17"
+        ],
+        "lookup_id": "268",
+        "lookup_rcid": "32303",
+        "object_class": "hrbfac",
+        "s52_instruction": "AC(CHBRN,3);SY(HRBFAC18)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_facility_cue",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC18 is harbour facilitiy, quarantine station. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC18__day.png",
+            "label": "harbour facilitiy, quarantine station",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC18__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC18__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC18__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

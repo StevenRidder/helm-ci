@@ -1,0 +1,27 @@
+asset,name,kind,input_candidate_status,classification,next_action,confidence,resolution
+ARCSLN01,ARCSLN01,line-style,pending_judge,style_primitive_not_standalone_icon,cover_by_renderer_style_contract_and_exclude_from_icon_art_gate,0.86,"arc/sector line style primitive; renderer stroke contract, not a standalone icon"
+BCNCON81,BCNCON81,symbol,chart1_fail_repair_queue,renderable_from_s57_symbolspec,render_batch_from_symbolspec,0.78,Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.
+DANGER53,DANGER53,symbol,judge_fail_repair_queue,reference_blocked_official_symbol,attach_tight_reference_before_render,0.34,"Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached."
+DASH,DASH,line-style,pending_judge,style_primitive_not_standalone_icon,cover_by_renderer_style_contract_and_exclude_from_icon_art_gate,0.86,"generic dashed line primitive used by many lookups; style contract, not a standalone icon"
+DATCVR01,DATCVR01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,data-coverage conditional procedure
+DEPARE01,DEPARE01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,depth-area conditional procedure
+DEPARE02,DEPARE02,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,depth-area conditional procedure
+DEPCNT02,DEPCNT02,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,depth-contour conditional procedure
+DGPS01DRFSTA01,DGPS01DRFSTA01,symbol,judge_fail_repair_queue,reference_blocked_official_symbol,split_or_attach_dgps_and_radio_station_reference,0.4,"DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness."
+DOTT,DOTT,line-style,pending_judge,style_primitive_not_standalone_icon,cover_by_renderer_style_contract_and_exclude_from_icon_art_gate,0.86,"generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon"
+LEGLIN02,LEGLIN02,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,leg-line conditional procedure
+NEWOBJ 01,NEWOBJ 01,symbol,judge_fail_repair_queue,manual_exception_newobj_placeholder,manual_exception_or_runtime_placeholder_policy,0.7,"NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote."
+NEWOBJ01,NEWOBJ01,symbol,judge_fail_repair_queue,manual_exception_newobj_placeholder,manual_exception_or_runtime_placeholder_policy,0.7,"NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram."
+OWNSHP02,OWNSHP02,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,own-ship conditional procedure
+QUAPOS01;TX(OBJNAM,QUAPOS01;TX(OBJNAM,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,quality-of-position/text conditional procedure
+RESARE01,RESARE01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,restricted-area conditional procedure
+RESARE02,RESARE02,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,restricted-area conditional procedure
+RESTRN01,RESTRN01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,restriction conditional procedure
+SLCONS03,SLCONS03,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,shoreline-construction conditional procedure
+SOLD,SOLD,line-style,pending_judge,style_primitive_not_standalone_icon,cover_by_renderer_style_contract_and_exclude_from_icon_art_gate,0.86,"generic solid line primitive used by many area/contour rules; style contract, not a standalone icon"
+SYMINS01,SYMINS01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,symbol-instruction conditional procedure
+TOPMARI1,TOPMARI1,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,topmark conditional procedure
+VEHTRF01,VEHTRF01,symbol,judge_fail_repair_queue,reference_blocked_official_symbol,attach_tight_reference_before_render,0.42,"Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available."
+VESSEL01,VESSEL01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,vessel conditional procedure
+VRMEBL01,VRMEBL01,conditional-procedure,pending_judge,portrayal_rule_not_standalone_icon,track_in_rule_registry_not_icon_art_queue,0.84,VRM/EBL conditional procedure
+boyspp50,boyspp50,symbol,chart1_fail_repair_queue,renderable_from_s57_symbolspec,render_batch_from_symbolspec,0.72,Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.

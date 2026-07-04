@@ -1,0 +1,1315 @@
+{
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch7.json",
+    "renders": "out/triad_judge_repair_batch1/renders",
+    "report": "out/triad_judge_repair_batch1/report.json",
+    "svg_dir": "assets/svg/owned_repair_batch7"
+  },
+  "schema_version": 1,
+  "source_judge": "out/triad_reference_candidate_pack/judge_batch_001.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 26,
+    "judged": 30,
+    "passed_without_repair": 4,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHARE02__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHARE02__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHARE02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHARE02.svg",
+      "asset": "ACHARE02",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHARE02.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHARE02.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Semantic anchor is present, but colour and scale are wrong versus S-101/OpenCPN. Aqua Map anchoring-prohibited is not the right primary reference for this row.",
+        "confidence": 0.96,
+        "expected": "Small magenta S-52/S-101 anchorage/obstruction anchor motif: magenta vertical shank, crossbar, and compact flukes; preserve magenta hazard/area styling.",
+        "observed": "Black large anchor with circular ring and rounded flukes.",
+        "safety_reason_codes": [
+          "wrong_colour_family",
+          "wrong_scale",
+          "reference_mismatch",
+          "unsafe_symbol_confusion"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/ACHARE02.svg",
+          "s101:PortrayalCatalog/Symbols/ACHARE02.svg",
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHARE02__day.png"
+        ]
+      },
+      "name": "Small magenta S-52/S-101 anchorage/obstruction anchor motif: magenta vertical shank, crossbar, and compact flukes; preserve magenta hazard/area styling.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw from S-101/OpenCPN ACHARE02: compact magenta anchor, no black stroke, correct tiny-chart proportions.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/ACHARE02.svg",
+        "s101:PortrayalCatalog/Symbols/ACHARE02.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHARE02__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHARE51__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHARE51__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHARE51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHARE51.svg",
+      "asset": "ACHARE51",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHARE51.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHARE51.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate reuses the wrong black point-anchor and ignores the ACHARE51 S-101/OpenCPN boundary form.",
+        "confidence": 0.97,
+        "expected": "Boundary anchorage area symbol is a pale/magenta S-52 anchor/boundary reference, larger than ACHARE02 but still magenta and shaped like S-101 ACHARE51.",
+        "observed": "Same black large anchor reused from ACHARE02.",
+        "safety_reason_codes": [
+          "wrong_colour_family",
+          "duplicate_wrong_symbol",
+          "reference_mismatch",
+          "unsafe_symbol_confusion"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/ACHARE51.svg",
+          "s101:PortrayalCatalog/Symbols/ACHARE51.svg",
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHARE51__day.png"
+        ]
+      },
+      "name": "Boundary anchorage area symbol is a pale/magenta S-52 anchor/boundary reference, larger than ACHARE02 but still magenta and shaped like S-101 ACHARE51.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw ACHARE51 specifically from S-101/OpenCPN, preserving magenta boundary colour and the broader anchor outline.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/ACHARE51.svg",
+        "s101:PortrayalCatalog/Symbols/ACHARE51.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHARE51__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHBRT07__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHBRT07__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHBRT07__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHBRT07.svg",
+      "asset": "ACHBRT07",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHBRT07.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHBRT07.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "The berth ring detail exists in the source but the candidate is black, oversized, and not the S-101 berth silhouette.",
+        "confidence": 0.95,
+        "expected": "Designated anchor berth reference uses a compact magenta anchor with circular berth ring and crossbar details.",
+        "observed": "Same black generic anchor reused.",
+        "safety_reason_codes": [
+          "wrong_colour_family",
+          "missing_berth_detail",
+          "duplicate_wrong_symbol",
+          "unsafe_symbol_confusion"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/ACHBRT07.svg",
+          "s101:PortrayalCatalog/Symbols/ACHBRT07.svg",
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHBRT07__day.png"
+        ]
+      },
+      "name": "Designated anchor berth reference uses a compact magenta anchor with circular berth ring and crossbar details.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as ACHBRT07: magenta compact anchor with circular berth ring and reference-matched proportions.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/ACHBRT07.svg",
+        "s101:PortrayalCatalog/Symbols/ACHBRT07.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHBRT07__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHPNT01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHPNT01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHPNT01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHPNT01.svg",
+      "asset": "ACHPNT01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHPNT01.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHPNT01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Semantic anchor is plausible but not colour-safe or chart-standard for this row.",
+        "confidence": 0.92,
+        "expected": "OpenCPN/S-52 anchor-point symbol is compact light-magenta/purple anchor, not black.",
+        "observed": "Black anchor with large ring and heavy stroke.",
+        "safety_reason_codes": [
+          "wrong_colour_family",
+          "wrong_scale",
+          "semantic_variant_not_distinguished"
+        ],
+        "source_refs_used": [
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHPNT01__day.png"
+        ]
+      },
+      "name": "OpenCPN/S-52 anchor-point symbol is compact light-magenta/purple anchor, not black.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw ACHPNT01 as compact magenta/purple anchor point; keep it visually distinct from anchorage area variants.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHPNT01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHRES61__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHRES61__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHRES61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHRES61.svg",
+      "asset": "ACHRES61",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHRES61.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHRES61.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate omits the restriction semantics entirely; this is a navigation-safety failure.",
+        "confidence": 0.98,
+        "expected": "S-101/OpenCPN ACHRES61 shows a magenta anchorage-restriction symbol with diagonal prohibition slash plus caution/other-caution mark.",
+        "observed": "Plain black anchor only; no prohibition slash/caution modifier.",
+        "safety_reason_codes": [
+          "missing_hazard_modifier",
+          "wrong_colour_family",
+          "unsafe_symbol_confusion"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/ACHRES61.svg",
+          "s101:PortrayalCatalog/Symbols/ACHRES61.svg",
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHRES61__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN ACHRES61 shows a magenta anchorage-restriction symbol with diagonal prohibition slash plus caution/other-caution mark.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw with magenta anchor, diagonal restriction slash, and ACHRES61 caution modifier exactly as S-101/OpenCPN shows.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/ACHRES61.svg",
+        "s101:PortrayalCatalog/Symbols/ACHRES61.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHRES61__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ACHRES71__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ACHRES71__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ACHRES71__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ACHRES71.svg",
+      "asset": "ACHRES71",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ACHRES71.svg",
+      "candidate_source": "assets/svg/triad_generated/ACHRES71.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate collapses restricted anchoring into ordinary anchoring, which is unsafe.",
+        "confidence": 0.98,
+        "expected": "S-101/OpenCPN ACHRES71 shows magenta anchorage restriction with diagonal slash and information marker.",
+        "observed": "Plain black anchor only; no information/restriction modifier.",
+        "safety_reason_codes": [
+          "missing_restriction_modifier",
+          "wrong_colour_family",
+          "unsafe_symbol_confusion"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/ACHRES71.svg",
+          "s101:PortrayalCatalog/Symbols/ACHRES71.svg",
+          "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+          "opencpn:out/opencpn_s52_reference/ACHRES71__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN ACHRES71 shows magenta anchorage restriction with diagonal slash and information marker.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw with magenta anchor, diagonal restriction slash, and ACHRES71 information marker from S-101/OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/ACHRES71.svg",
+        "s101:PortrayalCatalog/Symbols/ACHRES71.svg",
+        "aquamap:Anchoring Prohibited:reference_sources/aquamap_map_symbols/images/AnchoringProhibited1.png",
+        "opencpn:out/opencpn_s52_reference/ACHRES71__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ADDMRK01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ADDMRK01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ADDMRK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ADDMRK01.svg",
+      "asset": "ADDMRK01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ADDMRK01.svg",
+      "candidate_source": "assets/svg/triad_generated/ADDMRK01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Generic placeholder; no match to direction or board geometry.",
+        "confidence": 0.99,
+        "expected": "OpenCPN ADDMRK01 is a small right-facing additional-mark triangle/board element, not a diamond hazard marker.",
+        "observed": "Black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_orientation",
+          "wrong_marine_silhouette"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ADDMRK01__day.png"
+        ]
+      },
+      "name": "OpenCPN ADDMRK01 is a small right-facing additional-mark triangle/board element, not a diamond hazard marker.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with right-facing triangular additional mark matching OpenCPN ADDMRK01 proportions and light fill/black edge.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ADDMRK02__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ADDMRK02__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ADDMRK02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ADDMRK02.svg",
+      "asset": "ADDMRK02",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ADDMRK02.svg",
+      "candidate_source": "assets/svg/triad_generated/ADDMRK02.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate does not encode left direction and duplicates ADDMRK01.",
+        "confidence": 0.99,
+        "expected": "OpenCPN ADDMRK02 is the left-facing additional-mark triangle/board element.",
+        "observed": "Black diamond with white center dot, identical to ADDMRK01.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_orientation",
+          "duplicate_wrong_symbol"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ADDMRK02__day.png"
+        ]
+      },
+      "name": "OpenCPN ADDMRK02 is the left-facing additional-mark triangle/board element.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with left-facing triangular additional mark matching OpenCPN ADDMRK02.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK02__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ADDMRK05__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ADDMRK05__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ADDMRK05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ADDMRK05.svg",
+      "asset": "ADDMRK05",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ADDMRK05.svg",
+      "candidate_source": "assets/svg/triad_generated/ADDMRK05.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is unrelated to a bottom board mark.",
+        "confidence": 0.99,
+        "expected": "OpenCPN ADDMRK05 is a horizontal/bottom board element.",
+        "observed": "Black diamond with white center dot, identical to ADDMRK01/02.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_marine_silhouette",
+          "duplicate_wrong_symbol"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ADDMRK05__day.png"
+        ]
+      },
+      "name": "OpenCPN ADDMRK05 is a horizontal/bottom board element.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with horizontal bottom board/plate mark matching OpenCPN ADDMRK05.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ADDMRK05__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AIRARE02__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AIRARE02__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AIRARE02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AIRARE02.svg",
+      "asset": "AIRARE02",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AIRARE02.svg",
+      "candidate_source": "assets/svg/triad_generated/AIRARE02.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is explicitly a placeholder and misses the aircraft silhouette.",
+        "confidence": 0.98,
+        "expected": "S-101/OpenCPN airport area pattern is a brown/land-colour circle containing an airplane silhouette.",
+        "observed": "Dashed square with grey plus/cross placeholder.",
+        "safety_reason_codes": [
+          "placeholder_art",
+          "wrong_marine_silhouette",
+          "missing_required_pictogram"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/AIRARE02.svg",
+          "s101:PortrayalCatalog/Symbols/AIRARE02.svg",
+          "opencpn:out/opencpn_s52_reference/AIRARE02__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN airport area pattern is a brown/land-colour circle containing an airplane silhouette.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw AIRARE02 as circular land-colour airport symbol with centered aircraft silhouette from S-101/OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/AIRARE02.svg",
+        "s101:PortrayalCatalog/Symbols/AIRARE02.svg",
+        "opencpn:out/opencpn_s52_reference/AIRARE02__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AISDEF01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AISDEF01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AISDEF01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AISDEF01.svg",
+      "asset": "AISDEF01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AISDEF01.svg",
+      "candidate_source": "assets/svg/triad_generated/AISDEF01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Wrong colour family and wrong AIS target geometry; could be confused with generic hazard/notice mark.",
+        "confidence": 0.99,
+        "expected": "OpenCPN AISDEF01 is a green AIS target shape with unknown heading/course/question-mark styling.",
+        "observed": "Large magenta diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_colour_family",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/AISDEF01__day.png"
+        ]
+      },
+      "name": "OpenCPN AISDEF01 is a green AIS target shape with unknown heading/course/question-mark styling.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as AISDEF01 from OpenCPN: green AIS target glyph with unknown-heading/question indication.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/AISDEF01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AISONE01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AISONE01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AISONE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AISONE01.svg",
+      "asset": "AISONE01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AISONE01.svg",
+      "candidate_source": "assets/svg/triad_generated/AISONE01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is unrelated to vector time marks.",
+        "confidence": 0.99,
+        "expected": "OpenCPN AISONE01 is a small green one-minute vector tick/mark.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_scale",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/AISONE01__day.png"
+        ]
+      },
+      "name": "OpenCPN AISONE01 is a small green one-minute vector tick/mark.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with small green one-minute AIS vector mark matching OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/AISONE01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AISSIX01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AISSIX01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AISSIX01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AISSIX01.svg",
+      "asset": "AISSIX01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AISSIX01.svg",
+      "candidate_source": "assets/svg/triad_generated/AISSIX01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is unrelated and duplicates the one-minute candidate.",
+        "confidence": 0.99,
+        "expected": "OpenCPN AISSIX01 is a small green six-minute AIS vector mark, visually distinct from AISONE01.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "duplicate_wrong_symbol",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/AISSIX01__day.png"
+        ]
+      },
+      "name": "OpenCPN AISSIX01 is a small green six-minute AIS vector mark, visually distinct from AISONE01.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with small green six-minute AIS vector mark matching OpenCPN and distinct from AISONE01.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/AISSIX01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AISSLP01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AISSLP01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AISSLP01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AISSLP01.svg",
+      "asset": "AISSLP01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AISSLP01.svg",
+      "candidate_source": "assets/svg/triad_generated/AISSLP01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate gives no sleeping/target semantics and uses wrong colour.",
+        "confidence": 0.99,
+        "expected": "OpenCPN AISSLP01 is a green sleeping AIS target glyph.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_colour_family",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/AISSLP01__day.png"
+        ]
+      },
+      "name": "OpenCPN AISSLP01 is a green sleeping AIS target glyph.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as green sleeping AIS target matching OpenCPN silhouette.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/AISSLP01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/AISVES01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/AISVES01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/AISVES01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/AISVES01.svg",
+      "asset": "AISVES01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/AISVES01.svg",
+      "candidate_source": "assets/svg/triad_generated/AISVES01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate omits vessel target and vector/heading semantics.",
+        "confidence": 0.99,
+        "expected": "OpenCPN AISVES01 is a green active AIS vessel target with vector/heading line semantics.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "missing_vector_semantics",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/AISVES01__day.png"
+        ]
+      },
+      "name": "OpenCPN AISVES01 is a green active AIS vessel target with vector/heading line semantics.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as green active AIS vessel target with heading/vector shape from OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/AISVES01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ARPATG01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ARPATG01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ARPATG01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ARPATG01.svg",
+      "asset": "ARPATG01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ARPATG01.svg",
+      "candidate_source": "assets/svg/triad_generated/ARPATG01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Generic diamond does not match radar target symbology.",
+        "confidence": 0.98,
+        "expected": "OpenCPN ARPATG01 is a green ARPA target marker/circle/target glyph.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_target_class",
+          "wrong_marine_silhouette"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ARPATG01__day.png"
+        ]
+      },
+      "name": "OpenCPN ARPATG01 is a green ARPA target marker/circle/target glyph.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with OpenCPN ARPA target silhouette in the correct green target style.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ARPATG01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ARPONE01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ARPONE01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ARPONE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ARPONE01.svg",
+      "asset": "ARPONE01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ARPONE01.svg",
+      "candidate_source": "assets/svg/triad_generated/ARPONE01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is unrelated and too large.",
+        "confidence": 0.99,
+        "expected": "OpenCPN ARPONE01 is a tiny green one-minute ARPA vector tick/line.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "wrong_scale",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ARPONE01__day.png"
+        ]
+      },
+      "name": "OpenCPN ARPONE01 is a tiny green one-minute ARPA vector tick/line.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with small green one-minute ARPA vector tick matching OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ARPONE01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/ARPSIX01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/ARPSIX01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/ARPSIX01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/ARPSIX01.svg",
+      "asset": "ARPSIX01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/ARPSIX01.svg",
+      "candidate_source": "assets/svg/triad_generated/ARPSIX01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is unrelated and duplicates ARPONE01.",
+        "confidence": 0.99,
+        "expected": "OpenCPN ARPSIX01 is a tiny green six-minute ARPA vector tick/line.",
+        "observed": "Large black diamond with white center dot.",
+        "safety_reason_codes": [
+          "generic_placeholder",
+          "duplicate_wrong_symbol",
+          "wrong_target_class"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/ARPSIX01__day.png"
+        ]
+      },
+      "name": "OpenCPN ARPSIX01 is a tiny green six-minute ARPA vector tick/line.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Replace with small green six-minute ARPA vector tick matching OpenCPN and distinct from ARPONE01.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/ARPSIX01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNCON81__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNCON81__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNCON81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNCON81.svg",
+      "asset": "BCNCON81",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNCON81.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "No local reference render was available and the candidate may be using a buoy body for a beacon symbol. Conservative fail.",
+        "confidence": 0.7,
+        "expected": "BCNCON81 must be verified against its exact OpenCPN/S-52 reference before approval; packet metadata says BCNSPP/BOYSHP conditions, not enough to approve a buoy-body drawing.",
+        "observed": "Large conical buoy body filled blue/red/white stripes; no local OpenCPN reference render found.",
+        "safety_reason_codes": [
+          "missing_reference_render",
+          "insufficient_traceability",
+          "possible_object_class_mismatch"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/BCNCON81__day.png"
+        ]
+      },
+      "name": "BCNCON81 must be verified against its exact OpenCPN/S-52 reference before approval; packet metadata says BCNSPP/BOYSHP conditions, not enough to approve a buoy-body drawing.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Regenerate source reference for BCNCON81, then redraw exactly to the reference; do not approve from inferred metadata alone.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/BCNCON81__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNDEF13__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNDEF13__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNDEF13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNDEF13.svg",
+      "asset": "BCNDEF13",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNDEF13.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNDEF13.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate shape, scale, and colour bands do not match the default beacon reference.",
+        "confidence": 0.96,
+        "expected": "S-101/OpenCPN default beacon is a small gray rectangular beacon/unknown marker with magenta question mark, not a large striped body.",
+        "observed": "Large tapered beacon body with black/magenta/gray horizontal fills.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale",
+          "wrong_colour_pattern"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/BCNDEF13.svg",
+          "s101:PortrayalCatalog/Symbols/BCNDEF13.svg",
+          "opencpn:out/opencpn_s52_reference/BCNDEF13__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN default beacon is a small gray rectangular beacon/unknown marker with magenta question mark, not a large striped body.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw BCNDEF13 from S-101/OpenCPN: compact default beacon rectangle plus magenta question mark/unknown styling.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/BCNDEF13.svg",
+        "s101:PortrayalCatalog/Symbols/BCNDEF13.svg",
+        "opencpn:out/opencpn_s52_reference/BCNDEF13__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN01__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN01__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN01.svg",
+      "asset": "BCNGEN01",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN01.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN01.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate invents colour bands and body shape absent from the reference.",
+        "confidence": 0.95,
+        "expected": "S-101/OpenCPN beacon general full-chart is a small black post with circle/base marks, not a coloured body.",
+        "observed": "Large tapered beacon body filled black/blue with stem.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_colour_pattern",
+          "reference_mismatch"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/BCNGEN01.svg",
+          "s101:PortrayalCatalog/Symbols/BCNGEN01.svg",
+          "opencpn:out/opencpn_s52_reference/BCNGEN01__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN beacon general full-chart is a small black post with circle/base marks, not a coloured body.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as compact black general beacon post/circle silhouette from S-101/OpenCPN.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/BCNGEN01.svg",
+        "s101:PortrayalCatalog/Symbols/BCNGEN01.svg",
+        "opencpn:out/opencpn_s52_reference/BCNGEN01__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN03__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN03__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN03.svg",
+      "asset": "BCNGEN03",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN03.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN03.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate misses the question-mark/default-paper beacon form and uses an unrelated filled tower.",
+        "confidence": 0.96,
+        "expected": "S-101/OpenCPN paper-chart beacon default is a compact black beacon/post plus magenta question mark/unknown marker.",
+        "observed": "Large tapered beacon body filled black/magenta.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale",
+          "missing_question_mark_modifier"
+        ],
+        "source_refs_used": [
+          "s101:assets/svg/source_priority/s101_exact/BCNGEN03.svg",
+          "s101:PortrayalCatalog/Symbols/BCNGEN03.svg",
+          "opencpn:out/opencpn_s52_reference/BCNGEN03__day.png"
+        ]
+      },
+      "name": "S-101/OpenCPN paper-chart beacon default is a compact black beacon/post plus magenta question mark/unknown marker.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw BCNGEN03 from S-101/OpenCPN: compact beacon/post with magenta question mark marker.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "s101:assets/svg/source_priority/s101_exact/BCNGEN03.svg",
+        "s101:PortrayalCatalog/Symbols/BCNGEN03.svg",
+        "opencpn:out/opencpn_s52_reference/BCNGEN03__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN05__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN05__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN05.svg",
+      "asset": "BCNGEN05",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN05.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN05.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Colour is plausible but silhouette/scale is not the OpenCPN chart-standard mark.",
+        "confidence": 0.92,
+        "expected": "OpenCPN white beacon general is a small compact beacon/post symbol with white/outlined colour semantics.",
+        "observed": "Large white tapered beacon body with black outline and stem.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/BCNGEN05__day.png"
+        ]
+      },
+      "name": "OpenCPN white beacon general is a small compact beacon/post symbol with white/outlined colour semantics.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as compact OpenCPN BCNGEN05 beacon/post, preserving white colour semantics without oversized tower body.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN05__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN60__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN60__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN60.svg",
+      "asset": "BCNGEN60",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN60.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN60.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Colour family is plausible, but the candidate uses wrong silhouette and scale.",
+        "confidence": 0.92,
+        "expected": "OpenCPN red beacon general is a small compact beacon/post symbol with red colour cue.",
+        "observed": "Large red tapered beacon body with black outline and stem.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/BCNGEN60__day.png"
+        ]
+      },
+      "name": "OpenCPN red beacon general is a small compact beacon/post symbol with red colour cue.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as compact OpenCPN BCNGEN60 beacon/post with red cue.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN60__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN61__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN61__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN61.svg",
+      "asset": "BCNGEN61",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN61.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN61.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Colour family is plausible, but the silhouette and scale are not the reference.",
+        "confidence": 0.92,
+        "expected": "OpenCPN green beacon general is a small compact beacon/post symbol with green colour cue.",
+        "observed": "Large green tapered beacon body with black outline and stem.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/BCNGEN61__day.png"
+        ]
+      },
+      "name": "OpenCPN green beacon general is a small compact beacon/post symbol with green colour cue.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as compact OpenCPN BCNGEN61 beacon/post with green cue.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN61__day.png"
+      ]
+    },
+    {
+      "after_renders": {
+        "day": "out/triad_judge_repair_batch1/renders/BCNGEN64__after__day.png",
+        "dusk": "out/triad_judge_repair_batch1/renders/BCNGEN64__after__dusk.png",
+        "night": "out/triad_judge_repair_batch1/renders/BCNGEN64__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch7/BCNGEN64.svg",
+      "asset": "BCNGEN64",
+      "before_render": null,
+      "before_svg": "assets/svg/triad_generated/BCNGEN64.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNGEN64.svg",
+      "candidate_strategy": "owned_redraw_from_triad_judge_feedback",
+      "judge": {
+        "batch": "triad_judge_batch_001",
+        "comments": "Candidate is an oversized body rendering and does not match the chart-standard compact mark.",
+        "confidence": 0.93,
+        "expected": "OpenCPN red/white beacon general is a small compact beacon/post symbol with red/white cue.",
+        "observed": "Large red-over-white tapered beacon body with black outline and stem.",
+        "safety_reason_codes": [
+          "wrong_marine_silhouette",
+          "wrong_scale",
+          "reference_mismatch"
+        ],
+        "source_refs_used": [
+          "opencpn:out/opencpn_s52_reference/BCNGEN64__day.png"
+        ]
+      },
+      "name": "OpenCPN red/white beacon general is a small compact beacon/post symbol with red/white cue.",
+      "provenance": {
+        "generator": "forge.triad_judge_repair_batch1",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "triad_judge_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "triad_judge_failed_repair",
+      "repair_note": "Redraw as compact OpenCPN BCNGEN64 beacon/post with red/white cue; avoid buoy/tower body unless the exact reference shows it.",
+      "risk_bucket": "judge_batch_001_fail",
+      "visual_examples": [
+        "opencpn:out/opencpn_s52_reference/BCNGEN64__day.png"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1342 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch79.json",
+    "renders": "out/standard_repair_batch71/renders",
+    "svg_dir": "assets/svg/owned_repair_batch79"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 15,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/SILBUI01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/SILBUI01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/SILBUI01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/SILBUI01.svg",
+      "asset": "SILBUI01",
+      "before_svg": "assets/svg/owned_repair_batch79/SILBUI01.svg",
+      "candidate_source": "assets/svg/triad_generated/SILBUI01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "silo",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the large cylinder with the small brown silo point/circle mark matching the S-101/OpenCPN witness.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "CATSIL1"
+        ],
+        "lookup_id": "1245",
+        "lookup_rcid": "31297",
+        "object_class": "SILTNK",
+        "s52_instruction": "SY(SILBUI01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SILBUI01 is silo. It is used as a silo. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "silo"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SILBUI01__day.png",
+            "label": "silo",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SILBUI01__day.png",
+              "dusk": "out/opencpn_s52_reference/SILBUI01__dusk.png",
+              "night": "out/opencpn_s52_reference/SILBUI01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SILBUI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SILBUI01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SILBUI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SILBUI01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SILBUI01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/SILBUI11__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/SILBUI11__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/SILBUI11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/SILBUI11.svg",
+      "asset": "SILBUI11",
+      "before_svg": "assets/svg/owned_repair_batch79/SILBUI11.svg",
+      "candidate_source": "assets/svg/triad_generated/SILBUI11.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "conspicuous silo",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the large cylinder with the small black conspicuous silo point/circle mark matching the S-101/OpenCPN witness.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "CATSIL1",
+          "CONVIS1"
+        ],
+        "lookup_id": "1241",
+        "lookup_rcid": "31293",
+        "object_class": "SILTNK",
+        "s52_instruction": "SY(SILBUI11)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SILBUI11 is conspicuous silo. It is used as a conspicuous silo. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous silo"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SILBUI11__day.png",
+            "label": "conspicuous silo",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SILBUI11__day.png",
+              "dusk": "out/opencpn_s52_reference/SILBUI11__dusk.png",
+              "night": "out/opencpn_s52_reference/SILBUI11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SILBUI11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SILBUI11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SILBUI11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SILBUI11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SILBUI11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TMBYRD01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TMBYRD01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TMBYRD01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TMBYRD01.svg",
+      "asset": "TMBYRD01",
+      "before_svg": "assets/svg/owned_repair_batch79/TMBYRD01.svg",
+      "candidate_source": "assets/svg/triad_generated/TMBYRD01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "timber yard",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Redraw TMBYRD01 as the open brown timber-yard hash/grid with the reference two-horizontal/two-vertical stroke structure and proportions.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODETMBYRD01"
+        ],
+        "lookup_id": "1671",
+        "lookup_rcid": "31723",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(TMBYRD01)"
+      },
+      "safety_reason_codes": [
+        "wrong_grid_structure",
+        "wrong_stroke_count",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TMBYRD01 is timber yard. It is used as a timber yard. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "timber yard"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TMBYRD01__day.png",
+            "label": "timber yard",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TMBYRD01__day.png",
+              "dusk": "out/opencpn_s52_reference/TMBYRD01__dusk.png",
+              "night": "out/opencpn_s52_reference/TMBYRD01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TMBYRD01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TMBYRD01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TMBYRD01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TMBYRD01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TNKFRM01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TNKFRM01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TNKFRM01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TNKFRM01.svg",
+      "asset": "TNKFRM01",
+      "before_svg": "assets/svg/owned_repair_batch79/TNKFRM01.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKFRM01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "tank farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Redraw TNKFRM01 with the brown circular enclosure and the reference four-dot tank-farm cluster pattern; remove the extra center dot.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODETNKFRM01"
+        ],
+        "lookup_id": "1672",
+        "lookup_rcid": "31724",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(TNKFRM01)"
+      },
+      "safety_reason_codes": [
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKFRM01 is tank farm. It is used as a tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "tank farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKFRM01__day.png",
+            "label": "tank farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKFRM01__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKFRM01__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKFRM01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKFRM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKFRM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKFRM01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKFRM01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TNKFRM11__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TNKFRM11__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TNKFRM11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TNKFRM11.svg",
+      "asset": "TNKFRM11",
+      "before_svg": "assets/svg/owned_repair_batch79/TNKFRM11.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKFRM11.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "conspicuous tank farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Redraw TNKFRM11 with the black circular enclosure and the reference four-dot tank-farm cluster pattern; remove the extra center dot.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "CATPRA8",
+          "CONVIS1"
+        ],
+        "lookup_id": "138",
+        "lookup_rcid": "32174",
+        "object_class": "PRDARE",
+        "s52_instruction": "SY(TNKFRM11);LS(DASH,1,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKFRM11 is conspicuous tank farm. It is used as a conspicuous tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous tank farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKFRM11__day.png",
+            "label": "conspicuous tank farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKFRM11__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKFRM11__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKFRM11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKFRM11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKFRM11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKFRM11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKFRM11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TREPNT04__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TREPNT04__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TREPNT04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TREPNT04.svg",
+      "asset": "TREPNT04",
+      "before_svg": "assets/svg/owned_repair_batch79/TREPNT04.svg",
+      "candidate_source": "assets/svg/triad_generated/TREPNT04.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "general symbol for a tree",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched tree symbol silhouette; preserve the S-52/S-101 vegetation semantics.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODETREPNT04"
+        ],
+        "lookup_id": "1676",
+        "lookup_rcid": "31728",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(TREPNT04)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_tree_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TREPNT04 is general symbol for a tree. It is used as a general symbol for a tree. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "general symbol for a tree"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TREPNT04__day.png",
+            "label": "general symbol for a tree",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TREPNT04__day.png",
+              "dusk": "out/opencpn_s52_reference/TREPNT04__dusk.png",
+              "night": "out/opencpn_s52_reference/TREPNT04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TREPNT04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TREPNT04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TREPNT04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TREPNT04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TREPNT04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TREPNT05__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TREPNT05__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TREPNT05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TREPNT05.svg",
+      "asset": "TREPNT05",
+      "before_svg": "assets/svg/owned_repair_batch79/TREPNT05.svg",
+      "candidate_source": "assets/svg/triad_generated/TREPNT05.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "mangrove",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched mangrove/tree symbol silhouette; preserve the S-52/S-101 vegetation semantics.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODETREPNT05"
+        ],
+        "lookup_id": "1677",
+        "lookup_rcid": "31729",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(TREPNT05)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_mangrove_tree_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TREPNT05 is mangrove. It is used as a mangrove. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "mangrove"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TREPNT05__day.png",
+            "label": "mangrove",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TREPNT05__day.png",
+              "dusk": "out/opencpn_s52_reference/TREPNT05__dusk.png",
+              "night": "out/opencpn_s52_reference/TREPNT05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TREPNT05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TREPNT05.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TREPNT05",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TREPNT05.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TREPNT05"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/TRNBSN01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/TRNBSN01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/TRNBSN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/TRNBSN01.svg",
+      "asset": "TRNBSN01",
+      "before_svg": "assets/svg/owned_repair_batch79/TRNBSN01.svg",
+      "candidate_source": "assets/svg/triad_generated/TRNBSN01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "turning basin",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the placeholder with the turning basin circular/turning geometry and preserve the magenta traffic/waterway semantics.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "310",
+        "lookup_rcid": "32345",
+        "object_class": "trnbsn",
+        "s52_instruction": "SY(TRNBSN01);LS(DASH,2,CHMGD)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_turning_basin_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TRNBSN01 is turning basin. It is used as a turning basin. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "turning basin"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TRNBSN01__day.png",
+            "label": "turning basin",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TRNBSN01__day.png",
+              "dusk": "out/opencpn_s52_reference/TRNBSN01__dusk.png",
+              "night": "out/opencpn_s52_reference/TRNBSN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WATTUR02__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WATTUR02__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WATTUR02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WATTUR02.svg",
+      "asset": "WATTUR02",
+      "before_svg": "assets/svg/owned_repair_batch79/WATTUR02.svg",
+      "candidate_source": "assets/svg/triad_generated/WATTUR02.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "overfalls, eddies and breakers",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched overfalls/eddies/breakers wave-line geometry; do not substitute a point/daymark marker.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "238",
+        "lookup_rcid": "32273",
+        "object_class": "WATTUR",
+        "s52_instruction": "SY(WATTUR02);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_wave_line_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WATTUR02 is overfalls, eddies and breakers. It is used as a overfalls, eddies and breakers. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "overfalls, eddies and breakers"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WATTUR02__day.png",
+            "label": "overfalls, eddies and breakers",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WATTUR02__day.png",
+              "dusk": "out/opencpn_s52_reference/WATTUR02__dusk.png",
+              "night": "out/opencpn_s52_reference/WATTUR02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WATTUR02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WATTUR02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WATTUR02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WATTUR02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WATTUR02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WAYPNT01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WAYPNT01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WAYPNT01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WAYPNT01.svg",
+      "asset": "WAYPNT01",
+      "before_svg": "assets/svg/owned_repair_batch79/WAYPNT01.svg",
+      "candidate_source": "assets/svg/triad_generated/WAYPNT01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "waypoint on planned route",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the planned-route waypoint ring/circle cue in the reference colour and scale.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEWAYPNT01"
+        ],
+        "lookup_id": "1686",
+        "lookup_rcid": "31738",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(WAYPNT01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_waypoint_ring",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WAYPNT01 is waypoint on planned route. It is used as a waypoint on planned route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "waypoint on planned route"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WAYPNT01__day.png",
+            "label": "waypoint on planned route",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WAYPNT01__day.png",
+              "dusk": "out/opencpn_s52_reference/WAYPNT01__dusk.png",
+              "night": "out/opencpn_s52_reference/WAYPNT01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WAYPNT03__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WAYPNT03__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WAYPNT03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WAYPNT03.svg",
+      "asset": "WAYPNT03",
+      "before_svg": "assets/svg/owned_repair_batch79/WAYPNT03.svg",
+      "candidate_source": "assets/svg/triad_generated/WAYPNT03.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "waypoint on alternate planned route",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the alternate planned-route waypoint circle/ring cue and preserve the orange/reference colour family.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEWAYPNT03"
+        ],
+        "lookup_id": "1687",
+        "lookup_rcid": "31739",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(WAYPNT03)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_waypoint_ring",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WAYPNT03 is waypoint on alternate planned route. It is used as a waypoint on alternate planned route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "waypoint on alternate planned route"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WAYPNT03__day.png",
+            "label": "waypoint on alternate planned route",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WAYPNT03__day.png",
+              "dusk": "out/opencpn_s52_reference/WAYPNT03__dusk.png",
+              "night": "out/opencpn_s52_reference/WAYPNT03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WAYPNT11__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WAYPNT11__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WAYPNT11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WAYPNT11.svg",
+      "asset": "WAYPNT11",
+      "before_svg": "assets/svg/owned_repair_batch79/WAYPNT11.svg",
+      "candidate_source": "assets/svg/triad_generated/WAYPNT11.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "next waypoint on planned route",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the next-waypoint double ring/target geometry and preserve the reference colour treatment.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEWAYPNT11"
+        ],
+        "lookup_id": "1688",
+        "lookup_rcid": "31740",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(WAYPNT11)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_double_waypoint_ring",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WAYPNT11 is next waypoint on planned route. It is used as a next waypoint on planned route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "next waypoint on planned route"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WAYPNT11__day.png",
+            "label": "next waypoint on planned route",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WAYPNT11__day.png",
+              "dusk": "out/opencpn_s52_reference/WAYPNT11__dusk.png",
+              "night": "out/opencpn_s52_reference/WAYPNT11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WEDKLP03__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WEDKLP03__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WEDKLP03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WEDKLP03.svg",
+      "asset": "WEDKLP03",
+      "before_svg": "assets/svg/owned_repair_batch79/WEDKLP03.svg",
+      "candidate_source": "assets/svg/triad_generated/WEDKLP03.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "weed, kelp",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the branching kelp/weed frond silhouette from the reference witnesses.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "239",
+        "lookup_rcid": "32274",
+        "object_class": "WEDKLP",
+        "s52_instruction": "SY(WEDKLP03);LS(DASH,1,CHGRF)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_kelp_fronds",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WEDKLP03 is weed, kelp. It is used as a weed, kelp. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "weed, kelp"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WEDKLP03__day.png",
+            "label": "weed, kelp",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WEDKLP03__day.png",
+              "dusk": "out/opencpn_s52_reference/WEDKLP03__dusk.png",
+              "night": "out/opencpn_s52_reference/WEDKLP03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WEDKLP03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WEDKLP03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WEDKLP03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WEDKLP03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WEDKLP03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WTLVGG01__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WTLVGG01__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WTLVGG01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WTLVGG01.svg",
+      "asset": "WTLVGG01",
+      "before_svg": "assets/svg/owned_repair_batch79/WTLVGG01.svg",
+      "candidate_source": "assets/svg/triad_generated/WTLVGG01.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "gauge, height of water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the gauge-height-of-water box and stand geometry from the reference.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "catsiw13"
+        ],
+        "lookup_id": "1559",
+        "lookup_rcid": "31611",
+        "object_class": "sistaw",
+        "s52_instruction": "SY(WTLVGG01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_water_level_gauge",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WTLVGG01 is gauge, height of water. It is used as a gauge, height of water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "gauge, height of water"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WTLVGG01__day.png",
+            "label": "gauge, height of water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WTLVGG01__day.png",
+              "dusk": "out/opencpn_s52_reference/WTLVGG01__dusk.png",
+              "night": "out/opencpn_s52_reference/WTLVGG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch71/renders/WTLVGG02__after__day.png",
+        "dusk": "out/standard_repair_batch71/renders/WTLVGG02__after__dusk.png",
+        "night": "out/standard_repair_batch71/renders/WTLVGG02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch79/WTLVGG02.svg",
+      "asset": "WTLVGG02",
+      "before_svg": "assets/svg/owned_repair_batch79/WTLVGG02.svg",
+      "candidate_source": "assets/svg/triad_generated/WTLVGG02.svg",
+      "candidate_strategy": "owned_industrial_waterway_redraw_from_opencpn_reference",
+      "name": "recording gauge, height of water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch71",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN industrial/waterway witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/waterway symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_industrial_waterway_reference_consumed",
+      "required_change": "Replace the diamond marker with the recording water-gauge vertical rectangle/stand geometry from the reference.",
+      "risk_bucket": "industrial_waterway_symbol_repair_batch79",
+      "s57_structure": {
+        "conditions": [
+          "catsiw12"
+        ],
+        "lookup_id": "1558",
+        "lookup_rcid": "31610",
+        "object_class": "sistaw",
+        "s52_instruction": "SY(WTLVGG02)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_recording_gauge",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WTLVGG02 is recording gauge, height of water. It is used as a recording gauge, height of water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "recording gauge, height of water"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WTLVGG02__day.png",
+            "label": "recording gauge, height of water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WTLVGG02__day.png",
+              "dusk": "out/opencpn_s52_reference/WTLVGG02__dusk.png",
+              "night": "out/opencpn_s52_reference/WTLVGG02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

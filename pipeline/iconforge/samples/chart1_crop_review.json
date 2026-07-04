@@ -1,0 +1,1232 @@
+{
+  "crop_count": 36,
+  "entries": [
+    {
+      "box_pixels": [
+        1294,
+        469,
+        1457,
+        619
+      ],
+      "box_unit": [
+        0.735,
+        0.345,
+        0.828,
+        0.455
+      ],
+      "chart1_class": "beacon in general",
+      "crop_id": "beacon_general",
+      "evidence_counts": {
+        "multi_symbol_reference": 26
+      },
+      "image": "out/chart1_parity/reference/crops/beacon_general.png",
+      "mapped_assets": 26,
+      "page": 92,
+      "sample_assets": [
+        "BCNCON81",
+        "BCNDEF13",
+        "BCNGEN01",
+        "BCNGEN03",
+        "BCNGEN05",
+        "BCNGEN60",
+        "BCNGEN61",
+        "BCNGEN64"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNCON81_us-paper_day.png",
+      "sha256": "76533a5a5cf579aeb399772c877d22288df6fd694bfa4f054be3d8c02b899154",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 26
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        551,
+        1457,
+        609
+      ],
+      "box_unit": [
+        0.735,
+        0.405,
+        0.828,
+        0.448
+      ],
+      "chart1_class": "lattice beacon",
+      "crop_id": "beacon_lattice",
+      "evidence_counts": {
+        "multi_symbol_reference": 1
+      },
+      "image": "out/chart1_parity/reference/crops/beacon_lattice.png",
+      "mapped_assets": 1,
+      "page": 94,
+      "sample_assets": [
+        "BCNLTC01"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNLTC01_us-paper_day.png",
+      "sha256": "9220af53a4f05860ed07370cf75911c2493fa9a4b6306ff3fd87c9bce3982ea2",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 1
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        252,
+        1457,
+        551
+      ],
+      "box_unit": [
+        0.735,
+        0.185,
+        0.828,
+        0.405
+      ],
+      "chart1_class": "beacon tower",
+      "crop_id": "beacon_tower",
+      "evidence_counts": {
+        "multi_symbol_reference": 22
+      },
+      "image": "out/chart1_parity/reference/crops/beacon_tower.png",
+      "mapped_assets": 22,
+      "page": 94,
+      "sample_assets": [
+        "BCNTOW01",
+        "BCNTOW05",
+        "BCNTOW60",
+        "BCNTOW61",
+        "BCNTOW62",
+        "BCNTOW63",
+        "BCNTOW64",
+        "BCNTOW65"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNTOW01_us-paper_day.png",
+      "sha256": "e170195c871f408e526b0a771d6228d8fd50d2a6375424bb411c10e179384c16",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 22
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        768,
+        1457,
+        1142
+      ],
+      "box_unit": [
+        0.735,
+        0.565,
+        0.828,
+        0.84
+      ],
+      "chart1_class": "beacon with topmark examples",
+      "crop_id": "beacon_with_topmark",
+      "evidence_counts": {
+        "multi_symbol_reference": 5
+      },
+      "image": "out/chart1_parity/reference/crops/beacon_with_topmark.png",
+      "mapped_assets": 5,
+      "page": 92,
+      "sample_assets": [
+        "BCNGEN68",
+        "BCNGEN69",
+        "BCNGEN70",
+        "BCNGEN71",
+        "BCNGEN76"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNGEN68_us-paper_day.png",
+      "sha256": "f3c0f75f8c7ffd7ab73475a46683faf794dc6fbf1cd48d2eec72856dbec95c1b",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 5
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1265
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.93
+      ],
+      "chart1_class": "beacon examples region",
+      "crop_id": "beacons",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/beacons.png",
+      "mapped_assets": 0,
+      "page": 92,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "c247df3dadbb54a65b732d8e69ff290776a766e172f4dc8f9966170780ba38ab",
+      "status": "class_panel_reference",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1142
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.84
+      ],
+      "chart1_class": "standard buoy-shape examples region",
+      "crop_id": "buoy_shapes",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/buoy_shapes.png",
+      "mapped_assets": 0,
+      "page": 89,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "cdb778d1e087580370d8245a5b17978635adb2ce9b25bdfb36ac43bd053b78e6",
+      "status": "class_panel_reference",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1170
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "chart1_class": "cardinal marks examples",
+      "crop_id": "cardinal_marks",
+      "evidence_counts": {
+        "multi_symbol_reference": 8
+      },
+      "image": "out/chart1_parity/reference/crops/cardinal_marks.png",
+      "mapped_assets": 8,
+      "page": 97,
+      "sample_assets": [
+        "BCNCAR01",
+        "BCNCAR02",
+        "BCNCAR03",
+        "BCNCAR04",
+        "BOYCAR01",
+        "BOYCAR02",
+        "BOYCAR03",
+        "BOYCAR04"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNCAR01_us-paper_day.png",
+      "sha256": "e859229da5d1eec747f2220299462cf0aec1f4c73115e2aba92d46331908f15d",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "manual": 8
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1292
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.95
+      ],
+      "chart1_class": "ECDIS buoy/beacon summary region",
+      "crop_id": "ecdis_summary",
+      "evidence_counts": {
+        "manual_exception": 9,
+        "out_of_scope": 462
+      },
+      "image": "out/chart1_parity/reference/crops/ecdis_summary.png",
+      "mapped_assets": 471,
+      "page": 86,
+      "sample_assets": [
+        "ACHARE02",
+        "ACHARE51",
+        "ACHBRT07",
+        "ACHPNT01",
+        "ACHRES61",
+        "ACHRES71",
+        "ADDMRK01",
+        "ADDMRK02"
+      ],
+      "sample_render": "out/full_catalog/renders/ACHARE02_us-paper_day.png",
+      "sha256": "d5853aa2d03a71a2dbedeb49219d760f7ce6d182eb97baf9ae26e8ed30fab850",
+      "status": "class_panel_reference",
+      "verdict_counts": {
+        "deferred": 462,
+        "manual": 9
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1170
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "chart1_class": "isolated-danger safe-water special-mark examples",
+      "crop_id": "isolated_safe_special",
+      "evidence_counts": {
+        "multi_symbol_reference": 7
+      },
+      "image": "out/chart1_parity/reference/crops/isolated_safe_special.png",
+      "mapped_assets": 7,
+      "page": 98,
+      "sample_assets": [
+        "BCNISD21",
+        "BCNSAW13",
+        "BCNSAW21",
+        "BOYISD12",
+        "BOYPIL72",
+        "BOYPIL73",
+        "BOYSAW12"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNISD21_us-paper_day.png",
+      "sha256": "a3530104a9788ca3d32a5cee6d162b31359c8402b4a6ad94f50912446a8de4c8",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 7
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1278
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "chart1_class": "IALA lateral-region examples",
+      "crop_id": "lateral_regions",
+      "evidence_counts": {
+        "class_panel_reference": 20
+      },
+      "image": "out/chart1_parity/reference/crops/lateral_regions.png",
+      "mapped_assets": 20,
+      "page": 95,
+      "sample_assets": [
+        "BCNLAT15",
+        "BCNLAT16",
+        "BCNLAT21",
+        "BCNLAT22",
+        "BCNLAT23",
+        "BCNLAT50",
+        "BOYLAT13",
+        "BOYLAT14"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNLAT15_us-paper_day.png",
+      "sha256": "1ac1ef32511272a2ba8e9da49e8024c00d9f38df76ac56394264a2b9285b38fb",
+      "status": "class_panel_reference",
+      "verdict_counts": {
+        "manual": 20
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        789
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.58
+      ],
+      "chart1_class": "mooring buoy examples",
+      "crop_id": "mooring_buoys",
+      "evidence_counts": {
+        "multi_symbol_reference": 4
+      },
+      "image": "out/chart1_parity/reference/crops/mooring_buoys.png",
+      "mapped_assets": 4,
+      "page": 90,
+      "sample_assets": [
+        "BOYMOR01",
+        "BOYMOR03",
+        "BOYMOR11",
+        "BOYMOR31"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYMOR01_us-paper_day.png",
+      "sha256": "574cecf20f7fb136db45f7a0512694ab3e59269de96344b4b1ee1fc91381e61d",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 4
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        619,
+        1487,
+        670
+      ],
+      "box_unit": [
+        0.735,
+        0.455,
+        0.845,
+        0.493
+      ],
+      "chart1_class": "barrel buoy",
+      "crop_id": "shape_barrel_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 4
+      },
+      "image": "out/chart1_parity/reference/crops/shape_barrel_buoy.png",
+      "mapped_assets": 4,
+      "page": 89,
+      "sample_assets": [
+        "BOYBAR01",
+        "BOYBAR60",
+        "BOYBAR61",
+        "BOYBAR62"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYBAR01_us-paper_day.png",
+      "sha256": "aab4127b33ce7bbe1240cf981efa5191c02c5c7b6aeff28553bff7fd83dd680a",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 4
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        411,
+        1487,
+        464
+      ],
+      "box_unit": [
+        0.735,
+        0.302,
+        0.845,
+        0.341
+      ],
+      "chart1_class": "can buoy",
+      "crop_id": "shape_can_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 23
+      },
+      "image": "out/chart1_parity/reference/crops/shape_can_buoy.png",
+      "mapped_assets": 23,
+      "page": 89,
+      "sample_assets": [
+        "BOYCAN01",
+        "BOYCAN60",
+        "BOYCAN61",
+        "BOYCAN62",
+        "BOYCAN63",
+        "BOYCAN64",
+        "BOYCAN65",
+        "BOYCAN68"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYCAN01_us-paper_day.png",
+      "sha256": "01061a82558201da4178ba0562a3e78e15ffa065fb7a4aed85216bda93d6cf32",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 23
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        358,
+        1487,
+        411
+      ],
+      "box_unit": [
+        0.735,
+        0.263,
+        0.845,
+        0.302
+      ],
+      "chart1_class": "conical buoy",
+      "crop_id": "shape_conical_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 21
+      },
+      "image": "out/chart1_parity/reference/crops/shape_conical_buoy.png",
+      "mapped_assets": 21,
+      "page": 89,
+      "sample_assets": [
+        "BOYCON01",
+        "BOYCON60",
+        "BOYCON61",
+        "BOYCON62",
+        "BOYCON63",
+        "BOYCON64",
+        "BOYCON65",
+        "BOYCON66"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYCON01_us-paper_day.png",
+      "sha256": "fef35a12eb6ac7ea32c93223ff68d6024b6acc85959786f6a341256d41e9576a",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 21
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        515,
+        1487,
+        567
+      ],
+      "box_unit": [
+        0.735,
+        0.379,
+        0.845,
+        0.417
+      ],
+      "chart1_class": "pillar buoy",
+      "crop_id": "shape_pillar_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 12
+      },
+      "image": "out/chart1_parity/reference/crops/shape_pillar_buoy.png",
+      "mapped_assets": 12,
+      "page": 89,
+      "sample_assets": [
+        "BOYPIL01",
+        "BOYPIL60",
+        "BOYPIL61",
+        "BOYPIL66",
+        "BOYPIL67",
+        "BOYPIL68",
+        "BOYPIL69",
+        "BOYPIL70"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYPIL01_us-paper_day.png",
+      "sha256": "be8046d0d6f604b7b9f88c62dbca52a5ccce1cb58a7ecc751bac8ac78d0a2348",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 12
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        567,
+        1487,
+        619
+      ],
+      "box_unit": [
+        0.735,
+        0.417,
+        0.845,
+        0.455
+      ],
+      "chart1_class": "spar buoy",
+      "crop_id": "shape_spar_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 14
+      },
+      "image": "out/chart1_parity/reference/crops/shape_spar_buoy.png",
+      "mapped_assets": 14,
+      "page": 89,
+      "sample_assets": [
+        "BOYSPR01",
+        "BOYSPR02",
+        "BOYSPR03",
+        "BOYSPR04",
+        "BOYSPR05",
+        "BOYSPR60",
+        "BOYSPR61",
+        "BOYSPR62"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYSPR01_us-paper_day.png",
+      "sha256": "c0d0c086808b81edffc29bc9681241c906b03ad25d182d597fcf9f4db4b3420a",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 14
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        464,
+        1487,
+        515
+      ],
+      "box_unit": [
+        0.735,
+        0.341,
+        0.845,
+        0.379
+      ],
+      "chart1_class": "spherical buoy",
+      "crop_id": "shape_spherical_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 14
+      },
+      "image": "out/chart1_parity/reference/crops/shape_spherical_buoy.png",
+      "mapped_assets": 14,
+      "page": 89,
+      "sample_assets": [
+        "BOYSPH01",
+        "BOYSPH05",
+        "BOYSPH60",
+        "BOYSPH62",
+        "BOYSPH65",
+        "BOYSPH66",
+        "BOYSPH68",
+        "BOYSPH69"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYSPH01_us-paper_day.png",
+      "sha256": "32622449d1160313b7dc7aa6d5c2032f2d6e41a5678f3ae2eef5587d486b3bd8",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 14
+      }
+    },
+    {
+      "box_pixels": [
+        1294,
+        670,
+        1487,
+        824
+      ],
+      "box_unit": [
+        0.735,
+        0.493,
+        0.845,
+        0.606
+      ],
+      "chart1_class": "super-buoy",
+      "crop_id": "shape_super_buoy",
+      "evidence_counts": {
+        "multi_symbol_reference": 6
+      },
+      "image": "out/chart1_parity/reference/crops/shape_super_buoy.png",
+      "mapped_assets": 6,
+      "page": 89,
+      "sample_assets": [
+        "BOYSUP01",
+        "BOYSUP02",
+        "BOYSUP03",
+        "BOYSUP62",
+        "BOYSUP65",
+        "BOYSUP66"
+      ],
+      "sample_render": "out/full_catalog/renders/BOYSUP01_us-paper_day.png",
+      "sha256": "d52be2ea601c9fe08864e939c6f4604d2046a31987bbc8d0e40519dee7aafde5",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 6
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1197
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.88
+      ],
+      "chart1_class": "special-purpose buoy examples",
+      "crop_id": "special_purpose_buoys",
+      "evidence_counts": {
+        "multi_symbol_reference": 8
+      },
+      "image": "out/chart1_parity/reference/crops/special_purpose_buoys.png",
+      "mapped_assets": 8,
+      "page": 91,
+      "sample_assets": [
+        "BCNSPP13",
+        "BCNSPP21",
+        "BOYPIL59",
+        "BOYPIL62",
+        "BOYSPP11",
+        "BOYSPP15",
+        "BOYSPP25",
+        "boyspp50"
+      ],
+      "sample_render": "out/full_catalog/renders/BCNSPP13_us-paper_day.png",
+      "sha256": "0f3f3dd1cf3a7e907afa855edbd668f5f51da58519aaefa335be69ed2d57097c",
+      "status": "multi_symbol_reference",
+      "verdict_counts": {
+        "fail": 8
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1170
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.86
+      ],
+      "chart1_class": "supplementary buoy/beacon examples",
+      "crop_id": "supplementary",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/supplementary.png",
+      "mapped_assets": 0,
+      "page": 99,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "75cb84df1668d81d5ced0280cb0c8461cda5d3916edc3c1aa8d5461c3593a924",
+      "status": "class_panel_reference",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1290,
+        798,
+        1324,
+        823
+      ],
+      "box_unit": [
+        0.733,
+        0.587,
+        0.752,
+        0.605
+      ],
+      "chart1_class": "topmark: cone point down",
+      "crop_id": "topmark_cone_down",
+      "evidence_counts": {
+        "exact_symbol_crop": 3
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_cone_down.png",
+      "mapped_assets": 3,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA100",
+        "TOPSHP05",
+        "TOPSHQ25"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA100_us-paper_day.png",
+      "sha256": "3599e56126ea4645b2ccc8e4df9bce9b083569b577e8e778fa80cf70080161b1",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 3
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        751,
+        1324,
+        786
+      ],
+      "box_unit": [
+        0.733,
+        0.552,
+        0.752,
+        0.578
+      ],
+      "chart1_class": "topmark: cone point up",
+      "crop_id": "topmark_cone_up",
+      "evidence_counts": {
+        "exact_symbol_crop": 17
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_cone_up.png",
+      "mapped_assets": 17,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA102",
+        "TOPMA115",
+        "TOPSHP08",
+        "TOPSHP09;TE('%s'",
+        "TOPSHP10",
+        "TOPSHP11",
+        "TOPSHP12",
+        "TOPSHP13"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA102_us-paper_day.png",
+      "sha256": "adbcc3136ebc04f6fc3d1174d7e0107b738792d3a465ebd90c7d955392c64322",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 17
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        1034,
+        1324,
+        1065
+      ],
+      "box_unit": [
+        0.733,
+        0.76,
+        0.752,
+        0.783
+      ],
+      "chart1_class": "topmark: upright cross over a circle",
+      "crop_id": "topmark_cross_circle",
+      "evidence_counts": {
+        "exact_symbol_crop": 1
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_cross_circle.png",
+      "mapped_assets": 1,
+      "page": 88,
+      "sample_assets": [
+        "TOPSHQ30"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPSHQ30_us-paper_day.png",
+      "sha256": "28d7811de36aab06c3dde2157107997abd08b0aa90b5594300558342d392b4df",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 1
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        997,
+        1324,
+        1023
+      ],
+      "box_unit": [
+        0.733,
+        0.733,
+        0.752,
+        0.752
+      ],
+      "chart1_class": "topmark: cube point up",
+      "crop_id": "topmark_cube_point_up",
+      "evidence_counts": {
+        "exact_symbol_crop": 24
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_cube_point_up.png",
+      "mapped_assets": 24,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA109",
+        "TOPMAR98",
+        "TOPMAR99",
+        "TOPSHP51",
+        "TOPSHP52",
+        "TOPSHP53",
+        "TOPSHP54",
+        "TOPSHP55"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA109_us-paper_day.png",
+      "sha256": "eae13b7032e23294204b3a573aaa5cd7955a98306928a9af9e393f30c1be6601",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 24
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        911,
+        1324,
+        947
+      ],
+      "box_unit": [
+        0.733,
+        0.67,
+        0.752,
+        0.696
+      ],
+      "chart1_class": "topmark: flag or other shape",
+      "crop_id": "topmark_flag_other",
+      "evidence_counts": {
+        "exact_symbol_crop": 11
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_flag_other.png",
+      "mapped_assets": 11,
+      "page": 88,
+      "sample_assets": [
+        "TOPMAR87",
+        "TOPMAR88",
+        "TOPMAR90",
+        "TOPMAR93",
+        "TOPSHP00",
+        "TOPSHPJ1",
+        "TOPSHPJ3",
+        "TOPSHPS1"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMAR87_us-paper_day.png",
+      "sha256": "8ad98f3a20e19e9508959b1e6557dcf7f3bb278a1a874fe491e1c07b899f2992",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 11
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        957,
+        1324,
+        981
+      ],
+      "box_unit": [
+        0.733,
+        0.704,
+        0.752,
+        0.721
+      ],
+      "chart1_class": "topmark: board, horizontal rectangle",
+      "crop_id": "topmark_horizontal_board",
+      "evidence_counts": {
+        "exact_symbol_crop": 11
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_horizontal_board.png",
+      "mapped_assets": 11,
+      "page": 88,
+      "sample_assets": [
+        "TOPSHP79",
+        "TOPSHP80",
+        "TOPSHP81;TE('%s'",
+        "TOPSHP82",
+        "TOPSHP83",
+        "TOPSHP84",
+        "TOPSHP85",
+        "TOPSHP87"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPSHP79_us-paper_day.png",
+      "sha256": "2749e86bf6885c09d8403371acc5c73b4af4e92ac6502055e1dba37e5713ec11",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 11
+      }
+    },
+    {
+      "box_pixels": [
+        1382,
+        715,
+        1420,
+        741
+      ],
+      "box_unit": [
+        0.785,
+        0.526,
+        0.807,
+        0.545
+      ],
+      "chart1_class": "topmark: sphere",
+      "crop_id": "topmark_sphere",
+      "evidence_counts": {
+        "exact_symbol_crop": 7
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_sphere.png",
+      "mapped_assets": 7,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA117",
+        "TOPMAR01",
+        "TOPSHPD1",
+        "TOPSHPD2",
+        "TOPSHPD3",
+        "TOPSHPD5",
+        "TOPSHQ26"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA117_us-paper_day.png",
+      "sha256": "d77599698be0e3221bb0e88e52640283150ab309f66ab622727c55e14a631d7f",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 7
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        1073,
+        1324,
+        1106
+      ],
+      "box_unit": [
+        0.733,
+        0.789,
+        0.752,
+        0.813
+      ],
+      "chart1_class": "topmark: T-shape",
+      "crop_id": "topmark_t_shape",
+      "evidence_counts": {
+        "exact_symbol_crop": 1
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_t_shape.png",
+      "mapped_assets": 1,
+      "page": 88,
+      "sample_assets": [
+        "TOPSHQ28"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPSHQ28_us-paper_day.png",
+      "sha256": "75d927600e9758b905d483a2792d2b9db50028463a7198a4a74016de43594b0a",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 1
+      }
+    },
+    {
+      "box_pixels": [
+        1382,
+        566,
+        1420,
+        611
+      ],
+      "box_unit": [
+        0.785,
+        0.416,
+        0.807,
+        0.449
+      ],
+      "chart1_class": "topmark: 2 cones base to base",
+      "crop_id": "topmark_two_cones_base",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/topmark_two_cones_base.png",
+      "mapped_assets": 0,
+      "page": 88,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "121fba9cb1e2d66adc67f192cc099db34b7ad1d1e19572ee1cf21ce1985da5e8",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1382,
+        511,
+        1420,
+        559
+      ],
+      "box_unit": [
+        0.785,
+        0.376,
+        0.807,
+        0.411
+      ],
+      "chart1_class": "topmark: 2 cones point downward",
+      "crop_id": "topmark_two_cones_down",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/topmark_two_cones_down.png",
+      "mapped_assets": 0,
+      "page": 88,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "1cca84c0437aee15ff143708d2c2abdbf6b6b18a4346f4ddf7c9d8021403ce82",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1382,
+        619,
+        1420,
+        661
+      ],
+      "box_unit": [
+        0.785,
+        0.455,
+        0.807,
+        0.486
+      ],
+      "chart1_class": "topmark: 2 cones point to point",
+      "crop_id": "topmark_two_cones_point",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/topmark_two_cones_point.png",
+      "mapped_assets": 0,
+      "page": 88,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "4c7395a053eb708765c5cd5900716f12e1fd96f62165cf336bc123edeb8fe3ef",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1382,
+        462,
+        1420,
+        506
+      ],
+      "box_unit": [
+        0.785,
+        0.34,
+        0.807,
+        0.372
+      ],
+      "chart1_class": "topmark: 2 cones point upward",
+      "crop_id": "topmark_two_cones_up",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/topmark_two_cones_up.png",
+      "mapped_assets": 0,
+      "page": 88,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "fcab61fa8e2d3b8851322c65dd06d158ff95d7a3b21cc9f982e1f24c9ebe3c4a",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1382,
+        669,
+        1420,
+        704
+      ],
+      "box_unit": [
+        0.785,
+        0.492,
+        0.807,
+        0.518
+      ],
+      "chart1_class": "topmark: 2 spheres",
+      "crop_id": "topmark_two_spheres",
+      "evidence_counts": {},
+      "image": "out/chart1_parity/reference/crops/topmark_two_spheres.png",
+      "mapped_assets": 0,
+      "page": 88,
+      "sample_assets": [],
+      "sample_render": null,
+      "sha256": "99ac5f42adc99ad677d6c0cc9948a75b0f39573c006af316c5deeb60618b56e9",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {}
+    },
+    {
+      "box_pixels": [
+        1290,
+        834,
+        1324,
+        864
+      ],
+      "box_unit": [
+        0.733,
+        0.613,
+        0.752,
+        0.635
+      ],
+      "chart1_class": "topmark: cylinder, square, vertical rectangle",
+      "crop_id": "topmark_vertical_rectangle",
+      "evidence_counts": {
+        "exact_symbol_crop": 59
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_vertical_rectangle.png",
+      "mapped_assets": 59,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA106",
+        "TOPMA107",
+        "TOPMA114",
+        "TOPMA116",
+        "TOPSHP21",
+        "TOPSHP22",
+        "TOPSHP23",
+        "TOPSHP24"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA106_us-paper_day.png",
+      "sha256": "67283e3b491b7527210ffd8fbc72293119fd6ed71d5d6c6b813af121a68f3e47",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 59
+      }
+    },
+    {
+      "box_pixels": [
+        1290,
+        876,
+        1324,
+        902
+      ],
+      "box_unit": [
+        0.733,
+        0.644,
+        0.752,
+        0.663
+      ],
+      "chart1_class": "topmark: X-shape",
+      "crop_id": "topmark_x_shape",
+      "evidence_counts": {
+        "exact_symbol_crop": 5
+      },
+      "image": "out/chart1_parity/reference/crops/topmark_x_shape.png",
+      "mapped_assets": 5,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA113",
+        "TOPSHPI1",
+        "TOPSHPI2",
+        "TOPSHPI3",
+        "TOPSHQ07"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA113_us-paper_day.png",
+      "sha256": "1f88208e7f429e57aca57633cf23fadf816438f6cd7d8e1ce546db261515f0e9",
+      "status": "exact_symbol_crop",
+      "verdict_counts": {
+        "fail": 5
+      }
+    },
+    {
+      "box_pixels": [
+        35,
+        109,
+        1725,
+        1278
+      ],
+      "box_unit": [
+        0.02,
+        0.08,
+        0.98,
+        0.94
+      ],
+      "chart1_class": "topmark examples region",
+      "crop_id": "topmarks",
+      "evidence_counts": {
+        "manual_exception": 19
+      },
+      "image": "out/chart1_parity/reference/crops/topmarks.png",
+      "mapped_assets": 19,
+      "page": 88,
+      "sample_assets": [
+        "TOPMA111",
+        "TOPMAR91",
+        "TOPMAR92",
+        "TOPMARI1",
+        "TOPSHP01",
+        "TOPSHP02",
+        "TOPSHP03",
+        "TOPSHP04"
+      ],
+      "sample_render": "out/full_catalog/renders/TOPMA111_us-paper_day.png",
+      "sha256": "8590c23246f7271e962c652009cbe43cad32be0b51c472533ead17da50f384de",
+      "status": "class_panel_reference",
+      "verdict_counts": {
+        "manual": 19
+      }
+    }
+  ],
+  "generator": "iconforge-chart1-crop-review",
+  "pdf_sha256": "0967d6cac35faf54caaff474fc85e90b05964474088b57dd1431585d78a4a1c3",
+  "pdf_url": "https://repository.library.noaa.gov/view/noaa/2719/noaa_2719_DS1.pdf",
+  "schema_version": 1,
+  "source": "out/chart1_parity/report.json"
+}

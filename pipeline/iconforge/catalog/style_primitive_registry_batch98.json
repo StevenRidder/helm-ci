@@ -1,0 +1,237 @@
+{
+  "description": "Line/stroke primitives that belong to renderer style-contract tests, not standalone icon approval.",
+  "project": "vulkan",
+  "records": [
+    {
+      "asset": "ARCSLN01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/ARCSLN01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/ARCSLN01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "ARCSLN01",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "arc/sector line style primitive; renderer stroke contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "7",
+        "lookup_rcid": "32043",
+        "object_class": "ARCSLN",
+        "s52_instruction": "LC(ARCSLN01)"
+      },
+      "semantic_brief": {
+        "brief": "ARCSLN01 is ARCSLN01. It is used as a ARCSLN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ARCSLN01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DASH",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DASH.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DASH.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DASH",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic dashed line primitive used by many lookups; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "semantic_brief": {
+        "brief": "DASH is DASH. It is used as a DASH. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DASH"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DOTT",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DOTT.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DOTT.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DOTT",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "semantic_brief": {
+        "brief": "DOTT is DOTT. It is used as a obstruction or hazard marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "SOLD",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/SOLD.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/SOLD.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "SOLD",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic solid line primitive used by many area/contour rules; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "DRVAL1?",
+          "DRVAL2?"
+        ],
+        "lookup_id": "39",
+        "lookup_rcid": "32075",
+        "object_class": "DEPARE",
+        "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+      },
+      "semantic_brief": {
+        "brief": "SOLD is SOLD. It is used as a SOLD. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SOLD"
+      },
+      "still_normal_icon_art_queue": false
+    }
+  ],
+  "schema_version": 1,
+  "status": "batch98_registry_written",
+  "summary": {
+    "rows": 4
+  },
+  "task_id": "FORGE-15",
+  "title": "Style Primitive Registry Batch 98"
+}

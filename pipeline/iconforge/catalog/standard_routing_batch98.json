@@ -1,0 +1,2934 @@
+{
+  "classification_source": "catalog/standard_reference_resolution_batch96.json",
+  "project": "vulkan",
+  "queue_policy": "remaining non-pass rows are explicitly routed; none may be silently promoted by the normal icon-art loop",
+  "records": [
+    {
+      "asset": "ARCSLN01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/ARCSLN01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/ARCSLN01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "ARCSLN01",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "arc/sector line style primitive; renderer stroke contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "7",
+        "lookup_rcid": "32043",
+        "object_class": "ARCSLN",
+        "s52_instruction": "LC(ARCSLN01)"
+      },
+      "semantic_brief": {
+        "brief": "ARCSLN01 is ARCSLN01. It is used as a ARCSLN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ARCSLN01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "BCNCON81",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/BCNCON81.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch97/BCNCON81.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "chart1_parity_blocked_after_symbolspec_render",
+      "evidence_required": [
+        "exact_symbol_crop_or_equivalent_tight_witness",
+        "s57_s52_condition_confirmation",
+        "human_manual_exception_only_if_no_official_witness_exists"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "buoy_beacon_marks",
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "BCNCON81",
+      "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DANGER53",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DANGER53.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/DANGER53.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DANGER53",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEDANGER03"
+        ],
+        "lookup_id": "1630",
+        "lookup_rcid": "31682",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(DANGER53)"
+      },
+      "semantic_brief": {
+        "brief": "DANGER53 is DANGER53. It is used as a DANGER53. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DANGER53"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DASH",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DASH.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DASH.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DASH",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic dashed line primitive used by many lookups; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "semantic_brief": {
+        "brief": "DASH is DASH. It is used as a DASH. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DASH"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DATCVR01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DATCVR01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DATCVR01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DATCVR01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "data-coverage conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "100",
+        "lookup_rcid": "32136",
+        "object_class": "M_COVR",
+        "s52_instruction": "CS(DATCVR01)"
+      },
+      "semantic_brief": {
+        "brief": "DATCVR01 is DATCVR01. It is used as a DATCVR01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DATCVR01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DEPARE01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DEPARE01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DEPARE01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPARE01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "depth-area conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "40",
+        "lookup_rcid": "32076",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPARE01)"
+      },
+      "semantic_brief": {
+        "brief": "DEPARE01 is DEPARE01. It is used as a DEPARE01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPARE01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DEPARE02",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DEPARE02.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DEPARE02.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPARE02",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "depth-area conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "253",
+        "lookup_rcid": "32288",
+        "object_class": "depare",
+        "s52_instruction": "CS(DEPARE02)"
+      },
+      "semantic_brief": {
+        "brief": "DEPARE02 is DEPARE02. It is used as a DEPARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPARE02"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DEPCNT02",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DEPCNT02.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DEPCNT02.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "DEPCNT02",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "depth-contour conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "728",
+        "lookup_rcid": "31804",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPCNT02)"
+      },
+      "semantic_brief": {
+        "brief": "DEPCNT02 is DEPCNT02. It is used as a DEPCNT02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPCNT02"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/DGPS01DRFSTA01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "DGPS01DRFSTA01",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "CATROS10"
+        ],
+        "lookup_id": "1232",
+        "lookup_rcid": "31284",
+        "object_class": "RDOSTA",
+        "s52_instruction": "SY(DGPS01DRFSTA01)"
+      },
+      "semantic_brief": {
+        "brief": "DGPS01DRFSTA01 is DGPS01DRFSTA01. It is used as a DGPS01DRFSTA01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DGPS01DRFSTA01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "DOTT",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/DOTT.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/DOTT.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "DOTT",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "semantic_brief": {
+        "brief": "DOTT is DOTT. It is used as a obstruction or hazard marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "LEGLIN02",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/LEGLIN02.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/LEGLIN02.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "LEGLIN02",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "leg-line conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "886",
+        "lookup_rcid": "31962",
+        "object_class": "leglin",
+        "s52_instruction": "CS(LEGLIN02)"
+      },
+      "semantic_brief": {
+        "brief": "LEGLIN02 is LEGLIN02. It is used as a LEGLIN02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "LEGLIN02"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "NEWOBJ 01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/NEWOBJ_01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ_01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "manual_exception_newobj_placeholder",
+      "evidence_required": [
+        "product_policy_decision",
+        "manual_exception_reason",
+        "final_human_signoff_if_published"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ 01",
+      "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "manual_exception_policy_batch98",
+      "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+      "routing_bucket": "manual_policy_exception",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1189",
+        "lookup_rcid": "31241",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ 01)"
+      },
+      "semantic_brief": {
+        "brief": "NEWOBJ 01 is NEWOBJ 01. It is used as a NEWOBJ 01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "NEWOBJ 01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "NEWOBJ01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/NEWOBJ01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "manual_exception_newobj_placeholder",
+      "evidence_required": [
+        "product_policy_decision",
+        "manual_exception_reason",
+        "final_human_signoff_if_published"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch4.json",
+      "kind": "symbol",
+      "name": "NEWOBJ01",
+      "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "manual_exception_policy_batch98",
+      "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+      "routing_bucket": "manual_policy_exception",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "119",
+        "lookup_rcid": "32155",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)"
+      },
+      "semantic_brief": {
+        "brief": "NEWOBJ01 is NEWOBJ01. It is used as a NEWOBJ01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "NEWOBJ01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "OWNSHP02",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/OWNSHP02.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/OWNSHP02.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "OWNSHP02",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "own-ship conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1529",
+        "lookup_rcid": "31581",
+        "object_class": "ownshp",
+        "s52_instruction": "CS(OWNSHP02)"
+      },
+      "semantic_brief": {
+        "brief": "OWNSHP02 is OWNSHP02. It is used as a OWNSHP02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "OWNSHP02"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "QUAPOS01;TX(OBJNAM",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/QUAPOS01_TX_OBJNAM.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/QUAPOS01_TX_OBJNAM.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "QUAPOS01;TX(OBJNAM",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "quality-of-position/text conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1134",
+        "lookup_rcid": "31186",
+        "object_class": "LNDARE",
+        "s52_instruction": "SY(LNDARE01);CS(QUAPOS01;TX(OBJNAM,1,2,3,'15118',-1,-1,CHBLK,26))"
+      },
+      "semantic_brief": {
+        "brief": "QUAPOS01;TX(OBJNAM is QUAPOS01;TX(OBJNAM. It is used as a QUAPOS01;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "QUAPOS01;TX(OBJNAM"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "RESARE01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/RESARE01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/RESARE01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESARE01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "restricted-area conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "342",
+        "lookup_rcid": "32377",
+        "object_class": "ACHARE",
+        "s52_instruction": "SY(ACHARE51);LC(ACHARE51);CS(RESARE01)"
+      },
+      "semantic_brief": {
+        "brief": "RESARE01 is RESARE01. It is used as a anchorage-area or anchoring-related chart marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "anchorage-area or anchoring-related chart marking"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "RESARE02",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/RESARE02.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/RESARE02.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "areas_patterns_lines",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESARE02",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "restricted-area conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [
+          "CATREA4"
+        ],
+        "lookup_id": "166",
+        "lookup_rcid": "93668",
+        "object_class": "RESARE",
+        "s52_instruction": "TX(OBJNAM,3,1,2,'15110',1,0,CHMGD,29);CS(RESARE02)"
+      },
+      "semantic_brief": {
+        "brief": "RESARE02 is RESARE02. It is used as a RESARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "RESARE02"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "RESTRN01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/RESTRN01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/RESTRN01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "RESTRN01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "restriction conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "semantic_brief": {
+        "brief": "RESTRN01 is RESTRN01. It is used as a RESTRN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "RESTRN01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "SLCONS03",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/SLCONS03.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/SLCONS03.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "SLCONS03",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "shoreline-construction conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [
+          "CATSLC4"
+        ],
+        "lookup_id": "1564",
+        "lookup_rcid": "31616",
+        "object_class": "slcons",
+        "s52_instruction": "SY(PIER0001);CS(SLCONS03)"
+      },
+      "semantic_brief": {
+        "brief": "SLCONS03 is SLCONS03. It is used as a SLCONS03. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SLCONS03"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "SOLD",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/SOLD.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/SOLD.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "style_primitive_not_standalone_icon",
+      "evidence_required": [
+        "stroke_dash_pattern_contract",
+        "palette_and_line_width_contract",
+        "renderer_golden_or_structural_test"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "wreck_rock_obstruction",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "line-style",
+      "name": "SOLD",
+      "next_action": "cover_by_renderer_style_contract_tests",
+      "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "style_primitive_registry_batch98",
+      "resolution": "generic solid line primitive used by many area/contour rules; style contract, not a standalone icon",
+      "routing_bucket": "style_primitive_registry",
+      "s57_structure": {
+        "conditions": [
+          "DRVAL1?",
+          "DRVAL2?"
+        ],
+        "lookup_id": "39",
+        "lookup_rcid": "32075",
+        "object_class": "DEPARE",
+        "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+      },
+      "semantic_brief": {
+        "brief": "SOLD is SOLD. It is used as a SOLD. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SOLD"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "SYMINS01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/SYMINS01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/SYMINS01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "SYMINS01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "symbol-instruction conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [
+          "SYMINS"
+        ],
+        "lookup_id": "118",
+        "lookup_rcid": "32154",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "CS(SYMINS01)"
+      },
+      "semantic_brief": {
+        "brief": "SYMINS01 is SYMINS01. It is used as a SYMINS01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SYMINS01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "TOPMARI1",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/TOPMARI1.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/TOPMARI1.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "lights_daymarks_topmarks",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "TOPMARI1",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "topmark conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1597",
+        "lookup_rcid": "31649",
+        "object_class": "topmar",
+        "s52_instruction": "CS(TOPMARI1)"
+      },
+      "semantic_brief": {
+        "brief": "TOPMARI1 is TOPMARI1. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "VEHTRF01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/VEHTRF01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch84/VEHTRF01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "reference_blocked_official_symbol",
+      "evidence_required": [
+        "official_symbol_witness",
+        "s57_s52_condition_confirmation",
+        "source_crop_or_render_reference_id"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch84.json",
+      "kind": "symbol",
+      "name": "VEHTRF01",
+      "next_action": "attach_tight_reference_before_render",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf",
+        "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      },
+      "semantic_brief": {
+        "brief": "VEHTRF01 is VEHTRF01. It is used as a VEHTRF01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VEHTRF01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "VESSEL01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/VESSEL01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/VESSEL01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "VESSEL01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "vessel conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1601",
+        "lookup_rcid": "31653",
+        "object_class": "vessel",
+        "s52_instruction": "CS(VESSEL01)"
+      },
+      "semantic_brief": {
+        "brief": "VESSEL01 is VESSEL01. It is used as a VESSEL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VESSEL01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "VRMEBL01",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/VRMEBL01.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch91/VRMEBL01.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "portrayal_rule_not_standalone_icon",
+      "evidence_required": [
+        "conditional_procedure_mapping",
+        "runtime_rule_expected_output",
+        "not_comparable_as_standalone_svg_reason"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "pending_judge",
+      "input_source_batch": "catalog/owned_repair_batch91.json",
+      "kind": "conditional-procedure",
+      "name": "VRMEBL01",
+      "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+      "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "portrayal_rule_registry_batch98",
+      "resolution": "VRM/EBL conditional procedure",
+      "routing_bucket": "portrayal_rule_registry",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "877",
+        "lookup_rcid": "31953",
+        "object_class": "ebline",
+        "s52_instruction": "CS(VRMEBL01)"
+      },
+      "semantic_brief": {
+        "brief": "VRMEBL01 is VRMEBL01. It is used as a VRMEBL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VRMEBL01"
+      },
+      "still_normal_icon_art_queue": false
+    },
+    {
+      "asset": "boyspp50",
+      "candidate": {
+        "canonical_svg": "assets/svg/triad_generated/boyspp50.svg",
+        "source": "owned_repair_batch",
+        "source_svg": "assets/svg/owned_repair_batch97/boyspp50.svg",
+        "style_contract": "helm-openbridge-navigation-v1"
+      },
+      "classification": "chart1_parity_blocked_after_symbolspec_render",
+      "evidence_required": [
+        "exact_symbol_crop_or_equivalent_tight_witness",
+        "s57_s52_condition_confirmation",
+        "human_manual_exception_only_if_no_official_witness_exists"
+      ],
+      "excluded_from_normal_icon_art_queue": true,
+      "family": "ugly_attribute_edges",
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "kind": "symbol",
+      "name": "boyspp50",
+      "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+      "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+      "reference_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "registry_target": "witness_needed_batch98",
+      "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "semantic_brief": {
+        "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "boyspp50"
+      },
+      "still_normal_icon_art_queue": false
+    }
+  ],
+  "registries": {
+    "manual_exception_policy_batch98": [
+      {
+        "asset": "NEWOBJ 01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/NEWOBJ_01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ_01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "manual_exception_newobj_placeholder",
+        "evidence_required": [
+          "product_policy_decision",
+          "manual_exception_reason",
+          "final_human_signoff_if_published"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "judge_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch4.json",
+        "kind": "symbol",
+        "name": "NEWOBJ 01",
+        "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "manual_exception_policy_batch98",
+        "resolution": "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+        "routing_bucket": "manual_policy_exception",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "1189",
+          "lookup_rcid": "31241",
+          "object_class": "NEWOBJ",
+          "s52_instruction": "SY(NEWOBJ 01)"
+        },
+        "semantic_brief": {
+          "brief": "NEWOBJ 01 is NEWOBJ 01. It is used as a NEWOBJ 01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "NEWOBJ 01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "NEWOBJ01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/NEWOBJ01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch4/NEWOBJ01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "manual_exception_newobj_placeholder",
+        "evidence_required": [
+          "product_policy_decision",
+          "manual_exception_reason",
+          "final_human_signoff_if_published"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "judge_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch4.json",
+        "kind": "symbol",
+        "name": "NEWOBJ01",
+        "next_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_product_policy_decision",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "manual_exception_policy_batch98",
+        "resolution": "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+        "routing_bucket": "manual_policy_exception",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "119",
+          "lookup_rcid": "32155",
+          "object_class": "NEWOBJ",
+          "s52_instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)"
+        },
+        "semantic_brief": {
+          "brief": "NEWOBJ01 is NEWOBJ01. It is used as a NEWOBJ01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "NEWOBJ01"
+        },
+        "still_normal_icon_art_queue": false
+      }
+    ],
+    "portrayal_rule_registry_batch98": [
+      {
+        "asset": "DATCVR01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DATCVR01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DATCVR01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "DATCVR01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "data-coverage conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "100",
+          "lookup_rcid": "32136",
+          "object_class": "M_COVR",
+          "s52_instruction": "CS(DATCVR01)"
+        },
+        "semantic_brief": {
+          "brief": "DATCVR01 is DATCVR01. It is used as a DATCVR01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DATCVR01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DEPARE01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DEPARE01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DEPARE01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "wreck_rock_obstruction",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "DEPARE01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "depth-area conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "40",
+          "lookup_rcid": "32076",
+          "object_class": "DEPARE",
+          "s52_instruction": "CS(DEPARE01)"
+        },
+        "semantic_brief": {
+          "brief": "DEPARE01 is DEPARE01. It is used as a DEPARE01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DEPARE01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DEPARE02",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DEPARE02.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DEPARE02.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "wreck_rock_obstruction",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "DEPARE02",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "depth-area conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "253",
+          "lookup_rcid": "32288",
+          "object_class": "depare",
+          "s52_instruction": "CS(DEPARE02)"
+        },
+        "semantic_brief": {
+          "brief": "DEPARE02 is DEPARE02. It is used as a DEPARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DEPARE02"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DEPCNT02",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DEPCNT02.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DEPCNT02.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "wreck_rock_obstruction",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "DEPCNT02",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "depth-contour conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "728",
+          "lookup_rcid": "31804",
+          "object_class": "DEPARE",
+          "s52_instruction": "CS(DEPCNT02)"
+        },
+        "semantic_brief": {
+          "brief": "DEPCNT02 is DEPCNT02. It is used as a DEPCNT02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DEPCNT02"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "LEGLIN02",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/LEGLIN02.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/LEGLIN02.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "LEGLIN02",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "leg-line conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "886",
+          "lookup_rcid": "31962",
+          "object_class": "leglin",
+          "s52_instruction": "CS(LEGLIN02)"
+        },
+        "semantic_brief": {
+          "brief": "LEGLIN02 is LEGLIN02. It is used as a LEGLIN02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "LEGLIN02"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "OWNSHP02",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/OWNSHP02.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/OWNSHP02.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "OWNSHP02",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "own-ship conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "1529",
+          "lookup_rcid": "31581",
+          "object_class": "ownshp",
+          "s52_instruction": "CS(OWNSHP02)"
+        },
+        "semantic_brief": {
+          "brief": "OWNSHP02 is OWNSHP02. It is used as a OWNSHP02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "OWNSHP02"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "QUAPOS01;TX(OBJNAM",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/QUAPOS01_TX_OBJNAM.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/QUAPOS01_TX_OBJNAM.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "areas_patterns_lines",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "QUAPOS01;TX(OBJNAM",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "quality-of-position/text conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "1134",
+          "lookup_rcid": "31186",
+          "object_class": "LNDARE",
+          "s52_instruction": "SY(LNDARE01);CS(QUAPOS01;TX(OBJNAM,1,2,3,'15118',-1,-1,CHBLK,26))"
+        },
+        "semantic_brief": {
+          "brief": "QUAPOS01;TX(OBJNAM is QUAPOS01;TX(OBJNAM. It is used as a QUAPOS01;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "QUAPOS01;TX(OBJNAM"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "RESARE01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/RESARE01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/RESARE01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "areas_patterns_lines",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "RESARE01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "restricted-area conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "342",
+          "lookup_rcid": "32377",
+          "object_class": "ACHARE",
+          "s52_instruction": "SY(ACHARE51);LC(ACHARE51);CS(RESARE01)"
+        },
+        "semantic_brief": {
+          "brief": "RESARE01 is RESARE01. It is used as a anchorage-area or anchoring-related chart marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "anchorage-area or anchoring-related chart marking"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "RESARE02",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/RESARE02.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/RESARE02.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "areas_patterns_lines",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "RESARE02",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "restricted-area conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [
+            "CATREA4"
+          ],
+          "lookup_id": "166",
+          "lookup_rcid": "93668",
+          "object_class": "RESARE",
+          "s52_instruction": "TX(OBJNAM,3,1,2,'15110',1,0,CHMGD,29);CS(RESARE02)"
+        },
+        "semantic_brief": {
+          "brief": "RESARE02 is RESARE02. It is used as a RESARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "RESARE02"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "RESTRN01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/RESTRN01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/RESTRN01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "RESTRN01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "restriction conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [
+            "ORIENT ",
+            "TRAFIC1"
+          ],
+          "lookup_id": "47",
+          "lookup_rcid": "32083",
+          "object_class": "DWRTPT",
+          "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+        },
+        "semantic_brief": {
+          "brief": "RESTRN01 is RESTRN01. It is used as a RESTRN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "RESTRN01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "SLCONS03",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/SLCONS03.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/SLCONS03.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "SLCONS03",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "shoreline-construction conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [
+            "CATSLC4"
+          ],
+          "lookup_id": "1564",
+          "lookup_rcid": "31616",
+          "object_class": "slcons",
+          "s52_instruction": "SY(PIER0001);CS(SLCONS03)"
+        },
+        "semantic_brief": {
+          "brief": "SLCONS03 is SLCONS03. It is used as a SLCONS03. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "SLCONS03"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "SYMINS01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/SYMINS01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/SYMINS01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "SYMINS01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "symbol-instruction conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [
+            "SYMINS"
+          ],
+          "lookup_id": "118",
+          "lookup_rcid": "32154",
+          "object_class": "NEWOBJ",
+          "s52_instruction": "CS(SYMINS01)"
+        },
+        "semantic_brief": {
+          "brief": "SYMINS01 is SYMINS01. It is used as a SYMINS01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "SYMINS01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "TOPMARI1",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/TOPMARI1.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/TOPMARI1.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "lights_daymarks_topmarks",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "TOPMARI1",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "topmark conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "1597",
+          "lookup_rcid": "31649",
+          "object_class": "topmar",
+          "s52_instruction": "CS(TOPMARI1)"
+        },
+        "semantic_brief": {
+          "brief": "TOPMARI1 is TOPMARI1. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "exact topmark silhouette/count/orientation from the references",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "topmark symbol attached to an aid to navigation"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "VESSEL01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/VESSEL01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/VESSEL01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "VESSEL01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "vessel conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "1601",
+          "lookup_rcid": "31653",
+          "object_class": "vessel",
+          "s52_instruction": "CS(VESSEL01)"
+        },
+        "semantic_brief": {
+          "brief": "VESSEL01 is VESSEL01. It is used as a VESSEL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "VESSEL01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "VRMEBL01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/VRMEBL01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/VRMEBL01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "portrayal_rule_not_standalone_icon",
+        "evidence_required": [
+          "conditional_procedure_mapping",
+          "runtime_rule_expected_output",
+          "not_comparable_as_standalone_svg_reason"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "conditional-procedure",
+        "name": "VRMEBL01",
+        "next_action": "cover_by_portrayal_rule_or_runtime_renderer_test",
+        "queue_policy": "track_in_rule_registry_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "portrayal_rule_registry_batch98",
+        "resolution": "VRM/EBL conditional procedure",
+        "routing_bucket": "portrayal_rule_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "877",
+          "lookup_rcid": "31953",
+          "object_class": "ebline",
+          "s52_instruction": "CS(VRMEBL01)"
+        },
+        "semantic_brief": {
+          "brief": "VRMEBL01 is VRMEBL01. It is used as a VRMEBL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "VRMEBL01"
+        },
+        "still_normal_icon_art_queue": false
+      }
+    ],
+    "style_primitive_registry_batch98": [
+      {
+        "asset": "ARCSLN01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/ARCSLN01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/ARCSLN01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "style_primitive_not_standalone_icon",
+        "evidence_required": [
+          "stroke_dash_pattern_contract",
+          "palette_and_line_width_contract",
+          "renderer_golden_or_structural_test"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "areas_patterns_lines",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "line-style",
+        "name": "ARCSLN01",
+        "next_action": "cover_by_renderer_style_contract_tests",
+        "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "style_primitive_registry_batch98",
+        "resolution": "arc/sector line style primitive; renderer stroke contract, not a standalone icon",
+        "routing_bucket": "style_primitive_registry",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "7",
+          "lookup_rcid": "32043",
+          "object_class": "ARCSLN",
+          "s52_instruction": "LC(ARCSLN01)"
+        },
+        "semantic_brief": {
+          "brief": "ARCSLN01 is ARCSLN01. It is used as a ARCSLN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "ARCSLN01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DASH",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DASH.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DASH.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "style_primitive_not_standalone_icon",
+        "evidence_required": [
+          "stroke_dash_pattern_contract",
+          "palette_and_line_width_contract",
+          "renderer_golden_or_structural_test"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "areas_patterns_lines",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "line-style",
+        "name": "DASH",
+        "next_action": "cover_by_renderer_style_contract_tests",
+        "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "style_primitive_registry_batch98",
+        "resolution": "generic dashed line primitive used by many lookups; style contract, not a standalone icon",
+        "routing_bucket": "style_primitive_registry",
+        "s57_structure": {
+          "conditions": [
+            "ORIENT ",
+            "TRAFIC1"
+          ],
+          "lookup_id": "47",
+          "lookup_rcid": "32083",
+          "object_class": "DWRTPT",
+          "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+        },
+        "semantic_brief": {
+          "brief": "DASH is DASH. It is used as a DASH. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DASH"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DOTT",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DOTT.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/DOTT.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "style_primitive_not_standalone_icon",
+        "evidence_required": [
+          "stroke_dash_pattern_contract",
+          "palette_and_line_width_contract",
+          "renderer_golden_or_structural_test"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "wreck_rock_obstruction",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "line-style",
+        "name": "DOTT",
+        "next_action": "cover_by_renderer_style_contract_tests",
+        "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "style_primitive_registry_batch98",
+        "resolution": "generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon",
+        "routing_bucket": "style_primitive_registry",
+        "s57_structure": {
+          "conditions": [
+            "CATOBS6"
+          ],
+          "lookup_id": "122",
+          "lookup_rcid": "32158",
+          "object_class": "OBSTRN",
+          "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+        },
+        "semantic_brief": {
+          "brief": "DOTT is DOTT. It is used as a obstruction or hazard marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "obstruction or hazard marking"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "SOLD",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/SOLD.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch91/SOLD.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "style_primitive_not_standalone_icon",
+        "evidence_required": [
+          "stroke_dash_pattern_contract",
+          "palette_and_line_width_contract",
+          "renderer_golden_or_structural_test"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "wreck_rock_obstruction",
+        "final_approved": false,
+        "input_candidate_status": "pending_judge",
+        "input_source_batch": "catalog/owned_repair_batch91.json",
+        "kind": "line-style",
+        "name": "SOLD",
+        "next_action": "cover_by_renderer_style_contract_tests",
+        "queue_policy": "track_in_renderer_style_contract_not_icon_art_approval",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "style_primitive_registry_batch98",
+        "resolution": "generic solid line primitive used by many area/contour rules; style contract, not a standalone icon",
+        "routing_bucket": "style_primitive_registry",
+        "s57_structure": {
+          "conditions": [
+            "DRVAL1?",
+            "DRVAL2?"
+          ],
+          "lookup_id": "39",
+          "lookup_rcid": "32075",
+          "object_class": "DEPARE",
+          "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+        },
+        "semantic_brief": {
+          "brief": "SOLD is SOLD. It is used as a SOLD. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "SOLD"
+        },
+        "still_normal_icon_art_queue": false
+      }
+    ],
+    "witness_needed_batch98": [
+      {
+        "asset": "BCNCON81",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/BCNCON81.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch97/BCNCON81.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "chart1_parity_blocked_after_symbolspec_render",
+        "evidence_required": [
+          "exact_symbol_crop_or_equivalent_tight_witness",
+          "s57_s52_condition_confirmation",
+          "human_manual_exception_only_if_no_official_witness_exists"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "buoy_beacon_marks",
+        "final_approved": false,
+        "input_candidate_status": "chart1_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch97.json",
+        "kind": "symbol",
+        "name": "BCNCON81",
+        "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "witness_needed_batch98",
+        "resolution": "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+        "routing_bucket": "chart1_parity_witness_needed",
+        "s57_structure": {
+          "conditions": [
+            "BOYSHP1",
+            "COLPAT1,2",
+            "COLOUR5,3,1,5"
+          ],
+          "lookup_id": "1781",
+          "lookup_rcid": "93806",
+          "object_class": "BCNSPP",
+          "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+        },
+        "semantic_brief": {
+          "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+          "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+          "required_colours": [
+            "blue",
+            "red",
+            "white",
+            "blue"
+          ],
+          "required_shape": "conical/nun buoy body",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+            "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+          ],
+          "unique_required_colours": [
+            "blue",
+            "red",
+            "white"
+          ],
+          "use_case": "special-purpose beacon used for named local purposes"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DANGER53",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DANGER53.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch4/DANGER53.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "reference_blocked_official_symbol",
+        "evidence_required": [
+          "official_symbol_witness",
+          "s57_s52_condition_confirmation",
+          "source_crop_or_render_reference_id"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "judge_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch4.json",
+        "kind": "symbol",
+        "name": "DANGER53",
+        "next_action": "attach_tight_reference_before_render",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "witness_needed_batch98",
+        "resolution": "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+        "routing_bucket": "witness_needed_official_symbol",
+        "s57_structure": {
+          "conditions": [
+            "$SCODEDANGER03"
+          ],
+          "lookup_id": "1630",
+          "lookup_rcid": "31682",
+          "object_class": "$CSYMB",
+          "s52_instruction": "SY(DANGER53)"
+        },
+        "semantic_brief": {
+          "brief": "DANGER53 is DANGER53. It is used as a DANGER53. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DANGER53"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "DGPS01DRFSTA01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch4/DGPS01DRFSTA01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "reference_blocked_official_symbol",
+        "evidence_required": [
+          "official_symbol_witness",
+          "s57_s52_condition_confirmation",
+          "source_crop_or_render_reference_id"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "judge_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch4.json",
+        "kind": "symbol",
+        "name": "DGPS01DRFSTA01",
+        "next_action": "attach_tight_reference_before_render",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "witness_needed_batch98",
+        "resolution": "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+        "routing_bucket": "witness_needed_official_symbol",
+        "s57_structure": {
+          "conditions": [
+            "CATROS10"
+          ],
+          "lookup_id": "1232",
+          "lookup_rcid": "31284",
+          "object_class": "RDOSTA",
+          "s52_instruction": "SY(DGPS01DRFSTA01)"
+        },
+        "semantic_brief": {
+          "brief": "DGPS01DRFSTA01 is DGPS01DRFSTA01. It is used as a DGPS01DRFSTA01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "DGPS01DRFSTA01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "VEHTRF01",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/VEHTRF01.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch84/VEHTRF01.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "reference_blocked_official_symbol",
+        "evidence_required": [
+          "official_symbol_witness",
+          "s57_s52_condition_confirmation",
+          "source_crop_or_render_reference_id"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "judge_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch84.json",
+        "kind": "symbol",
+        "name": "VEHTRF01",
+        "next_action": "attach_tight_reference_before_render",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_tight_witness_attached",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "witness_needed_batch98",
+        "resolution": "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+        "routing_bucket": "witness_needed_official_symbol",
+        "s57_structure": {
+          "conditions": [],
+          "lookup_id": "311",
+          "lookup_rcid": "32346",
+          "object_class": "vehtrf",
+          "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+        },
+        "semantic_brief": {
+          "brief": "VEHTRF01 is VEHTRF01. It is used as a VEHTRF01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+          "colour_pattern": null,
+          "required_colours": [],
+          "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [],
+          "use_case": "VEHTRF01"
+        },
+        "still_normal_icon_art_queue": false
+      },
+      {
+        "asset": "boyspp50",
+        "candidate": {
+          "canonical_svg": "assets/svg/triad_generated/boyspp50.svg",
+          "source": "owned_repair_batch",
+          "source_svg": "assets/svg/owned_repair_batch97/boyspp50.svg",
+          "style_contract": "helm-openbridge-navigation-v1"
+        },
+        "classification": "chart1_parity_blocked_after_symbolspec_render",
+        "evidence_required": [
+          "exact_symbol_crop_or_equivalent_tight_witness",
+          "s57_s52_condition_confirmation",
+          "human_manual_exception_only_if_no_official_witness_exists"
+        ],
+        "excluded_from_normal_icon_art_queue": true,
+        "family": "ugly_attribute_edges",
+        "final_approved": false,
+        "input_candidate_status": "chart1_fail_repair_queue",
+        "input_source_batch": "catalog/owned_repair_batch97.json",
+        "kind": "symbol",
+        "name": "boyspp50",
+        "next_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate",
+        "queue_policy": "exclude_from_normal_icon_art_queue_until_chart1_parity_evidence",
+        "reference_counts": {
+          "aquamap": 0,
+          "opencpn_render": 0,
+          "s101": 0
+        },
+        "registry_target": "witness_needed_batch98",
+        "resolution": "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+        "routing_bucket": "chart1_parity_witness_needed",
+        "s57_structure": {
+          "conditions": [
+            "catwwm19",
+            "COLOUR6"
+          ],
+          "lookup_id": "1383",
+          "lookup_rcid": "31435",
+          "object_class": "boywtw",
+          "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+        },
+        "semantic_brief": {
+          "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+          "colour_pattern": null,
+          "required_colours": [
+            "yellow"
+          ],
+          "required_shape": "buoy symbol matching the S-57 buoy family",
+          "safety_invariants": [
+            "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+            "Preserve load-bearing colours and colour order.",
+            "Preserve topmark count/orientation and band pattern when present.",
+            "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+          ],
+          "unique_required_colours": [
+            "yellow"
+          ],
+          "use_case": "boyspp50"
+        },
+        "still_normal_icon_art_queue": false
+      }
+    ]
+  },
+  "schema_version": 1,
+  "source_table": "catalog/standard_source_table.json",
+  "status": "standard_routing_batch98_written",
+  "summary": {
+    "chart1_parity_witness_needed": 2,
+    "input_status_counts": {
+      "chart1_fail_repair_queue": 2,
+      "judge_fail_repair_queue": 5,
+      "pending_judge": 19
+    },
+    "manual_policy_exception": 2,
+    "portrayal_rule_registry": 15,
+    "routing_bucket_counts": {
+      "chart1_parity_witness_needed": 2,
+      "manual_policy_exception": 2,
+      "portrayal_rule_registry": 15,
+      "style_primitive_registry": 4,
+      "witness_needed_official_symbol": 3
+    },
+    "still_normal_icon_art_queue": 0,
+    "style_primitive_registry": 4,
+    "total_routed": 26,
+    "witness_needed_official_symbol": 3
+  },
+  "task_id": "FORGE-15"
+}

@@ -1,0 +1,238 @@
+# Topmark Standards Pass
+
+Dedicated topmark/daymark evidence pack for the LLM judge/repair loop.
+
+## Summary
+
+- standard_shape_refs: `33`
+- topmark_rows_needing_special_pass: `137`
+- resolved_exact_or_inferred_shape_rows: `134`
+- ambiguous_or_unresolved_rows: `3`
+- human_rejected_rows: `4`
+- candidate_png_rendered_rows: `137`
+- s101_topmark_svg_entries: `32`
+- s101_topmark_svg_sources_found: `32`
+- s101_topmark_png_rendered: `32`
+- rows_with_s101_witnesses: `134`
+- basis_counts: `{'legacy_topma_row_requires_manual_mapping': 1, 'row_name_inferred_circle': 1, 's57_structure_conditions_TOPSHP': 133, 'topmar_symbol_not_present_in_s101_topmar02_map': 2}`
+- candidate_status_counts: `{'judge_pass_pending_final_approval': 136, 'portrayal_rule_registry': 1}`
+- shape_counts: `{'TOPSHP01': 1, 'TOPSHP03': 3, 'TOPSHP05': 1, 'TOPSHP06': 10, 'TOPSHP07': 4, 'TOPSHP08': 2, 'TOPSHP12': 24, 'TOPSHP15': 2, 'TOPSHP16': 2, 'TOPSHP17': 2, 'TOPSHP19': 24, 'TOPSHP20': 10, 'TOPSHP21': 21, 'TOPSHP22': 3, 'TOPSHP23': 3, 'TOPSHP24': 15, 'TOPSHP25': 2, 'TOPSHP26': 3, 'TOPSHP33': 2, 'unresolved': 3}`
+
+## Sources
+
+- [IHO S-57 Appendix A, Chapter 2, attribute TOPSHP](https://iho.int/uploads/user/pubs/standards/s-57/31ApAch2.pdf) - official code list for topmark shape values 1-33
+- [S-101 Feature Catalogue topmarkDaymarkShape / TOPSHP](https://services.data.shom.fr/static/jeux_test/S-101_FC.htm) - S-101 successor attribute values for topmark/daymark shape
+- [IHO S-101 TOPMAR02.lua portrayal rule](https://raw.githubusercontent.com/iho-ohi/S-101_Portrayal-Catalogue/main/PortrayalCatalog/Rules/TOPMAR02.lua) - rule-derived mapping from topmarkDaymarkShape to point instructions
+- [NOAA/NGA Chart No. 1 Section Q](https://msi.nga.mil/api/publications/download?key=16694005%2FSFH00000%2FSec_Q.pdf) - public chart-symbol witness for buoy/topmark families
+- [Canadian Chart 1, Q topmarks](https://charts.gc.ca/publications/chart1-carte1/sections/q-buoys/topmarks-eng.html) - human-readable reference page for common topmark shapes
+
+## S-101 Topmark SVG Witnesses
+
+- `TMARDEF1`: topmark for beacons, flag or other shape (`PortrayalCatalog/Symbols/TMARDEF1.svg`, local=True, rendered=True)
+- `TMARDEF2`: topmark for buoys, flag or other shape (`PortrayalCatalog/Symbols/TMARDEF2.svg`, local=True, rendered=True)
+- `TOPMAR02`: topmark for buoys, cone point up (`PortrayalCatalog/Symbols/TOPMAR02.svg`, local=True, rendered=True)
+- `TOPMAR04`: topmark for buoys, cone point down (`PortrayalCatalog/Symbols/TOPMAR04.svg`, local=True, rendered=True)
+- `TOPMAR05`: topmark for buoys, 2 cones point upward (`PortrayalCatalog/Symbols/TOPMAR05.svg`, local=True, rendered=True)
+- `TOPMAR06`: topmark for buoys, 2 cones point downward (`PortrayalCatalog/Symbols/TOPMAR06.svg`, local=True, rendered=True)
+- `TOPMAR07`: topmark for buoys, 2 cones base to base (`PortrayalCatalog/Symbols/TOPMAR07.svg`, local=True, rendered=True)
+- `TOPMAR08`: topmark for buoys, 2 cones point to point (`PortrayalCatalog/Symbols/TOPMAR08.svg`, local=True, rendered=True)
+- `TOPMAR10`: topmark for buoys, sphere (`PortrayalCatalog/Symbols/TOPMAR10.svg`, local=True, rendered=True)
+- `TOPMAR12`: topmark for buoys, 2 spheres (`PortrayalCatalog/Symbols/TOPMAR12.svg`, local=True, rendered=True)
+- `TOPMAR13`: topmark for buoys, cylinder (`PortrayalCatalog/Symbols/TOPMAR13.svg`, local=True, rendered=True)
+- `TOPMAR14`: topmark for buoys, board (`PortrayalCatalog/Symbols/TOPMAR14.svg`, local=True, rendered=True)
+- `TOPMAR16`: topmark for buoys, cube point up (`PortrayalCatalog/Symbols/TOPMAR16.svg`, local=True, rendered=True)
+- `TOPMAR17`: topmark for buoys, flag or other shape (`PortrayalCatalog/Symbols/TOPMAR17.svg`, local=True, rendered=True)
+- `TOPMAR18`: topmark for buoys, T-Shape (`PortrayalCatalog/Symbols/TOPMAR18.svg`, local=True, rendered=True)
+- `TOPMAR22`: topmark for beacons, cone point up (`PortrayalCatalog/Symbols/TOPMAR22.svg`, local=True, rendered=True)
+- `TOPMAR24`: topmark for beacons, cone point down (`PortrayalCatalog/Symbols/TOPMAR24.svg`, local=True, rendered=True)
+- `TOPMAR25`: topmark for beacons, 2 cones point upward (`PortrayalCatalog/Symbols/TOPMAR25.svg`, local=True, rendered=True)
+- `TOPMAR26`: topmark for beacons, 2 cones point downward (`PortrayalCatalog/Symbols/TOPMAR26.svg`, local=True, rendered=True)
+- `TOPMAR27`: topmark for beacons, 2 cones base to base (`PortrayalCatalog/Symbols/TOPMAR27.svg`, local=True, rendered=True)
+- `TOPMAR28`: topmark for beacons, 2 cones point to point (`PortrayalCatalog/Symbols/TOPMAR28.svg`, local=True, rendered=True)
+- `TOPMAR30`: topmark for beacons, sphere (`PortrayalCatalog/Symbols/TOPMAR30.svg`, local=True, rendered=True)
+- `TOPMAR32`: topmark for beacons, 2 spheres (`PortrayalCatalog/Symbols/TOPMAR32.svg`, local=True, rendered=True)
+- `TOPMAR33`: topmark for beacons, cylinder (`PortrayalCatalog/Symbols/TOPMAR33.svg`, local=True, rendered=True)
+- `TOPMAR34`: topmark for beacons, board (`PortrayalCatalog/Symbols/TOPMAR34.svg`, local=True, rendered=True)
+- `TOPMAR36`: topmark for beacons, cube point up (`PortrayalCatalog/Symbols/TOPMAR36.svg`, local=True, rendered=True)
+- `TOPMAR65`: topmark for buoys, x-shape (`PortrayalCatalog/Symbols/TOPMAR65.svg`, local=True, rendered=True)
+- `TOPMAR85`: topmark for beacons, x-shape (`PortrayalCatalog/Symbols/TOPMAR85.svg`, local=True, rendered=True)
+- `TOPMAR86`: topmark for beacons, upright cross (`PortrayalCatalog/Symbols/TOPMAR86.svg`, local=True, rendered=True)
+- `TOPMAR87`: topmark for beacons, besom point down (`PortrayalCatalog/Symbols/TOPMAR87.svg`, local=True, rendered=True)
+- `TOPMAR88`: topmark for beacons, besom point up (`PortrayalCatalog/Symbols/TOPMAR88.svg`, local=True, rendered=True)
+- `TOPMAR89`: topmark for beacons, T-shape (`PortrayalCatalog/Symbols/TOPMAR89.svg`, local=True, rendered=True)
+
+## Standard Shapes
+
+- `TOPSHP01`: cone, point up (floating `TOPMAR02`, rigid `TOPMAR22`)
+- `TOPSHP02`: cone, point down (floating `TOPMAR04`, rigid `TOPMAR24`)
+- `TOPSHP03`: sphere (floating `TOPMAR10`, rigid `TOPMAR30`)
+- `TOPSHP04`: two spheres (floating `TOPMAR12`, rigid `TOPMAR32`)
+- `TOPSHP05`: cylinder (floating `TOPMAR13`, rigid `TOPMAR33`)
+- `TOPSHP06`: board (floating `TOPMAR14`, rigid `TOPMAR34`)
+- `TOPSHP07`: X-shaped (floating `TOPMAR65`, rigid `TOPMAR85`)
+- `TOPSHP08`: upright cross (floating `TOPMAR17`, rigid `TOPMAR86`)
+- `TOPSHP09`: cube, point up (floating `TOPMAR16`, rigid `TOPMAR36`)
+- `TOPSHP10`: two cones, point to point (floating `TOPMAR08`, rigid `TOPMAR28`)
+- `TOPSHP11`: two cones, base to base (floating `TOPMAR07`, rigid `TOPMAR27`)
+- `TOPSHP12`: rhombus (floating `TOPMAR14`, rigid `TOPMAR14`)
+- `TOPSHP13`: two cones, points upward (floating `TOPMAR05`, rigid `TOPMAR25`)
+- `TOPSHP14`: two cones, points downward (floating `TOPMAR06`, rigid `TOPMAR26`)
+- `TOPSHP15`: besom, point up (floating `TMARDEF2`, rigid `TOPMAR88`)
+- `TOPSHP16`: besom, point down (floating `TMARDEF2`, rigid `TOPMAR87`)
+- `TOPSHP17`: flag (floating `TMARDEF2`, rigid `TMARDEF1`)
+- `TOPSHP18`: sphere over rhombus (floating `TOPMAR10`, rigid `TOPMAR30`)
+- `TOPSHP19`: square (floating `TOPMAR13`, rigid `TOPMAR33`)
+- `TOPSHP20`: rectangle, horizontal (floating `TOPMAR14`, rigid `TOPMAR34`)
+- `TOPSHP21`: rectangle, vertical (floating `TOPMAR13`, rigid `TOPMAR33`)
+- `TOPSHP22`: trapezium, up (floating `TOPMAR14`, rigid `TOPMAR34`)
+- `TOPSHP23`: trapezium, down (floating `TOPMAR14`, rigid `TOPMAR34`)
+- `TOPSHP24`: triangle, point up (floating `TOPMAR02`, rigid `TOPMAR22`)
+- `TOPSHP25`: triangle, point down (floating `TOPMAR04`, rigid `TOPMAR24`)
+- `TOPSHP26`: circle (floating `TOPMAR10`, rigid `TOPMAR30`)
+- `TOPSHP27`: two upright crosses (floating `TOPMAR17`, rigid `TOPMAR86`)
+- `TOPSHP28`: T-shape (floating `TOPMAR18`, rigid `TOPMAR89`)
+- `TOPSHP29`: triangle over circle (floating `TOPMAR02`, rigid `TOPMAR22`)
+- `TOPSHP30`: upright cross over circle (floating `TOPMAR17`, rigid `TOPMAR86`)
+- `TOPSHP31`: rhombus over circle (floating `TOPMAR14`, rigid `TOPMAR14`)
+- `TOPSHP32`: circle over triangle, point up (floating `TOPMAR10`, rigid `TOPMAR30`)
+- `TOPSHP33`: other (floating `TMARDEF2`, rigid `TMARDEF1`)
+
+## Queue
+
+- `TOPMA100` -> `TOPSHP25` triangle, point down [s57_structure_conditions_TOPSHP]
+- `TOPMA102` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPMA106` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPMA107` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPMA109` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPMA111` -> `TOPSHP08` upright cross [s57_structure_conditions_TOPSHP]
+- `TOPMA113` -> `TOPSHP07` X-shaped [s57_structure_conditions_TOPSHP]
+- `TOPMA114` -> `TOPSHP05` cylinder [s57_structure_conditions_TOPSHP]
+- `TOPMA115` -> `TOPSHP01` cone, point up [s57_structure_conditions_TOPSHP]
+- `TOPMA116` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPMA117` -> `TOPSHP26` circle [s57_structure_conditions_TOPSHP]
+- `TOPMAR01` -> `TOPSHP03` sphere [s57_structure_conditions_TOPSHP]
+- `TOPMAR87` -> `TOPSHP15` besom, point up [s57_structure_conditions_TOPSHP]
+- `TOPMAR88` -> `TOPSHP16` besom, point down [s57_structure_conditions_TOPSHP]
+- `TOPMAR90` -> `TOPSHP16` besom, point down [s57_structure_conditions_TOPSHP]
+- `TOPMAR91` -> `unresolved`  [topmar_symbol_not_present_in_s101_topmar02_map]
+- `TOPMAR92` -> `unresolved`  [topmar_symbol_not_present_in_s101_topmar02_map]
+- `TOPMAR93` -> `TOPSHP15` besom, point up [s57_structure_conditions_TOPSHP]
+- `TOPMAR98` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPMAR99` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPMARI1` -> `unresolved`  [legacy_topma_row_requires_manual_mapping]
+- `TOPSHP00` -> `TOPSHP33` other [s57_structure_conditions_TOPSHP]
+- `TOPSHP01` -> `TOPSHP23` trapezium, down [s57_structure_conditions_TOPSHP]
+- `TOPSHP02` -> `TOPSHP23` trapezium, down [s57_structure_conditions_TOPSHP]
+- `TOPSHP03` -> `TOPSHP22` trapezium, up [s57_structure_conditions_TOPSHP]
+- `TOPSHP04` -> `TOPSHP22` trapezium, up [s57_structure_conditions_TOPSHP]
+- `TOPSHP05` -> `TOPSHP25` triangle, point down [s57_structure_conditions_TOPSHP]
+- `TOPSHP07` -> `TOPSHP23` trapezium, down [s57_structure_conditions_TOPSHP]
+- `TOPSHP08` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP09;TE('%s'` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP10` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP11` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP12` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP13` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP15;TE('%s'` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP16` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP17` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP18` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP19` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP20` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHP21` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP22` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP23` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP24` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP25` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP28` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP29` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP30` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP31` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP32` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP33` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP34` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP35` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP36` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP37` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP38` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP40` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP41` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP42` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP43` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP44` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP47` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP48` -> `TOPSHP19` square [s57_structure_conditions_TOPSHP]
+- `TOPSHP51` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP52` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP53` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP54` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP55` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP58` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP61` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP62` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP63` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP64` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP65` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP67` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP69` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP70` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP71` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP72` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP73;TE('%s'` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP74` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP76` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP77` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP78` -> `TOPSHP12` rhombus [s57_structure_conditions_TOPSHP]
+- `TOPSHP79` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP80` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP81;TE('%s'` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP82` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP83` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP84` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP85` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP87` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP88` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP89;TE('%s'` -> `TOPSHP20` rectangle, horizontal [s57_structure_conditions_TOPSHP]
+- `TOPSHP90` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP91` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP92` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP93` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP94` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP95` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP96` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP97` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP98` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHP99` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA0` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA1` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA2` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA3` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA4` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA5` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA6` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA7` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA8` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPA9` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPB0` -> `TOPSHP21` rectangle, vertical [s57_structure_conditions_TOPSHP]
+- `TOPSHPD1` -> `TOPSHP26` circle [s57_structure_conditions_TOPSHP]
+- `TOPSHPD2` -> `TOPSHP03` sphere [s57_structure_conditions_TOPSHP]
+- `TOPSHPD3` -> `TOPSHP03` sphere [s57_structure_conditions_TOPSHP]
+- `TOPSHPD5` -> `TOPSHP26` circle [row_name_inferred_circle]
+- `TOPSHPI1` -> `TOPSHP07` X-shaped [s57_structure_conditions_TOPSHP]
+- `TOPSHPI2` -> `TOPSHP07` X-shaped [s57_structure_conditions_TOPSHP]
+- `TOPSHPI3` -> `TOPSHP07` X-shaped [s57_structure_conditions_TOPSHP]
+- `TOPSHPJ1` -> `TOPSHP17` flag [s57_structure_conditions_TOPSHP]
+- `TOPSHPJ3` -> `TOPSHP17` flag [s57_structure_conditions_TOPSHP]
+- `TOPSHPP2` -> `TOPSHP08` upright cross [s57_structure_conditions_TOPSHP]
+- `TOPSHPR1` -> `TOPSHP22` trapezium, up [s57_structure_conditions_TOPSHP]
+- `TOPSHPS1` -> `TOPSHP33` other [s57_structure_conditions_TOPSHP]
+- `TOPSHPT1` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT2` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT3` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT4` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT5` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT6` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT7` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPT8;TE('%s'` -> `TOPSHP06` board [s57_structure_conditions_TOPSHP]
+- `TOPSHPU1` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]
+- `TOPSHPU2` -> `TOPSHP24` triangle, point up [s57_structure_conditions_TOPSHP]

@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYCAN61 can_buoy">
+  <title>BOYCAN61 can_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BOYCAN61" data-shape="can_buoy">
+  <defs><clipPath id="clip-BOYCAN61"><path d="M18 21 Q32 14 46 21 L46 48 Q32 55 18 48 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYCAN61)">
+  <rect x="0" y="0" width="64" height="64" fill="var(--green)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M18 21 Q32 14 46 21 L46 48 Q32 55 18 48 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

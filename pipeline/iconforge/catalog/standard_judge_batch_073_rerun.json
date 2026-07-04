@@ -1,0 +1,517 @@
+{
+  "agent_id": "codex/judge73-boysup-repair-rerun",
+  "batch_id": "standard_judge_batch_073_rerun",
+  "created_at": "2026-07-01T23:00:22Z",
+  "evidence_notes": [
+    "Judged the BOYSUP repair batch against row metadata, semantic briefs, S-57/S-52 names/attributes, Chart No.1 super-buoy crop, OpenCPN S-52 references, S-101 references when provided by the batch, and repaired Helm renders.",
+    "Chart No.1 parity rows include chart1_crop:<chart1_crop_id> tokens when the batch provided crop ids, plus OpenCPN, S-101, helm_candidate, and helm_repaired_render evidence.",
+    "Each verdict includes opencpn_render:<asset>:<path>, helm_candidate:<asset>:<path>, and helm_repaired_render:<asset>:<path> evidence.",
+    "Passes are judge_pass_pending_final_approval only; this artifact grants zero final approvals."
+  ],
+  "project": "helm-icon-forge",
+  "schema_version": 1,
+  "selection": {
+    "assets": [
+      "BOYSUP01",
+      "BOYSUP02",
+      "BOYSUP03",
+      "BOYSUP62",
+      "BOYSUP65",
+      "BOYSUP66"
+    ],
+    "risk_bucket": "super_buoy_reference_repair_batch73",
+    "source_batch": "catalog/owned_repair_batch73.json"
+  },
+  "summary": {
+    "candidate_status": "repair_batch_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 6,
+    "selected": 6,
+    "source_batches": [
+      "catalog/owned_repair_batch73.json"
+    ]
+  },
+  "task_id": "standard_source_table_judge_batch_073_rerun",
+  "verdicts": [
+    {
+      "batch_index": 1,
+      "confidence": 0.94,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": null,
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP01.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__night.png"
+        ],
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "s101_refs": [
+          "pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP01.svg",
+          "PortrayalCatalog/Symbols/BOYSUP01.svg"
+        ],
+        "super_buoy_class": "squat super-buoy body with red-over-black body, small cap, and stand",
+        "warnings": [],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP01 must preserve a squat super-buoy body, not a tall can/cone/sphere buoy; required colours ['red','black']; required detail: red/black body with small cap/stand; S-57/S-52 structure: {\"conditions\":[\"BOYSHP7\"],\"lookup_id\":\"1859\",\"lookup_rcid\":\"30141\",\"object_class\":\"BOYCAR\",\"s52_instruction\":\"SY(BOYSUP01);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP01 uses the required squat super-buoy silhouette with red-over-black body and small cap/stand, matching Chart No.1 super-buoy shape, OpenCPN/S-101 witnesses, and S-57 BOYSHP7 metadata. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a squat super-buoy body with a red upper body, black lower body, small top cap, and bottom stand; it is not a tall can/cone/sphere buoy.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: BOYSUP01 preserves the required super-buoy family and red/black load-bearing colours with small cap/stand.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP01",
+        "name:super buoy, general, full-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP01 is super buoy, general, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: super-buoy body. Required colours: red, black.\",\"colour_pattern\":null,\"required_colours\":[\"red\",\"black\"],\"required_shape\":\"super-buoy body\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"red\",\"black\"],\"use_case\":\"cardinal buoy used to indicate the safe side of danger\"}",
+        "s57_structure:{\"conditions\":[\"BOYSHP7\"],\"lookup_id\":\"1859\",\"lookup_rcid\":\"30141\",\"object_class\":\"BOYCAR\",\"s52_instruction\":\"SY(BOYSUP01);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN,S-101",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "s101_reference:BOYSUP01:pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP01.svg",
+        "s101_portrayal_catalog:BOYSUP01:PortrayalCatalog/Symbols/BOYSUP01.svg",
+        "helm_candidate:BOYSUP01:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP01.svg",
+        "helm_candidate_source:BOYSUP01:pipeline/iconforge/assets/svg/triad_generated/BOYSUP01.svg",
+        "helm_before_svg:BOYSUP01:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP01.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP01:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__day.png",
+        "helm_repaired_render:BOYSUP01:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__dusk.png",
+        "helm_repaired_render:BOYSUP01:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP01__after__night.png",
+        "opencpn_render:BOYSUP01:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__day.png",
+        "opencpn_render:BOYSUP01:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__dusk.png",
+        "opencpn_render:BOYSUP01:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP01__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP01",
+      "symbol_id": "BOYSUP01",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.95,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": null,
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP02.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [
+          "pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP02.svg",
+          "PortrayalCatalog/Symbols/BOYSUP02.svg"
+        ],
+        "super_buoy_class": "squat black super-buoy body with small cap and stand",
+        "warnings": [],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP02 must preserve a squat super-buoy body, not a tall can/cone/sphere buoy; required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"BOYSHP7\"],\"lookup_id\":\"1061\",\"lookup_rcid\":\"31113\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP02);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP02 is a black squat super-buoy body with cap/stand and does not substitute a tall buoy family. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a solid black squat super-buoy body with small cap and stand.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: BOYSUP02 preserves the required black super-buoy silhouette against Chart No.1, OpenCPN, S-101, and S-57 BOYSHP7 metadata.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP02",
+        "name:super buoy, black, full-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP02 is super buoy, black, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: black.\",\"colour_pattern\":null,\"required_colours\":[\"black\"],\"required_shape\":\"super-buoy body\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"black\"],\"use_case\":\"special-purpose buoy used for named local purposes\"}",
+        "s57_structure:{\"conditions\":[\"BOYSHP7\"],\"lookup_id\":\"1061\",\"lookup_rcid\":\"31113\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP02);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN,S-101",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "s101_reference:BOYSUP02:pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP02.svg",
+        "s101_portrayal_catalog:BOYSUP02:PortrayalCatalog/Symbols/BOYSUP02.svg",
+        "helm_candidate:BOYSUP02:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP02.svg",
+        "helm_candidate_source:BOYSUP02:pipeline/iconforge/assets/svg/triad_generated/BOYSUP02.svg",
+        "helm_before_svg:BOYSUP02:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP02.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP02:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__day.png",
+        "helm_repaired_render:BOYSUP02:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__dusk.png",
+        "helm_repaired_render:BOYSUP02:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP02__after__night.png",
+        "opencpn_render:BOYSUP02:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__day.png",
+        "opencpn_render:BOYSUP02:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__dusk.png",
+        "opencpn_render:BOYSUP02:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP02__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP02",
+      "symbol_id": "BOYSUP02",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.94,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": null,
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP03.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__night.png"
+        ],
+        "required_colours": [
+          "red",
+          "black"
+        ],
+        "s101_refs": [
+          "pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP03.svg",
+          "PortrayalCatalog/Symbols/BOYSUP03.svg"
+        ],
+        "super_buoy_class": "LANBY squat super-buoy body with top asterisk/star detail",
+        "warnings": [],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP03 must preserve LANBY/super-buoy semantics with squat super-buoy body and top asterisk/star detail; required colours ['red','black']; S-57/S-52 structure: {\"conditions\":[\"CATSPM15\"],\"lookup_id\":\"1983\",\"lookup_rcid\":\"30254\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP03);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP03 keeps the LANBY/super-buoy body and includes the required top asterisk/star detail, with red/black load-bearing body colours. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a squat red/black super-buoy with a top asterisk/star detail; it does not collapse into a generic buoy body.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: BOYSUP03 preserves the required LANBY super-buoy silhouette and the top asterisk/star witness detail.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP03",
+        "name:LANBY, super-buoy, paper-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP03 is LANBY, super-buoy, paper-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: red, black.\",\"colour_pattern\":null,\"required_colours\":[\"red\",\"black\"],\"required_shape\":\"buoy symbol matching the S-57 buoy family\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"red\",\"black\"],\"use_case\":\"special-purpose buoy used for named local purposes\"}",
+        "s57_structure:{\"conditions\":[\"CATSPM15\"],\"lookup_id\":\"1983\",\"lookup_rcid\":\"30254\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP03);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN,S-101",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "s101_reference:BOYSUP03:pipeline/iconforge/assets/svg/source_priority/s101_exact/BOYSUP03.svg",
+        "s101_portrayal_catalog:BOYSUP03:PortrayalCatalog/Symbols/BOYSUP03.svg",
+        "helm_candidate:BOYSUP03:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP03.svg",
+        "helm_candidate_source:BOYSUP03:pipeline/iconforge/assets/svg/triad_generated/BOYSUP03.svg",
+        "helm_before_svg:BOYSUP03:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP03.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP03:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__day.png",
+        "helm_repaired_render:BOYSUP03:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__dusk.png",
+        "helm_repaired_render:BOYSUP03:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP03__after__night.png",
+        "opencpn_render:BOYSUP03:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__day.png",
+        "opencpn_render:BOYSUP03:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__dusk.png",
+        "opencpn_render:BOYSUP03:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP03__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP03",
+      "symbol_id": "BOYSUP03",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.95,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": null,
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP62.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__night.png"
+        ],
+        "required_colours": [
+          "yellow"
+        ],
+        "s101_refs": [],
+        "super_buoy_class": "squat yellow super-buoy body with small cap and stand",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP62 in owned_repair_batch73; judged against Chart No.1, OpenCPN, S-57/S-52 metadata, and Helm render evidence."
+        ],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP62 must preserve a squat super-buoy body, not a tall can/cone/sphere buoy; required colours ['yellow']; S-57/S-52 structure: {\"conditions\":[\"BOYSHP7\",\"COLOUR6\"],\"lookup_id\":\"1863\",\"lookup_rcid\":\"30145\",\"object_class\":\"BOYINB\",\"s52_instruction\":\"SY(BOYSUP62);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP62 is the required yellow squat super-buoy body and does not substitute another buoy family. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a squat yellow super-buoy body with small cap and stand.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP62 in owned_repair_batch73."
+        ]
+      },
+      "rationale": "Pass pending human: BOYSUP62 preserves the required yellow super-buoy silhouette against Chart No.1, OpenCPN, and S-57/S-52 BOYSHP7/COLOUR6 metadata.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP62",
+        "name:super buoy, yellow, full-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP62 is super buoy, yellow, full-chart. It is used as a installation buoy. Required geometry: super-buoy body. Required colours: yellow.\",\"colour_pattern\":null,\"required_colours\":[\"yellow\"],\"required_shape\":\"super-buoy body\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"yellow\"],\"use_case\":\"installation buoy\"}",
+        "s57_structure:{\"conditions\":[\"BOYSHP7\",\"COLOUR6\"],\"lookup_id\":\"1863\",\"lookup_rcid\":\"30145\",\"object_class\":\"BOYINB\",\"s52_instruction\":\"SY(BOYSUP62);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN",
+        "s101_reference:BOYSUP62:none_provided_in_batch",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "helm_candidate:BOYSUP62:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP62.svg",
+        "helm_candidate_source:BOYSUP62:pipeline/iconforge/assets/svg/triad_generated/BOYSUP62.svg",
+        "helm_before_svg:BOYSUP62:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP62.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP62:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__day.png",
+        "helm_repaired_render:BOYSUP62:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__dusk.png",
+        "helm_repaired_render:BOYSUP62:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP62__after__night.png",
+        "opencpn_render:BOYSUP62:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__day.png",
+        "opencpn_render:BOYSUP62:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__dusk.png",
+        "opencpn_render:BOYSUP62:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP62__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP62",
+      "symbol_id": "BOYSUP62",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.94,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": "vertical bands/stripes in the listed colour order",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP65.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__night.png"
+        ],
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "s101_refs": [],
+        "super_buoy_class": "squat red-left/white-right vertical-split super-buoy body",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP65 in owned_repair_batch73; judged against Chart No.1, OpenCPN, S-57/S-52 metadata, and Helm render evidence."
+        ],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP65 must preserve a squat super-buoy body with vertical red/white split in the listed colour order, not a horizontal-band buoy or tall buoy family; S-57/S-52 structure: {\"conditions\":[\"BOYSHP7\",\"COLPAT2\",\"COLOUR3,1\"],\"lookup_id\":\"1954\",\"lookup_rcid\":\"30233\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP65);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP65 keeps the squat super-buoy silhouette and the required vertical red-left/white-right colour split. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a squat super-buoy body split vertically, red on the left and white on the right.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP65 in owned_repair_batch73."
+        ]
+      },
+      "rationale": "Pass pending human: BOYSUP65 preserves the required vertical red/white split and super-buoy silhouette; it is not swapped with BOYSUP66's horizontal banding.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP65",
+        "name:super buoy, red, white, full-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP65 is super buoy, red, white, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: red, white with vertical bands/stripes in the listed colour order.\",\"colour_pattern\":\"vertical bands/stripes in the listed colour order\",\"required_colours\":[\"red\",\"white\"],\"required_shape\":\"super-buoy body\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"red\",\"white\"],\"use_case\":\"special-purpose buoy used for named local purposes\"}",
+        "s57_structure:{\"conditions\":[\"BOYSHP7\",\"COLPAT2\",\"COLOUR3,1\"],\"lookup_id\":\"1954\",\"lookup_rcid\":\"30233\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP65);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN",
+        "s101_reference:BOYSUP65:none_provided_in_batch",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "helm_candidate:BOYSUP65:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP65.svg",
+        "helm_candidate_source:BOYSUP65:pipeline/iconforge/assets/svg/triad_generated/BOYSUP65.svg",
+        "helm_before_svg:BOYSUP65:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP65.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP65:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__day.png",
+        "helm_repaired_render:BOYSUP65:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__dusk.png",
+        "helm_repaired_render:BOYSUP65:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP65__after__night.png",
+        "opencpn_render:BOYSUP65:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__day.png",
+        "opencpn_render:BOYSUP65:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__dusk.png",
+        "opencpn_render:BOYSUP65:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP65__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP65",
+      "symbol_id": "BOYSUP65",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.94,
+      "evidence": {
+        "chart1_crop_id": "shape_super_buoy",
+        "chart1_crop_path": "pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "chart1_crop_token": "chart1_crop:shape_super_buoy",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP66.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__night.png"
+        ],
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "s101_refs": [],
+        "super_buoy_class": "squat red-over-white horizontal-split super-buoy body",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP66 in owned_repair_batch73; judged against Chart No.1, OpenCPN, S-57/S-52 metadata, and Helm render evidence."
+        ],
+        "wrong_band_order_detected": false,
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "BOYSUP66 must preserve a squat super-buoy body with horizontal red/white split in the listed colour order, not a vertical-split buoy or tall buoy family; S-57/S-52 structure: {\"conditions\":[\"BOYSHP7\",\"COLPAT1\",\"COLOUR3,1\"],\"lookup_id\":\"1953\",\"lookup_rcid\":\"93967\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP66);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch73.json",
+      "judge_comments": "Pass pending human: BOYSUP66 keeps the squat super-buoy silhouette and the required horizontal red-over-white colour split. No final approval is granted by this artifact.",
+      "observed": "Repaired render is a squat super-buoy body split horizontally, red on top and white below.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": [
+          "No S-101 reference path was provided for BOYSUP66 in owned_repair_batch73."
+        ]
+      },
+      "rationale": "Pass pending human: BOYSUP66 preserves the required horizontal red-over-white banding and super-buoy silhouette; it is not swapped with BOYSUP65's vertical split.",
+      "repair_batch_catalog": "catalog/owned_repair_batch73.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:BOYSUP66",
+        "name:super buoy, red, white, full-chart",
+        "semantic_brief:{\"brief\":\"BOYSUP66 is super buoy, red, white, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: red, white with horizontal bands/stripes in the listed colour order.\",\"colour_pattern\":\"horizontal bands/stripes in the listed colour order\",\"required_colours\":[\"red\",\"white\"],\"required_shape\":\"super-buoy body\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"red\",\"white\"],\"use_case\":\"special-purpose buoy used for named local purposes\"}",
+        "s57_structure:{\"conditions\":[\"BOYSHP7\",\"COLPAT1\",\"COLOUR3,1\"],\"lookup_id\":\"1953\",\"lookup_rcid\":\"93967\",\"object_class\":\"BOYSPP\",\"s52_instruction\":\"SY(BOYSUP66);TE('%s','OBJNAM',2,1,2,'15110',-2,-1,CHBLK,21)\"}",
+        "reference_providers:Chart No.1,OpenCPN",
+        "s101_reference:BOYSUP66:none_provided_in_batch",
+        "required_change_input:Do not treat the earlier automated visual pass as final-pass eligible. Redraw against exact Chart No.1/OpenCPN/S-52 witness geometry, preserving silhouette, band count/order, topmark/board details, and load-bearing colours; then rerun visual judge.",
+        "chart1_crop:shape_super_buoy",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/shape_super_buoy.png",
+        "helm_candidate:BOYSUP66:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP66.svg",
+        "helm_candidate_source:BOYSUP66:pipeline/iconforge/assets/svg/triad_generated/BOYSUP66.svg",
+        "helm_before_svg:BOYSUP66:pipeline/iconforge/assets/svg/owned_repair_batch73/BOYSUP66.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch73.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "helm_repaired_render:BOYSUP66:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__day.png",
+        "helm_repaired_render:BOYSUP66:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__dusk.png",
+        "helm_repaired_render:BOYSUP66:pipeline/iconforge/out/standard_repair_batch65/renders/BOYSUP66__after__night.png",
+        "opencpn_render:BOYSUP66:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__day.png",
+        "opencpn_render:BOYSUP66:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__dusk.png",
+        "opencpn_render:BOYSUP66:pipeline/iconforge/out/opencpn_s52_reference/BOYSUP66__night.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP66",
+      "symbol_id": "BOYSUP66",
+      "verdict": "pass"
+    }
+  ]
+}

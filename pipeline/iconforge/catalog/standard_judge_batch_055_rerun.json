@@ -1,0 +1,69 @@
+{
+  "agent_id": "codex/FORGE-14-judge-batch55",
+  "batch_id": "standard_judge_batch_055_rerun",
+  "created_at": "2026-07-01T21:50:07Z",
+  "evidence_notes": [
+    "Actual repaired SVG was read from pipeline/iconforge/assets/svg/owned_repair_batch55/ in the detached copy.",
+    "Candidate day render and OpenCPN reference render were read from /private/tmp/helm-forge14/pipeline/iconforge/out.",
+    "The prior failure was specifically a pure horizontal blue-red-white-blue stack without the required vertical blue element; the batch55 SVG adds lower vertical blue-white-blue segmentation clipped inside the conical body.",
+    "Pass is judge_pass_pending_final_approval only and grants zero final approvals."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "BOYCON81"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "repair_batch_catalog": "pipeline/iconforge/catalog/owned_repair_batch55.json",
+    "selection_note": "Judged owned_repair_batch55 BOYCON81 against full row metadata, semantic_brief, S-57 shape/color/pattern conditions, source/provider references, before/after SVGs, prior judge feedback, and available source-worktree after/OpenCPN/Chart No.1 reference renders.",
+    "source_batch": "catalog/owned_repair_batch55.json",
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 1,
+    "selected": 1,
+    "source_batches": [
+      "catalog/owned_repair_batch55.json"
+    ]
+  },
+  "task_id": "FORGE-14",
+  "verdicts": [
+    {
+      "batch_index": 55,
+      "confidence": 0.88,
+      "expected": "BOYCON81 must preserve conical/nun buoy shape and the blue-red-white-blue special-purpose colour sequence with both horizontal and vertical stripe semantics from COLPAT1,2.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch55.json",
+      "judge_comments": "Pass pending human: the repaired SVG remains a conical/nun buoy, preserves the blue-red-white-blue load-bearing colour set, and now shows the previously missing vertical blue stripe/element rather than a purely horizontal stack. No final approval is granted.",
+      "observed": "After SVG renders as a clipped conical/nun buoy with a blue top band, red band, white body field, and lower blue-white-blue vertical segmentation; the pattern is consistent with the row's mixed horizontal/vertical COLPAT1,2 requirement and the OpenCPN witness.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch55.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON81",
+        "s57_conditions:BOYSHP1,COLOUR5,3,1,5,COLPAT1,2",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch55/BOYCON81.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch47/renders/BOYCON81__after__day.png",
+        "before_svg:pipeline/iconforge/assets/svg/triad_generated/BOYCON81.svg",
+        "prior_judge:catalog/standard_judge_batch_053_rerun.json",
+        "prior_latest:standard_judge_batch_053_rerun",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/BOYCON81__day.png",
+        "chart1_reference:pipeline/iconforge/out/source_variant_matrix/renders/BOYCON81/chart1_parity_reference_crop_1.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON81",
+      "symbol_id": "BOYCON81"
+    }
+  ]
+}

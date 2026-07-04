@@ -1,0 +1,1028 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch78.json",
+    "renders": "out/standard_repair_batch70/renders",
+    "svg_dir": "assets/svg/owned_repair_batch78"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 12,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/DISMAR03__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/DISMAR03__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/DISMAR03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/DISMAR03.svg",
+      "asset": "DISMAR03",
+      "before_svg": "assets/svg/owned_repair_batch78/DISMAR03.svg",
+      "candidate_source": "assets/svg/triad_generated/DISMAR03.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "distance mark",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Resolve DISMAR03 against the intended strongest reference, then redraw to that witness instead of the black DM post.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "CATDIS1",
+          "wtwdis "
+        ],
+        "lookup_id": "2628",
+        "lookup_rcid": "30696",
+        "object_class": "dismar",
+        "s52_instruction": "SY(DISMAR03);TX(wtwdis,3,2,2,'14106',1,0,CHMGD,21)"
+      },
+      "safety_reason_codes": [
+        "conflicting_reference_witness",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "DISMAR03 is distance mark. It is used as a distance mark. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "distance mark"
+      },
+      "source_judge": "catalog/standard_judge_batch_021_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DISMAR03__day.png",
+            "label": "distance mark",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DISMAR03__day.png",
+              "dusk": "out/opencpn_s52_reference/DISMAR03__dusk.png",
+              "night": "out/opencpn_s52_reference/DISMAR03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/DISMAR04__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/DISMAR04__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/DISMAR04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/DISMAR04.svg",
+      "asset": "DISMAR04",
+      "before_svg": "assets/svg/owned_repair_batch78/DISMAR04.svg",
+      "candidate_source": "assets/svg/triad_generated/DISMAR04.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "distance point with no mark",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Resolve DISMAR04 against the intended strongest reference, then redraw to that witness instead of the black DP target.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "CATDIS1"
+        ],
+        "lookup_id": "1109",
+        "lookup_rcid": "31161",
+        "object_class": "DISMAR",
+        "s52_instruction": "SY(DISMAR04);TX(INFORM,3,2,2,'15110',2,0,CHMGD,21)"
+      },
+      "safety_reason_codes": [
+        "conflicting_reference_witness",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "DISMAR04 is distance point with no mark. It is used as a distance point with no mark. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "distance point with no mark"
+      },
+      "source_judge": "catalog/standard_judge_batch_021_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/DISMAR04__day.png",
+            "label": "distance point with no mark",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/DISMAR04__day.png",
+              "dusk": "out/opencpn_s52_reference/DISMAR04__dusk.png",
+              "night": "out/opencpn_s52_reference/DISMAR04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/LITFLT10__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/LITFLT10__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/LITFLT10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/LITFLT10.svg",
+      "asset": "LITFLT10",
+      "before_svg": "assets/svg/owned_repair_batch78/LITFLT10.svg",
+      "candidate_source": "assets/svg/triad_generated/LITFLT10.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "light float, red/white, full-chart.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw as the red/white light-float full-chart symbol with the correct body and light cue.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR3,1"
+        ],
+        "lookup_id": "2203",
+        "lookup_rcid": "30383",
+        "object_class": "LITFLT",
+        "s52_instruction": "SY(LITFLT10);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "missing_light_cue"
+      ],
+      "semantic_brief": {
+        "brief": "LITFLT10 is light float, red/white, full-chart.. It is used as a light float, red/white, full-chart.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red, white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red",
+          "white"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "white"
+        ],
+        "use_case": "light float, red/white, full-chart."
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITFLT10__day.png",
+            "label": "light float, red/white, full-chart.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITFLT10__day.png",
+              "dusk": "out/opencpn_s52_reference/LITFLT10__dusk.png",
+              "night": "out/opencpn_s52_reference/LITFLT10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/LITFLT61__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/LITFLT61__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/LITFLT61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/LITFLT61.svg",
+      "asset": "LITFLT61",
+      "before_svg": "assets/svg/owned_repair_batch78/LITFLT61.svg",
+      "candidate_source": "assets/svg/triad_generated/LITFLT61.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "light float, green, full-chart.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw as the green light-float full-chart symbol with the correct body and light cue.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR4"
+        ],
+        "lookup_id": "2204",
+        "lookup_rcid": "30384",
+        "object_class": "LITFLT",
+        "s52_instruction": "SY(LITFLT61);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "LITFLT61 is light float, green, full-chart.. It is used as a light float, green, full-chart.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "light float, green, full-chart."
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITFLT61__day.png",
+            "label": "light float, green, full-chart.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITFLT61__day.png",
+              "dusk": "out/opencpn_s52_reference/LITFLT61__dusk.png",
+              "night": "out/opencpn_s52_reference/LITFLT61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/LITVES60__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/LITVES60__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/LITVES60__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/LITVES60.svg",
+      "asset": "LITVES60",
+      "before_svg": "assets/svg/owned_repair_batch78/LITVES60.svg",
+      "candidate_source": "assets/svg/triad_generated/LITVES60.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "light vessel. red, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw as the red light-vessel reference symbol with ship body and light cue.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR3"
+        ],
+        "lookup_id": "2206",
+        "lookup_rcid": "30386",
+        "object_class": "LITVES",
+        "s52_instruction": "SY(LITVES60);TE('LtV %s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "LITVES60 is light vessel. red, full-chart. It is used as a light vessel. red, full-chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: red.",
+        "colour_pattern": null,
+        "required_colours": [
+          "red"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red"
+        ],
+        "use_case": "light vessel. red, full-chart"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITVES60__day.png",
+            "label": "light vessel. red, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITVES60__day.png",
+              "dusk": "out/opencpn_s52_reference/LITVES60__dusk.png",
+              "night": "out/opencpn_s52_reference/LITVES60__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/LITVES61__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/LITVES61__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/LITVES61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/LITVES61.svg",
+      "asset": "LITVES61",
+      "before_svg": "assets/svg/owned_repair_batch78/LITVES61.svg",
+      "candidate_source": "assets/svg/triad_generated/LITVES61.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "light vessel. green, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw as the green light-vessel reference symbol with ship body and light cue.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR4"
+        ],
+        "lookup_id": "2207",
+        "lookup_rcid": "30387",
+        "object_class": "LITVES",
+        "s52_instruction": "SY(LITVES61);TE('LtV %s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_light_cue",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "LITVES61 is light vessel. green, full-chart. It is used as a light vessel. green, full-chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green"
+        ],
+        "use_case": "light vessel. green, full-chart"
+      },
+      "source_judge": "catalog/standard_judge_batch_008.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LITVES61__day.png",
+            "label": "light vessel. green, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LITVES61__day.png",
+              "dusk": "out/opencpn_s52_reference/LITVES61__dusk.png",
+              "night": "out/opencpn_s52_reference/LITVES61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/OWNSHP01__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/OWNSHP01__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/OWNSHP01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/OWNSHP01.svg",
+      "asset": "OWNSHP01",
+      "before_svg": "assets/svg/owned_repair_batch78/OWNSHP01.svg",
+      "candidate_source": "assets/svg/triad_generated/OWNSHP01.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "own ship symbol, constant size",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Render OWNSHP01 as the reference constant-size ownship target, preserving the circular target/ring semantics and reference colour family without extra crosshair axes unless metadata explicitly requires them.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEOWNSHP01"
+        ],
+        "lookup_id": "1648",
+        "lookup_rcid": "31700",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(OWNSHP01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "invented_detail",
+        "unsafe_ownship_confusion"
+      ],
+      "semantic_brief": {
+        "brief": "OWNSHP01 is own ship symbol, constant size. It is used as a own ship symbol, constant size. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "own ship symbol, constant size"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OWNSHP01__day.png",
+            "label": "own ship symbol, constant size",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OWNSHP01__day.png",
+              "dusk": "out/opencpn_s52_reference/OWNSHP01__dusk.png",
+              "night": "out/opencpn_s52_reference/OWNSHP01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/OWNSHP05__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/OWNSHP05__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/OWNSHP05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/OWNSHP05.svg",
+      "asset": "OWNSHP05",
+      "before_svg": "assets/svg/owned_repair_batch78/OWNSHP05.svg",
+      "candidate_source": "assets/svg/triad_generated/OWNSHP05.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "own ship drawn to scale with conning position marked",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Use a scaled hull/ship outline matching OWNSHP05 reference geometry with a conning-position cue; do not substitute a generic triangular ownship arrow.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEOWNSHP05"
+        ],
+        "lookup_id": "1649",
+        "lookup_rcid": "31701",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(OWNSHP05,ORIENT)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_scaled_hull",
+        "unsafe_ownship_confusion"
+      ],
+      "semantic_brief": {
+        "brief": "OWNSHP05 is own ship drawn to scale with conning position marked. It is used as a own ship drawn to scale with conning position marked. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "own ship drawn to scale with conning position marked"
+      },
+      "source_judge": "catalog/standard_judge_batch_043_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OWNSHP05__day.png",
+            "label": "own ship drawn to scale with conning position marked",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OWNSHP05__day.png",
+              "dusk": "out/opencpn_s52_reference/OWNSHP05__dusk.png",
+              "night": "out/opencpn_s52_reference/OWNSHP05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/RFNERY01__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/RFNERY01__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/RFNERY01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/RFNERY01.svg",
+      "asset": "RFNERY01",
+      "before_svg": "assets/svg/owned_repair_batch78/RFNERY01.svg",
+      "candidate_source": "assets/svg/triad_generated/RFNERY01.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "refinery",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw RFNERY01 as the brown circular refinery glyph matching the S-101/OpenCPN witness, including the enclosing circle and refinery detail.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "$SCODERFNERY01"
+        ],
+        "lookup_id": "1664",
+        "lookup_rcid": "31716",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(RFNERY01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_reference_circle",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RFNERY01 is refinery. It is used as a refinery. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "refinery"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RFNERY01__day.png",
+            "label": "refinery",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RFNERY01__day.png",
+              "dusk": "out/opencpn_s52_reference/RFNERY01__dusk.png",
+              "night": "out/opencpn_s52_reference/RFNERY01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RFNERY01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RFNERY01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RFNERY01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RFNERY01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RFNERY01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/RFNERY11__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/RFNERY11__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/RFNERY11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/RFNERY11.svg",
+      "asset": "RFNERY11",
+      "before_svg": "assets/svg/owned_repair_batch78/RFNERY11.svg",
+      "candidate_source": "assets/svg/triad_generated/RFNERY11.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "conspicuous refinery",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw RFNERY11 as the black circular conspicuous-refinery glyph matching the S-101/OpenCPN witness, including the enclosing circle.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "CATPRA5",
+          "CONVIS1"
+        ],
+        "lookup_id": "137",
+        "lookup_rcid": "32173",
+        "object_class": "PRDARE",
+        "s52_instruction": "SY(RFNERY11);LS(DASH,1,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_reference_circle",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RFNERY11 is conspicuous refinery. It is used as a conspicuous refinery. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous refinery"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RFNERY11__day.png",
+            "label": "conspicuous refinery",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RFNERY11__day.png",
+              "dusk": "out/opencpn_s52_reference/RFNERY11__dusk.png",
+              "night": "out/opencpn_s52_reference/RFNERY11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RFNERY11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RFNERY11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RFNERY11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RFNERY11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RFNERY11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/SCALEB10__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/SCALEB10__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/SCALEB10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/SCALEB10.svg",
+      "asset": "SCALEB10",
+      "before_svg": "assets/svg/owned_repair_batch78/SCALEB10.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB10.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "one mile scalebar for display scales larger than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw SCALEB10 as the thin alternating grey/orange vertical one-mile scale pattern from the S-101/OpenCPN witness; remove black/white blocks, side ticks, and the text label.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "$SCODESCALEB10"
+        ],
+        "lookup_id": "1666",
+        "lookup_rcid": "31718",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(SCALEB10)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_scalebar_pattern",
+        "wrong_text_glyph",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB10 is one mile scalebar for display scales larger than 1/80,000. It is used as a one mile scalebar for display scales larger than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "one mile scalebar for display scales larger than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+            "label": "one mile scalebar for display scales larger than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB10__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB10.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB10.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB10"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch70/renders/SCALEB11__after__day.png",
+        "dusk": "out/standard_repair_batch70/renders/SCALEB11__after__dusk.png",
+        "night": "out/standard_repair_batch70/renders/SCALEB11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch78/SCALEB11.svg",
+      "asset": "SCALEB11",
+      "before_svg": "assets/svg/owned_repair_batch78/SCALEB11.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB11.svg",
+      "candidate_strategy": "owned_operational_symbol_redraw_from_opencpn_reference",
+      "name": "10 mile latitude scale for display scales smaller than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch70",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN operational-symbol witnesses and S-57 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue operational symbol blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_operational_symbol_reference_consumed",
+      "required_change": "Redraw SCALEB11 as the thin alternating black/grey vertical latitude-scale segment pattern from the S-101/OpenCPN witness; remove the block ladder, side ticks, and text label.",
+      "risk_bucket": "operational_symbol_repair_batch78",
+      "s57_structure": {
+        "conditions": [
+          "$SCODESCALEB11"
+        ],
+        "lookup_id": "1667",
+        "lookup_rcid": "31719",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(SCALEB11)"
+      },
+      "safety_reason_codes": [
+        "wrong_scalebar_pattern",
+        "wrong_text_glyph",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB11 is 10 mile latitude scale for display scales smaller than 1/80,000. It is used as a 10 mile latitude scale for display scales smaller than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "10 mile latitude scale for display scales smaller than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_045_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+            "label": "10 mile latitude scale for display scales smaller than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB11__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB11"
+          }
+        ]
+      }
+    }
+  ]
+}

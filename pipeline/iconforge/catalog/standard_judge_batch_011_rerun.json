@@ -1,0 +1,1106 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch11-local",
+  "batch_id": "standard_judge_batch_011_rerun",
+  "created_at": "2026-07-01T06:41:13.303606+00:00",
+  "project": "vulkan",
+  "schema_version": "standard_judge_rerun.v1",
+  "selection": {
+    "candidate_statuses": [
+      "repaired_pending_judge_rerun",
+      "shape_pass_pending_visual_rerun"
+    ],
+    "previous_judge_artifacts": [
+      "catalog/standard_judge_batch_005.json",
+      "catalog/standard_shape_judge_batch_004_rerun.json",
+      "catalog/standard_shape_judge_batch_011_rerun.json"
+    ],
+    "repair_batch": "catalog/owned_repair_batch11.json",
+    "selected_count": 50,
+    "shape_queue": "catalog/standard_semantic_shape_judge_queue.json",
+    "source_table": "catalog/standard_source_table.json",
+    "status_counts": {
+      "repaired_pending_judge_rerun": 30,
+      "shape_pass_pending_visual_rerun": 20
+    }
+  },
+  "summary": {
+    "blockers": [
+      "OpenCPN day renders are missing for BOYLAT52 and BOYLAT53, so those rows remain failed despite matching S-101/semantic colour order."
+    ],
+    "fail_count": 11,
+    "final_approved_count": 0,
+    "notes": "Visual rerun only after repairs; no SVG edits and no final approvals. Candidate repair renders from owned_repair_batch10/11 were used where source-table triad paths were stale.",
+    "pass_count": 39,
+    "top_failure_themes": [
+      "remaining wrong/special silhouette for installation, mooring, safe-water, and isolated-danger rows",
+      "remaining missing/incorrect pattern on BOYCON74, BOYCON81, and BOYPIL78",
+      "source/reference ambiguity for BOYCAN81 colour order",
+      "missing OpenCPN local reference renders for BOYLAT52 and BOYLAT53"
+    ],
+    "total_verdicts": 50
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.78,
+      "expected": "beacon yb, full-chart. Required lattice/tower beacon; colours brown.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: preserves tower/beacon class and brown load-bearing cue; lattice/detail can be style polish. Not final-approved.",
+      "observed": "Simplified brown/yellow-brown tower beacon on a post.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BCNTOW90",
+        "helm_candidate:assets/svg/owned_repair_batch10/BCNTOW90.svg",
+        "helm_render:out/standard_repair_batch2/renders/BCNTOW90__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BCNTOW90__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BCNTOW90__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW90",
+      "symbol_id": "BCNTOW90"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.9,
+      "expected": "symbol to be used for checking and adjusting the brightness and contrast controls. Required symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference; reference-defined colours.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: square-with-center brightness/contrast control cue matches OpenCPN/S-101 family. Not final-approved.",
+      "observed": "Black square adjustment symbol with centered grey square.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BLKADJ01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BLKADJ01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BLKADJ01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BLKADJ01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BLKADJ01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BLKADJ01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BLKADJ01",
+      "symbol_id": "BLKADJ01"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.76,
+      "expected": "border. Required symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference; colours red.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun against the OpenCPN border witness; S-101 diamond witness remains a provider-family mismatch to revisit before final approval. Not final-approved.",
+      "observed": "Thin red diagonal slash/border mark.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BORDER01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BORDER01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BORDER01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BORDER01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BORDER01__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BORDER01",
+      "symbol_id": "BORDER01"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.74,
+      "expected": "barrel buoy, black full-chart. Required barrel buoy body; colours red-black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun under current semantic brief after batch11 shape repair; provider colour/shape conflict should stay visible before final approval. Not final-approved.",
+      "observed": "Barrel buoy with red-over-black body and black stem.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYBAR01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYBAR01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYBAR01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYBAR01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYBAR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYBAR01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYBAR01",
+      "symbol_id": "BOYBAR01"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.82,
+      "expected": "can buoy, paper-chart. Required can/cylindrical buoy body; colours black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can class and black reference cue are preserved. Not final-approved.",
+      "observed": "Can/cylindrical buoy outline with black stroke and white interior.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN01",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN01.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYCAN01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN01",
+      "symbol_id": "BOYCAN01"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.77,
+      "expected": "can buoy,generic,full-chart. Required can/cylindrical buoy body; colours green-black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun under current semantic brief; source references differ but required can body and green/black cue are present. Not final-approved.",
+      "observed": "Can buoy split green over black.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN62",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCAN62.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCAN62__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN62__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN62__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN62",
+      "symbol_id": "BOYCAN62"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.88,
+      "expected": "can buoy,lateral rgr,full-chart. Required can/cylindrical buoy body; colours red-green-red; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: lateral can body and RGR order are clear. Not final-approved.",
+      "observed": "Can buoy with red-green-red horizontal bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN72",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN72.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN72__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN72__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN72__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN72",
+      "symbol_id": "BOYCAN72"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.88,
+      "expected": "can buoy,lateral grg,full-chart. Required can/cylindrical buoy body; colours green-red-green; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: lateral can body and GRG order are clear. Not final-approved.",
+      "observed": "Can buoy with green-red-green horizontal bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN73",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN73.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN73__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN73__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN73__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN73",
+      "symbol_id": "BOYCAN73"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.8,
+      "expected": "can buoy,lateral-rw,full-chart. Required can/cylindrical buoy body; colours red-white-red-white-red.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can body and red/white lateral cue match the available rendered witnesses; final QA may still decide if the full repeated source list needs five visible bands. Not final-approved.",
+      "observed": "Can buoy with red-white-red repeated horizontal cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN74",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN74.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN74__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN74__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN74__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN74",
+      "symbol_id": "BOYCAN74"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.86,
+      "expected": "can buoy,isolated danger brb,full-chart. Required can/cylindrical buoy body; colours black-red-black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: isolated-danger can colour order is present. Not final-approved.",
+      "observed": "Can buoy with black-red-black body.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN76",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN76.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN76__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN76__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN76__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN76",
+      "symbol_id": "BOYCAN76"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.84,
+      "expected": "can buoy,lateral white/orange,full-chart. Required can/cylindrical buoy body; colours white-orange; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can body and white/orange order match the visible references. Not final-approved.",
+      "observed": "Can buoy with white-orange horizontal cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN77",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN77.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN77__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN77__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN77__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN77",
+      "symbol_id": "BOYCAN77"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.84,
+      "expected": "can buoy,lateral wow,full-chart. Required can/cylindrical buoy body; colours white-orange-white; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can body and WOW sequence are present. Not final-approved.",
+      "observed": "Can buoy with white-orange-white horizontal cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN78",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN78.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN78__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN78__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN78__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN78",
+      "symbol_id": "BOYCAN78"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.9,
+      "expected": "can buoy,orange,full-chart. Required can/cylindrical buoy body; colours orange.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: orange can body matches the semantic and S-101/OpenCPN witnesses. Not final-approved.",
+      "observed": "Can buoy filled orange.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN79",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCAN79.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCAN79__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN79__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN79__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN79",
+      "symbol_id": "BOYCAN79"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.7,
+      "expected": "can buoy,lateral white/orange,full-chart. Required can/cylindrical buoy body; colours orange-white; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "The current brief requires orange-white horizontal order; prior shape pass noted source/order ambiguity, but visual rerun should not promote the opposite visible order.",
+      "observed": "Can body is still rendered white-orange-white.",
+      "pass": false,
+      "required_change": "Resolve the orange/white source-order ambiguity, then redraw so the visible bands follow the authoritative order.",
+      "safety_reason_codes": [
+        "wrong_colour_order",
+        "brief_reference_conflict",
+        "unsafe_special_purpose_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN81",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN81.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN81__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN81__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN81__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN81",
+      "symbol_id": "BOYCAN81"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.8,
+      "expected": "can buoy,lateral-rw,full-chart. Required can/cylindrical buoy body; colours red-white-red-white-red.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can body and red/white cue match the visible references; final QA may still decide if the full repeated source list needs five visible bands. Not final-approved.",
+      "observed": "Can buoy with red-white-red repeated horizontal cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN82",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN82.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN82__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN82__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN82__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN82",
+      "symbol_id": "BOYCAN82"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.8,
+      "expected": "can buoy,lateral-rw,full-chart. Required can/cylindrical buoy body; colours red-white-red-white.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: can body and red/white cue are preserved. Not final-approved.",
+      "observed": "Can buoy with red-white-red horizontal cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCAN83",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCAN83.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCAN83__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCAN83__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCAN83__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN83",
+      "symbol_id": "BOYCAN83"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.74,
+      "expected": "conical buoy, general, full-chart. Required conical/nun buoy body; colours red-black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun under the current semantic brief after batch11 shape repair; provider reference conflict remains a final-QA note. Not final-approved.",
+      "observed": "Conical/nun buoy split red over black.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYCON01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON01",
+      "symbol_id": "BOYCON01"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.88,
+      "expected": "conical buoy,lateral-balck-red-black,full-chart. Required conical/nun buoy body; colours black-red-black.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: conical body and BRB order are clear. Not final-approved.",
+      "observed": "Conical/nun buoy with black-red-black bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON63",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON63.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON63__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON63__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON63__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON63",
+      "symbol_id": "BOYCON63"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.88,
+      "expected": "conical buoy,lateral-rgr,full-chart. Required conical/nun buoy body; colours red-green-red; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: conical body and RGR order are clear. Not final-approved.",
+      "observed": "Conical/nun buoy with red-green-red bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON66",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON66.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON66__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON66__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON66__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON66",
+      "symbol_id": "BOYCON66"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.88,
+      "expected": "conical buoy,lateral-grg,full-chart. Required conical/nun buoy body; colours green-red-green; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "shape_pass_pending_visual_rerun",
+      "judge_comments": "Pass for visual rerun: conical body and GRG order are clear. Not final-approved.",
+      "observed": "Conical/nun buoy with green-red-green bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON67",
+        "helm_candidate:assets/svg/owned_repair_batch10/BOYCON67.svg",
+        "helm_render:out/standard_repair_batch2/renders/BOYCON67__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON67__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON67__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON67",
+      "symbol_id": "BOYCON67"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.9,
+      "expected": "conical buoy,cardinal-east-byb,full-chart. Required conical/nun buoy body; colours black-yellow-black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: repair restored the missing lower black cardinal band. Not final-approved.",
+      "observed": "Conical/nun buoy with black-yellow-black order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON71",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON71.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON71__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON71__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON71",
+      "symbol_id": "BOYCON71"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.9,
+      "expected": "conical buoy,cardinal-west-yby,full-chart. Required conical/nun buoy body; colours yellow-black-yellow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: repair restored the required west-cardinal order. Not final-approved.",
+      "observed": "Conical/nun buoy with yellow-black-yellow order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON72",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON72.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON72__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON72__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON72__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON72",
+      "symbol_id": "BOYCON72"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.86,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; colours green-white-green-white-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The row requires a green-white-green-white-green conical sequence; the repair still collapses the repeated green/white banding.",
+      "observed": "Conical body shows only a single green middle band on a white body.",
+      "pass": false,
+      "required_change": "Redraw BOYCON74 with five ordered green-white-green-white-green bands on the conical body.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON74",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON74.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON74__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON74__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON74__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON74",
+      "symbol_id": "BOYCON74"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.88,
+      "expected": "conical buoy,lateral-rw,full-chart. Required conical/nun buoy body; colours red-white; vertical bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: vertical red/white split is present on the conical body. Not final-approved.",
+      "observed": "Conical/nun buoy split red/white vertically.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON78",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON78.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON78__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON78__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON78__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON78",
+      "symbol_id": "BOYCON78"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.72,
+      "expected": "conical buoy,lateral-gr,full-chart. Required stake/perch beacon; colours red-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun against semantic_brief/S-57 beacon context; symbol name and rendered OpenCPN witness remain ambiguous enough for final-QA review. Not final-approved.",
+      "observed": "Stake/perch beacon with red over green body.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON79",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON79.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON79__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON79__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON79__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON79",
+      "symbol_id": "BOYCON79"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.86,
+      "expected": "conical buoy,lateral-grg,full-chart. Required conical/nun buoy body; colours white-orange-white; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: WOW order is present. Not final-approved.",
+      "observed": "Conical/nun buoy with white-orange-white bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYCON80",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON80.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON80__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON80__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON80__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON80",
+      "symbol_id": "BOYCON80"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.84,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; colours blue-red-white-blue; horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The row requires blue-red-white-blue and the horizontal/vertical stripe evidence called out by the semantic brief.",
+      "observed": "Conical body shows a blue/red/white split cue, but not the full blue-red-white-blue plus mixed stripe requirement.",
+      "pass": false,
+      "required_change": "Add the missing final blue segment and resolve the mixed horizontal/vertical striping pattern against exact references.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_pattern",
+        "unsafe_special_purpose_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYCON81",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYCON81.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYCON81__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYCON81__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYCON81__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYCON81",
+      "symbol_id": "BOYCON81"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.78,
+      "expected": "default symbol for buoy, simplified. Required buoy symbol matching the S-57 buoy family; reference-defined colours.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: default/unknown cue has been restored, though final QA should compare scale against S-101/OpenCPN. Not final-approved.",
+      "observed": "Default buoy body with prominent question-mark cue.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYDEF03",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYDEF03.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYDEF03__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYDEF03__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYDEF03__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYDEF03.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYDEF03",
+      "symbol_id": "BOYDEF03"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.76,
+      "expected": "default buoy, full-chart. Required buoy symbol matching the S-57 buoy family; colours black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: invented colours were removed and the black buoy-family cue is present. Not final-approved.",
+      "observed": "Black generic/default buoy body.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYGEN03",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYGEN03.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYGEN03__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYGEN03__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYGEN03__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYGEN03.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYGEN03",
+      "symbol_id": "BOYGEN03"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.82,
+      "expected": "instructionallation buoy, paper-chart. Required buoy symbol matching the S-57 buoy family; colours black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Installation-buoy references show a wider installation glyph with top cap/ring proportions, not a generic body with a window.",
+      "observed": "Candidate remains a generic black buoy body with a white center inset.",
+      "pass": false,
+      "required_change": "Redraw the black installation-buoy silhouette from S-101/OpenCPN instead of using a generic buoy body.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYINB01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYINB01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYINB01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYINB01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYINB01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYINB01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYINB01",
+      "symbol_id": "BOYINB01"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.88,
+      "expected": "isolated danger buoy, simplified. Required buoy symbol matching the S-57 buoy family; colours red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Isolated-danger simplified references require the distinctive paired danger marks/cue; one black ball changes the safety meaning.",
+      "observed": "Candidate uses a red buoy body with a single black ball/topmark.",
+      "pass": false,
+      "required_change": "Redraw BOYISD12 with the isolated-danger cue from S-101/Aqua Map/OpenCPN, including the correct paired/topmark treatment.",
+      "safety_reason_codes": [
+        "missing_topmark",
+        "wrong_topmark_count",
+        "unsafe_isolated_danger_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYISD12",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYISD12.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYISD12__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYISD12__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYISD12__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYISD12.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/BOYISD1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYISD12",
+      "symbol_id": "BOYISD12"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.86,
+      "expected": "conical lateral buoy, green, simplified. Required conical/nun buoy body; colours green-red-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: missing lower green band was restored. Not final-approved.",
+      "observed": "Conical lateral buoy with green-red-green order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT13",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT13.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT13__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT13__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT13__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYLAT13.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT13",
+      "symbol_id": "BOYLAT13"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.86,
+      "expected": "conical lateral buoy, red, simplified. Required conical/nun buoy body; colours red-green-red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: missing lower red band was restored. Not final-approved.",
+      "observed": "Conical lateral buoy with red-green-red order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT14",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT14.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT14__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT14__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT14__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYLAT14.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT14",
+      "symbol_id": "BOYLAT14"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.86,
+      "expected": "can shape lateral buoy, green, simplified. Required can/cylindrical buoy body; colours green-red-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: can body and GRG order are present. Not final-approved.",
+      "observed": "Can lateral buoy with green-red-green order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT23",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT23.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT23__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT23__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT23__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYLAT23.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT23",
+      "symbol_id": "BOYLAT23"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.86,
+      "expected": "can shape lateral buoy, red, simplified. Required can/cylindrical buoy body; colours red-green-red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: can body and RGR order are present. Not final-approved.",
+      "observed": "Can lateral buoy with red-green-red order.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT24",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT24.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT24__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT24__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT24__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYLAT24.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT24",
+      "symbol_id": "BOYLAT24"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.78,
+      "expected": "BOYLAT26. Required buoy symbol matching the S-57 buoy family; colours white-red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: repair now preserves the narrow segmented silhouette and white/red order. Not final-approved.",
+      "observed": "Narrow white-over-red lateral mark.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT26",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT26.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT26__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT26__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT26__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT26",
+      "symbol_id": "BOYLAT26"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.78,
+      "expected": "BOYLAT27. Required buoy symbol matching the S-57 buoy family; colours white-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: repair now preserves the narrow segmented silhouette and white/green order. Not final-approved.",
+      "observed": "Narrow white-over-green lateral mark.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT27",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT27.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT27__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT27__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT27__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT27",
+      "symbol_id": "BOYLAT27"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.8,
+      "expected": "BOYLAT52. Required buoy symbol matching the S-57 buoy family; colours red-green-red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The colour order matches S-101/semantic evidence, but visual rerun approval requires the missing OpenCPN reference to be regenerated or explicitly waived.",
+      "observed": "Candidate now shows red-green-red, but the local OpenCPN witness render is absent.",
+      "pass": false,
+      "required_change": "Regenerate/verify out/opencpn_s52_reference/BOYLAT52__day.png before promoting this row.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_visual_evidence"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT52",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT52.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT52__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT52__day.png:missing",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT52__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT52",
+      "symbol_id": "BOYLAT52"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.8,
+      "expected": "BOYLAT53. Required buoy symbol matching the S-57 buoy family; colours green-red-green.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The colour order matches S-101/semantic evidence, but visual rerun approval requires the missing OpenCPN reference to be regenerated or explicitly waived.",
+      "observed": "Candidate now shows green-red-green, but the local OpenCPN witness render is absent.",
+      "pass": false,
+      "required_change": "Regenerate/verify out/opencpn_s52_reference/BOYLAT53__day.png before promoting this row.",
+      "safety_reason_codes": [
+        "missing_reference_render",
+        "insufficient_visual_evidence"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYLAT53",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYLAT53.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYLAT53__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYLAT53__day.png:missing",
+        "s101_render:out/source_priority_icon_pack/renders/BOYLAT53__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT53",
+      "symbol_id": "BOYLAT53"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.87,
+      "expected": "mooring buoy, barrel shape, full-chart. Required spherical buoy body; colours black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Mooring references show the mooring/anchor facility cue, not just a solid sphere.",
+      "observed": "Candidate is a plain black spherical buoy.",
+      "pass": false,
+      "required_change": "Redraw BOYMOR01 as the black mooring buoy/facility cue shown by S-101/Aqua Map/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch",
+        "unsafe_mooring_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYMOR01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYMOR01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYMOR01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYMOR01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYMOR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYMOR01.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/Mooring1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR01",
+      "symbol_id": "BOYMOR01"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.9,
+      "expected": "instructionallation buoy and mooring buoy, simplified. Required mooring facility/buoy symbol; colours black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Simplified mooring/installation references show a flat mooring facility mark with top dot/cap, not a target ring.",
+      "observed": "Candidate is a target/ring marker on a stem.",
+      "pass": false,
+      "required_change": "Redraw the simplified mooring facility/buoy symbol instead of the target-ring substitute.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYMOR11",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYMOR11.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYMOR11__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYMOR11__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYMOR11__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYMOR11.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/Mooring1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR11",
+      "symbol_id": "BOYMOR11"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.82,
+      "expected": "pillar buoy, full-chart. Required pillar buoy body; colours black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: invented colour was removed and the black pillar cue is present. Not final-approved.",
+      "observed": "Black pillar buoy body.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL01",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL01.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYPIL01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL01",
+      "symbol_id": "BOYPIL01"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.9,
+      "expected": "pillar buoy,lateral-rgr,full-chart. Required pillar buoy body; colours red-green-red; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: pillar body and RGR order are clear. Not final-approved.",
+      "observed": "Pillar buoy with red-green-red bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL66",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL66.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL66__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL66__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL66__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL66",
+      "symbol_id": "BOYPIL66"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.9,
+      "expected": "pillar buoy,lateral-grg,full-chart. Required pillar buoy body; colours green-red-green; horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: pillar body and GRG order are clear. Not final-approved.",
+      "observed": "Pillar buoy with green-red-green bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL67",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL67.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL67__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL67__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL67__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL67",
+      "symbol_id": "BOYPIL67"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.9,
+      "expected": "pillar buoy,cardinal-byb,full-chart. Required pillar buoy body; colours black-yellow-black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: cardinal BYB order is present. Not final-approved.",
+      "observed": "Pillar buoy with black-yellow-black bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL70",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL70.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL70__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL70__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL70__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL70",
+      "symbol_id": "BOYPIL70"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.9,
+      "expected": "pillar buoy,cardianl-yby,full-chart. Required pillar buoy body; colours yellow-black-yellow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: cardinal YBY order is present. Not final-approved.",
+      "observed": "Pillar buoy with yellow-black-yellow bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL71",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL71.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL71__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL71__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL71",
+      "symbol_id": "BOYPIL71"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.9,
+      "expected": "pillar buoy,isol.danger-brb,full-chart. Required pillar buoy body; colours black-red-black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: isolated-danger BRB order is present. Not final-approved.",
+      "observed": "Pillar buoy with black-red-black bands.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL72",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL72.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL72__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL72__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL72__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL72",
+      "symbol_id": "BOYPIL72"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.88,
+      "expected": "pillar buoy,safe water-rw,full-chart. Required pillar buoy body; colours red-white; vertical bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Pass for visual rerun: safe-water vertical red/white striping is present. Not final-approved.",
+      "observed": "Pillar buoy with vertical red/white split.",
+      "pass": true,
+      "required_change": "No repair required for visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL73",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL73.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL73__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL73__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL73__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL73",
+      "symbol_id": "BOYPIL73"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.86,
+      "expected": "BOYPIL78. Required pillar buoy body; colours red-white; squared/checkered pattern in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "The row requires a red/white squared or checkered pattern, not horizontal bands.",
+      "observed": "Candidate still uses horizontal red-white bands on the pillar.",
+      "pass": false,
+      "required_change": "Replace horizontal bands with the red/white squared/checkered pattern on the pillar body.",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYPIL78",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYPIL78.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYPIL78__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYPIL78__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYPIL78__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL78",
+      "symbol_id": "BOYPIL78"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.86,
+      "expected": "safe water buoy, simplified. Required buoy symbol matching the S-57 buoy family; colours red.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Safe-water simplified references require a compact red safe-water cue; the white body half and top-ball treatment are not the target visual.",
+      "observed": "Candidate uses a red/white buoy body with a single red ball top cue.",
+      "pass": false,
+      "required_change": "Redraw BOYSAW12 to match the compact red safe-water simplified reference cue without the extra white split/topmark substitute.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "unsafe_safe_water_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSAW12",
+        "helm_candidate:assets/svg/owned_repair_batch11/BOYSAW12.svg",
+        "helm_render:out/standard_repair_batch3/renders/BOYSAW12__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSAW12__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSAW12__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSAW12.svg",
+        "aquamap:reference_sources/aquamap_map_symbols/images/BOYSAW1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSAW12",
+      "symbol_id": "BOYSAW12"
+    }
+  ]
+}

@@ -1,0 +1,195 @@
+{
+  "agent_id": "codex/judge74-icon-forge",
+  "batch_id": "standard_judge_batch_074_rerun",
+  "created_at": "2026-07-01T23:01:28Z",
+  "evidence_notes": [
+    "Judged only repaired TOPMAR87 and TOPMAR88 rows from owned_repair_batch72 after commit 093b4fa3.",
+    "Each verdict checks the repaired SVG stroke geometry plus OpenCPN S-52 reference renders, S-101 reference SVGs where available, and Helm repaired renders.",
+    "Passes are judge_pass_pending_final_approval only; this artifact grants zero final approvals.",
+    "Both repaired marks now have a central vertical stem plus two slanted strokes in the required besom orientation, with no nested-V substitute and no crossbar."
+  ],
+  "project": "helm-icon-forge",
+  "schema_version": 1,
+  "selection": {
+    "assets": [
+      "TOPMAR87",
+      "TOPMAR88"
+    ],
+    "risk_bucket": "topmar_reference_repair_batch72",
+    "source_batch": "catalog/owned_repair_batch72.json"
+  },
+  "summary": {
+    "candidate_status": "repair_batch_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 2,
+    "selected": 2,
+    "source_batches": [
+      "catalog/owned_repair_batch72.json"
+    ]
+  },
+  "task_id": "standard_source_table_judge_batch_074_rerun",
+  "verdicts": [
+    {
+      "batch_index": 1,
+      "confidence": 0.97,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": null,
+        "helm_candidate_geometry": "path:M32 18 V45 plus path:M24 22 L32 45 L40 22",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR87.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [
+          "pipeline/iconforge/assets/svg/source_priority/s101_exact/TOPMAR87.svg",
+          "PortrayalCatalog/Symbols/TOPMAR87.svg"
+        ],
+        "s101_refs_present": true,
+        "topshape_class": "black besom point down, three-stroke mark with central vertical stem and downward V",
+        "warnings": [],
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "TOPMAR87 must preserve black besom point down: central vertical stem plus two slanted strokes forming a downward V; no nested V substitute and no crossbar. Required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"TOPSHP15\"],\"lookup_id\":\"12704\",\"lookup_rcid\":\"31540\",\"object_class\":\"TOPMAR\",\"s52_instruction\":\"SY(TOPMAR87);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: TOPMAR87 now matches the required black besom point-down silhouette. The repair removed the prior unsafe nested-V/crossbar ambiguity and preserves the S-101/OpenCPN three-stroke witness geometry at chart-readable scale. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a black point-down besom: one central vertical stem from the upper center to the bottom point, plus two slanted strokes descending to the same lower point. No crossbar or nested-V substitute is present.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TOPMAR87 now matches the required black besom point-down silhouette. The repair removed the prior unsafe nested-V/crossbar ambiguity and preserves the S-101/OpenCPN three-stroke witness geometry at chart-readable scale.",
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TOPMAR87",
+        "name:topmark for beacons, besom point down, paper-chart",
+        "semantic_brief:{\"brief\":\"TOPMAR87 is topmark for beacons, besom point down, paper-chart. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black.\",\"colour_pattern\":null,\"required_colours\":[\"black\"],\"required_shape\":\"exact topmark silhouette/count/orientation from the references\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"black\"],\"use_case\":\"topmark symbol attached to an aid to navigation\"}",
+        "s57_structure:{\"conditions\":[\"TOPSHP15\"],\"lookup_id\":\"12704\",\"lookup_rcid\":\"31540\",\"object_class\":\"TOPMAR\",\"s52_instruction\":\"SY(TOPMAR87);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)\"}",
+        "required_change_input:Remove the extra crossbar and redraw TOPMAR87 as the exact three-stroke black point-down besom reference shape.",
+        "reference_providers:OpenCPN,S-101",
+        "helm_candidate:TOPMAR87:pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR87.svg",
+        "helm_candidate_source:TOPMAR87:pipeline/iconforge/assets/svg/triad_generated/TOPMAR87.svg",
+        "helm_before_svg:TOPMAR87:pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR87.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "s101_exact_svg:TOPMAR87:pipeline/iconforge/assets/svg/source_priority/s101_exact/TOPMAR87.svg",
+        "s101_portrayal_catalogue_svg:TOPMAR87:PortrayalCatalog/Symbols/TOPMAR87.svg",
+        "helm_repaired_render:TOPMAR87:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__day.png",
+        "helm_repaired_render:TOPMAR87:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__dusk.png",
+        "helm_repaired_render:TOPMAR87:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR87__after__night.png",
+        "opencpn_render:TOPMAR87:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__day.png",
+        "opencpn_render:TOPMAR87:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__dusk.png",
+        "opencpn_render:TOPMAR87:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR87__night.png",
+        "chart1_crop:topmark_flag_other",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/topmark_flag_other.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR87",
+      "symbol_id": "TOPMAR87",
+      "verdict": "pass"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.97,
+      "evidence": {
+        "chart1_crop_id": null,
+        "chart1_crop_path": null,
+        "chart1_crop_token": null,
+        "colour_pattern": null,
+        "helm_candidate_geometry": "path:M32 46 V19 plus path:M24 42 L32 19 L40 42",
+        "helm_candidate_svg": "pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR88.svg",
+        "helm_repaired_renders": [
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__day.png",
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__dusk.png",
+          "pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__night.png"
+        ],
+        "opencpn_refs_present": true,
+        "opencpn_renders": [
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__day.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__dusk.png",
+          "pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__night.png"
+        ],
+        "required_colours": [
+          "black"
+        ],
+        "s101_refs": [
+          "pipeline/iconforge/assets/svg/source_priority/s101_exact/TOPMAR88.svg",
+          "PortrayalCatalog/Symbols/TOPMAR88.svg"
+        ],
+        "s101_refs_present": true,
+        "topshape_class": "black besom point up, three-stroke mark with central vertical stem and upward inverted V",
+        "warnings": [],
+        "wrong_silhouette_family_detected": false
+      },
+      "expected": "TOPMAR88 must preserve black besom point up: central vertical stem plus two slanted strokes forming an upward/inverted V; no nested V substitute and no crossbar. Required colours ['black']; S-57/S-52 structure: {\"conditions\":[\"TOPSHP16\"],\"lookup_id\":\"12703\",\"lookup_rcid\":\"31539\",\"object_class\":\"TOPMAR\",\"s52_instruction\":\"SY(TOPMAR88);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)\"}.",
+      "final_approved": false,
+      "input_candidate_status": "repair_batch_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch72.json",
+      "judge_comments": "Pass pending human: TOPMAR88 now matches the required black besom point-up silhouette. The repair removed the prior unsafe nested inverted-V/crossbar ambiguity and preserves the S-101/OpenCPN three-stroke witness geometry at chart-readable scale. No final approval is granted by this artifact.",
+      "observed": "Repaired SVG and renders show a black point-up besom: one central vertical stem from the lower center to the upper point, plus two slanted strokes rising to the same upper point. No crossbar or nested inverted-V substitute is present.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "qa_status": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "status": "judge_pass_pending_final_approval",
+        "structural_pass": true,
+        "visual_parity": "judge_pass_pending_final_approval",
+        "warnings": []
+      },
+      "rationale": "Pass pending human: TOPMAR88 now matches the required black besom point-up silhouette. The repair removed the prior unsafe nested inverted-V/crossbar ambiguity and preserves the S-101/OpenCPN three-stroke witness geometry at chart-readable scale.",
+      "repair_batch_catalog": "catalog/owned_repair_batch72.json",
+      "required_change": "No further repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TOPMAR88",
+        "name:topmark for beacons, besom point up, paper-chart",
+        "semantic_brief:{\"brief\":\"TOPMAR88 is topmark for beacons, besom point up, paper-chart. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: black.\",\"colour_pattern\":null,\"required_colours\":[\"black\"],\"required_shape\":\"exact topmark silhouette/count/orientation from the references\",\"safety_invariants\":[\"Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.\",\"Preserve load-bearing colours and colour order.\",\"Preserve topmark count/orientation and band pattern when present.\",\"Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.\"],\"unique_required_colours\":[\"black\"],\"use_case\":\"topmark symbol attached to an aid to navigation\"}",
+        "s57_structure:{\"conditions\":[\"TOPSHP16\"],\"lookup_id\":\"12703\",\"lookup_rcid\":\"31539\",\"object_class\":\"TOPMAR\",\"s52_instruction\":\"SY(TOPMAR88);TX(OBJNAM,3,2,2,'1508',1,-1,CHBLK,26)\"}",
+        "required_change_input:Remove the extra crossbar and redraw TOPMAR88 as the exact three-stroke black point-up besom reference shape.",
+        "reference_providers:OpenCPN,S-101",
+        "helm_candidate:TOPMAR88:pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR88.svg",
+        "helm_candidate_source:TOPMAR88:pipeline/iconforge/assets/svg/triad_generated/TOPMAR88.svg",
+        "helm_before_svg:TOPMAR88:pipeline/iconforge/assets/svg/owned_repair_batch72/TOPMAR88.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch72.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "s101_exact_svg:TOPMAR88:pipeline/iconforge/assets/svg/source_priority/s101_exact/TOPMAR88.svg",
+        "s101_portrayal_catalogue_svg:TOPMAR88:PortrayalCatalog/Symbols/TOPMAR88.svg",
+        "helm_repaired_render:TOPMAR88:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__day.png",
+        "helm_repaired_render:TOPMAR88:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__dusk.png",
+        "helm_repaired_render:TOPMAR88:pipeline/iconforge/out/standard_repair_batch64/renders/TOPMAR88__after__night.png",
+        "opencpn_render:TOPMAR88:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__day.png",
+        "opencpn_render:TOPMAR88:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__dusk.png",
+        "opencpn_render:TOPMAR88:pipeline/iconforge/out/opencpn_s52_reference/TOPMAR88__night.png",
+        "chart1_crop:topmark_flag_other",
+        "chart1_crop_path:pipeline/iconforge/out/chart1_parity/reference/crops/topmark_flag_other.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPMAR88",
+      "symbol_id": "TOPMAR88",
+      "verdict": "pass"
+    }
+  ]
+}

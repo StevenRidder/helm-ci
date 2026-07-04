@@ -1,0 +1,1871 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-005-local",
+  "batch_id": "standard_judge_batch_005",
+  "created_at": "2026-07-01T00:00:00Z",
+  "project": "vulkan",
+  "selection": {
+    "excluded_statuses": [
+      "shape_pass_pending_visual_rerun",
+      "shape_fail_repair_queue",
+      "judge_pass_pending_final_approval",
+      "no_helm_candidate",
+      "judge_fail_repair_queue"
+    ],
+    "input": "pipeline/iconforge/catalog/standard_source_table.json",
+    "rule": "first 50 rows where helm_candidate.candidate_status == pending_judge",
+    "semantic_input": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "symbols": [
+      "BOYCON69",
+      "BOYCON70",
+      "BOYCON71",
+      "BOYCON72",
+      "BOYCON73",
+      "BOYCON74",
+      "BOYCON77",
+      "BOYCON78",
+      "BOYCON79",
+      "BOYCON80",
+      "BOYCON81",
+      "BOYDEF03",
+      "BOYGEN03",
+      "BOYINB01",
+      "BOYISD12",
+      "BOYLAT13",
+      "BOYLAT14",
+      "BOYLAT23",
+      "BOYLAT24",
+      "BOYLAT25",
+      "BOYLAT26",
+      "BOYLAT27",
+      "BOYLAT50",
+      "BOYLAT51",
+      "BOYLAT52",
+      "BOYLAT53",
+      "BOYLAT54",
+      "BOYLAT55",
+      "BOYLAT56",
+      "BOYMOR01",
+      "BOYMOR03",
+      "BOYMOR11",
+      "BOYMOR31",
+      "BOYPIL01",
+      "BOYPIL59",
+      "BOYPIL60",
+      "BOYPIL61",
+      "BOYPIL62",
+      "BOYPIL66",
+      "BOYPIL67",
+      "BOYPIL68",
+      "BOYPIL69",
+      "BOYPIL70",
+      "BOYPIL71",
+      "BOYPIL72",
+      "BOYPIL73",
+      "BOYPIL74",
+      "BOYPIL78",
+      "BOYPIL81",
+      "BOYSAW12"
+    ]
+  },
+  "summary": {
+    "fail_count": 30,
+    "final_approved_count": 0,
+    "input_candidate_status": "pending_judge",
+    "notes": "No verdict is final approval; passing rows remain pending final approval QA.",
+    "pass_count": 20,
+    "review_basis": "standard_source_table enriched row, standard_semantic_shape_judge_queue semantic brief, S-101 refs where present, Aqua Map refs where present, OpenCPN day render where available, Helm candidate SVG/day render",
+    "top_repair_themes": [
+      "multi-band colour sequences collapsed to two bands, especially cardinal and lateral rows",
+      "wrong pattern orientation for vertical stripe or checkered rows",
+      "generic buoy body substituted for distinct default, installation, isolated-danger, safe-water, or mooring reference silhouettes",
+      "a small number of local OpenCPN renders are missing and should be regenerated before promotion"
+    ],
+    "total_verdicts": 50
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.86,
+      "expected": "conical buoy,cardinal-north-by,full-chart. Required conical/nun buoy body; black-yellow.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders the conical/nun buoy with black over yellow, matching the north-cardinal colour order; styling is cleaner/larger than OpenCPN but the class and order read correctly.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,cardinal-north-by,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON69__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON69.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON69__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON69.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON69",
+      "symbol_id": "BOYCON69"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.86,
+      "expected": "conical buoy,cardinal-south-yb,full-chart. Required conical/nun buoy body; yellow-black.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders the conical/nun buoy with yellow over black, matching the south-cardinal colour order; differences are stroke and scale.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,cardinal-south-yb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON70__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON70.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON70__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON70.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON70",
+      "symbol_id": "BOYCON70"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.91,
+      "expected": "conical buoy,cardinal-east-byb,full-chart. Required conical/nun buoy body; black-yellow-black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders black over yellow only; the required east-cardinal sequence is black-yellow-black.",
+      "pass": false,
+      "required_change": "Add the missing lower black band so the conical body reads black-yellow-black, not two-band black-yellow.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_cardinal_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,cardinal-east-byb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON71__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON71.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON71__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON71.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON71",
+      "symbol_id": "BOYCON71"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.91,
+      "expected": "conical buoy,cardinal-west-yby,full-chart. Required conical/nun buoy body; yellow-black-yellow.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders yellow over black only; the required west-cardinal sequence is yellow-black-yellow.",
+      "pass": false,
+      "required_change": "Add the missing lower yellow band so the conical body reads yellow-black-yellow, not two-band yellow-black.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_cardinal_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,cardinal-west-yby,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON72__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON72.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON72__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON72.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON72",
+      "symbol_id": "BOYCON72"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.84,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; green-white with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm preserves a conical buoy with green over white horizontal bands, matching the semantic brief and OpenCPN cue at first-pass level.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,gw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON73__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON73.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON73__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON73.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON73",
+      "symbol_id": "BOYCON73"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.93,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; green-white-green-white-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders only green over white, while the row requires green-white-green-white-green striping.",
+      "pass": false,
+      "required_change": "Redraw with five ordered green/white/green/white/green bands on the conical body.",
+      "safety_reason_codes": [
+        "missing_colour_bands",
+        "wrong_colour_order",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,gw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON74__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON74.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON74__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON74.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON74",
+      "symbol_id": "BOYCON74"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.84,
+      "expected": "conical buoy,lateral-wo,full-chart. Required conical/nun buoy body; white-orange with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm preserves a conical buoy with white over orange horizontal bands, matching the semantic brief and OpenCPN cue at first-pass level.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-wo,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON77__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON77.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON77__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON77.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON77",
+      "symbol_id": "BOYCON77"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.89,
+      "expected": "conical buoy,lateral-rw,full-chart. Required conical/nun buoy body; red-white with vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders red over white horizontal bands; the semantic brief and OpenCPN reference require red/white vertical striping.",
+      "pass": false,
+      "required_change": "Change BOYCON78 to vertical red/white striping on the conical buoy, not horizontal bands.",
+      "safety_reason_codes": [
+        "wrong_pattern_orientation",
+        "reference_mismatch",
+        "unsafe_lateral_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-rw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON78__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON78.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON78__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON78.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON78",
+      "symbol_id": "BOYCON78"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.88,
+      "expected": "conical buoy,lateral-gr,full-chart. Required stake/perch beacon; red-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a conical buoy body, but the enriched row describes a lateral beacon/stake/perch and the S-57 object class is bcnlat.",
+      "pass": false,
+      "required_change": "Replace the conical buoy silhouette with the required stake/perch beacon geometry while preserving red-over-green order.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_shape",
+        "unsafe_buoy_beacon_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-gr,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON79__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON79.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON79__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON79.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON79",
+      "symbol_id": "BOYCON79"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.91,
+      "expected": "conical buoy,lateral-grg,full-chart. Required conical/nun buoy body; white-orange-white with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders white over orange only; the required sequence is white-orange-white.",
+      "pass": false,
+      "required_change": "Add the missing lower white band so the conical body reads white-orange-white.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-grg,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON80__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON80.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON80__day.png",
+          "source_svg": "assets/svg/owned_repair_batch1/BOYCON80.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON80",
+      "symbol_id": "BOYCON80"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.94,
+      "expected": "conical buoy,gw,full-chart. Required conical/nun buoy body; blue-red-white-blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders blue-red-white bands, but the row requires blue-red-white-blue with mixed horizontal/vertical stripe evidence.",
+      "pass": false,
+      "required_change": "Add the missing final blue segment and resolve the required horizontal/vertical striping pattern against the exact reference before approval.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_pattern",
+        "unsafe_special_purpose_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,gw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON81__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON81.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON81__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYCON81.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON81",
+      "symbol_id": "BOYCON81"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.94,
+      "expected": "default symbol for buoy, simplified. Required buoy symbol matching the S-57 buoy family; reference-defined colours.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a generic buoy with magenta fill, while OpenCPN/S-101 show the default buoy/question-mark style cue.",
+      "pass": false,
+      "required_change": "Redraw as the default buoy symbol family from S-101/OpenCPN, including the default/unknown cue; do not substitute a magenta generic buoy.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYDEF03",
+          "path": "assets/svg/source_priority/s101_exact/BOYDEF03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYDEF03",
+          "path": "PortrayalCatalog/Symbols/BOYDEF03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "default symbol for buoy, simplified",
+          "path": "out/opencpn_s52_reference/BOYDEF03__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYDEF03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYDEF03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYDEF03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYDEF03",
+      "symbol_id": "BOYDEF03"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.93,
+      "expected": "default buoy, full-chart. Required buoy symbol matching the S-57 buoy family; black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a multicolour buoy with magenta/blue, but the row requires a black default buoy cue.",
+      "pass": false,
+      "required_change": "Remove invented magenta/blue fills and redraw as the black default buoy family shown by the references.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_colour",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYGEN03",
+          "path": "assets/svg/source_priority/s101_exact/BOYGEN03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYGEN03",
+          "path": "PortrayalCatalog/Symbols/BOYGEN03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "default buoy, full-chart",
+          "path": "out/opencpn_s52_reference/BOYGEN03__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYGEN03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYGEN03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYGEN03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYGEN03",
+      "symbol_id": "BOYGEN03"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.92,
+      "expected": "instructionallation buoy, paper-chart. Required buoy symbol matching the S-57 buoy family; black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a plain black can-like buoy; OpenCPN/S-101 show a wide installation-buoy glyph with a small top ring/cap.",
+      "pass": false,
+      "required_change": "Redraw the installation buoy silhouette from the provider references while keeping black as the load-bearing colour.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch",
+        "unsafe_symbol_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYINB01",
+          "path": "assets/svg/source_priority/s101_exact/BOYINB01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYINB01",
+          "path": "PortrayalCatalog/Symbols/BOYINB01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "instructionallation buoy, paper-chart",
+          "path": "out/opencpn_s52_reference/BOYINB01__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYINB01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYINB01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYINB01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYINB01",
+      "symbol_id": "BOYINB01"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.95,
+      "expected": "isolated danger buoy, simplified. Required buoy symbol matching the S-57 buoy family; red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a single red-topped black buoy body, but isolated-danger references require the distinctive isolated-danger/topmark cue rather than a generic buoy body.",
+      "pass": false,
+      "required_change": "Redraw BOYISD12 with the isolated-danger visual cue from S-101/Aqua Map/OpenCPN, including the paired red danger marks/topmark treatment as applicable.",
+      "safety_reason_codes": [
+        "missing_topmark",
+        "wrong_shape",
+        "unsafe_isolated_danger_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYISD12",
+          "path": "assets/svg/source_priority/s101_exact/BOYISD12.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYISD12",
+          "path": "PortrayalCatalog/Symbols/BOYISD12.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "Buoy Isolated Danger",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYISD1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "isolated danger buoy, simplified",
+          "path": "out/opencpn_s52_reference/BOYISD12__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYISD12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYISD12__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYISD12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYISD12",
+      "symbol_id": "BOYISD12"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.91,
+      "expected": "conical lateral buoy, green, simplified. Required conical/nun buoy body; green-red-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders green over red only; the required sequence is green-red-green.",
+      "pass": false,
+      "required_change": "Add the missing lower green band to the conical buoy.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_lateral_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT13",
+          "path": "assets/svg/source_priority/s101_exact/BOYLAT13.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYLAT13",
+          "path": "PortrayalCatalog/Symbols/BOYLAT13.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "conical lateral buoy, green, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT13__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT13.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT13__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYLAT13.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT13",
+      "symbol_id": "BOYLAT13"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.91,
+      "expected": "conical lateral buoy, red, simplified. Required conical/nun buoy body; red-green-red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders red over green only; the required sequence is red-green-red.",
+      "pass": false,
+      "required_change": "Add the missing lower red band to the conical buoy.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_lateral_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT14",
+          "path": "assets/svg/source_priority/s101_exact/BOYLAT14.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYLAT14",
+          "path": "PortrayalCatalog/Symbols/BOYLAT14.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "conical lateral buoy, red, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT14__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT14.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT14__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYLAT14.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT14",
+      "symbol_id": "BOYLAT14"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.93,
+      "expected": "can shape lateral buoy, green, simplified. Required can/cylindrical buoy body; green-red-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm uses a rounded generic buoy and only green-red bands; the row requires a can/cylindrical body with green-red-green order.",
+      "pass": false,
+      "required_change": "Use a can/cylindrical buoy body and add the missing lower green band.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_colour_band",
+        "wrong_colour_order"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT23",
+          "path": "assets/svg/source_priority/s101_exact/BOYLAT23.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYLAT23",
+          "path": "PortrayalCatalog/Symbols/BOYLAT23.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "can shape lateral buoy, green, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT23__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT23.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT23__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYLAT23.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT23",
+      "symbol_id": "BOYLAT23"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.93,
+      "expected": "can shape lateral buoy, red, simplified. Required can/cylindrical buoy body; red-green-red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm uses a rounded generic buoy and only red-green bands; the row requires a can/cylindrical body with red-green-red order.",
+      "pass": false,
+      "required_change": "Use a can/cylindrical buoy body and add the missing lower red band.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_colour_band",
+        "wrong_colour_order"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT24",
+          "path": "assets/svg/source_priority/s101_exact/BOYLAT24.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYLAT24",
+          "path": "PortrayalCatalog/Symbols/BOYLAT24.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "can shape lateral buoy, red, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT24__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT24.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT24__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYLAT24.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT24",
+      "symbol_id": "BOYLAT24"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.78,
+      "expected": "red-green lateral buoy, simplified. Required buoy symbol matching the S-57 buoy family; red-green.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a buoy-family mark with red over green, matching the required two-colour lateral order; silhouette is stylized but not a different symbol class.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "red-green lateral buoy, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT25__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT25.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT25__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT25.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT25",
+      "symbol_id": "BOYLAT25"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.87,
+      "expected": "BOYLAT26. Required buoy symbol matching the S-57 buoy family; white-red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a rounded white-over-red buoy, while the OpenCPN reference is a narrow segmented waterway/lateral mark rather than this generic body.",
+      "pass": false,
+      "required_change": "Match the narrow segmented BOYLAT26 reference silhouette while preserving white-over-red order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT26",
+          "path": "out/opencpn_s52_reference/BOYLAT26__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT26.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT26__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT26.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT26",
+      "symbol_id": "BOYLAT26"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.87,
+      "expected": "BOYLAT27. Required buoy symbol matching the S-57 buoy family; white-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a rounded white-over-green buoy, while the OpenCPN reference is a narrow segmented waterway/lateral mark rather than this generic body.",
+      "pass": false,
+      "required_change": "Match the narrow segmented BOYLAT27 reference silhouette while preserving white-over-green order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT27",
+          "path": "out/opencpn_s52_reference/BOYLAT27__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT27.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT27__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT27.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT27",
+      "symbol_id": "BOYLAT27"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.76,
+      "expected": "can shape lateral buoy, red, simplified. Required buoy symbol matching the S-57 buoy family; red.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a red buoy-family mark, preserving the load-bearing red lateral cue; style/shape is simplified but semantically aligned.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can shape lateral buoy, red, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT50__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT50.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT50__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT50.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT50",
+      "symbol_id": "BOYLAT50"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.84,
+      "expected": "conical lateral buoy, green, simplified. Required conical/nun buoy body; green.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a green conical/nun buoy, matching the required conical shape and green lateral cue.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical lateral buoy, green, simplified",
+          "path": "out/opencpn_s52_reference/BOYLAT51__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT51",
+      "symbol_id": "BOYLAT51"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.79,
+      "expected": "BOYLAT52. Required buoy symbol matching the S-57 buoy family; red-green-red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "The local OpenCPN render is missing and Helm renders only red-green, while the enriched brief requires red-green-red.",
+      "pass": false,
+      "required_change": "Add the missing lower red band and obtain/verify the exact local OpenCPN render before promoting.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "missing_reference_render",
+        "wrong_colour_order"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT52",
+          "path": "out/opencpn_s52_reference/BOYLAT52__day.png",
+          "provider": "opencpn_render",
+          "status": "missing_local_file",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT52.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT52__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT52.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT52",
+      "symbol_id": "BOYLAT52"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.79,
+      "expected": "BOYLAT53. Required buoy symbol matching the S-57 buoy family; green-red-green.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "The local OpenCPN render is missing and Helm renders only green-red, while the enriched brief requires green-red-green.",
+      "pass": false,
+      "required_change": "Add the missing lower green band and obtain/verify the exact local OpenCPN render before promoting.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "missing_reference_render",
+        "wrong_colour_order"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT53",
+          "path": "out/opencpn_s52_reference/BOYLAT53__day.png",
+          "provider": "opencpn_render",
+          "status": "missing_local_file",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT53.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT53__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT53.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT53",
+      "symbol_id": "BOYLAT53"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.68,
+      "expected": "BOYLAT54. Required buoy symbol matching the S-57 buoy family; red-green.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "No local OpenCPN day render is available for this row, but the candidate preserves the required buoy-family body and red-over-green order from the semantic/S-57 metadata.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT54",
+          "path": "out/opencpn_s52_reference/BOYLAT54__day.png",
+          "provider": "opencpn_render",
+          "status": "missing_local_file",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT54.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT54__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT54.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT54",
+      "symbol_id": "BOYLAT54"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.68,
+      "expected": "BOYLAT55. Required buoy symbol matching the S-57 buoy family; white-red.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "No local OpenCPN day render is available for this row, but the candidate preserves the required buoy-family body and white-over-red order from the semantic/S-57 metadata.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT55",
+          "path": "out/opencpn_s52_reference/BOYLAT55__day.png",
+          "provider": "opencpn_render",
+          "status": "missing_local_file",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT55.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT55__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT55.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT55",
+      "symbol_id": "BOYLAT55"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.68,
+      "expected": "BOYLAT56. Required buoy symbol matching the S-57 buoy family; white-green.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "No local OpenCPN day render is available for this row, but the candidate preserves the required buoy-family body and white-over-green order from the semantic/S-57 metadata.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "BOYLAT56",
+          "path": "out/opencpn_s52_reference/BOYLAT56__day.png",
+          "provider": "opencpn_render",
+          "status": "missing_local_file",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYLAT56.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYLAT56__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYLAT56.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYLAT56",
+      "symbol_id": "BOYLAT56"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.91,
+      "expected": "mooring buoy, barrel shape, full-chart. Required spherical buoy body; black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a black/blue split buoy, but the mooring row requires a black spherical/barrel mooring buoy cue.",
+      "pass": false,
+      "required_change": "Remove the invented blue fill and redraw as the black spherical/barrel mooring buoy from the reference.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYMOR01",
+          "path": "assets/svg/source_priority/s101_exact/BOYMOR01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYMOR01",
+          "path": "PortrayalCatalog/Symbols/BOYMOR01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "mooring buoy, barrel shape, full-chart",
+          "path": "out/opencpn_s52_reference/BOYMOR01__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYMOR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYMOR01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYMOR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR01",
+      "symbol_id": "BOYMOR01"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.74,
+      "expected": "can mooring buoy,generic,full-chart. Required can/cylindrical buoy body; green-black.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a can/cylindrical-style mooring buoy with green over black, preserving the required family and colour order; OpenCPN has a different small-ring glyph style but the semantic cue is intact.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "BOYMOR03",
+          "path": "assets/svg/source_priority/s101_exact/BOYMOR03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYMOR03",
+          "path": "PortrayalCatalog/Symbols/BOYMOR03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "can mooring buoy,generic,full-chart",
+          "path": "out/opencpn_s52_reference/BOYMOR03__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYMOR03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYMOR03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYMOR03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR03",
+      "symbol_id": "BOYMOR03"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.91,
+      "expected": "instructionallation buoy and mooring buoy, simplified. Required mooring facility/buoy symbol; black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a generic black can body; OpenCPN shows the simplified mooring/installation facility mark as a flat horizontal symbol.",
+      "pass": false,
+      "required_change": "Redraw the simplified mooring facility/buoy symbol, not a generic can buoy.",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYMOR11",
+          "path": "assets/svg/source_priority/s101_exact/BOYMOR11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYMOR11",
+          "path": "PortrayalCatalog/Symbols/BOYMOR11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "instructionallation buoy and mooring buoy, simplified",
+          "path": "out/opencpn_s52_reference/BOYMOR11__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYMOR11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYMOR11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYMOR11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR11",
+      "symbol_id": "BOYMOR11"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.78,
+      "expected": "can mooring buoy,generic, whire,full-chart. Required can/cylindrical buoy body; white.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a white can/cylindrical mooring buoy, matching the required white can-family cue; style differences are scale/stroke.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "Mooring Buoy",
+          "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "Pile",
+          "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "can mooring buoy,generic, whire,full-chart",
+          "path": "out/opencpn_s52_reference/BOYMOR31__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYMOR31.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYMOR31__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYMOR31.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYMOR31",
+      "symbol_id": "BOYMOR31"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.92,
+      "expected": "pillar buoy, full-chart. Required pillar buoy body; black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a black/blue split pillar, but the row requires a black pillar buoy.",
+      "pass": false,
+      "required_change": "Remove the invented blue lower fill and make the full pillar body black.",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_colour",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYPIL01",
+          "path": "assets/svg/source_priority/s101_exact/BOYPIL01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYPIL01",
+          "path": "PortrayalCatalog/Symbols/BOYPIL01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "pillar buoy, full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL01__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYPIL01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL01",
+      "symbol_id": "BOYPIL01"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.86,
+      "expected": "pillar buoy,special purpose-y,full-chart. Required pillar buoy body; orange.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders an orange pillar buoy, matching the special-purpose pillar silhouette and colour cue.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,special purpose-y,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL59__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL59.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL59__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL59.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL59",
+      "symbol_id": "BOYPIL59"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.86,
+      "expected": "pillar buoy,lateral-r,full-chart. Required pillar buoy body; red.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a red pillar buoy, matching the lateral pillar silhouette and red cue.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "BOYPIL60",
+          "path": "assets/svg/source_priority/s101_exact/BOYPIL60.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYPIL60",
+          "path": "PortrayalCatalog/Symbols/BOYPIL60.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "pillar buoy,lateral-r,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL60__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL60.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL60__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYPIL60.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL60",
+      "symbol_id": "BOYPIL60"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.86,
+      "expected": "pillar buoy,lateral-g,full-chart. Required pillar buoy body; green.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a green pillar buoy, matching the lateral pillar silhouette and green cue.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,lateral-g,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL61__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL61__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL61.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL61",
+      "symbol_id": "BOYPIL61"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.86,
+      "expected": "pillar buoy,special purpose-y,full-chart. Required pillar buoy body; yellow.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a yellow pillar buoy, matching the special-purpose pillar silhouette and yellow cue.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,special purpose-y,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL62__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL62.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL62__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL62.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL62",
+      "symbol_id": "BOYPIL62"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.91,
+      "expected": "pillar buoy,lateral-rgr,full-chart. Required pillar buoy body; red-green-red with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders red over green only; the required lateral pillar sequence is red-green-red.",
+      "pass": false,
+      "required_change": "Add the missing lower red band to the pillar body.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_lateral_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,lateral-rgr,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL66__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL66.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL66__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL66.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL66",
+      "symbol_id": "BOYPIL66"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.91,
+      "expected": "pillar buoy,lateral-grg,full-chart. Required pillar buoy body; green-red-green with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders green over red only; the required lateral pillar sequence is green-red-green.",
+      "pass": false,
+      "required_change": "Add the missing lower green band to the pillar body.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_lateral_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,lateral-grg,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL67__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL67.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL67__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL67.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL67",
+      "symbol_id": "BOYPIL67"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.86,
+      "expected": "pillar buoy,cardinal-by,full-chart. Required pillar buoy body; black-yellow.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a pillar buoy with black over yellow, matching the required cardinal colour order.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,cardinal-by,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL68__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL68.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL68__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL68.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL68",
+      "symbol_id": "BOYPIL68"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.86,
+      "expected": "pillar buoy,cardinal-yb,full-chart. Required pillar buoy body; yellow-black.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a pillar buoy with yellow over black, matching the required cardinal colour order.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,cardinal-yb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL69__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL69.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL69__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL69.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL69",
+      "symbol_id": "BOYPIL69"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.91,
+      "expected": "pillar buoy,cardinal-byb,full-chart. Required pillar buoy body; black-yellow-black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders black over yellow only; the required cardinal pillar sequence is black-yellow-black.",
+      "pass": false,
+      "required_change": "Add the missing lower black band to the pillar body.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_cardinal_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,cardinal-byb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL70__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL70.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL70__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL70.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL70",
+      "symbol_id": "BOYPIL70"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.91,
+      "expected": "pillar buoy,cardianl-yby,full-chart. Required pillar buoy body; yellow-black-yellow.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders yellow over black only; the required cardinal pillar sequence is yellow-black-yellow.",
+      "pass": false,
+      "required_change": "Add the missing lower yellow band to the pillar body.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_cardinal_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,cardianl-yby,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL71__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL71.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL71__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL71.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL71",
+      "symbol_id": "BOYPIL71"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.91,
+      "expected": "pillar buoy,isol.danger-brb,full-chart. Required pillar buoy body; black-red-black.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders black over red only; the required isolated-danger pillar sequence is black-red-black.",
+      "pass": false,
+      "required_change": "Add the missing lower black band to the pillar body.",
+      "safety_reason_codes": [
+        "missing_colour_band",
+        "wrong_colour_order",
+        "unsafe_isolated_danger_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,isol.danger-brb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL72__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL72.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL72__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL72.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL72",
+      "symbol_id": "BOYPIL72"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.89,
+      "expected": "pillar buoy,safe water-rw,full-chart. Required pillar buoy body; red-white with vertical bands/stripes in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders red over white horizontal bands; the safe-water row requires red/white vertical striping.",
+      "pass": false,
+      "required_change": "Change BOYPIL73 to vertical red/white striping on the pillar body.",
+      "safety_reason_codes": [
+        "wrong_pattern_orientation",
+        "reference_mismatch",
+        "unsafe_safe_water_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,safe water-rw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL73__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL73.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL73__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL73.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL73",
+      "symbol_id": "BOYPIL73"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.82,
+      "expected": "pillar buoy,red/green,full-chart. Required pillar buoy body; green-red with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a pillar buoy with green over red horizontal bands, matching the required red/green row order as expressed in the semantic brief and visual ref.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,red/green,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL74__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL74.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL74__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL74.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL74",
+      "symbol_id": "BOYPIL74"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.9,
+      "expected": "BOYPIL78. Required pillar buoy body; red-white with squared/checkered pattern in the listed colour order.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders red over white horizontal bands; the semantic brief requires a red/white squared/checkered pattern.",
+      "pass": false,
+      "required_change": "Replace horizontal bands with the red/white squared/checkered pattern on the pillar body.",
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYPIL78",
+          "path": "out/opencpn_s52_reference/BOYPIL78__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL78.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL78__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL78.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL78",
+      "symbol_id": "BOYPIL78"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.84,
+      "expected": "pillar buoy,white/orange,full-chart. Required pillar buoy body; white-orange with horizontal bands/stripes in the listed colour order.",
+      "judge_comments": "Pass for first-pass semantic visual parity against the enriched semantic brief and available provider references. Not final-approved.",
+      "observed": "Helm renders a pillar buoy with white over orange horizontal bands, matching the required pattern and colour order.",
+      "pass": true,
+      "required_change": "No semantic repair required before final approval QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "pillar buoy,white/orange,full-chart",
+          "path": "out/opencpn_s52_reference/BOYPIL81__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYPIL81.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYPIL81__day.png",
+          "source_svg": "assets/svg/owned_repair_batch2/BOYPIL81.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYPIL81",
+      "symbol_id": "BOYPIL81"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.94,
+      "expected": "safe water buoy, simplified. Required buoy symbol matching the S-57 buoy family; red.",
+      "judge_comments": "Fail for first-pass semantic visual parity; repair must preserve symbol class, required geometry, and colour/order before any style polish.",
+      "observed": "Helm renders a red/black buoy body, while the safe-water simplified references show a compact red circular/safe-water cue rather than a generic buoy body.",
+      "pass": false,
+      "required_change": "Redraw BOYSAW12 to match the safe-water simplified reference cue and remove the misleading black lower body.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "unsafe_safe_water_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "BOYSAW12",
+          "path": "assets/svg/source_priority/s101_exact/BOYSAW12.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "label": "BOYSAW12",
+          "path": "PortrayalCatalog/Symbols/BOYSAW12.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "label": "Buoy Safe Water",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYSAW1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "label": "safe water buoy, simplified",
+          "path": "out/opencpn_s52_reference/BOYSAW12__day.png",
+          "provider": "opencpn_render",
+          "status": "available",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYSAW12.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYSAW12__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/BOYSAW12.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYSAW12",
+      "symbol_id": "BOYSAW12"
+    }
+  ]
+}

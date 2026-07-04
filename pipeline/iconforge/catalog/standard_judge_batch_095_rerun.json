@@ -1,0 +1,140 @@
+{
+  "agent": "codex/FORGE-15-judge-loop-current",
+  "batch_id": "standard_judge_batch_095_rerun",
+  "created_at": "2026-07-03T05:35:00Z",
+  "evidence_notes": [
+    "Judged owned_repair_batch95 against Aqua Map visual witnesses, S-52 metadata, and semantic briefs.",
+    "Aqua Map images are reference-only; Helm canonical assets remain generated-owned SVG.",
+    "Pass means judge_pass_pending_final_approval only; no symbol is final human-approved."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "LIGHTS05",
+      "OBSTRN04",
+      "TOWERS74|;TX(OBJNAM",
+      "WRECKS02"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun_or_prior_fail_with_new_source_batch",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "source_batches": [
+      "catalog/owned_repair_batch95.json"
+    ]
+  },
+  "source_batch": "catalog/owned_repair_batch95.json",
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun_or_prior_fail_with_new_source_batch",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 4,
+    "passed_assets": [
+      "LIGHTS05",
+      "OBSTRN04",
+      "TOWERS74|;TX(OBJNAM",
+      "WRECKS02"
+    ],
+    "selected": 4,
+    "source_batches": [
+      "catalog/owned_repair_batch95.json"
+    ]
+  },
+  "task_id": "FORGE-15",
+  "verdicts": [
+    {
+      "batch_index": 95,
+      "confidence": 0.83,
+      "expected": "LIGHTS05 is LIGHTS05. It is used as a light characteristic or lighted aid-to-navigation symbol. Required geometry: light symbol with the correct color cue and no invented hazard silhouette. Required colours: reference-defined. light symbol with the correct color cue and no invented hazard silhouette Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "judge_pass_pending_final_approval",
+      "input_source_batch": "catalog/owned_repair_batch95.json",
+      "judge_comments": "PASS-PENDING-HUMAN. LIGHTS05 now follows the Aqua Map visual witness for LIGHTS05: the recognizable pictogram family, label where present, and small-scale silhouette are preserved. Human final approval is still required.",
+      "observed": "LIGHTS05 now follows the Aqua Map visual witness for LIGHTS05: the recognizable pictogram family, label where present, and small-scale silhouette are preserved.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:LIGHTS05",
+        "source_batch:catalog/owned_repair_batch95.json",
+        "helm_candidate:assets/svg/triad_generated/LIGHTS05.svg",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSM11.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSY11.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSW11.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSR11.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSG11.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LIGHTSmulti1.png"
+      ],
+      "symbol_id": "LIGHTS05"
+    },
+    {
+      "batch_index": 95,
+      "confidence": 0.83,
+      "expected": "OBSTRN04 is OBSTRN04. It is used as a obstruction or hazard marking. Required geometry: recognized obstruction hazard symbol. Required colours: reference-defined. recognized obstruction hazard symbol Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "judge_pass_pending_final_approval",
+      "input_source_batch": "catalog/owned_repair_batch95.json",
+      "judge_comments": "PASS-PENDING-HUMAN. OBSTRN04 now follows the Aqua Map visual witness for OBSTRN04: the recognizable pictogram family, label where present, and small-scale silhouette are preserved. Human final approval is still required.",
+      "observed": "OBSTRN04 now follows the Aqua Map visual witness for OBSTRN04: the recognizable pictogram family, label where present, and small-scale silhouette are preserved.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:OBSTRN04",
+        "source_batch:catalog/owned_repair_batch95.json",
+        "helm_candidate:assets/svg/triad_generated/OBSTRN04.svg",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/Obstruction1.png"
+      ],
+      "symbol_id": "OBSTRN04"
+    },
+    {
+      "batch_index": 95,
+      "confidence": 0.83,
+      "expected": "TOWERS74|;TX(OBJNAM is TOWERS74|;TX(OBJNAM. It is used as a TOWERS74|;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, orange. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "judge_pass_pending_final_approval",
+      "input_source_batch": "catalog/owned_repair_batch95.json",
+      "judge_comments": "PASS-PENDING-HUMAN. TOWERS74|;TX(OBJNAM now follows the Aqua Map visual witness for TOWERS74|;TX(OBJNAM: the recognizable pictogram family, label where present, and small-scale silhouette are preserved. Human final approval is still required.",
+      "observed": "TOWERS74|;TX(OBJNAM now follows the Aqua Map visual witness for TOWERS74|;TX(OBJNAM: the recognizable pictogram family, label where present, and small-scale silhouette are preserved.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:TOWERS74|;TX(OBJNAM",
+        "source_batch:catalog/owned_repair_batch95.json",
+        "helm_candidate:assets/svg/triad_generated/TOWERS74_TX_OBJNAM.svg",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/Tower1.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/WaterTower1.png"
+      ],
+      "symbol_id": "TOWERS74|;TX(OBJNAM"
+    },
+    {
+      "batch_index": 95,
+      "confidence": 0.83,
+      "expected": "WRECKS02 is WRECKS02. It is used as a wreck hazard. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: reference-defined. recognized wreck symbol, not a generic decorative icon Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "judge_pass_pending_final_approval",
+      "input_source_batch": "catalog/owned_repair_batch95.json",
+      "judge_comments": "PASS-PENDING-HUMAN. WRECKS02 now follows the Aqua Map visual witness for WRECKS02: the recognizable pictogram family, label where present, and small-scale silhouette are preserved. Human final approval is still required.",
+      "observed": "WRECKS02 now follows the Aqua Map visual witness for WRECKS02: the recognizable pictogram family, label where present, and small-scale silhouette are preserved.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:WRECKS02",
+        "source_batch:catalog/owned_repair_batch95.json",
+        "helm_candidate:assets/svg/triad_generated/WRECKS02.svg",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+        "aquamap_reference:reference_sources/aquamap_map_symbols/images/EmergedWreck1.png"
+      ],
+      "symbol_id": "WRECKS02"
+    }
+  ]
+}

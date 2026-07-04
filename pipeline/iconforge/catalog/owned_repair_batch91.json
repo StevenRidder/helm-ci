@@ -1,0 +1,1593 @@
+{
+  "blockers": [
+    "no_provider_reference_image"
+  ],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch91.json",
+    "renders": "out/standard_generate_batch91/renders",
+    "svg_dir": "assets/svg/owned_repair_batch91"
+  },
+  "schema_version": 1,
+  "status": "semantic_hard_pile_generated_pending_judge_or_reference_gap_review",
+  "summary": {
+    "final_approved": 0,
+    "generated": 24,
+    "reference_backed_pending_judge": 5,
+    "reference_gap_pending_source_review": 19
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/ARCSLN01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/ARCSLN01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/ARCSLN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/ARCSLN01.svg",
+      "asset": "ARCSLN01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_arc_slip_line_semantic_redraw_without_provider_image",
+      "name": "ARCSLN01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "7",
+        "lookup_rcid": "32043",
+        "object_class": "ARCSLN",
+        "s52_instruction": "LC(ARCSLN01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "ARCSLN01 is ARCSLN01. It is used as a ARCSLN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ARCSLN01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/CLRLIN01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/CLRLIN01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/CLRLIN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/CLRLIN01.svg",
+      "asset": "CLRLIN01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_clearing_line_arrowhead_semantic_redraw_without_provider_image",
+      "name": "arrow head for mariner's clearing line",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Provider image attached; candidate must pass normal visual judge.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_llm_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "870",
+        "lookup_rcid": "31946",
+        "object_class": "clrlin",
+        "s52_instruction": "CS(CLRLIN01)"
+      },
+      "safety_reason_codes": [
+        "new_candidate_pending_visual_judge"
+      ],
+      "semantic_brief": {
+        "brief": "CLRLIN01 is arrow head for mariner's clearing line. It is used as a arrow head for mariner's clearing line. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrow head for mariner's clearing line"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/CLRLIN01__day.png",
+            "label": "arrow head for mariner's clearing line",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/CLRLIN01__day.png",
+              "dusk": "out/opencpn_s52_reference/CLRLIN01__dusk.png",
+              "night": "out/opencpn_s52_reference/CLRLIN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DASH__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DASH__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DASH__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DASH.svg",
+      "asset": "DASH",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_dashed_line_primitive_semantic_redraw_without_provider_image",
+      "name": "DASH",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DASH is DASH. It is used as a DASH. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DASH"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DATCVR01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DATCVR01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DATCVR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DATCVR01.svg",
+      "asset": "DATCVR01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_data_coverage_boundary_semantic_redraw_without_provider_image",
+      "name": "DATCVR01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "100",
+        "lookup_rcid": "32136",
+        "object_class": "M_COVR",
+        "s52_instruction": "CS(DATCVR01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DATCVR01 is DATCVR01. It is used as a DATCVR01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DATCVR01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DEPARE01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DEPARE01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DEPARE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DEPARE01.svg",
+      "asset": "DEPARE01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_depth_area_shallow_semantic_redraw_without_provider_image",
+      "name": "DEPARE01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "40",
+        "lookup_rcid": "32076",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPARE01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DEPARE01 is DEPARE01. It is used as a DEPARE01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPARE01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DEPARE02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DEPARE02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DEPARE02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DEPARE02.svg",
+      "asset": "DEPARE02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_depth_area_deep_semantic_redraw_without_provider_image",
+      "name": "DEPARE02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "253",
+        "lookup_rcid": "32288",
+        "object_class": "depare",
+        "s52_instruction": "CS(DEPARE02)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DEPARE02 is DEPARE02. It is used as a DEPARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPARE02"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DEPCNT02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DEPCNT02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DEPCNT02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DEPCNT02.svg",
+      "asset": "DEPCNT02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_depth_contour_semantic_redraw_without_provider_image",
+      "name": "DEPCNT02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "728",
+        "lookup_rcid": "31804",
+        "object_class": "DEPARE",
+        "s52_instruction": "CS(DEPCNT02)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DEPCNT02 is DEPCNT02. It is used as a DEPCNT02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DEPCNT02"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/DOTT__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/DOTT__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/DOTT__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/DOTT.svg",
+      "asset": "DOTT",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_dotted_line_primitive_semantic_redraw_without_provider_image",
+      "name": "DOTT",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "DOTT is DOTT. It is used as a obstruction or hazard marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/LEGLIN02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/LEGLIN02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/LEGLIN02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/LEGLIN02.svg",
+      "asset": "LEGLIN02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_route_leg_line_semantic_redraw_without_provider_image",
+      "name": "LEGLIN02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "886",
+        "lookup_rcid": "31962",
+        "object_class": "leglin",
+        "s52_instruction": "CS(LEGLIN02)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "LEGLIN02 is LEGLIN02. It is used as a LEGLIN02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "LEGLIN02"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/LIGHTS05__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/LIGHTS05__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/LIGHTS05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/LIGHTS05.svg",
+      "asset": "LIGHTS05",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_light_characteristic_semantic_redraw_without_provider_image",
+      "name": "LIGHTS05",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Provider image attached; candidate must pass normal visual judge.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_llm_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1131",
+        "lookup_rcid": "31183",
+        "object_class": "LIGHTS",
+        "s52_instruction": "CS(LIGHTS05)"
+      },
+      "safety_reason_codes": [
+        "new_candidate_pending_visual_judge"
+      ],
+      "semantic_brief": {
+        "brief": "LIGHTS05 is LIGHTS05. It is used as a light characteristic or lighted aid-to-navigation symbol. Required geometry: light symbol with the correct color cue and no invented hazard silhouette. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "light symbol with the correct color cue and no invented hazard silhouette",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "light characteristic or lighted aid-to-navigation symbol"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSM11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSY11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSW11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSR11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSG11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Multi Lights",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSmulti1.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/OBSTRN04__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/OBSTRN04__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/OBSTRN04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/OBSTRN04.svg",
+      "asset": "OBSTRN04",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_obstruction_hazard_semantic_redraw_without_provider_image",
+      "name": "OBSTRN04",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Provider image attached; candidate must pass normal visual judge.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_llm_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "new_candidate_pending_visual_judge"
+      ],
+      "semantic_brief": {
+        "brief": "OBSTRN04 is OBSTRN04. It is used as a obstruction or hazard marking. Required geometry: recognized obstruction hazard symbol. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized obstruction hazard symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Bottom Obstruction",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Obstruction1.png",
+            "section": "Others",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/OWNSHP02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/OWNSHP02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/OWNSHP02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/OWNSHP02.svg",
+      "asset": "OWNSHP02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_ownship_scaled_outline_semantic_redraw_without_provider_image",
+      "name": "OWNSHP02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1529",
+        "lookup_rcid": "31581",
+        "object_class": "ownshp",
+        "s52_instruction": "CS(OWNSHP02)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "OWNSHP02 is OWNSHP02. It is used as a OWNSHP02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "OWNSHP02"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/PASTRK01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/PASTRK01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/PASTRK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/PASTRK01.svg",
+      "asset": "PASTRK01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_past_track_time_mark_semantic_redraw_without_provider_image",
+      "name": "time mark on past track",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Provider image attached; candidate must pass normal visual judge.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_llm_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "889",
+        "lookup_rcid": "31965",
+        "object_class": "pastrk",
+        "s52_instruction": "CS(PASTRK01)"
+      },
+      "safety_reason_codes": [
+        "new_candidate_pending_visual_judge"
+      ],
+      "semantic_brief": {
+        "brief": "PASTRK01 is time mark on past track. It is used as a time mark on past track. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "time mark on past track"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PASTRK01__day.png",
+            "label": "time mark on past track",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PASTRK01__day.png",
+              "dusk": "out/opencpn_s52_reference/PASTRK01__dusk.png",
+              "night": "out/opencpn_s52_reference/PASTRK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/QUAPOS01_TX_OBJNAM__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/QUAPOS01_TX_OBJNAM__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/QUAPOS01_TX_OBJNAM__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/QUAPOS01_TX_OBJNAM.svg",
+      "asset": "QUAPOS01;TX(OBJNAM",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_position_quality_with_label_anchor_semantic_redraw_without_provider_image",
+      "name": "QUAPOS01;TX(OBJNAM",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1134",
+        "lookup_rcid": "31186",
+        "object_class": "LNDARE",
+        "s52_instruction": "SY(LNDARE01);CS(QUAPOS01;TX(OBJNAM,1,2,3,'15118',-1,-1,CHBLK,26))"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "QUAPOS01;TX(OBJNAM is QUAPOS01;TX(OBJNAM. It is used as a QUAPOS01;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "QUAPOS01;TX(OBJNAM"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/RESARE01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/RESARE01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/RESARE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/RESARE01.svg",
+      "asset": "RESARE01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_restricted_anchor_area_semantic_redraw_without_provider_image",
+      "name": "RESARE01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "342",
+        "lookup_rcid": "32377",
+        "object_class": "ACHARE",
+        "s52_instruction": "SY(ACHARE51);LC(ACHARE51);CS(RESARE01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "RESARE01 is RESARE01. It is used as a anchorage-area or anchoring-related chart marking. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "anchorage-area or anchoring-related chart marking"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/RESARE02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/RESARE02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/RESARE02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/RESARE02.svg",
+      "asset": "RESARE02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_restricted_area_notice_semantic_redraw_without_provider_image",
+      "name": "RESARE02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "CATREA4"
+        ],
+        "lookup_id": "166",
+        "lookup_rcid": "93668",
+        "object_class": "RESARE",
+        "s52_instruction": "TX(OBJNAM,3,1,2,'15110',1,0,CHMGD,29);CS(RESARE02)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "RESARE02 is RESARE02. It is used as a RESARE02. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "RESARE02"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/RESTRN01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/RESTRN01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/RESTRN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/RESTRN01.svg",
+      "asset": "RESTRN01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_traffic_restriction_semantic_redraw_without_provider_image",
+      "name": "RESTRN01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "47",
+        "lookup_rcid": "32083",
+        "object_class": "DWRTPT",
+        "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "RESTRN01 is RESTRN01. It is used as a RESTRN01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "RESTRN01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/SLCONS03__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/SLCONS03__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/SLCONS03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/SLCONS03.svg",
+      "asset": "SLCONS03",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_shoreline_construction_pier_semantic_redraw_without_provider_image",
+      "name": "SLCONS03",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "CATSLC4"
+        ],
+        "lookup_id": "1564",
+        "lookup_rcid": "31616",
+        "object_class": "slcons",
+        "s52_instruction": "SY(PIER0001);CS(SLCONS03)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "SLCONS03 is SLCONS03. It is used as a SLCONS03. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SLCONS03"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/SOLD__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/SOLD__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/SOLD__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/SOLD.svg",
+      "asset": "SOLD",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_solid_line_primitive_semantic_redraw_without_provider_image",
+      "name": "SOLD",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "DRVAL1?",
+          "DRVAL2?"
+        ],
+        "lookup_id": "39",
+        "lookup_rcid": "32075",
+        "object_class": "DEPARE",
+        "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "SOLD is SOLD. It is used as a SOLD. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SOLD"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/SYMINS01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/SYMINS01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/SYMINS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/SYMINS01.svg",
+      "asset": "SYMINS01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_symbol_insert_instruction_semantic_redraw_without_provider_image",
+      "name": "SYMINS01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [
+          "SYMINS"
+        ],
+        "lookup_id": "118",
+        "lookup_rcid": "32154",
+        "object_class": "NEWOBJ",
+        "s52_instruction": "CS(SYMINS01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "SYMINS01 is SYMINS01. It is used as a SYMINS01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "SYMINS01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/TOPMARI1__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/TOPMARI1__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/TOPMARI1__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/TOPMARI1.svg",
+      "asset": "TOPMARI1",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_isolated_topmark_reference_semantic_redraw_without_provider_image",
+      "name": "TOPMARI1",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1597",
+        "lookup_rcid": "31649",
+        "object_class": "topmar",
+        "s52_instruction": "CS(TOPMARI1)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "TOPMARI1 is TOPMARI1. It is used as a topmark symbol attached to an aid to navigation. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "topmark symbol attached to an aid to navigation"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/VESSEL01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/VESSEL01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/VESSEL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/VESSEL01.svg",
+      "asset": "VESSEL01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_vessel_target_semantic_redraw_without_provider_image",
+      "name": "VESSEL01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1601",
+        "lookup_rcid": "31653",
+        "object_class": "vessel",
+        "s52_instruction": "CS(VESSEL01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "VESSEL01 is VESSEL01. It is used as a VESSEL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VESSEL01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/VRMEBL01__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/VRMEBL01__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/VRMEBL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/VRMEBL01.svg",
+      "asset": "VRMEBL01",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_vrm_ebl_control_semantic_redraw_without_provider_image",
+      "name": "VRMEBL01",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "No provider image attached; candidate is a semantic placeholder requiring source review before visual approval.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_reference_gap_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "877",
+        "lookup_rcid": "31953",
+        "object_class": "ebline",
+        "s52_instruction": "CS(VRMEBL01)"
+      },
+      "safety_reason_codes": [
+        "no_provider_reference_image",
+        "semantic_candidate_requires_source_review"
+      ],
+      "semantic_brief": {
+        "brief": "VRMEBL01 is VRMEBL01. It is used as a VRMEBL01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VRMEBL01"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_generate_batch91/renders/WRECKS02__after__day.png",
+        "dusk": "out/standard_generate_batch91/renders/WRECKS02__after__dusk.png",
+        "night": "out/standard_generate_batch91/renders/WRECKS02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch91/WRECKS02.svg",
+      "asset": "WRECKS02",
+      "before_svg": null,
+      "candidate_source": null,
+      "candidate_strategy": "owned_wreck_unknown_variant_semantic_redraw_without_provider_image",
+      "name": "WRECKS02",
+      "provenance": {
+        "generator": "forge.standard_generate_batch91",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Provider image attached; candidate must pass normal visual judge.",
+        "source_priority_basis": "no_helm_candidate row with no usable provider image in current reference table",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": true,
+        "structural_pass": true,
+        "visual_parity": "pending_llm_judge"
+      },
+      "queue_action": "remaining_no_candidate_generated_for_judge_or_source_review",
+      "required_change": "Generated first Helm-owned semantic candidate from S-57/S-52 metadata; rows without provider images remain blocked until source/reference evidence is attached.",
+      "risk_bucket": "semantic_hard_pile_batch91",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "242",
+        "lookup_rcid": "32277",
+        "object_class": "WRECKS",
+        "s52_instruction": "CS(WRECKS02)"
+      },
+      "safety_reason_codes": [
+        "new_candidate_pending_visual_judge"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS02 is WRECKS02. It is used as a wreck hazard. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "wreck hazard"
+      },
+      "source_judge": null,
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    }
+  ]
+}

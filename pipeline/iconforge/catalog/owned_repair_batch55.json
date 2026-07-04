@@ -1,0 +1,105 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch55.json",
+    "renders": "out/standard_repair_batch47/renders",
+    "svg_dir": "assets/svg/owned_repair_batch55"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 1,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch47/renders/BOYCON81__after__day.png",
+        "dusk": "out/standard_repair_batch47/renders/BOYCON81__after__dusk.png",
+        "night": "out/standard_repair_batch47/renders/BOYCON81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch55/BOYCON81.svg",
+      "asset": "BOYCON81",
+      "before_svg": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON81.svg",
+      "candidate_strategy": "owned_targeted_mixed_colpat12_buoy_redraw",
+      "name": "conical buoy,gw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch47",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-57 COLPAT1,2 and OpenCPN witness require mixed horizontal/vertical stripe semantics",
+        "source_priority_basis": "standard_judge_batch_053_rerun BOYCON81 failure",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw BOYCON81 against the OpenCPN/reference witness so the blue-red-white-blue horizontal/vertical stripe pattern is unambiguous; include the vertical blue element rather than a purely horizontal band stack.",
+      "risk_bucket": "buoy_mixed_pattern_repair_batch55",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLOUR5,3,1,5",
+          "COLPAT1,2"
+        ],
+        "lookup_id": "1940",
+        "lookup_rcid": "93807",
+        "object_class": "BOYSPP",
+        "s52_instruction": "SY(BOYCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_pattern",
+        "wrong_stripe_orientation",
+        "unsafe_special_purpose_confusion",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BOYCON81 is conical buoy,gw,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose buoy used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_053_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+            "label": "conical buoy,gw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON81__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON81__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

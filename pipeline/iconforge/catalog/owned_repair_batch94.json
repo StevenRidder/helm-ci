@@ -1,0 +1,2533 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch94.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch94"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 35,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/FSHFAC04.svg",
+      "asset": "FSHFAC04",
+      "before_svg": "assets/svg/owned_repair_batch94/FSHFAC04.svg",
+      "candidate_source": "assets/svg/triad_generated/FSHFAC04.svg",
+      "candidate_strategy": "owned_fish_trap_small_tick_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for an area with fish traps, fish weirs, tunny nets",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw FSHFAC04 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for an area with fish traps, fish weirs, tunny nets'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATFIF2"
+        ],
+        "lookup_id": "66",
+        "lookup_rcid": "32102",
+        "object_class": "FSHFAC",
+        "s52_instruction": "AP(FSHFAC04);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "FSHFAC04 is pattern of symbols for an area with fish traps, fish weirs, tunny nets. It is used as a pattern of symbols for an area with fish traps, fish weirs, tunny nets. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for an area with fish traps, fish weirs, tunny nets"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHFAC04__day.png",
+            "label": "pattern of symbols for an area with fish traps, fish weirs, tunny nets",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHFAC04__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHFAC04__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHFAC04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/FSHHAV02.svg",
+      "asset": "FSHHAV02",
+      "before_svg": "assets/svg/owned_repair_batch94/FSHHAV02.svg",
+      "candidate_source": "assets/svg/triad_generated/FSHHAV02.svg",
+      "candidate_strategy": "owned_fish_haven_small_fish_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for a fish haven",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw FSHHAV02 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for a fish haven'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "69",
+        "lookup_rcid": "32105",
+        "object_class": "FSHFAC",
+        "s52_instruction": "AP(FSHHAV02);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "FSHHAV02 is pattern of symbols for a fish haven. It is used as a pattern of symbols for a fish haven. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for a fish haven"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHHAV02__day.png",
+            "label": "pattern of symbols for a fish haven",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHHAV02__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHHAV02__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHHAV02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/HODATA01.svg",
+      "asset": "HODATA01",
+      "before_svg": "assets/svg/owned_repair_batch94/HODATA01.svg",
+      "candidate_source": "assets/svg/triad_generated/HODATA01.svg",
+      "candidate_strategy": "owned_ho_data_boundary_kink_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary marking end of HO data",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw HODATA01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary marking end of HO data'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEHODATA01"
+        ],
+        "lookup_id": "916",
+        "lookup_rcid": "31992",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(HODATA01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "HODATA01 is boundary marking end of HO data. It is used as a boundary marking end of HO data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary marking end of HO data"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HODATA01__day.png",
+            "label": "boundary marking end of HO data",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HODATA01__day.png",
+              "dusk": "out/opencpn_s52_reference/HODATA01__dusk.png",
+              "night": "out/opencpn_s52_reference/HODATA01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/ICEARE04.svg",
+      "asset": "ICEARE04",
+      "before_svg": "assets/svg/owned_repair_batch94/ICEARE04.svg",
+      "candidate_source": "assets/svg/triad_generated/ICEARE04.svg",
+      "candidate_strategy": "owned_ice_area_sparse_slash_pattern_literal_redraw_from_opencpn_witness",
+      "name": "continuous pattern for an ice area (glacier, etc.)",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw ICEARE04 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'continuous pattern for an ice area (glacier, etc.)'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "80",
+        "lookup_rcid": "32116",
+        "object_class": "ICEARE",
+        "s52_instruction": "AC(NODTA);AP(ICEARE04);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "ICEARE04 is continuous pattern for an ice area (glacier, etc.). It is used as a continuous pattern for an ice area (glacier, etc.). Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "continuous pattern for an ice area (glacier, etc.)"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/ICEARE04__day.png",
+            "label": "continuous pattern for an ice area (glacier, etc.)",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/ICEARE04__day.png",
+              "dusk": "out/opencpn_s52_reference/ICEARE04__dusk.png",
+              "night": "out/opencpn_s52_reference/ICEARE04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/LOWACC41.svg",
+      "asset": "LOWACC41",
+      "before_svg": "assets/svg/owned_repair_batch94/LOWACC41.svg",
+      "candidate_source": "assets/svg/triad_generated/LOWACC41.svg",
+      "candidate_strategy": "owned_low_accuracy_rectangle_boundary_literal_redraw_from_opencpn_witness",
+      "name": "danger line of low accuracy surrounding a foul area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw LOWACC41 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'danger line of low accuracy surrounding a foul area'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODELOWACC41"
+        ],
+        "lookup_id": "917",
+        "lookup_rcid": "31993",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(LOWACC41)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "LOWACC41 is danger line of low accuracy surrounding a foul area. It is used as a danger line of low accuracy surrounding a foul area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "danger line of low accuracy surrounding a foul area"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LOWACC41__day.png",
+            "label": "danger line of low accuracy surrounding a foul area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LOWACC41__day.png",
+              "dusk": "out/opencpn_s52_reference/LOWACC41__dusk.png",
+              "night": "out/opencpn_s52_reference/LOWACC41__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/MARSHES1.svg",
+      "asset": "MARSHES1",
+      "before_svg": "assets/svg/owned_repair_batch94/MARSHES1.svg",
+      "candidate_source": "assets/svg/triad_generated/MARSHES1.svg",
+      "candidate_strategy": "owned_marsh_small_reed_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for a marsh",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw MARSHES1 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for a marsh'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATLND12"
+        ],
+        "lookup_id": "89",
+        "lookup_rcid": "32125",
+        "object_class": "LNDRGN",
+        "s52_instruction": "AP(MARSHES1)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "MARSHES1 is pattern of symbols for a marsh. It is used as a pattern of symbols for a marsh. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "pattern of symbols for a marsh"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MARSHES1__day.png",
+            "label": "pattern of symbols for a marsh",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MARSHES1__day.png",
+              "dusk": "out/opencpn_s52_reference/MARSHES1__dusk.png",
+              "night": "out/opencpn_s52_reference/MARSHES1__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/MARSYS51.svg",
+      "asset": "MARSYS51",
+      "before_svg": "assets/svg/owned_repair_batch94/MARSYS51.svg",
+      "candidate_source": "assets/svg/triad_generated/MARSYS51.svg",
+      "candidate_strategy": "owned_iala_boundary_a_b_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary between IALA-A and IALA-B systems of lateral buoys and beacons",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw MARSYS51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary between IALA-A and IALA-B systems of lateral buoys and beacons'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEMARSYS51"
+        ],
+        "lookup_id": "918",
+        "lookup_rcid": "31994",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(MARSYS51)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "MARSYS51 is boundary between IALA-A and IALA-B systems of lateral buoys and beacons. It is used as a boundary between IALA-A and IALA-B systems of lateral buoys and beacons. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary between IALA-A and IALA-B systems of lateral buoys and beacons"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MARSYS51__day.png",
+            "label": "boundary between IALA-A and IALA-B systems of lateral buoys and beacons",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MARSYS51__day.png",
+              "dusk": "out/opencpn_s52_reference/MARSYS51__dusk.png",
+              "night": "out/opencpn_s52_reference/MARSYS51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/NAVARE51.svg",
+      "asset": "NAVARE51",
+      "before_svg": "assets/svg/owned_repair_batch94/NAVARE51.svg",
+      "candidate_source": "assets/svg/triad_generated/NAVARE51.svg",
+      "candidate_strategy": "owned_navigation_area_v_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary of a navigation feature such as a fairway, magnetic anomaly, etc.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw NAVARE51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary of a navigation feature such as a fairway, magnetic anomaly, etc.'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "ORIENT ",
+          "TRAFIC1"
+        ],
+        "lookup_id": "394",
+        "lookup_rcid": "32429",
+        "object_class": "FAIRWY",
+        "s52_instruction": "SY(FAIRWY51,ORIENT);LC(NAVARE51);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "NAVARE51 is boundary of a navigation feature such as a fairway, magnetic anomaly, etc.. It is used as a boundary of a navigation feature such as a fairway, magnetic anomaly, etc.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary of a navigation feature such as a fairway, magnetic anomaly, etc."
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NAVARE51__day.png",
+            "label": "boundary of a navigation feature such as a fairway, magnetic anomaly, etc.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NAVARE51__day.png",
+              "dusk": "out/opencpn_s52_reference/NAVARE51__dusk.png",
+              "night": "out/opencpn_s52_reference/NAVARE51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/NODATA03.svg",
+      "asset": "NODATA03",
+      "before_svg": "assets/svg/owned_repair_batch94/NODATA03.svg",
+      "candidate_source": "assets/svg/triad_generated/NODATA03.svg",
+      "candidate_strategy": "owned_no_data_single_line_literal_redraw_from_opencpn_witness",
+      "name": "area of no chart data",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw NODATA03 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'area of no chart data'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "114",
+        "lookup_rcid": "32150",
+        "object_class": "M_QUAL",
+        "s52_instruction": "AP(NODATA03);LS(DASH,2,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "NODATA03 is area of no chart data. It is used as a area of no chart data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "area of no chart data"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NODATA03__day.png",
+            "label": "area of no chart data",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NODATA03__day.png",
+              "dusk": "out/opencpn_s52_reference/NODATA03__dusk.png",
+              "night": "out/opencpn_s52_reference/NODATA03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/OVERSC01.svg",
+      "asset": "OVERSC01",
+      "before_svg": "assets/svg/owned_repair_batch94/OVERSC01.svg",
+      "candidate_source": "assets/svg/triad_generated/OVERSC01.svg",
+      "candidate_strategy": "owned_overscale_single_vertical_line_literal_redraw_from_opencpn_witness",
+      "name": "overscale part of a display containing data from more than one navigation purpose",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw OVERSC01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'overscale part of a display containing data from more than one navigation purpose'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEOVERSC01"
+        ],
+        "lookup_id": "316",
+        "lookup_rcid": "32351",
+        "object_class": "$AREAS",
+        "s52_instruction": "AP(OVERSC01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "OVERSC01 is overscale part of a display containing data from more than one navigation purpose. It is used as a overscale part of a display containing data from more than one navigation purpose. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "overscale part of a display containing data from more than one navigation purpose"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/OVERSC01__day.png",
+            "label": "overscale part of a display containing data from more than one navigation purpose",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/OVERSC01__day.png",
+              "dusk": "out/opencpn_s52_reference/OVERSC01__dusk.png",
+              "night": "out/opencpn_s52_reference/OVERSC01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PASTRK01.svg",
+      "asset": "PASTRK01",
+      "before_svg": "assets/svg/owned_repair_batch94/PASTRK01.svg",
+      "candidate_source": "assets/svg/triad_generated/PASTRK01.svg",
+      "candidate_strategy": "owned_past_track_time_mark_literal_redraw_from_opencpn_witness",
+      "name": "time mark on past track",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PASTRK01 from the OpenCPN local render witness as the same chart symbol, preserving the recognized silhouette, small-scale proportions, color cue, and any text/mark convention for 'time mark on past track'.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "889",
+        "lookup_rcid": "31965",
+        "object_class": "pastrk",
+        "s52_instruction": "CS(PASTRK01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PASTRK01 is time mark on past track. It is used as a time mark on past track. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "time mark on past track"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PASTRK01__day.png",
+            "label": "time mark on past track",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PASTRK01__day.png",
+              "dusk": "out/opencpn_s52_reference/PASTRK01__dusk.png",
+              "night": "out/opencpn_s52_reference/PASTRK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PIPARE51.svg",
+      "asset": "PIPARE51",
+      "before_svg": "assets/svg/owned_repair_batch94/PIPARE51.svg",
+      "candidate_source": "assets/svg/triad_generated/PIPARE51.svg",
+      "candidate_strategy": "owned_dangerous_pipeline_area_wave_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary of a submarine pipeline area with potentially dangerous contents",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PIPARE51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary of a submarine pipeline area with potentially dangerous contents'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "476",
+        "lookup_rcid": "32511",
+        "object_class": "PIPARE",
+        "s52_instruction": "SY(INFARE51);LC(PIPARE51);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PIPARE51 is boundary of a submarine pipeline area with potentially dangerous contents. It is used as a boundary of a submarine pipeline area with potentially dangerous contents. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary of a submarine pipeline area with potentially dangerous contents"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PIPARE51__day.png",
+            "label": "boundary of a submarine pipeline area with potentially dangerous contents",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PIPARE51__day.png",
+              "dusk": "out/opencpn_s52_reference/PIPARE51__dusk.png",
+              "night": "out/opencpn_s52_reference/PIPARE51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PIPARE61.svg",
+      "asset": "PIPARE61",
+      "before_svg": "assets/svg/owned_repair_batch94/PIPARE61.svg",
+      "candidate_source": "assets/svg/triad_generated/PIPARE61.svg",
+      "candidate_strategy": "owned_pipeline_area_grey_wave_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary of a submarine pipeline area with generally non-dangerous contents",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PIPARE61 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary of a submarine pipeline area with generally non-dangerous contents'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATPIP2"
+        ],
+        "lookup_id": "473",
+        "lookup_rcid": "32508",
+        "object_class": "PIPARE",
+        "s52_instruction": "SY(INFARE51);LC(PIPARE61);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PIPARE61 is boundary of a submarine pipeline area with generally non-dangerous contents. It is used as a boundary of a submarine pipeline area with generally non-dangerous contents. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary of a submarine pipeline area with generally non-dangerous contents"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PIPARE61__day.png",
+            "label": "boundary of a submarine pipeline area with generally non-dangerous contents",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PIPARE61__day.png",
+              "dusk": "out/opencpn_s52_reference/PIPARE61__dusk.png",
+              "night": "out/opencpn_s52_reference/PIPARE61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PIPSOL05.svg",
+      "asset": "PIPSOL05",
+      "before_svg": "assets/svg/owned_repair_batch94/PIPSOL05.svg",
+      "candidate_source": "assets/svg/triad_generated/PIPSOL05.svg",
+      "candidate_strategy": "owned_pipeline_oil_circle_line_literal_redraw_from_opencpn_witness",
+      "name": "oil, gas pipeline, submerged or on land",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PIPSOL05 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'oil, gas pipeline, submerged or on land'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "790",
+        "lookup_rcid": "31866",
+        "object_class": "PIPSOL",
+        "s52_instruction": "LC(PIPSOL05)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PIPSOL05 is oil, gas pipeline, submerged or on land. It is used as a oil, gas pipeline, submerged or on land. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "oil, gas pipeline, submerged or on land"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PIPSOL05__day.png",
+            "label": "oil, gas pipeline, submerged or on land",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PIPSOL05__day.png",
+              "dusk": "out/opencpn_s52_reference/PIPSOL05__dusk.png",
+              "night": "out/opencpn_s52_reference/PIPSOL05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PIPSOL06.svg",
+      "asset": "PIPSOL06",
+      "before_svg": "assets/svg/owned_repair_batch94/PIPSOL06.svg",
+      "candidate_source": "assets/svg/triad_generated/PIPSOL06.svg",
+      "candidate_strategy": "owned_pipeline_water_circle_line_literal_redraw_from_opencpn_witness",
+      "name": "water pipeline, sewer, etc.",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PIPSOL06 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'water pipeline, sewer, etc.'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATPIP2"
+        ],
+        "lookup_id": "785",
+        "lookup_rcid": "31861",
+        "object_class": "PIPSOL",
+        "s52_instruction": "LC(PIPSOL06)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PIPSOL06 is water pipeline, sewer, etc.. It is used as a water pipeline, sewer, etc.. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "water pipeline, sewer, etc."
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PIPSOL06__day.png",
+            "label": "water pipeline, sewer, etc.",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PIPSOL06__day.png",
+              "dusk": "out/opencpn_s52_reference/PIPSOL06__dusk.png",
+              "night": "out/opencpn_s52_reference/PIPSOL06__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PLNRTE03.svg",
+      "asset": "PLNRTE03",
+      "before_svg": "assets/svg/owned_repair_batch94/PLNRTE03.svg",
+      "candidate_source": "assets/svg/triad_generated/PLNRTE03.svg",
+      "candidate_strategy": "owned_planned_route_red_ring_literal_redraw_from_opencpn_witness",
+      "name": "planned route for own ship",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PLNRTE03 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'planned route for own ship'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEPLNRTE03"
+        ],
+        "lookup_id": "919",
+        "lookup_rcid": "31995",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(PLNRTE03)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PLNRTE03 is planned route for own ship. It is used as a planned route for own ship. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "planned route for own ship"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PLNRTE03__day.png",
+            "label": "planned route for own ship",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PLNRTE03__day.png",
+              "dusk": "out/opencpn_s52_reference/PLNRTE03__dusk.png",
+              "night": "out/opencpn_s52_reference/PLNRTE03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/PRTSUR01.svg",
+      "asset": "PRTSUR01",
+      "before_svg": "assets/svg/owned_repair_batch94/PRTSUR01.svg",
+      "candidate_source": "assets/svg/triad_generated/PRTSUR01.svg",
+      "candidate_strategy": "owned_incompletely_surveyed_single_line_literal_redraw_from_opencpn_witness",
+      "name": "incompletely surveyed area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw PRTSUR01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'incompletely surveyed area'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "DRVAL1?",
+          "DRVAL2?"
+        ],
+        "lookup_id": "39",
+        "lookup_rcid": "32075",
+        "object_class": "DEPARE",
+        "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "PRTSUR01 is incompletely surveyed area. It is used as a incompletely surveyed area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "incompletely surveyed area"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PRTSUR01__day.png",
+            "label": "incompletely surveyed area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PRTSUR01__day.png",
+              "dusk": "out/opencpn_s52_reference/PRTSUR01__dusk.png",
+              "night": "out/opencpn_s52_reference/PRTSUR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCKLDG01.svg",
+      "asset": "RCKLDG01",
+      "before_svg": "assets/svg/owned_repair_batch94/RCKLDG01.svg",
+      "candidate_source": "assets/svg/triad_generated/RCKLDG01.svg",
+      "candidate_strategy": "owned_rock_ledge_small_chevron_pattern_literal_redraw_from_opencpn_witness",
+      "name": "rock or coral drying ledges",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCKLDG01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'rock or coral drying ledges'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "WATLEV4",
+          "NATSUR11"
+        ],
+        "lookup_id": "172",
+        "lookup_rcid": "32207",
+        "object_class": "SBDARE",
+        "s52_instruction": "AP(RCKLDG01);LS(DASH,1,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCKLDG01 is rock or coral drying ledges. It is used as a rock or coral drying ledges. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "rock or coral drying ledges"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCKLDG01__day.png",
+            "label": "rock or coral drying ledges",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCKLDG01__day.png",
+              "dusk": "out/opencpn_s52_reference/RCKLDG01__dusk.png",
+              "night": "out/opencpn_s52_reference/RCKLDG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCRDEF01.svg",
+      "asset": "RCRDEF01",
+      "before_svg": "assets/svg/owned_repair_batch94/RCRDEF01.svg",
+      "candidate_source": "assets/svg/triad_generated/RCRDEF01.svg",
+      "candidate_strategy": "owned_regulated_recommended_route_unknown_literal_redraw_from_opencpn_witness",
+      "name": "regulated recommended route centreline, details not defined",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCRDEF01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'regulated recommended route centreline, details not defined'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "807",
+        "lookup_rcid": "31883",
+        "object_class": "RCRTCL",
+        "s52_instruction": "LC(RCRDEF01);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCRDEF01 is regulated recommended route centreline, details not defined. It is used as a regulated recommended route centreline, details not defined. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "regulated recommended route centreline, details not defined"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCRDEF01__day.png",
+            "label": "regulated recommended route centreline, details not defined",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCRDEF01__day.png",
+              "dusk": "out/opencpn_s52_reference/RCRDEF01__dusk.png",
+              "night": "out/opencpn_s52_reference/RCRDEF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCRTCL11.svg",
+      "asset": "RCRTCL11",
+      "before_svg": "assets/svg/owned_repair_batch94/RCRTCL11.svg",
+      "candidate_source": "assets/svg/triad_generated/RCRTCL11.svg",
+      "candidate_strategy": "owned_regulated_two_way_free_literal_redraw_from_opencpn_witness",
+      "name": "regulated two-way recommended route centreline, not based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCRTCL11 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'regulated two-way recommended route centreline, not based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK2",
+          "TRAFIC4"
+        ],
+        "lookup_id": "802",
+        "lookup_rcid": "31878",
+        "object_class": "RCRTCL",
+        "s52_instruction": "LC(RCRTCL11);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCRTCL11 is regulated two-way recommended route centreline, not based on fixed marks. It is used as a regulated two-way recommended route centreline, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "regulated two-way recommended route centreline, not based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCRTCL11__day.png",
+            "label": "regulated two-way recommended route centreline, not based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCRTCL11__day.png",
+              "dusk": "out/opencpn_s52_reference/RCRTCL11__dusk.png",
+              "night": "out/opencpn_s52_reference/RCRTCL11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCRTCL12.svg",
+      "asset": "RCRTCL12",
+      "before_svg": "assets/svg/owned_repair_batch94/RCRTCL12.svg",
+      "candidate_source": "assets/svg/triad_generated/RCRTCL12.svg",
+      "candidate_strategy": "owned_regulated_one_way_free_literal_redraw_from_opencpn_witness",
+      "name": "regulated one-way recommended route centreline, not based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCRTCL12 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'regulated one-way recommended route centreline, not based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK2",
+          "TRAFIC1"
+        ],
+        "lookup_id": "799",
+        "lookup_rcid": "31875",
+        "object_class": "RCRTCL",
+        "s52_instruction": "LC(RCRTCL12);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCRTCL12 is regulated one-way recommended route centreline, not based on fixed marks. It is used as a regulated one-way recommended route centreline, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "regulated one-way recommended route centreline, not based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCRTCL12__day.png",
+            "label": "regulated one-way recommended route centreline, not based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCRTCL12__day.png",
+              "dusk": "out/opencpn_s52_reference/RCRTCL12__dusk.png",
+              "night": "out/opencpn_s52_reference/RCRTCL12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCRTCL13.svg",
+      "asset": "RCRTCL13",
+      "before_svg": "assets/svg/owned_repair_batch94/RCRTCL13.svg",
+      "candidate_source": "assets/svg/triad_generated/RCRTCL13.svg",
+      "candidate_strategy": "owned_regulated_two_way_fixed_literal_redraw_from_opencpn_witness",
+      "name": "regulated two-way recommended route centreline, based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCRTCL13 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'regulated two-way recommended route centreline, based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK1",
+          "TRAFIC4"
+        ],
+        "lookup_id": "798",
+        "lookup_rcid": "31874",
+        "object_class": "RCRTCL",
+        "s52_instruction": "LC(RCRTCL13);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCRTCL13 is regulated two-way recommended route centreline, based on fixed marks. It is used as a regulated two-way recommended route centreline, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "regulated two-way recommended route centreline, based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCRTCL13__day.png",
+            "label": "regulated two-way recommended route centreline, based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCRTCL13__day.png",
+              "dusk": "out/opencpn_s52_reference/RCRTCL13__dusk.png",
+              "night": "out/opencpn_s52_reference/RCRTCL13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RCRTCL14.svg",
+      "asset": "RCRTCL14",
+      "before_svg": "assets/svg/owned_repair_batch94/RCRTCL14.svg",
+      "candidate_source": "assets/svg/triad_generated/RCRTCL14.svg",
+      "candidate_strategy": "owned_regulated_one_way_fixed_literal_redraw_from_opencpn_witness",
+      "name": "regulated one-way recommended route centreline, based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RCRTCL14 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'regulated one-way recommended route centreline, based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK1",
+          "TRAFIC1"
+        ],
+        "lookup_id": "795",
+        "lookup_rcid": "31871",
+        "object_class": "RCRTCL",
+        "s52_instruction": "LC(RCRTCL14);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RCRTCL14 is regulated one-way recommended route centreline, based on fixed marks. It is used as a regulated one-way recommended route centreline, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "regulated one-way recommended route centreline, based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCRTCL14__day.png",
+            "label": "regulated one-way recommended route centreline, based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCRTCL14__day.png",
+              "dusk": "out/opencpn_s52_reference/RCRTCL14__dusk.png",
+              "night": "out/opencpn_s52_reference/RCRTCL14__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RECDEF02.svg",
+      "asset": "RECDEF02",
+      "before_svg": "assets/svg/owned_repair_batch94/RECDEF02.svg",
+      "candidate_source": "assets/svg/triad_generated/RECDEF02.svg",
+      "candidate_strategy": "owned_recommended_track_unknown_literal_redraw_from_opencpn_witness",
+      "name": "non-regulated recommended track, direction not defined in data",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RECDEF02 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'non-regulated recommended track, direction not defined in data'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "825",
+        "lookup_rcid": "31901",
+        "object_class": "RECTRC",
+        "s52_instruction": "LC(RECDEF02);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RECDEF02 is non-regulated recommended track, direction not defined in data. It is used as a non-regulated recommended track, direction not defined in data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-regulated recommended track, direction not defined in data"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECDEF02__day.png",
+            "label": "non-regulated recommended track, direction not defined in data",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECDEF02__day.png",
+              "dusk": "out/opencpn_s52_reference/RECDEF02__dusk.png",
+              "night": "out/opencpn_s52_reference/RECDEF02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RECTRC09.svg",
+      "asset": "RECTRC09",
+      "before_svg": "assets/svg/owned_repair_batch94/RECTRC09.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC09.svg",
+      "candidate_strategy": "owned_recommended_two_way_free_literal_redraw_from_opencpn_witness",
+      "name": "non-regulated recommended two-way track, not based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RECTRC09 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'non-regulated recommended two-way track, not based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK2",
+          "TRAFIC4"
+        ],
+        "lookup_id": "820",
+        "lookup_rcid": "31896",
+        "object_class": "RECTRC",
+        "s52_instruction": "LC(RECTRC09);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC09 is non-regulated recommended two-way track, not based on fixed marks. It is used as a non-regulated recommended two-way track, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-regulated recommended two-way track, not based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC09__day.png",
+            "label": "non-regulated recommended two-way track, not based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC09__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC09__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC09__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RECTRC10.svg",
+      "asset": "RECTRC10",
+      "before_svg": "assets/svg/owned_repair_batch94/RECTRC10.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC10.svg",
+      "candidate_strategy": "owned_recommended_two_way_fixed_literal_redraw_from_opencpn_witness",
+      "name": "non-regulated recommended two-way track, based on fixed-marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RECTRC10 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'non-regulated recommended two-way track, based on fixed-marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK1",
+          "TRAFIC4"
+        ],
+        "lookup_id": "816",
+        "lookup_rcid": "31892",
+        "object_class": "RECTRC",
+        "s52_instruction": "LC(RECTRC10);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC10 is non-regulated recommended two-way track, based on fixed-marks. It is used as a non-regulated recommended two-way track, based on fixed-marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-regulated recommended two-way track, based on fixed-marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC10__day.png",
+            "label": "non-regulated recommended two-way track, based on fixed-marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC10__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC10__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RECTRC11.svg",
+      "asset": "RECTRC11",
+      "before_svg": "assets/svg/owned_repair_batch94/RECTRC11.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC11.svg",
+      "candidate_strategy": "owned_recommended_one_way_free_literal_redraw_from_opencpn_witness",
+      "name": "non-regulated recommended one-way track, not based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RECTRC11 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'non-regulated recommended one-way track, not based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK2",
+          "TRAFIC1"
+        ],
+        "lookup_id": "817",
+        "lookup_rcid": "31893",
+        "object_class": "RECTRC",
+        "s52_instruction": "LC(RECTRC11);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC11 is non-regulated recommended one-way track, not based on fixed marks. It is used as a non-regulated recommended one-way track, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-regulated recommended one-way track, not based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC11__day.png",
+            "label": "non-regulated recommended one-way track, not based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC11__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC11__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RECTRC12.svg",
+      "asset": "RECTRC12",
+      "before_svg": "assets/svg/owned_repair_batch94/RECTRC12.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC12.svg",
+      "candidate_strategy": "owned_recommended_one_way_fixed_literal_redraw_from_opencpn_witness",
+      "name": "non-regulated recommended one-way track, based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RECTRC12 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'non-regulated recommended one-way track, based on fixed marks'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATTRK1",
+          "TRAFIC1"
+        ],
+        "lookup_id": "813",
+        "lookup_rcid": "31889",
+        "object_class": "RECTRC",
+        "s52_instruction": "LC(RECTRC12);TE('%03.0lf deg','ORIENT',3,1,2,'15110',1,-1,CHBLK,11)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC12 is non-regulated recommended one-way track, based on fixed marks. It is used as a non-regulated recommended one-way track, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-regulated recommended one-way track, based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC12__day.png",
+            "label": "non-regulated recommended one-way track, based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC12__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC12__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/RESARE51.svg",
+      "asset": "RESARE51",
+      "before_svg": "assets/svg/owned_repair_batch94/RESARE51.svg",
+      "candidate_source": "assets/svg/triad_generated/RESARE51.svg",
+      "candidate_strategy": "owned_restricted_area_t_boundary_literal_redraw_from_opencpn_witness",
+      "name": "boundary of a restricted area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw RESARE51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary of a restricted area'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "422",
+        "lookup_rcid": "32457",
+        "object_class": "ISTZNE",
+        "s52_instruction": "SY(ITZARE51);LC(RESARE51);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "RESARE51 is boundary of a restricted area. It is used as a boundary of a restricted area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary of a restricted area"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RESARE51__day.png",
+            "label": "boundary of a restricted area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RESARE51__day.png",
+              "dusk": "out/opencpn_s52_reference/RESARE51__dusk.png",
+              "night": "out/opencpn_s52_reference/RESARE51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/SCLBDY51.svg",
+      "asset": "SCLBDY51",
+      "before_svg": "assets/svg/owned_repair_batch94/SCLBDY51.svg",
+      "candidate_source": "assets/svg/triad_generated/SCLBDY51.svg",
+      "candidate_strategy": "owned_scale_boundary_double_line_literal_redraw_from_opencpn_witness",
+      "name": "chart scale boundary, the double line indicates the larger scale",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw SCLBDY51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'chart scale boundary, the double line indicates the larger scale'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODESCLBDY51"
+        ],
+        "lookup_id": "921",
+        "lookup_rcid": "31997",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(SCLBDY51)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "SCLBDY51 is chart scale boundary, the double line indicates the larger scale. It is used as a chart scale boundary, the double line indicates the larger scale. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "chart scale boundary, the double line indicates the larger scale"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCLBDY51__day.png",
+            "label": "chart scale boundary, the double line indicates the larger scale",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCLBDY51__day.png",
+              "dusk": "out/opencpn_s52_reference/SCLBDY51__dusk.png",
+              "night": "out/opencpn_s52_reference/SCLBDY51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/SNDWAV01.svg",
+      "asset": "SNDWAV01",
+      "before_svg": "assets/svg/owned_repair_batch94/SNDWAV01.svg",
+      "candidate_source": "assets/svg/triad_generated/SNDWAV01.svg",
+      "candidate_strategy": "owned_sand_waves_small_wave_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for sand waves",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw SNDWAV01 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for sand waves'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "191",
+        "lookup_rcid": "32226",
+        "object_class": "SNDWAV",
+        "s52_instruction": "AP(SNDWAV01);LS(DASH,2,CHGRD)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "SNDWAV01 is pattern of symbols for sand waves. It is used as a pattern of symbols for sand waves. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for sand waves"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SNDWAV01__day.png",
+            "label": "pattern of symbols for sand waves",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SNDWAV01__day.png",
+              "dusk": "out/opencpn_s52_reference/SNDWAV01__dusk.png",
+              "night": "out/opencpn_s52_reference/SNDWAV01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/TIDINF51.svg",
+      "asset": "TIDINF51",
+      "before_svg": "assets/svg/owned_repair_batch94/TIDINF51.svg",
+      "candidate_source": "assets/svg/triad_generated/TIDINF51.svg",
+      "candidate_strategy": "owned_tidal_information_tick_line_literal_redraw_from_opencpn_witness",
+      "name": "boundary of an area for which there is tidal information",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw TIDINF51 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'boundary of an area for which there is tidal information'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "$SCODETIDINF51"
+        ],
+        "lookup_id": "922",
+        "lookup_rcid": "31998",
+        "object_class": "$LINES",
+        "s52_instruction": "LC(TIDINF51)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "TIDINF51 is boundary of an area for which there is tidal information. It is used as a boundary of an area for which there is tidal information. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "boundary of an area for which there is tidal information"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TIDINF51__day.png",
+            "label": "boundary of an area for which there is tidal information",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TIDINF51__day.png",
+              "dusk": "out/opencpn_s52_reference/TIDINF51__dusk.png",
+              "night": "out/opencpn_s52_reference/TIDINF51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/TSSJCT02.svg",
+      "asset": "TSSJCT02",
+      "before_svg": "assets/svg/owned_repair_batch94/TSSJCT02.svg",
+      "candidate_source": "assets/svg/triad_generated/TSSJCT02.svg",
+      "candidate_strategy": "owned_traffic_scheme_diagonal_line_literal_redraw_from_opencpn_witness",
+      "name": "precautionary area or a traffic separation scheme crossing or roundabout",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw TSSJCT02 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'precautionary area or a traffic separation scheme crossing or roundabout'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "478",
+        "lookup_rcid": "32513",
+        "object_class": "PRCARE",
+        "s52_instruction": "AP(TSSJCT02);SY(PRCARE51);LC(PRCARE51);CS(RESTRN01)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "TSSJCT02 is precautionary area or a traffic separation scheme crossing or roundabout. It is used as a precautionary area or a traffic separation scheme crossing or roundabout. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "precautionary area or a traffic separation scheme crossing or roundabout"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TSSJCT02__day.png",
+            "label": "precautionary area or a traffic separation scheme crossing or roundabout",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TSSJCT02__day.png",
+              "dusk": "out/opencpn_s52_reference/TSSJCT02__dusk.png",
+              "night": "out/opencpn_s52_reference/TSSJCT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/VEGATN03.svg",
+      "asset": "VEGATN03",
+      "before_svg": "assets/svg/owned_repair_batch94/VEGATN03.svg",
+      "candidate_source": "assets/svg/triad_generated/VEGATN03.svg",
+      "candidate_strategy": "owned_wooded_area_tree_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for wooded areas",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw VEGATN03 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for wooded areas'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATVEG14"
+        ],
+        "lookup_id": "223",
+        "lookup_rcid": "32258",
+        "object_class": "VEGATN",
+        "s52_instruction": "AP(VEGATN03);LS(DASH,1,LANDF)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "VEGATN03 is pattern of symbols for wooded areas. It is used as a pattern of symbols for wooded areas. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for wooded areas"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VEGATN03__day.png",
+            "label": "pattern of symbols for wooded areas",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VEGATN03__day.png",
+              "dusk": "out/opencpn_s52_reference/VEGATN03__dusk.png",
+              "night": "out/opencpn_s52_reference/VEGATN03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch94/VEGATN04.svg",
+      "asset": "VEGATN04",
+      "before_svg": "assets/svg/owned_repair_batch94/VEGATN04.svg",
+      "candidate_source": "assets/svg/triad_generated/VEGATN04.svg",
+      "candidate_strategy": "owned_mangrove_round_tree_pattern_literal_redraw_from_opencpn_witness",
+      "name": "pattern of symbols for mangroves",
+      "provenance": {
+        "generator": "forge.standard_repair_batch94",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN local line/pattern witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue OpenCPN-backed line/pattern failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_opencpn_line_pattern_failure_consumed",
+      "required_change": "Redraw VEGATN04 to follow the OpenCPN local render witness exactly enough for visual parity: preserve the line dash/solid/dot cadence, symbol-repeat shape, spacing, orientation, and color cue for 'pattern of symbols for mangroves'. Do not substitute a larger decorative icon or generic label.",
+      "risk_bucket": "opencpn_line_pattern_repair_batch94",
+      "s57_structure": {
+        "conditions": [
+          "CATVEG21"
+        ],
+        "lookup_id": "230",
+        "lookup_rcid": "32265",
+        "object_class": "VEGATN",
+        "s52_instruction": "AP(VEGATN04);LS(DASH,1,LANDF)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "VEGATN04 is pattern of symbols for mangroves. It is used as a pattern of symbols for mangroves. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for mangroves"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VEGATN04__day.png",
+            "label": "pattern of symbols for mangroves",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VEGATN04__day.png",
+              "dusk": "out/opencpn_s52_reference/VEGATN04__dusk.png",
+              "night": "out/opencpn_s52_reference/VEGATN04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "rendered_reference"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

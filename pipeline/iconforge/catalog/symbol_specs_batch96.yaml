@@ -1,0 +1,313 @@
+schema_version: 1
+status: batch96_symbol_specs_written
+symbols:
+  -
+    id: BCNCON81
+    name: BCNCON81
+    kind: symbol
+    tier: chart-artifact
+    s52_token: BCNCON81
+    s57:
+      object_class: BCNSPP
+      conditions:
+        - BOYSHP1
+        - "COLPAT1,2"
+        - "COLOUR5,3,1,5"
+      instruction: "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      lookup_id: 1781
+      lookup_rcid: 93806
+    source_refs:
+      s52: BCNCON81
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/BCNCON81.svg
+      status: renderable_from_s57_symbolspec
+    qa:
+      semantic_pass: true
+      visual_parity: ready_for_batch96_render
+      final_approved: false
+    geometry:
+      primitive: conical_beacon_or_buoy_body
+      colour_pattern: horizontal_bands
+      colpat:
+        - 1
+        - 2
+      colours:
+        - blue
+        - red
+        - white
+        - blue
+      required_marks:
+        - "OBJNAM text remains separate label, not part of canonical icon"
+    generation:
+      status: render_batch_from_symbolspec
+      confidence: 0.78
+      resolution: "Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: DANGER53
+    name: DANGER53
+    kind: symbol
+    tier: reference-blocked-or-manual-exception
+    s52_token: DANGER53
+    s57:
+      object_class: "$CSYMB"
+      conditions:
+        - "$SCODEDANGER03"
+      instruction: "SY(DANGER53)"
+      lookup_id: 1630
+      lookup_rcid: 31682
+    source_refs:
+      s52: DANGER53
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/DANGER53.svg
+      status: reference_blocked_official_symbol
+    qa:
+      semantic_pass: false
+      visual_parity: blocked_until_reference_or_next_render
+      final_approved: false
+    geometry:
+      primitive: unknown_danger_symbol
+      colours:
+        - black
+      required_marks:
+        - "do not promote a generic diamond without official witness"
+    generation:
+      status: attach_tight_reference_before_render
+      confidence: 0.34
+      resolution: "Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: DGPS01DRFSTA01
+    name: DGPS01DRFSTA01
+    kind: symbol
+    tier: reference-blocked-or-manual-exception
+    s52_token: DGPS01DRFSTA01
+    s57:
+      object_class: RDOSTA
+      conditions:
+        - CATROS10
+      instruction: "SY(DGPS01DRFSTA01)"
+      lookup_id: 1232
+      lookup_rcid: 31284
+    source_refs:
+      s52: DGPS01DRFSTA01
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/DGPS01DRFSTA01.svg
+      status: reference_blocked_official_symbol
+    qa:
+      semantic_pass: false
+      visual_parity: blocked_until_reference_or_next_render
+      final_approved: false
+    geometry:
+      primitive: dgps_radio_station_composite
+      colours:
+        - magenta
+        - black
+      required_marks:
+        - "DGPS/radio-station semantics must be confirmed before drawing"
+    generation:
+      status: split_or_attach_dgps_and_radio_station_reference
+      confidence: 0.4
+      resolution: "DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: "NEWOBJ 01"
+    name: "NEWOBJ 01"
+    kind: symbol
+    tier: reference-blocked-or-manual-exception
+    s52_token: "NEWOBJ 01"
+    s57:
+      object_class: NEWOBJ
+      conditions:
+        []
+      instruction: "SY(NEWOBJ 01)"
+      lookup_id: 1189
+      lookup_rcid: 31241
+    source_refs:
+      s52: "NEWOBJ 01"
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/NEWOBJ_01.svg
+      status: manual_exception_newobj_placeholder
+    qa:
+      semantic_pass: false
+      visual_parity: blocked_until_reference_or_next_render
+      final_approved: false
+    geometry:
+      primitive: new_object_placeholder
+      colours:
+        - magenta
+      required_marks:
+        - "do not treat as finished chart symbology without product policy"
+    generation:
+      status: manual_exception_or_runtime_placeholder_policy
+      confidence: 0.7
+      resolution: "NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: NEWOBJ01
+    name: NEWOBJ01
+    kind: symbol
+    tier: reference-blocked-or-manual-exception
+    s52_token: NEWOBJ01
+    s57:
+      object_class: NEWOBJ
+      conditions:
+        []
+      instruction: "SY(NEWOBJ01);LS(DASH,2,CHMGD)"
+      lookup_id: 119
+      lookup_rcid: 32155
+    source_refs:
+      s52: NEWOBJ01
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/NEWOBJ01.svg
+      status: manual_exception_newobj_placeholder
+    qa:
+      semantic_pass: false
+      visual_parity: blocked_until_reference_or_next_render
+      final_approved: false
+    geometry:
+      primitive: new_object_area_placeholder
+      colours:
+        - magenta
+      line_style: "DASH,2,CHMGD"
+      required_marks:
+        - "do not promote as normal chart artifact without product policy"
+    generation:
+      status: manual_exception_or_runtime_placeholder_policy
+      confidence: 0.7
+      resolution: "NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: VEHTRF01
+    name: VEHTRF01
+    kind: symbol
+    tier: reference-blocked-or-manual-exception
+    s52_token: VEHTRF01
+    s57:
+      object_class: vehtrf
+      conditions:
+        []
+      instruction: "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      lookup_id: 311
+      lookup_rcid: 32346
+    source_refs:
+      s52: VEHTRF01
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/VEHTRF01.svg
+      status: reference_blocked_official_symbol
+    qa:
+      semantic_pass: false
+      visual_parity: blocked_until_reference_or_next_render
+      final_approved: false
+    geometry:
+      primitive: vehicle_traffic_area
+      colours:
+        - gray
+      line_style: "DASH,1,CHGRF"
+      required_marks:
+        - "vehicle/traffic geometry must be confirmed before drawing"
+    generation:
+      status: attach_tight_reference_before_render
+      confidence: 0.42
+      resolution: "Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"
+  -
+    id: boyspp50
+    name: boyspp50
+    kind: symbol
+    tier: chart-artifact
+    s52_token: boyspp50
+    s57:
+      object_class: boywtw
+      conditions:
+        - catwwm19
+        - COLOUR6
+      instruction: "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      lookup_id: 1383
+      lookup_rcid: 31435
+    source_refs:
+      s52: boyspp50
+      opencpn_s52_spine: "chartsymbols.xml lookup metadata only; no raster/vector art imported"
+      standard_source_table: catalog/standard_source_table.json
+    asset:
+      canonical: assets/svg/triad_generated/boyspp50.svg
+      status: renderable_from_s57_symbolspec
+    qa:
+      semantic_pass: true
+      visual_parity: ready_for_batch96_render
+      final_approved: false
+    geometry:
+      primitive: special_purpose_buoy_or_waterway_marker
+      colours:
+        - yellow
+      conditions:
+        - catwwm19
+        - COLOUR6
+      required_marks:
+        - "OBJNAM text remains separate label, not part of canonical icon"
+    generation:
+      status: render_batch_from_symbolspec
+      confidence: 0.72
+      resolution: "Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker."
+    provenance:
+      origin: generated-owned-artwork-plan
+      allowed_sources:
+        - "OpenCPN S-52 lookup metadata"
+        - "S-57 condition metadata"
+        - "future public-domain Chart No.1 or locally rendered tight witness when required"
+      forbidden_sources:
+        - "do not import OpenCPN raster pixels as canonical art"

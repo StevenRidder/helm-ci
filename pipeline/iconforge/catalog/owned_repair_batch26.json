@@ -1,0 +1,527 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch26.json",
+    "renders": "out/standard_repair_batch18/renders",
+    "svg_dir": "assets/svg/owned_repair_batch26"
+  },
+  "schema_version": 1,
+  "source_feedback": "out/human_review/icon_review_feedback.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 5,
+    "human_feedback_rows": 5,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch18/renders/MORFAC03__after__day.png",
+        "dusk": "out/standard_repair_batch18/renders/MORFAC03__after__dusk.png",
+        "night": "out/standard_repair_batch18/renders/MORFAC03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch26/MORFAC03.svg",
+      "asset": "MORFAC03",
+      "before_svg": "assets/svg/triad_generated/MORFAC03.svg",
+      "candidate_source": "assets/svg/triad_generated/MORFAC03.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback_and_s101_shape_witness",
+      "human_feedback": {
+        "expected_change": "Redraw MORFAC03 to the compact mooring-dolphin witness; remove the ladder frame and top ring.",
+        "feedback": "shoujld be a simple swuare in helm style. color inside is same as others in the examples. .",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_ring_detail;reference_mismatch"
+      },
+      "name": "mooring dolphin",
+      "provenance": {
+        "generator": "forge.standard_repair_batch18",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/Aqua Map/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback_plus_s101_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the simple S-101/OpenCPN mooring-dolphin square witness; remove pile/ladder substitution.",
+      "required_change": "Redraw MORFAC03 to the compact mooring-dolphin witness; remove the ladder frame and top ring.",
+      "risk_bucket": "human_review_targeted_repair_batch26",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_ring_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MORFAC03 is mooring dolphin. It is used as a mooring dolphin. Required geometry: mooring facility/buoy symbol. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "mooring facility/buoy symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "mooring dolphin"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Pile",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Mooring Buoy",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MORFAC03__day.png",
+            "label": "mooring dolphin",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MORFAC03__day.png",
+              "dusk": "out/opencpn_s52_reference/MORFAC03__dusk.png",
+              "night": "out/opencpn_s52_reference/MORFAC03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MORFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MORFAC03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MORFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MORFAC03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MORFAC03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch18/renders/MORFAC04__after__day.png",
+        "dusk": "out/standard_repair_batch18/renders/MORFAC04__after__dusk.png",
+        "night": "out/standard_repair_batch18/renders/MORFAC04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch26/MORFAC04.svg",
+      "asset": "MORFAC04",
+      "before_svg": "assets/svg/triad_generated/MORFAC04.svg",
+      "candidate_source": "assets/svg/triad_generated/MORFAC04.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback_and_s101_shape_witness",
+      "human_feedback": {
+        "expected_change": "Redraw MORFAC04 to the narrow deviation mooring-dolphin witness; remove the top ring and oversized frame.",
+        "feedback": "worng shape, make it just like the other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_ring_detail;reference_mismatch"
+      },
+      "name": "deviation mooring dolphin",
+      "provenance": {
+        "generator": "forge.standard_repair_batch18",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/Aqua Map/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback_plus_s101_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the trapezoid-and-center-pole deviation mooring-dolphin witness.",
+      "required_change": "Redraw MORFAC04 to the narrow deviation mooring-dolphin witness; remove the top ring and oversized frame.",
+      "risk_bucket": "human_review_targeted_repair_batch26",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_ring_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MORFAC04 is deviation mooring dolphin. It is used as a mooring facility. Required geometry: mooring facility/buoy symbol. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "mooring facility/buoy symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "mooring facility"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Pile",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Piles1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Mooring Buoy",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Mooring1.png",
+            "section": "Other Buoys and Beacons",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MORFAC04__day.png",
+            "label": "deviation mooring dolphin",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MORFAC04__day.png",
+              "dusk": "out/opencpn_s52_reference/MORFAC04__dusk.png",
+              "night": "out/opencpn_s52_reference/MORFAC04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MORFAC04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MORFAC04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MORFAC04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MORFAC04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MORFAC04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch18/renders/MSTCON04__after__day.png",
+        "dusk": "out/standard_repair_batch18/renders/MSTCON04__after__dusk.png",
+        "night": "out/standard_repair_batch18/renders/MSTCON04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch26/MSTCON04.svg",
+      "asset": "MSTCON04",
+      "before_svg": "assets/svg/triad_generated/MSTCON04.svg",
+      "candidate_source": "assets/svg/triad_generated/MSTCON04.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback_and_s101_shape_witness",
+      "human_feedback": {
+        "expected_change": "Redraw MSTCON04 as the narrow mast/needle tower witness; remove the arrowhead substitution.",
+        "feedback": "should be a tall triangle, not just a simple line. see other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;wrong_symbol_semantics;reference_mismatch"
+      },
+      "name": "mast",
+      "provenance": {
+        "generator": "forge.standard_repair_batch18",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/Aqua Map/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback_plus_s101_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the tall triangular mast witness with base circle, not a single line.",
+      "required_change": "Redraw MSTCON04 as the narrow mast/needle tower witness; remove the arrowhead substitution.",
+      "risk_bucket": "human_review_targeted_repair_batch26",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_semantics",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MSTCON04 is mast. It is used as a mast. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "mast"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MSTCON04__day.png",
+            "label": "mast",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MSTCON04__day.png",
+              "dusk": "out/opencpn_s52_reference/MSTCON04__dusk.png",
+              "night": "out/opencpn_s52_reference/MSTCON04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MSTCON04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MSTCON04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MSTCON04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MSTCON04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MSTCON04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch18/renders/MSTCON14__after__day.png",
+        "dusk": "out/standard_repair_batch18/renders/MSTCON14__after__dusk.png",
+        "night": "out/standard_repair_batch18/renders/MSTCON14__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch26/MSTCON14.svg",
+      "asset": "MSTCON14",
+      "before_svg": "assets/svg/triad_generated/MSTCON14.svg",
+      "candidate_source": "assets/svg/triad_generated/MSTCON14.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback_and_s101_shape_witness",
+      "human_feedback": {
+        "expected_change": "Redraw MSTCON14 as the narrow mast/needle tower witness; remove the arrowhead substitution.",
+        "feedback": "should be a tall triangle, not just a simple line. see other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;wrong_symbol_semantics;reference_mismatch"
+      },
+      "name": "conspicuous mast",
+      "provenance": {
+        "generator": "forge.standard_repair_batch18",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/Aqua Map/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback_plus_s101_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the black conspicuous tall triangular mast witness with base circle.",
+      "required_change": "Redraw MSTCON14 as the narrow mast/needle tower witness; remove the arrowhead substitution.",
+      "risk_bucket": "human_review_targeted_repair_batch26",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_semantics",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MSTCON14 is conspicuous mast. It is used as a conspicuous mast. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous mast"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MSTCON14__day.png",
+            "label": "conspicuous mast",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MSTCON14__day.png",
+              "dusk": "out/opencpn_s52_reference/MSTCON14__dusk.png",
+              "night": "out/opencpn_s52_reference/MSTCON14__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MSTCON14",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MSTCON14.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MSTCON14",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MSTCON14.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MSTCON14"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch18/renders/POSGEN04__after__day.png",
+        "dusk": "out/standard_repair_batch18/renders/POSGEN04__after__dusk.png",
+        "night": "out/standard_repair_batch18/renders/POSGEN04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch26/POSGEN04.svg",
+      "asset": "POSGEN04",
+      "before_svg": "assets/svg/triad_generated/POSGEN04.svg",
+      "candidate_source": "assets/svg/triad_generated/POSGEN04.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback_and_s101_shape_witness",
+      "human_feedback": {
+        "expected_change": "Redraw as the POSGEN04 reference ring marker; remove the invented internal triangle.",
+        "feedback": "no inner circles or dot, just circle with one border ",
+        "priority": "medium",
+        "reason_codes": "invented_internal_shape;wrong_shape;reference_mismatch"
+      },
+      "name": "position of an elevation or control point",
+      "provenance": {
+        "generator": "forge.standard_repair_batch18",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/OpenCPN/Aqua Map/provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback_plus_s101_reference",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as a single plain position ring; remove inner rings, dots, and triangles.",
+      "required_change": "Redraw as the POSGEN04 reference ring marker; remove the invented internal triangle.",
+      "risk_bucket": "human_review_targeted_repair_batch26",
+      "safety_reason_codes": [
+        "invented_internal_shape",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "POSGEN04 is position of an elevation or control point. It is used as a position of an elevation or control point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "position of an elevation or control point"
+      },
+      "source_judge": "catalog/standard_judge_batch_018_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/POSGEN04__day.png",
+            "label": "position of an elevation or control point",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/POSGEN04__day.png",
+              "dusk": "out/opencpn_s52_reference/POSGEN04__dusk.png",
+              "night": "out/opencpn_s52_reference/POSGEN04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "POSGEN04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/POSGEN04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "POSGEN04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/POSGEN04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "POSGEN04"
+          }
+        ]
+      }
+    }
+  ]
+}

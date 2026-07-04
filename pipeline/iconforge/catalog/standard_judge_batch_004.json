@@ -1,0 +1,1591 @@
+{
+  "batch_id": "standard_judge_batch_004",
+  "generated_at": "2026-07-01T05:51:55.050241+00:00",
+  "schema_version": "standard-source-judge.v1",
+  "status": "complete",
+  "summary": {
+    "fail_count": 20,
+    "final_approved_count": 0,
+    "notes": "Judged from normalized source table packet, OpenCPN rendered refs, local AquaMap refs where mapped, S-57/S-52 metadata, and Helm candidate PNG/SVG. No verdict is final-approved.",
+    "pass_count": 30,
+    "selected_from": "rows whose helm_candidate.candidate_status == pending_judge",
+    "slice": "[0:50]",
+    "top_repair_themes": [
+      "missing third band in repeated color patterns such as r-g-r, g-r-g, r-w-r, w-o-w, and b-r-b",
+      "invented colors or bands on generic/paper-chart buoy symbols",
+      "wrong utility/border symbol family for BLKADJ01 and BORDER01",
+      "one BCNTOW color mismatch: BCNTOW90 renders black instead of yellow/brown"
+    ],
+    "total_verdicts": 50
+  },
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.82,
+      "expected": "beacon tower, green/white, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP3, COLOUR4,1, COLPAT2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon tower, green/white, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW85__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW85.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW85__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW85",
+      "symbol_id": "BCNTOW85"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.82,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP4, COLOUR1,2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW86__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW86.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW86__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW86",
+      "symbol_id": "BCNTOW86"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.82,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP3, COLPAT1, COLOUR2,1,2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW87__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW87.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW87__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW87",
+      "symbol_id": "BCNTOW87"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.82,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP4, COLOUR2,1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW88__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW88.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW88__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW88",
+      "symbol_id": "BCNTOW88"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.82,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP3, COLOUR2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW89__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW89.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW89__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW89",
+      "symbol_id": "BCNTOW89"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.86,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP4, COLOUR8.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate renders black tower, but OpenCPN/S-52 reference and COLOUR8 indicate a yellow/brown tower body.",
+      "pass": false,
+      "required_change": "Re-render as beacon tower with the BCNTOW90 yellow/brown body color, not black, preserving compact tower silhouette and black outline.",
+      "safety_reason_codes": [
+        "wrong_colour"
+      ],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW90__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW90.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW90__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW90",
+      "symbol_id": "BCNTOW90"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.82,
+      "expected": "beacon yb, full-chart. S-57/S-52 object=BCNSPP; conditions=BCNSHP4, COLOUR1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "beacon yb, full-chart",
+          "path": "out/opencpn_s52_reference/BCNTOW91__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BCNTOW91.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BCNTOW91__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BCNTOW91",
+      "symbol_id": "BCNTOW91"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.86,
+      "expected": "symbol to be used for checking and adjusting the brightness and contrast controls. S-57/S-52 object=$CSYMB; conditions=$SCODEBLKADJ01.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate is a black diamond with a white dot; reference is a square brightness/contrast control swatch.",
+      "pass": false,
+      "required_change": "Replace diamond with square control swatch: black outer square/frame with dark inner square as in S-52/S-101 BLKADJ01.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "utility_symbol_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "symbol to be used for checking and adjusting the brightness and contrast controls",
+          "path": "out/opencpn_s52_reference/BLKADJ01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BLKADJ01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BLKADJ01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BLKADJ01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BLKADJ01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BLKADJ01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BLKADJ01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BLKADJ01",
+      "symbol_id": "BLKADJ01"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.86,
+      "expected": "border. S-57/S-52 object=chkpnt; conditions=catchp2.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate is a magenta diamond/circle marker; reference is a thin diagonal red/white border symbol.",
+      "pass": false,
+      "required_change": "Replace with a thin diagonal red/white bordered line/strip matching BORDER01; no diamond, circle, or point-marker body.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family"
+      ],
+      "source_refs_used": [
+        {
+          "label": "border",
+          "path": "out/opencpn_s52_reference/BORDER01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BORDER01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BORDER01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BORDER01",
+      "symbol_id": "BORDER01"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.86,
+      "expected": "barrel buoy, paper-chart; barrel buoy, black full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP6.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate is a colored barrel with red/blue bands; reference is black paper-chart barrel outline/generic barrel.",
+      "pass": false,
+      "required_change": "Re-render as generic black/paper-chart barrel buoy silhouette/outline. Remove invented red/blue bands.",
+      "safety_reason_codes": [
+        "wrong_colour",
+        "invented_bands"
+      ],
+      "source_refs_used": [
+        {
+          "label": "barrel buoy, black full-chart",
+          "path": "out/opencpn_s52_reference/BOYBAR01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYBAR01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYBAR01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYBAR01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYBAR01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYBAR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYBAR01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYBAR01",
+      "symbol_id": "BOYBAR01"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.82,
+      "expected": "barrel buoy, red, full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP6, COLOUR3.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "barrel buoy, red, full-chart",
+          "path": "out/opencpn_s52_reference/BOYBAR60__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYBAR60.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYBAR60__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYBAR60",
+      "symbol_id": "BOYBAR60"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.82,
+      "expected": "barrel buoy, green, full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP6, COLOUR4.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "barrel buoy, green, full-chart",
+          "path": "out/opencpn_s52_reference/BOYBAR61__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYBAR61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYBAR61__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYBAR61",
+      "symbol_id": "BOYBAR61"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.82,
+      "expected": "barrel buoy, yellow, full-chart. S-57/S-52 object=BOYINB; conditions=BOYSHP6, COLOUR6.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "barrel buoy, yellow, full-chart",
+          "path": "out/opencpn_s52_reference/BOYBAR62__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYBAR62.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYBAR62__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYBAR62",
+      "symbol_id": "BOYBAR62"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.86,
+      "expected": "can buoy, paper-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP2.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate is an upright filled black can; reference is a small paper-chart can outline/shape.",
+      "pass": false,
+      "required_change": "Use the BOYCAN01 paper-chart can shape/outline, not a filled full-chart upright can.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "paper_full_chart_confusion"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy, paper-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCAN01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCAN01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCAN01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCAN01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN01",
+      "symbol_id": "BOYCAN01"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.82,
+      "expected": "can buoy,lateral-r,full-chart. S-57/S-52 object=BOYSPP; conditions=CATSPM8, BOYSHP2, COLOUR3.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral-r,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN60__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN60.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN60__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN60",
+      "symbol_id": "BOYCAN60"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.82,
+      "expected": "can buoy,lateral-g,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, COLOUR4.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral-g,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN61__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN61__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN61",
+      "symbol_id": "BOYCAN61"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.86,
+      "expected": "can buoy,generic,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate invents green/blue bands for a generic can buoy; reference is uncolored/generic can.",
+      "pass": false,
+      "required_change": "Render generic can with neutral/black outline and no invented green/blue color bands.",
+      "safety_reason_codes": [
+        "invented_bands",
+        "wrong_colour"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,generic,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN62__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN62.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN62__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN62",
+      "symbol_id": "BOYCAN62"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.82,
+      "expected": "can buoy,yellow,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, COLOUR6.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,yellow,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN63__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN63.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN63__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN63",
+      "symbol_id": "BOYCAN63"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.82,
+      "expected": "can buoy,black,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,black,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN64__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN64.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN64__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN64",
+      "symbol_id": "BOYCAN64"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.82,
+      "expected": "can buoy,yellow,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,yellow,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN65__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN65.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN65__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN65",
+      "symbol_id": "BOYCAN65"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.82,
+      "expected": "can buoy,cardinal north by,full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP2, COLOUR2,6.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,cardinal north by,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN68__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN68.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN68__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN68",
+      "symbol_id": "BOYCAN68"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.82,
+      "expected": "can buoy,cardinal south yb,full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP2, COLOUR6,2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,cardinal south yb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN69__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN69.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN69__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN69",
+      "symbol_id": "BOYCAN69"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.82,
+      "expected": "can buoy,cardinal east byb,full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP2, COLOUR2,6,2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,cardinal east byb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN70__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN70.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN70__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN70",
+      "symbol_id": "BOYCAN70"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.82,
+      "expected": "can buoy,cardinal west yby,full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP2, COLOUR6,2,6.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,cardinal west yby,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN71__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN71.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN71__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN71",
+      "symbol_id": "BOYCAN71"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral rgr,full-chart. S-57/S-52 object=boylat; conditions=BOYSHP2, COLOUR3,4,3, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has red over green only; metadata/reference require lateral r-g-r three-band can.",
+      "pass": false,
+      "required_change": "Render three horizontal bands red/green/red in correct order on can body.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral rgr,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN72__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN72.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN72__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN72",
+      "symbol_id": "BOYCAN72"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral grg,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, COLOUR4,3,4, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has green over red only; metadata/reference require lateral g-r-g three-band can.",
+      "pass": false,
+      "required_change": "Render three horizontal bands green/red/green in correct order on can body.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral grg,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN73__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN73.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN73__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN73",
+      "symbol_id": "BOYCAN73"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral-rw,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, COLOUR3,1,3,1,3.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has red over white only; metadata/reference require lateral r-w-r three-band can.",
+      "pass": false,
+      "required_change": "Render three horizontal bands red/white/red in correct order on can body.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral-rw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN74__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN74.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN74__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN74",
+      "symbol_id": "BOYCAN74"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.82,
+      "expected": "can buoy,lateral rg,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR3,4, COLPAT1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral rg,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN75__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN75.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN75__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN75",
+      "symbol_id": "BOYCAN75"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.86,
+      "expected": "can buoy,isolated danger brb,full-chart. S-57/S-52 object=BOYISD; conditions=BOYSHP2, COLOUR2,3,2.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate shows black over red but lacks the lower black band for isolated danger b-r-b.",
+      "pass": false,
+      "required_change": "Render isolated-danger can as black/red/black with all three bands visible.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count",
+        "safety_isolated_danger"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,isolated danger brb,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN76__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN76.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN76__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN76",
+      "symbol_id": "BOYCAN76"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral white/orange,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR1,11, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has white over orange only; reference/metadata indicate white/orange/white pattern.",
+      "pass": false,
+      "required_change": "Render white/orange/white three-band can; do not collapse to two bands.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral white/orange,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN77__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN77.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN77__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN77",
+      "symbol_id": "BOYCAN77"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral wow,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR1,11,1, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has white over orange only; reference/metadata indicate white/orange/white pattern.",
+      "pass": false,
+      "required_change": "Render white/orange/white three-band can; do not collapse to two bands.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral wow,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN78__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN78.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN78__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN78",
+      "symbol_id": "BOYCAN78"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.7,
+      "expected": "can buoy,orange,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR11.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate does not closely match the available reference packet.",
+      "pass": false,
+      "required_change": "Repair against OpenCPN/S-52 spine and available S-101/AquaMap examples, then rerun judge.",
+      "safety_reason_codes": [
+        "visual_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,orange,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN79__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN79.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN79__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN79",
+      "symbol_id": "BOYCAN79"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.82,
+      "expected": "can buoy,red-white,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR3,1, COLPAT1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "can buoy,red-white,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN80__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN80.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN80__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN80",
+      "symbol_id": "BOYCAN80"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral white/orange,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP2, COLOUR11,1, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has orange/white only for white/orange pattern and misses the full repeated band cue.",
+      "pass": false,
+      "required_change": "Render the white/orange/white lateral can pattern indicated by S-52 metadata/reference.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral white/orange,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN81__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN81.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN81__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN81",
+      "symbol_id": "BOYCAN81"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral-rw,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, CATLAM7, COLOUR3,1,3,1,3.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has red/white only; metadata/reference require red/white/red lateral can.",
+      "pass": false,
+      "required_change": "Render three horizontal bands red/white/red in correct order.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral-rw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN82__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN82.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN82__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN82",
+      "symbol_id": "BOYCAN82"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.86,
+      "expected": "can buoy,lateral-rw,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP2, CATLAM7, COLOUR3,1,3,1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has red/white only; metadata/reference require red/white/red lateral can.",
+      "pass": false,
+      "required_change": "Render three horizontal bands red/white/red in correct order.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "can buoy,lateral-rw,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCAN83__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAN83.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAN83__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAN83",
+      "symbol_id": "BOYCAN83"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.82,
+      "expected": "cardinal buoy, north, simplified. S-57/S-52 object=BOYCAR; conditions=CATCAM1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "cardinal buoy, north, simplified",
+          "path": "out/opencpn_s52_reference/BOYCAR01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCAR01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCAR01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCAR01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCAR01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "North cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "South cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "West cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "East cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAR01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAR01",
+      "symbol_id": "BOYCAR01"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.82,
+      "expected": "cardinal buoy, east, simplified. S-57/S-52 object=BOYCAR; conditions=CATCAM2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "cardinal buoy, east, simplified",
+          "path": "out/opencpn_s52_reference/BOYCAR02__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCAR02",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCAR02.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCAR02",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCAR02.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "North cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "South cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "West cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "East cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAR02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAR02__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAR02",
+      "symbol_id": "BOYCAR02"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.82,
+      "expected": "cardinal buoy, south, simplified. S-57/S-52 object=BOYCAR; conditions=CATCAM3.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "cardinal buoy, south, simplified",
+          "path": "out/opencpn_s52_reference/BOYCAR03__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCAR03",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCAR03.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCAR03",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCAR03.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "North cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "South cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "West cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "East cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAR03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAR03__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAR03",
+      "symbol_id": "BOYCAR03"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.82,
+      "expected": "cardinal buoy, west, simplified. S-57/S-52 object=BOYCAR; conditions=CATCAM4.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "cardinal buoy, west, simplified",
+          "path": "out/opencpn_s52_reference/BOYCAR04__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCAR04",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCAR04.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCAR04",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCAR04.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "North cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "South cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "West cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARYBY1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "label": "East cardinal mark",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYCARBYB1.png",
+          "provider": "aquamap",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCAR04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCAR04__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCAR04",
+      "symbol_id": "BOYCAR04"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.86,
+      "expected": "conical buoy, paper-chart; conical buoy, general, full-chart. S-57/S-52 object=BOYCAR; conditions=BOYSHP1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate invents red and blue fill bands on a generic/paper-chart conical buoy.",
+      "pass": false,
+      "required_change": "Render generic BOYCON01 conical buoy as the S-52/S-101 paper/full-chart reference shape without invented red/blue bands.",
+      "safety_reason_codes": [
+        "invented_bands",
+        "wrong_colour"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy, general, full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON01__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "label": "BOYCON01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "assets/svg/source_priority/s101_exact/BOYCON01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "label": "BOYCON01",
+          "note": "path present in packet; not visually rendered in this local pass",
+          "path": "PortrayalCatalog/Symbols/BOYCON01.svg",
+          "provider": "s101",
+          "used": false
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON01__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON01",
+      "symbol_id": "BOYCON01"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.82,
+      "expected": "conical buoy,lateral-red,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR3.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-red,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON60__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON60.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON60__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON60",
+      "symbol_id": "BOYCON60"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.82,
+      "expected": "conical buoy,lateral-green,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR4.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-green,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON61__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON61.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON61__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON61",
+      "symbol_id": "BOYCON61"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.82,
+      "expected": "conical buoy,yellow,paper-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR6.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,yellow,paper-chart",
+          "path": "out/opencpn_s52_reference/BOYCON62__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON62.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON62__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON62",
+      "symbol_id": "BOYCON62"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.86,
+      "expected": "conical buoy,lateral-balck-red-black,full-chart. S-57/S-52 object=BOYISD; conditions=BOYSHP1, COLOUR2.3.2.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate shows black/red but lacks lower black band for isolated-danger black-red-black conical buoy.",
+      "pass": false,
+      "required_change": "Render conical buoy with black/red/black three-band sequence.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count",
+        "safety_isolated_danger"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-balck-red-black,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON63__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON63.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON63__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON63",
+      "symbol_id": "BOYCON63"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.82,
+      "expected": "conical buoy,black,paper-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR2.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,black,paper-chart",
+          "path": "out/opencpn_s52_reference/BOYCON64__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON64.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON64__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON64",
+      "symbol_id": "BOYCON64"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.82,
+      "expected": "conical buoy,green-white,full-chart. S-57/S-52 object=BOYSPP; conditions=BOYSHP1, COLOUR4,1,4,1,4, COLPAT1.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,green-white,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON65__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON65.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON65__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON65",
+      "symbol_id": "BOYCON65"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.86,
+      "expected": "conical buoy,lateral-rgr,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR3,4,3, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has red over green only; metadata/reference require lateral r-g-r conical buoy.",
+      "pass": false,
+      "required_change": "Render three horizontal bands red/green/red in correct order on conical body.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-rgr,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON66__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON66.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON66__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON66",
+      "symbol_id": "BOYCON66"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.86,
+      "expected": "conical buoy,lateral-grg,full-chart. S-57/S-52 object=boylat; conditions=BOYSHP1, COLOUR4,3,4, COLPAT1.",
+      "judge_comments": "Fail under strict visual rules; send to renderer repair queue with required_change. Not final-approved.",
+      "observed": "Candidate has green over red only; metadata/reference require lateral g-r-g conical buoy.",
+      "pass": false,
+      "required_change": "Render three horizontal bands green/red/green in correct order on conical body.",
+      "safety_reason_codes": [
+        "missing_band",
+        "wrong_band_count"
+      ],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-grg,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON67__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON67.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON67__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON67",
+      "symbol_id": "BOYCON67"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.82,
+      "expected": "conical buoy,lateral-gr,full-chart. S-57/S-52 object=BOYLAT; conditions=BOYSHP1, COLOUR4,3.",
+      "judge_comments": "Pass for semantic visual parity against available OpenCPN/S-52 reference and row metadata. Not final-approved.",
+      "observed": "Helm candidate preserves the recognizable S-52 symbol family, body shape, and required color/band cue for this row; differences are scale/stroke/style only.",
+      "pass": true,
+      "required_change": "No semantic repair required before final style/scale QA; keep pending final approval.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "label": "conical buoy,lateral-gr,full-chart",
+          "path": "out/opencpn_s52_reference/BOYCON68__day.png",
+          "provider": "opencpn_render",
+          "used": true
+        },
+        {
+          "path": "assets/svg/triad_generated/BOYCON68.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/BOYCON68__day.png",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:BOYCON68",
+      "symbol_id": "BOYCON68"
+    }
+  ]
+}

@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="WAYPNT03 generic_symbol">
+  <title>WAYPNT03 generic_symbol</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="WAYPNT03" data-shape="generic_symbol">
+<path d="M32 12 L52 32 L32 52 L12 32 Z" fill="var(--black)" stroke="var(--black)" stroke-width="2"/>
+<circle cx="32" cy="32" r="5" fill="var(--white)" stroke="var(--black)" stroke-width="1.5"/>
+  </g>
+</svg>

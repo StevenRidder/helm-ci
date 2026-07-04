@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYSPR69 Q24 spar/spindle">
+  <title>BOYSPR69 Q24 spar/spindle</title>
+  <g data-origin="generated-owned-artwork" data-int1="Q24"
+     data-s52-asset="BOYSPR69" data-primitive="spar_buoy">
+  <defs><clipPath id="clip-BOYSPR69"><path d="M29 10 L35 10 L38 52 Q32 58 26 52 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYSPR69)">
+    <rect x="0" y="10.0" width="64" height="24.25" fill="var(--yellow)"/>
+    <rect x="0" y="34.0" width="64" height="24.25" fill="var(--black)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.2" stroke-linejoin="round"><path d="M29 10 L35 10 L38 52 Q32 58 26 52 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.5" stroke-linecap="round"/>
+  </g>
+</svg>

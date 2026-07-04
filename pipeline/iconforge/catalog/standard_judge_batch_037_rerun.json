@@ -1,0 +1,369 @@
+{
+  "agent_id": "codex/FORGE-14-batch37-judge",
+  "batch_id": "standard_judge_batch_037_rerun",
+  "created_at": "2026-07-01T19:00:33Z",
+  "project": "vulkan",
+  "schema_version": "standard.visual_judge.v1",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "selected_asset_ids": [
+      "RCLDEF01",
+      "RDOCAL02",
+      "RDOCAL03",
+      "RDOSTA02",
+      "RECDEF51",
+      "RECTRC55",
+      "RECTRC56",
+      "RECTRC57",
+      "RECTRC58",
+      "RETRFL01",
+      "RETRFL02",
+      "RTPBCN02"
+    ],
+    "selection_note": "Judged only owned repair batch 37 against owned_repair_batch37 metadata, full standard_source_table semantic/source metadata where available, S-57/OpenCPN portrayal instructions, S-101 exact SVG witnesses, local OpenCPN reference paths listed in the catalog, Aqua Map metadata where listed, and actual batch-37 repaired SVGs on the branch.",
+    "source_batches": [
+      "pipeline/iconforge/catalog/owned_repair_batch37.json"
+    ],
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 5,
+    "failed_assets": [
+      "RCLDEF01",
+      "RDOCAL02",
+      "RDOCAL03",
+      "RECTRC56",
+      "RECTRC58"
+    ],
+    "final_approved": 0,
+    "pass": 7,
+    "selected": 12,
+    "source_batches": [
+      "catalog/owned_repair_batch37.json"
+    ]
+  },
+  "task_id": "FORGE-14",
+  "verdicts": [
+    {
+      "symbol_id": "RCLDEF01",
+      "source_table_id": "opencpn-s52:RCLDEF01",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": false,
+      "confidence": 0.86,
+      "observed": "Candidate has the radio circle and two question marks, but it keeps a continuous magenta diamond enclosure around the circle.",
+      "expected": "RCLDEF01 must be the unknown-direction radio calling-in point: central magenta circle, left/right question marks, and separate upper/lower direction chevron witnesses rather than a closed diamond sign.",
+      "judge_comments": "The unknown-direction meaning is partly present, but the repaired silhouette still does not match the S-101/OpenCPN witness closely enough. The closed diamond changes the load-bearing radio-call silhouette and repeats the prior diamond-placeholder problem in a subtler form. No final approval implied.",
+      "required_change": "Redraw RCLDEF01 with the central circle, two question marks, and separate upper/lower V direction witnesses; remove the continuous diamond side enclosure.",
+      "safety_reason_codes": [
+        "wrong_silhouette",
+        "radio_call_direction_cue_mismatch",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RCLDEF01",
+        "s57_structure:radio calling-in point; SY(RCLDEF01); traffic/radio line context may add LS(DASH,1,TRFCD) and OBJNAM text.",
+        "prior_failed_judge:RCLDEF01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RCLDEF01.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RCLDEF01.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RCLDEF01.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RCLDEF01__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RDOCAL02",
+      "source_table_id": "opencpn-s52:RDOCAL02",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": false,
+      "confidence": 0.93,
+      "observed": "Candidate is a magenta circle inside a closed diamond, with no single one-way triangular direction witness.",
+      "expected": "RDOCAL02 must be the one-direction radio calling-in point: central circle plus one triangular/V direction cue only.",
+      "judge_comments": "The radio circle is present, but the closed diamond adds a second implied direction and removes the specific one-way call-in cue. This is a navigation semantics failure, not a style difference. No final approval implied.",
+      "required_change": "Redraw RDOCAL02 as a central radio-call circle with one upper triangular/V direction point; remove the closed diamond and any opposite-direction cue.",
+      "safety_reason_codes": [
+        "wrong_direction_semantics",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RDOCAL02",
+        "s57_structure:radio calling-in point for traffic in one direction only; SY(RDOCAL02,ORIENT); optional OBJNAM/COMCHA text.",
+        "prior_failed_judge:RDOCAL02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RDOCAL02.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RDOCAL02.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RDOCAL02.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOCAL02__day.png",
+        "aquamap:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png"
+      ]
+    },
+    {
+      "symbol_id": "RDOCAL03",
+      "source_table_id": "opencpn-s52:RDOCAL03",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": false,
+      "confidence": 0.91,
+      "observed": "Candidate is a magenta circle inside a closed diamond with a vertical center stroke.",
+      "expected": "RDOCAL03 must be the bidirectional radio calling-in point: central circle with opposed upper and lower triangular/V direction witnesses.",
+      "judge_comments": "The center stroke does not encode the required bidirectional radio-call symbol. The closed diamond remains a wrong sign-like enclosure and the two opposed direction witnesses are not preserved. No final approval implied.",
+      "required_change": "Redraw RDOCAL03 as the central circle with separate upper and lower triangular/V direction witnesses; remove the closed diamond and vertical center stroke.",
+      "safety_reason_codes": [
+        "wrong_direction_semantics",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RDOCAL03",
+        "s57_structure:radio calling-in point for traffic in both directions; SY(RDOCAL03,ORIENT); optional OBJNAM/COMCHA text.",
+        "prior_failed_judge:RDOCAL03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RDOCAL03.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RDOCAL03.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RDOCAL03.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOCAL03__day.png",
+        "aquamap:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png"
+      ]
+    },
+    {
+      "symbol_id": "RDOSTA02",
+      "source_table_id": "opencpn-s52:RDOSTA02",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.94,
+      "observed": "Candidate is a simple magenta circular radio-station point and avoids mast, broadcast-wave, or radar-station substitutions.",
+      "expected": "RDOSTA02 is the radio station symbol: a simple magenta circle/point witness.",
+      "judge_comments": "Semantic gate passes: correct radio-station family, colour, and circular shape. Scale/stroke are Helm-styled but do not change the symbol meaning. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RDOSTA02",
+        "s57_structure:radio station; SY(RDOSTA02); optional COMCHA/DGPS text.",
+        "prior_failed_judge:RDOSTA02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RDOSTA02.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RDOSTA02.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RDOSTA02.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RDOSTA02__day.png",
+        "aquamap:reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png"
+      ]
+    },
+    {
+      "symbol_id": "RECDEF51",
+      "source_table_id": "opencpn-s52:RECDEF51",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.89,
+      "observed": "Candidate is a grey recommended-track witness with horizontal track segments, opposed side chevrons, and a central question-mark unknown-direction cue.",
+      "expected": "RECDEF51 is recommended track as an area, direction not defined in data: split track line, central unknown-direction question mark, and non-directional chevron context.",
+      "judge_comments": "Semantic gate passes: the prior directional-arrow treatment is gone and the unknown-direction cue is present. Stroke weight/text scale are Helm style differences only. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RECDEF51",
+        "s57_structure:recommended track as area, direction not defined; SY(RECDEF51); area boundary may use LS(DASH,1,CHGRD) or LC(NAVARE51).",
+        "prior_failed_judge:RECDEF51",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RECDEF51.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RECDEF51.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RECDEF51.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECDEF51__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RECTRC55",
+      "source_table_id": "opencpn-s52:RECTRC55",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.9,
+      "observed": "Candidate is a grey vertical recommended-track line with two opposed chevrons and no standalone horizontal arrow sign.",
+      "expected": "RECTRC55 is the two-way recommended track as an area, not based on fixed marks: vertical track witness with opposed direction chevrons and broken/non-fixed-mark track segments.",
+      "judge_comments": "Semantic gate passes: two-way route meaning, grey track colour, opposed chevrons, and non-fixed-mark broken track context are preserved. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RECTRC55",
+        "s57_structure:recommended two-way track as area, not based on fixed marks; SY(RECTRC55,ORIENT); optional ORIENT text.",
+        "prior_failed_judge:RECTRC55",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RECTRC55.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RECTRC55.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RECTRC55.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC55__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RECTRC56",
+      "source_table_id": "opencpn-s52:RECTRC56",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": false,
+      "confidence": 0.82,
+      "observed": "Candidate uses the two-way chevron track but keeps broken/non-fixed-mark line segments and adds a central circle.",
+      "expected": "RECTRC56 must be the fixed-mark two-way recommended-track witness: continuous track line through the opposed chevrons, without an added circle marker.",
+      "judge_comments": "The two-way direction is recognizable, but the fixed-mark distinction is not preserved. The central circle and broken line make it drift from the S-101/OpenCPN fixed-mark witness and too close to a custom marker rather than the fixed-mark route symbol. No final approval implied.",
+      "required_change": "Redraw RECTRC56 with a continuous vertical fixed-mark track line and opposed chevrons; remove the added center circle and broken-line treatment.",
+      "safety_reason_codes": [
+        "fixed_mark_semantics_mismatch",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC56",
+        "s57_structure:recommended two-way track as area, based on fixed marks; SY(RECTRC56,ORIENT); optional ORIENT text.",
+        "prior_failed_judge:RECTRC56",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RECTRC56.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RECTRC56.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RECTRC56.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC56__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RECTRC57",
+      "source_table_id": "opencpn-s52:RECTRC57",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.88,
+      "observed": "Candidate is a grey one-way recommended-track witness with a single chevron on the track axis and no standalone horizontal dashed arrow.",
+      "expected": "RECTRC57 is recommended one-way track as an area, not based on fixed marks: broken/non-fixed-mark track line and one direction chevron on the track axis.",
+      "judge_comments": "Semantic gate passes: one-way direction, grey track colour, and non-fixed-mark broken track context are preserved. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RECTRC57",
+        "s57_structure:recommended one-way track as area, not based on fixed marks; SY(RECTRC57,ORIENT); optional ORIENT text.",
+        "prior_failed_judge:RECTRC57",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RECTRC57.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RECTRC57.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RECTRC57.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC57__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RECTRC58",
+      "source_table_id": "opencpn-s52:RECTRC58",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": false,
+      "confidence": 0.83,
+      "observed": "Candidate uses the one-way chevron track but keeps broken/non-fixed-mark line segments and adds a central circle.",
+      "expected": "RECTRC58 must be the fixed-mark one-way recommended-track witness: continuous track line with one direction chevron, without an added circle marker.",
+      "judge_comments": "The one-way route direction is recognizable, but the fixed-mark semantics are not. The central circle is not in the S-101/OpenCPN witness and the broken line makes it too close to RECTRC57/custom marker treatment. No final approval implied.",
+      "required_change": "Redraw RECTRC58 with a continuous vertical fixed-mark track line and one direction chevron; remove the added center circle and broken-line treatment.",
+      "safety_reason_codes": [
+        "fixed_mark_semantics_mismatch",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:RECTRC58",
+        "s57_structure:recommended one-way track as area, based on fixed marks; SY(RECTRC58,ORIENT); optional ORIENT text.",
+        "prior_failed_judge:RECTRC58",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RECTRC58.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RECTRC58.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RECTRC58.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RECTRC58__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RETRFL01",
+      "source_table_id": "opencpn-s52:RETRFL01",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.91,
+      "observed": "Candidate is a magenta retro-reflector comb/E witness with one vertical spine and three horizontal bars.",
+      "expected": "RETRFL01 is retro reflector, paper chart: magenta comb/E witness with vertical spine and three horizontal bars.",
+      "judge_comments": "Semantic gate passes: correct reflector family, magenta colour, and comb/E geometry. Candidate is Helm-scaled but preserves the symbol semantics. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RETRFL01",
+        "s57_structure:retro reflector, paper chart; SY(RETRFL01).",
+        "prior_failed_judge:RETRFL01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RETRFL01.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RETRFL01.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RETRFL01.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RETRFL01__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RETRFL02",
+      "source_table_id": "opencpn-s52:RETRFL02",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.9,
+      "observed": "Candidate is a magenta simplified retro-reflector comb/E witness with one vertical spine and three horizontal bars.",
+      "expected": "RETRFL02 is retro reflector, simplified: magenta comb/E witness with vertical spine and horizontal bars.",
+      "judge_comments": "Semantic gate passes: correct reflector family, colour, and simplified comb/E shape. Candidate is visually close enough for pending-human status; no final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RETRFL02",
+        "s57_structure:retro reflector, simplified; SY(RETRFL02).",
+        "prior_failed_judge:RETRFL02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RETRFL02.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RETRFL02.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RETRFL02.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RETRFL02__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "RTPBCN02",
+      "source_table_id": "opencpn-s52:RTPBCN02",
+      "batch_index": 37,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch37.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch37.json",
+      "pass": true,
+      "confidence": 0.87,
+      "observed": "Candidate is a magenta segmented/dashed circular ring and no longer a diamond placeholder.",
+      "expected": "RTPBCN02 is a radar transponder beacon: magenta segmented/ring glyph around the point.",
+      "judge_comments": "Semantic gate passes: the radar transponder beacon ring/segmented-circle family and magenta colour are preserved. The S-101 witness uses discrete arc segments rather than a dasharray circle, but this is acceptable Helm styling for pending-human status. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:RTPBCN02",
+        "s57_structure:radar transponder beacon; SY(RTPBCN02).",
+        "prior_failed_judge:RTPBCN02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch37/RTPBCN02.svg",
+        "s101:pipeline/iconforge/assets/svg/source_priority/s101_exact/RTPBCN02.svg",
+        "s101_metadata:PortrayalCatalog/Symbols/RTPBCN02.svg",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/RTPBCN02__day.png",
+        "aquamap:none_listed_for_row"
+      ]
+    }
+  ]
+}

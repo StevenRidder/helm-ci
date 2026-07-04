@@ -1,0 +1,607 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch81.json",
+    "renders": "out/standard_repair_batch73/renders",
+    "svg_dir": "assets/svg/owned_repair_batch81"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 6,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WIMCON01__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WIMCON01__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WIMCON01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WIMCON01.svg",
+      "asset": "WIMCON01",
+      "before_svg": "assets/svg/owned_repair_batch81/WIMCON01.svg",
+      "candidate_source": "assets/svg/triad_generated/WIMCON01.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "windmotor",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the brown windmotor structure with rotor, mast, base line, and base ring/dot treatment from the references.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK19"
+        ],
+        "lookup_id": "2278",
+        "lookup_rcid": "30435",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(WIMCON01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_windmotor_rotor",
+        "missing_base_ring",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WIMCON01 is windmotor. It is used as a windmotor. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "windmotor"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WIMCON01__day.png",
+            "label": "windmotor",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WIMCON01__day.png",
+              "dusk": "out/opencpn_s52_reference/WIMCON01__dusk.png",
+              "night": "out/opencpn_s52_reference/WIMCON01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WIMCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WIMCON01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WIMCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WIMCON01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WIMCON01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WIMCON11__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WIMCON11__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WIMCON11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WIMCON11.svg",
+      "asset": "WIMCON11",
+      "before_svg": "assets/svg/owned_repair_batch81/WIMCON11.svg",
+      "candidate_source": "assets/svg/triad_generated/WIMCON11.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "conspicuous windmotor",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the black conspicuous windmotor structure with the reference rotor/mast/base geometry.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK19",
+          "CONVIS1"
+        ],
+        "lookup_id": "1156",
+        "lookup_rcid": "31208",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(WIMCON11)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_windmotor_rotor",
+        "missing_base_ring",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WIMCON11 is conspicuous windmotor. It is used as a conspicuous windmotor. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous windmotor"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WIMCON11__day.png",
+            "label": "conspicuous windmotor",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WIMCON11__day.png",
+              "dusk": "out/opencpn_s52_reference/WIMCON11__dusk.png",
+              "night": "out/opencpn_s52_reference/WIMCON11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WIMCON11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WIMCON11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WIMCON11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WIMCON11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WIMCON11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WNDFRM51__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WNDFRM51__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WNDFRM51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WNDFRM51.svg",
+      "asset": "WNDFRM51",
+      "before_svg": "assets/svg/owned_repair_batch81/WNDFRM51.svg",
+      "candidate_source": "assets/svg/triad_generated/WNDFRM51.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "wind generator farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the wind generator farm symbol: circular enclosure plus turbine/mast geometry in the brown/reference colour family.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEWNDFRM51"
+        ],
+        "lookup_id": "1689",
+        "lookup_rcid": "31741",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(WNDFRM51)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_wind_farm_enclosure",
+        "missing_turbine_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WNDFRM51 is wind generator farm. It is used as a wind generator farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "wind generator farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WNDFRM51__day.png",
+            "label": "wind generator farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WNDFRM51__day.png",
+              "dusk": "out/opencpn_s52_reference/WNDFRM51__dusk.png",
+              "night": "out/opencpn_s52_reference/WNDFRM51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WNDFRM51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WNDFRM51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WNDFRM51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WNDFRM51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WNDFRM51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WNDFRM61__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WNDFRM61__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WNDFRM61__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WNDFRM61.svg",
+      "asset": "WNDFRM61",
+      "before_svg": "assets/svg/owned_repair_batch81/WNDFRM61.svg",
+      "candidate_source": "assets/svg/triad_generated/WNDFRM61.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "conspicuous wind generator farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the black conspicuous wind generator farm symbol with circular enclosure and turbine/mast geometry.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "CATPRA9",
+          "CONVIS1"
+        ],
+        "lookup_id": "139",
+        "lookup_rcid": "32175",
+        "object_class": "PRDARE",
+        "s52_instruction": "SY(WNDFRM61);LS(DASH,1,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "wrong_area_marker_substitute",
+        "missing_wind_farm_enclosure",
+        "missing_turbine_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WNDFRM61 is conspicuous wind generator farm. It is used as a conspicuous wind generator farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous wind generator farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WNDFRM61__day.png",
+            "label": "conspicuous wind generator farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WNDFRM61__day.png",
+              "dusk": "out/opencpn_s52_reference/WNDFRM61__dusk.png",
+              "night": "out/opencpn_s52_reference/WNDFRM61__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WNDFRM61",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WNDFRM61.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WNDFRM61",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WNDFRM61.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WNDFRM61"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WNDMIL02__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WNDMIL02__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WNDMIL02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WNDMIL02.svg",
+      "asset": "WNDMIL02",
+      "before_svg": "assets/svg/owned_repair_batch81/WNDMIL02.svg",
+      "candidate_source": "assets/svg/triad_generated/WNDMIL02.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "windmill",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the brown windmill symbol with crossed blades and lower circular body/base cue.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK18"
+        ],
+        "lookup_id": "2277",
+        "lookup_rcid": "30434",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(WNDMIL02)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_windmill_blades",
+        "missing_base_ring",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WNDMIL02 is windmill. It is used as a windmill. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "windmill"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WNDMIL02__day.png",
+            "label": "windmill",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WNDMIL02__day.png",
+              "dusk": "out/opencpn_s52_reference/WNDMIL02__dusk.png",
+              "night": "out/opencpn_s52_reference/WNDMIL02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WNDMIL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WNDMIL02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WNDMIL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WNDMIL02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WNDMIL02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch73/renders/WNDMIL12__after__day.png",
+        "dusk": "out/standard_repair_batch73/renders/WNDMIL12__after__dusk.png",
+        "night": "out/standard_repair_batch73/renders/WNDMIL12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch81/WNDMIL12.svg",
+      "asset": "WNDMIL12",
+      "before_svg": "assets/svg/owned_repair_batch81/WNDMIL12.svg",
+      "candidate_source": "assets/svg/triad_generated/WNDMIL12.svg",
+      "candidate_strategy": "owned_wind_symbol_redraw_from_opencpn_reference",
+      "name": "conspicuous windmill",
+      "provenance": {
+        "generator": "forge.standard_repair_batch73",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN wind symbol witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue windmotor/windmill blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_wind_reference_consumed",
+      "required_change": "Redraw as the black conspicuous windmill symbol with crossed blades and lower circular body/base cue.",
+      "risk_bucket": "wind_symbol_repair_batch81",
+      "s57_structure": {
+        "conditions": [
+          "CATLMK18",
+          "CONVIS1"
+        ],
+        "lookup_id": "1155",
+        "lookup_rcid": "31207",
+        "object_class": "LNDMRK",
+        "s52_instruction": "SY(WNDMIL12)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_windmill_blades",
+        "missing_base_ring",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "WNDMIL12 is conspicuous windmill. It is used as a conspicuous windmill. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous windmill"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/WNDMIL12__day.png",
+            "label": "conspicuous windmill",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/WNDMIL12__day.png",
+              "dusk": "out/opencpn_s52_reference/WNDMIL12__dusk.png",
+              "night": "out/opencpn_s52_reference/WNDMIL12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "WNDMIL12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/WNDMIL12.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "WNDMIL12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/WNDMIL12.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "WNDMIL12"
+          }
+        ]
+      }
+    }
+  ]
+}

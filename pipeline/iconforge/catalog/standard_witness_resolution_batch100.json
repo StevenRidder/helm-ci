@@ -1,0 +1,529 @@
+{
+  "policy": "Related OpenCPN/S-101/AquaMap/Chart No.1 evidence may guide repair, but only an exact symbol crop/render or explicit manual exception can unblock final promotion.",
+  "project": "vulkan",
+  "records": [
+    {
+      "asset": "BCNCON81",
+      "attached_reference_count": 11,
+      "attached_references": [
+        {
+          "note": "Broad beacon/dayboard/stake/tower crop; useful class evidence, not an exact BCNCON81 crop.",
+          "path": "out/source_variant_matrix/renders/BCNCON81/chart1_parity_reference_crop_1.png",
+          "related_asset": null,
+          "role": "broad_chart1_crop",
+          "status": "multi_symbol_reference"
+        },
+        {
+          "note": "Chart No.1 mapping snippet attached to BCNCON81; not enough alone to call final visual parity.",
+          "path": "out/source_variant_matrix/renders/BCNCON81/chart1_mappings_symbol_reference_1.png",
+          "related_asset": null,
+          "role": "chart1_mapping_snippet",
+          "status": "reference_only_not_canonical_artwork"
+        },
+        {
+          "note": "Additional Chart No.1 mapping snippet for class/sibling context.",
+          "path": "out/source_variant_matrix/renders/BCNCON81/chart1_mappings_symbol_reference_2.png",
+          "related_asset": null,
+          "role": "chart1_mapping_snippet",
+          "status": "reference_only_not_canonical_artwork"
+        },
+        {
+          "note": "Additional Chart No.1 mapping snippet for class/sibling context.",
+          "path": "out/source_variant_matrix/renders/BCNCON81/chart1_mappings_symbol_reference_3.png",
+          "related_asset": null,
+          "role": "chart1_mapping_snippet",
+          "status": "reference_only_not_canonical_artwork"
+        },
+        {
+          "note": "Additional Chart No.1 mapping snippet for class/sibling context.",
+          "path": "out/source_variant_matrix/renders/BCNCON81/chart1_mappings_symbol_reference_4.png",
+          "related_asset": null,
+          "role": "chart1_mapping_snippet",
+          "status": "reference_only_not_canonical_artwork"
+        },
+        {
+          "note": "Related BCNSPP witness for special-purpose beacon family, not BCNCON81 exact evidence.",
+          "path": "out/source_variant_matrix/renders/BCNSPP13/opencpn_s52_reference_render_1.png",
+          "related_asset": "BCNSPP13",
+          "role": "related_opencpn_family_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Related S-101 BCNSPP witness; mapping/sibling evidence only.",
+          "path": "out/source_variant_matrix/renders/BCNSPP13/s101_portrayal_catalogue_svg_1.png",
+          "related_asset": "BCNSPP13",
+          "role": "related_s101_family_witness",
+          "status": "license_pending_reference_not_canonical"
+        },
+        {
+          "note": "Second related BCNSPP witness for family contrast.",
+          "path": "out/source_variant_matrix/renders/BCNSPP21/opencpn_s52_reference_render_1.png",
+          "related_asset": "BCNSPP21",
+          "role": "related_opencpn_family_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Second related S-101 BCNSPP witness for family contrast.",
+          "path": "out/source_variant_matrix/renders/BCNSPP21/s101_portrayal_catalogue_svg_1.png",
+          "related_asset": "BCNSPP21",
+          "role": "related_s101_family_witness",
+          "status": "license_pending_reference_not_canonical"
+        },
+        {
+          "note": "AquaMap beacon-special-purpose yellow reference; visual guidance only.",
+          "path": "reference_sources/aquamap_map_symbols/images/BCNSPPY1.png",
+          "related_asset": "BCNSPPY1",
+          "role": "related_aquamap_family_witness",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        },
+        {
+          "note": "AquaMap beacon-special-purpose black reference; visual guidance only.",
+          "path": "reference_sources/aquamap_map_symbols/images/BCNSPPB1.png",
+          "related_asset": "BCNSPPB1",
+          "role": "related_aquamap_family_witness",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        }
+      ],
+      "chart1_parity": {
+        "chart1_class": "beacon/dayboard/stake/tower",
+        "expected_colors": [
+          "black"
+        ],
+        "expected_shape": "beacon",
+        "expected_topmark": "optional_topmark",
+        "final_pass_allowed": false,
+        "reference_crop": "out/chart1_parity/reference/crops/beacon_general.png",
+        "reference_crop_id": "beacon_general",
+        "reference_crop_sha256": "76533a5a5cf579aeb399772c877d22288df6fd694bfa4f054be3d8c02b899154",
+        "reference_crop_status": "multi_symbol_reference",
+        "reference_pages": [
+          92,
+          93,
+          94
+        ]
+      },
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "kind": "symbol",
+      "manual_exception_allowed": true,
+      "name": "BCNCON81",
+      "next_action": "find or crop exact BCNCON81 one-symbol witness, or get explicit human manual exception before any promotion",
+      "normal_icon_art_queue_allowed": false,
+      "promotion_ready": false,
+      "remaining_blocker": "no_exact_symbol_witness",
+      "resolution_status": "equivalent_family_witness_attached_not_exact",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_note": "Do not promote this row from related/broad witnesses. It needs exact symbol evidence or explicit human manual exception before entering final approval.",
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      }
+    },
+    {
+      "asset": "DANGER53",
+      "attached_reference_count": 4,
+      "attached_references": [
+        {
+          "note": "ECDIS summary crop is not a tight DANGER53 symbol witness.",
+          "path": "out/source_variant_matrix/renders/DANGER53/chart1_parity_reference_crop_1.png",
+          "related_asset": null,
+          "role": "broad_chart1_crop",
+          "status": "out_of_scope"
+        },
+        {
+          "note": "Related DANGER51 render; useful danger-family evidence, not DANGER53 proof.",
+          "path": "out/source_variant_matrix/renders/DANGER51/opencpn_s52_reference_render_1.png",
+          "related_asset": "DANGER51",
+          "role": "related_opencpn_symbol_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Related DANGER52 render; useful danger-family evidence, not DANGER53 proof.",
+          "path": "out/source_variant_matrix/renders/DANGER52/opencpn_s52_reference_render_1.png",
+          "related_asset": "DANGER52",
+          "role": "related_opencpn_symbol_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Concept cue only; cannot satisfy S-52 official DANGER53 witness requirement.",
+          "path": "out/source_variant_matrix/renders/DANGER53/open_source_icon_concept_1.png",
+          "related_asset": null,
+          "role": "concept_icon",
+          "status": "permissive_icon_reference_needs_chart_semantic_review"
+        }
+      ],
+      "chart1_parity": {
+        "chart1_class": "outside buoy/beacon/topmark visual gate",
+        "expected_colors": [],
+        "expected_shape": "not_scoped",
+        "expected_topmark": null,
+        "final_pass_allowed": false,
+        "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+        "reference_crop_id": "ecdis_summary",
+        "reference_crop_sha256": "d5853aa2d03a71a2dbedeb49219d760f7ce6d182eb97baf9ae26e8ed30fab850",
+        "reference_crop_status": "out_of_scope",
+        "reference_pages": [
+          86
+        ]
+      },
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "kind": "symbol",
+      "manual_exception_allowed": true,
+      "name": "DANGER53",
+      "next_action": "attach official DANGER53 symbol definition/render or keep in hard-pile for manual review",
+      "normal_icon_art_queue_allowed": false,
+      "promotion_ready": false,
+      "remaining_blocker": "official_symbol_definition_or_exact_render_missing",
+      "resolution_status": "related_symbol_witness_attached_not_exact",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEDANGER03"
+        ],
+        "lookup_id": "1630",
+        "lookup_rcid": "31682",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(DANGER53)"
+      },
+      "safety_note": "Do not promote this row from related/broad witnesses. It needs exact symbol evidence or explicit human manual exception before entering final approval.",
+      "semantic_brief": {
+        "brief": "DANGER53 is DANGER53. It is used as a DANGER53. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DANGER53"
+      }
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "attached_reference_count": 6,
+      "attached_references": [
+        {
+          "note": "ECDIS summary crop is not a tight DGPS/radio-station composite witness.",
+          "path": "out/source_variant_matrix/renders/DGPS01DRFSTA01/chart1_parity_reference_crop_1.png",
+          "related_asset": null,
+          "role": "broad_chart1_crop",
+          "status": "out_of_scope"
+        },
+        {
+          "note": "Related radio-station parent symbol; does not prove the DGPS composite.",
+          "path": "out/source_variant_matrix/renders/RDOSTA02/opencpn_s52_reference_render_1.png",
+          "related_asset": "RDOSTA02",
+          "role": "parent_opencpn_symbol_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Related S-101 radio-station witness; mapping evidence only.",
+          "path": "out/source_variant_matrix/renders/RDOSTA02/s101_portrayal_catalogue_svg_1.png",
+          "related_asset": "RDOSTA02",
+          "role": "parent_s101_symbol_witness",
+          "status": "license_pending_reference_not_canonical"
+        },
+        {
+          "note": "AquaMap radio/radar station reference; visual guidance only.",
+          "path": "out/source_variant_matrix/renders/RDOSTA02/aquamap_map_symbols_1.png",
+          "related_asset": "RDOSTA02",
+          "role": "parent_aquamap_symbol_witness",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        },
+        {
+          "note": "Radar station concept reference; not DGPS exact evidence.",
+          "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+          "related_asset": "RadarStation1",
+          "role": "related_aquamap_concept",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        },
+        {
+          "note": "Radio call-in concept reference; not DGPS exact evidence.",
+          "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+          "related_asset": "RadioCallinPoint1",
+          "role": "related_aquamap_concept",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        }
+      ],
+      "chart1_parity": {
+        "chart1_class": "outside buoy/beacon/topmark visual gate",
+        "expected_colors": [],
+        "expected_shape": "not_scoped",
+        "expected_topmark": null,
+        "final_pass_allowed": false,
+        "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+        "reference_crop_id": "ecdis_summary",
+        "reference_crop_sha256": "d5853aa2d03a71a2dbedeb49219d760f7ce6d182eb97baf9ae26e8ed30fab850",
+        "reference_crop_status": "out_of_scope",
+        "reference_pages": [
+          86
+        ]
+      },
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "kind": "symbol",
+      "manual_exception_allowed": true,
+      "name": "DGPS01DRFSTA01",
+      "next_action": "split composite into exact DGPS + RDOSTA witnesses or get human-approved composite spec",
+      "normal_icon_art_queue_allowed": false,
+      "promotion_ready": false,
+      "remaining_blocker": "exact_composite_witness_missing",
+      "resolution_status": "composite_parent_witness_attached_not_exact",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [
+          "CATROS10"
+        ],
+        "lookup_id": "1232",
+        "lookup_rcid": "31284",
+        "object_class": "RDOSTA",
+        "s52_instruction": "SY(DGPS01DRFSTA01)"
+      },
+      "safety_note": "Do not promote this row from related/broad witnesses. It needs exact symbol evidence or explicit human manual exception before entering final approval.",
+      "semantic_brief": {
+        "brief": "DGPS01DRFSTA01 is DGPS01DRFSTA01. It is used as a DGPS01DRFSTA01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "DGPS01DRFSTA01"
+      }
+    },
+    {
+      "asset": "VEHTRF01",
+      "attached_reference_count": 2,
+      "attached_references": [
+        {
+          "note": "ECDIS summary crop is not a tight vehicle-traffic symbol witness.",
+          "path": "out/source_variant_matrix/renders/VEHTRF01/chart1_parity_reference_crop_1.png",
+          "related_asset": null,
+          "role": "broad_chart1_crop",
+          "status": "out_of_scope"
+        },
+        {
+          "note": "Existing generated draft is retained for comparison only; it cannot be its own witness.",
+          "path": "out/source_variant_matrix/renders/VEHTRF01/helm_generated_draft_svg_1.png",
+          "related_asset": null,
+          "role": "generated_candidate_to_reject_or_rework",
+          "status": "generated_pending_visual_parity"
+        }
+      ],
+      "chart1_parity": {
+        "chart1_class": "outside buoy/beacon/topmark visual gate",
+        "expected_colors": [],
+        "expected_shape": "not_scoped",
+        "expected_topmark": null,
+        "final_pass_allowed": false,
+        "reference_crop": "out/chart1_parity/reference/crops/ecdis_summary.png",
+        "reference_crop_id": "ecdis_summary",
+        "reference_crop_sha256": "d5853aa2d03a71a2dbedeb49219d760f7ce6d182eb97baf9ae26e8ed30fab850",
+        "reference_crop_status": "out_of_scope",
+        "reference_pages": [
+          86
+        ]
+      },
+      "final_approved": false,
+      "input_candidate_status": "judge_fail_repair_queue",
+      "kind": "symbol",
+      "manual_exception_allowed": true,
+      "name": "VEHTRF01",
+      "next_action": "search standards/portrayal catalogues for exact VEHTRF01 witness; otherwise keep blocked for manual exception",
+      "normal_icon_art_queue_allowed": false,
+      "promotion_ready": false,
+      "remaining_blocker": "no_tight_visual_witness_found",
+      "resolution_status": "unresolved_no_tight_witness",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf",
+        "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      },
+      "safety_note": "Do not promote this row from related/broad witnesses. It needs exact symbol evidence or explicit human manual exception before entering final approval.",
+      "semantic_brief": {
+        "brief": "VEHTRF01 is VEHTRF01. It is used as a VEHTRF01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VEHTRF01"
+      }
+    },
+    {
+      "asset": "boyspp50",
+      "attached_reference_count": 7,
+      "attached_references": [
+        {
+          "note": "Broad special-purpose buoy crop; useful class evidence, not exact boyspp50 evidence.",
+          "path": "out/source_variant_matrix/renders/boyspp50/chart1_parity_reference_crop_1.png",
+          "related_asset": null,
+          "role": "broad_chart1_crop",
+          "status": "multi_symbol_reference"
+        },
+        {
+          "note": "Related BOYSPP witness for special-purpose buoy family.",
+          "path": "out/source_variant_matrix/renders/BOYSPP11/opencpn_s52_reference_render_1.png",
+          "related_asset": "BOYSPP11",
+          "role": "related_opencpn_family_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Related S-101 BOYSPP witness; mapping/sibling evidence only.",
+          "path": "out/source_variant_matrix/renders/BOYSPP11/s101_portrayal_catalogue_svg_1.png",
+          "related_asset": "BOYSPP11",
+          "role": "related_s101_family_witness",
+          "status": "license_pending_reference_not_canonical"
+        },
+        {
+          "note": "Second related BOYSPP witness for family contrast.",
+          "path": "out/source_variant_matrix/renders/BOYSPP15/opencpn_s52_reference_render_1.png",
+          "related_asset": "BOYSPP15",
+          "role": "related_opencpn_family_witness",
+          "status": "comparison_reference_not_exact"
+        },
+        {
+          "note": "Third related S-101 BOYSPP witness for family contrast.",
+          "path": "out/source_variant_matrix/renders/BOYSPP25/s101_portrayal_catalogue_svg_1.png",
+          "related_asset": "BOYSPP25",
+          "role": "related_s101_family_witness",
+          "status": "license_pending_reference_not_canonical"
+        },
+        {
+          "note": "AquaMap yellow special-purpose buoy reference; visual guidance only.",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYSPPY1.png",
+          "related_asset": "BOYSPPY1",
+          "role": "related_aquamap_family_witness",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        },
+        {
+          "note": "AquaMap black special-purpose buoy reference; visual guidance only.",
+          "path": "reference_sources/aquamap_map_symbols/images/BOYSPPB1.png",
+          "related_asset": "BOYSPPB1",
+          "role": "related_aquamap_family_witness",
+          "status": "copyrighted_visual_reference_not_canonical_art"
+        }
+      ],
+      "chart1_parity": {
+        "chart1_class": "special-purpose mark",
+        "expected_colors": [
+          "yellow"
+        ],
+        "expected_shape": "special",
+        "expected_topmark": "x_topmark_optional",
+        "final_pass_allowed": false,
+        "reference_crop": "out/chart1_parity/reference/crops/special_purpose_buoys.png",
+        "reference_crop_id": "special_purpose_buoys",
+        "reference_crop_sha256": "0f3f3dd1cf3a7e907afa855edbd668f5f51da58519aaefa335be69ed2d57097c",
+        "reference_crop_status": "multi_symbol_reference",
+        "reference_pages": [
+          91
+        ]
+      },
+      "final_approved": false,
+      "input_candidate_status": "chart1_fail_repair_queue",
+      "kind": "symbol",
+      "manual_exception_allowed": true,
+      "name": "boyspp50",
+      "next_action": "find exact boyspp50/BOYWTW witness or approve a manual exception before rendering final art",
+      "normal_icon_art_queue_allowed": false,
+      "promotion_ready": false,
+      "remaining_blocker": "no_exact_symbol_witness",
+      "resolution_status": "equivalent_family_witness_attached_not_exact",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "safety_note": "Do not promote this row from related/broad witnesses. It needs exact symbol evidence or explicit human manual exception before entering final approval.",
+      "semantic_brief": {
+        "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "boyspp50"
+      }
+    }
+  ],
+  "schema_version": 1,
+  "source": "catalog/witness_needed_batch98.json",
+  "status": "standard_witness_resolution_batch100_written",
+  "summary": {
+    "attached_reference_count": 30,
+    "exact_witness_resolved": 0,
+    "promotion_ready": 0,
+    "resolution_status_counts": {
+      "composite_parent_witness_attached_not_exact": 1,
+      "equivalent_family_witness_attached_not_exact": 2,
+      "related_symbol_witness_attached_not_exact": 1,
+      "unresolved_no_tight_witness": 1
+    },
+    "still_blocked": 5,
+    "total_witness_needed": 5
+  },
+  "task_id": "FORGE-15"
+}

@@ -1,0 +1,437 @@
+{
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "batch_id": "standard_judge_batch_043_rerun",
+  "created_at": "2026-07-01T20:06:02Z",
+  "project": "vulkan",
+  "task_id": "FORGE-14",
+  "agent_id": "codex/FORGE-14-judge-batch43",
+  "selection": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "source_batches": [
+      "catalog/owned_repair_batch43.json"
+    ],
+    "asset_ids": [
+      "NOTBRD12",
+      "NOTMRK01",
+      "NOTMRK02",
+      "NOTMRK03",
+      "OSPONE02",
+      "OSPSIX02",
+      "OWNSHP01",
+      "OWNSHP05",
+      "PIER0001",
+      "PLNPOS01",
+      "PLNPOS02",
+      "PLNSPD03",
+      "PLNSPD04",
+      "POSITN02"
+    ],
+    "selection_rule": "Rows from standard_source_table whose helm_candidate.source_batch is catalog/owned_repair_batch43.json and candidate_status is repaired_pending_judge_rerun."
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "source_batches": [
+      "catalog/owned_repair_batch43.json"
+    ],
+    "selected": 14,
+    "pass": 7,
+    "fail": 7,
+    "final_approved": 0,
+    "failed_assets": [
+      "NOTMRK03",
+      "OSPONE02",
+      "OSPSIX02",
+      "OWNSHP01",
+      "OWNSHP05",
+      "PLNPOS02",
+      "POSITN02"
+    ]
+  },
+  "verdicts": [
+    {
+      "symbol_id": "NOTBRD12",
+      "source_table_id": "opencpn-s52:NOTBRD12",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.91,
+      "observed": "Repaired candidate is a yellow square notice board on a black post with the prior center-ring/diamond detail removed.",
+      "expected": "Yellow conspicuous notice board should be a yellow square board on a post.",
+      "judge_comments": "Pass pending human: required yellow board/post silhouette is present and the old diamond/ring placeholder is gone. Scale and stroke weight are Helm styling differences only; no final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:NOTBRD12",
+        "s57_structure:SY(NOTBRD12);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+        "prior_failed_judge:standard_judge_batch_010:NOTBRD12",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/NOTBRD12.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/NOTBRD12__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/NOTBRD12__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "NOTMRK01",
+      "source_table_id": "opencpn-s52:NOTMRK01",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is a red square notice board with a white diagonal prohibition slash and black outer stroke.",
+      "expected": "Prohibition notice mark should be a red square board with a diagonal prohibition slash.",
+      "judge_comments": "Pass pending human: prohibition board shape, red/white/black colour family, and slash semantics are restored. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:NOTMRK01",
+        "s57_structure:SY(NOTMRK01)",
+        "prior_failed_judge:standard_judge_batch_010:NOTMRK01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/NOTMRK01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/NOTMRK01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/NOTMRK01__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "NOTMRK02",
+      "source_table_id": "opencpn-s52:NOTMRK02",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.9,
+      "observed": "Repaired candidate is a red square regulation/restriction board with a centered white square field and black outline.",
+      "expected": "Regulation/restriction notice mark should be a red square regulation-board mark.",
+      "judge_comments": "Pass pending human: the diamond placeholder is gone and the red regulation board with white field preserves the requested restriction-board semantics. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:NOTMRK02",
+        "s57_structure:SY(NOTMRK02)",
+        "prior_failed_judge:standard_judge_batch_010:NOTMRK02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/NOTMRK02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/NOTMRK02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/NOTMRK02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "NOTMRK03",
+      "source_table_id": "opencpn-s52:NOTMRK03",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.88,
+      "observed": "Repaired candidate is a white information board on a post with a black letter i.",
+      "expected": "Information/recommendation notice mark should match the reference notice-board mark; the available OpenCPN witness is a blue/black square notice mark, not a posted white information sign.",
+      "judge_comments": "Fail: the repair removes the diamond but changes the reference color family and silhouette by introducing a white posted board and text glyph. Human review may later accept a different convention, but this standard rerun cannot.",
+      "required_change": "Replace with the NOTMRK03 reference information/recommendation notice-board shape and preserve the blue/black reference colour family or provide explicit metadata justifying the alternate white-board convention.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:NOTMRK03",
+        "s57_structure:SY(NOTMRK03)",
+        "prior_failed_judge:standard_judge_batch_010:NOTMRK03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/NOTMRK03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/NOTMRK03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/NOTMRK03__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "OSPONE02",
+      "source_table_id": "opencpn-s52:OSPONE02",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.9,
+      "observed": "Repaired candidate is a vertical orange tick line.",
+      "expected": "One-minute ownship-vector mark should be the thin reference tick/line mark; the provider witness is a short black horizontal vector tick.",
+      "judge_comments": "Fail: the repair restores a tick-like line but changes both orientation and colour family relative to the available reference, which is load-bearing for this line/tick symbol.",
+      "required_change": "Use the OSPONE02 one-minute vector tick as a short reference-aligned black tick/line, or record explicit orientation/colour metadata before rerun approval.",
+      "safety_reason_codes": [
+        "wrong_line_orientation",
+        "wrong_colour_family",
+        "reference_mismatch",
+        "unsafe_ownship_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:OSPONE02",
+        "s57_structure:SY(OSPONE02)",
+        "prior_failed_judge:standard_judge_batch_010:OSPONE02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/OSPONE02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/OSPONE02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OSPONE02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "OSPSIX02",
+      "source_table_id": "opencpn-s52:OSPSIX02",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.91,
+      "observed": "Repaired candidate is a black hash/grid mark with three vertical strokes crossed by a horizontal stroke.",
+      "expected": "Six-minute ownship-vector mark should remain a thin reference tick/line mark; the provider witness is a short black horizontal vector tick.",
+      "judge_comments": "Fail: the candidate is no longer a simple vector tick/line and introduces hash/grid semantics not present in the row reference.",
+      "required_change": "Replace the hash/grid mark with the OSPSIX02 six-minute vector tick/line geometry matching the reference line semantics.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_line_semantics",
+        "invented_detail",
+        "unsafe_ownship_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:OSPSIX02",
+        "s57_structure:SY(OSPSIX02)",
+        "prior_failed_judge:standard_judge_batch_010:OSPSIX02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/OSPSIX02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/OSPSIX02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OSPSIX02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "OWNSHP01",
+      "source_table_id": "opencpn-s52:OWNSHP01",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.87,
+      "observed": "Repaired candidate is an orange target/crosshair with outer circle, full horizontal/vertical cross lines, and center dot.",
+      "expected": "Own ship constant-size symbol should match the reference target/ownship mark; the provider witness is a black circular target with inner ring and no full cross axes.",
+      "judge_comments": "Fail: the candidate is a recognisable ownship-like target, but it changes the reference colour family and adds crosshair axes that are not in the provider witness.",
+      "required_change": "Render OWNSHP01 as the reference constant-size ownship target, preserving the circular target/ring semantics and reference colour family without extra crosshair axes unless metadata explicitly requires them.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "invented_detail",
+        "unsafe_ownship_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:OWNSHP01",
+        "s57_structure:SY(OWNSHP01)",
+        "prior_failed_judge:standard_judge_batch_010:OWNSHP01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/OWNSHP01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/OWNSHP01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OWNSHP01__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "OWNSHP05",
+      "source_table_id": "opencpn-s52:OWNSHP05",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.93,
+      "observed": "Repaired candidate is an orange triangular ownship arrow with a center line, crossbar, and conning dot.",
+      "expected": "Own ship drawn to scale with conning position should show the scaled hull/ship outline and conning-position cue; the provider witness is a narrow black vessel/hull outline.",
+      "judge_comments": "Fail: conning-position intent is present, but the scaled vessel silhouette is replaced by a triangular target/arrow and the reference colour family is changed.",
+      "required_change": "Use a scaled hull/ship outline matching OWNSHP05 reference geometry with a conning-position cue; do not substitute a generic triangular ownship arrow.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_scaled_hull",
+        "unsafe_ownship_confusion"
+      ],
+      "source_refs_used": [
+        "semantic_brief:OWNSHP05",
+        "s57_structure:SY(OWNSHP05,ORIENT)",
+        "prior_failed_judge:standard_judge_batch_010:OWNSHP05",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/OWNSHP05.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/OWNSHP05__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/OWNSHP05__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "PIER0001",
+      "source_table_id": "opencpn-s52:PIER0001",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.84,
+      "observed": "Repaired candidate is a blue circular pier/harbor mark with an internal right-angle pier extension cue.",
+      "expected": "Pier with no surveyed extension should be the blue circular pier/harbor reference mark with pier extension cue.",
+      "judge_comments": "Pass pending human, with low confidence: the repair preserves the blue circular mark and an internal pier-extension cue, although the cue is simplified versus the small OpenCPN raster. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:PIER0001",
+        "s57_structure:SY(PIER0001);CS(SLCONS03)",
+        "prior_failed_judge:standard_judge_batch_010:PIER0001",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/PIER0001.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/PIER0001__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PIER0001__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "PLNPOS01",
+      "source_table_id": "opencpn-s52:PLNPOS01",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.93,
+      "observed": "Repaired candidate is an orange surrounding ellipse.",
+      "expected": "Planned-position arrival-time surround should be a red/orange ellipse.",
+      "judge_comments": "Pass pending human: ellipse shape and planned-position red/orange colour family are preserved. No final approval implied.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:PLNPOS01",
+        "s57_structure:SY(PLNPOS01)",
+        "prior_failed_judge:standard_judge_batch_010:PLNPOS01",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/PLNPOS01.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/PLNPOS01__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PLNPOS01__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "PLNPOS02",
+      "source_table_id": "opencpn-s52:PLNPOS02",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.89,
+      "observed": "Repaired candidate is an orange plus/crosshair with both horizontal and vertical strokes.",
+      "expected": "Planned-position crossline should preserve the reference crossline annotation; the provider witness is a single red/orange horizontal line segment.",
+      "judge_comments": "Fail: the repair changes a line annotation into a crosshair/plus mark, altering the line semantics for the planned-position row.",
+      "required_change": "Replace the plus/crosshair with the PLNPOS02 planned-position crossline geometry, preserving the single-line/oriented-line semantics from the reference.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_line_semantics",
+        "invented_detail",
+        "missing_planned_route_annotation"
+      ],
+      "source_refs_used": [
+        "semantic_brief:PLNPOS02",
+        "s57_structure:SY(PLNPOS01);SY(PLNPOS02,ORIENT);TX(plndat,1,2,2,'15110',4,3,CHBLK,50);",
+        "prior_failed_judge:standard_judge_batch_010:PLNPOS02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/PLNPOS02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/PLNPOS02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PLNPOS02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "PLNSPD03",
+      "source_table_id": "opencpn-s52:PLNSPD03",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.86,
+      "observed": "Repaired candidate is an orange rectangular speed box with an S label.",
+      "expected": "Planned-route speed-to-make-good box should be a red/orange rectangular speed box.",
+      "judge_comments": "Pass pending human, with low confidence: rectangular speed-box shape and planned-route colour family are restored. The S label is treated as non-final Helm annotation and still needs human/crop review before any final approval.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:PLNSPD03",
+        "s57_structure:SY(PLNSPD03)",
+        "prior_failed_judge:standard_judge_batch_010:PLNSPD03",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/PLNSPD03.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/PLNSPD03__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PLNSPD03__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "PLNSPD04",
+      "source_table_id": "opencpn-s52:PLNSPD04",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": true,
+      "confidence": 0.85,
+      "observed": "Repaired candidate is an orange dashed rectangular speed box with an S label.",
+      "expected": "Alternate-route speed-to-make-good box should be the alternate planned-speed rectangular box.",
+      "judge_comments": "Pass pending human, with low confidence: alternate planned-speed box meaning and orange colour family are present. The dashed outline/S label remain human-review details and this artifact grants no final approval.",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:PLNSPD04",
+        "s57_structure:SY(PLNSPD04)",
+        "prior_failed_judge:standard_judge_batch_010:PLNSPD04",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/PLNSPD04.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/PLNSPD04__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/PLNSPD04__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    },
+    {
+      "symbol_id": "POSITN02",
+      "source_table_id": "opencpn-s52:POSITN02",
+      "batch_index": 43,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch43.json",
+      "repair_batch_catalog": "catalog/owned_repair_batch43.json",
+      "pass": false,
+      "confidence": 0.92,
+      "observed": "Repaired candidate is an orange circle with diagonal X strokes.",
+      "expected": "Ownship position fix should be the orange position-fix crosshair; the provider witness shows an orange circle with orthogonal crosshair/plus axes.",
+      "judge_comments": "Fail: colour and circular family are correct, but the diagonal X changes the position-fix crosshair semantics.",
+      "required_change": "Replace the diagonal X with the POSITN02 orthogonal position-fix crosshair/plus geometry while preserving the orange colour family.",
+      "safety_reason_codes": [
+        "wrong_line_semantics",
+        "wrong_shape",
+        "unsafe_ownship_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:POSITN02",
+        "s57_structure:SY(POSITN02)",
+        "prior_failed_judge:standard_judge_batch_010:POSITN02",
+        "helm_candidate:pipeline/iconforge/assets/svg/owned_repair_batch43/POSITN02.svg",
+        "helm_render:pipeline/iconforge/out/standard_repair_batch35/renders/POSITN02__after__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/POSITN02__day.png",
+        "s101:none_listed_for_row",
+        "aquamap:none_listed_for_row"
+      ]
+    }
+  ]
+}

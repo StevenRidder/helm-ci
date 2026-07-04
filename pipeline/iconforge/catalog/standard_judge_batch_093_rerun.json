@@ -1,0 +1,407 @@
+{
+  "agent": "codex/FORGE-15-judge-loop-current",
+  "batch_id": "standard_judge_batch_093_rerun",
+  "created_at": "2026-07-03T04:40:00Z",
+  "evidence_notes": [
+    "Judged owned_repair_batch93 against OpenCPN witnesses, S-52 metadata, and semantic briefs.",
+    "Pass means judge_pass_pending_final_approval only; no symbol is final human-approved.",
+    "This gate validates chart-scale visual parity for the repair slice and leaves final signoff to human review."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "CBLSUB06",
+      "CROSSX02",
+      "DIAMOND1",
+      "DQUALA11",
+      "DQUALA21",
+      "DQUALB01",
+      "DQUALC01",
+      "DQUALD01",
+      "DQUALU01",
+      "DWLDEF01",
+      "DWRTCL05",
+      "DWRTCL06",
+      "DWRTCL07",
+      "DWRTCL08",
+      "FERYRT01",
+      "FERYRT02"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "source_batches": [
+      "catalog/owned_repair_batch93.json"
+    ]
+  },
+  "source_batch": "catalog/owned_repair_batch93.json",
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 16,
+    "passed_assets": [
+      "CBLSUB06",
+      "CROSSX02",
+      "DIAMOND1",
+      "DQUALA11",
+      "DQUALA21",
+      "DQUALB01",
+      "DQUALC01",
+      "DQUALD01",
+      "DQUALU01",
+      "DWLDEF01",
+      "DWRTCL05",
+      "DWRTCL06",
+      "DWRTCL07",
+      "DWRTCL08",
+      "FERYRT01",
+      "FERYRT02"
+    ],
+    "selected": 16,
+    "source_batches": [
+      "catalog/owned_repair_batch93.json"
+    ]
+  },
+  "task_id": "FORGE-15",
+  "verdicts": [
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "CBLSUB06 is submarine cable. It is used as a submarine cable. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. tightened magenta cable zigzag and terminal kink now match the small line-style witness at chart scale. Human final approval is still required.",
+      "observed": "tightened magenta cable zigzag and terminal kink now match the small line-style witness at chart scale.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:CBLSUB06",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/CBLSUB06.svg",
+        "opencpn_render:out/opencpn_s52_reference/CBLSUB06__day.png"
+      ],
+      "symbol_id": "CBLSUB06"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "CROSSX02 is General small dot pattern. It is used as a General small dot pattern. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. dense tiny brown cross patch now reads as the provider's small fill-pattern witness rather than a large grid. Human final approval is still required.",
+      "observed": "dense tiny brown cross patch now reads as the provider's small fill-pattern witness rather than a large grid.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:CROSSX02",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/CROSSX02.svg",
+        "opencpn_render:out/opencpn_s52_reference/CROSSX02__day.png"
+      ],
+      "symbol_id": "CROSSX02"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DIAMOND1 is area of depth less than the safety contour. It is used as a area of depth less than the safety contour. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. candidate now uses the crossed-line safety-contour witness, not the rejected diamond cluster. Human final approval is still required.",
+      "observed": "candidate now uses the crossed-line safety-contour witness, not the rejected diamond cluster.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DIAMOND1",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DIAMOND1.svg",
+        "opencpn_render:out/opencpn_s52_reference/DIAMOND1__day.png"
+      ],
+      "symbol_id": "DIAMOND1"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALA11 is pattern of symbols for a chart of 5m accuracy with full seafloor coverage. It is used as a pattern of symbols for a chart of 5m accuracy with full seafloor coverage. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. triangular survey-quality stamp with internal star marks now matches the witness family. Human final approval is still required.",
+      "observed": "triangular survey-quality stamp with internal star marks now matches the witness family.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALA11",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALA11.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALA11__day.png"
+      ],
+      "symbol_id": "DQUALA11"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALA21 is pattern of symbols for a chart with 20m accuracy with full seafloor coverage. It is used as a pattern of symbols for a chart with 20m accuracy with full seafloor coverage. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. triangular survey-quality stamp with internal marks and lower bar cue now matches the requested witness family. Human final approval is still required.",
+      "observed": "triangular survey-quality stamp with internal marks and lower bar cue now matches the requested witness family.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALA21",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALA21.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALA21__day.png"
+      ],
+      "symbol_id": "DQUALA21"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALB01 is pattern of symbols for a chart with 50m accuracy from standard survey based on lines of continuous soundings. It is used as a pattern of symbols for a chart with 50m accuracy from standard survey based on lines of continuous soundings. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. triangular survey-quality stamp now replaces the rejected horizontal bars. Human final approval is still required.",
+      "observed": "triangular survey-quality stamp now replaces the rejected horizontal bars.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALB01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALB01.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALB01__day.png"
+      ],
+      "symbol_id": "DQUALB01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALC01 is pattern of symbols for a low accuracy or incomplete chart. It is used as a pattern of symbols for a low accuracy or incomplete chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. rounded capsule with three internal star marks now matches the low-accuracy witness family. Human final approval is still required.",
+      "observed": "rounded capsule with three internal star marks now matches the low-accuracy witness family.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALC01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALC01.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALC01__day.png"
+      ],
+      "symbol_id": "DQUALC01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALD01 is pattern of symbols for an unreliable chart. It is used as a pattern of symbols for an unreliable chart. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. rounded capsule with internal star marks now replaces the rejected dashed triangle. Human final approval is still required.",
+      "observed": "rounded capsule with internal star marks now replaces the rejected dashed triangle.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALD01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALD01.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALD01__day.png"
+      ],
+      "symbol_id": "DQUALD01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DQUALU01 is pattern of symbols for a chart with quality not assessed. It is used as a pattern of symbols for a chart with quality not assessed. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. rounded capsule with centered U now matches the quality-not-assessed witness. Human final approval is still required.",
+      "observed": "rounded capsule with centered U now matches the quality-not-assessed witness.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DQUALU01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DQUALU01.svg",
+        "opencpn_render:out/opencpn_s52_reference/DQUALU01__day.png"
+      ],
+      "symbol_id": "DQUALU01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DWLDEF01 is deep water route centreline, direction not defined in the data. It is used as a deep water route centreline, direction not defined in the data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. deep-water route line now has small magenta linework, unknown-direction cue, question mark, and DW label. Human final approval is still required.",
+      "observed": "deep-water route line now has small magenta linework, unknown-direction cue, question mark, and DW label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DWLDEF01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DWLDEF01.svg",
+        "opencpn_render:out/opencpn_s52_reference/DWLDEF01__day.png"
+      ],
+      "symbol_id": "DWLDEF01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DWRTCL05 is two-way deep water route centreline, not based on fixed marks. It is used as a two-way deep water route centreline, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. two-way free deep-water route now preserves small bidirectional arrows, dashed line, and DW label. Human final approval is still required.",
+      "observed": "two-way free deep-water route now preserves small bidirectional arrows, dashed line, and DW label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DWRTCL05",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DWRTCL05.svg",
+        "opencpn_render:out/opencpn_s52_reference/DWRTCL05__day.png"
+      ],
+      "symbol_id": "DWRTCL05"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DWRTCL06 is two-way deep water route centreline, based on fixed marks. It is used as a two-way deep water route centreline, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. two-way fixed deep-water route now preserves small bidirectional arrows, solid line, and DW label. Human final approval is still required.",
+      "observed": "two-way fixed deep-water route now preserves small bidirectional arrows, solid line, and DW label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DWRTCL06",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DWRTCL06.svg",
+        "opencpn_render:out/opencpn_s52_reference/DWRTCL06__day.png"
+      ],
+      "symbol_id": "DWRTCL06"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DWRTCL07 is one-way deep water route centreline, not based on fixed marks. It is used as a one-way deep water route centreline, not based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. one-way free deep-water route now preserves small right-arrow cue, dashed line, and DW label. Human final approval is still required.",
+      "observed": "one-way free deep-water route now preserves small right-arrow cue, dashed line, and DW label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DWRTCL07",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DWRTCL07.svg",
+        "opencpn_render:out/opencpn_s52_reference/DWRTCL07__day.png"
+      ],
+      "symbol_id": "DWRTCL07"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "DWRTCL08 is one-way deep water route centreline, based on fixed-marks. It is used as a one-way deep water route centreline, based on fixed-marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. one-way fixed deep-water route now preserves small right-arrow cue, solid line, and DW label. Human final approval is still required.",
+      "observed": "one-way fixed deep-water route now preserves small right-arrow cue, solid line, and DW label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:DWRTCL08",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/DWRTCL08.svg",
+        "opencpn_render:out/opencpn_s52_reference/DWRTCL08__day.png"
+      ],
+      "symbol_id": "DWRTCL08"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "FERYRT01 is ferry route. It is used as a ferry route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. ferry route now uses a small magenta vessel/box cue on a dashed route line, not an F label. Human final approval is still required.",
+      "observed": "ferry route now uses a small magenta vessel/box cue on a dashed route line, not an F label.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:FERYRT01",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/FERYRT01.svg",
+        "opencpn_render:out/opencpn_s52_reference/FERYRT01__day.png"
+      ],
+      "symbol_id": "FERYRT01"
+    },
+    {
+      "batch_index": 93,
+      "confidence": 0.87,
+      "expected": "FERYRT02 is cable ferry route. It is used as a cable ferry route. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black. symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family. Preserve load-bearing colours and colour order. Preserve topmark count/orientation and band pattern when present. Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch93.json",
+      "judge_comments": "PASS-PENDING-HUMAN. cable ferry route now uses a compact grey box cue on a dashed route line. Human final approval is still required.",
+      "observed": "cable ferry route now uses a compact grey box cue on a dashed route line.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:FERYRT02",
+        "source_batch:catalog/owned_repair_batch93.json",
+        "helm_candidate:assets/svg/triad_generated/FERYRT02.svg",
+        "opencpn_render:out/opencpn_s52_reference/FERYRT02__day.png"
+      ],
+      "symbol_id": "FERYRT02"
+    }
+  ]
+}

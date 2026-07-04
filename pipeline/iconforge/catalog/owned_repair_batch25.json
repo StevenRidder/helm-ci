@@ -1,0 +1,1308 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch25.json",
+    "renders": "out/standard_repair_batch17/renders",
+    "svg_dir": "assets/svg/owned_repair_batch25"
+  },
+  "schema_version": 1,
+  "source_feedback": "out/human_review/icon_review_feedback.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 14,
+    "human_feedback_rows": 14,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/BUIREL01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/BUIREL01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/BUIREL01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/BUIREL01.svg",
+      "asset": "BUIREL01",
+      "before_svg": "assets/svg/triad_generated/BUIREL01.svg",
+      "candidate_source": "assets/svg/triad_generated/BUIREL01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "",
+        "feedback": "wrong shape, it shoudl be more like a jerusalem cross per hte other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_building_outline;reference_mismatch"
+      },
+      "name": "non-conspicuous religious building, Christian",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: replace the religious-building/body substitute with a compact brown Jerusalem/potent cross witness.",
+      "required_change": "wrong shape, it shoudl be more like a jerusalem cross per hte other examples. ",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_building_outline",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BUIREL01 is non-conspicuous religious building, Christian. It is used as a non-conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-conspicuous religious building, Christian"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BUIREL01__day.png",
+            "label": "non-conspicuous religious building, Christian",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BUIREL01__day.png",
+              "dusk": "out/opencpn_s52_reference/BUIREL01__dusk.png",
+              "night": "out/opencpn_s52_reference/BUIREL01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BUIREL01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BUIREL01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BUIREL01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BUIREL01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BUIREL01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/BUIREL13__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/BUIREL13__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/BUIREL13__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/BUIREL13.svg",
+      "asset": "BUIREL13",
+      "before_svg": "assets/svg/triad_generated/BUIREL13.svg",
+      "candidate_source": "assets/svg/triad_generated/BUIREL13.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw as the compact black conspicuous Christian religious-building witness shape from S-101/OpenCPN; remove the house outline and doorway.",
+        "feedback": "same feedback, make it more of a square corss with flared edges. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_building_outline;reference_mismatch"
+      },
+      "name": "conspicuous religious building, Christian",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: replace the religious-building/body substitute with a compact black Jerusalem/potent cross witness.",
+      "required_change": "Redraw as the compact black conspicuous Christian religious-building witness shape from S-101/OpenCPN; remove the house outline and doorway.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_building_outline",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "BUIREL13 is conspicuous religious building, Christian. It is used as a conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous religious building, Christian"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BUIREL13__day.png",
+            "label": "conspicuous religious building, Christian",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BUIREL13__day.png",
+              "dusk": "out/opencpn_s52_reference/BUIREL13__dusk.png",
+              "night": "out/opencpn_s52_reference/BUIREL13__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BUIREL13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BUIREL13.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BUIREL13",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BUIREL13.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BUIREL13"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/GATCON03__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/GATCON03__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/GATCON03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/GATCON03.svg",
+      "asset": "GATCON03",
+      "before_svg": "assets/svg/triad_generated/GATCON03.svg",
+      "candidate_source": "assets/svg/triad_generated/GATCON03.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw GATCON03 to the magenta circular navigable lock-gate witness; do not use a generic black gate frame.",
+        "feedback": "should be a circle with two parallel lines going acrss inside horizontally like the other examples. also two trianges inside pointing to the left.  see the other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_colour_family;wrong_symbol_body;reference_mismatch"
+      },
+      "name": "navigable lock gate",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: magenta circle, two horizontal bars, and two left-pointing gate triangles.",
+      "required_change": "Redraw GATCON03 to the magenta circular navigable lock-gate witness; do not use a generic black gate frame.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_body",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "GATCON03 is navigable lock gate. It is used as a navigable lock gate. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "navigable lock gate"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/GATCON03__day.png",
+            "label": "navigable lock gate",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/GATCON03__day.png",
+              "dusk": "out/opencpn_s52_reference/GATCON03__dusk.png",
+              "night": "out/opencpn_s52_reference/GATCON03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "GATCON03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/GATCON03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "GATCON03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/GATCON03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "GATCON03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/GATCON04__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/GATCON04__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/GATCON04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/GATCON04.svg",
+      "asset": "GATCON04",
+      "before_svg": "assets/svg/triad_generated/GATCON04.svg",
+      "candidate_source": "assets/svg/triad_generated/GATCON04.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw GATCON04 to the magenta circular non-navigable lock-gate witness; remove the generic black gate frame.",
+        "feedback": "shoud be should be a circle with two parallel lines going acrss inside horizontally like the other examples. behind is one shorter line in the middle going from top to bottom, see other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_colour_family;wrong_symbol_body;reference_mismatch"
+      },
+      "name": "non-navigable lock gate",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: magenta circle, two horizontal bars, and a short central vertical closure bar.",
+      "required_change": "Redraw GATCON04 to the magenta circular non-navigable lock-gate witness; remove the generic black gate frame.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_symbol_body",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "GATCON04 is non-navigable lock gate. It is used as a non-navigable lock gate. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "non-navigable lock gate"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/GATCON04__day.png",
+            "label": "non-navigable lock gate",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/GATCON04__day.png",
+              "dusk": "out/opencpn_s52_reference/GATCON04__dusk.png",
+              "night": "out/opencpn_s52_reference/GATCON04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "GATCON04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/GATCON04.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "GATCON04",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/GATCON04.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "GATCON04"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/HULKES01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/HULKES01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/HULKES01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/HULKES01.svg",
+      "asset": "HULKES01",
+      "before_svg": "assets/svg/triad_generated/HULKES01.svg",
+      "candidate_source": "assets/svg/triad_generated/HULKES01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw as the compact HULKES01 hulk silhouette; remove the mast/A-frame and outline-boat substitution.",
+        "feedback": "should be helm styled, shaped boat from a top down view.  see the other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_mast_detail;reference_mismatch"
+      },
+      "name": "hulk",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as a Helm-styled top-down boat/hulk silhouette, not mast/A-frame detail.",
+      "required_change": "Redraw as the compact HULKES01 hulk silhouette; remove the mast/A-frame and outline-boat substitution.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_mast_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HULKES01 is hulk. It is used as a hulk. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "hulk"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HULKES01__day.png",
+            "label": "hulk",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HULKES01__day.png",
+              "dusk": "out/opencpn_s52_reference/HULKES01__dusk.png",
+              "night": "out/opencpn_s52_reference/HULKES01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "HULKES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/HULKES01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "HULKES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/HULKES01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "HULKES01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/INFORM01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/INFORM01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/INFORM01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/INFORM01.svg",
+      "asset": "INFORM01",
+      "before_svg": "assets/svg/triad_generated/INFORM01.svg",
+      "candidate_source": "assets/svg/triad_generated/INFORM01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw INFORM01 with the square boxed information marker at the leader end; keep the leader line and origin circle.",
+        "feedback": "the diaganol line is sligtly off from the corner, get it aligned like the others. ",
+        "priority": "medium",
+        "reason_codes": "wrong_marker_shape;wrong_scale;reference_mismatch"
+      },
+      "name": "this object has additional information available by cursor query",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: align the diagonal leader exactly to the square marker corner.",
+      "required_change": "Redraw INFORM01 with the square boxed information marker at the leader end; keep the leader line and origin circle.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_marker_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "INFORM01 is this object has additional information available by cursor query. It is used as a this object has additional information available by cursor query. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "this object has additional information available by cursor query"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/INFORM01__day.png",
+            "label": "this object has additional information available by cursor query",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/INFORM01__day.png",
+              "dusk": "out/opencpn_s52_reference/INFORM01__dusk.png",
+              "night": "out/opencpn_s52_reference/INFORM01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "INFORM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/INFORM01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "INFORM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/INFORM01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "INFORM01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/LNDARE01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/LNDARE01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/LNDARE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/LNDARE01.svg",
+      "asset": "LNDARE01",
+      "before_svg": "assets/svg/triad_generated/LNDARE01.svg",
+      "candidate_source": "assets/svg/triad_generated/LNDARE01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw LNDARE01 as the small point/dot witness; remove the outer target ring.",
+        "feedback": "need border in helm theme. ",
+        "priority": "medium",
+        "reason_codes": "invented_ring;wrong_symbol_body;reference_mismatch"
+      },
+      "name": "land as a point at small scale",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: keep the land point but add a Helm-style border.",
+      "required_change": "Redraw LNDARE01 as the small point/dot witness; remove the outer target ring.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "invented_ring",
+        "wrong_symbol_body",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LNDARE01 is land as a point at small scale. It is used as a land as a point at small scale. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "land as a point at small scale"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LNDARE01__day.png",
+            "label": "land as a point at small scale",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LNDARE01__day.png",
+              "dusk": "out/opencpn_s52_reference/LNDARE01__dusk.png",
+              "night": "out/opencpn_s52_reference/LNDARE01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LNDARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LNDARE01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LNDARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LNDARE01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LNDARE01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/LOCMAG01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/LOCMAG01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/LOCMAG01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/LOCMAG01.svg",
+      "asset": "LOCMAG01",
+      "before_svg": "assets/svg/triad_generated/LOCMAG01.svg",
+      "candidate_source": "assets/svg/triad_generated/LOCMAG01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw LOCMAG01 as the reference wedge/line glyph; remove the A-letter substitution.",
+        "feedback": "shoudl look more like a sail like the others. ",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;wrong_symbol_semantics;reference_mismatch"
+      },
+      "name": "cursor pick site for a magnetic anomaly at a point",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the sail-like magnetic-anomaly wedge/line witness.",
+      "required_change": "Redraw LOCMAG01 as the reference wedge/line glyph; remove the A-letter substitution.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_semantics",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LOCMAG01 is cursor pick site for a magnetic anomaly at a point. It is used as a cursor pick site for a magnetic anomaly at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for a magnetic anomaly at a point"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LOCMAG01__day.png",
+            "label": "cursor pick site for a magnetic anomaly at a point",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LOCMAG01__day.png",
+              "dusk": "out/opencpn_s52_reference/LOCMAG01__dusk.png",
+              "night": "out/opencpn_s52_reference/LOCMAG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LOCMAG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LOCMAG01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LOCMAG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LOCMAG01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LOCMAG01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/LOWACC01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/LOWACC01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/LOWACC01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/LOWACC01.svg",
+      "asset": "LOWACC01",
+      "before_svg": "assets/svg/triad_generated/LOWACC01.svg",
+      "candidate_source": "assets/svg/triad_generated/LOWACC01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Remove the invented endpoint ring and align LOWACC01 to the question-mark-plus-diagonal-line witness.",
+        "feedback": "the diagnoal line is going the wrong way, please fix to match the direct of the other examples. \n",
+        "priority": "medium",
+        "reason_codes": "invented_endpoint_ring;wrong_internal_detail;reference_mismatch"
+      },
+      "name": "safety contour of low accuracy in position",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: reverse the diagonal line direction to match the references.",
+      "required_change": "Remove the invented endpoint ring and align LOWACC01 to the question-mark-plus-diagonal-line witness.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "invented_endpoint_ring",
+        "wrong_internal_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LOWACC01 is safety contour of low accuracy in position. It is used as a safety contour of low accuracy in position. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "safety contour of low accuracy in position"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LOWACC01__day.png",
+            "label": "safety contour of low accuracy in position",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LOWACC01__day.png",
+              "dusk": "out/opencpn_s52_reference/LOWACC01__dusk.png",
+              "night": "out/opencpn_s52_reference/LOWACC01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LOWACC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LOWACC01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LOWACC01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LOWACC01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LOWACC01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/MAGVAR01__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/MAGVAR01__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/MAGVAR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/MAGVAR01.svg",
+      "asset": "MAGVAR01",
+      "before_svg": "assets/svg/triad_generated/MAGVAR01.svg",
+      "candidate_source": "assets/svg/triad_generated/MAGVAR01.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw MAGVAR01 as the filled wedge/flag and vertical line witness; remove the M/A monogram.",
+        "feedback": "Redraw MAGVAR01 as the filled wedge/flag and vertical line witness; remove the M/A monogram.",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;wrong_symbol_semantics;reference_mismatch"
+      },
+      "name": "cursor pick site for magnetic variation at a point",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the filled magnetic-variation wedge/flag and vertical line.",
+      "required_change": "Redraw MAGVAR01 as the filled wedge/flag and vertical line witness; remove the M/A monogram.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_semantics",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MAGVAR01 is cursor pick site for magnetic variation at a point. It is used as a cursor pick site for magnetic variation at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for magnetic variation at a point"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MAGVAR01__day.png",
+            "label": "cursor pick site for magnetic variation at a point",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MAGVAR01__day.png",
+              "dusk": "out/opencpn_s52_reference/MAGVAR01__dusk.png",
+              "night": "out/opencpn_s52_reference/MAGVAR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MAGVAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MAGVAR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MAGVAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MAGVAR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MAGVAR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/MAGVAR51__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/MAGVAR51__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/MAGVAR51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/MAGVAR51.svg",
+      "asset": "MAGVAR51",
+      "before_svg": "assets/svg/triad_generated/MAGVAR51.svg",
+      "candidate_source": "assets/svg/triad_generated/MAGVAR51.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw MAGVAR51 as the filled wedge/flag and vertical line witness; remove the M/A monogram and dashed underline.",
+        "feedback": "Redraw MAGVAR01 as the filled wedge/flag and vertical line witness; remove the M/A monogram.",
+        "priority": "medium",
+        "reason_codes": "wrong_shape;invented_line_detail;reference_mismatch"
+      },
+      "name": "cursor pick site for magnetic variation along a line or over an area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as the filled magnetic-variation wedge/flag and vertical line without dashed underline.",
+      "required_change": "Redraw MAGVAR51 as the filled wedge/flag and vertical line witness; remove the M/A monogram and dashed underline.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_line_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MAGVAR51 is cursor pick site for magnetic variation along a line or over an area. It is used as a cursor pick site for magnetic variation along a line or over an area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for magnetic variation along a line or over an area"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MAGVAR51__day.png",
+            "label": "cursor pick site for magnetic variation along a line or over an area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MAGVAR51__day.png",
+              "dusk": "out/opencpn_s52_reference/MAGVAR51__dusk.png",
+              "night": "out/opencpn_s52_reference/MAGVAR51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MAGVAR51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MAGVAR51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MAGVAR51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MAGVAR51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MAGVAR51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/MARCUL02__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/MARCUL02__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/MARCUL02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/MARCUL02.svg",
+      "asset": "MARCUL02",
+      "before_svg": "assets/svg/triad_generated/MARCUL02.svg",
+      "candidate_source": "assets/svg/triad_generated/MARCUL02.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Redraw MARCUL02 as the rectangular marine-farm fish/net frame; remove the wave baseline.",
+        "feedback": "shoudl look more like a fish inside a cage, with the cage lines behind the fish; see other examples. ",
+        "priority": "medium",
+        "reason_codes": "wrong_enclosure_shape;invented_wave_line;reference_mismatch"
+      },
+      "name": "pattern of symbols for a marine farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: redraw as a fish inside a rectangular cage/net with cage lines behind the fish.",
+      "required_change": "Redraw MARCUL02 as the rectangular marine-farm fish/net frame; remove the wave baseline.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "wrong_enclosure_shape",
+        "invented_wave_line",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MARCUL02 is pattern of symbols for a marine farm. It is used as a pattern of symbols for a marine farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for a marine farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MARCUL02__day.png",
+            "label": "pattern of symbols for a marine farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MARCUL02__day.png",
+              "dusk": "out/opencpn_s52_reference/MARCUL02__dusk.png",
+              "night": "out/opencpn_s52_reference/MARCUL02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MARCUL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MARCUL02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MARCUL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MARCUL02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MARCUL02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/MONUMT02__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/MONUMT02__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/MONUMT02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/MONUMT02.svg",
+      "asset": "MONUMT02",
+      "before_svg": "assets/svg/triad_generated/MONUMT02.svg",
+      "candidate_source": "assets/svg/triad_generated/MONUMT02.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Add the reference base/ring cue and align MONUMT02 proportions to the monument witness before visual approval.",
+        "feedback": "needs striped lines like the other desins. ",
+        "priority": "medium",
+        "reason_codes": "missing_base_detail;wrong_proportions;reference_mismatch"
+      },
+      "name": "monument",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: add striped monument lines and reference base/ring cue.",
+      "required_change": "Add the reference base/ring cue and align MONUMT02 proportions to the monument witness before visual approval.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "missing_base_detail",
+        "wrong_proportions",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MONUMT02 is monument. It is used as a monument. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "monument"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MONUMT02__day.png",
+            "label": "monument",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MONUMT02__day.png",
+              "dusk": "out/opencpn_s52_reference/MONUMT02__dusk.png",
+              "night": "out/opencpn_s52_reference/MONUMT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MONUMT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MONUMT02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MONUMT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MONUMT02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MONUMT02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch17/renders/MONUMT12__after__day.png",
+        "dusk": "out/standard_repair_batch17/renders/MONUMT12__after__dusk.png",
+        "night": "out/standard_repair_batch17/renders/MONUMT12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch25/MONUMT12.svg",
+      "asset": "MONUMT12",
+      "before_svg": "assets/svg/triad_generated/MONUMT12.svg",
+      "candidate_source": "assets/svg/triad_generated/MONUMT12.svg",
+      "candidate_strategy": "owned_redraw_from_human_review_feedback",
+      "human_feedback": {
+        "expected_change": "Add the reference base/ring cue and align MONUMT12 proportions to the monument witness before visual approval.",
+        "feedback": "needs striped lines like the other desins. ",
+        "priority": "medium",
+        "reason_codes": "missing_base_detail;wrong_proportions;reference_mismatch"
+      },
+      "name": "conspicuous monument",
+      "provenance": {
+        "generator": "forge.standard_repair_batch17",
+        "origin": "generated-owned-artwork",
+        "reference_role": "human feedback plus provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "human_review_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "human_review_feedback_consumed",
+      "repair_note": "Human review: add striped monument lines and reference base/ring cue.",
+      "required_change": "Add the reference base/ring cue and align MONUMT12 proportions to the monument witness before visual approval.",
+      "risk_bucket": "human_review_targeted_repair_batch25",
+      "safety_reason_codes": [
+        "missing_base_detail",
+        "wrong_proportions",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MONUMT12 is conspicuous monument. It is used as a conspicuous monument. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous monument"
+      },
+      "source_judge": "catalog/standard_judge_batch_022_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MONUMT12__day.png",
+            "label": "conspicuous monument",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MONUMT12__day.png",
+              "dusk": "out/opencpn_s52_reference/MONUMT12__dusk.png",
+              "night": "out/opencpn_s52_reference/MONUMT12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MONUMT12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MONUMT12.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MONUMT12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MONUMT12.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MONUMT12"
+          }
+        ]
+      }
+    }
+  ]
+}

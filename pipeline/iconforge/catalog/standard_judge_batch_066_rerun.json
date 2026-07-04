@@ -1,0 +1,81 @@
+{
+  "agent_id": "codex/FORGE-14-batch66-judge",
+  "batch_id": "standard_judge_batch_066_rerun",
+  "created_at": "2026-07-01T22:35:41.300Z",
+  "evidence_notes": [
+    "Actual repaired SVG was read from pipeline/iconforge/assets/svg/owned_repair_batch66/TOPSHQ31.svg in this worktree.",
+    "Candidate day/dusk/night renders were read from pipeline/iconforge/out/standard_repair_batch58/renders and OpenCPN/source-variant references from pipeline/iconforge/out.",
+    "The verdict used asset id, name, semantic_brief including required colours, s57_structure, reference_providers, prior source_judge history, before/after SVG/render paths, required_change, and source-table row metadata.",
+    "OpenCPN is the available provider witness for TOPSHQ31 in standard_source_table; S-101 and AquaMap provider arrays are empty for this row.",
+    "Pass is judge_pass_pending_final_approval only and grants zero final approvals."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "TOPSHQ31"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "repair_batch_catalog": "pipeline/iconforge/catalog/owned_repair_batch66.json",
+    "selection_note": "Judged owned_repair_batch66 TOPSHQ31 lozenge-over-circle repair against row metadata, semantic_brief, S-57/S-52 conditions, OpenCPN provider reference, repaired SVG, after renders, prior source_judge history, and source-table metadata.",
+    "source_batch": "catalog/owned_repair_batch66.json",
+    "source_table": "pipeline/iconforge/catalog/standard_source_table.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 1,
+    "selected": 1,
+    "source_batches": [
+      "catalog/owned_repair_batch66.json"
+    ]
+  },
+  "task_id": "FORGE-14",
+  "verdicts": [
+    {
+      "batch_index": 1,
+      "confidence": 0.91,
+      "expected": "TOPSHQ31 must replace the prior circle-over-circle repair with the OpenCPN-witnessed diamond/lozenge-over-circle compound topmark for TOPSHP31 and preserve required colour cues: red, white, black.",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch66.json",
+      "judge_comments": "Pass pending human: repaired Helm-owned SVG now uses the witnessed compound lozenge/diamond over lower circle silhouette rather than circle-over-circle, preserves the red fill and black outline cue, and renders at chart-readable scale. No final approval is granted.",
+      "observed": "After render is a red lozenge/diamond top element over a red lower circle, both with black outlines, matching the OpenCPN-witnessed diamond-over-circle compound silhouette closely enough for generated-owned artwork. The former upper-circle error is gone and the day/dusk/night renders remain legible at the rendered icon scale.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "repair_batch_catalog": "catalog/owned_repair_batch66.json",
+      "required_change": "No repair required for this visual/semantic rerun; candidate may move only to judge_pass_pending_final_approval and must not be final-approved by this artifact.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "asset_id:TOPSHQ31",
+        "name:TOPSHQ31",
+        "semantic_brief:TOPSHQ31 is TOPSHQ31. It is used as a TOPSHQ31. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, white, black.",
+        "s57_conditions:TOPSHP31",
+        "s57_instruction:SY(TOPSHQ31);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+        "opencpn_s52_bitmap:width=13,height=34,graphics_location=(813,902),color_ref=ADEPMDBCHBLKCCHWHTDCHRED",
+        "prior_required_change:Replace the upper circle with the witnessed diamond/lozenge element above the lower circle; preserve the compound diamond-over-circle order, red/white/black cues, and black outline treatment.",
+        "source_judge:catalog/standard_judge_batch_064_rerun.json",
+        "reference_providers:OpenCPN",
+        "helm_after_svg:pipeline/iconforge/assets/svg/owned_repair_batch66/TOPSHQ31.svg",
+        "candidate_source_svg:pipeline/iconforge/assets/svg/triad_generated/TOPSHQ31.svg",
+        "repair_catalog:pipeline/iconforge/catalog/owned_repair_batch66.json",
+        "source_table:pipeline/iconforge/catalog/standard_source_table.json",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch58/renders/TOPSHQ31__after__day.png",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch58/renders/TOPSHQ31__after__dusk.png",
+        "candidate_render:pipeline/iconforge/out/standard_repair_batch58/renders/TOPSHQ31__after__night.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOPSHQ31__day.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOPSHQ31__dusk.png",
+        "opencpn_render:pipeline/iconforge/out/opencpn_s52_reference/TOPSHQ31__night.png",
+        "source_variant_opencpn:pipeline/iconforge/out/source_variant_matrix/renders/TOPSHQ31/opencpn_s52_reference_render_1.png",
+        "chart1_crop:pipeline/iconforge/out/source_variant_matrix/renders/TOPSHQ31/chart1_parity_reference_crop_1.png",
+        "before_render:pipeline/iconforge/out/source_variant_matrix/renders/TOPSHQ31/helm_generated_draft_svg_1.png"
+      ],
+      "source_table_id": "opencpn-s52:TOPSHQ31",
+      "symbol_id": "TOPSHQ31"
+    }
+  ]
+}

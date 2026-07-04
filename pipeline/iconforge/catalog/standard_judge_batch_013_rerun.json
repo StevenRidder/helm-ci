@@ -1,0 +1,728 @@
+{
+  "agent_id": "codex/FORGE-18-visual-rerun-batch13-local",
+  "batch_id": "standard_judge_batch_013_rerun",
+  "created_at": "2026-07-01T00:00:00+12:00",
+  "project": "vulkan",
+  "schema_version": "iconforge.standard_visual_judge_rerun.v1",
+  "selection": {
+    "actual_total": 29,
+    "expected_total": 29,
+    "filter": {
+      "helm_candidate.candidate_status": "repaired_pending_judge_rerun",
+      "helm_candidate.source_batch": "catalog/owned_repair_batch13.json"
+    },
+    "input_table": "pipeline/iconforge/catalog/standard_source_table.json",
+    "repair_batch": "pipeline/iconforge/catalog/owned_repair_batch13.json",
+    "shape_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json"
+  },
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 20,
+    "final_approved": 0,
+    "pass": 9,
+    "selected": 29,
+    "source_batch": "catalog/owned_repair_batch13.json"
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.9,
+      "expected": "BOYSPH01 is spherical buoy,general ,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair restores the required red/black spherical buoy class and colour pair. Styling remains Helm-owned and this is not final approval.",
+      "observed": "Spherical buoy with red upper and black lower horizontal body, black outline, and stem; invented blue/grey is gone.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPH01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPH01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPH01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPH01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSPH01.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSPH01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH01",
+      "symbol_id": "BOYSPH01"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.92,
+      "expected": "BOYSPH65 is spherical buoy,red-white,full-chart. It is used as a safe-water buoy used to mark navigable water. Required geometry: spherical buoy body. Required colours: red, white with vertical bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair rotates the safe-water red/white spherical body to the required vertical stripe order. Not final-approved.",
+      "observed": "Spherical buoy with vertical red/white split, black outline, and stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH65",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPH65.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPH65__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPH65__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPH65__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH65",
+      "symbol_id": "BOYSPH65"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.9,
+      "expected": "BOYSPH66 is spherical buoy,rgr,full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: spherical buoy body. Required colours: red, green, red with horizontal bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair adds the missing lower red band and preserves the spherical buoy family. Not final-approved.",
+      "observed": "Spherical buoy with horizontal red-green-red bands and black outline/stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH66",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPH66.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPH66__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPH66__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPH66__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH66",
+      "symbol_id": "BOYSPH66"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.9,
+      "expected": "BOYSPH70 is spherical buoy,byb,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: black, yellow, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair adds the missing lower black band and now reads as the required BYB spherical buoy. Not final-approved.",
+      "observed": "Spherical buoy with black-yellow-black horizontal cardinal sequence and black outline/stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH70",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPH70.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPH70__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPH70__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPH70__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH70",
+      "symbol_id": "BOYSPH70"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.9,
+      "expected": "BOYSPH71 is spherical buoy,yby,full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spherical buoy body. Required colours: yellow, black, yellow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair adds the missing lower yellow band and now reads as the required YBY spherical buoy. Not final-approved.",
+      "observed": "Spherical buoy with yellow-black-yellow horizontal cardinal sequence and black outline/stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPH71",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPH71.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPH71__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPH71__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPH71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPH71",
+      "symbol_id": "BOYSPH71"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.84,
+      "expected": "BOYSPP11 is special purpose buoy, simplified. It is used as a special-purpose buoy used for named local purposes. Required geometry: pillar buoy body. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair preserves the required pillar/special-purpose class. The OpenCPN/S-101 witness is more compact, but the semantic shape and colour are now acceptable for rerun. Not final-approved.",
+      "observed": "Simplified yellow pillar special-purpose buoy cue with black outline and stem; generic black lower body is removed.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPP11",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPP11.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPP11__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPP11__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPP11__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSPP11.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSPP11.svg",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPY1.png",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPB1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPP11",
+      "symbol_id": "BOYSPP11"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.85,
+      "expected": "BOYSPP15 is special purpose TSS buoy marking the starboard side of the traffic lane, simplified. It is used as a special-purpose buoy used for named local purposes. Required geometry: conical/nun buoy body. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair replaces the generic body with the required conical/nun family cue. Not final-approved.",
+      "observed": "Simplified yellow conical/triangular special-purpose TSS starboard cue with black outline and stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPP15",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPP15.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPP15__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPP15__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPP15__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSPP15.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSPP15.svg",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPY1.png",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPB1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPP15",
+      "symbol_id": "BOYSPP15"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.84,
+      "expected": "BOYSPP25 is special purpose TSS buoy marking the port side of the traffic lane, simplified. It is used as a special-purpose buoy used for named local purposes. Required geometry: can/cylindrical buoy body. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair replaces the generic body with the required can/cylindrical family cue. Not final-approved.",
+      "observed": "Simplified yellow can/cylindrical special-purpose TSS port cue with black outline and stem.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BOYSPP25",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPP25.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPP25__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPP25__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPP25__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSPP25.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSPP25.svg",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPY1.png",
+        "aquamap:Buoy Special Purpose:reference_sources/aquamap_map_symbols/images/BOYSPPB1.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPP25",
+      "symbol_id": "BOYSPP25"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.86,
+      "expected": "BOYSPR01 is default spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: white, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Default spar buoy should use only the white/black spar body without extra external separator marks.",
+      "observed": "White/black spar body is present, but a long grey horizontal separator stroke protrudes far outside the narrow spar silhouette.",
+      "pass": false,
+      "required_change": "Clip or remove the horizontal separator stroke so it does not extend outside the spar silhouette; preserve the white-over-black body.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPR01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPR01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPR01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPR01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSPR01.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSPR01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR01",
+      "symbol_id": "BOYSPR01"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.88,
+      "expected": "BOYSPR70 is black/yellow/black spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: black, yellow, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Black/yellow/black spar must show the ordered body bands without external scaffold-like lines.",
+      "observed": "Black-yellow-black spar sequence is present, but two long grey separator strokes protrude outside the narrow spar body.",
+      "pass": false,
+      "required_change": "Clip or remove the separator strokes outside the spar silhouette; preserve black-yellow-black band order.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR70",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPR70.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPR70__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPR70__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPR70__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR70",
+      "symbol_id": "BOYSPR70"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.88,
+      "expected": "BOYSPR71 is yellow/black/yellow spar buoy, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: spar buoy body. Required colours: yellow, black, yellow.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Yellow/black/yellow spar must show the ordered body bands without external scaffold-like lines.",
+      "observed": "Yellow-black-yellow spar sequence is present, but two long grey separator strokes protrude outside the narrow spar body.",
+      "pass": false,
+      "required_change": "Clip or remove the separator strokes outside the spar silhouette; preserve yellow-black-yellow band order.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR71",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPR71.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPR71__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPR71__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPR71__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR71",
+      "symbol_id": "BOYSPR71"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.88,
+      "expected": "BOYSPR72 is black/red/black spar buoy, full-chart. It is used as a isolated-danger buoy used to mark a hazard with navigable water around it. Required geometry: spar buoy body. Required colours: black, red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Black/red/black isolated-danger spar must show the ordered body bands without external scaffold-like lines.",
+      "observed": "Black-red-black spar sequence is present, but two long grey separator strokes protrude outside the narrow spar body.",
+      "pass": false,
+      "required_change": "Clip or remove the separator strokes outside the spar silhouette; preserve black-red-black band order.",
+      "safety_reason_codes": [
+        "visual_artifact",
+        "unclipped_separator_strokes",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSPR72",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSPR72.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSPR72__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSPR72__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSPR72__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSPR72",
+      "symbol_id": "BOYSPR72"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.86,
+      "expected": "BOYSUP01 is super buoy, general, full-chart. It is used as a cardinal buoy used to indicate the safe side of danger. Required geometry: super-buoy body. Required colours: red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Super-buoy should retain the super-buoy reference silhouette first, then carry the red/black colour semantics.",
+      "observed": "Red/black rounded capsule buoy; it does not match the OpenCPN/S-101 super-buoy platform/trapezoid with ring cue.",
+      "pass": false,
+      "required_change": "Redraw as the super-buoy platform/trapezoid/ring reference silhouette while preserving red/black load-bearing colours.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "unsafe_buoy_family_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSUP01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSUP01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSUP01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSUP01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSUP01.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSUP01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP01",
+      "symbol_id": "BOYSUP01"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.86,
+      "expected": "BOYSUP02 is super buoy, black, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Black super-buoy should read as the reference super-buoy platform, not a generic rounded buoy body.",
+      "observed": "Solid black rounded capsule buoy; it does not match the black super-buoy platform/trapezoid reference silhouette.",
+      "pass": false,
+      "required_change": "Redraw BOYSUP02 as the black super-buoy platform/trapezoid reference silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "unsafe_buoy_family_confusion",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP02",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSUP02.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSUP02__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSUP02__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSUP02__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSUP02.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSUP02.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP02",
+      "symbol_id": "BOYSUP02"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.88,
+      "expected": "BOYSUP03 is LANBY, super-buoy, paper-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: red, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "LANBY paper-chart super-buoy needs the reference super-buoy body plus the distinctive top cue.",
+      "observed": "Red/black rounded capsule with a small cap/top stem; it misses the LANBY star/asterisk top cue and platform-shaped super-buoy body.",
+      "pass": false,
+      "required_change": "Redraw with the super-buoy platform silhouette and the LANBY star/asterisk topmark cue; preserve red/black colour semantics.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "missing_topmark",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP03",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSUP03.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSUP03__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSUP03__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSUP03__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BOYSUP03.svg",
+        "s101:PortrayalCatalog/Symbols/BOYSUP03.svg"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP03",
+      "symbol_id": "BOYSUP03"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.86,
+      "expected": "BOYSUP65 is super buoy, red, white, full-chart. It is used as a special-purpose buoy used for named local purposes. Required geometry: super-buoy body. Required colours: red, white with vertical bands/stripes in the listed colour order.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Red/white super-buoy must preserve vertical stripes on the reference super-buoy silhouette.",
+      "observed": "Vertical red/white striping is fixed, but the body remains a rounded capsule rather than the super-buoy platform/trapezoid witness.",
+      "pass": false,
+      "required_change": "Redraw on the super-buoy platform/trapezoid reference body while preserving vertical red/white order.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BOYSUP65",
+        "helm_candidate:assets/svg/owned_repair_batch13/BOYSUP65.svg",
+        "helm_render:out/standard_repair_batch5/renders/BOYSUP65__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BOYSUP65__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BOYSUP65__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BOYSUP65",
+      "symbol_id": "BOYSUP65"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.82,
+      "expected": "BRIDGE01 is symbol for opening bridge. It is used as a symbol for opening bridge. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Opening bridge should match the magenta ring/circular reference silhouette without invented crosshair detail.",
+      "observed": "Magenta circular ring is present, but the candidate adds a black crosshair/target center instead of the S-101/OpenCPN opening-bridge ring/diagonal cue.",
+      "pass": false,
+      "required_change": "Remove the invented black crosshair/target detail and redraw the opening-bridge ring to match the S-101/OpenCPN witness.",
+      "safety_reason_codes": [
+        "invented_detail",
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BRIDGE01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BRIDGE01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BRIDGE01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BRIDGE01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BRIDGE01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BRIDGE01.svg",
+        "s101:PortrayalCatalog/Symbols/BRIDGE01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BRIDGE01",
+      "symbol_id": "BRIDGE01"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.91,
+      "expected": "BRTHNO01 is berth number symbol. It is used as a berth number symbol. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Berth-number reference is a magenta circular symbol/placeholder; it should not bake in literal \u201cNo\u201d text.",
+      "observed": "Black outlined circle containing literal \u201cNo\u201d text.",
+      "pass": false,
+      "required_change": "Redraw as the magenta berth-number circular reference cue and remove the invented text.",
+      "safety_reason_codes": [
+        "invented_text",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BRTHNO01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BRTHNO01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BRTHNO01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BRTHNO01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BRTHNO01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BRTHNO01.svg",
+        "s101:PortrayalCatalog/Symbols/BRTHNO01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BRTHNO01",
+      "symbol_id": "BRTHNO01"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.89,
+      "expected": "BUAARE02 is built-up area. It is used as a built-up area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Built-up-area reference is a compact brown filled area/dot cue, not a framed block cluster.",
+      "observed": "White square frame with multiple brown building blocks and a diagonal slash.",
+      "pass": false,
+      "required_change": "Redraw as the built-up-area brown filled area/dot reference cue; remove the square frame and block-cluster/slash treatment.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUAARE02",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUAARE02.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUAARE02__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUAARE02__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUAARE02__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUAARE02.svg",
+        "s101:PortrayalCatalog/Symbols/BUAARE02.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUAARE02",
+      "symbol_id": "BUAARE02"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.88,
+      "expected": "BUIREL01 is non-conspicuous religious building, Christian. It is used as a non-conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Non-conspicuous Christian religious-building witness is a brown cross/church cue, not a black filled building pictogram.",
+      "observed": "Black filled church/building silhouette with cross.",
+      "pass": false,
+      "required_change": "Redraw to the brown Christian cross/church schematic reference cue rather than a filled building silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL01.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL01",
+      "symbol_id": "BUIREL01"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.88,
+      "expected": "BUIREL04 is non-conspicuous religious building, non-Christian. It is used as a non-conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Non-Christian religious-building witness is a brown schematic/temple cue, not a black filled dome pictogram.",
+      "observed": "Black domed building silhouette with white columns.",
+      "pass": false,
+      "required_change": "Redraw to the brown non-Christian religious-building schematic reference cue.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL04",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL04.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL04__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL04__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL04__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL04.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL04.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL04",
+      "symbol_id": "BUIREL04"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.88,
+      "expected": "BUIREL05 is mosque or minaret. It is used as a mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Mosque/minaret witness uses a crescent/minaret schematic cue, not a filled building pictogram.",
+      "observed": "Black mosque/minaret building silhouette.",
+      "pass": false,
+      "required_change": "Redraw to the mosque/minaret crescent/reference cue and avoid the generic filled building silhouette.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL05",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL05.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL05__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL05__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL05__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL05.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL05.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL05",
+      "symbol_id": "BUIREL05"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.86,
+      "expected": "BUIREL13 is conspicuous religious building, Christian. It is used as a conspicuous religious building, Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Conspicuous Christian religious-building witness is a black/grey Christian cross schematic cue, not a filled building pictogram.",
+      "observed": "Black filled church/building silhouette with cross.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous Christian cross/church reference cue while preserving black conspicuous colour.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL13",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL13.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL13__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL13__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL13__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL13.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL13.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL13",
+      "symbol_id": "BUIREL13"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.86,
+      "expected": "BUIREL14 is conspicuous religious building, non-Christian. It is used as a conspicuous religious building, non-Christian. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Conspicuous non-Christian religious-building witness is a black/grey schematic cue, not a filled dome pictogram.",
+      "observed": "Black domed building silhouette with white columns.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous non-Christian schematic reference cue while preserving black conspicuous colour.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL14",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL14.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL14__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL14__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL14__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL14.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL14.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL14",
+      "symbol_id": "BUIREL14"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.87,
+      "expected": "BUIREL15 is conspicuous mosque or minaret. It is used as a conspicuous mosque or minaret. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Conspicuous mosque/minaret witness is a black crescent/minaret schematic cue, not a filled building pictogram.",
+      "observed": "Black mosque/minaret building silhouette.",
+      "pass": false,
+      "required_change": "Redraw to the conspicuous mosque/minaret crescent/reference cue while preserving black conspicuous colour.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUIREL15",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUIREL15.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUIREL15__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUIREL15__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUIREL15__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUIREL15.svg",
+        "s101:PortrayalCatalog/Symbols/BUIREL15.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUIREL15",
+      "symbol_id": "BUIREL15"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.87,
+      "expected": "BUISGL01 is single building. It is used as a single building. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Single-building reference is a compact brown square/building cue; the roof/door house pictogram changes the chart symbol.",
+      "observed": "Brown house pictogram with roof and black door.",
+      "pass": false,
+      "required_change": "Redraw as the compact brown square/building reference silhouette; remove roof/door pictogram detail.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUISGL01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUISGL01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUISGL01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUISGL01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUISGL01__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUISGL01.svg",
+        "s101:PortrayalCatalog/Symbols/BUISGL01.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUISGL01",
+      "symbol_id": "BUISGL01"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.87,
+      "expected": "BUISGL11 is conspicuous single building. It is used as a conspicuous single building. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Conspicuous single-building reference is a compact black square/building cue; the roof/door house pictogram changes the chart symbol.",
+      "observed": "Black house pictogram with roof and white door.",
+      "pass": false,
+      "required_change": "Redraw as the compact black square/building reference silhouette; remove roof/door pictogram detail.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUISGL11",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUISGL11.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUISGL11__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUISGL11__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUISGL11__day.png",
+        "s101:assets/svg/source_priority/s101_exact/BUISGL11.svg",
+        "s101:PortrayalCatalog/Symbols/BUISGL11.svg"
+      ],
+      "source_table_id": "opencpn-s52:BUISGL11",
+      "symbol_id": "BUISGL11"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.86,
+      "expected": "BUNSTA01 is bunker station, diesel oil station. It is used as a bunker station, diesel oil station. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Repair replaces the diamond placeholder with the bunker diesel fuel/service-station silhouette seen in the OpenCPN witness. Not final-approved.",
+      "observed": "Black diesel/fuel-pump cue with white display and hose.",
+      "pass": true,
+      "required_change": "No repair required for this visual rerun; keep pending final approval QA and do not mark final-approved.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "semantic_brief:BUNSTA01",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUNSTA01.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUNSTA01__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUNSTA01__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUNSTA01__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BUNSTA01",
+      "symbol_id": "BUNSTA01"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.9,
+      "expected": "BUNSTA02 is bunker station, water. It is used as a bunker station, water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "judge_comments": "Bunker-water reference is a small water bucket/tap/service-station cue, not a generic droplet.",
+      "observed": "Black water-drop pictogram with a white wave mark.",
+      "pass": false,
+      "required_change": "Redraw to the water bunker-station bucket/tap reference silhouette; remove the generic droplet pictogram.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        "semantic_brief:BUNSTA02",
+        "helm_candidate:assets/svg/owned_repair_batch13/BUNSTA02.svg",
+        "helm_render:out/standard_repair_batch5/renders/BUNSTA02__after__day.png",
+        "opencpn_render:out/opencpn_s52_reference/BUNSTA02__day.png",
+        "s101_render:out/source_priority_icon_pack/renders/BUNSTA02__day.png"
+      ],
+      "source_table_id": "opencpn-s52:BUNSTA02",
+      "symbol_id": "BUNSTA02"
+    }
+  ]
+}

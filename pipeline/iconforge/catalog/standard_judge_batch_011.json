@@ -1,0 +1,3084 @@
+{
+  "agent_id": "codex/FORGE-18-visual-judge-011-local",
+  "batch_id": "standard_judge_batch_011",
+  "created_at": "2026-07-01T07:49:54.373491+00:00",
+  "project": "vulkan",
+  "selection": {
+    "count": 50,
+    "first_symbol": "PSSARE01",
+    "input_branch": "codex/FORGE-14-exact-crops",
+    "input_pushed_head": "06fc43b",
+    "last_symbol": "TERMNL08",
+    "prior_archived_batch": "standard_judge_batch_010",
+    "prior_archived_last_symbol": "PRICKE04",
+    "semantic_queue": "pipeline/iconforge/catalog/standard_semantic_shape_judge_queue.json",
+    "source": "pipeline/iconforge/catalog/standard_source_table.json",
+    "status_filter": "helm_candidate.candidate_status == pending_judge"
+  },
+  "summary": {
+    "blockers": [
+      "Most rows still collapse to large diamond placeholders instead of the small S-52/S-101 point, text, arrow, or facility glyphs.",
+      "Route/track/scalebar rows lose directional arrows, track lines, scalebar segments, or unknown-direction question-mark cues.",
+      "Terminal, signal-station, and service rows need circular/board/text/icon detail rather than generic point diamonds.",
+      "Only SMCFAC02 is an automated first-pass visual pass; it is not human-final approved."
+    ],
+    "fail": 49,
+    "final_approved": 0,
+    "judged": 50,
+    "pass": 1
+  },
+  "task_id": "FORGE-18",
+  "verdicts": [
+    {
+      "batch_index": 0,
+      "confidence": 0.94,
+      "expected": "PSSARE01 should follow the provider reference symbol/pattern for a PSSA area, not a generic dashed area tile.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a gray dashed square area placeholder with a diagonal dash pattern.",
+      "pass": false,
+      "required_change": "Replace the dashed-square placeholder with the PSSARE01 reference area symbol/pattern from S-101/OpenCPN.",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_pattern",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "PSSARE01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "PSSARE01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "PSSARE01",
+          "path": "assets/svg/source_priority/s101_exact/PSSARE01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "PSSARE01",
+          "path": "PortrayalCatalog/Symbols/PSSARE01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "PSSARE01",
+          "path": "out/opencpn_s52_reference/PSSARE01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/PSSARE01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/PSSARE01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/PSSARE01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:PSSARE01",
+      "symbol_id": "PSSARE01"
+    },
+    {
+      "batch_index": 1,
+      "confidence": 0.98,
+      "expected": "Approximate position should render the reference PA/position-approximate text cue in black.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a rounded dashed box with a gray plus.",
+      "pass": false,
+      "required_change": "Replace the dashed plus box with the QUAPOS01 PA approximate-position label/cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "missing_text_label",
+        "placeholder_artwork",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "QUAPOS01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "QUAPOS01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "QUAPOS01",
+          "path": "assets/svg/source_priority/s101_exact/QUAPOS01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "QUAPOS01",
+          "path": "PortrayalCatalog/Symbols/QUAPOS01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "position approximate",
+          "path": "out/opencpn_s52_reference/QUAPOS01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/QUAPOS01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/QUAPOS01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/QUAPOS01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:QUAPOS01",
+      "symbol_id": "QUAPOS01"
+    },
+    {
+      "batch_index": 2,
+      "confidence": 0.98,
+      "expected": "Quarry should use the small brown crossed quarry/pick symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the point diamond with the brown QUARRY01 crossed quarry glyph at reference proportions.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "QUARRY01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "QUARRY01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "QUARRY01",
+          "path": "assets/svg/source_priority/s101_exact/QUARRY01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "QUARRY01",
+          "path": "PortrayalCatalog/Symbols/QUARRY01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "quarry",
+          "path": "out/opencpn_s52_reference/QUARRY01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/QUARRY01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/QUARRY01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/QUARRY01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:QUARRY01",
+      "symbol_id": "QUARRY01"
+    },
+    {
+      "batch_index": 3,
+      "confidence": 0.98,
+      "expected": "Unknown/insufficiently-described object pattern should use the magenta question-mark reference cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a rounded dashed box with a gray plus.",
+      "pass": false,
+      "required_change": "Replace the dashed plus box with the QUESMRK1 magenta question-mark pattern/symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_pattern",
+        "missing_question_mark",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "QUESMRK1",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "QUESMRK1",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "QUESMRK1",
+          "path": "assets/svg/source_priority/s101_exact/QUESMRK1.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "QUESMRK1",
+          "path": "PortrayalCatalog/Symbols/QUESMRK1.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "pattern of symbols for an area which is not sufficiently described to be symbolized, or for which no symbol exists in the symbol library",
+          "path": "out/opencpn_s52_reference/QUESMRK1__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/QUESMRK1.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/QUESMRK1__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/QUESMRK1.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:QUESMRK1",
+      "symbol_id": "QUESMRK1"
+    },
+    {
+      "batch_index": 4,
+      "confidence": 0.98,
+      "expected": "Radar-conspicuous object should use the small magenta radar-conspicuous star/sunburst mark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RACNSP01 magenta radar-conspicuous starburst glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RACNSP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RACNSP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RACNSP01",
+          "path": "assets/svg/source_priority/s101_exact/RACNSP01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RACNSP01",
+          "path": "PortrayalCatalog/Symbols/RACNSP01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "symbol indicating this object is radar conspicuous",
+          "path": "out/opencpn_s52_reference/RACNSP01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RACNSP01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RACNSP01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RACNSP01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RACNSP01",
+      "symbol_id": "RACNSP01"
+    },
+    {
+      "batch_index": 5,
+      "confidence": 0.98,
+      "expected": "Radar reflector should use the radar-reflector witness glyph, not a generic magenta point diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RADRFL03 radar-reflector structure/arc glyph from the provider witnesses.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RADRFL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RADRFL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RADRFL03",
+          "path": "assets/svg/source_priority/s101_exact/RADRFL03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RADRFL03",
+          "path": "PortrayalCatalog/Symbols/RADRFL03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radar Reflector",
+          "path": "reference_sources/aquamap_map_symbols/images/RadarReflector1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radar reflector",
+          "path": "out/opencpn_s52_reference/RADRFL03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RADRFL03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RADRFL03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RADRFL03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RADRFL03",
+      "symbol_id": "RADRFL03"
+    },
+    {
+      "batch_index": 6,
+      "confidence": 0.98,
+      "expected": "Radar scanner should be the small scanner/antenna reference glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RASCAN01 radar-scanner glyph at reference scale.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RASCAN01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RASCAN01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RASCAN01",
+          "path": "assets/svg/source_priority/s101_exact/RASCAN01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RASCAN01",
+          "path": "PortrayalCatalog/Symbols/RASCAN01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radar scanner",
+          "path": "out/opencpn_s52_reference/RASCAN01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RASCAN01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RASCAN01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RASCAN01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RASCAN01",
+      "symbol_id": "RASCAN01"
+    },
+    {
+      "batch_index": 7,
+      "confidence": 0.98,
+      "expected": "Conspicuous radar scanner should be the black scanner/antenna reference glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RASCAN11 conspicuous radar-scanner glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RASCAN11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RASCAN11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RASCAN11",
+          "path": "assets/svg/source_priority/s101_exact/RASCAN11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RASCAN11",
+          "path": "PortrayalCatalog/Symbols/RASCAN11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous radar scanner",
+          "path": "out/opencpn_s52_reference/RASCAN11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RASCAN11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RASCAN11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RASCAN11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RASCAN11",
+      "symbol_id": "RASCAN11"
+    },
+    {
+      "batch_index": 8,
+      "confidence": 0.98,
+      "expected": "Radio calling-in point with unknown direction should show the magenta calling-in point plus unknown-direction question marks.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RCLDEF01 radio calling-in point and unknown-direction question-mark geometry.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "missing_directional_semantics",
+        "missing_question_mark",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RCLDEF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RCLDEF01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RCLDEF01",
+          "path": "assets/svg/source_priority/s101_exact/RCLDEF01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RCLDEF01",
+          "path": "PortrayalCatalog/Symbols/RCLDEF01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radio calling-in point whose direction is not known",
+          "path": "out/opencpn_s52_reference/RCLDEF01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RCLDEF01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RCLDEF01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RCLDEF01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RCLDEF01",
+      "symbol_id": "RCLDEF01"
+    },
+    {
+      "batch_index": 9,
+      "confidence": 0.98,
+      "expected": "Recommended traffic direction should be a magenta dashed directional arrow/track cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RCTLPT52 magenta dashed traffic-direction arrow.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RCTLPT52",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RCTLPT52",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RCTLPT52",
+          "path": "assets/svg/source_priority/s101_exact/RCTLPT52.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RCTLPT52",
+          "path": "PortrayalCatalog/Symbols/RCTLPT52.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended traffic direction between parts of a traffic separation scheme, or for ships not needing a deep water route",
+          "path": "out/opencpn_s52_reference/RCTLPT52__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RCTLPT52.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RCTLPT52__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RCTLPT52.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RCTLPT52",
+      "symbol_id": "RCTLPT52"
+    },
+    {
+      "batch_index": 10,
+      "confidence": 0.98,
+      "expected": "One-direction radio calling-in point should use the magenta call-in point symbol with its direction cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RDOCAL02 one-direction radio call-in point glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_semantics",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RDOCAL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RDOCAL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RDOCAL02",
+          "path": "assets/svg/source_priority/s101_exact/RDOCAL02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RDOCAL02",
+          "path": "PortrayalCatalog/Symbols/RDOCAL02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radio Call-in Point",
+          "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radar Station",
+          "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radio calling-in point for traffic in one direction only",
+          "path": "out/opencpn_s52_reference/RDOCAL02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RDOCAL02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RDOCAL02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RDOCAL02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RDOCAL02",
+      "symbol_id": "RDOCAL02"
+    },
+    {
+      "batch_index": 11,
+      "confidence": 0.98,
+      "expected": "Two-direction radio calling-in point should use the magenta call-in point symbol with both-direction semantics.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RDOCAL03 both-direction radio call-in point glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_bidirectional_semantics",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RDOCAL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RDOCAL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RDOCAL03",
+          "path": "assets/svg/source_priority/s101_exact/RDOCAL03.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RDOCAL03",
+          "path": "PortrayalCatalog/Symbols/RDOCAL03.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radio Call-in Point",
+          "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radar Station",
+          "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radio calling-in point for traffic in both directions",
+          "path": "out/opencpn_s52_reference/RDOCAL03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RDOCAL03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RDOCAL03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RDOCAL03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RDOCAL03",
+      "symbol_id": "RDOCAL03"
+    },
+    {
+      "batch_index": 12,
+      "confidence": 0.97,
+      "expected": "Radio station should be the small magenta radio-station circle/glyph witness.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RDOSTA02 radio-station reference glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RDOSTA02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RDOSTA02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RDOSTA02",
+          "path": "assets/svg/source_priority/s101_exact/RDOSTA02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RDOSTA02",
+          "path": "PortrayalCatalog/Symbols/RDOSTA02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radio Call-in Point",
+          "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Radar Station",
+          "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radio station",
+          "path": "out/opencpn_s52_reference/RDOSTA02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RDOSTA02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RDOSTA02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RDOSTA02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RDOSTA02",
+      "symbol_id": "RDOSTA02"
+    },
+    {
+      "batch_index": 13,
+      "confidence": 0.98,
+      "expected": "Recommended track area with direction undefined should show the gray line/unknown-direction track cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RECDEF51 recommended-track line and unknown-direction cue.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_track_line",
+        "missing_unknown_direction_cue"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RECDEF51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RECDEF51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RECDEF51",
+          "path": "assets/svg/source_priority/s101_exact/RECDEF51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RECDEF51",
+          "path": "PortrayalCatalog/Symbols/RECDEF51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended track as an area, direction not defined in data",
+          "path": "out/opencpn_s52_reference/RECDEF51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RECDEF51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RECDEF51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RECDEF51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RECDEF51",
+      "symbol_id": "RECDEF51"
+    },
+    {
+      "batch_index": 14,
+      "confidence": 0.98,
+      "expected": "Recommended two-way track not based on fixed marks should show the vertical track line with two-way arrows/markers.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RECTRC55 recommended two-way track annotation.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_track_line",
+        "missing_bidirectional_semantics"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RECTRC55",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RECTRC55",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RECTRC55",
+          "path": "assets/svg/source_priority/s101_exact/RECTRC55.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RECTRC55",
+          "path": "PortrayalCatalog/Symbols/RECTRC55.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended two-way track as an area, not based on fixed marks",
+          "path": "out/opencpn_s52_reference/RECTRC55__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RECTRC55.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RECTRC55__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RECTRC55.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RECTRC55",
+      "symbol_id": "RECTRC55"
+    },
+    {
+      "batch_index": 15,
+      "confidence": 0.98,
+      "expected": "Recommended two-way track based on fixed marks should show the fixed-mark two-way track annotation.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RECTRC56 fixed-mark two-way track annotation.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_track_line",
+        "missing_bidirectional_semantics"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RECTRC56",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RECTRC56",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RECTRC56",
+          "path": "assets/svg/source_priority/s101_exact/RECTRC56.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RECTRC56",
+          "path": "PortrayalCatalog/Symbols/RECTRC56.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended two-way track as an area, based on fixed marks",
+          "path": "out/opencpn_s52_reference/RECTRC56__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RECTRC56.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RECTRC56__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/RECTRC56.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RECTRC56",
+      "symbol_id": "RECTRC56"
+    },
+    {
+      "batch_index": 16,
+      "confidence": 0.98,
+      "expected": "Recommended one-way track not based on fixed marks should show a one-way arrow/track annotation.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RECTRC57 one-way recommended-track annotation.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_track_line",
+        "missing_directional_arrow"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RECTRC57",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RECTRC57",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RECTRC57",
+          "path": "assets/svg/source_priority/s101_exact/RECTRC57.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RECTRC57",
+          "path": "PortrayalCatalog/Symbols/RECTRC57.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended one-way track as an area, not based on fixed marks",
+          "path": "out/opencpn_s52_reference/RECTRC57__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RECTRC57.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RECTRC57__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/RECTRC57.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RECTRC57",
+      "symbol_id": "RECTRC57"
+    },
+    {
+      "batch_index": 17,
+      "confidence": 0.98,
+      "expected": "Recommended one-way track based on fixed marks should show the fixed-mark one-way track annotation.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RECTRC58 fixed-mark one-way track annotation.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_track_line",
+        "missing_directional_arrow"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RECTRC58",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RECTRC58",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RECTRC58",
+          "path": "assets/svg/source_priority/s101_exact/RECTRC58.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RECTRC58",
+          "path": "PortrayalCatalog/Symbols/RECTRC58.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended one-way track as an area, based on fixed marks",
+          "path": "out/opencpn_s52_reference/RECTRC58__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RECTRC58.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RECTRC58__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/RECTRC58.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RECTRC58",
+      "symbol_id": "RECTRC58"
+    },
+    {
+      "batch_index": 18,
+      "confidence": 0.98,
+      "expected": "Refuse dump should use the green refuse-can/dump symbol with black detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large green diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the REFDMP01 green refuse dump can glyph and preserve green/black ordering.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_refuse_can",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "REFDMP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "REFDMP01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "refuse dump",
+          "path": "out/opencpn_s52_reference/REFDMP01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/REFDMP01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/REFDMP01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/REFDMP01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:REFDMP01",
+      "symbol_id": "REFDMP01"
+    },
+    {
+      "batch_index": 19,
+      "confidence": 0.98,
+      "expected": "Reference point/ghost cursor should be the orange crosshair/cursor mark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the REFPNT02 orange reference-point crosshair.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "REFPNT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "REFPNT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "REFPNT02",
+          "path": "assets/svg/source_priority/s101_exact/REFPNT02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "REFPNT02",
+          "path": "PortrayalCatalog/Symbols/REFPNT02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "reference point, 'ghost cursor' (user interface)",
+          "path": "out/opencpn_s52_reference/REFPNT02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/REFPNT02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/REFPNT02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/REFPNT02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:REFPNT02",
+      "symbol_id": "REFPNT02"
+    },
+    {
+      "batch_index": 20,
+      "confidence": 0.98,
+      "expected": "Paper-chart retro reflector should use the small magenta retro-reflector glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RETRFL01 magenta retro-reflector glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RETRFL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RETRFL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RETRFL01",
+          "path": "assets/svg/source_priority/s101_exact/RETRFL01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RETRFL01",
+          "path": "PortrayalCatalog/Symbols/RETRFL01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "retro reflector, paper chart",
+          "path": "out/opencpn_s52_reference/RETRFL01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RETRFL01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RETRFL01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RETRFL01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RETRFL01",
+      "symbol_id": "RETRFL01"
+    },
+    {
+      "batch_index": 21,
+      "confidence": 0.98,
+      "expected": "Simplified retro reflector should use the small magenta retro-reflector glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RETRFL02 simplified retro-reflector glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RETRFL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RETRFL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RETRFL02",
+          "path": "assets/svg/source_priority/s101_exact/RETRFL02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RETRFL02",
+          "path": "PortrayalCatalog/Symbols/RETRFL02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "retro reflector, simplified",
+          "path": "out/opencpn_s52_reference/RETRFL02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RETRFL02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RETRFL02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RETRFL02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RETRFL02",
+      "symbol_id": "RETRFL02"
+    },
+    {
+      "batch_index": 22,
+      "confidence": 0.98,
+      "expected": "Refinery should use the brown refinery circle/glyph witness.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RFNERY01 brown refinery symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RFNERY01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RFNERY01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RFNERY01",
+          "path": "assets/svg/source_priority/s101_exact/RFNERY01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RFNERY01",
+          "path": "PortrayalCatalog/Symbols/RFNERY01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "refinery",
+          "path": "out/opencpn_s52_reference/RFNERY01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RFNERY01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RFNERY01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RFNERY01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RFNERY01",
+      "symbol_id": "RFNERY01"
+    },
+    {
+      "batch_index": 23,
+      "confidence": 0.98,
+      "expected": "Conspicuous refinery should use the black refinery circle/glyph witness.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a gray dashed area tile with a diagonal dash pattern.",
+      "pass": false,
+      "required_change": "Replace the dashed area tile with the RFNERY11 conspicuous refinery glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RFNERY11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RFNERY11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RFNERY11",
+          "path": "assets/svg/source_priority/s101_exact/RFNERY11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RFNERY11",
+          "path": "PortrayalCatalog/Symbols/RFNERY11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous refinery",
+          "path": "out/opencpn_s52_reference/RFNERY11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RFNERY11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RFNERY11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RFNERY11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RFNERY11",
+      "symbol_id": "RFNERY11"
+    },
+    {
+      "batch_index": 24,
+      "confidence": 0.98,
+      "expected": "RoRo terminal should use the RoRo text/terminal label.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the ROLROL01 RoRo terminal text label.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "ROLROL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "ROLROL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "ROLROL01",
+          "path": "assets/svg/source_priority/s101_exact/ROLROL01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "ROLROL01",
+          "path": "PortrayalCatalog/Symbols/ROLROL01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RoRo terminal",
+          "path": "out/opencpn_s52_reference/ROLROL01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/ROLROL01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/ROLROL01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/ROLROL01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:ROLROL01",
+      "symbol_id": "ROLROL01"
+    },
+    {
+      "batch_index": 25,
+      "confidence": 0.98,
+      "expected": "Rescue station/position approximate witness should be the small black star/cross position mark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RSCSTA02 reference point/star mark.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RSCSTA02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RSCSTA02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RSCSTA02",
+          "path": "assets/svg/source_priority/s101_exact/RSCSTA02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RSCSTA02",
+          "path": "PortrayalCatalog/Symbols/RSCSTA02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "position approximate",
+          "path": "out/opencpn_s52_reference/RSCSTA02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RSCSTA02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RSCSTA02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RSCSTA02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RSCSTA02",
+      "symbol_id": "RSCSTA02"
+    },
+    {
+      "batch_index": 26,
+      "confidence": 0.98,
+      "expected": "Recommended route with direction unspecified should show the magenta route arrow plus unknown-direction question marks.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RTLDEF51 dashed route arrow and unknown-direction cues.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "missing_question_mark"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RTLDEF51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RTLDEF51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RTLDEF51",
+          "path": "assets/svg/source_priority/s101_exact/RTLDEF51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RTLDEF51",
+          "path": "PortrayalCatalog/Symbols/RTLDEF51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data",
+          "path": "out/opencpn_s52_reference/RTLDEF51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RTLDEF51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RTLDEF51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/RTLDEF51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RTLDEF51",
+      "symbol_id": "RTLDEF51"
+    },
+    {
+      "batch_index": 27,
+      "confidence": 0.96,
+      "expected": "Radar transponder beacon should be a magenta dashed/circular transponder beacon mark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large magenta diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the RTPBCN02 magenta transponder-beacon circle/ring glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "RTPBCN02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "RTPBCN02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "RTPBCN02",
+          "path": "assets/svg/source_priority/s101_exact/RTPBCN02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "RTPBCN02",
+          "path": "PortrayalCatalog/Symbols/RTPBCN02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "radar transponder beacon",
+          "path": "out/opencpn_s52_reference/RTPBCN02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/RTPBCN02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/RTPBCN02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/RTPBCN02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:RTPBCN02",
+      "symbol_id": "RTPBCN02"
+    },
+    {
+      "batch_index": 28,
+      "confidence": 0.99,
+      "expected": "One-mile scalebar should be the vertical orange/blue segmented scale bar.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SCALEB10 one-mile segmented vertical scalebar.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_scalebar"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SCALEB10",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SCALEB10",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SCALEB10",
+          "path": "assets/svg/source_priority/s101_exact/SCALEB10.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SCALEB10",
+          "path": "PortrayalCatalog/Symbols/SCALEB10.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "one mile scalebar for display scales larger than 1/80,000",
+          "path": "out/opencpn_s52_reference/SCALEB10__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SCALEB10.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SCALEB10__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SCALEB10.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SCALEB10",
+      "symbol_id": "SCALEB10"
+    },
+    {
+      "batch_index": 29,
+      "confidence": 0.99,
+      "expected": "Ten-mile latitude scale should be the vertical black segmented scale bar.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SCALEB11 ten-mile segmented latitude scalebar.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_scalebar",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SCALEB11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SCALEB11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SCALEB11",
+          "path": "assets/svg/source_priority/s101_exact/SCALEB11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SCALEB11",
+          "path": "PortrayalCatalog/Symbols/SCALEB11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "10 mile latitude scale for display scales smaller than 1/80,000",
+          "path": "out/opencpn_s52_reference/SCALEB11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SCALEB11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SCALEB11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SCALEB11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SCALEB11",
+      "symbol_id": "SCALEB11"
+    },
+    {
+      "batch_index": 30,
+      "confidence": 0.97,
+      "expected": "Silo should be a small brown point/circle symbol, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large brown diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SILBUI01 small brown silo point mark.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SILBUI01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SILBUI01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SILBUI01",
+          "path": "assets/svg/source_priority/s101_exact/SILBUI01.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SILBUI01",
+          "path": "PortrayalCatalog/Symbols/SILBUI01.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "silo",
+          "path": "out/opencpn_s52_reference/SILBUI01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SILBUI01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SILBUI01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SILBUI01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SILBUI01",
+      "symbol_id": "SILBUI01"
+    },
+    {
+      "batch_index": 31,
+      "confidence": 0.97,
+      "expected": "Conspicuous silo should be a small black point/circle symbol, not a diamond.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SILBUI11 conspicuous silo point mark.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SILBUI11",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SILBUI11",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SILBUI11",
+          "path": "assets/svg/source_priority/s101_exact/SILBUI11.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SILBUI11",
+          "path": "PortrayalCatalog/Symbols/SILBUI11.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "conspicuous silo",
+          "path": "out/opencpn_s52_reference/SILBUI11__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SILBUI11.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SILBUI11__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SILBUI11.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SILBUI11",
+      "symbol_id": "SILBUI11"
+    },
+    {
+      "batch_index": 32,
+      "confidence": 0.98,
+      "expected": "Signal station should show the small SS signal-station label/box.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large white diamond with a black center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SISTAT02 signal-station SS label symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SISTAT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SISTAT02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "signal station",
+          "path": "out/opencpn_s52_reference/SISTAT02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SISTAT02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SISTAT02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/SISTAT02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SISTAT02",
+      "symbol_id": "SISTAT02"
+    },
+    {
+      "batch_index": 33,
+      "confidence": 0.82,
+      "expected": "Yacht harbour/marina should use a sailboat-in-circle harbour facility symbol; OpenCPN and AquaMap both witness this class.",
+      "judge_comments": "Automated visual pass only: correct symbol class, shape, and color order are close enough for first-pass visual parity. Not final-approved.",
+      "observed": "Helm renders a sailboat/marina glyph inside a magenta circle.",
+      "pass": true,
+      "required_change": "No semantic repair required; optional native-scale and stroke-weight tightening only.",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SMCFAC02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SMCFAC02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SMCFAC02",
+          "path": "assets/svg/source_priority/s101_exact/SMCFAC02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SMCFAC02",
+          "path": "PortrayalCatalog/Symbols/SMCFAC02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Marina",
+          "path": "reference_sources/aquamap_map_symbols/images/Marina1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Boat Ramp",
+          "path": "reference_sources/aquamap_map_symbols/images/BoatRamp1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "Water Tower",
+          "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+          "provider": "aquamap",
+          "status": "copyrighted_visual_reference_not_canonical_art",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "yacht harbour, marina",
+          "path": "out/opencpn_s52_reference/SMCFAC02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SMCFAC02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SMCFAC02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch3/SMCFAC02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SMCFAC02",
+      "symbol_id": "SMCFAC02"
+    },
+    {
+      "batch_index": 34,
+      "confidence": 0.98,
+      "expected": "Sand waves should be a small gray wavy-line seabed symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SNDWAV02 wavy sand-wave line symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_wave_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SNDWAV02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SNDWAV02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SNDWAV02",
+          "path": "assets/svg/source_priority/s101_exact/SNDWAV02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SNDWAV02",
+          "path": "PortrayalCatalog/Symbols/SNDWAV02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "sand waves",
+          "path": "out/opencpn_s52_reference/SNDWAV02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SNDWAV02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SNDWAV02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SNDWAV02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SNDWAV02",
+      "symbol_id": "SNDWAV02"
+    },
+    {
+      "batch_index": 35,
+      "confidence": 0.99,
+      "expected": "Deep sounding should render the sounding-number text cue, not a boxed plus placeholder.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a rounded dashed box with a gray plus.",
+      "pass": false,
+      "required_change": "Replace the dashed plus box with the SOUNDG02 sounding-number glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_depth_label",
+        "placeholder_artwork"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SOUNDG02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SOUNDG02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SOUNDG02",
+          "path": "assets/svg/source_priority/s101_exact/SOUNDG02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SOUNDG02",
+          "path": "PortrayalCatalog/Symbols/SOUNDG02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "for deep soundings, greater than safety depth, full-chart and simplified",
+          "path": "out/opencpn_s52_reference/SOUNDG02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SOUNDG02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SOUNDG02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SOUNDG02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SOUNDG02",
+      "symbol_id": "SOUNDG02"
+    },
+    {
+      "batch_index": 36,
+      "confidence": 0.98,
+      "expected": "Spring should use the small spring/water-source glyph.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large gray diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SPRING02 spring reference glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SPRING02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SPRING02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SPRING02",
+          "path": "assets/svg/source_priority/s101_exact/SPRING02.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SPRING02",
+          "path": "PortrayalCatalog/Symbols/SPRING02.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "spring",
+          "path": "out/opencpn_s52_reference/SPRING02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SPRING02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SPRING02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SPRING02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SPRING02",
+      "symbol_id": "SPRING02"
+    },
+    {
+      "batch_index": 37,
+      "confidence": 0.98,
+      "expected": "Port-entry signal station should use the signal-board/post icon with its entry pictogram.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SSENTR01 port-entry signal-station board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SSENTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SSENTR01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "signal station, port entry",
+          "path": "out/opencpn_s52_reference/SSENTR01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SSENTR01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SSENTR01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/SSENTR01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SSENTR01",
+      "symbol_id": "SSENTR01"
+    },
+    {
+      "batch_index": 38,
+      "confidence": 0.98,
+      "expected": "Lock signal station should use the signal-board/post icon with two-light/lock detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SSLOCK01 lock signal-station board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SSLOCK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SSLOCK01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "signal station, lock",
+          "path": "out/opencpn_s52_reference/SSLOCK01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SSLOCK01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SSLOCK01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/SSLOCK01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SSLOCK01",
+      "symbol_id": "SSLOCK01"
+    },
+    {
+      "batch_index": 39,
+      "confidence": 0.98,
+      "expected": "Wahrschau signal station should use the triangular signal-board/post icon.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the SSWARS01 wahrschau signal-station board glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SSWARS01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SSWARS01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "signal station, wahrschau",
+          "path": "out/opencpn_s52_reference/SSWARS01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SSWARS01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SSWARS01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/SSWARS01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SSWARS01",
+      "symbol_id": "SSWARS01"
+    },
+    {
+      "batch_index": 40,
+      "confidence": 0.98,
+      "expected": "STARPT01 should use the small black star point mark.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the STARPT01 black star symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_star_shape",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "STARPT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "STARPT01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "STARPT01",
+          "path": "out/opencpn_s52_reference/STARPT01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/STARPT01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/STARPT01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/STARPT01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:STARPT01",
+      "symbol_id": "STARPT01"
+    },
+    {
+      "batch_index": 41,
+      "confidence": 0.98,
+      "expected": "Swept area should use the bracket/U-shaped swept-area cue.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a gray dashed area tile with a diagonal dash pattern.",
+      "pass": false,
+      "required_change": "Replace the dashed area tile with the SWPARE51 swept-area bracket symbol.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "SWPARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "SWPARE51",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "SWPARE51",
+          "path": "assets/svg/source_priority/s101_exact/SWPARE51.svg",
+          "provider": "s101",
+          "status": "selected_s101_exact_svg",
+          "used": true
+        },
+        {
+          "available": false,
+          "label": "SWPARE51",
+          "path": "PortrayalCatalog/Symbols/SWPARE51.svg",
+          "provider": "s101",
+          "status": "license_pending_reference",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "swept area",
+          "path": "out/opencpn_s52_reference/SWPARE51__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/SWPARE51.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/SWPARE51__day.png",
+          "source_svg": "assets/svg/owned_repair_batch5/SWPARE51.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:SWPARE51",
+      "symbol_id": "SWPARE51"
+    },
+    {
+      "batch_index": 42,
+      "confidence": 0.98,
+      "expected": "Passenger terminal should use the circular terminal symbol with passenger/ferry detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL01 passenger-terminal circular glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL01",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, passanger terminal",
+          "path": "out/opencpn_s52_reference/TERMNL01__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL01.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL01__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL01.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL01",
+      "symbol_id": "TERMNL01"
+    },
+    {
+      "batch_index": 43,
+      "confidence": 0.98,
+      "expected": "Ferry terminal should use the circular terminal symbol with ferry detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL02 ferry-terminal circular glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL02",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, ferry terminal",
+          "path": "out/opencpn_s52_reference/TERMNL02__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL02.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL02__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL02.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL02",
+      "symbol_id": "TERMNL02"
+    },
+    {
+      "batch_index": 44,
+      "confidence": 0.98,
+      "expected": "Container terminal should use the circular multicolor container-terminal symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large red diamond with a black/white center ring.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL03 circular container-terminal glyph, preserving red/black/color detail.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_container_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL03",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Container transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL03__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL03.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL03__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL03.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL03",
+      "symbol_id": "TERMNL03"
+    },
+    {
+      "batch_index": 45,
+      "confidence": 0.98,
+      "expected": "Bulk terminal should use the circular bulk/material terminal symbol.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL04 circular bulk-terminal glyph with white/black detail.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_terminal_detail",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL04",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL04",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Bulk transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL04__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL04.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL04__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL04.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL04",
+      "symbol_id": "TERMNL04"
+    },
+    {
+      "batch_index": 46,
+      "confidence": 0.98,
+      "expected": "Oil terminal should use the circular terminal mark with oil text/detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL05 circular oil-terminal label glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL05",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL05",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Oil transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL05__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL05.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL05__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL05.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL05",
+      "symbol_id": "TERMNL05"
+    },
+    {
+      "batch_index": 47,
+      "confidence": 0.98,
+      "expected": "Fuel terminal should use the circular terminal mark with fuel text/detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL06 circular fuel-terminal label glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL06",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL06",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Fuel transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL06__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL06.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL06__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL06.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL06",
+      "symbol_id": "TERMNL06"
+    },
+    {
+      "batch_index": 48,
+      "confidence": 0.98,
+      "expected": "Chemical terminal should use the circular terminal mark with chemical text/detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL07 circular chemical-terminal label glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL07",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL07",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Chemical transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL07__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL07.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL07__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL07.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL07",
+      "symbol_id": "TERMNL07"
+    },
+    {
+      "batch_index": 49,
+      "confidence": 0.98,
+      "expected": "Liquid-goods terminal should use the circular terminal mark with liquid-goods text/detail.",
+      "judge_comments": "Fail for first-pass visual parity: correct symbol class, shape/topmark/color order, and provider-reference parity are not proven. Not final-approved.",
+      "observed": "Helm renders a large black diamond with a white center dot.",
+      "pass": false,
+      "required_change": "Replace the diamond with the TERMNL08 circular liquid-goods terminal label glyph.",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "source_refs_used": [
+        {
+          "available": true,
+          "provider": "semantic_brief",
+          "symbol_id": "TERMNL08",
+          "used": true
+        },
+        {
+          "available": true,
+          "provider": "semantic_shape_judge_queue",
+          "status": "matched_pending_judge_item",
+          "symbol_id": "TERMNL08",
+          "used": true
+        },
+        {
+          "available": true,
+          "label": "terminal, Liquid Goods transshipment",
+          "path": "out/opencpn_s52_reference/TERMNL08__day.png",
+          "provider": "opencpn_render",
+          "status": "pending_render",
+          "used": true
+        },
+        {
+          "available": true,
+          "path": "assets/svg/triad_generated/TERMNL08.svg",
+          "provider": "helm_candidate",
+          "render_path": "out/triad_reference_candidate_pack/renders/TERMNL08__day.png",
+          "source_svg": "assets/svg/owned_repair_batch4/TERMNL08.svg",
+          "used": true
+        }
+      ],
+      "source_table_id": "opencpn-s52:TERMNL08",
+      "symbol_id": "TERMNL08"
+    }
+  ]
+}

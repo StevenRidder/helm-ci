@@ -1,0 +1,474 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch40.json",
+    "renders": "out/standard_repair_batch32/renders",
+    "svg_dir": "assets/svg/owned_repair_batch40"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 5,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch32/renders/RCLDEF01__after__day.png",
+        "dusk": "out/standard_repair_batch32/renders/RCLDEF01__after__dusk.png",
+        "night": "out/standard_repair_batch32/renders/RCLDEF01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch40/RCLDEF01.svg",
+      "asset": "RCLDEF01",
+      "before_svg": "assets/svg/triad_generated/RCLDEF01.svg",
+      "candidate_source": "assets/svg/triad_generated/RCLDEF01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_batch_037_feedback",
+      "name": "radio calling-in point whose direction is not known",
+      "provenance": {
+        "generator": "forge.standard_repair_batch32",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_037_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw RCLDEF01 with the central circle, two question marks, and separate upper/lower V direction witnesses; remove the continuous diamond side enclosure.",
+      "risk_bucket": "batch37_followup_repair_batch40",
+      "safety_reason_codes": [
+        "wrong_silhouette",
+        "radio_call_direction_cue_mismatch",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RCLDEF01 is radio calling-in point whose direction is not known. It is used as a radio calling-in point whose direction is not known. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "radio calling-in point whose direction is not known"
+      },
+      "source_judge": "catalog/standard_judge_batch_037_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RCLDEF01__day.png",
+            "label": "radio calling-in point whose direction is not known",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RCLDEF01__day.png",
+              "dusk": "out/opencpn_s52_reference/RCLDEF01__dusk.png",
+              "night": "out/opencpn_s52_reference/RCLDEF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RCLDEF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RCLDEF01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RCLDEF01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RCLDEF01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RCLDEF01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch32/renders/RDOCAL02__after__day.png",
+        "dusk": "out/standard_repair_batch32/renders/RDOCAL02__after__dusk.png",
+        "night": "out/standard_repair_batch32/renders/RDOCAL02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch40/RDOCAL02.svg",
+      "asset": "RDOCAL02",
+      "before_svg": "assets/svg/triad_generated/RDOCAL02.svg",
+      "candidate_source": "assets/svg/triad_generated/RDOCAL02.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_batch_037_feedback",
+      "name": "radio calling-in point for traffic in one direction only",
+      "provenance": {
+        "generator": "forge.standard_repair_batch32",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_037_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw RDOCAL02 as a central radio-call circle with one upper triangular/V direction point; remove the closed diamond and any opposite-direction cue.",
+      "risk_bucket": "batch37_followup_repair_batch40",
+      "safety_reason_codes": [
+        "wrong_direction_semantics",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RDOCAL02 is radio calling-in point for traffic in one direction only. It is used as a radio calling-in point for traffic in one direction only. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "radio calling-in point for traffic in one direction only"
+      },
+      "source_judge": "catalog/standard_judge_batch_037_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Radio Call-in Point",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Radar Station",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RDOCAL02__day.png",
+            "label": "radio calling-in point for traffic in one direction only",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RDOCAL02__day.png",
+              "dusk": "out/opencpn_s52_reference/RDOCAL02__dusk.png",
+              "night": "out/opencpn_s52_reference/RDOCAL02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RDOCAL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RDOCAL02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RDOCAL02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RDOCAL02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RDOCAL02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch32/renders/RDOCAL03__after__day.png",
+        "dusk": "out/standard_repair_batch32/renders/RDOCAL03__after__dusk.png",
+        "night": "out/standard_repair_batch32/renders/RDOCAL03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch40/RDOCAL03.svg",
+      "asset": "RDOCAL03",
+      "before_svg": "assets/svg/triad_generated/RDOCAL03.svg",
+      "candidate_source": "assets/svg/triad_generated/RDOCAL03.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_batch_037_feedback",
+      "name": "radio calling-in point for traffic in both directions",
+      "provenance": {
+        "generator": "forge.standard_repair_batch32",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_037_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw RDOCAL03 as the central circle with separate upper and lower triangular/V direction witnesses; remove the closed diamond and vertical center stroke.",
+      "risk_bucket": "batch37_followup_repair_batch40",
+      "safety_reason_codes": [
+        "wrong_direction_semantics",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RDOCAL03 is radio calling-in point for traffic in both directions. It is used as a radio calling-in point for traffic in both directions. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "radio calling-in point for traffic in both directions"
+      },
+      "source_judge": "catalog/standard_judge_batch_037_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Radio Call-in Point",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/RadioCallinPoint1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Radar Station",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/RadarStation1.png",
+            "section": "Other Marine objects",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RDOCAL03__day.png",
+            "label": "radio calling-in point for traffic in both directions",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RDOCAL03__day.png",
+              "dusk": "out/opencpn_s52_reference/RDOCAL03__dusk.png",
+              "night": "out/opencpn_s52_reference/RDOCAL03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RDOCAL03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RDOCAL03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RDOCAL03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RDOCAL03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RDOCAL03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch32/renders/RECTRC56__after__day.png",
+        "dusk": "out/standard_repair_batch32/renders/RECTRC56__after__dusk.png",
+        "night": "out/standard_repair_batch32/renders/RECTRC56__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch40/RECTRC56.svg",
+      "asset": "RECTRC56",
+      "before_svg": "assets/svg/triad_generated/RECTRC56.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC56.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_batch_037_feedback",
+      "name": "recommended two-way track as an area, based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch32",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_037_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw RECTRC56 with a continuous vertical fixed-mark track line and opposed chevrons; remove the added center circle and broken-line treatment.",
+      "risk_bucket": "batch37_followup_repair_batch40",
+      "safety_reason_codes": [
+        "fixed_mark_semantics_mismatch",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC56 is recommended two-way track as an area, based on fixed marks. It is used as a recommended two-way track as an area, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "recommended two-way track as an area, based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_037_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC56__day.png",
+            "label": "recommended two-way track as an area, based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC56__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC56__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC56__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RECTRC56",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RECTRC56.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RECTRC56",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RECTRC56.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RECTRC56"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch32/renders/RECTRC58__after__day.png",
+        "dusk": "out/standard_repair_batch32/renders/RECTRC58__after__dusk.png",
+        "night": "out/standard_repair_batch32/renders/RECTRC58__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch40/RECTRC58.svg",
+      "asset": "RECTRC58",
+      "before_svg": "assets/svg/triad_generated/RECTRC58.svg",
+      "candidate_source": "assets/svg/triad_generated/RECTRC58.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_batch_037_feedback",
+      "name": "recommended one-way track as an area, based on fixed marks",
+      "provenance": {
+        "generator": "forge.standard_repair_batch32",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_037_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw RECTRC58 with a continuous vertical fixed-mark track line and one direction chevron; remove the added center circle and broken-line treatment.",
+      "risk_bucket": "batch37_followup_repair_batch40",
+      "safety_reason_codes": [
+        "fixed_mark_semantics_mismatch",
+        "wrong_silhouette",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RECTRC58 is recommended one-way track as an area, based on fixed marks. It is used as a recommended one-way track as an area, based on fixed marks. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "recommended one-way track as an area, based on fixed marks"
+      },
+      "source_judge": "catalog/standard_judge_batch_037_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RECTRC58__day.png",
+            "label": "recommended one-way track as an area, based on fixed marks",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RECTRC58__day.png",
+              "dusk": "out/opencpn_s52_reference/RECTRC58__dusk.png",
+              "night": "out/opencpn_s52_reference/RECTRC58__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RECTRC58",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RECTRC58.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RECTRC58",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RECTRC58.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RECTRC58"
+          }
+        ]
+      }
+    }
+  ]
+}

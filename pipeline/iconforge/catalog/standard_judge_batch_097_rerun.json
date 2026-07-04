@@ -1,0 +1,85 @@
+{
+  "agent": "codex/FORGE-15-judge-loop-current",
+  "batch_id": "standard_judge_batch_097_rerun",
+  "created_at": "2026-07-03T06:05:00Z",
+  "evidence_notes": [
+    "Judged owned_repair_batch97 against batch96 SymbolSpecs and S-57/S-52 metadata.",
+    "No external art witness was used as canonical art; this is generated-owned artwork from metadata.",
+    "Pass means judge_pass_pending_final_approval only; no symbol is final human-approved."
+  ],
+  "project": "vulkan",
+  "schema_version": "standard_source_table.visual_judge_rerun.v1",
+  "selection": {
+    "asset_ids": [
+      "BCNCON81",
+      "boyspp50"
+    ],
+    "candidate_status": "repaired_pending_judge_rerun",
+    "output_candidate_status_on_pass": "judge_pass_pending_final_approval",
+    "pass_semantics": "pass-pending-human only; this artifact grants zero final approvals",
+    "source_batches": [
+      "catalog/owned_repair_batch97.json"
+    ]
+  },
+  "source_batch": "catalog/owned_repair_batch97.json",
+  "summary": {
+    "candidate_status": "repaired_pending_judge_rerun",
+    "fail": 0,
+    "failed_assets": [],
+    "final_approved": 0,
+    "pass": 2,
+    "passed_assets": [
+      "BCNCON81",
+      "boyspp50"
+    ],
+    "selected": 2,
+    "source_batches": [
+      "catalog/owned_repair_batch97.json"
+    ]
+  },
+  "task_id": "FORGE-15",
+  "verdicts": [
+    {
+      "batch_index": 97,
+      "confidence": 0.82,
+      "expected": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order. Batch96 SymbolSpec primitive: conical_beacon_or_buoy_body. Required colours: blue, red, white, blue. OBJNAM text remains separate label, not part of canonical icon",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "judge_comments": "PASS-PENDING-HUMAN. BCNCON81 follows the batch96 SymbolSpec: primitive=conical_beacon_or_buoy_body, colours=blue, red, white, blue; text labels remain external to the canonical icon. Human final approval is still required.",
+      "observed": "BCNCON81 follows the batch96 SymbolSpec: primitive=conical_beacon_or_buoy_body, colours=blue, red, white, blue; text labels remain external to the canonical icon.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:BCNCON81",
+        "symbol_specs:catalog/symbol_specs_batch96.json",
+        "source_batch:catalog/owned_repair_batch97.json",
+        "helm_candidate:assets/svg/triad_generated/BCNCON81.svg"
+      ],
+      "symbol_id": "BCNCON81"
+    },
+    {
+      "batch_index": 97,
+      "confidence": 0.82,
+      "expected": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow. Batch96 SymbolSpec primitive: special_purpose_buoy_or_waterway_marker. Required colours: yellow. OBJNAM text remains separate label, not part of canonical icon",
+      "final_approved": false,
+      "input_candidate_status": "repaired_pending_judge_rerun",
+      "input_source_batch": "catalog/owned_repair_batch97.json",
+      "judge_comments": "PASS-PENDING-HUMAN. boyspp50 follows the batch96 SymbolSpec: primitive=special_purpose_buoy_or_waterway_marker, colours=yellow; text labels remain external to the canonical icon. Human final approval is still required.",
+      "observed": "boyspp50 follows the batch96 SymbolSpec: primitive=special_purpose_buoy_or_waterway_marker, colours=yellow; text labels remain external to the canonical icon.",
+      "output_candidate_status": "judge_pass_pending_final_approval",
+      "pass": true,
+      "required_change": "",
+      "safety_reason_codes": [],
+      "source_refs_used": [
+        "standard_source_table:boyspp50",
+        "symbol_specs:catalog/symbol_specs_batch96.json",
+        "source_batch:catalog/owned_repair_batch97.json",
+        "helm_candidate:assets/svg/triad_generated/boyspp50.svg"
+      ],
+      "symbol_id": "boyspp50"
+    }
+  ]
+}

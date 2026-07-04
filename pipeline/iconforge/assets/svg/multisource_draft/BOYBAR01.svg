@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYBAR01 barrel_buoy">
+  <title>BOYBAR01 barrel_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BOYBAR01" data-shape="barrel_buoy">
+  <defs><clipPath id="clip-BOYBAR01"><path d="M19 24 Q32 12 45 24 L45 45 Q32 56 19 45 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYBAR01)">
+  <rect x="0" y="7.0" width="64" height="17.58" fill="var(--red)"/>
+  <rect x="0" y="24.33" width="64" height="17.58" fill="var(--black)"/>
+  <rect x="0" y="41.67" width="64" height="17.58" fill="var(--blue)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M19 24 Q32 12 45 24 L45 45 Q32 56 19 45 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

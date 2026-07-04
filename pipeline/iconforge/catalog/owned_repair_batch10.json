@@ -1,0 +1,1025 @@
+{
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch10.json",
+    "renders": "out/standard_repair_batch2/renders",
+    "svg_dir": "assets/svg/owned_repair_batch10"
+  },
+  "schema_version": 1,
+  "source_judge": "catalog/standard_judge_batch_004.json",
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 20,
+    "source_judge_failed_rows": 20,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BCNTOW90__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BCNTOW90__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BCNTOW90__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BCNTOW90.svg",
+      "asset": "BCNTOW90",
+      "before_svg": "assets/svg/triad_generated/BCNTOW90.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNTOW90.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "beacon yb, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Re-render as beacon tower with the BCNTOW90 yellow/brown body color, not black, preserving compact tower silhouette and black outline.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNTOW90__day.png",
+            "label": "beacon yb, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNTOW90__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNTOW90__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNTOW90__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BLKADJ01__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BLKADJ01__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BLKADJ01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BLKADJ01.svg",
+      "asset": "BLKADJ01",
+      "before_svg": "assets/svg/triad_generated/BLKADJ01.svg",
+      "candidate_source": "assets/svg/triad_generated/BLKADJ01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "symbol to be used for checking and adjusting the brightness and contrast controls",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Replace diamond with square control swatch: black outer square/frame with dark inner square as in S-52/S-101 BLKADJ01.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BLKADJ01__day.png",
+            "label": "symbol to be used for checking and adjusting the brightness and contrast controls",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BLKADJ01__day.png",
+              "dusk": "out/opencpn_s52_reference/BLKADJ01__dusk.png",
+              "night": "out/opencpn_s52_reference/BLKADJ01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BLKADJ01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BLKADJ01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BLKADJ01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BLKADJ01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BLKADJ01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BORDER01__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BORDER01__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BORDER01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BORDER01.svg",
+      "asset": "BORDER01",
+      "before_svg": "assets/svg/triad_generated/BORDER01.svg",
+      "candidate_source": "assets/svg/triad_generated/BORDER01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "border",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Replace with a thin diagonal red/white bordered line/strip matching BORDER01; no diamond, circle, or point-marker body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BORDER01__day.png",
+            "label": "border",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BORDER01__day.png",
+              "dusk": "out/opencpn_s52_reference/BORDER01__dusk.png",
+              "night": "out/opencpn_s52_reference/BORDER01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYBAR01__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYBAR01__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYBAR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYBAR01.svg",
+      "asset": "BOYBAR01",
+      "before_svg": "assets/svg/triad_generated/BOYBAR01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYBAR01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "barrel buoy, black full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Re-render as generic black/paper-chart barrel buoy silhouette/outline. Remove invented red/blue bands.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+            "label": "barrel buoy, black full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYBAR01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYBAR01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYBAR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYBAR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYBAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYBAR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYBAR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN01__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN01__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN01.svg",
+      "asset": "BOYCAN01",
+      "before_svg": "assets/svg/triad_generated/BOYCAN01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy, paper-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Use the BOYCAN01 paper-chart can shape/outline, not a filled full-chart upright can.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN01__day.png",
+            "label": "can buoy, paper-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYCAN01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYCAN01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYCAN01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYCAN01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN62__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN62__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN62__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN62.svg",
+      "asset": "BOYCAN62",
+      "before_svg": "assets/svg/triad_generated/BOYCAN62.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN62.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,generic,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render generic can with neutral/black outline and no invented green/blue color bands.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN62__day.png",
+            "label": "can buoy,generic,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN62__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN62__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN62__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN72__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN72__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN72__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN72.svg",
+      "asset": "BOYCAN72",
+      "before_svg": "assets/svg/triad_generated/BOYCAN72.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN72.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral rgr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands red/green/red in correct order on can body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN72__day.png",
+            "label": "can buoy,lateral rgr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN72__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN72__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN72__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN73__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN73__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN73__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN73.svg",
+      "asset": "BOYCAN73",
+      "before_svg": "assets/svg/triad_generated/BOYCAN73.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN73.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral grg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands green/red/green in correct order on can body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN73__day.png",
+            "label": "can buoy,lateral grg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN73__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN73__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN73__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN74__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN74__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN74__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN74.svg",
+      "asset": "BOYCAN74",
+      "before_svg": "assets/svg/triad_generated/BOYCAN74.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN74.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands red/white/red in correct order on can body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN74__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN74__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN74__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN74__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN76__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN76__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN76__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN76.svg",
+      "asset": "BOYCAN76",
+      "before_svg": "assets/svg/triad_generated/BOYCAN76.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN76.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,isolated danger brb,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render isolated-danger can as black/red/black with all three bands visible.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN76__day.png",
+            "label": "can buoy,isolated danger brb,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN76__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN76__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN76__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN77__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN77__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN77__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN77.svg",
+      "asset": "BOYCAN77",
+      "before_svg": "assets/svg/triad_generated/BOYCAN77.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN77.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral white/orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render white/orange/white three-band can; do not collapse to two bands.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN77__day.png",
+            "label": "can buoy,lateral white/orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN77__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN77__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN77__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN78__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN78__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN78__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN78.svg",
+      "asset": "BOYCAN78",
+      "before_svg": "assets/svg/triad_generated/BOYCAN78.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN78.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral wow,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render white/orange/white three-band can; do not collapse to two bands.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN78__day.png",
+            "label": "can buoy,lateral wow,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN78__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN78__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN78__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN79__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN79__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN79__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN79.svg",
+      "asset": "BOYCAN79",
+      "before_svg": "assets/svg/triad_generated/BOYCAN79.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN79.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Repair against OpenCPN/S-52 spine and available S-101/AquaMap examples, then rerun judge.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN79__day.png",
+            "label": "can buoy,orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN79__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN79__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN79__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN81__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN81__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN81.svg",
+      "asset": "BOYCAN81",
+      "before_svg": "assets/svg/triad_generated/BOYCAN81.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN81.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral white/orange,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render the white/orange/white lateral can pattern indicated by S-52 metadata/reference.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN81__day.png",
+            "label": "can buoy,lateral white/orange,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN81__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN81__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN82__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN82__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN82__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN82.svg",
+      "asset": "BOYCAN82",
+      "before_svg": "assets/svg/triad_generated/BOYCAN82.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN82.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands red/white/red in correct order.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN82__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN82__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN82__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN82__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCAN83__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCAN83__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCAN83__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCAN83.svg",
+      "asset": "BOYCAN83",
+      "before_svg": "assets/svg/triad_generated/BOYCAN83.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCAN83.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "can buoy,lateral-rw,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands red/white/red in correct order.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCAN83__day.png",
+            "label": "can buoy,lateral-rw,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCAN83__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCAN83__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCAN83__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCON01__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCON01__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCON01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCON01.svg",
+      "asset": "BOYCON01",
+      "before_svg": "assets/svg/triad_generated/BOYCON01.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON01.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "conical buoy, general, full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render generic BOYCON01 conical buoy as the S-52/S-101 paper/full-chart reference shape without invented red/blue bands.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON01__day.png",
+            "label": "conical buoy, general, full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON01__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON01__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "BOYCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/BOYCON01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "BOYCON01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/BOYCON01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "BOYCON01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCON63__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCON63__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCON63__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCON63.svg",
+      "asset": "BOYCON63",
+      "before_svg": "assets/svg/triad_generated/BOYCON63.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON63.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "conical buoy,lateral-balck-red-black,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render conical buoy with black/red/black three-band sequence.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON63__day.png",
+            "label": "conical buoy,lateral-balck-red-black,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON63__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON63__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON63__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCON66__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCON66__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCON66__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCON66.svg",
+      "asset": "BOYCON66",
+      "before_svg": "assets/svg/triad_generated/BOYCON66.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON66.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "conical buoy,lateral-rgr,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands red/green/red in correct order on conical body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON66__day.png",
+            "label": "conical buoy,lateral-rgr,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON66__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON66__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON66__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch2/renders/BOYCON67__after__day.png",
+        "dusk": "out/standard_repair_batch2/renders/BOYCON67__after__dusk.png",
+        "night": "out/standard_repair_batch2/renders/BOYCON67__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch10/BOYCON67.svg",
+      "asset": "BOYCON67",
+      "before_svg": "assets/svg/triad_generated/BOYCON67.svg",
+      "candidate_source": "assets/svg/triad_generated/BOYCON67.svg",
+      "candidate_strategy": "owned_redraw_from_standard_judge_feedback",
+      "name": "conical buoy,lateral-grg,full-chart",
+      "provenance": {
+        "generator": "forge.standard_repair_batch2",
+        "origin": "generated-owned-artwork",
+        "reference_role": "S-101/Aqua Map/OpenCPN visual reference; redrawn owned SVG",
+        "source_priority_basis": "standard_source_table_repair",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_source_table_repair",
+      "repair_note": "Render three horizontal bands green/red/green in correct order on conical body.",
+      "risk_bucket": "standard_judge_batch_004_fail",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BOYCON67__day.png",
+            "label": "conical buoy,lateral-grg,full-chart",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BOYCON67__day.png",
+              "dusk": "out/opencpn_s52_reference/BOYCON67__dusk.png",
+              "night": "out/opencpn_s52_reference/BOYCON67__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

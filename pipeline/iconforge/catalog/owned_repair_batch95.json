@@ -1,0 +1,375 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch95.json",
+    "renders": null,
+    "svg_dir": "assets/svg/owned_repair_batch95"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 4,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch95/LIGHTS05.svg",
+      "asset": "LIGHTS05",
+      "before_svg": "assets/svg/owned_repair_batch95/LIGHTS05.svg",
+      "candidate_source": "assets/svg/triad_generated/LIGHTS05.svg",
+      "candidate_strategy": "owned_light_flare_teardrop_redraw_from_aquamap_witness",
+      "name": "LIGHTS05",
+      "provenance": {
+        "generator": "forge.standard_repair_batch95",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Aqua Map support-page witnesses guide generated-owned redraw; source images are not canonical art",
+        "source_priority_basis": "standard_repair_queue Aqua Map-backed pictogram failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_aquamap_pictogram_failure_consumed",
+      "required_change": "Redraw LIGHTS05 from the Aqua Map visual witness as the same chart symbol, preserving the recognized silhouette, small-scale proportions, color cue, and any text/mark convention for 'LIGHTS05'.",
+      "risk_bucket": "aquamap_pictogram_repair_batch95",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "1131",
+        "lookup_rcid": "31183",
+        "object_class": "LIGHTS",
+        "s52_instruction": "CS(LIGHTS05)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "LIGHTS05 is LIGHTS05. It is used as a light characteristic or lighted aid-to-navigation symbol. Required geometry: light symbol with the correct color cue and no invented hazard silhouette. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "light symbol with the correct color cue and no invented hazard silhouette",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "light characteristic or lighted aid-to-navigation symbol"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSM11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSY11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSW11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSR11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Light or Lighted Structure (Single color)",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSG11.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Multi Lights",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LIGHTSmulti1.png",
+            "section": "Lights",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch95/OBSTRN04.svg",
+      "asset": "OBSTRN04",
+      "before_svg": "assets/svg/owned_repair_batch95/OBSTRN04.svg",
+      "candidate_source": "assets/svg/triad_generated/OBSTRN04.svg",
+      "candidate_strategy": "owned_bottom_obstruction_dotted_circle_redraw_from_aquamap_witness",
+      "name": "OBSTRN04",
+      "provenance": {
+        "generator": "forge.standard_repair_batch95",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Aqua Map support-page witnesses guide generated-owned redraw; source images are not canonical art",
+        "source_priority_basis": "standard_repair_queue Aqua Map-backed pictogram failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_aquamap_pictogram_failure_consumed",
+      "required_change": "Redraw OBSTRN04 from the Aqua Map visual witness as the same chart symbol, preserving the recognized silhouette, small-scale proportions, color cue, and any text/mark convention for 'OBSTRN04'.",
+      "risk_bucket": "aquamap_pictogram_repair_batch95",
+      "s57_structure": {
+        "conditions": [
+          "CATOBS6"
+        ],
+        "lookup_id": "122",
+        "lookup_rcid": "32158",
+        "object_class": "OBSTRN",
+        "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "OBSTRN04 is OBSTRN04. It is used as a obstruction or hazard marking. Required geometry: recognized obstruction hazard symbol. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized obstruction hazard symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "obstruction or hazard marking"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Bottom Obstruction",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Obstruction1.png",
+            "section": "Others",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch95/TOWERS74_TX_OBJNAM.svg",
+      "asset": "TOWERS74|;TX(OBJNAM",
+      "before_svg": "assets/svg/owned_repair_batch95/TOWERS74_TX_OBJNAM.svg",
+      "candidate_source": "assets/svg/triad_generated/TOWERS74_TX_OBJNAM.svg",
+      "candidate_strategy": "owned_tower_landmark_rectangular_body_redraw_from_aquamap_witness",
+      "name": "TOWERS74|;TX(OBJNAM",
+      "provenance": {
+        "generator": "forge.standard_repair_batch95",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Aqua Map support-page witnesses guide generated-owned redraw; source images are not canonical art",
+        "source_priority_basis": "standard_repair_queue Aqua Map-backed pictogram failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_aquamap_pictogram_failure_consumed",
+      "required_change": "Create or attach a true TOWERS74 one-symbol crop/render witness, then rerun the judge; keep the tower silhouette direction, but do not promote from broad table evidence.",
+      "risk_bucket": "aquamap_pictogram_repair_batch95",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR1,11"
+        ],
+        "lookup_id": "2469",
+        "lookup_rcid": "93985",
+        "object_class": "TOWERS",
+        "s52_instruction": "SY(TOWERS74|;TX(OBJNAM,3,2,2,'15110',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "source_crop_not_symbol_tight",
+        "insufficient_visual_evidence",
+        "manual_review_required"
+      ],
+      "semantic_brief": {
+        "brief": "TOWERS74|;TX(OBJNAM is TOWERS74|;TX(OBJNAM. It is used as a TOWERS74|;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, orange.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "TOWERS74|;TX(OBJNAM"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Tower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Water Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {},
+      "after_svg": "assets/svg/owned_repair_batch95/WRECKS02.svg",
+      "asset": "WRECKS02",
+      "before_svg": "assets/svg/owned_repair_batch95/WRECKS02.svg",
+      "candidate_source": "assets/svg/triad_generated/WRECKS02.svg",
+      "candidate_strategy": "owned_submerged_wreck_dotted_hull_redraw_from_aquamap_witness",
+      "name": "WRECKS02",
+      "provenance": {
+        "generator": "forge.standard_repair_batch95",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Aqua Map support-page witnesses guide generated-owned redraw; source images are not canonical art",
+        "source_priority_basis": "standard_repair_queue Aqua Map-backed pictogram failures",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_aquamap_pictogram_failure_consumed",
+      "required_change": "Redraw WRECKS02 from the Aqua Map visual witness as the same chart symbol, preserving the recognized silhouette, small-scale proportions, color cue, and any text/mark convention for 'WRECKS02'.",
+      "risk_bucket": "aquamap_pictogram_repair_batch95",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "242",
+        "lookup_rcid": "32277",
+        "object_class": "WRECKS",
+        "s52_instruction": "CS(WRECKS02)"
+      },
+      "safety_reason_codes": [
+        "visual_parity_mismatch",
+        "reference_witness_not_followed",
+        "repairable_first_pass_candidate"
+      ],
+      "semantic_brief": {
+        "brief": "WRECKS02 is WRECKS02. It is used as a wreck hazard. Required geometry: recognized wreck symbol, not a generic decorative icon. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "recognized wreck symbol, not a generic decorative icon",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "wreck hazard"
+      },
+      "source_judge": "catalog/standard_judge_batch_088_091_initial.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Submerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/SubmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Dangerous Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/DangerousWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Emerged Wreck",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/EmergedWreck1.png",
+            "section": "Wrecks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [],
+        "s101": []
+      }
+    }
+  ]
+}

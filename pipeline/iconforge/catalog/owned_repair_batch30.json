@@ -1,0 +1,699 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch30.json",
+    "renders": "out/standard_repair_batch22/renders",
+    "svg_dir": "assets/svg/owned_repair_batch30"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 8,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FAIRWY51__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FAIRWY51__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FAIRWY51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FAIRWY51.svg",
+      "asset": "FAIRWY51",
+      "before_svg": "assets/svg/triad_generated/FAIRWY51.svg",
+      "candidate_source": "assets/svg/triad_generated/FAIRWY51.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "fairway with one-way traffic in direction indicated",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: keep hollow one-way arrow but use the CHGRD/gray reference stroke colour.",
+      "required_change": "Keep the hollow one-way arrow geometry, but move FAIRWY51 from black to the CHGRD/gray reference stroke colour.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FAIRWY51 is fairway with one-way traffic in direction indicated. It is used as a fairway with one-way traffic in direction indicated. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fairway with one-way traffic in direction indicated"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FAIRWY51__day.png",
+            "label": "fairway with one-way traffic in direction indicated",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FAIRWY51__day.png",
+              "dusk": "out/opencpn_s52_reference/FAIRWY51__dusk.png",
+              "night": "out/opencpn_s52_reference/FAIRWY51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FAIRWY51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FAIRWY51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FAIRWY51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FAIRWY51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FAIRWY51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FAIRWY52__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FAIRWY52__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FAIRWY52__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FAIRWY52.svg",
+      "asset": "FAIRWY52",
+      "before_svg": "assets/svg/triad_generated/FAIRWY52.svg",
+      "candidate_source": "assets/svg/triad_generated/FAIRWY52.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "fairway with two-way traffic",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: keep hollow two-way arrow but use the CHGRD/gray reference stroke colour.",
+      "required_change": "Keep the hollow two-way arrow geometry, but move FAIRWY52 from black to the CHGRD/gray reference stroke colour.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FAIRWY52 is fairway with two-way traffic. It is used as a fairway with two-way traffic. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fairway with two-way traffic"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FAIRWY52__day.png",
+            "label": "fairway with two-way traffic",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FAIRWY52__day.png",
+              "dusk": "out/opencpn_s52_reference/FAIRWY52__dusk.png",
+              "night": "out/opencpn_s52_reference/FAIRWY52__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FAIRWY52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FAIRWY52.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FAIRWY52",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FAIRWY52.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FAIRWY52"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FLDSTR01__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FLDSTR01__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FLDSTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FLDSTR01.svg",
+      "asset": "FLDSTR01",
+      "before_svg": "assets/svg/triad_generated/FLDSTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/FLDSTR01.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "flood stream, rate at spring tides",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: replace horizontal crossbar with spring-rate tick geometry on the gray flood-stream arrow.",
+      "required_change": "Replace the horizontal rate crossbar with the S-101/OpenCPN spring-rate tick geometry while preserving the gray flood-stream arrow.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_internal_detail",
+        "wrong_rate_marker_geometry",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FLDSTR01 is flood stream, rate at spring tides. It is used as a flood stream, rate at spring tides. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "flood stream, rate at spring tides"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FLDSTR01__day.png",
+            "label": "flood stream, rate at spring tides",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FLDSTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/FLDSTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/FLDSTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FLDSTR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FLDSTR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FLDSTR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FLDSTR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FLDSTR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FRYARE51__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FRYARE51__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FRYARE51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FRYARE51.svg",
+      "asset": "FRYARE51",
+      "before_svg": "assets/svg/triad_generated/FRYARE51.svg",
+      "candidate_source": "assets/svg/triad_generated/FRYARE51.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "ferry area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: keep ferry-on-route geometry but use the magenta ferry-area reference colour.",
+      "required_change": "Keep the ferry-on-dashed-route geometry but change FRYARE51 from black to the magenta CHMGF/reference colour family.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FRYARE51 is ferry area. It is used as a ferry area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "ferry area"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FRYARE51__day.png",
+            "label": "ferry area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FRYARE51__day.png",
+              "dusk": "out/opencpn_s52_reference/FRYARE51__dusk.png",
+              "night": "out/opencpn_s52_reference/FRYARE51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FRYARE51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FRYARE51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FRYARE51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FRYARE51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FRYARE51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FSHFAC02__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FSHFAC02__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FSHFAC02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FSHFAC02.svg",
+      "asset": "FSHFAC02",
+      "before_svg": "assets/svg/triad_generated/FSHFAC02.svg",
+      "candidate_source": "assets/svg/triad_generated/FSHFAC02.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "fishing stakes",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: use the gray simple fishing-stakes rectangle and diagonal witness.",
+      "required_change": "Redraw FSHFAC02 in the gray CHGRD/reference colour and remove the extra vertical lattice lines, keeping the simple rectangle plus one diagonal stake/line.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_pattern",
+        "extra_lattice_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FSHFAC02 is fishing stakes. It is used as a fishing stakes. Required geometry: spar/stake vertical body. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "fishing stakes"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHFAC02__day.png",
+            "label": "fishing stakes",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHFAC02__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHFAC02__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHFAC02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FSHFAC02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FSHFAC02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FSHFAC02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FSHFAC02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FSHFAC02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/FSHFAC03__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/FSHFAC03__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/FSHFAC03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/FSHFAC03.svg",
+      "asset": "FSHFAC03",
+      "before_svg": "assets/svg/triad_generated/FSHFAC03.svg",
+      "candidate_source": "assets/svg/triad_generated/FSHFAC03.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "pattern of symbols for an area with fishing stakes",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: use the gray low fishing-stakes comb pattern.",
+      "required_change": "Move FSHFAC03 to the gray CHGRD/reference colour family and compress the posts to the low S-101/OpenCPN fishing-stakes proportions.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_proportions",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "FSHFAC03 is pattern of symbols for an area with fishing stakes. It is used as a pattern of symbols for an area with fishing stakes. Required geometry: spar/stake vertical body. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "spar/stake vertical body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "pattern of symbols for an area with fishing stakes"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/FSHFAC03__day.png",
+            "label": "pattern of symbols for an area with fishing stakes",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/FSHFAC03__day.png",
+              "dusk": "out/opencpn_s52_reference/FSHFAC03__dusk.png",
+              "night": "out/opencpn_s52_reference/FSHFAC03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "FSHFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/FSHFAC03.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "FSHFAC03",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/FSHFAC03.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "FSHFAC03"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/HRBFAC09__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/HRBFAC09__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/HRBFAC09__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/HRBFAC09.svg",
+      "asset": "HRBFAC09",
+      "before_svg": "assets/svg/triad_generated/HRBFAC09.svg",
+      "candidate_source": "assets/svg/triad_generated/HRBFAC09.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "fishing harbour",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the magenta fishing-harbour fish/arc mark; remove black ring and F text.",
+      "required_change": "Redraw HRBFAC09 in magenta using the S-101/OpenCPN fish/arc service mark; remove the black enclosing circle and F text.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "invented_text",
+        "wrong_enclosure_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HRBFAC09 is fishing harbour. It is used as a harbour facility or service point. Required geometry: harbour-service/facility symbol; preserve letter/icon convention where references use it. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "harbour-service/facility symbol; preserve letter/icon convention where references use it",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "harbour facility or service point"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HRBFAC09__day.png",
+            "label": "fishing harbour",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HRBFAC09__day.png",
+              "dusk": "out/opencpn_s52_reference/HRBFAC09__dusk.png",
+              "night": "out/opencpn_s52_reference/HRBFAC09__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "HRBFAC09",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/HRBFAC09.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "HRBFAC09",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/HRBFAC09.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "HRBFAC09"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch22/renders/PILPNT02__after__day.png",
+        "dusk": "out/standard_repair_batch22/renders/PILPNT02__after__dusk.png",
+        "night": "out/standard_repair_batch22/renders/PILPNT02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch30/PILPNT02.svg",
+      "asset": "PILPNT02",
+      "before_svg": "assets/svg/triad_generated/PILPNT02.svg",
+      "candidate_source": "assets/svg/triad_generated/PILPNT02.svg",
+      "candidate_strategy": "owned_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "pile or bollard",
+      "provenance": {
+        "generator": "forge.standard_repair_batch22",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_023_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the small filled black pile/bollard point witness.",
+      "required_change": "Redraw PILPNT02 as the small filled black point/circle witness; remove the tapered bollard/post body.",
+      "risk_bucket": "batch23_followup_repair_batch30",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "PILPNT02 is pile or bollard. It is used as a mooring facility. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "mooring facility"
+      },
+      "source_judge": "catalog/standard_judge_batch_023_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/PILPNT02__day.png",
+            "label": "pile or bollard",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/PILPNT02__day.png",
+              "dusk": "out/opencpn_s52_reference/PILPNT02__dusk.png",
+              "night": "out/opencpn_s52_reference/PILPNT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "PILPNT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/PILPNT02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "PILPNT02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/PILPNT02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "PILPNT02"
+          }
+        ]
+      }
+    }
+  ]
+}

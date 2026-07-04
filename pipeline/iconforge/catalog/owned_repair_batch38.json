@@ -1,0 +1,918 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch38.json",
+    "renders": "out/standard_repair_batch30/renders",
+    "svg_dir": "assets/svg/owned_repair_batch38"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 12,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF01__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF01__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF01.svg",
+      "asset": "NMKINF01",
+      "before_svg": "assets/svg/triad_generated/NMKINF01.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF01.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "entry permitted",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a rectangular entry-permitted board with green field and white vertical-bar cue.",
+      "required_change": "Redraw as the NMKINF01 rectangular entry-permitted sign with the green/white vertical-bar pattern.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_order",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF01 is entry permitted. It is used as a entry permitted. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green, white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "white",
+          "black"
+        ],
+        "use_case": "entry permitted"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF01__day.png",
+            "label": "entry permitted",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF01__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF01__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF02__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF02__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF02.svg",
+      "asset": "NMKINF02",
+      "before_svg": "assets/svg/triad_generated/NMKINF02.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF02.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, overhead power line crossing",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a white overhead-power lightning glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF02 notice board and lightning glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF02 is notice mark, overhead power line crossing. It is used as a notice mark, overhead power line crossing. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, overhead power line crossing"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF02__day.png",
+            "label": "notice mark, overhead power line crossing",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF02__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF02__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF03__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF03__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF03__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF03.svg",
+      "asset": "NMKINF03",
+      "before_svg": "assets/svg/triad_generated/NMKINF03.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF03.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, weir",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a white weir/stepped-water glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF03 notice board and weir glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF03 is notice mark, weir. It is used as a notice mark, weir. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, weir"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF03__day.png",
+            "label": "notice mark, weir",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF03__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF03__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF03__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF04__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF04__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF04__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF04.svg",
+      "asset": "NMKINF04",
+      "before_svg": "assets/svg/triad_generated/NMKINF04.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF04.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, cable ferry",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a cable-ferry line and ferry body glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF04 cable-ferry notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF04 is notice mark, cable ferry. It is used as a notice mark, cable ferry. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, cable ferry"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF04__day.png",
+            "label": "notice mark, cable ferry",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF04__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF04__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF04__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF05__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF05__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF05__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF05.svg",
+      "asset": "NMKINF05",
+      "before_svg": "assets/svg/triad_generated/NMKINF05.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF05.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, ferry",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a ferry/boat glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF05 ferry notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF05 is notice mark, ferry. It is used as a notice mark, ferry. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, ferry"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF05__day.png",
+            "label": "notice mark, ferry",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF05__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF05__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF05__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF06__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF06__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF06__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF06.svg",
+      "asset": "NMKINF06",
+      "before_svg": "assets/svg/triad_generated/NMKINF06.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF06.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, berthing permitted",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a berthing-permitted bollard/boat glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF06 berthing-permitted notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF06 is notice mark, berthing permitted. It is used as a notice mark, berthing permitted. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, berthing permitted"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF06__day.png",
+            "label": "notice mark, berthing permitted",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF06__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF06__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF06__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF19__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF19__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF19__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF19.svg",
+      "asset": "NMKINF19",
+      "before_svg": "assets/svg/triad_generated/NMKINF19.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF19.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, anchoring permitted",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying the white anchoring-permitted anchor glyph.",
+      "required_change": "Place the anchor inside the NMKINF19 blue notice-board frame with the reference white anchor treatment.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "missing_notice_board"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF19 is notice mark, anchoring permitted. It is used as a notice mark, anchoring permitted. Required geometry: anchor/anchorage symbol. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "anchor/anchorage symbol",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, anchoring permitted"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF19__day.png",
+            "label": "notice mark, anchoring permitted",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF19__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF19__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF19__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF20__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF20__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF20__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF20.svg",
+      "asset": "NMKINF20",
+      "before_svg": "assets/svg/triad_generated/NMKINF20.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF20.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, making fast to the bank permitted",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a making-fast bollard and rope glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF20 making-fast notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF20 is notice mark, making fast to the bank permitted. It is used as a notice mark, making fast to the bank permitted. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, making fast to the bank permitted"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF20__day.png",
+            "label": "notice mark, making fast to the bank permitted",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF20__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF20__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF20__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF21__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF21__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF21.svg",
+      "asset": "NMKINF21",
+      "before_svg": "assets/svg/triad_generated/NMKINF21.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF21.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, facilities for loading and unloading vehicles",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a vehicle loading/unloading ramp glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF21 loading/unloading notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_notice_glyph",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF21 is notice mark, facilities for loading and unloading vehicles. It is used as a notice mark, facilities for loading and unloading vehicles. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, facilities for loading and unloading vehicles"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF21__day.png",
+            "label": "notice mark, facilities for loading and unloading vehicles",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF21__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF21__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF22__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF22__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF22__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF22.svg",
+      "asset": "NMKINF22",
+      "before_svg": "assets/svg/triad_generated/NMKINF22.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF22.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, turning permitted",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue notice board carrying a turning-permitted circular arrow glyph.",
+      "required_change": "Replace the diamond with the blue NMKINF22 turning-permitted notice-board glyph.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF22 is notice mark, turning permitted. It is used as a notice mark, turning permitted. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, turning permitted"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF22__day.png",
+            "label": "notice mark, turning permitted",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF22__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF22__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF22__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF23__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF23__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF23__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF23.svg",
+      "asset": "NMKINF23",
+      "before_svg": "assets/svg/triad_generated/NMKINF23.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF23.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, crossing with secondary waterway ahead",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue/white crossing-waterway diagram.",
+      "required_change": "Replace the diamond with the NMKINF23 blue/white crossing-waterway diagram.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF23 is notice mark, crossing with secondary waterway ahead. It is used as a notice mark, crossing with secondary waterway ahead. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, crossing with secondary waterway ahead"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF23__day.png",
+            "label": "notice mark, crossing with secondary waterway ahead",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF23__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF23__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF23__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch30/renders/NMKINF24__after__day.png",
+        "dusk": "out/standard_repair_batch30/renders/NMKINF24__after__dusk.png",
+        "night": "out/standard_repair_batch30/renders/NMKINF24__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch38/NMKINF24.svg",
+      "asset": "NMKINF24",
+      "before_svg": "assets/svg/triad_generated/NMKINF24.svg",
+      "candidate_source": "assets/svg/triad_generated/NMKINF24.svg",
+      "candidate_strategy": "owned_notice_board_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "notice mark, secondary waterway ahead on the right",
+      "provenance": {
+        "generator": "forge.standard_repair_batch30",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue NMKINF notice-board slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Redraw as a blue/white right-side secondary-waterway diagram.",
+      "required_change": "Replace the diamond with the NMKINF24 right-side secondary-waterway diagram.",
+      "risk_bucket": "notice_board_repair_batch38",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_waterway_diagram",
+        "placeholder_artwork"
+      ],
+      "semantic_brief": {
+        "brief": "NMKINF24 is notice mark, secondary waterway ahead on the right. It is used as a notice mark, secondary waterway ahead on the right. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "black"
+        ],
+        "use_case": "notice mark, secondary waterway ahead on the right"
+      },
+      "source_judge": "catalog/standard_judge_batch_009.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/NMKINF24__day.png",
+            "label": "notice mark, secondary waterway ahead on the right",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/NMKINF24__day.png",
+              "dusk": "out/opencpn_s52_reference/NMKINF24__dusk.png",
+              "night": "out/opencpn_s52_reference/NMKINF24__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

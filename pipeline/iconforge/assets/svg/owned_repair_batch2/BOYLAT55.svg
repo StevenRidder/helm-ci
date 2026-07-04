@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="BOYLAT55 generic_buoy">
+  <title>BOYLAT55 generic_buoy</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="BOYLAT55" data-shape="generic_buoy">
+  <defs><clipPath id="clip-BOYLAT55"><path d="M21 20 Q32 10 43 20 L48 45 Q32 57 16 45 Z"/></clipPath></defs>
+  <g clip-path="url(#clip-BOYLAT55)">
+  <rect x="0" y="7.0" width="64" height="26.25" fill="var(--white)"/>
+  <rect x="0" y="33.0" width="64" height="26.25" fill="var(--red)"/>
+  </g>
+  <g fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"><path d="M21 20 Q32 10 43 20 L48 45 Q32 57 16 45 Z"/></g>
+  <path d="M32 55 L32 61" fill="none" stroke="var(--black)" stroke-width="1.4" stroke-linecap="round"/>
+  </g>
+</svg>

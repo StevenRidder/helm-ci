@@ -1,0 +1,1485 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch45.json",
+    "renders": "out/standard_repair_batch37/renders",
+    "svg_dir": "assets/svg/owned_repair_batch45"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 18,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/REFDMP01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/REFDMP01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/REFDMP01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/REFDMP01.svg",
+      "asset": "REFDMP01",
+      "before_svg": "assets/svg/triad_generated/REFDMP01.svg",
+      "candidate_source": "assets/svg/triad_generated/REFDMP01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "refuse dump",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the REFDMP01 green refuse dump can glyph and preserve green/black ordering.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_refuse_can",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "REFDMP01 is refuse dump. It is used as a refuse dump. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: green, black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "green",
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "black"
+        ],
+        "use_case": "refuse dump"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/REFDMP01__day.png",
+            "label": "refuse dump",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/REFDMP01__day.png",
+              "dusk": "out/opencpn_s52_reference/REFDMP01__dusk.png",
+              "night": "out/opencpn_s52_reference/REFDMP01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/RFNERY01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/RFNERY01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/RFNERY01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/RFNERY01.svg",
+      "asset": "RFNERY01",
+      "before_svg": "assets/svg/triad_generated/RFNERY01.svg",
+      "candidate_source": "assets/svg/triad_generated/RFNERY01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "refinery",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the RFNERY01 brown refinery symbol.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_colour_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RFNERY01 is refinery. It is used as a refinery. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "refinery"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RFNERY01__day.png",
+            "label": "refinery",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RFNERY01__day.png",
+              "dusk": "out/opencpn_s52_reference/RFNERY01__dusk.png",
+              "night": "out/opencpn_s52_reference/RFNERY01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RFNERY01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RFNERY01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RFNERY01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RFNERY01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RFNERY01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/RFNERY11__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/RFNERY11__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/RFNERY11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/RFNERY11.svg",
+      "asset": "RFNERY11",
+      "before_svg": "assets/svg/triad_generated/RFNERY11.svg",
+      "candidate_source": "assets/svg/triad_generated/RFNERY11.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "conspicuous refinery",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the dashed area tile with the RFNERY11 conspicuous refinery glyph.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "RFNERY11 is conspicuous refinery. It is used as a conspicuous refinery. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous refinery"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RFNERY11__day.png",
+            "label": "conspicuous refinery",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RFNERY11__day.png",
+              "dusk": "out/opencpn_s52_reference/RFNERY11__dusk.png",
+              "night": "out/opencpn_s52_reference/RFNERY11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RFNERY11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RFNERY11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RFNERY11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RFNERY11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RFNERY11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/RTLDEF51__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/RTLDEF51__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/RTLDEF51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/RTLDEF51.svg",
+      "asset": "RTLDEF51",
+      "before_svg": "assets/svg/triad_generated/RTLDEF51.svg",
+      "candidate_source": "assets/svg/triad_generated/RTLDEF51.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the RTLDEF51 dashed route arrow and unknown-direction cues.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_directional_arrow",
+        "missing_question_mark"
+      ],
+      "semantic_brief": {
+        "brief": "RTLDEF51 is recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data. It is used as a recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/RTLDEF51__day.png",
+            "label": "recommended route between parts of a traffic separation scheme, or for ships not needing a deep water route, with the direction not specified in the data",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/RTLDEF51__day.png",
+              "dusk": "out/opencpn_s52_reference/RTLDEF51__dusk.png",
+              "night": "out/opencpn_s52_reference/RTLDEF51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "RTLDEF51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/RTLDEF51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "RTLDEF51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/RTLDEF51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "RTLDEF51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SCALEB10__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SCALEB10__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SCALEB10__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SCALEB10.svg",
+      "asset": "SCALEB10",
+      "before_svg": "assets/svg/triad_generated/SCALEB10.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB10.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "one mile scalebar for display scales larger than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw SCALEB10 as the vertical segmented one-mile scalebar in the reference color/segment pattern; remove the large black ladder and 1M text label.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_colour_family",
+        "wrong_shape",
+        "wrong_scalebar_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB10 is one mile scalebar for display scales larger than 1/80,000. It is used as a one mile scalebar for display scales larger than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "one mile scalebar for display scales larger than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+            "label": "one mile scalebar for display scales larger than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB10__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB10__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB10__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB10.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB10",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB10.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB10"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SCALEB11__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SCALEB11__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SCALEB11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SCALEB11.svg",
+      "asset": "SCALEB11",
+      "before_svg": "assets/svg/triad_generated/SCALEB11.svg",
+      "candidate_source": "assets/svg/triad_generated/SCALEB11.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "10 mile latitude scale for display scales smaller than 1/80,000",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw SCALEB11 as the vertical segmented 10-mile latitude scalebar at reference proportions; remove the horizontal bar and 10M text treatment.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_orientation",
+        "wrong_shape",
+        "wrong_scalebar_pattern",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SCALEB11 is 10 mile latitude scale for display scales smaller than 1/80,000. It is used as a 10 mile latitude scale for display scales smaller than 1/80,000. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "10 mile latitude scale for display scales smaller than 1/80,000"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+            "label": "10 mile latitude scale for display scales smaller than 1/80,000",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SCALEB11__day.png",
+              "dusk": "out/opencpn_s52_reference/SCALEB11__dusk.png",
+              "night": "out/opencpn_s52_reference/SCALEB11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SCALEB11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SCALEB11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SCALEB11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SCALEB11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SILBUI01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SILBUI01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SILBUI01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SILBUI01.svg",
+      "asset": "SILBUI01",
+      "before_svg": "assets/svg/triad_generated/SILBUI01.svg",
+      "candidate_source": "assets/svg/triad_generated/SILBUI01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "silo",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SILBUI01 small brown silo point mark.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SILBUI01 is silo. It is used as a silo. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "silo"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SILBUI01__day.png",
+            "label": "silo",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SILBUI01__day.png",
+              "dusk": "out/opencpn_s52_reference/SILBUI01__dusk.png",
+              "night": "out/opencpn_s52_reference/SILBUI01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SILBUI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SILBUI01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SILBUI01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SILBUI01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SILBUI01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SILBUI11__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SILBUI11__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SILBUI11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SILBUI11.svg",
+      "asset": "SILBUI11",
+      "before_svg": "assets/svg/triad_generated/SILBUI11.svg",
+      "candidate_source": "assets/svg/triad_generated/SILBUI11.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "conspicuous silo",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SILBUI11 conspicuous silo point mark.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "wrong_scale",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SILBUI11 is conspicuous silo. It is used as a conspicuous silo. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous silo"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SILBUI11__day.png",
+            "label": "conspicuous silo",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SILBUI11__day.png",
+              "dusk": "out/opencpn_s52_reference/SILBUI11__dusk.png",
+              "night": "out/opencpn_s52_reference/SILBUI11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "SILBUI11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/SILBUI11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "SILBUI11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/SILBUI11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "SILBUI11"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SISTAT02__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SISTAT02__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SISTAT02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SISTAT02.svg",
+      "asset": "SISTAT02",
+      "before_svg": "assets/svg/triad_generated/SISTAT02.svg",
+      "candidate_source": "assets/svg/triad_generated/SISTAT02.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "signal station",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SISTAT02 signal-station SS label symbol.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_text_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SISTAT02 is signal station. It is used as a signal station. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white"
+        ],
+        "use_case": "signal station"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SISTAT02__day.png",
+            "label": "signal station",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SISTAT02__day.png",
+              "dusk": "out/opencpn_s52_reference/SISTAT02__dusk.png",
+              "night": "out/opencpn_s52_reference/SISTAT02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SSENTR01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SSENTR01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SSENTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SSENTR01.svg",
+      "asset": "SSENTR01",
+      "before_svg": "assets/svg/triad_generated/SSENTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSENTR01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "signal station, port entry",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SSENTR01 port-entry signal-station board glyph.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSENTR01 is signal station, port entry. It is used as a signal station, port entry. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, port entry"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSENTR01__day.png",
+            "label": "signal station, port entry",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSENTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSENTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSENTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SSLOCK01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SSLOCK01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SSLOCK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SSLOCK01.svg",
+      "asset": "SSLOCK01",
+      "before_svg": "assets/svg/triad_generated/SSLOCK01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSLOCK01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "signal station, lock",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SSLOCK01 lock signal-station board glyph.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSLOCK01 is signal station, lock. It is used as a signal station, lock. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, lock"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSLOCK01__day.png",
+            "label": "signal station, lock",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSLOCK01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSLOCK01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSLOCK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/SSWARS01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/SSWARS01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/SSWARS01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/SSWARS01.svg",
+      "asset": "SSWARS01",
+      "before_svg": "assets/svg/triad_generated/SSWARS01.svg",
+      "candidate_source": "assets/svg/triad_generated/SSWARS01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "signal station, wahrschau",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the SSWARS01 wahrschau signal-station board glyph.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_signal_board",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "SSWARS01 is signal station, wahrschau. It is used as a signal station, wahrschau. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "signal station, wahrschau"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/SSWARS01__day.png",
+            "label": "signal station, wahrschau",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/SSWARS01__day.png",
+              "dusk": "out/opencpn_s52_reference/SSWARS01__dusk.png",
+              "night": "out/opencpn_s52_reference/SSWARS01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/STARPT01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/STARPT01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/STARPT01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/STARPT01.svg",
+      "asset": "STARPT01",
+      "before_svg": "assets/svg/triad_generated/STARPT01.svg",
+      "candidate_source": "assets/svg/triad_generated/STARPT01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "STARPT01",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Replace the diamond with the STARPT01 black star symbol.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_symbol_class",
+        "wrong_shape",
+        "missing_star_shape",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "STARPT01 is STARPT01. It is used as a STARPT01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "STARPT01"
+      },
+      "source_judge": "catalog/standard_judge_batch_011.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/STARPT01__day.png",
+            "label": "STARPT01",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/STARPT01__day.png",
+              "dusk": "out/opencpn_s52_reference/STARPT01__dusk.png",
+              "night": "out/opencpn_s52_reference/STARPT01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/TMBYRD01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/TMBYRD01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/TMBYRD01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/TMBYRD01.svg",
+      "asset": "TMBYRD01",
+      "before_svg": "assets/svg/triad_generated/TMBYRD01.svg",
+      "candidate_source": "assets/svg/triad_generated/TMBYRD01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "timber yard",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw TMBYRD01 as the open brown timber-yard hash/grid witness; remove the enclosing square frame and match the reference stroke count/proportions.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "invented_enclosure",
+        "wrong_grid_structure",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TMBYRD01 is timber yard. It is used as a timber yard. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "timber yard"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TMBYRD01__day.png",
+            "label": "timber yard",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TMBYRD01__day.png",
+              "dusk": "out/opencpn_s52_reference/TMBYRD01__dusk.png",
+              "night": "out/opencpn_s52_reference/TMBYRD01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TMBYRD01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TMBYRD01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TMBYRD01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TMBYRD01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TMBYRD01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/TNKCON02__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/TNKCON02__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/TNKCON02__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/TNKCON02.svg",
+      "asset": "TNKCON02",
+      "before_svg": "assets/svg/triad_generated/TNKCON02.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKCON02.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "tank",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw TNKCON02 as the simple brown circular tank ring at reference proportions; remove extra side ovals and layered outlines.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKCON02 is tank. It is used as a tank. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "tank"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKCON02__day.png",
+            "label": "tank",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKCON02__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKCON02__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKCON02__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKCON02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKCON02.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKCON02",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKCON02.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKCON02"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/TNKCON12__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/TNKCON12__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/TNKCON12__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/TNKCON12.svg",
+      "asset": "TNKCON12",
+      "before_svg": "assets/svg/triad_generated/TNKCON12.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKCON12.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "conspicuous tank",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw TNKCON12 as the simple black conspicuous tank ring/donut at reference proportions; remove extra side ovals and layered outlines.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKCON12 is conspicuous tank. It is used as a conspicuous tank. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous tank"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKCON12__day.png",
+            "label": "conspicuous tank",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKCON12__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKCON12__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKCON12__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKCON12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKCON12.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKCON12",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKCON12.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKCON12"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/TNKFRM01__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/TNKFRM01__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/TNKFRM01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/TNKFRM01.svg",
+      "asset": "TNKFRM01",
+      "before_svg": "assets/svg/triad_generated/TNKFRM01.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKFRM01.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "tank farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw TNKFRM01 as the brown tank-farm circular enclosure containing the reference clustered-dot/circle pattern; do not use three unenclosed touching rings.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "missing_reference_enclosure",
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKFRM01 is tank farm. It is used as a tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "tank farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKFRM01__day.png",
+            "label": "tank farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKFRM01__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKFRM01__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKFRM01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKFRM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKFRM01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKFRM01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKFRM01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKFRM01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch37/renders/TNKFRM11__after__day.png",
+        "dusk": "out/standard_repair_batch37/renders/TNKFRM11__after__dusk.png",
+        "night": "out/standard_repair_batch37/renders/TNKFRM11__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch45/TNKFRM11.svg",
+      "asset": "TNKFRM11",
+      "before_svg": "assets/svg/triad_generated/TNKFRM11.svg",
+      "candidate_source": "assets/svg/triad_generated/TNKFRM11.svg",
+      "candidate_strategy": "owned_industrial_signal_redraw_from_semantic_brief_and_provider_witnesses",
+      "name": "conspicuous tank farm",
+      "provenance": {
+        "generator": "forge.standard_repair_batch37",
+        "origin": "generated-owned-artwork",
+        "reference_role": "provider refs and semantic_brief are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_repair_queue industrial/signal/utility slice",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "required_change": "Redraw TNKFRM11 as the black tank-farm circular enclosure containing the reference clustered-dot pattern; do not use three unenclosed touching rings.",
+      "risk_bucket": "industrial_signal_utility_repair_batch45",
+      "safety_reason_codes": [
+        "missing_reference_enclosure",
+        "wrong_cluster_count",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TNKFRM11 is conspicuous tank farm. It is used as a conspicuous tank farm. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "conspicuous tank farm"
+      },
+      "source_judge": "catalog/standard_judge_batch_020_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TNKFRM11__day.png",
+            "label": "conspicuous tank farm",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TNKFRM11__day.png",
+              "dusk": "out/opencpn_s52_reference/TNKFRM11__dusk.png",
+              "night": "out/opencpn_s52_reference/TNKFRM11__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "TNKFRM11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/TNKFRM11.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "TNKFRM11",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/TNKFRM11.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "TNKFRM11"
+          }
+        ]
+      }
+    }
+  ]
+}

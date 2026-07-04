@@ -1,0 +1,559 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch80.json",
+    "renders": "out/standard_repair_batch72/renders",
+    "svg_dir": "assets/svg/owned_repair_batch80"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 7,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/UNITFTH1__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/UNITFTH1__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/UNITFTH1__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/UNITFTH1.svg",
+      "asset": "UNITFTH1",
+      "before_svg": "assets/svg/owned_repair_batch80/UNITFTH1.svg",
+      "candidate_source": "assets/svg/triad_generated/UNITFTH1.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "change of depth unit line, bounds 'fathom depths'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the marker with the reference-matched fathom depth-unit label glyph and keep it as a unit-boundary symbol, not a point/daymark marker.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEUNITFTH1"
+        ],
+        "lookup_id": "1678",
+        "lookup_rcid": "31730",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(UNITFTH1)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_depth_unit_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "UNITFTH1 is change of depth unit line, bounds 'fathom depths'. It is used as a change of depth unit line, bounds 'fathom depths'. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "change of depth unit line, bounds 'fathom depths'"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/UNITFTH1__day.png",
+            "label": "change of depth unit line, bounds 'fathom depths'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/UNITFTH1__day.png",
+              "dusk": "out/opencpn_s52_reference/UNITFTH1__dusk.png",
+              "night": "out/opencpn_s52_reference/UNITFTH1__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/UNITMTR1__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/UNITMTR1__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/UNITMTR1__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/UNITMTR1.svg",
+      "asset": "UNITMTR1",
+      "before_svg": "assets/svg/owned_repair_batch80/UNITMTR1.svg",
+      "candidate_source": "assets/svg/triad_generated/UNITMTR1.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "change of depth unit line, bounds 'metre depths'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the marker with the reference-matched metre depth-unit label glyph and keep it as a unit-boundary symbol, not a point/daymark marker.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEUNITMTR1"
+        ],
+        "lookup_id": "1679",
+        "lookup_rcid": "31731",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(UNITMTR1)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_depth_unit_label",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "UNITMTR1 is change of depth unit line, bounds 'metre depths'. It is used as a change of depth unit line, bounds 'metre depths'. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "change of depth unit line, bounds 'metre depths'"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/UNITMTR1__day.png",
+            "label": "change of depth unit line, bounds 'metre depths'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/UNITMTR1__day.png",
+              "dusk": "out/opencpn_s52_reference/UNITMTR1__dusk.png",
+              "night": "out/opencpn_s52_reference/UNITMTR1__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/VECGND01__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/VECGND01__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/VECGND01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/VECGND01.svg",
+      "asset": "VECGND01",
+      "before_svg": "assets/svg/owned_repair_batch80/VECGND01.svg",
+      "candidate_source": "assets/svg/triad_generated/VECGND01.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "arrowhead for ownship vector for course and speed over the ground",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched vector arrowhead; preserve whether the symbol is ground/water and ownship/target semantics.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECGND01"
+        ],
+        "lookup_id": "1682",
+        "lookup_rcid": "31734",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECGND01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_vector_arrowhead",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECGND01 is arrowhead for ownship vector for course and speed over the ground. It is used as a arrowhead for ownship vector for course and speed over the ground. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ownship vector for course and speed over the ground"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECGND01__day.png",
+            "label": "arrowhead for ownship vector for course and speed over the ground",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECGND01__day.png",
+              "dusk": "out/opencpn_s52_reference/VECGND01__dusk.png",
+              "night": "out/opencpn_s52_reference/VECGND01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/VECGND21__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/VECGND21__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/VECGND21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/VECGND21.svg",
+      "asset": "VECGND21",
+      "before_svg": "assets/svg/owned_repair_batch80/VECGND21.svg",
+      "candidate_source": "assets/svg/triad_generated/VECGND21.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "arrowhead for ARPA or AIS vector for course and speed over the ground",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched vector arrowhead; preserve whether the symbol is ground/water and ownship/target semantics.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECGND21"
+        ],
+        "lookup_id": "1683",
+        "lookup_rcid": "31735",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECGND21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_vector_arrowhead",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECGND21 is arrowhead for ARPA or AIS vector for course and speed over the ground. It is used as a arrowhead for ARPA or AIS vector for course and speed over the ground. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ARPA or AIS vector for course and speed over the ground"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECGND21__day.png",
+            "label": "arrowhead for ARPA or AIS vector for course and speed over the ground",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECGND21__day.png",
+              "dusk": "out/opencpn_s52_reference/VECGND21__dusk.png",
+              "night": "out/opencpn_s52_reference/VECGND21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/VECWTR01__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/VECWTR01__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/VECWTR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/VECWTR01.svg",
+      "asset": "VECWTR01",
+      "before_svg": "assets/svg/owned_repair_batch80/VECWTR01.svg",
+      "candidate_source": "assets/svg/triad_generated/VECWTR01.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "arrowhead for ownship vector for course and speed through the water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched vector arrowhead; preserve whether the symbol is ground/water and ownship/target semantics.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECWTR01"
+        ],
+        "lookup_id": "1684",
+        "lookup_rcid": "31736",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECWTR01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_vector_arrowhead",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECWTR01 is arrowhead for ownship vector for course and speed through the water. It is used as a arrowhead for ownship vector for course and speed through the water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ownship vector for course and speed through the water"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECWTR01__day.png",
+            "label": "arrowhead for ownship vector for course and speed through the water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECWTR01__day.png",
+              "dusk": "out/opencpn_s52_reference/VECWTR01__dusk.png",
+              "night": "out/opencpn_s52_reference/VECWTR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/VECWTR21__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/VECWTR21__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/VECWTR21__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/VECWTR21.svg",
+      "asset": "VECWTR21",
+      "before_svg": "assets/svg/owned_repair_batch80/VECWTR21.svg",
+      "candidate_source": "assets/svg/triad_generated/VECWTR21.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "arrowhead for ARPA or AIS vector for course and speed through the water",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched vector arrowhead; preserve whether the symbol is ground/water and ownship/target semantics.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "$SCODEVECWTR21"
+        ],
+        "lookup_id": "1685",
+        "lookup_rcid": "31737",
+        "object_class": "$CSYMB",
+        "s52_instruction": "SY(VECWTR21,ORIENT)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_vector_arrowhead",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VECWTR21 is arrowhead for ARPA or AIS vector for course and speed through the water. It is used as a arrowhead for ARPA or AIS vector for course and speed through the water. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "arrowhead for ARPA or AIS vector for course and speed through the water"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VECWTR21__day.png",
+            "label": "arrowhead for ARPA or AIS vector for course and speed through the water",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VECWTR21__day.png",
+              "dusk": "out/opencpn_s52_reference/VECWTR21__dusk.png",
+              "night": "out/opencpn_s52_reference/VECWTR21__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch72/renders/VTCLMK01__after__day.png",
+        "dusk": "out/standard_repair_batch72/renders/VTCLMK01__after__dusk.png",
+        "night": "out/standard_repair_batch72/renders/VTCLMK01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch80/VTCLMK01.svg",
+      "asset": "VTCLMK01",
+      "before_svg": "assets/svg/owned_repair_batch80/VTCLMK01.svg",
+      "candidate_source": "assets/svg/triad_generated/VTCLMK01.svg",
+      "candidate_strategy": "owned_unit_vector_redraw_from_opencpn_reference",
+      "name": "vertical clearance mark at bridges",
+      "provenance": {
+        "generator": "forge.standard_repair_batch72",
+        "origin": "generated-owned-artwork",
+        "reference_role": "OpenCPN unit/vector/clearance witnesses and S-52 metadata drive generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue unit/vector/clearance blockers",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_unit_vector_reference_consumed",
+      "required_change": "Replace the placeholder with the reference-matched vertical-clearance mark and preserve required colour semantics: black.",
+      "risk_bucket": "unit_vector_symbol_repair_batch80",
+      "s57_structure": {
+        "conditions": [
+          "catsiw16"
+        ],
+        "lookup_id": "1561",
+        "lookup_rcid": "31613",
+        "object_class": "sistaw",
+        "s52_instruction": "SY(VTCLMK01)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "missing_vertical_clearance_mark",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VTCLMK01 is vertical clearance mark at bridges. It is used as a vertical clearance mark at bridges. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: black.",
+        "colour_pattern": null,
+        "required_colours": [
+          "black"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "black"
+        ],
+        "use_case": "vertical clearance mark at bridges"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VTCLMK01__day.png",
+            "label": "vertical clearance mark at bridges",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VTCLMK01__day.png",
+              "dusk": "out/opencpn_s52_reference/VTCLMK01__dusk.png",
+              "night": "out/opencpn_s52_reference/VTCLMK01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

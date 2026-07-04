@@ -1,0 +1,530 @@
+{
+  "blockers": [],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch31.json",
+    "renders": "out/standard_repair_batch23/renders",
+    "svg_dir": "assets/svg/owned_repair_batch31"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 6,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/HULKES01__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/HULKES01__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/HULKES01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/HULKES01.svg",
+      "asset": "HULKES01",
+      "before_svg": "assets/svg/triad_generated/HULKES01.svg",
+      "candidate_source": "assets/svg/triad_generated/HULKES01.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "hulk",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the compact brown low hulk silhouette; remove upright leaf/ribs.",
+      "required_change": "Redraw HULKES01 as the compact brown hulk silhouette from OpenCPN/S-52: low horizontal hull body, no upright leaf outline, no tree-like internal ribs.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "invented_generic_icon",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "HULKES01 is hulk. It is used as a hulk. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: brown.",
+        "colour_pattern": null,
+        "required_colours": [
+          "brown"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "brown"
+        ],
+        "use_case": "hulk"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/HULKES01__day.png",
+            "label": "hulk",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/HULKES01__day.png",
+              "dusk": "out/opencpn_s52_reference/HULKES01__dusk.png",
+              "night": "out/opencpn_s52_reference/HULKES01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "HULKES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/HULKES01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "HULKES01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/HULKES01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "HULKES01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/LNDARE01__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/LNDARE01__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/LNDARE01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/LNDARE01.svg",
+      "asset": "LNDARE01",
+      "before_svg": "assets/svg/triad_generated/LNDARE01.svg",
+      "candidate_source": "assets/svg/triad_generated/LNDARE01.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "land as a point at small scale",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the tiny point witness; remove target/ring treatment.",
+      "required_change": "Redraw LNDARE01 as a small point/dot marker matching the reference; remove the outer ring and bullseye treatment.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "wrong_shape",
+        "invented_target_ring",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LNDARE01 is land as a point at small scale. It is used as a land as a point at small scale. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "land as a point at small scale"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LNDARE01__day.png",
+            "label": "land as a point at small scale",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LNDARE01__day.png",
+              "dusk": "out/opencpn_s52_reference/LNDARE01__dusk.png",
+              "night": "out/opencpn_s52_reference/LNDARE01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LNDARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LNDARE01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LNDARE01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LNDARE01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LNDARE01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/LOCMAG01__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/LOCMAG01__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/LOCMAG01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/LOCMAG01.svg",
+      "asset": "LOCMAG01",
+      "before_svg": "assets/svg/triad_generated/LOCMAG01.svg",
+      "candidate_source": "assets/svg/triad_generated/LOCMAG01.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "cursor pick site for a magnetic anomaly at a point",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the small magenta wedge/vertical-line cursor glyph.",
+      "required_change": "Redraw LOCMAG01 as the reference magenta wedge/line glyph; remove the A-shaped triangle, crossbar, and baseline.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "letter_substitution",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LOCMAG01 is cursor pick site for a magnetic anomaly at a point. It is used as a cursor pick site for a magnetic anomaly at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for a magnetic anomaly at a point"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LOCMAG01__day.png",
+            "label": "cursor pick site for a magnetic anomaly at a point",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LOCMAG01__day.png",
+              "dusk": "out/opencpn_s52_reference/LOCMAG01__dusk.png",
+              "night": "out/opencpn_s52_reference/LOCMAG01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LOCMAG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LOCMAG01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LOCMAG01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LOCMAG01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LOCMAG01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/LOCMAG51__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/LOCMAG51__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/LOCMAG51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/LOCMAG51.svg",
+      "asset": "LOCMAG51",
+      "before_svg": "assets/svg/triad_generated/LOCMAG51.svg",
+      "candidate_source": "assets/svg/triad_generated/LOCMAG51.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "cursor pick site for a magnetic anomaly along a line or over an area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the pale magenta line/area magnetic anomaly wedge glyph.",
+      "required_change": "Redraw LOCMAG51 as the reference magenta magnetic-anomaly line/area wedge/line glyph; remove the A-shaped body and baseline.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "wrong_symbol_family",
+        "letter_substitution",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "LOCMAG51 is cursor pick site for a magnetic anomaly along a line or over an area. It is used as a cursor pick site for a magnetic anomaly along a line or over an area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for a magnetic anomaly along a line or over an area"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/LOCMAG51__day.png",
+            "label": "cursor pick site for a magnetic anomaly along a line or over an area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/LOCMAG51__day.png",
+              "dusk": "out/opencpn_s52_reference/LOCMAG51__dusk.png",
+              "night": "out/opencpn_s52_reference/LOCMAG51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "LOCMAG51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/LOCMAG51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "LOCMAG51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/LOCMAG51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "LOCMAG51"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/MAGVAR01__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/MAGVAR01__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/MAGVAR01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/MAGVAR01.svg",
+      "asset": "MAGVAR01",
+      "before_svg": "assets/svg/triad_generated/MAGVAR01.svg",
+      "candidate_source": "assets/svg/triad_generated/MAGVAR01.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "cursor pick site for magnetic variation at a point",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the compact filled magenta wedge with short vertical reference line.",
+      "required_change": "Redraw MAGVAR01 as the compact filled magenta wedge with short vertical reference line matching OpenCPN; avoid a generic flag-on-pole silhouette.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "generic_flag_substitution",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MAGVAR01 is cursor pick site for magnetic variation at a point. It is used as a cursor pick site for magnetic variation at a point. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for magnetic variation at a point"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MAGVAR01__day.png",
+            "label": "cursor pick site for magnetic variation at a point",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MAGVAR01__day.png",
+              "dusk": "out/opencpn_s52_reference/MAGVAR01__dusk.png",
+              "night": "out/opencpn_s52_reference/MAGVAR01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MAGVAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MAGVAR01.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MAGVAR01",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MAGVAR01.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MAGVAR01"
+          }
+        ]
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch23/renders/MAGVAR51__after__day.png",
+        "dusk": "out/standard_repair_batch23/renders/MAGVAR51__after__dusk.png",
+        "night": "out/standard_repair_batch23/renders/MAGVAR51__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch31/MAGVAR51.svg",
+      "asset": "MAGVAR51",
+      "before_svg": "assets/svg/triad_generated/MAGVAR51.svg",
+      "candidate_source": "assets/svg/triad_generated/MAGVAR51.svg",
+      "candidate_strategy": "owned_compact_redraw_from_judge_feedback_and_provider_witnesses",
+      "name": "cursor pick site for magnetic variation along a line or over an area",
+      "provenance": {
+        "generator": "forge.standard_repair_batch23",
+        "origin": "generated-owned-artwork",
+        "reference_role": "judge feedback and provider refs are shape witnesses; SVG is owned redraw",
+        "source_priority_basis": "standard_judge_batch_024_025_rerun_feedback",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "judge_failure_consumed",
+      "repair_note": "Judge repair: redraw as the pale compact magenta variation wedge/vertical-line glyph.",
+      "required_change": "Redraw MAGVAR51 as the compact magenta wedge/vertical-line line-or-area glyph from the reference; remove the flagpole/base icon treatment.",
+      "risk_bucket": "batch24_25_judge_failure_repair_batch31",
+      "safety_reason_codes": [
+        "shape_mismatch",
+        "generic_flag_substitution",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "MAGVAR51 is cursor pick site for magnetic variation along a line or over an area. It is used as a cursor pick site for magnetic variation along a line or over an area. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "cursor pick site for magnetic variation along a line or over an area"
+      },
+      "source_judge": "catalog/standard_judge_batch_024_025_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/MAGVAR51__day.png",
+            "label": "cursor pick site for magnetic variation along a line or over an area",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/MAGVAR51__day.png",
+              "dusk": "out/opencpn_s52_reference/MAGVAR51__dusk.png",
+              "night": "out/opencpn_s52_reference/MAGVAR51__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": [
+          {
+            "label": "MAGVAR51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "assets/svg/source_priority/s101_exact/MAGVAR51.svg",
+            "source": "s101_exact_svg",
+            "status": "selected_s101_exact_svg",
+            "symbol_id": null
+          },
+          {
+            "label": "MAGVAR51",
+            "license_boundary": "S-101/IHO license-pending reference; redraw, do not import as canonical unless cleared",
+            "path": "PortrayalCatalog/Symbols/MAGVAR51.svg",
+            "source": "s101_portrayal_catalogue_svg",
+            "status": "license_pending_reference",
+            "symbol_id": "MAGVAR51"
+          }
+        ]
+      }
+    }
+  ]
+}

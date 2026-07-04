@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img"
+     aria-label="UWTROC03 rock">
+  <title>UWTROC03 rock</title>
+  <g data-origin="generated-owned-artwork" data-reference-oracle="opencpn-s52"
+     data-s52-asset="UWTROC03" data-shape="rock">
+<path d="M14 43 L25 23 L34 36 L42 20 L51 43 Z" fill="none" stroke="var(--black)" stroke-width="2.1" stroke-linejoin="round"/>
+<path d="M17 48 H48" stroke="var(--black)" stroke-width="2" stroke-linecap="round"/>
+  </g>
+</svg>

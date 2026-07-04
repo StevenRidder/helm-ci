@@ -1,0 +1,643 @@
+{
+  "blockers": [
+    {
+      "asset": "DANGER53",
+      "reason": "kept_in_repair_queue_until_exact_reference_crop_or_render_exists"
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "reason": "kept_in_repair_queue_until_exact_reference_crop_or_render_exists"
+    },
+    {
+      "asset": "NEWOBJ 01",
+      "reason": "kept_in_repair_queue_until_exact_reference_crop_or_render_exists"
+    },
+    {
+      "asset": "NEWOBJ01",
+      "reason": "kept_in_repair_queue_until_exact_reference_crop_or_render_exists"
+    }
+  ],
+  "outputs": {
+    "catalog": "catalog/owned_repair_batch84.json",
+    "renders": "out/standard_repair_batch76/renders",
+    "svg_dir": "assets/svg/owned_repair_batch84"
+  },
+  "schema_version": 1,
+  "status": "repair_batch_pending_judge_rerun",
+  "summary": {
+    "failed_repaired": 7,
+    "visual_parity": "repaired_pending_judge_rerun"
+  },
+  "symbols": [
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/BCNCON81__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/BCNCON81__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/BCNCON81__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/BCNCON81.svg",
+      "asset": "BCNCON81",
+      "before_svg": "assets/svg/owned_repair_batch84/BCNCON81.svg",
+      "candidate_source": "assets/svg/triad_generated/BCNCON81.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "BCNCON81",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "BCNCON81 needs an exact local reference crop/render first; then redraw against that crop rather than approving a generic black post.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "BOYSHP1",
+          "COLPAT1,2",
+          "COLOUR5,3,1,5"
+        ],
+        "lookup_id": "1781",
+        "lookup_rcid": "93806",
+        "object_class": "BCNSPP",
+        "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "missing_exact_reference",
+        "unsafe_symbol_confusion",
+        "insufficient_visual_evidence"
+      ],
+      "semantic_brief": {
+        "brief": "BCNCON81 is BCNCON81. It is used as a special-purpose beacon used for named local purposes. Required geometry: conical/nun buoy body. Required colours: blue, red, white, blue with horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order.",
+        "colour_pattern": "horizontal bands/stripes in the listed colour order; vertical bands/stripes in the listed colour order",
+        "required_colours": [
+          "blue",
+          "red",
+          "white",
+          "blue"
+        ],
+        "required_shape": "conical/nun buoy body",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork.",
+          "Conical/nun buoy rows must not be rendered as can/cylindrical buoy rows."
+        ],
+        "unique_required_colours": [
+          "blue",
+          "red",
+          "white"
+        ],
+        "use_case": "special-purpose beacon used for named local purposes"
+      },
+      "source_judge": "catalog/standard_judge_batch_003.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/BCNCON81__day.png",
+            "label": "BCNCON81",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/BCNCON81__day.png",
+              "dusk": "out/opencpn_s52_reference/BCNCON81__dusk.png",
+              "night": "out/opencpn_s52_reference/BCNCON81__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/TOPSHP09_TE_s__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/TOPSHP09_TE_s__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/TOPSHP09_TE_s__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/TOPSHP09_TE_s.svg",
+      "asset": "TOPSHP09;TE('%s'",
+      "before_svg": "assets/svg/owned_repair_batch84/TOPSHP09_TE_s.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP09_TE_s.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "TOPSHP09;TE('%s'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Redraw TOPSHP09 with the required red/red/green horizontal/S-57 band pattern while keeping the text-bearing cue; the current vertical stripes do not match the required colour pattern.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP24",
+          "COLPAT6,1",
+          "COLOUR3,3,4"
+        ],
+        "lookup_id": "2046",
+        "lookup_rcid": "30312",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPSHP09;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_pattern",
+        "wrong_stripe_orientation",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP09;TE('%s' is TOPSHP09;TE('%s'. It is used as a TOPSHP09;TE('%s'. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, red, green with S-57 colour pattern 6; horizontal bands/stripes in the listed colour order.",
+        "colour_pattern": "S-57 colour pattern 6; horizontal bands/stripes in the listed colour order",
+        "required_colours": [
+          "red",
+          "red",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "green"
+        ],
+        "use_case": "TOPSHP09;TE('%s'"
+      },
+      "source_judge": "catalog/standard_judge_batch_047_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP09_TE_s__day.png",
+            "label": "TOPSHP09;TE('%s'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP09_TE_s__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP09_TE_s__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP09_TE_s__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/TOPSHP15_TE_s__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/TOPSHP15_TE_s__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/TOPSHP15_TE_s__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/TOPSHP15_TE_s.svg",
+      "asset": "TOPSHP15;TE('%s'",
+      "before_svg": "assets/svg/owned_repair_batch84/TOPSHP15_TE_s.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP15_TE_s.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "TOPSHP15;TE('%s'",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Redraw TOPSHP15 with the required red/red/yellow S-57 band pattern while keeping the text-bearing cue; the current vertical stripes do not match the required colour pattern.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP24",
+          "COLPAT6",
+          "COLOUR3,3,6"
+        ],
+        "lookup_id": "2065",
+        "lookup_rcid": "30320",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPSHP15;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_colour_pattern",
+        "wrong_stripe_orientation",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP15;TE('%s' is TOPSHP15;TE('%s'. It is used as a TOPSHP15;TE('%s'. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: red, red, yellow with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "red",
+          "red",
+          "yellow"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "red",
+          "yellow"
+        ],
+        "use_case": "TOPSHP15;TE('%s'"
+      },
+      "source_judge": "catalog/standard_judge_batch_047_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP15_TE_s__day.png",
+            "label": "TOPSHP15;TE('%s'",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP15_TE_s__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP15_TE_s__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP15_TE_s__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/TOPSHP33__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/TOPSHP33__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/TOPSHP33__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/TOPSHP33.svg",
+      "asset": "TOPSHP33",
+      "before_svg": "assets/svg/owned_repair_batch84/TOPSHP33.svg",
+      "candidate_source": "assets/svg/triad_generated/TOPSHP33.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "TOPSHP33",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Attach or regenerate the exact TOPSHP33 OpenCPN/source render witness, then rerun the judge against that exact reference before promotion; do not final-approve or pass-pending from neighboring-family inference alone.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "TOPSHP19",
+          "COLPAT6",
+          "COLOUR4,3,4"
+        ],
+        "lookup_id": "2054",
+        "lookup_rcid": "30314",
+        "object_class": "DAYMAR",
+        "s52_instruction": "SY(TOPSHP33);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "missing_exact_reference",
+        "insufficient_reference_evidence"
+      ],
+      "semantic_brief": {
+        "brief": "TOPSHP33 is TOPSHP33. It is used as a TOPSHP33. Required geometry: exact topmark silhouette/count/orientation from the references. Required colours: green, red, green with S-57 colour pattern 6.",
+        "colour_pattern": "S-57 colour pattern 6",
+        "required_colours": [
+          "green",
+          "red",
+          "green"
+        ],
+        "required_shape": "exact topmark silhouette/count/orientation from the references",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "green",
+          "red"
+        ],
+        "use_case": "TOPSHP33"
+      },
+      "source_judge": "catalog/standard_judge_batch_058_rerun.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOPSHP33__day.png",
+            "label": "TOPSHP33",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOPSHP33__day.png",
+              "dusk": "out/opencpn_s52_reference/TOPSHP33__dusk.png",
+              "night": "out/opencpn_s52_reference/TOPSHP33__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/TOWERS74_TX_OBJNAM__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/TOWERS74_TX_OBJNAM__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/TOWERS74_TX_OBJNAM__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/TOWERS74_TX_OBJNAM.svg",
+      "asset": "TOWERS74|;TX(OBJNAM",
+      "before_svg": "assets/svg/owned_repair_batch84/TOWERS74_TX_OBJNAM.svg",
+      "candidate_source": "assets/svg/triad_generated/TOWERS74_TX_OBJNAM.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "TOWERS74|;TX(OBJNAM",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Attach or regenerate the exact TOWERS74_TX_OBJNAM OpenCPN/source render witness, confirm the white/orange colour semantics against that row, then rerun the judge; do not pass-pending or final-approve from chart-only evidence.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "COLOUR1,11"
+        ],
+        "lookup_id": "2469",
+        "lookup_rcid": "93985",
+        "object_class": "TOWERS",
+        "s52_instruction": "SY(TOWERS74|;TX(OBJNAM,3,2,2,'15110',1,-1,CHBLK,26)"
+      },
+      "safety_reason_codes": [
+        "missing_exact_reference",
+        "insufficient_reference_evidence",
+        "colour_pattern_uncertain"
+      ],
+      "semantic_brief": {
+        "brief": "TOWERS74|;TX(OBJNAM is TOWERS74|;TX(OBJNAM. It is used as a TOWERS74|;TX(OBJNAM. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: white, orange.",
+        "colour_pattern": null,
+        "required_colours": [
+          "white",
+          "orange"
+        ],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "white",
+          "orange"
+        ],
+        "use_case": "TOWERS74|;TX(OBJNAM"
+      },
+      "source_judge": "catalog/standard_judge_batch_059_rerun.json",
+      "visual_examples": {
+        "aquamap": [
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/Tower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Tower & Lighted Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/LightedTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          },
+          {
+            "label": "Water Tower",
+            "license_boundary": "Aqua Map copyrighted support-page image; visual reference only, redraw into Helm-owned SVG",
+            "path": "reference_sources/aquamap_map_symbols/images/WaterTower1.png",
+            "section": "Landmarks",
+            "source": "aquamap_map_symbols",
+            "status": "copyrighted_visual_reference_not_canonical_art",
+            "url": null
+          }
+        ],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/TOWERS74_TX_OBJNAM__day.png",
+            "label": "TOWERS74|;TX(OBJNAM",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/TOWERS74_TX_OBJNAM__day.png",
+              "dusk": "out/opencpn_s52_reference/TOWERS74_TX_OBJNAM__dusk.png",
+              "night": "out/opencpn_s52_reference/TOWERS74_TX_OBJNAM__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/VEHTRF01__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/VEHTRF01__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/VEHTRF01__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/VEHTRF01.svg",
+      "asset": "VEHTRF01",
+      "before_svg": "assets/svg/owned_repair_batch84/VEHTRF01.svg",
+      "candidate_source": "assets/svg/triad_generated/VEHTRF01.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "VEHTRF01",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Replace the placeholder with the reference-matched vehicle traffic symbol geometry and preserve the VEHTRF class semantics.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [],
+        "lookup_id": "311",
+        "lookup_rcid": "32346",
+        "object_class": "vehtrf",
+        "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "VEHTRF01 is VEHTRF01. It is used as a VEHTRF01. Required geometry: symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference. Required colours: reference-defined.",
+        "colour_pattern": null,
+        "required_colours": [],
+        "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [],
+        "use_case": "VEHTRF01"
+      },
+      "source_judge": "catalog/standard_judge_batch_016.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/VEHTRF01__day.png",
+            "label": "VEHTRF01",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/VEHTRF01__day.png",
+              "dusk": "out/opencpn_s52_reference/VEHTRF01__dusk.png",
+              "night": "out/opencpn_s52_reference/VEHTRF01__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    },
+    {
+      "after_renders": {
+        "day": "out/standard_repair_batch76/renders/boyspp50__after__day.png",
+        "dusk": "out/standard_repair_batch76/renders/boyspp50__after__dusk.png",
+        "night": "out/standard_repair_batch76/renders/boyspp50__after__night.png"
+      },
+      "after_svg": "assets/svg/owned_repair_batch84/boyspp50.svg",
+      "asset": "boyspp50",
+      "before_svg": "assets/svg/owned_repair_batch84/boyspp50.svg",
+      "candidate_source": "assets/svg/triad_generated/boyspp50.svg",
+      "candidate_strategy": "owned_thin_redraw_from_chart1_crop_s57_metadata_and_provider_witnesses",
+      "name": "boyspp50",
+      "provenance": {
+        "generator": "forge.standard_repair_batch76",
+        "origin": "generated-owned-artwork",
+        "reference_role": "Chart 1 crops, S-57 metadata, and provider witnesses guide generated-owned redraw",
+        "source_priority_basis": "standard_repair_queue remaining evidence-backed rows",
+        "style_contract_id": "helm-openbridge-navigation-v1"
+      },
+      "qa": {
+        "final_approved": false,
+        "semantic_pass": false,
+        "structural_pass": true,
+        "visual_parity": "repaired_pending_judge_rerun"
+      },
+      "queue_action": "standard_hard_queue_reference_improved",
+      "required_change": "Replace the yellow diamond with the correct yellow buoy-family `boyspp50` symbol after regenerating/attaching a usable local reference render; do not promote a diamond substitute.",
+      "risk_bucket": "final_hard_queue_candidate_repair_batch84",
+      "s57_structure": {
+        "conditions": [
+          "catwwm19",
+          "COLOUR6"
+        ],
+        "lookup_id": "1383",
+        "lookup_rcid": "31435",
+        "object_class": "boywtw",
+        "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)"
+      },
+      "safety_reason_codes": [
+        "wrong_shape",
+        "wrong_symbol_family",
+        "generic_daymark_substitute",
+        "missing_buoy_body",
+        "insufficient_reference_render_detail",
+        "reference_mismatch"
+      ],
+      "semantic_brief": {
+        "brief": "boyspp50 is boyspp50. It is used as a boyspp50. Required geometry: buoy symbol matching the S-57 buoy family. Required colours: yellow.",
+        "colour_pattern": null,
+        "required_colours": [
+          "yellow"
+        ],
+        "required_shape": "buoy symbol matching the S-57 buoy family",
+        "safety_invariants": [
+          "Preserve the S-57/S-52 symbol class; do not substitute a different buoy/beacon/topmark/hazard family.",
+          "Preserve load-bearing colours and colour order.",
+          "Preserve topmark count/orientation and band pattern when present.",
+          "Use provider images as semantic/shape witnesses; Helm output remains generated-owned artwork."
+        ],
+        "unique_required_colours": [
+          "yellow"
+        ],
+        "use_case": "boyspp50"
+      },
+      "source_judge": "catalog/standard_judge_batch_017.json",
+      "visual_examples": {
+        "aquamap": [],
+        "opencpn_render": [
+          {
+            "day": "out/opencpn_s52_reference/boyspp50__day.png",
+            "label": "boyspp50",
+            "license_boundary": "GPL/OpenCPN local visual oracle; reference only, do not copy pixels",
+            "paths": {
+              "day": "out/opencpn_s52_reference/boyspp50__day.png",
+              "dusk": "out/opencpn_s52_reference/boyspp50__dusk.png",
+              "night": "out/opencpn_s52_reference/boyspp50__night.png"
+            },
+            "source": "opencpn_s52_reference_render",
+            "status": "pending_render"
+          }
+        ],
+        "s101": []
+      }
+    }
+  ]
+}

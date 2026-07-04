@@ -1,0 +1,1154 @@
+{
+  "outputs": {
+    "csv": "catalog/standard_reference_gap_report.csv",
+    "json": "catalog/standard_reference_gap_report.json",
+    "markdown": "catalog/standard_reference_gap_report.md"
+  },
+  "rows": [
+    {
+      "asset": "ARCSLN01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "style_primitive_registry",
+      "canonical_svg": "assets/svg/triad_generated/ARCSLN01.svg",
+      "expected_action": "cover_by_renderer_style_contract_tests: arc/sector line style primitive; renderer stroke contract, not a standalone icon",
+      "family": "areas_patterns_lines",
+      "gap_class": "routed_style_primitive",
+      "kind": "line-style",
+      "name": "ARCSLN01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "style_primitive_registry",
+      "s52_instruction": "LC(ARCSLN01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "BCNCON81",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "chart1_parity_witness_needed",
+      "canonical_svg": "assets/svg/triad_generated/BCNCON81.svg",
+      "expected_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate: Generate owned beacon/conical special-purpose mark from explicit S-57 conditions; no external art import required.",
+      "family": "buoy_beacon_marks",
+      "gap_class": "routed_witness_needed",
+      "kind": "symbol",
+      "name": "BCNCON81",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "blue",
+        "red",
+        "white",
+        "blue"
+      ],
+      "required_shape": "conical/nun buoy body",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s52_instruction": "SY(BCNCON81);TE('%s','OBJNAM',2,1,2,'15110',-1,-2,CHBLK,21)",
+      "s57_conditions": [
+        "BOYSHP1",
+        "COLPAT1,2",
+        "COLOUR5,3,1,5"
+      ],
+      "source_batch": "catalog/owned_repair_batch97.json"
+    },
+    {
+      "asset": "BOYLAT52",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYLAT52.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYLAT52 before recognition judging; candidate shape contract is buoy symbol matching the S-57 buoy family; colours are red, green, red.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYLAT52",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "green",
+        "red"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYLAT52);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm13",
+        "COLOUR3,4,3"
+      ],
+      "source_batch": "catalog/owned_repair_batch68.json"
+    },
+    {
+      "asset": "BOYLAT53",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYLAT53.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYLAT53 before recognition judging; candidate shape contract is buoy symbol matching the S-57 buoy family; colours are green, red, green.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYLAT53",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "green",
+        "red",
+        "green"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYLAT53);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm10",
+        "COLOUR4,3,4"
+      ],
+      "source_batch": "catalog/owned_repair_batch68.json"
+    },
+    {
+      "asset": "BOYLAT54",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYLAT54.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYLAT54 before recognition judging; candidate shape contract is buoy symbol matching the S-57 buoy family; colours are red, green.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYLAT54",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "green"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYLAT54);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm6",
+        "COLOUR3,4"
+      ],
+      "source_batch": "catalog/owned_repair_batch68.json"
+    },
+    {
+      "asset": "BOYLAT55",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYLAT55.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYLAT55 before recognition judging; candidate shape contract is buoy symbol matching the S-57 buoy family; colours are white, red.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYLAT55",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "white",
+        "red"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYLAT55);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm11",
+        "COLOUR1,3"
+      ],
+      "source_batch": "catalog/owned_repair_batch68.json"
+    },
+    {
+      "asset": "BOYLAT56",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYLAT56.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYLAT56 before recognition judging; candidate shape contract is buoy symbol matching the S-57 buoy family; colours are white, green.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYLAT56",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "white",
+        "green"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYLAT56);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm10",
+        "COLOUR1,4"
+      ],
+      "source_batch": "catalog/owned_repair_batch68.json"
+    },
+    {
+      "asset": "BOYSPH79",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYSPH79.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYSPH79 before recognition judging; candidate shape contract is conical/nun buoy body; colours are red, green.",
+      "family": "buoy_beacon_marks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYSPH79",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "green"
+      ],
+      "required_shape": "conical/nun buoy body",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYSPH79);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "BOYSHP1",
+        "COLOUR3,4",
+        "COLPAT1"
+      ],
+      "source_batch": "catalog/owned_repair_batch67.json"
+    },
+    {
+      "asset": "BOYSPR02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYSPR02.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYSPR02 before recognition judging; candidate shape contract is spar buoy body; colours are green.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYSPR02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "green"
+      ],
+      "required_shape": "spar buoy body",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYSPR02);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "BOYSHP5",
+        "COLOUR4"
+      ],
+      "source_batch": "catalog/owned_repair_batch69.json"
+    },
+    {
+      "asset": "BOYSPR03",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/BOYSPR03.svg",
+      "expected_action": "Attach or generate a tight reference image for BOYSPR03 before recognition judging; candidate shape contract is spar buoy body; colours are red.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "BOYSPR03",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red"
+      ],
+      "required_shape": "spar buoy body",
+      "routing_bucket": null,
+      "s52_instruction": "SY(BOYSPR03);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "BOYSHP5",
+        "COLOUR3"
+      ],
+      "source_batch": "catalog/owned_repair_batch69.json"
+    },
+    {
+      "asset": "DANGER53",
+      "blockers": [
+        "no_reference_images",
+        "style_blocked",
+        "craft_blocked"
+      ],
+      "candidate_status": "witness_needed_official_symbol",
+      "canonical_svg": "assets/svg/triad_generated/DANGER53.svg",
+      "expected_action": "attach_tight_reference_before_render: Official S-52 danger symbol row exists, but no tight OpenCPN/S-101/AquaMap/Chart-1 one-symbol witness is attached.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_witness_needed",
+      "kind": "symbol",
+      "name": "DANGER53",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s52_instruction": "SY(DANGER53)",
+      "s57_conditions": [
+        "$SCODEDANGER03"
+      ],
+      "source_batch": "catalog/owned_repair_batch4.json"
+    },
+    {
+      "asset": "DASH",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "style_primitive_registry",
+      "canonical_svg": "assets/svg/triad_generated/DASH.svg",
+      "expected_action": "cover_by_renderer_style_contract_tests: generic dashed line primitive used by many lookups; style contract, not a standalone icon",
+      "family": "areas_patterns_lines",
+      "gap_class": "routed_style_primitive",
+      "kind": "line-style",
+      "name": "DASH",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "style_primitive_registry",
+      "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)",
+      "s57_conditions": [
+        "ORIENT ",
+        "TRAFIC1"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "DATCVR01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/DATCVR01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: data-coverage conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "DATCVR01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(DATCVR01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "DEPARE01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/DEPARE01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: depth-area conditional procedure",
+      "family": "wreck_rock_obstruction",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "DEPARE01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(DEPARE01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "DEPARE02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/DEPARE02.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: depth-area conditional procedure",
+      "family": "wreck_rock_obstruction",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "DEPARE02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(DEPARE02)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "DEPCNT02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/DEPCNT02.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: depth-contour conditional procedure",
+      "family": "wreck_rock_obstruction",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "DEPCNT02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(DEPCNT02)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "DGPS01DRFSTA01",
+      "blockers": [
+        "no_reference_images",
+        "style_blocked",
+        "craft_blocked"
+      ],
+      "candidate_status": "witness_needed_official_symbol",
+      "canonical_svg": "assets/svg/triad_generated/DGPS01DRFSTA01.svg",
+      "expected_action": "attach_tight_reference_before_render: DGPS/radio-station composite row exists, but current merged token lacks a tight symbol witness.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_witness_needed",
+      "kind": "symbol",
+      "name": "DGPS01DRFSTA01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s52_instruction": "SY(DGPS01DRFSTA01)",
+      "s57_conditions": [
+        "CATROS10"
+      ],
+      "source_batch": "catalog/owned_repair_batch4.json"
+    },
+    {
+      "asset": "DOTT",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "style_primitive_registry",
+      "canonical_svg": "assets/svg/triad_generated/DOTT.svg",
+      "expected_action": "cover_by_renderer_style_contract_tests: generic dotted line primitive used by obstruction/foul-area rules; style contract, not a standalone icon",
+      "family": "wreck_rock_obstruction",
+      "gap_class": "routed_style_primitive",
+      "kind": "line-style",
+      "name": "DOTT",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "style_primitive_registry",
+      "s52_instruction": "CS(OBSTRN04);AP(FOULAR01);LS(DOTT,2,CHBLK)",
+      "s57_conditions": [
+        "CATOBS6"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "LEGLIN02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/LEGLIN02.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: leg-line conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "LEGLIN02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(LEGLIN02)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "NEWOBJ 01",
+      "blockers": [
+        "no_reference_images",
+        "style_blocked",
+        "craft_blocked"
+      ],
+      "candidate_status": "manual_policy_exception",
+      "canonical_svg": "assets/svg/triad_generated/NEWOBJ_01.svg",
+      "expected_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception: NEWOBJ is a placeholder/new-object hook, not a stable nautical symbol to visually promote.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_manual_exception",
+      "kind": "symbol",
+      "name": "NEWOBJ 01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "manual_policy_exception",
+      "s52_instruction": "SY(NEWOBJ 01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch4.json"
+    },
+    {
+      "asset": "NEWOBJ01",
+      "blockers": [
+        "no_reference_images",
+        "style_blocked",
+        "craft_blocked"
+      ],
+      "candidate_status": "manual_policy_exception",
+      "canonical_svg": "assets/svg/triad_generated/NEWOBJ01.svg",
+      "expected_action": "decide_runtime_placeholder_policy_or_explicit_manual_exception: NEWOBJ area symbol is a placeholder/new-object hook; line style is handled by the renderer, not a canonical pictogram.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_manual_exception",
+      "kind": "symbol",
+      "name": "NEWOBJ01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "manual_policy_exception",
+      "s52_instruction": "SY(NEWOBJ01);LS(DASH,2,CHMGD)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch4.json"
+    },
+    {
+      "asset": "OWNSHP02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/OWNSHP02.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: own-ship conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "OWNSHP02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(OWNSHP02)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "QUAPOS01;TX(OBJNAM",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/QUAPOS01_TX_OBJNAM.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: quality-of-position/text conditional procedure",
+      "family": "areas_patterns_lines",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "QUAPOS01;TX(OBJNAM",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "SY(LNDARE01);CS(QUAPOS01;TX(OBJNAM,1,2,3,'15118',-1,-1,CHBLK,26))",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "RESARE01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/RESARE01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: restricted-area conditional procedure",
+      "family": "areas_patterns_lines",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "RESARE01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "SY(ACHARE51);LC(ACHARE51);CS(RESARE01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "RESARE02",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/RESARE02.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: restricted-area conditional procedure",
+      "family": "areas_patterns_lines",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "RESARE02",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "TX(OBJNAM,3,1,2,'15110',1,0,CHMGD,29);CS(RESARE02)",
+      "s57_conditions": [
+        "CATREA4"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "RESTRN01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/RESTRN01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: restriction conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "RESTRN01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "SY(TSSLPT51,ORIENT);SY(DWRTPT51);LS(DASH,2,TRFCD);CS(RESTRN01)",
+      "s57_conditions": [
+        "ORIENT ",
+        "TRAFIC1"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "SLCONS03",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/SLCONS03.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: shoreline-construction conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "SLCONS03",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "SY(PIER0001);CS(SLCONS03)",
+      "s57_conditions": [
+        "CATSLC4"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "SOLD",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "style_primitive_registry",
+      "canonical_svg": "assets/svg/triad_generated/SOLD.svg",
+      "expected_action": "cover_by_renderer_style_contract_tests: generic solid line primitive used by many area/contour rules; style contract, not a standalone icon",
+      "family": "wreck_rock_obstruction",
+      "gap_class": "routed_style_primitive",
+      "kind": "line-style",
+      "name": "SOLD",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "style_primitive_registry",
+      "s52_instruction": "AC(NODTA);AP(PRTSUR01);LS(SOLD,2,CHGRD)",
+      "s57_conditions": [
+        "DRVAL1?",
+        "DRVAL2?"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "SYMINS01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/SYMINS01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: symbol-instruction conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "SYMINS01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(SYMINS01)",
+      "s57_conditions": [
+        "SYMINS"
+      ],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "TOPMARI1",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/TOPMARI1.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: topmark conditional procedure",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "TOPMARI1",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(TOPMARI1)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "TOPSHP09;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP09_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP09;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are red, red, green.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP09;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "red",
+        "green"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP09;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP24",
+        "COLPAT6,1",
+        "COLOUR3,3,4"
+      ],
+      "source_batch": "catalog/owned_repair_batch84.json"
+    },
+    {
+      "asset": "TOPSHP15;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP15_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP15;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are red, red, yellow.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP15;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "red",
+        "yellow"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP15;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP24",
+        "COLPAT6",
+        "COLOUR3,3,6"
+      ],
+      "source_batch": "catalog/owned_repair_batch84.json"
+    },
+    {
+      "asset": "TOPSHP33",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP33.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP33 before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are green, red, green.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP33",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "green",
+        "red",
+        "green"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP33);TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP19",
+        "COLPAT6",
+        "COLOUR4,3,4"
+      ],
+      "source_batch": "catalog/owned_repair_batch84.json"
+    },
+    {
+      "asset": "TOPSHP73;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP73_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP73;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are white, black, white.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP73;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "white",
+        "black",
+        "white"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP73;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP12",
+        "COLPAT6,4",
+        "COLOUR1,2,1"
+      ],
+      "source_batch": "catalog/owned_repair_batch49.json"
+    },
+    {
+      "asset": "TOPSHP81;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP81_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP81;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are orange, black.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP81;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "orange",
+        "black"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP81;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP20",
+        "COLPAT2",
+        "COLOUR11,2"
+      ],
+      "source_batch": "catalog/owned_repair_batch50.json"
+    },
+    {
+      "asset": "TOPSHP89;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHP89_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHP89;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are red, white, red.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHP89;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "red",
+        "white",
+        "red"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHP89;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP20",
+        "COLPAT2",
+        "COLOUR3,1,3"
+      ],
+      "source_batch": "catalog/owned_repair_batch50.json"
+    },
+    {
+      "asset": "TOPSHPT8;TE('%s'",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "judge_pass_pending_final_approval",
+      "canonical_svg": "assets/svg/triad_generated/TOPSHPT8_TE_s.svg",
+      "expected_action": "Attach or generate a tight reference image for TOPSHPT8;TE('%s' before recognition judging; candidate shape contract is exact topmark silhouette/count/orientation from the references; colours are white, black, white.",
+      "family": "lights_daymarks_topmarks",
+      "gap_class": "candidate_blocked_no_reference_images",
+      "kind": "symbol",
+      "name": "TOPSHPT8;TE('%s'",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "white",
+        "black",
+        "white"
+      ],
+      "required_shape": "exact topmark silhouette/count/orientation from the references",
+      "routing_bucket": null,
+      "s52_instruction": "SY(TOPSHPT8;TE('%s','OBJNAM',2,1,2,'15110',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "TOPSHP6",
+        "COLPAT2",
+        "COLOUR1,2,1"
+      ],
+      "source_batch": "catalog/owned_repair_batch52.json"
+    },
+    {
+      "asset": "VEHTRF01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "witness_needed_official_symbol",
+      "canonical_svg": "assets/svg/triad_generated/VEHTRF01.svg",
+      "expected_action": "attach_tight_reference_before_render: Vehicle-traffic area row exists, but no tight witness is attached; keep blocked until a symbol crop/render is available.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_witness_needed",
+      "kind": "symbol",
+      "name": "VEHTRF01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "witness_needed_official_symbol",
+      "s52_instruction": "SY(VEHTRF01);LS(DASH,1,CHGRF)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch84.json"
+    },
+    {
+      "asset": "VESSEL01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/VESSEL01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: vessel conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "VESSEL01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(VESSEL01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "VRMEBL01",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "portrayal_rule_registry",
+      "canonical_svg": "assets/svg/triad_generated/VRMEBL01.svg",
+      "expected_action": "cover_by_portrayal_rule_or_runtime_renderer_test: VRM/EBL conditional procedure",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_portrayal_rule",
+      "kind": "conditional-procedure",
+      "name": "VRMEBL01",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [],
+      "required_shape": "symbol silhouette must match the strongest S-101/OpenCPN/Aqua Map reference",
+      "routing_bucket": "portrayal_rule_registry",
+      "s52_instruction": "CS(VRMEBL01)",
+      "s57_conditions": [],
+      "source_batch": "catalog/owned_repair_batch91.json"
+    },
+    {
+      "asset": "boyspp50",
+      "blockers": [
+        "no_reference_images"
+      ],
+      "candidate_status": "chart1_parity_witness_needed",
+      "canonical_svg": "assets/svg/triad_generated/boyspp50.svg",
+      "expected_action": "attach_exact_chart1_or_equivalent_witness_then_rerun_parity_gate: Lowercase legacy special-purpose waterway mark can be generated from S-57 conditions as a yellow special-purpose buoy marker.",
+      "family": "ugly_attribute_edges",
+      "gap_class": "routed_witness_needed",
+      "kind": "symbol",
+      "name": "boyspp50",
+      "provider_counts": {
+        "aquamap": 0,
+        "opencpn_render": 0,
+        "s101": 0
+      },
+      "required_colours": [
+        "yellow"
+      ],
+      "required_shape": "buoy symbol matching the S-57 buoy family",
+      "routing_bucket": "chart1_parity_witness_needed",
+      "s52_instruction": "SY(boyspp50);TX(OBJNAM,2,1,2,'14106',-1,-1,CHBLK,21)",
+      "s57_conditions": [
+        "catwwm19",
+        "COLOUR6"
+      ],
+      "source_batch": "catalog/owned_repair_batch97.json"
+    }
+  ],
+  "schema_version": "iconforge.standard_reference_gap_report.v1",
+  "status": "reference_gap_report_written",
+  "summary": {
+    "gap_class_counts": {
+      "candidate_blocked_no_reference_images": 15,
+      "routed_manual_exception": 2,
+      "routed_portrayal_rule": 15,
+      "routed_style_primitive": 4,
+      "routed_witness_needed": 5
+    },
+    "recognition_packets": 824,
+    "reference_gap_rows": 41,
+    "source_table_rows": 824
+  }
+}

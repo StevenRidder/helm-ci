@@ -1,0 +1,117 @@
+{
+  "schema_version": 1,
+  "source": {
+    "id": "chart1_mappings_pdf_semantic_targets",
+    "title": "Chart 1 Mappings - Symbols Abbreviations Terms and S-57 Objects",
+    "url": "file:///Users/steveridder/Downloads/Chart%201%20Mappings.pdf",
+    "local_pdf": "/Users/steveridder/Downloads/Chart 1 Mappings.pdf",
+    "pdf_sha256": "6768d3935f312310686d94dc78683fa29f1e5c00901cd9cf0978481cfd54af64",
+    "status": "reference_only",
+    "license_status": "permission_required_before_artwork_use",
+    "allowed_use": [
+      "name_mapping",
+      "s57_object_crosswalk",
+      "semantic_generation_target",
+      "semantic_qa"
+    ],
+    "forbidden_use": [
+      "crop_extract_svg",
+      "direct_artwork_derivation",
+      "canonical_asset_source"
+    ]
+  },
+  "notes": [
+    "Rows record precise Chart 1 Mappings names and S-57 object/attribute expressions outside the current Q-section crop table.",
+    "Rows without a printed source glyph are still valid generator targets; they carry expected_symbol guidance instead of a crop claim.",
+    "Familiar public iconography, including emoji-like metaphors, may be used only as semantic inspiration for newly drawn owned SVGs."
+  ],
+  "targets": [
+    {
+      "target_id": "SMCFAC_CATSCF_12",
+      "official_name": "Water tap",
+      "s57_refs": ["SMCFAC.CATSCF=12"],
+      "source_table": {
+        "section": "Small craft facilities",
+        "symbol_cell_status": "source_symbol_present",
+        "reference_status": "reference_only_not_canonical_artwork",
+        "source_crop_status": "needs_pdf_crop",
+        "user_verified": true
+      },
+      "generation_target": {
+        "asset_id": "SMCFAC_CATSCF_12",
+        "kind": "chart-symbol",
+        "tier": "chart-artifact",
+        "origin": "generated-owned-artwork",
+        "expected_symbol": "water_tap",
+        "visual_brief": "Draw a compact magenta/purple faucet or water tap symbol suitable for a nautical chart small-craft facility marker.",
+        "style_notes": [
+          "Use the source row for identity and S-57 mapping only.",
+          "Do not trace, vectorize, or recolor the source PDF crop.",
+          "Keep the glyph legible at small chart-symbol size."
+        ]
+      },
+      "qa": {
+        "semantic_pass": true,
+        "visual_parity": "pending_exact_reference_crop"
+      }
+    },
+    {
+      "target_id": "SMCFAC_CATSCF_16",
+      "official_name": "Showers",
+      "s57_refs": ["SMCFAC.CATSCF=16"],
+      "source_table": {
+        "section": "Small craft facilities",
+        "symbol_cell_status": "no_symbol_in_source_table",
+        "reference_status": "semantic_mapping_only",
+        "source_crop_status": "not_applicable",
+        "user_verified": true
+      },
+      "generation_target": {
+        "asset_id": "SMCFAC_CATSCF_16",
+        "kind": "chart-symbol",
+        "tier": "chart-artifact",
+        "origin": "generated-owned-artwork",
+        "expected_symbol": "shower",
+        "visual_brief": "Draw a simple shower head with falling water drops for a small-craft facility marker.",
+        "style_notes": [
+          "Use familiar shower iconography as semantic inspiration only.",
+          "Do not claim a source glyph crop when the table cell is blank.",
+          "Keep the symbol distinct from water tap and drinking-water targets."
+        ]
+      },
+      "qa": {
+        "semantic_pass": true,
+        "visual_parity": "semantic_only_pending_generated_art"
+      }
+    },
+    {
+      "target_id": "SMCFAC_CATSCF_21",
+      "official_name": "Refuse bin",
+      "s57_refs": ["SMCFAC.CATSCF=21"],
+      "source_table": {
+        "section": "Small craft facilities",
+        "symbol_cell_status": "no_symbol_in_source_table",
+        "reference_status": "semantic_mapping_only",
+        "source_crop_status": "not_applicable",
+        "user_verified": true
+      },
+      "generation_target": {
+        "asset_id": "SMCFAC_CATSCF_21",
+        "kind": "chart-symbol",
+        "tier": "chart-artifact",
+        "origin": "generated-owned-artwork",
+        "expected_symbol": "refuse_bin",
+        "visual_brief": "Draw a small refuse bin or trash barrel symbol for a small-craft facility marker.",
+        "style_notes": [
+          "Use familiar trash-bin iconography as semantic inspiration only.",
+          "Do not claim a source glyph crop when the table cell is blank.",
+          "Avoid shapes that read as a buoy, tank, or generic square."
+        ]
+      },
+      "qa": {
+        "semantic_pass": true,
+        "visual_parity": "semantic_only_pending_generated_art"
+      }
+    }
+  ]
+}

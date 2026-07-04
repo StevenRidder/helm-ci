@@ -1,0 +1,46 @@
+{
+  "consistency_checks": {
+    "human_review_s101_missing_shape_witness_note": [],
+    "human_review_s101_missing_symbol_id": [],
+    "passed": true,
+    "resolved_colour_attribute_mismatches": []
+  },
+  "coverage": {
+    "all_rows_accounted_for": true,
+    "all_rows_classified": true,
+    "all_rows_s101_feature_equivalent": false,
+    "non_s101_or_extension": 149,
+    "resolver_status_counts": {
+      "classified_extension_requires_profile": 107,
+      "classified_non_s101_runtime": 42,
+      "resolved_direct": 244,
+      "resolved_rule": 92,
+      "resolved_rule_catalogue": 264,
+      "resolved_with_deviation": 75
+    },
+    "rows": 824,
+    "s101_crosswalk_class_counts": {
+      "non_s101_or_inland_extension": 107,
+      "non_s101_runtime_construct": 42,
+      "s101_feature_equivalent": 600,
+      "s101_feature_equivalent_with_documented_deviation": 75
+    },
+    "s101_feature_equivalent": 675,
+    "s101_mapping_type_counts": {
+      "acceptable_deviation": 75,
+      "direct_asset_match": 244,
+      "rule_derived_equivalent": 92,
+      "unresolved": 413
+    },
+    "unresolved": 0
+  },
+  "interpretation": {
+    "non_s101_or_extension_rows": "Runtime display constructs and extension/inland profile rows are classified explicitly; do not claim these are S-101 ENC features.",
+    "raw_s101_svg_warning": "Raw S-101 SVG witnesses are shape/reference evidence; colour semantics come from resolver attributes.",
+    "s101_feature_equivalent_rows": "S-101 mapping evidence exists as direct, rule-derived, catalogue-rule, or acceptable-deviation evidence.",
+    "unresolved_rows": "No row may remain in this bucket; add a standards mapping or an explicit non-S-101/profile classification."
+  },
+  "schema": "helm.forge.s101-mapping-audit.v1",
+  "status": "pass",
+  "unresolved_rows": []
+}
