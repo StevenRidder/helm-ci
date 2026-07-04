@@ -8,9 +8,12 @@ from __future__ import annotations
 import argparse
 import csv
 import json
+import mimetypes
 from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
+from urllib.parse import parse_qs, unquote, urlparse
 
+from . import db_review_api
 from . import human_review_page
 
 
@@ -48,6 +51,26 @@ SIGNOFF_FIELDS = [
 
 
 class ReviewHandler(SimpleHTTPRequestHandler):
+    def do_GET(self) -> None:  # noqa: N802 - http.server API
+        parsed = urlparse(self.path)
+        if parsed.path == "/api/proof-review/rows":
+            self._handle_review_rows(parsed.query)
+            return
+        if parsed.path == "/api/proof-review/summary":
+            self._handle_review_summary()
+            return
+        if parsed.path.startswith("/api/proof-review/image/"):
+            self._handle_review_image(parsed.path)
+            return
+        super().do_GET()
+
+    def do_HEAD(self) -> None:  # noqa: N802 - http.server API
+        parsed = urlparse(self.path)
+        if parsed.path.startswith("/api/proof-review/image/"):
+            self._handle_review_image(parsed.path, head_only=True)
+            return
+        super().do_HEAD()
+
     def do_POST(self) -> None:  # noqa: N802 - http.server API
         if self.path not in {"/api/save-review", "/api/save-signoff"}:
             self.send_error(404, "unknown endpoint")
@@ -69,6 +92,77 @@ class ReviewHandler(SimpleHTTPRequestHandler):
         self.send_header("Content-Length", str(len(body)))
         self.end_headers()
         self.wfile.write(body)
+
+    def _write_json(self, status_code: int, payload: dict) -> None:
+        body = json.dumps(payload, indent=2, sort_keys=True).encode("utf-8")
+        self.send_response(status_code)
+        self.send_header("Content-Type", "application/json")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        self.wfile.write(body)
+
+    def _handle_review_rows(self, query: str) -> None:
+        try:
+            params = parse_qs(query)
+            limit = int((params.get("limit") or ["100"])[0])
+            offset = int((params.get("offset") or ["0"])[0])
+            symbols = params.get("symbol")
+            payload = db_review_api.build_review_payload(
+                limit=max(0, min(limit, 500)),
+                offset=max(0, offset),
+                symbol_ids=symbols or None,
+            )
+        except Exception as exc:  # noqa: BLE001 - browser needs loud diagnostics.
+            self._write_json(500, {
+                "schema": db_review_api.SCHEMA,
+                "status": "error",
+                "error": str(exc),
+            })
+            return
+        self._write_json(200, payload)
+
+    def _handle_review_summary(self) -> None:
+        try:
+            payload = db_review_api.build_review_payload(limit=0)
+        except Exception as exc:  # noqa: BLE001
+            self._write_json(500, {
+                "schema": db_review_api.SCHEMA,
+                "status": "error",
+                "error": str(exc),
+            })
+            return
+        self._write_json(200, {
+            "schema": db_review_api.SCHEMA,
+            "source": payload["source"],
+            "summary": payload["summary"],
+        })
+
+    def _handle_review_image(self, path: str, *, head_only: bool = False) -> None:
+        parts = path.removeprefix("/api/proof-review/image/").split("/")
+        if len(parts) != 2:
+            self._write_json(404, {"status": "missing", "error": "expected /asset/kind"})
+            return
+        asset = unquote(parts[0])
+        kind = unquote(parts[1])
+        image_path = db_review_api.image_path_for(asset, kind)
+        if not image_path:
+            self._write_json(404, {
+                "status": "missing",
+                "asset": asset,
+                "kind": kind,
+                "error": "review image evidence is not available",
+            })
+            return
+        body = image_path.read_bytes()
+        content_type = mimetypes.guess_type(str(image_path))[0] or "application/octet-stream"
+        if image_path.suffix == ".svg":
+            content_type = "image/svg+xml"
+        self.send_response(200)
+        self.send_header("Content-Type", content_type)
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if not head_only:
+            self.wfile.write(body)
 
 
 def _merge_rows(path: Path, rows: list[dict]) -> list[dict]:
@@ -180,6 +274,7 @@ def main(argv: list[str] | None = None) -> int:
     server = ThreadingHTTPServer((args.host, args.port), ReviewHandler)
     print(f"serving http://{args.host}:{args.port}/out/human_review/icon_review.html")
     print(f"signoff http://{args.host}:{args.port}/out/human_review/pass_review.html")
+    print(f"db review http://{args.host}:{args.port}/out/human_review/db_review.html")
     print(f"feedback csv: {FEEDBACK_CSV}")
     print(f"signoff csv: {SIGNOFF_CSV}")
     server.serve_forever()

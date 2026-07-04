@@ -12,6 +12,8 @@ import json
 import os
 from pathlib import Path
 
+from . import db_review_api
+
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = ROOT / "catalog"
@@ -19,6 +21,7 @@ OUT = ROOT / "out" / "human_review"
 TABLE = CATALOG / "standard_source_table.json"
 HTML_OUT = OUT / "icon_review.html"
 PASS_HTML_OUT = OUT / "pass_review.html"
+DB_HTML_OUT = OUT / "db_review.html"
 CSV_OUT = OUT / "icon_review_seed.csv"
 FEEDBACK_CSV = OUT / "icon_review_feedback.csv"
 FEEDBACK_JSON = OUT / "icon_review_feedback.json"
@@ -315,6 +318,7 @@ def build(*, limit: int | None = None) -> dict:
     _write_csv(rows)
     _write_html(rows, table.get("summary") or {})
     _write_pass_html([row for row in rows if row["status"] == "judge_pass_pending_final_approval"], table.get("summary") or {})
+    _write_db_review_html()
     return {
         "status": "human_review_page_written",
         "summary": {
@@ -325,6 +329,7 @@ def build(*, limit: int | None = None) -> dict:
         "outputs": {
             "html": str(HTML_OUT.relative_to(ROOT)),
             "pass_html": str(PASS_HTML_OUT.relative_to(ROOT)),
+            "db_html": str(DB_HTML_OUT.relative_to(ROOT)),
             "csv": str(CSV_OUT.relative_to(ROOT)),
         },
     }
@@ -680,6 +685,7 @@ applyFilters();
     <button id="exportChecked" class="primary">Export checked CSV</button>
     <button id="saveServer">Save to server</button>
     <a class="buttonLink primary" href="pass_review.html" target="_blank">Final sign-off ({pass_count})</a>
+    <a class="buttonLink" href="db_review.html" target="_blank">DB evidence</a>
     <button id="exportAll">Export all CSV</button>
     <button id="exportJson">Export JSON</button>
   </div>
@@ -697,6 +703,145 @@ applyFilters();
 </html>
 """
     HTML_OUT.write_text(body)
+
+
+def _write_db_review_html() -> None:
+    try:
+        source = db_review_api.build_review_payload(limit=0)["summary"]
+        source_note = (
+            f"DB rows: {source['total_candidates']}; runtime eligible: "
+            f"{source['runtime_eligible']}; DB hash: {source['db_sha256'][:16]}"
+        )
+    except Exception as exc:  # noqa: BLE001 - page should fail loud at runtime too.
+        source_note = f"DB summary unavailable at build time: {exc}"
+    js = """
+const rowsEl = document.getElementById("rows");
+const statusEl = document.getElementById("status");
+const qEl = document.getElementById("q");
+const statusFilterEl = document.getElementById("statusFilter");
+let allRows = [];
+
+function esc(value) {
+  return String(value ?? "").replace(/[&<>"']/g, ch => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]));
+}
+function text(value, fallback = "missing") {
+  if (value === null || value === undefined || value === "") return `<span class="missingText">${esc(fallback)}</span>`;
+  if (Array.isArray(value)) return esc(value.join(", "));
+  if (typeof value === "object") return esc(JSON.stringify(value));
+  return esc(value);
+}
+function image(label, src) {
+  if (!src) return `<div class="imageBox missingBox"><div class="missing">missing ${esc(label)}</div><div class="label">${esc(label)}</div></div>`;
+  return `<div class="imageBox"><img src="${esc(src)}" alt="${esc(label)}"><div class="label">${esc(label)}</div></div>`;
+}
+function gateList(row) {
+  return (row.qa.gates || []).map(gate =>
+    `<li class="${esc(gate.status)}"><strong>${esc(gate.name)}</strong>: ${esc(gate.status)} - ${esc(gate.detail)}</li>`
+  ).join("");
+}
+function renderRow(row) {
+  const interp = row.helm.interpretation?.sections || {};
+  const missing = row.qa.missing_evidence || [];
+  return `<section class="row" data-status="${esc(row.status)}" data-haystack="${esc([
+      row.symbol_id, row.opencpn.description, row.s57.description, row.s101.feature_type,
+      row.s101.rule_file, row.helm.interpretation_status, row.helm.recipe_status,
+      missing.join(" ")
+    ].join(" ").toLowerCase())}">
+    <div class="report">
+      <div class="meta">
+        <h2>${esc(row.symbol_id)} <span class="small">${esc(row.opencpn.description || row.s57.description)}</span></h2>
+        <div class="status ${row.qa.runtime_eligible ? "pass" : "pending"}">${esc(row.status)}</div>
+        <div class="small"><strong>OpenCPN:</strong> ${text(row.opencpn.object_name || row.opencpn.description)}</div>
+        <div class="small"><strong>S-57:</strong> ${text(row.s57.object_class)} ${text(row.s57.geometry, "")}</div>
+        <div class="small"><strong>S-52:</strong> ${text(row.s52.instruction)}</div>
+        <div class="small"><strong>S-101:</strong> ${text(row.s101.feature_type || row.s101.direct_symbol_id || row.s101.mapping_type)}</div>
+        <div class="small"><strong>Rule:</strong> ${text(row.s101.rule_file, "no rule file")}</div>
+        <div class="small"><strong>Helm:</strong> ${text(row.helm.interpretation_status)} / ${text(row.helm.recipe_status)}</div>
+      </div>
+      <div class="images">
+        ${image("Helm", row.images.helm.backend_url)}
+        ${image("OpenCPN", row.images.opencpn.backend_url)}
+        ${image("S-101", row.images.s101.backend_url)}
+      </div>
+      <div class="narrative">
+        <div class="note small"><strong>S-57 description:</strong> ${text(row.s57.description)}</div>
+        <div class="note small"><strong>Helm interpretation:</strong> ${text(interp.what_it_is || interp.clean_room_render_notes || row.helm.interpretation_status)}</div>
+        <div class="note small"><strong>S-101 evidence:</strong> ${text(row.s101.portrayal_evidence)}</div>
+        <div class="note small"><strong>Runtime gate:</strong> ${text(row.qa.runtime_gate_summary)}</div>
+      </div>
+    </div>
+    <div class="review signoffPanel">
+      <div class="wide"><label>Gate states</label><ul class="gateList">${gateList(row)}</ul></div>
+      <div class="wide"><label>Missing evidence</label><div class="small">${missing.length ? esc(missing.join("; ")) : "none"}</div></div>
+      <div class="wide"><label>Approval state</label><div class="small">${text(row.approval.state, "not reviewed")}</div></div>
+      <div class="wide actions">
+        <button type="button" disabled>${row.qa.runtime_eligible ? "Runtime eligible" : "Runtime blocked"}</button>
+        <span class="rowSaveStatus">Approval writes use existing sign-off endpoints</span>
+      </div>
+    </div>
+  </section>`;
+}
+function applyFilters() {
+  const q = qEl.value.trim().toLowerCase();
+  const status = statusFilterEl.value;
+  const visible = allRows.filter(row => {
+    const haystack = JSON.stringify(row).toLowerCase();
+    return (!q || haystack.includes(q)) && (!status || row.status === status);
+  });
+  rowsEl.innerHTML = visible.map(renderRow).join("");
+  document.getElementById("shownCount").textContent = visible.length;
+}
+async function loadRows() {
+  statusEl.textContent = "Loading DB evidence...";
+  try {
+    const response = await fetch("/api/proof-review/rows?limit=100");
+    if (!response.ok) throw new Error(await response.text());
+    const payload = await response.json();
+    if (payload.schema !== "helm.iconforge.db_review_api.v1") throw new Error(`unexpected schema ${payload.schema}`);
+    allRows = payload.rows;
+    statusEl.textContent = `Loaded ${payload.pagination.returned} rows from ${payload.summary.total_candidates} DB candidates; runtime eligible ${payload.summary.runtime_eligible}`;
+    const statuses = [...new Set(allRows.map(row => row.status))].sort();
+    statusFilterEl.innerHTML = `<option value="">all statuses</option>` + statuses.map(s => `<option value="${esc(s)}">${esc(s)}</option>`).join("");
+    applyFilters();
+  } catch (error) {
+    statusEl.textContent = `DB evidence load failed: ${error}`;
+    rowsEl.innerHTML = `<section class="row"><div class="note small"><strong>Failure:</strong> ${esc(error)}</div></section>`;
+  }
+}
+qEl.addEventListener("input", applyFilters);
+statusFilterEl.addEventListener("change", applyFilters);
+loadRows();
+"""
+    body = f"""<!doctype html>
+<html lang="en">
+<meta charset="utf-8">
+<title>Helm Icon Forge DB Evidence Review</title>
+<style>{_base_css_v2()}
+.gateList {{ margin: 0; padding-left: 18px; }}
+.gateList li {{ margin-bottom: 5px; }}
+.gateList .blocked, .gateList .pending {{ color: var(--red); }}
+.gateList .warn {{ color: #8a4b00; }}
+.missingText {{ color: var(--red); }}
+</style>
+<header>
+  <h1>Helm Icon Forge DB Evidence Review</h1>
+  <div class="toolbar signoff">
+    <input id="q" type="search" placeholder="Search DB evidence, mappings, gates">
+    <select id="statusFilter"><option value="">all statuses</option></select>
+    <a class="buttonLink" href="icon_review.html">Human review</a>
+    <a class="buttonLink" href="pass_review.html">Final sign-off</a>
+  </div>
+  <div class="summary">
+    <span>{_e(source_note)}</span>
+    <span>Visible: <strong id="shownCount">0</strong></span>
+    <span class="saveStatus" id="status">Not loaded</span>
+  </div>
+</header>
+<main id="rows"></main>
+<script>{js}</script>
+</html>
+"""
+    DB_HTML_OUT.write_text(body)
 
 
 def _signoff_card_v2(row: dict) -> str:

@@ -23,9 +23,11 @@ def main():
 
     html_path = ROOT / result["outputs"]["html"]
     pass_html_path = ROOT / result["outputs"]["pass_html"]
+    db_html_path = ROOT / result["outputs"]["db_html"]
     csv_path = ROOT / result["outputs"]["csv"]
     assert html_path.exists()
     assert pass_html_path.exists()
+    assert db_html_path.exists()
     assert csv_path.exists()
 
     html = html_path.read_text()
@@ -37,6 +39,7 @@ def main():
     assert "icon_review_remediation.csv" in html
     assert "helm.iconforge.human_review.v1" in html
     assert "/api/save-review" in html
+    assert "db_review.html" in html
 
     pass_html = pass_html_path.read_text()
     assert "Helm Icon Forge Final Sign-Off" in pass_html
@@ -48,6 +51,12 @@ def main():
     assert "pending queue" in pass_html
     assert "helm.iconforge.human_signoff.v1" in pass_html
     assert "/api/save-signoff" in pass_html
+
+    db_html = db_html_path.read_text()
+    assert "Helm Icon Forge DB Evidence Review" in db_html
+    assert "/api/proof-review/rows?limit=100" in db_html
+    assert "helm.iconforge.db_review_api.v1" in db_html
+    assert "Runtime blocked" in db_html
 
     rows = list(csv.DictReader(csv_path.open()))
     assert len(rows) == 12
