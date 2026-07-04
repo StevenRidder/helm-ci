@@ -33,6 +33,12 @@ def main() -> None:
         assert row["qa"]["style_contract"]["gate_status"] in {"pass", "pending", "failed"}
         assert row["qa"]["colour_authority"]["schema"] == "helm.iconforge.colour_authority_contract.v1"
         assert row["qa"]["colour_authority"]["gate_status"] in {"pass", "warn", "pending"}
+        assert row["qa"]["authority_trace"]["schema"] == "helm.iconforge.authority_trace_gate.v1"
+        assert row["qa"]["authority_trace"]["gate_status"] == "blocked"
+        assert row["qa"]["authority_trace"]["runtime_blocker"] is True
+        assert row["qa"]["authority_trace"]["s52_lookup"]["instruction"]
+        assert row["qa"]["authority_trace"]["s57_dictionary_decode"]["source"]
+        assert row["qa"]["authority_trace"]["s101_mapping"]["source_boundary"]
         assert row["approval"]["controls"]["save_signoff"] == "/api/save-signoff"
 
     assert rows["BOYPIL60"]["s101"]["feature_type"] == "LateralBuoy"
@@ -43,6 +49,8 @@ def main() -> None:
     assert rows["BOYLAT25"]["qa"]["colour_authority"]["feature_colour_sequence"] == ["red", "green"]
     assert rows["BOYLAT25"]["qa"]["colour_authority"]["visual_colour_sequence"] == ["red", "green"]
     assert rows["BOYLAT25"]["qa"]["colour_authority"]["status"] == "aligned"
+    assert rows["BOYLAT25"]["qa"]["authority_trace"]["s101_mapping"]["feature_type"] == "LateralBuoy"
+    assert "authority_trace:runtime_candidate_not_eligible" in rows["BOYLAT25"]["qa"]["authority_trace"]["reason_codes"]
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["status"] == "feature_colour_dropped"
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["missing_feature_colours"] == ["green"]
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["extra_visual_colours"] == ["white"]

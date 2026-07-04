@@ -25,10 +25,15 @@ def main() -> None:
     assert "style_contract_failed" in payload["summary"]["reason_counts"]
     assert "colour_authority_missing" not in payload["summary"]["reason_counts"]
     assert "colour_authority_pending" not in payload["summary"]["reason_counts"]
+    assert "authority_trace_blocked" in payload["summary"]["reason_counts"]
+    assert "authority_trace_runtime_blocker" in payload["summary"]["reason_counts"]
+    assert "authority_trace_missing" not in payload["summary"]["reason_counts"]
+    assert "authority_trace:runtime_candidate_not_eligible" in payload["summary"]["reason_counts"]
     assert any(reason.startswith("gate:visual_approval:pending") for reason in payload["summary"]["reason_counts"])
     assert not payload["rows"]
     assert payload["hard_pile"][0]["reason_codes"]
     assert not any(reason.startswith("colour_authority") for reason in payload["summary"]["reason_counts"])
+    assert any(reason.startswith("authority_trace:") for reason in payload["summary"]["reason_counts"])
 
     with tempfile.TemporaryDirectory() as tmp_dir:
         tmp = Path(tmp_dir)

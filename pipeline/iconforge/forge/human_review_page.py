@@ -737,9 +737,11 @@ function image(label, src) {
 function gateList(row) {
   const style = row.qa.style_contract || {};
   const colour = row.qa.colour_authority || {};
+  const authority = row.qa.authority_trace || {};
   const styleGate = `<li class="${esc(style.gate_status || "pending")}"><strong>style_contract</strong>: ${esc(style.gate_status || "pending")} - ${esc(style.status || "missing")} ${esc((style.issues || []).join(", "))}</li>`;
   const colourGate = `<li class="${esc(colour.gate_status || "pending")}"><strong>colour_authority</strong>: ${esc(colour.gate_status || "pending")} - ${esc(colour.status || "missing")} feature=[${esc((colour.feature_colour_sequence || []).join(", "))}] visual=[${esc((colour.visual_colour_sequence || []).join(", "))}] missing=[${esc((colour.missing_feature_colours || []).join(", "))}] extra=[${esc((colour.extra_visual_colours || []).join(", "))}] authority=${esc(colour.render_colour_authority || "missing")}</li>`;
-  return styleGate + colourGate + (row.qa.gates || []).map(gate =>
+  const authorityGate = `<li class="${esc(authority.gate_status || "blocked")}"><strong>authority_trace</strong>: ${esc(authority.gate_status || "blocked")} - ${esc(authority.authority_status || "missing")} reasons=${esc((authority.reason_codes || []).slice(0, 5).join(", "))}</li>`;
+  return styleGate + colourGate + authorityGate + (row.qa.gates || []).map(gate =>
     `<li class="${esc(gate.status)}"><strong>${esc(gate.name)}</strong>: ${esc(gate.status)} - ${esc(gate.detail)}</li>`
   ).join("");
 }
@@ -748,12 +750,14 @@ function renderRow(row) {
   const missing = row.qa.missing_evidence || [];
   const style = row.qa.style_contract || {};
   const colour = row.qa.colour_authority || {};
+  const authority = row.qa.authority_trace || {};
   return `<section class="row" data-status="${esc(row.status)}" data-haystack="${esc([
       row.symbol_id, row.opencpn.description, row.s57.description, row.s101.feature_type,
       row.s101.rule_file, row.helm.interpretation_status, row.helm.recipe_status,
       style.status, style.gate_status, (style.issues || []).join(" "),
       colour.status, colour.gate_status, colour.render_colour_authority,
       (colour.feature_colour_sequence || []).join(" "), (colour.visual_colour_sequence || []).join(" "),
+      authority.authority_status, authority.gate_status, (authority.reason_codes || []).join(" "),
       missing.join(" ")
     ].join(" ").toLowerCase())}">
     <div class="report">
@@ -768,6 +772,7 @@ function renderRow(row) {
         <div class="small"><strong>Helm:</strong> ${text(row.helm.interpretation_status)} / ${text(row.helm.recipe_status)}</div>
         <div class="small"><strong>Style contract:</strong> ${text(style.status)} / ${text(style.gate_status)}</div>
         <div class="small"><strong>Colour authority:</strong> ${text(colour.status)} / ${text(colour.gate_status)} / ${text(colour.render_colour_authority)}</div>
+        <div class="small"><strong>Authority trace:</strong> ${text(authority.authority_status)} / ${text(authority.gate_status)}</div>
       </div>
       <div class="images">
         ${image("Helm", row.images.helm.backend_url)}
@@ -781,6 +786,7 @@ function renderRow(row) {
         <div class="note small"><strong>Runtime gate:</strong> ${text(row.qa.runtime_gate_summary)}</div>
         <div class="note small"><strong>Style contract:</strong> ${text(style)}</div>
         <div class="note small"><strong>Colour authority:</strong> ${text(colour)}</div>
+        <div class="note small"><strong>Authority trace:</strong> ${text(authority)}</div>
       </div>
     </div>
     <div class="review signoffPanel">

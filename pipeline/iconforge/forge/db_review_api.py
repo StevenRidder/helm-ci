@@ -20,6 +20,7 @@ PROOF_MANIFEST = ROOT / "proof" / "manifest.json"
 SIGNOFF_JSON = ROOT / "out" / "human_review" / "icon_review_signoff.json"
 STYLE_AUDIT = ROOT / "catalog" / "standard_style_audit.json"
 COLOUR_AUTHORITY = ROOT / "catalog" / "colour_authority_contract.json"
+AUTHORITY_TRACE = ROOT / "catalog" / "authority_trace_gate.json"
 
 SCHEMA = "helm.iconforge.db_review_api.v1"
 
@@ -99,6 +100,25 @@ def _colour_authority_index() -> dict[str, dict[str, Any]]:
         out.setdefault(asset.upper(), row)
         out.setdefault(asset.lower(), row)
     return out
+
+
+def _authority_trace_indexes() -> tuple[dict[int, dict[str, Any]], dict[str, dict[str, Any]]]:
+    payload = _read_json(AUTHORITY_TRACE)
+    by_lookup: dict[int, dict[str, Any]] = {}
+    for row in payload.get("rows") or []:
+        lookup_id = row.get("s52_lookup_id")
+        if lookup_id is None:
+            continue
+        try:
+            by_lookup[int(lookup_id)] = row
+        except (TypeError, ValueError):
+            continue
+    by_asset = {
+        str(row.get("asset")): row
+        for row in payload.get("asset_summaries") or []
+        if row.get("asset")
+    }
+    return by_lookup, by_asset
 
 
 def _style_gate(symbol_id: str, style: dict[str, Any] | None) -> dict[str, Any]:
@@ -191,6 +211,48 @@ def _colour_authority_gate(symbol_id: str, authority: dict[str, Any] | None) -> 
         "reason_codes": authority.get("reason_codes") or [],
         "notes": authority.get("notes") or [],
         "report_path": str(COLOUR_AUTHORITY),
+    }
+
+
+def _authority_trace_gate(
+    *,
+    lookup_id: int,
+    symbol_id: str,
+    trace: dict[str, Any] | None,
+    asset_summary: dict[str, Any] | None,
+) -> dict[str, Any]:
+    if not trace:
+        return {
+            "schema": "helm.iconforge.authority_trace_gate.v1",
+            "authority_status": "missing",
+            "gate_status": "blocked",
+            "runtime_blocker": True,
+            "reason_codes": ["authority_trace:trace_row_missing"],
+            "s52_lookup_id": lookup_id,
+            "symbol_id": symbol_id,
+            "asset_summary": asset_summary or {},
+            "report_path": str(AUTHORITY_TRACE),
+        }
+    return {
+        "schema": trace.get("schema") or "helm.iconforge.authority_trace_gate.v1",
+        "authority_status": trace.get("authority_status") or "missing",
+        "gate_status": trace.get("gate_status") or "blocked",
+        "runtime_blocker": bool(trace.get("runtime_blocker")) or trace.get("gate_status") != "pass",
+        "reason_codes": trace.get("reason_codes") or [],
+        "trace_id": trace.get("trace_id"),
+        "s52_lookup_id": trace.get("s52_lookup_id") or lookup_id,
+        "symbol_id": trace.get("symbol_id") or symbol_id,
+        "s57_feature": trace.get("s57_feature") or {},
+        "s57_dictionary_decode": trace.get("s57_dictionary_decode") or {},
+        "s52_lookup": trace.get("s52_lookup") or {},
+        "s52_instruction_ast": trace.get("s52_instruction_ast") or {},
+        "s52_visual_recipe": trace.get("s52_visual_recipe") or {},
+        "s101_mapping": trace.get("s101_mapping") or {},
+        "helm_recipe": trace.get("helm_recipe") or {},
+        "helm_interpretation": trace.get("helm_interpretation") or {},
+        "runtime_gate": trace.get("runtime_gate") or {},
+        "asset_summary": asset_summary or {},
+        "report_path": str(AUTHORITY_TRACE),
     }
 
 
@@ -386,6 +448,8 @@ def _review_row(
     approval: dict[str, Any] | None,
     style: dict[str, Any] | None,
     colour_authority: dict[str, Any] | None,
+    authority_trace: dict[str, Any] | None,
+    authority_asset_summary: dict[str, Any] | None,
 ) -> dict[str, Any]:
     symbol_id = str(db_row["s52_symbol_id"] or "")
     semantic_tuple = _json_value(db_row["semantic_tuple"], {})
@@ -423,6 +487,16 @@ def _review_row(
         missing.append("colour_authority_unresolved")
     elif colour_contract["runtime_blocker"]:
         missing.append("colour_authority_blocked")
+    authority_contract = _authority_trace_gate(
+        lookup_id=int(db_row["s52_lookup_id"]),
+        symbol_id=symbol_id,
+        trace=authority_trace,
+        asset_summary=authority_asset_summary,
+    )
+    if authority_contract["gate_status"] == "blocked":
+        missing.append("authority_trace_blocked")
+    elif authority_contract["gate_status"] == "pending":
+        missing.append("authority_trace_pending")
 
     return {
         "row_id": db_row["s52_lookup_id"],
@@ -483,6 +557,7 @@ def _review_row(
             "runtime_gate_summary": runtime_gate or gate_summary,
             "style_contract": style_contract,
             "colour_authority": colour_contract,
+            "authority_trace": authority_contract,
             "blocking_gate_count": db_row["blocking_gate_count"],
             "pending_gate_count": db_row["pending_gate_count"],
             "warning_gate_count": db_row["warning_gate_count"],
@@ -517,6 +592,7 @@ def build_review_payload(
     approvals = _approval_index()
     styles = _style_index()
     colour_authorities = _colour_authority_index()
+    authority_traces, authority_assets = _authority_trace_indexes()
     with _connect(db_path) as conn:
         sql, params = _row_query(symbol_ids)
         if symbol_ids:
@@ -536,6 +612,8 @@ def build_review_payload(
                     approvals.get(symbol_id),
                     styles.get(symbol_id),
                     colour_authorities.get(symbol_id),
+                    authority_traces.get(int(db_row["s52_lookup_id"])),
+                    authority_assets.get(symbol_id),
                 )
             )
         return {
@@ -547,6 +625,7 @@ def build_review_payload(
                 "proof_manifest": str(PROOF_MANIFEST),
                 "style_audit": str(STYLE_AUDIT),
                 "colour_authority": str(COLOUR_AUTHORITY),
+                "authority_trace": str(AUTHORITY_TRACE),
                 "sidecars_are_display_evidence_only": True,
             },
             "summary": _summary(conn, db_path),
