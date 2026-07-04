@@ -41,6 +41,7 @@ const APP_SHELL_URLS = [
   './integrations/pmtiles.js',
   './integrations/temporal.js',
   './shell.js',
+  './command-palette.js',
   './persist.js',
   './board.js',
   './offline-packs.js',
