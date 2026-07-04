@@ -340,6 +340,7 @@
         "scripts/helmcxx-no-python-runtime.sh",
         "scripts/helmcxx-cockpit-proof.sh",
         "scripts/helmcxx-benchmark-soak.mjs",
+        "scripts/helmcxx-maintainability-audit.mjs",
         "scripts/helmcxx-make-envd-fixture.mjs"
       ],
       "launch": [
@@ -347,15 +348,16 @@
         "engine/test-packd.sh",
         "scripts/helmcxx-no-python-runtime.sh",
         "scripts/helmcxx-cockpit-proof.sh",
-        "scripts/helmcxx-benchmark-soak.mjs"
+        "scripts/helmcxx-benchmark-soak.mjs",
+        "scripts/helmcxx-maintainability-audit.mjs"
       ],
       "starts_python_daemon": false,
       "python_allowed": true,
       "allowed_python_reason": "Test harnesses and fixture probes are outside required runtime.",
       "owner": "ENGINE/OFFLINE",
-      "evidence_tasks": ["ENGINE-16", "OFFLINE-16", "OFFLINE-17", "HELMC++-3", "HELMC++-4", "HELMC++-5"],
-      "feeds_helmcxx": ["HELMC++-2", "HELMC++-3", "HELMC++-4", "HELMC++-5", "HELMC++-8"],
-      "notes": "Tests may use Python helpers to generate fixtures or inspect JSON. HELMC++-3 adds a no-Python runtime harness that may use shell/Node as test tooling but launches only C++ required-runtime daemons. HELMC++-4 adds a Playwright cockpit harness over the same C++ runtime shape. HELMC++-5 adds benchmark/soak evidence for latency, resources, cache/no-network behavior, restart recovery, and baseline comparison."
+      "evidence_tasks": ["ENGINE-16", "OFFLINE-16", "OFFLINE-17", "HELMC++-3", "HELMC++-4", "HELMC++-5", "HELMC++-7"],
+      "feeds_helmcxx": ["HELMC++-2", "HELMC++-3", "HELMC++-4", "HELMC++-5", "HELMC++-7", "HELMC++-8"],
+      "notes": "Tests may use Python helpers to generate fixtures or inspect JSON. HELMC++-3 adds a no-Python runtime harness that may use shell/Node as test tooling but launches only C++ required-runtime daemons. HELMC++-4 adds a Playwright cockpit harness over the same C++ runtime shape. HELMC++-5 adds benchmark/soak evidence for latency, resources, cache/no-network behavior, restart recovery, and baseline comparison. HELMC++-7 adds maintainability evidence for CMake/test/doc coverage, bounded files, raw ownership spread, and warning dispositions."
     },
     {
       "id": "web-test-harnesses",

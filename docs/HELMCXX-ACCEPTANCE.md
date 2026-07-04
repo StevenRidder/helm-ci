@@ -273,6 +273,18 @@ Every C++ runtime service must be boring, bounded, and reviewable:
 - no line-for-line translation from a prototype when a native C++ shape is clearer;
 - reviewer-readable diffs and documentation.
 
+`HELMC++-7` records the maintainability gate in
+[`HELMCXX-MAINTAINABILITY.md`](HELMCXX-MAINTAINABILITY.md) and makes it repeatable with:
+
+```bash
+scripts/helmcxx-maintainability-audit.mjs
+```
+
+The audit checks the required C++ runtime services for CMake/test/docs coverage, bounded file size,
+raw ownership spread, novelty template machinery, and dependency discipline. Current warning
+dispositions are intentionally explicit: `helm-server` keeps a named OpenCPN/ixwebsocket
+legacy-adapter exception, while smaller daemons fail if that ownership style spreads.
+
 ## Go/no-go rule
 
 HELMC++ passes only when all of the following are true:

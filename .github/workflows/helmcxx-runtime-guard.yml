@@ -6,12 +6,14 @@ on:
       - "docs/runtime-inventory.json"
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
+      - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-benchmark-soak.mjs"
+      - "scripts/helmcxx-maintainability-audit.mjs"
       - "scripts/helmcxx-make-envd-fixture.mjs"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
@@ -20,12 +22,14 @@ on:
       - "docs/runtime-inventory.json"
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
+      - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
       - "scripts/helmcxx-benchmark-soak.mjs"
+      - "scripts/helmcxx-maintainability-audit.mjs"
       - "scripts/helmcxx-make-envd-fixture.mjs"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
@@ -49,4 +53,7 @@ jobs:
           bash -n scripts/helmcxx-cockpit-proof.sh
           node --check scripts/helmcxx-make-envd-fixture.mjs
           node --check scripts/helmcxx-benchmark-soak.mjs
+          node --check scripts/helmcxx-maintainability-audit.mjs
           node --check web/test/e2e/helmcxx4-cockpit.spec.js
+      - name: Check HELMC++ maintainability audit
+        run: scripts/helmcxx-maintainability-audit.mjs

@@ -18,6 +18,7 @@ python3 scripts/check-runtime-inventory.py
 python3 scripts/helmcxx-parity-suite.py
 bash -n scripts/helmcxx-no-python-runtime.sh
 node --check scripts/helmcxx-benchmark-soak.mjs
+node --check scripts/helmcxx-maintainability-audit.mjs
 ```
 
 This is an architecture guardrail, not a rewrite order to stop all product work
@@ -190,6 +191,13 @@ benchmark/soak evidence for cold start, first chart/environmental layer data,
 latency percentiles, concurrent clients, RSS/CPU, disk footprint, cache/no-network
 behavior, crash/restart recovery, and optional baseline comparison.
 
+The HELMC++ maintainability gate is
+[`scripts/helmcxx-maintainability-audit.mjs`](../scripts/helmcxx-maintainability-audit.mjs)
+plus [`HELMCXX-MAINTAINABILITY.md`](HELMCXX-MAINTAINABILITY.md). It keeps the C++ runtime service
+shape boring: CMake targets, test/doc coverage, no raw ownership spread outside the named
+`helm-server` adapter exception, no novelty template machinery, and explicit warning dispositions
+for large files.
+
 ## OpenCPN Alignment
 
 The OpenCPN public repo already has useful C++ seams:
@@ -227,5 +235,7 @@ The runtime-service policy is accepted only after the HELMC++ gate passes:
 - the cockpit passes a C++-only Playwright proof;
 - `scripts/helmcxx-benchmark-soak.mjs` records performance, reliability, no-network,
   crash/restart, dependency-footprint, and soak evidence;
+- `scripts/helmcxx-maintainability-audit.mjs` passes and warning dispositions are carried into the
+  final dossier;
 - packaging works on fresh machines without Docker;
 - performance, reliability, soak, and maintainability evidence is recorded.
