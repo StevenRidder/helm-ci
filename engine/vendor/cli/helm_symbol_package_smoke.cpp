@@ -30,6 +30,14 @@ bool HasReason(const helm::symbols::SymbolRecord &record,
   return false;
 }
 
+bool HasApprovalBlockReason(const helm::symbols::SymbolRecord &record,
+                            const std::string &reason) {
+  for (const std::string &candidate : record.runtime_approval_block_reasons) {
+    if (candidate == reason) return true;
+  }
+  return false;
+}
+
 bool HasEvidenceLayer(const helm::symbols::SymbolRecord &record,
                       const std::string &layer) {
   for (const helm::symbols::SourceEvidence &evidence :
@@ -69,8 +77,18 @@ int main(int argc, char **argv) {
   Check(boypil60 != nullptr, "missing BOYPIL60 diagnostic record");
   Check(!boypil60->runtime_eligible_default,
         "BOYPIL60 must not enter default render path before gates pass");
+  Check(!boypil60->runtime_approved,
+        "BOYPIL60 must not be runtime-approved before gates pass");
   Check(boypil60->proof_manifest_present,
         "BOYPIL60 proof manifest metadata missing");
+  Check(boypil60->package_status == "needs_review",
+        "BOYPIL60 package review status not preserved");
+  Check(!boypil60->proof_final_approved,
+        "BOYPIL60 final approval should remain false");
+  Check(!boypil60->chartplotter_runtime_eligible,
+        "BOYPIL60 chartplotter runtime flag should remain false");
+  Check(boypil60->runtime_scope == "chart_portrayal",
+        "BOYPIL60 runtime scope should be chart portrayal");
   Check(boypil60->clean_room_generated &&
             boypil60->third_party_artwork_not_source,
         "BOYPIL60 clean-room provenance not preserved");
@@ -86,6 +104,16 @@ int main(int argc, char **argv) {
         "BOYPIL60 source evidence did not expose FeatureCatalogue gap");
   Check(HasReason(*boypil60, "authority_trace:runtime_candidate_not_eligible"),
         "BOYPIL60 runtime reason missing");
+  Check(HasApprovalBlockReason(*boypil60, "package_status_not_accepted"),
+        "BOYPIL60 package-status block reason missing");
+  Check(HasApprovalBlockReason(*boypil60, "final_approved_false"),
+        "BOYPIL60 final-approval block reason missing");
+  Check(HasApprovalBlockReason(*boypil60, "chartplotter_runtime_not_eligible"),
+        "BOYPIL60 chartplotter-runtime block reason missing");
+  Check(HasApprovalBlockReason(*boypil60, "runtime_eligible_db_false"),
+        "BOYPIL60 DB runtime block reason missing");
+  Check(HasApprovalBlockReason(*boypil60, "fail_closed_true"),
+        "BOYPIL60 fail-closed block reason missing");
 
   const helm::symbols::SymbolRecord *topshq28 =
       helm::symbols::FindSymbol(package, "TOPSHQ28", true);
@@ -110,6 +138,10 @@ int main(int argc, char **argv) {
         "rdocal02 should expose missing proof manifest provenance");
   Check(!rdocal02->runtime_eligible_default,
         "rdocal02 must not enter default render path without proof metadata");
+  Check(HasApprovalBlockReason(*rdocal02, "proof_manifest_missing"),
+        "rdocal02 missing-proof block reason absent");
+  Check(HasApprovalBlockReason(*rdocal02, "runtime_scope_missing"),
+        "rdocal02 missing-scope block reason absent");
 
   Check(helm::symbols::FindSymbol(package, "BOYPIL60", false) == nullptr,
         "diagnostic-only BOYPIL60 leaked into default lookup");

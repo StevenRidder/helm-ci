@@ -12,6 +12,7 @@ on:
     paths:
       - "engine/test-symbol-selection-fixtures.sh"
       - "engine/test-symbol-selection-db-conformance.sh"
+      - "engine/test-symbol-runtime-gate.sh"
       - "engine/test-symbol-package-loader.sh"
       - "engine/test-vulkan-symbol-selection-render.sh"
       - "engine/test/fixtures/symbol-selection/**"
@@ -29,6 +30,7 @@ on:
     paths:
       - "engine/test-symbol-selection-fixtures.sh"
       - "engine/test-symbol-selection-db-conformance.sh"
+      - "engine/test-symbol-runtime-gate.sh"
       - "engine/test-symbol-package-loader.sh"
       - "engine/test-vulkan-symbol-selection-render.sh"
       - "engine/test/fixtures/symbol-selection/**"
@@ -65,6 +67,9 @@ jobs:
 
       - name: C++ symbol-package loader stays fail-closed
         run: ./engine/test-symbol-package-loader.sh
+
+      - name: Runtime eligibility gate blocks unapproved defaults
+        run: ./engine/test-symbol-runtime-gate.sh
 
       - name: Flagged Forge render smoke (day/dusk/night, no witness-red)
         run: ./engine/test-vulkan-symbol-selection-render.sh

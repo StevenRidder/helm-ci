@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..ae59f3e 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,208 @@ if (APPLE)
+@@ -90,3 +90,212 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -151,6 +151,10 @@ index 1909f44..ae59f3e 100644
 +add_executable(helm-symbol-selection-fixtures helm_symbol_selection_fixtures.cpp)
 +set_property(TARGET helm-symbol-selection-fixtures PROPERTY ENABLE_EXPORTS ON)
 +target_link_libraries(helm-symbol-selection-fixtures PRIVATE helm-symbol-package)
++
++add_executable(helm-symbol-runtime-gate-smoke helm_symbol_runtime_gate_smoke.cpp)
++set_property(TARGET helm-symbol-runtime-gate-smoke PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-symbol-runtime-gate-smoke PRIVATE helm-symbol-package)
 +
 +# ---- Helm Engine skeleton: model/ nav core -> nav-state WebSocket (127.0.0.1:8081) ----
 +add_executable(helm-engine helm_engine.cpp api_shim.cpp)

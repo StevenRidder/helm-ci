@@ -42,9 +42,9 @@ c++ -std=c++11 -O2 -Wall -Wextra \
 /tmp/helm-vulkan-fixture-check --print-hashes
 ```
 
-The same source is also built by `engine/bootstrap.sh` as the
-`helm-vulkan-fixture-check` target, so the checker can run inside the normal
-OpenCPN/Helm C++ build without introducing a scripting dependency.
+The same source is exercised by the dedicated fixture scripts and CI smoke.
+`engine/bootstrap.sh` deliberately stays focused on the cold OpenCPN/Helm
+install, C++ target build, runtime asset install, and ENC tile render path.
 
 It validates fixture shape, canonical JSON hashes, provenance references,
 required command types, and expected image hashes.
@@ -103,6 +103,18 @@ nonblank image stats, no raw witness-red leakage, and DB conformance against
 `runtime_symbol_candidate_v1`, `runtime_symbol_portrayal_v1`, and the Forge
 runtime evidence snapshot while keeping the Forge package path opt-in. See
 [CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md](CHART-7-FLAGGED-FORGE-RENDER-SMOKE.md).
+
+`CHART-9` adds the runtime eligibility gate:
+
+```bash
+engine/test-symbol-runtime-gate.sh
+```
+
+This smoke proves default chart lookup admits only accepted/final-approved
+`chart_portrayal` rows, keeps pending/rejected/fail-closed rows diagnostic-only,
+and routes approved overlay or extension/profile rows only through explicit
+scope lookup. See
+[CHART-9-RUNTIME-ELIGIBILITY-GATE.md](CHART-9-RUNTIME-ELIGIBILITY-GATE.md).
 
 ## Redistributable Fixture Policy
 

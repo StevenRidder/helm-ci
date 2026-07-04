@@ -392,12 +392,25 @@ SourceEvidence ParseSourceEvidence(const Json &item) {
   return out;
 }
 
+const Json *ObjectChild(const Json *object, const std::string &key) {
+  if (!object || object->type != Json::OBJECT) return nullptr;
+  return Get(*object, key);
+}
+
 void ApplyProofMetadata(const Json *proof, SymbolRecord *record) {
   if (!proof) return;
   record->proof_manifest_present = true;
   record->kind = StringValue(Get(*proof, "kind"));
   record->name = StringValue(Get(*proof, "name"));
   record->family = StringValue(Get(*proof, "family"));
+  record->package_status = StringValue(Get(*proof, "status"));
+  const Json *qa = Get(*proof, "qa");
+  record->proof_final_approved = BoolValue(ObjectChild(qa, "final_approved"));
+  const Json *runtime = Get(*proof, "chartplotter_runtime");
+  record->chartplotter_runtime_eligible = BoolValue(ObjectChild(runtime, "eligible"));
+  const Json *standards = Get(*proof, "standards_mappings");
+  const Json *crosswalk = ObjectChild(standards, "s101_crosswalk_classification");
+  record->runtime_scope = StringValue(ObjectChild(crosswalk, "runtime_scope"));
   const Json *boundary = Get(*proof, "clean_room_boundary");
   if (boundary && boundary->type == Json::OBJECT) {
     record->clean_room_generated =
@@ -407,6 +420,44 @@ void ApplyProofMetadata(const Json *proof, SymbolRecord *record) {
     record->third_party_artwork_not_source =
         BoolValue(Get(*boundary, "third_party_artwork_not_source"));
   }
+}
+
+std::vector<std::string> RuntimeApprovalBlockReasons(const SymbolRecord &record) {
+  std::vector<std::string> reasons;
+  if (!record.proof_manifest_present) {
+    reasons.push_back("proof_manifest_missing");
+  }
+  if (record.package_status != "accepted") {
+    reasons.push_back("package_status_not_accepted");
+  }
+  if (!record.proof_final_approved) {
+    reasons.push_back("final_approved_false");
+  }
+  if (!record.chartplotter_runtime_eligible) {
+    reasons.push_back("chartplotter_runtime_not_eligible");
+  }
+  if (record.runtime_state != "runtime_eligible") {
+    reasons.push_back("runtime_state_not_eligible");
+  }
+  if (record.candidate_status != "runtime_eligible") {
+    reasons.push_back("candidate_status_not_eligible");
+  }
+  if (!record.runtime_eligible_db) {
+    reasons.push_back("runtime_eligible_db_false");
+  }
+  if (record.fail_closed) {
+    reasons.push_back("fail_closed_true");
+  }
+  if (!record.clean_room_generated) {
+    reasons.push_back("clean_room_generated_false");
+  }
+  if (!record.third_party_artwork_not_source) {
+    reasons.push_back("third_party_artwork_boundary_missing");
+  }
+  if (record.runtime_scope.empty()) {
+    reasons.push_back("runtime_scope_missing");
+  }
+  return reasons;
 }
 
 bool ParseSnapshotRow(const Json &row,
@@ -462,13 +513,12 @@ bool ParseSnapshotRow(const Json &row,
   }
 
   ApplyProofMetadata(proof, record);
+  record->runtime_approval_block_reasons =
+      RuntimeApprovalBlockReasons(*record);
+  record->runtime_approved = record->runtime_approval_block_reasons.empty();
   record->runtime_eligible_default =
-      record->runtime_state == "runtime_eligible" &&
-      record->runtime_eligible_db &&
-      !record->fail_closed &&
-      record->proof_manifest_present &&
-      record->clean_room_generated &&
-      record->third_party_artwork_not_source;
+      record->runtime_approved &&
+      record->runtime_scope == "chart_portrayal";
   return true;
 }
 
@@ -560,6 +610,18 @@ const SymbolRecord *FindSymbol(const SymbolPackage &package,
   for (const SymbolRecord &record : package.records) {
     if (record.symbol_id != symbol_id) continue;
     if (include_diagnostics || record.runtime_eligible_default) return &record;
+  }
+  return nullptr;
+}
+
+const SymbolRecord *FindSymbolForScope(const SymbolPackage &package,
+                                       const std::string &symbol_id,
+                                       const std::string &runtime_scope,
+                                       bool include_diagnostics) {
+  for (const SymbolRecord &record : package.records) {
+    if (record.symbol_id != symbol_id) continue;
+    if (record.runtime_scope != runtime_scope) continue;
+    if (include_diagnostics || record.runtime_approved) return &record;
   }
   return nullptr;
 }
