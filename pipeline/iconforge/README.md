@@ -363,6 +363,39 @@ OpenCPN/IHO/Chart No.1 references are labelled comparison/standards evidence
 only. Chartplotter runtimes must consume only rows whose status is `accepted`
 and whose QA has `final_approved: true`.
 
+## Clean-room registry manifest
+
+`forge.cleanroom_symbol_manifest` is the FORGE-16 package manifest gate. It
+joins the DB-backed review payload, proof bundle evidence, recipe/interpreter
+state, and FORGE-31 runtime hard-pile state into a production registry:
+
+```bash
+python3 -m forge.cleanroom_symbol_manifest
+python3 -m forge.tests.test_cleanroom_symbol_manifest
+```
+
+Outputs land in `registry/`:
+
+- `symbols.json` — generated package registry using
+  `helm.symbol.cleanroom-registry.v1`.
+- `symbols.yaml` — YAML-compatible compact mirror of the same registry for
+  packaging systems that prefer a `.yaml` artifact.
+- `symbol.schema.json` — schema for the registry successor to the original
+  SPEC 0001 starter schema.
+
+The manifest is intentionally fail-closed. Current output records 3,057 DB
+candidates, 2,636 generated symbol records with real Helm SVG/recipe evidence,
+and 421 blocked candidates that have no generated visual asset or recipe yet.
+Those 421 rows stay out of `symbols` and remain visible in
+`blocked_candidates`; the generator must not fabricate placeholder artwork or
+silently promote missing rows.
+
+The registry uses the DB `row_key` as the unique package row ID because one
+S-52 symbol filename can map to many lookup/attribute rows, and some rows have
+no symbol filename at all. `symbol_id` remains the S-52/OpenCPN asset handle
+where present. This keeps chartplotter-facing consumers from confusing a file
+name with a complete portrayal rule.
+
 `catalog/s101_mapping_audit.json` is the guardrail for the mapping question:
 it proves every row is accounted for and classified, checks resolved colour
 attributes against semantic tuples, and verifies that the human review UI labels
