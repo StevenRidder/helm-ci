@@ -8,13 +8,13 @@
 
 ## Board at a glance
 
-- **22 epics** · **225 tasks** — 🟢 63 done · 🟡 22 in-progress · 🔴 0 blocked · ⚪ 140 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit; +`LABS`: 7 experimental pro-maritime features from the 2026-06-26 cruise/military/commercial-charting survey — see [LABS.md](LABS.md))_
+- **23 epics** · **234 tasks** — 🟢 63 done · 🟡 23 in-progress · 🔴 0 blocked · ⚪ 148 to-do  _(+`CLIENT`: 18 web-client-hardening tasks from the 2026-06-26 front-end / MapLibre best-practices audit; +`LABS`: 7 experimental pro-maritime features from the 2026-06-26 cruise/military/commercial-charting survey — see [LABS.md](LABS.md); +`WATCHMATE`: 9 voyage-memory/watchkeeping tasks — see [WATCHMATE.md](WATCHMATE.md))_
 
 | Wave | Theme | Epics | Tasks done |
 |---|---|---|---|
 | **1** | Foundations & unblockers | BACKEND, CHART, CONTRACT, ENGINE, SHELL | 25/51 |
 | **2** | Reference-client capabilities | AIS, ALARM, CONN, OFFLINE, OWNSHIP, ROUTE, TOOLS, WX | 29/78 |
-| **3** | Higher-order capabilities | AI, BOARD, PILOT, PLACES, ROUTING, TIDES | 9/56 |
+| **3** | Higher-order capabilities | AI, BOARD, PILOT, PLACES, ROUTING, TIDES, WATCHMATE | 9/65 |
 | **4** | Native + commercial (last) | NATIVE | 0/15 |
 | **✚** | Cross-cutting · web-client hardening | CLIENT | 0/18 |
 | **🧪** | Experimental · pro-maritime survey (Labs) | LABS | 0/7 |
@@ -318,18 +318,18 @@ _Reference-client capabilities that consume the locked contract, live in their O
 
 # Wave 3 — Higher-order capabilities
 
-_Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp relocation), ROUTING (needs polars+GRIB+routes+tides; ROUTING-1 gated on BOAT-1 from wave 2), PLACES & AI (need BACKEND + WX + places store), BOARD (needs TOOLS persistence + instrument stream + its own board.js). PLACES, AI, and BOARD are parallelSafe (separate backend modules / own files); TIDES and ROUTING serialize on shared engine/contract files. AI-5's probe-contract enforcement + faces gate the plugin-SDK work in wave 4._
+_Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp relocation), ROUTING (needs polars+GRIB+routes+tides; ROUTING-1 gated on BOAT-1 from wave 2), PLACES & AI (need BACKEND + WX + places store), WATCHMATE (needs route/weather/tide/AIS/alarm/AI substrates), BOARD (needs TOOLS persistence + instrument stream + its own board.js). PLACES, AI, WATCHMATE, and BOARD are parallelSafe when they stay in their own backend/web namespaces; TIDES and ROUTING serialize on shared engine/contract files. AI-5's probe-contract enforcement + faces gate the plugin-SDK work in wave 4._
 
 
 ## 🟡 `AI` — AI copilot — spacetime probe, dossiers, briefings, NL ⌘K
 
 **Wave 3 · mixed · 4/17 done · ⚡ parallel-safe**
 
-> Deterministic-cored, LLM-narrated copilot: spacetime probe resolver + uniform sample() faces (with a probe-contract enforcement bar for all new layers/plugins), place dossiers, living passage/destination briefings with dual-axis timeline, NL ⌘K, explain-this, watchkeeper, smart logbook — advise, never act.
+> Deterministic-cored, LLM-narrated substrate: spacetime probe resolver + uniform sample() faces (with a probe-contract enforcement bar for all new layers/plugins), place/destination dossier primitives, NL ⌘K, explain-this, RAG, offline-aware LLM mode, and cite-source/freshness guardrails. Watchmate owns the user-facing voyage memory, watchkeeper, handoff, logbook, and passage-timeline product.
 
 - **Owns (collision boundary):** `backend/agents.py`, `backend/context.py`, `backend/llm.py`
 - **Touches shared (coordinate):** `web/index.html`, `backend/main.py`
-- **Done =** resolve_context + /context + /narrate + provider-pluggable LLMClient + ReAct research agents + where-to-go recommender all done; finish probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) AND establish the enforceable 'a layer is not done until it can be sampled' probe contract as a discrete bar for new layers/plugins; wire real NL ⌘K + fuzzy go-to; living passage/destination dossiers + dual-axis timeline + background diff-narration; explain-this; watchkeeper; smart logbook; advise-don't-act + cite-source/freshness guardrails enforced; offline-aware LLM mode. NOTE: AI-4 (where-to-go) shipped against a STUBBED boat profile; promoting to the real BOAT-1 model is a wave-2/3 enrichment, not a rebuild.
+- **Done =** resolve_context + /context + /narrate + provider-pluggable LLMClient + ReAct research agents + where-to-go recommender all done; finish probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) AND establish the enforceable 'a layer is not done until it can be sampled' probe contract as a discrete bar for new layers/plugins; wire real NL ⌘K + fuzzy go-to; cited destination/deep-read dossier primitives; generic explain-this; offline-aware LLM mode; and advise-don't-act + cite-source/freshness guardrails enforced. User-facing living passage, watchkeeper advisories, forecast-diff voyage windows, and smart logbook are consolidated under WATCHMATE; AI only supplies optional generated-comment/helper logic for those surfaces. NOTE: AI-4 (where-to-go) shipped against a STUBBED boat profile; promoting to the real BOAT-1 model is a wave-2/3 enrichment, not a rebuild.
 
 - [x] 🟢 **AI-1** — resolve_context + /context + /narrate backend (source-tagged Slice) ⛔  ↳ BACKEND-1, WX-1
 - [x] 🟢 **AI-2** — Provider-pluggable LLMClient abstraction (env-only keys) ⛔  ↳ BACKEND-1
@@ -337,17 +337,38 @@ _Higher-order capabilities depending on wave-2 substrate: TIDES (helm_tides.cpp 
 - [x] 🟢 **AI-4** — Where-to-go recommender (deterministic pre-filter + LLM rank + schema) — shipped against a STUBBED boat profile; BOAT-1 is a later enrichment  ↳ AI-3, PLACES-2
 - [ ] 🟡 **AI-5** — Probe sample() faces for stubbed layers (depth/tides/AIS/weather/climatology) + enforceable probe-contract bar for new layers/plugins _(in-progress)_ ⛔  ↳ AI-1, CHART-10, TIDES-2, ENGINE-4
 - [ ] ⚪ **AI-6** — Real NL command + fuzzy go-to ⌘K wired to actions  ↳ AI-2, TOOLS-3, SHELL-3
-- [ ] ⚪ **AI-7** — Living passage + destination dossiers + dual-axis (valid/issue-time) timeline + quick-notes-vs-deep-read tiers  ↳ AI-1, ROUTING-3, AI-3
+- [ ] ⚪ **AI-7** — Cited destination dossier primitives — living passage scope folded into WATCHMATE  ↳ AI-1, ROUTING-3, AI-3
 - [ ] 🟡 **AI-8** — Cited RAG pipeline over cruiser web (Noonsite/blogs/forums) _(in-progress)_  ↳ AI-3
-- [ ] ⚪ **AI-9** — Background ingestion + forecast-diff 'what changed & does it matter' narration  ↳ AI-7, ROUTING-2
+- [ ] ⚪ **AI-9** — Forecast-diff narration helper — product scope folded into WATCHMATE-7  ↳ AI-13, WX-11
 - [ ] ⚪ **AI-10** — Explain-this on chart object / weather / alarm  ↳ AI-1, CHART-10
-- [ ] ⚪ **AI-11** — Watchkeeper risk narration + departure advisor + router-style advisory  ↳ AI-1, ALARM-5, ROUTING-2
-- [ ] ⚪ **AI-12** — Smart auto-narrated logbook from track + instruments  ↳ AI-2, ENGINE-5
+- [ ] ⚪ **AI-11** — Watchkeeper narration helper — advisory product folded into WATCHMATE-5  ↳ AI-13, ALARM-5
+- [ ] ⚪ **AI-12** — Logbook narration helper — structured voyage log folded into WATCHMATE  ↳ AI-13, ENGINE-5
 - [ ] 🟡 **AI-13** — Advise-don't-act + cite-source/freshness/horizon guardrails (enforced) _(in-progress)_ ⛔  ↳ AI-1
 - [ ] ⚪ **AI-14** — Offline-aware LLM mode (cloud dockside, on-device + cached offshore)  ↳ AI-2, OFFLINE-2
 - [ ] ⚪ **AI-15** — Real climatology / tropical-cyclone tier (NOAA/COGOW/NHC/JTWC) + horizon/confidence honesty labeling  ↳ AI-1, WX-10
 - [ ] ⚪ **AI-16** — Wire the /dossier ReAct card to a place/point tap in the web UI  ↳ AI-3, PLACES-3
 - [ ] ⚪ **AI-17** — Implement an enforceable probe-contract (sample()) bar — base class/registry/test  ↳ AI-5
+
+## 🟡 `WATCHMATE` — Voyage memory, watch handoff, and advisory timeline
+
+**Wave 3 · mixed · 0/9 done · ⚡ parallel-safe**
+
+> A structured voyage memory layer that journals the past, explains the current watch, and projects future route-aware decision windows. The LLM may summarize and comment, but the structured journal, source records, freshness, confidence, and human notes stay authoritative. Full contract: [WATCHMATE.md](WATCHMATE.md).
+
+- **Owns (collision boundary):** `docs/WATCHMATE.md`; future implementation should use `backend/watchmate.py` or `backend/watchmate/`, `web/watchmate.js`, and `helm-watchmate-*` style/layer namespaces.
+- **Consumes (does not seize ownership):** ROUTE active-leg/ETA/XTE state, WX forecast age/route-weather, TIDES source/confidence/pass data, AIS risk/target state, ALARM lifecycle, AI narration/guardrails, CONTRACT source/staleness semantics.
+- **Touches shared (coordinate):** `web/index.html`, `web/style.json`, `backend/main.py`, and engine stream/schema files only through future board tasks that explicitly own the seam.
+- **Done =** Watchmate ships a local-first voyage journal event store; passage timeline UI; watch handoff summaries; source/confidence-tagged advisory cards; human notes and acknowledged decisions; forecast-diff narration; voyage review/export; and golden no-invention tests. Every record exposes source, freshness, confidence, and a why/explain path. Watchmate advises, never acts.
+
+- [ ] 🟡 **WATCHMATE-1** — Epic contract: Watchmate voyage memory + advisory timeline ⛔
+- [ ] ⚪ **WATCHMATE-2** — Structured voyage journal event store ⛔  ↳ WATCHMATE-1, ROUTE-2, WX-7, TIDES-8, AIS-1, ALARM-12
+- [ ] ⚪ **WATCHMATE-3** — Passage timeline UI: past, current watch, and next decision windows  ↳ WATCHMATE-2, ROUTE-4, WX-6, WX-7, TIDES-4
+- [ ] ⚪ **WATCHMATE-4** — Watch handoff summaries: what changed since last watch  ↳ WATCHMATE-2, AI-13
+- [ ] ⚪ **WATCHMATE-5** — Current-watch advisor cards with source/confidence reasoning  ↳ WATCHMATE-2, AI-13, ALARM-3, ALARM-5, WX-11, TIDES-4
+- [ ] ⚪ **WATCHMATE-6** — Human notes, decisions, and acknowledged actions in the voyage log  ↳ WATCHMATE-2, AI-13
+- [ ] ⚪ **WATCHMATE-7** — Forecast-diff and future risk-window narration  ↳ WATCHMATE-3, WATCHMATE-5, WX-11, WX-14, TIDES-3, TIDES-5
+- [ ] ⚪ **WATCHMATE-8** — Voyage review, export, and passage dossier handoff  ↳ WATCHMATE-4, WATCHMATE-6, AI-16
+- [ ] ⚪ **WATCHMATE-9** — Golden voyage scenarios and no-invention tests  ↳ WATCHMATE-4, WATCHMATE-5, WATCHMATE-7, AI-13, TIDES-6
 
 ## ⚪ `BOARD` — Smart Board — composable dashboard, tiles, automations
 
