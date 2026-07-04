@@ -1,4 +1,6 @@
 out/
 .cache/
+.agent-scratch/
+tmp/
 __pycache__/
 *.pyc

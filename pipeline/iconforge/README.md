@@ -112,6 +112,47 @@ The atlas manifest is the `engine/vendor/cli/helm_s52_atlas` shape — entries
 keyed `(name, kind, palette)` with `pixel_rect` / `uv` / `anchor` — plus the new
 `style` axis. The C++/Vulkan loader consumes it unchanged.
 
+## File ownership and generated-artifact handoff
+
+FORGE workers must declare which paths they intend to write before they modify
+the symbol library, proof package, or review tooling. The policy is generated
+from Git state so ambiguous untracked files cannot slide into a handoff:
+
+```bash
+python3 -m forge.file_ownership_policy claim \
+  --task-id FORGE-52 \
+  --agent-id codex/FORGE-52-file-ownership \
+  --paths pipeline/iconforge/README.md pipeline/iconforge/catalog/file_ownership_policy.json
+python3 -m forge.file_ownership_policy --write
+python3 -m forge.tests.test_file_ownership_policy
+python3 -m forge.file_ownership_policy --check-handoff
+```
+
+Outputs:
+
+- `catalog/file_ownership_policy.json`
+- `catalog/file_ownership_policy.md`
+
+The classes are intentionally small:
+
+- `source_contract` — Forge code, tests, docs, fixtures, pilots, and stylepacks.
+- `generated_tracked` — committed generated artifacts with reproducible builders
+  or adjacent provenance, including `assets/svg/`, `catalog/`, `generated/`,
+  `proof/`, `registry/`, `samples/`, `symbols.yaml`, and the runtime DB
+  contract artifacts.
+- `reference_evidence_tracked` — committed source/reference evidence used only
+  for comparison, mapping, or provenance. These are not canonical Helm artwork.
+- `review_only_output` — `out/` HTML, PNGs, local review state, and scratch proof
+  pages. These are regenerated, ignored, or summarized on the board; they are not
+  a hidden publish surface.
+- `agent_private_scratch` — `.cache/`, `.agent-scratch/`, and `tmp/`.
+
+Before `complete_claim`, stage intentional tracked changes and run
+`--check-handoff`. A task should not pass review while Forge-controlled roots
+contain untracked files whose disposition is ambiguous. If a generated proof
+needs to become durable, promote it through a named generator into `catalog/`,
+`proof/`, `registry/`, or `assets/svg/` and record the provenance there.
+
 ## 20-symbol stress pilot
 
 `pilots/stress20.json` is the next scaling gate. It deliberately covers

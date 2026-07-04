@@ -1,0 +1,60 @@
+{
+  "policy": {
+    "agent_private_scratch": [
+      "pipeline/iconforge/.cache/**",
+      "pipeline/iconforge/.agent-scratch/**",
+      "pipeline/iconforge/tmp/**"
+    ],
+    "generated_tracked": [
+      "pipeline/iconforge/assets/svg/**",
+      "pipeline/iconforge/catalog/**",
+      "pipeline/iconforge/generated/**",
+      "pipeline/iconforge/proof/**",
+      "pipeline/iconforge/registry/**",
+      "pipeline/iconforge/samples/**",
+      "pipeline/iconforge/symbols.yaml",
+      "artifacts/opencpn_s52_portrayal.schema.sql",
+      "artifacts/opencpn_s52_portrayal.sqlite"
+    ],
+    "reference_evidence_tracked": [
+      "pipeline/iconforge/reference_sources/**"
+    ],
+    "review_only_output": [
+      "pipeline/iconforge/out/**"
+    ],
+    "source_contract": [
+      "pipeline/iconforge/README.md",
+      "pipeline/iconforge/SPEC-0001-clean-room-symbol-package.md",
+      "pipeline/iconforge/AGENT-BRIEF.md",
+      "pipeline/iconforge/CONTEXT-THREAD.md",
+      "pipeline/iconforge/.gitignore",
+      "pipeline/iconforge/forge/**",
+      "pipeline/iconforge/fixtures/**",
+      "pipeline/iconforge/pilots/**",
+      "pipeline/iconforge/stylepacks/**",
+      "scripts/augment-opencpn-s52-s101-semantics.py"
+    ]
+  },
+  "rules": [
+    "Every Forge worker must claim intended write paths before modifying tracked generated or source-contract files.",
+    "Review-only outputs under pipeline/iconforge/out/ are ignored by Git; summarize them in board evidence or promote them through an explicit generator if they must be tracked.",
+    "Generated tracked artifacts must be reproducible from a named forge module or carry provenance in an adjacent JSON/Markdown report.",
+    "Reference-source assets are comparison/provenance evidence only and must not become canonical Helm artwork without a clean-IP task.",
+    "A handoff must not contain untracked files under Forge-controlled roots; stage intentional files, ignore scratch outputs, or delete them before complete_claim."
+  ],
+  "schema": "helm.iconforge.file_ownership_policy.v1",
+  "status": "pass",
+  "summary": {
+    "classes": {
+      "generated_tracked": 9302,
+      "reference_evidence_tracked": 4252,
+      "review_only_output": 18,
+      "source_contract": 438
+    },
+    "tracked_files": 14010,
+    "unknown_tracked_files": 0,
+    "untracked_handoff_files": 0
+  },
+  "unknown_tracked_files": [],
+  "untracked_handoff_files": []
+}
