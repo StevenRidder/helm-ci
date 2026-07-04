@@ -871,6 +871,8 @@ def resolve_equivalence(semantic_row: dict[str, Any]) -> dict[str, Any]:
 def create_tables(con: sqlite3.Connection) -> None:
     con.executescript(
         """
+        DROP VIEW IF EXISTS electronic_chart1_entry_v1;
+        DROP TABLE IF EXISTS electronic_chart1_entry;
         DROP VIEW IF EXISTS runtime_symbol_blocker_v1;
         DROP VIEW IF EXISTS runtime_symbol_portrayal_v1;
         DROP VIEW IF EXISTS runtime_symbol_candidate_v1;
@@ -1079,6 +1081,40 @@ def create_tables(con: sqlite3.Connection) -> None:
           created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
         );
 
+        CREATE TABLE electronic_chart1_entry (
+          s52_lookup_id INTEGER PRIMARY KEY REFERENCES s52_portrayal_lookup(id) ON DELETE CASCADE,
+          row_key TEXT NOT NULL,
+          chart1_row_id TEXT NOT NULL UNIQUE,
+          row_taxonomy TEXT NOT NULL CHECK (
+            row_taxonomy IN (
+              'point_symbol',
+              'line_style',
+              'area_fill',
+              'conditional_rule',
+              'text_rule',
+              'runtime_overlay',
+              'placeholder_manual',
+              'non_reviewable_construct'
+            )
+          ),
+          taxonomy_reason TEXT NOT NULL,
+          evidence_status TEXT NOT NULL CHECK (evidence_status IN ('green', 'yellow', 'red')),
+          render_eligibility TEXT NOT NULL CHECK (render_eligibility = 'fail_closed_not_runtime_eligible'),
+          reason_codes TEXT NOT NULL CHECK (json_valid(reason_codes)),
+          s57_object_class TEXT NOT NULL,
+          s57_attribute_tuple TEXT NOT NULL CHECK (json_valid(s57_attribute_tuple)),
+          s52_instruction TEXT NOT NULL,
+          s52_instruction_evidence TEXT NOT NULL CHECK (json_valid(s52_instruction_evidence)),
+          s101_evidence TEXT NOT NULL CHECK (json_valid(s101_evidence)),
+          helm_art_path TEXT,
+          helm_art_status TEXT NOT NULL,
+          colour_authority TEXT NOT NULL CHECK (json_valid(colour_authority)),
+          shape_family_authority TEXT NOT NULL CHECK (json_valid(shape_family_authority)),
+          human_qa_status TEXT NOT NULL CHECK (json_valid(human_qa_status)),
+          provenance TEXT NOT NULL CHECK (json_valid(provenance)),
+          created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+        );
+
         CREATE VIEW runtime_symbol_candidate_v1 AS
         SELECT
           c.s52_lookup_id,
@@ -1123,6 +1159,29 @@ def create_tables(con: sqlite3.Connection) -> None:
         JOIN runtime_symbol_candidate c ON c.s52_lookup_id = g.s52_lookup_id
         WHERE g.gate_status IN ('blocked', 'pending');
 
+        CREATE VIEW electronic_chart1_entry_v1 AS
+        SELECT
+          s52_lookup_id,
+          row_key,
+          chart1_row_id,
+          row_taxonomy,
+          taxonomy_reason,
+          evidence_status,
+          render_eligibility,
+          reason_codes,
+          s57_object_class,
+          s57_attribute_tuple,
+          s52_instruction,
+          s52_instruction_evidence,
+          s101_evidence,
+          helm_art_path,
+          helm_art_status,
+          colour_authority,
+          shape_family_authority,
+          human_qa_status,
+          provenance
+        FROM electronic_chart1_entry;
+
         CREATE INDEX s52_semantic_tuple_lookup_idx ON s52_semantic_tuple (s52_lookup_id);
         CREATE INDEX s52_semantic_tuple_object_idx ON s52_semantic_tuple (object_class);
         CREATE INDEX s52_semantic_tuple_category_idx ON s52_semantic_tuple (category);
@@ -1138,6 +1197,9 @@ def create_tables(con: sqlite3.Connection) -> None:
         CREATE INDEX runtime_symbol_gate_lookup_idx ON runtime_symbol_gate (s52_lookup_id);
         CREATE INDEX runtime_symbol_gate_name_status_idx ON runtime_symbol_gate (gate_name, gate_status);
         CREATE INDEX runtime_symbol_candidate_status_idx ON runtime_symbol_candidate (candidate_status);
+        CREATE INDEX electronic_chart1_entry_taxonomy_idx ON electronic_chart1_entry (row_taxonomy);
+        CREATE INDEX electronic_chart1_entry_status_idx ON electronic_chart1_entry (evidence_status);
+        CREATE INDEX electronic_chart1_entry_object_idx ON electronic_chart1_entry (s57_object_class);
         """
     )
     con.executemany(
@@ -1296,6 +1358,13 @@ def read_json_if_exists(path: Path) -> Any | None:
     return json.loads(path.read_text())
 
 
+def runtime_s101_mapping_type(row: dict[str, Any]) -> str | None:
+    mapping_type = row.get("s101_mapping_type")
+    if row.get("resolver_status") == "resolved_rule_catalogue" and mapping_type == "unresolved":
+        return "rule_derived_equivalent"
+    return mapping_type
+
+
 def source_catalog_id(row: dict[str, Any]) -> str:
     s57 = row.get("s57_structure") or {}
     return "_".join(
@@ -1420,7 +1489,7 @@ def import_iconforge_approval(con: sqlite3.Connection, approval_root: Path | Non
                     row.get("helm_catalog_id"),
                     row.get("object_class"),
                     row.get("resolver_status"),
-                    row.get("s101_mapping_type"),
+                    runtime_s101_mapping_type(row),
                     classification.get("class"),
                     classification.get("basis"),
                     classification.get("runtime_scope"),
@@ -1797,6 +1866,268 @@ def build_runtime_candidates(con: sqlite3.Connection) -> Counter[str]:
     return status_counts
 
 
+RUNTIME_OVERLAY_OBJECTS = {"EBLINE", "OWNSHP", "VESSEL", "VRMARK"}
+RUNTIME_OVERLAY_SYMBOL_PREFIXES = ("AIS",)
+RUNTIME_OVERLAY_SYMBOLS = {"OWNSHP02", "VESSEL01", "VRMEBL01"}
+
+
+def _chart1_taxonomy(row: sqlite3.Row) -> tuple[str, str]:
+    object_class = row["object_class"] or ""
+    symbol_id = row["s52_symbol_id"] or ""
+    asset_kind = row["s52_asset_kind"] or ""
+    category_value = row["category"] or ""
+    geometry_value = row["geometry"] or ""
+    symbol_refs = json_loads(row["symbol_refs"], [])
+    line_refs = json_loads(row["line_style_refs"], [])
+    pattern_refs = json_loads(row["pattern_refs"], [])
+    conditional_refs = json_loads(row["conditional_refs"], [])
+    text_refs = json_loads(row["text_refs"], [])
+
+    if (
+        object_class in RUNTIME_OVERLAY_OBJECTS
+        or symbol_id in RUNTIME_OVERLAY_SYMBOLS
+        or symbol_id.startswith(RUNTIME_OVERLAY_SYMBOL_PREFIXES)
+    ):
+        return "runtime_overlay", "runtime/display construct, not a plain S-57 feature symbol"
+    if object_class.startswith("$"):
+        return "non_reviewable_construct", "Presentation Library construct row, not an ENC object row"
+    if row["tuple_status"] == "partial" or row["topmark_shape_code"] in (98, 99):
+        return "placeholder_manual", "semantic tuple or special-case decode requires manual mapping"
+    if text_refs and not (symbol_refs or pattern_refs or conditional_refs):
+        return "text_rule", "S-52 instruction is text-only"
+    if conditional_refs or asset_kind == "conditional-procedure":
+        return "conditional_rule", "S-52 instruction depends on a conditional symbology procedure"
+    if pattern_refs or asset_kind == "pattern" or category_value == "area_pattern":
+        return "area_fill", "S-52 instruction uses an area pattern/fill"
+    if asset_kind == "line-style" or geometry_value == "line" or line_refs and not symbol_refs:
+        return "line_style", "S-52 instruction uses line style geometry"
+    if symbol_refs or asset_kind == "symbol" or symbol_id:
+        return "point_symbol", "S-52 instruction uses a named symbol asset"
+    if geometry_value == "area":
+        return "area_fill", "Area row has fill/line portrayal without standalone symbol art"
+    if geometry_value == "line":
+        return "line_style", "Line row has line portrayal without standalone symbol art"
+    return "placeholder_manual", "No standalone review taxonomy could be derived"
+
+
+def _helm_art_from_standard_row(row_json: str | None) -> tuple[str | None, str, dict[str, Any]]:
+    payload = json_loads(row_json, {}) if row_json else {}
+    candidate = payload.get("helm_candidate") or {}
+    canonical = candidate.get("canonical_svg")
+    if canonical:
+        return canonical, "canonical_helm_art_recorded", payload
+    if payload:
+        return None, "helm_standard_source_row_without_canonical_art", payload
+    return None, "no_helm_standard_source_row", {}
+
+
+def _chart1_reason_codes(
+    row: sqlite3.Row,
+    taxonomy: str,
+    helm_art_path: str | None,
+    standard_payload: dict[str, Any],
+) -> list[str]:
+    reasons: list[str] = []
+    if row["tuple_status"] != "complete":
+        reasons.extend(f"s57_tuple:{reason}" for reason in json_loads(row["missing_data_reasons"], []))
+    if row["instruction_parse_status"] != "complete":
+        reasons.append("s52_instruction_ast:partial")
+        reasons.extend(f"s52_instruction_ast:{reason}" for reason in json_loads(row["instruction_parse_errors"], []))
+    if not row["s101_feature_type"] and taxonomy not in {"runtime_overlay", "non_reviewable_construct"}:
+        reasons.append("s101_feature_type:missing_or_not_applicable")
+    if not row["resolver_status"] and taxonomy not in {"text_rule", "non_reviewable_construct"}:
+        reasons.append("s101_resolver_row:missing")
+    if taxonomy in {"point_symbol", "line_style", "area_fill", "conditional_rule"} and row["s52_symbol_id"] and not helm_art_path:
+        reasons.append("helm_canonical_art:missing")
+    if taxonomy == "placeholder_manual":
+        reasons.append("manual_mapping_required")
+    if taxonomy == "runtime_overlay":
+        reasons.append("runtime_overlay_profile_required")
+    if taxonomy == "non_reviewable_construct":
+        reasons.append("presentation_library_construct_not_direct_chart1_symbol")
+    candidate = standard_payload.get("helm_candidate") or {}
+    qa = candidate.get("qa") or {}
+    if candidate and not qa.get("final_approved"):
+        reasons.append("human_final_approval:pending")
+    return sorted(set(str(reason) for reason in reasons if reason))
+
+
+def _chart1_evidence_status(reason_codes: list[str]) -> str:
+    if any(
+        reason.startswith("s57_tuple:")
+        or reason.startswith("s52_instruction_ast:")
+        or reason == "manual_mapping_required"
+        for reason in reason_codes
+    ):
+        return "red"
+    if reason_codes:
+        return "yellow"
+    return "green"
+
+
+def build_electronic_chart1_entries(con: sqlite3.Connection) -> Counter[str]:
+    con.row_factory = sqlite3.Row
+    rows = con.execute(
+        """
+        SELECT
+          t.*,
+          l.object_name,
+          l.attribute_predicates,
+          l.instruction,
+          l.source_git_sha,
+          ast.parse_status AS instruction_parse_status,
+          ast.command_sequence AS command_sequence,
+          ast.symbol_refs AS symbol_refs,
+          ast.line_style_refs AS line_style_refs,
+          ast.pattern_refs AS pattern_refs,
+          ast.color_refs AS color_refs,
+          ast.conditional_refs AS conditional_refs,
+          ast.text_refs AS text_refs,
+          ast.parse_errors AS instruction_parse_errors,
+          e.mapping_type AS provisional_s101_mapping_type,
+          e.s101_feature_type,
+          e.s101_attributes,
+          e.portrayal_evidence,
+          e.unresolved_reasons AS provisional_unresolved_reasons,
+          r.resolver_status,
+          r.s101_mapping_type AS resolver_s101_mapping_type,
+          r.s101_crosswalk_class,
+          r.s101_rule_file,
+          r.s101_direct_symbol_id,
+          r.portrayal_evidence AS resolver_portrayal_evidence,
+          r.unresolved_reasons AS resolver_unresolved_reasons,
+          s.row_json AS standard_source_json,
+          c.candidate_status,
+          c.runtime_eligible,
+          c.blocking_gate_count,
+          c.pending_gate_count,
+          c.warning_gate_count,
+          c.gate_summary
+        FROM s52_semantic_tuple t
+        JOIN s52_portrayal_lookup l ON l.id = t.s52_lookup_id
+        JOIN s52_instruction_ast ast ON ast.s52_lookup_id = t.s52_lookup_id
+        JOIN s101_portrayal_equivalence e ON e.s52_lookup_id = t.s52_lookup_id
+        LEFT JOIN iconforge_s101_resolver_row r ON r.asset = t.s52_symbol_id
+        LEFT JOIN iconforge_standard_source_row s ON s.asset = t.s52_symbol_id
+        LEFT JOIN runtime_symbol_candidate c ON c.s52_lookup_id = t.s52_lookup_id
+        ORDER BY t.s52_lookup_id
+        """
+    ).fetchall()
+
+    counts: Counter[str] = Counter()
+    for row in rows:
+        taxonomy, taxonomy_reason = _chart1_taxonomy(row)
+        helm_art_path, helm_art_status, standard_payload = _helm_art_from_standard_row(row["standard_source_json"])
+        reason_codes = _chart1_reason_codes(row, taxonomy, helm_art_path, standard_payload)
+        evidence_status = _chart1_evidence_status(reason_codes)
+        tuple_payload = json_loads(row["semantic_tuple"], {})
+        colours = tuple_payload.get("colour_sequence") or []
+        shape = tuple_payload.get("shape")
+        family = standard_payload.get("family")
+        s101_portrayal = json_loads(row["resolver_portrayal_evidence"], None)
+        if s101_portrayal is None:
+            s101_portrayal = json_loads(row["portrayal_evidence"], {})
+        human_candidate = (standard_payload.get("helm_candidate") or {}) if standard_payload else {}
+        con.execute(
+            """
+            INSERT INTO electronic_chart1_entry (
+              s52_lookup_id, row_key, chart1_row_id, row_taxonomy, taxonomy_reason,
+              evidence_status, render_eligibility, reason_codes, s57_object_class,
+              s57_attribute_tuple, s52_instruction, s52_instruction_evidence,
+              s101_evidence, helm_art_path, helm_art_status, colour_authority,
+              shape_family_authority, human_qa_status, provenance
+            )
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+            """,
+            (
+                row["s52_lookup_id"],
+                row["row_key"],
+                f"echart1-{int(row['s52_lookup_id']):04d}",
+                taxonomy,
+                taxonomy_reason,
+                evidence_status,
+                "fail_closed_not_runtime_eligible",
+                json_dumps(reason_codes),
+                row["object_class"],
+                row["semantic_tuple"],
+                row["instruction"],
+                json_dumps(
+                    {
+                        "parse_status": row["instruction_parse_status"],
+                        "command_sequence": json_loads(row["command_sequence"], []),
+                        "symbol_refs": json_loads(row["symbol_refs"], []),
+                        "line_style_refs": json_loads(row["line_style_refs"], []),
+                        "pattern_refs": json_loads(row["pattern_refs"], []),
+                        "color_refs": json_loads(row["color_refs"], []),
+                        "conditional_refs": json_loads(row["conditional_refs"], []),
+                        "text_refs": json_loads(row["text_refs"], []),
+                        "parse_errors": json_loads(row["instruction_parse_errors"], []),
+                    }
+                ),
+                json_dumps(
+                    {
+                        "feature_type": row["s101_feature_type"],
+                        "rule_file": row["s101_rule_file"],
+                        "direct_symbol_id": row["s101_direct_symbol_id"],
+                        "mapping_type": row["resolver_s101_mapping_type"] or row["provisional_s101_mapping_type"],
+                        "crosswalk_class": row["s101_crosswalk_class"],
+                        "resolver_status": row["resolver_status"],
+                        "attributes": json_loads(row["s101_attributes"], {}),
+                        "portrayal_evidence": s101_portrayal,
+                        "unresolved_reasons": json_loads(
+                            row["resolver_unresolved_reasons"],
+                            json_loads(row["provisional_unresolved_reasons"], []),
+                        ),
+                        "source_boundary": "reference_only_not_bundled",
+                    }
+                ),
+                helm_art_path,
+                helm_art_status,
+                json_dumps(
+                    {
+                        "status": "colour_authority_ready" if colours else "not_colour_bearing_or_pending",
+                        "colour_sequence": colours,
+                        "colour_pattern": tuple_payload.get("colour_pattern"),
+                        "source": "s57_semantic_tuple.colour_sequence",
+                    }
+                ),
+                json_dumps(
+                    {
+                        "status": "shape_family_ready" if (shape or family) else "shape_family_pending",
+                        "shape": shape,
+                        "family": family,
+                        "source": "s57_semantic_tuple.shape + iconforge_standard_source_row.family",
+                    }
+                ),
+                json_dumps(
+                    {
+                        "candidate_status": row["candidate_status"],
+                        "runtime_eligible": bool(row["runtime_eligible"]),
+                        "blocking_gate_count": row["blocking_gate_count"],
+                        "pending_gate_count": row["pending_gate_count"],
+                        "warning_gate_count": row["warning_gate_count"],
+                        "gate_summary": json_loads(row["gate_summary"], {}),
+                        "helm_candidate_status": human_candidate.get("candidate_status"),
+                        "final_approved": bool((human_candidate.get("qa") or {}).get("final_approved")),
+                    }
+                ),
+                json_dumps(
+                    {
+                        "generator": "scripts/augment-opencpn-s52-s101-semantics.py",
+                        "schema": "helm.forge.electronic_chart1_entry.v1",
+                        "source_git_sha": row["source_git_sha"],
+                        "source_db_table": "s52_portrayal_lookup",
+                        "clean_room_boundary": "metadata/proof contract only; no bundled IHO/OpenCPN artwork",
+                        "runtime_promotion_policy": "fail_closed_until_later_FORGE_gates_pass",
+                    }
+                ),
+            ),
+        )
+        counts[taxonomy] += 1
+        counts[f"status:{evidence_status}"] += 1
+    return counts
+
+
 def audit(con: sqlite3.Connection) -> None:
     def scalar(query: str) -> Any:
         return con.execute(query).fetchone()[0]
@@ -1873,9 +2204,53 @@ def audit(con: sqlite3.Connection) -> None:
         "SELECT COUNT(*) FROM iconforge_topmark_gate_row WHERE gate_status = 'manual_review_required'"
     )
     iconforge_lookup_links = scalar("SELECT COUNT(*) FROM iconforge_s52_lookup_link")
+    resolver_catalogue_mapping_mismatch_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM iconforge_s101_resolver_row
+        WHERE resolver_status = 'resolved_rule_catalogue'
+          AND s101_mapping_type != 'rule_derived_equivalent'
+        """
+    )
     runtime_candidate_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate")
     runtime_candidate_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate_v1")
     runtime_portrayal_view_count = scalar("SELECT COUNT(*) FROM runtime_symbol_portrayal_v1")
+    chart1_entry_count = scalar("SELECT COUNT(*) FROM electronic_chart1_entry")
+    chart1_entry_view_count = scalar("SELECT COUNT(*) FROM electronic_chart1_entry_v1")
+    chart1_runtime_eligible_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM electronic_chart1_entry
+        WHERE render_eligibility != 'fail_closed_not_runtime_eligible'
+        """
+    )
+    chart1_taxonomy_count = scalar(
+        "SELECT COUNT(DISTINCT row_taxonomy) FROM electronic_chart1_entry"
+    )
+    chart1_unclassified_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM electronic_chart1_entry
+        WHERE row_taxonomy IS NULL
+           OR row_taxonomy = ''
+           OR taxonomy_reason = ''
+        """
+    )
+    chart1_hidden_gap_count = scalar(
+        """
+        SELECT COUNT(*)
+        FROM electronic_chart1_entry
+        WHERE evidence_status IN ('red', 'yellow')
+          AND json_array_length(reason_codes) = 0
+        """
+    )
+    chart1_fail_closed_rows = scalar(
+        """
+        SELECT COUNT(*)
+        FROM electronic_chart1_entry
+        WHERE render_eligibility = 'fail_closed_not_runtime_eligible'
+        """
+    )
     runtime_gate_subject_count = scalar("SELECT COUNT(DISTINCT s52_lookup_id) FROM runtime_symbol_gate")
     runtime_gate_count = scalar("SELECT COUNT(*) FROM runtime_symbol_gate")
     runtime_eligible_count = scalar("SELECT COUNT(*) FROM runtime_symbol_candidate WHERE runtime_eligible = 1")
@@ -2060,6 +2435,13 @@ def audit(con: sqlite3.Connection) -> None:
             "resolver assets with matching OpenCPN lookup resource refs are linked",
         ),
         (
+            "iconforge_catalogue_rule_rows_are_not_unresolved_for_runtime",
+            resolver_catalogue_mapping_mismatch_count == 0,
+            "0 resolved_rule_catalogue rows with non-rule-derived runtime mapping type",
+            str(resolver_catalogue_mapping_mismatch_count),
+            "catalogue-rule-backed rows keep no-direct-symbol evidence but expose rule_derived_equivalent to runtime consumers",
+        ),
+        (
             "runtime_candidates_cover_all_lookup_rows",
             runtime_candidate_count == lookup_count and runtime_candidate_view_count == lookup_count,
             str(lookup_count),
@@ -2112,6 +2494,51 @@ def audit(con: sqlite3.Connection) -> None:
             "runtime_symbol_portrayal_v1 must remain empty until parser, mapping, visual, and edge-case gates pass",
         ),
         (
+            "electronic_chart1_entries_cover_all_lookup_rows",
+            chart1_entry_count == lookup_count and chart1_entry_view_count == lookup_count,
+            str(lookup_count),
+            json_dumps({"table": chart1_entry_count, "view": chart1_entry_view_count}),
+            "electronic_chart1_entry_v1 is the review/proof contract over every OpenCPN lookup row",
+        ),
+        (
+            "electronic_chart1_runtime_export_fail_closed",
+            chart1_runtime_eligible_count == 0 and runtime_portrayal_view_count == 0,
+            "0 promoted electronic Chart 1 rows and 0 strict runtime rows",
+            json_dumps(
+                {
+                    "electronic_chart1_non_fail_closed_rows": chart1_runtime_eligible_count,
+                    "runtime_symbol_portrayal_v1": runtime_portrayal_view_count,
+                }
+            ),
+            "FORGE-39 classifies rows for proof review only and cannot promote runtime symbols",
+        ),
+        (
+            "electronic_chart1_taxonomy_has_all_required_buckets",
+            chart1_taxonomy_count == 8 and chart1_unclassified_count == 0,
+            "8 required buckets with no unclassified rows",
+            json_dumps({"taxonomy_count": chart1_taxonomy_count, "unclassified": chart1_unclassified_count}),
+            "row_taxonomy covers point, line, area, conditional, text, runtime overlay, manual, and non-reviewable constructs",
+        ),
+        (
+            "electronic_chart1_missing_evidence_is_explicit",
+            chart1_hidden_gap_count == 0,
+            "0 red/yellow rows without reason_codes",
+            str(chart1_hidden_gap_count),
+            "red/yellow electronic Chart 1 rows must carry explicit reason codes",
+        ),
+        (
+            "electronic_chart1_all_rows_remain_fail_closed",
+            chart1_fail_closed_rows == lookup_count and chart1_runtime_eligible_count == 0,
+            "all proof rows fail-closed with no runtime promotion",
+            json_dumps(
+                {
+                    "fail_closed_rows": chart1_fail_closed_rows,
+                    "non_fail_closed_rows": chart1_runtime_eligible_count,
+                }
+            ),
+            "FORGE-39 produces a review contract only; approval/promotion belongs to later gates",
+        ),
+        (
             "visual_approval_blocks_all_runtime_rows",
             visual_pending_count == lookup_count,
             str(lookup_count),
@@ -2150,6 +2577,7 @@ def update_metadata(
     mapping_counts: Counter[str],
     instruction_counts: Counter[str],
     runtime_counts: Counter[str],
+    chart1_counts: Counter[str],
 ) -> None:
     generated_at = datetime.now(timezone.utc).isoformat()
     values = {
@@ -2162,6 +2590,8 @@ def update_metadata(
         "s101_reference_policy": json_dumps(REFERENCE_POLICY),
         "s101_standards_references": json_dumps(STANDARDS_REFERENCES),
         "runtime_candidate_status_counts": json_dumps(dict(sorted(runtime_counts.items()))),
+        "electronic_chart1_entry_counts": json_dumps(dict(sorted(chart1_counts.items()))),
+        "electronic_chart1_contract": "electronic_chart1_entry_v1 is review/proof evidence only; render_eligibility is fail_closed_not_runtime_eligible for every row",
         "runtime_contract": "runtime_symbol_candidate_v1 is browse/review evidence; runtime_symbol_portrayal_v1 is strict serving surface",
         "topshp_decode_source": "OpenCPN data/s57data/attdecode.csv TOPSHP row",
         "topshp_standard_decode_count": str(len(TOPSHP_DECODE)),
@@ -2183,7 +2613,8 @@ def augment(db_path: Path, approval_root: Path | None) -> None:
         instruction_counts = load_instruction_ast(con)
         import_metadata = import_iconforge_approval(con, approval_root)
         runtime_counts = build_runtime_candidates(con)
-        update_metadata(con, semantic_counts, mapping_counts, instruction_counts, runtime_counts)
+        chart1_counts = build_electronic_chart1_entries(con)
+        update_metadata(con, semantic_counts, mapping_counts, instruction_counts, runtime_counts, chart1_counts)
         con.execute(
             "INSERT OR REPLACE INTO s52_source_metadata (key, value) VALUES (?, ?)",
             ("iconforge_approval_import", json_dumps(import_metadata)),
