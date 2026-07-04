@@ -397,9 +397,10 @@
         "native/README.md",
         "native/test-native-core.sh",
         "native/ios/build-ios-proof.sh",
-        "native/macos/build-macos-client.sh"
+        "native/macos/build-macos-client.sh",
+        "native/macos/package-macos-dmg.sh"
       ],
-      "launch": ["native/test-native-core.sh", "native/ios/build-ios-proof.sh"],
+      "launch": ["native/test-native-core.sh", "native/ios/build-ios-proof.sh", "native/macos/package-macos-dmg.sh"],
       "starts_python_daemon": false,
       "python_allowed": false,
       "owner": "NATIVE",

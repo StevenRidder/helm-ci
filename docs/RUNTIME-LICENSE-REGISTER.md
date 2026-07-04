@@ -102,9 +102,11 @@ Store build, or any appliance image:
 5. Any App Store, paid, or preloaded appliance distribution must carry a
    counsel-reviewed license/notice bundle and user-facing safety disclaimer.
 
-The existing guard is `engine/containment-check.sh`. Native packaging tasks
-must extend that guard to inspect native build outputs once installable bundles
-exist.
+The engine guard is `engine/containment-check.sh`. The macOS DMG path added by
+`NATIVE-13` has a native-side companion check in
+[`native/macos/package-macos-dmg.sh`](../native/macos/package-macos-dmg.sh):
+before it signs or creates a DMG, it rejects client bundles that contain
+OpenCPN/wx/engine artifacts or link forbidden engine dependencies.
 
 ## Release Checklist
 
@@ -138,5 +140,6 @@ release:
 - Future clean-room S-52/S-101 work must record source provenance for IHO,
   OpenBridge, Esri, NOAA, and any other portrayal/symbol sources before runtime
   promotion.
-- Native packaging containment checks must be added when NATIVE tasks produce
-  final installable artifacts.
+- Native packaging containment checks must be extended to future iOS/iPadOS,
+  appliance, and multi-tier package outputs after those tasks produce final
+  installable artifacts.

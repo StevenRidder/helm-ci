@@ -39,6 +39,9 @@ client "open source" until it converts to Apache-2.0.
   restricted commercial data.
 - A downloadable appliance image or paid build before IP counsel reviews the
   GPL boundary, BSL wording, attribution register, and chart-data sources.
+- A public macOS DMG before `native/macos/package-macos-dmg.sh --notarize`
+  passes with a Developer ID identity, the notarization ticket is stapled, and
+  counsel has reviewed the native-client notice bundle.
 - A standalone phone-only promise. That path requires the clean-room renderer
   work tracked separately from the current headless OpenCPN engine.
 - Claims that Helm is type-approved, certified, primary-navigation ECDIS, or a

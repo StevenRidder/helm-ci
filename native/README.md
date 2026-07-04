@@ -50,6 +50,8 @@ The iOS presets build only `libhelm_native_core.a`; tests remain macOS-hosted.
   native MapLibre/Metal work is justified.
 - `macos/` contains the first SwiftUI/AppKit macOS client. It discovers/connects to a boat-side
   `helm-server` and sends the CONN-9 serial NMEA `conn.upsert` command without linking OpenCPN or
-  touching the live `:8080` screen.
+  touching the live `:8080` screen. Its `package-macos-dmg.sh` script builds the non-App-Store
+  Developer ID DMG path for `NATIVE-13`, with notarization support and client-bundle containment
+  checks.
 
 Both client build scripts disable signing and do not start any Helm runtime.

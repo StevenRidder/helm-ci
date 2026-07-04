@@ -111,6 +111,19 @@ Run the proof from Xcode (`native/ios/HelmWebViewProof.xcodeproj`) against a pri
 for example `scripts/start-helm.sh --port 9001`. Do not use the shared live `:8080` instance for
 agent testing.
 
+The macOS native client can be packaged outside the App Store as a Developer ID
+DMG. The local package-shape check builds the Release app, verifies that no
+OpenCPN/wx/engine artifacts are inside the client bundle, ad-hoc signs, and
+writes a DMG under `native/macos/dist/`:
+
+```bash
+native/macos/package-macos-dmg.sh
+```
+
+For a real public artifact, provide a Developer ID Application identity and a
+notarytool profile, then add `--notarize`. The resulting DMG is still a thin
+client; `helm-server` remains a separate boat-side process.
+
 ## 2. Chart and Weather Data
 
 Helm does not include chart packs. Bring your own local charts/basemaps at
