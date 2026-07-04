@@ -46,6 +46,10 @@
 - **IP counsel must sign off before any OpenCPN source is embedded.**
 - Helm's own license terms are in root [LICENSE](../LICENSE) and
   [LICENSE.BSL](../LICENSE.BSL): BSL 1.1 → Apache-2.0 for Helm-authored components.
+- Helm's dependency and attribution registers are split by distribution surface:
+  [CLIENT-LICENSE-REGISTER.md](CLIENT-LICENSE-REGISTER.md) covers browser/WKWebView/native-client
+  shipped code, while [RUNTIME-LICENSE-REGISTER.md](RUNTIME-LICENSE-REGISTER.md) covers boat-side
+  engine/runtime dependencies, the GPL/GDAL boundary, and native packaging guardrails.
 - Vulkan renderer POC boundaries are tracked in
   [VULKAN-RENDER-LICENSE-BOUNDARY.md](VULKAN-RENDER-LICENSE-BOUNDARY.md):
   shared OpenCPN-derived renderer semantics stay on the GPL-compatible engine

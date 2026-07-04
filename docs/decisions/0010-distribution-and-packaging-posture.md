@@ -55,6 +55,7 @@ Per [BUSINESS-MODEL.md](../BUSINESS-MODEL.md): the **Helm Cloud subscription** (
 
 - We can put the backend on public GitHub **today** without giving away the cloud business — BSL reserves competing commercial hosting for up to four years per release.
 - Proprietary native binaries are genuinely closeable; the web client is source-visible but its value (the cloud) is not, so "proprietary web client" means *restrictively licensed*, not *secret* — and that's sufficient.
+- Checked-in native source follows the root repository license unless a file says otherwise; any separate proprietary native binary terms require release-specific counsel review.
 - A regression that linked/bundled the GPL engine into a client would make that client GPL; the [ADR-0009](0009-arms-length-gpl-containment.md) guard fails the build before that ships.
 - BSL is *source-available*, not OSI "open source" — set expectations with the cruiser community accordingly (it converts to true Apache-2.0 on the change-date).
 - Dependencies must stay GPL-compatible-or-permissive in the engine, and license-clean in the clients (GDAL/PROJ = MIT/X-style; MapLibre = BSD).
@@ -71,5 +72,9 @@ Per [BUSINESS-MODEL.md](../BUSINESS-MODEL.md): the **Helm Cloud subscription** (
 - Root [LICENSE](../../LICENSE) explains the multi-license split.
 - Root [LICENSE.BSL](../../LICENSE.BSL) carries the BSL 1.1 terms and Additional Use Grant.
 - Root [NOTICE](../../NOTICE) captures the current attribution and safety disclaimers.
+- [RUNTIME-LICENSE-REGISTER.md](../RUNTIME-LICENSE-REGISTER.md) captures the engine/runtime,
+  GPL/GDAL, native-packaging, and attribution register for `NATIVE-12`.
+- [CLIENT-LICENSE-REGISTER.md](../CLIENT-LICENSE-REGISTER.md) captures the browser/WKWebView client
+  dependency audit.
 - [PUBLIC-ALPHA-CHECKLIST.md](../PUBLIC-ALPHA-CHECKLIST.md) is the pre-post / pre-release gate.
 - [Cruisers Forum draft](../posts/cruisersforum-opencpn-update.md) is the current community post.

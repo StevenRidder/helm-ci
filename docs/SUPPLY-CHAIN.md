@@ -2,7 +2,9 @@
 
 Bill of materials + CVE status for the code that ships to (or serves) the Helm **web client**. The
 safety-critical C++ nav engine is out of scope here — it vendors OpenCPN `model/` via the maintained
-patch series (see `engine/`). This covers the web frontend and the Python companion services.
+patch series (see `engine/`). Runtime/native license and attribution posture lives in
+[RUNTIME-LICENSE-REGISTER.md](RUNTIME-LICENSE-REGISTER.md). This covers the web frontend and the
+Python companion services.
 
 Generated 2026-06-26 (CLIENT-16). Re-run with the commands under each section.
 

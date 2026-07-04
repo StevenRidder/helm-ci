@@ -97,6 +97,8 @@ repo docs unless someone asks directly.
       paths, live-machine config notes, and any scripts that touch a stable
       `:8080` instance.
 - [ ] Run the client license audit in docs/CLIENT-LICENSE-REGISTER.md.
+- [ ] Refresh docs/RUNTIME-LICENSE-REGISTER.md against the exact release
+      engine/native artifacts.
 - [ ] Refresh NOTICE with any new dependencies, fonts, map sources, and sample
       data.
 - [ ] Confirm SAFETY.md is linked from README, release notes, and public demo

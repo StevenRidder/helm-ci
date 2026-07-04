@@ -22,6 +22,9 @@ Primary project attribution:
   docs/CLIENT-LICENSE-REGISTER.md.
 - Noto Sans font glyph atlases: derived from Noto Sans under the SIL Open Font
   License 1.1.
+- Boat-side runtime and native distribution dependency details are tracked in
+  docs/RUNTIME-LICENSE-REGISTER.md. Browser-client dependency details are
+  tracked in docs/CLIENT-LICENSE-REGISTER.md.
 
 Data and layer attribution rules:
 
@@ -36,5 +39,5 @@ Data and layer attribution rules:
   hosted, or sold build.
 
 Before a public alpha or paid distribution, refresh the attribution table,
-dependency register, and legal review notes in docs/LEGAL.md and
-docs/CLIENT-LICENSE-REGISTER.md.
+dependency registers, and legal review notes in docs/LEGAL.md,
+docs/CLIENT-LICENSE-REGISTER.md, and docs/RUNTIME-LICENSE-REGISTER.md.

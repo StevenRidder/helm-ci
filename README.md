@@ -242,8 +242,10 @@ core then *emerges from working code* rather than upfront architecture.
 
 ## License
 
-Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL), and
-[docs/LEGAL.md](docs/LEGAL.md).
+Multi-license — see [LICENSE](LICENSE), [LICENSE.BSL](LICENSE.BSL),
+[NOTICE](NOTICE), [docs/LEGAL.md](docs/LEGAL.md),
+[docs/CLIENT-LICENSE-REGISTER.md](docs/CLIENT-LICENSE-REGISTER.md), and
+[docs/RUNTIME-LICENSE-REGISTER.md](docs/RUNTIME-LICENSE-REGISTER.md).
 
 - **OpenCPN-derived engine work:** GPLv2-or-later, source-visible, and kept in a
   separate boat-server process behind the HTTP/WebSocket protocol boundary.

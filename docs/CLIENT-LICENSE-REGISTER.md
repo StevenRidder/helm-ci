@@ -9,12 +9,15 @@
 > Scope is deliberately narrow: **code/dependencies that ship to the client.** The chart/weather
 > **data-source** register (Sentinel, NOAA, OpenSeaMap, Windy, …) and its attribution checklist
 > live in [LEGAL.md](LEGAL.md); Helm's own-code license terms live in root [LICENSE](../LICENSE)
-> and [LICENSE.BSL](../LICENSE.BSL). This doc does not restate them.
+> and [LICENSE.BSL](../LICENSE.BSL). Runtime/server attribution and native distribution posture
+> live in [RUNTIME-LICENSE-REGISTER.md](RUNTIME-LICENSE-REGISTER.md). This doc does not restate
+> them.
 
 ## Bottom line
 
-**As of 2026-06-26 (HEAD `4fc3dc3`), nothing in the client is GPL/LGPL/AGPL. The removal list is
-empty.** Every byte that ships to the browser / WKWebView / future native shell is either
+**As of 2026-07-05 (`origin/main` `0893bba098f1fba3d8dcc8b84c7dba814cc83ad2`), nothing in the
+client is GPL/LGPL/AGPL. The removal list is empty.** Every byte that ships to the browser /
+WKWebView / future native shell is either
 permissive third-party (BSD/MIT/ISC/Apache/OFL) or Helm's own code. The GPL — OpenCPN `model/` +
 the `s57chart` S-52 renderer — lives **only** in the engine process and is reached over the network
 protocol, never embedded in the client.
@@ -134,11 +137,10 @@ curl -s https://registry.npmjs.org/<pkg>/<version> | grep -o '"license":"[^"]*"'
   technical boundary is necessary, not by itself sufficient
   ([ADR-0009](decisions/0009-arms-length-gpl-containment.md), [LEGAL.md](LEGAL.md),
   root [LICENSE](../LICENSE) / [LICENSE.BSL](../LICENSE.BSL)).
-- **Server-side dependency register.** This doc covers the *client*. A complete attribution register
-  for the **engine** process (OpenCPN GPLv2+, wxWidgets 3.2 / wxWindows licence, GDAL/OGR/PROJ
-  MIT-X-style) is a separate NATIVE-12 deliverable — out of scope here because none of it ships to the
-  client. The GPL/GDAL boundary *decision* is [ADR-0002](decisions/0002-enc-engine.md) /
-  [ADR-0009](decisions/0009-arms-length-gpl-containment.md).
+- **Runtime-side dependency register.** This doc covers the *client*. The engine/runtime,
+  native-packaging, GPL/GDAL, and attribution register is
+  [RUNTIME-LICENSE-REGISTER.md](RUNTIME-LICENSE-REGISTER.md). Keep both registers refreshed before
+  any public alpha, paid distribution, or native binary release.
 - **Extend the containment guard to native outputs** once `NATIVE-*` produces installable bundles
   (assert the shipped bundle launches the engine as a separate process, and that no GPL artifact lands
   inside the client app) — already flagged Open in ADR-0009. A **source-level** provenance lint for
@@ -151,4 +153,5 @@ curl -s https://registry.npmjs.org/<pkg>/<version> | grep -o '"license":"[^"]*"'
 - [ADR-0002 — ENC engine (GPL vs clean-room GDAL rebuild)](decisions/0002-enc-engine.md)
 - [ADR-0006 — Server / thin-client split](decisions/0006-server-client-thin-display.md)
 - [LEGAL.md — chart/weather data-source register + attribution checklist](LEGAL.md)
+- [RUNTIME-LICENSE-REGISTER.md — engine/runtime/native attribution register](RUNTIME-LICENSE-REGISTER.md)
 - [OPENCPN-REUSE.md](OPENCPN-REUSE.md)

@@ -92,3 +92,6 @@ Helm's *own* code stays GPL-free under the root [LICENSE](../../LICENSE) /
 - Counsel sign-off on the boat-server/thin-client reading before a paid tier ships.
 - Extend the containment guard to native packaging outputs once `NATIVE-*` produces them
   (assert the shipped bundle launches the engine as a separate process).
+- Keep the runtime/native attribution and distribution checklist current in
+  [RUNTIME-LICENSE-REGISTER.md](../RUNTIME-LICENSE-REGISTER.md) before public alpha,
+  paid distribution, or installable native artifacts.
