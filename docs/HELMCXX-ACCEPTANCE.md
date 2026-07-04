@@ -116,6 +116,36 @@ Parity must cover:
 Outputs should be byte-identical where practical. Where byte identity is not the right bar, tests
 must use normalized JSON, normalized headers, semantic image checks, or documented tolerances.
 
+## HELMC++-2 parity suite
+
+The checked-in HELMC++-2 parity matrix is
+[`helmcxx-parity-suite.json`](helmcxx-parity-suite.json). It maps each required
+runtime service to the acceptance surfaces above, the concrete service-contract
+tests that prove them, and the remaining Python paths that are allowed only as
+oracles, tooling, fixtures, dev-only helpers, or optional non-safety services.
+
+Validate the static suite coverage with:
+
+```bash
+python3 scripts/helmcxx-parity-suite.py
+```
+
+On a machine with private C++ binaries, run the service contracts with:
+
+```bash
+HELM_SERVER_BIN=/path/to/helm-server \
+HELM_PACKD_BIN=/path/to/helm-packd \
+HELM_BASEMAP_CACHE_BIN=/path/to/helm-basemap-cache \
+HELM_ENVD_BIN=/path/to/helm-envd \
+python3 scripts/helmcxx-parity-suite.py --run-contracts --strict-contract-env
+```
+
+The static gate fails if a required runtime service is missing from the parity
+matrix, if an acceptance surface has no evidence, if a referenced test path
+disappears, or if a Python-bearing inventory entry lacks an explicit HELMC++-2
+role. The runtime contract mode then executes the concrete probes on private
+ports only.
+
 ## End-to-end proof
 
 The final C++ runtime proof must launch Helm on private ports with required C++ daemons only. It must

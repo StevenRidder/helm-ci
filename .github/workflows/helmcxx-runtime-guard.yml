@@ -4,16 +4,20 @@ on:
   push:
     paths:
       - "docs/runtime-inventory.json"
+      - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
+      - "scripts/helmcxx-parity-suite.py"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   pull_request:
     paths:
       - "docs/runtime-inventory.json"
+      - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/RUNTIME-SERVICES.md"
       - "scripts/check-runtime-inventory.py"
+      - "scripts/helmcxx-parity-suite.py"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   workflow_dispatch:
 
@@ -27,3 +31,5 @@ jobs:
           python-version: "3.11"
       - name: Check runtime inventory
         run: python3 scripts/check-runtime-inventory.py
+      - name: Check HELMC++ parity suite
+        run: python3 scripts/helmcxx-parity-suite.py

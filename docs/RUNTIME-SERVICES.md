@@ -15,6 +15,7 @@ The checked-in machine-readable inventory is
 
 ```bash
 python3 scripts/check-runtime-inventory.py
+python3 scripts/helmcxx-parity-suite.py
 ```
 
 This is an architecture guardrail, not a rewrite order to stop all product work
@@ -97,7 +98,11 @@ Names are provisional. What matters is the boundary:
 The table below is the human-readable summary. The enforceable version is
 [`runtime-inventory.json`](runtime-inventory.json), which also names current
 Python references/oracles, optional non-safety services, owner lanes, and C++
-exit tasks.
+exit tasks. HELMC++-2 consumes that inventory through
+[`helmcxx-parity-suite.json`](helmcxx-parity-suite.json), which maps each
+required runtime service to its parity probes and records whether remaining
+Python paths are oracle-only, dev-only, offline-bake, fixture/test, or optional
+non-safety.
 
 | Target service | Accepted role | C++ runtime decision |
 |---|---|---|
