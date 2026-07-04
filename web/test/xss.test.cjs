@@ -5,6 +5,8 @@
 // Run: node web/test/xss.test.cjs
 const fs = require('fs'), path = require('path');
 const src = fs.readFileSync(path.join(__dirname, '..', 'index.html'), 'utf8');
+// CLIENT-25: the AIS tap-inspector card moved to ais-inspector.js — its sinks are checked there.
+const ais = fs.readFileSync(path.join(__dirname, '..', 'ais-inspector.js'), 'utf8');
 
 const line = src.split('\n').find((l) => l.includes('const escHtml ='));
 if (!line) { console.error('escHtml not found in index.html'); process.exit(1); }
@@ -14,6 +16,10 @@ const escHtml = new Function('return (' + expr + ')')();   // the real escaper, 
 let pass = 0, fail = 0;
 const ok = (c, m) => { console.log((c ? '  \x1b[32mPASS\x1b[0m  ' : '  \x1b[31mFAIL\x1b[0m  ') + m); c ? pass++ : fail++; };
 const has = (s) => src.includes(s);
+const hasAis = (s) => ais.includes(s);   // AIS-card sinks live in ais-inspector.js now
+// the module carries its OWN copy of the canonical escaper — it must be byte-identical, or the
+// AIS card could quietly diverge into an under-escaping fork.
+const aisEscLine = ais.split('\n').find((l) => l.includes('const escHtml ='));
 
 // escaper correctness
 ok(escHtml('<img src=x onerror=alert(1)>') === '&lt;img src=x onerror=alert(1)&gt;', '1. escapes < and >');
@@ -26,7 +32,8 @@ ok(has('escHtml(p.name || p.kind)'), '5. places popup escapes the OSM place name
 ok(has('escHtml(p.note || p.kind)'), '6. saved-place popup escapes the user note');
 ok(has("escHtml(p.name || '')"), '7. recommender popup escapes the name');
 ok(has('safeUrl(p.sourceUrl)') && has('rel="noopener noreferrer"'), '8. saved sourceUrl -> safeUrl (no javascript:) + rel=noopener');
-ok(has('aisEsc(name)'), '9. AIS card still escapes the (open-radio) vessel name');
+ok(hasAis('aisEsc(name)'), '9. AIS card still escapes the (open-radio) vessel name');
+ok(!!aisEscLine && aisEscLine.replace(/\s+/g, '') === line.replace(/\s+/g, ''), '9b. ais-inspector escHtml is byte-identical to the canonical escaper');
 
 console.log('\n' + (fail ? '\x1b[31m' : '\x1b[32m') + 'xss: ' + pass + ' passed, ' + fail + ' failed\x1b[0m');
 process.exit(fail ? 1 : 0);

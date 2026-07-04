@@ -76,6 +76,7 @@ const APP_SHELL_URLS = [
   './ais-risk.js',
   './ais-hub.js',
   './collision.js',
+  './ais-inspector.js',
   './ais-meta.js',
   './ais-vectors.js',
   './ais-guard.js',
