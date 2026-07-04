@@ -32,7 +32,7 @@ def main() -> None:
         assert row["qa"]["style_contract"]["schema"] == "helm.iconforge.style_contract_gate.v1"
         assert row["qa"]["style_contract"]["gate_status"] in {"pass", "pending", "failed"}
         assert row["qa"]["colour_authority"]["schema"] == "helm.iconforge.colour_authority_contract.v1"
-        assert row["qa"]["colour_authority"]["gate_status"] in {"pass", "warn", "pending"}
+        assert row["qa"]["colour_authority"]["gate_status"] in {"pass", "blocked", "pending"}
         assert row["qa"]["authority_trace"]["schema"] == "helm.iconforge.authority_trace_gate.v1"
         assert row["qa"]["authority_trace"]["gate_status"] == "blocked"
         assert row["qa"]["authority_trace"]["runtime_blocker"] is True
@@ -60,6 +60,8 @@ def main() -> None:
         for item in rows["BOYLAT25"]["qa"]["authority_trace"]["gap_classifications"]
     )
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["status"] == "feature_colour_dropped"
+    assert rows["BCNLAT15"]["qa"]["colour_authority"]["gate_status"] == "blocked"
+    assert rows["BCNLAT15"]["qa"]["colour_authority"]["runtime_blocker"] is True
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["missing_feature_colours"] == ["green"]
     assert rows["BCNLAT15"]["qa"]["colour_authority"]["extra_visual_colours"] == ["white"]
     assert rows["TOPSHQ28"]["s101"]["feature_type"] == "Daymark"
@@ -70,6 +72,18 @@ def main() -> None:
     s101_image = db_review_api.image_path_for("BOYPIL60", "s101")
     assert helm_image and helm_image.exists()
     assert s101_image and s101_image.exists()
+
+    unknown = db_review_api._colour_authority_gate("TEST01", {
+        "schema": "helm.iconforge.colour_authority_contract.v1",
+        "status": "future_status",
+        "gate_status": "surprise",
+        "runtime_blocker": False,
+        "reason_codes": [],
+    })
+    assert unknown["gate_status"] == "blocked"
+    assert unknown["runtime_blocker"] is True
+    assert "colour_authority:unknown_status:future_status" in unknown["reason_codes"]
+    assert "colour_authority:unknown_gate_status:surprise" in unknown["reason_codes"]
 
     print("db review api: OK")
 

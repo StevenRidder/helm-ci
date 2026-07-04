@@ -15,7 +15,7 @@
     "runtime_db": "artifacts/opencpn_s52_portrayal.sqlite",
     "runtime_db_sha256": "eb6773e8bd49cbfd097ff94a63faf315da8222073209d7f29d340e73ead25264",
     "runtime_evidence_snapshot": "pipeline/iconforge/catalog/runtime_evidence_snapshot.json",
-    "runtime_evidence_snapshot_sha256": "4861cd734046c13d6ab182700a60345da241f93612d73e729b606270068e2134",
+    "runtime_evidence_snapshot_sha256": "2662eb26f2e747e3f19a63754ae0f0954e8cbeb76c1aa8c7673cf23c22ec0769",
     "proof_manifest": "pipeline/iconforge/proof/manifest.json",
     "proof_manifest_sha256": "fb82754f9473dc271043d8b343b9ee99fe84d0a2c8ac16a6b6879092eba2c6f0",
     "symbol_selection_fixtures": "engine/test/fixtures/symbol-selection/fixtures.json",

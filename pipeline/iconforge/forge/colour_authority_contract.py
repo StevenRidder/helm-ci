@@ -53,6 +53,24 @@ LOAD_BEARING_COLOURS = {
     "yellow",
 }
 
+PASS_STATUSES = {
+    "aligned",
+    "feature_empty_visual_defined",
+    "not_colour_bearing",
+}
+
+BLOCKED_STATUSES = {
+    "feature_colour_dropped",
+    "feature_visual_order_difference",
+    "missing_positive_not_colour_bearing_evidence",
+    "missing_visual_witness",
+    "pattern_orientation_conflict",
+    "unresolved",
+    "visual_colour_extra",
+}
+
+KNOWN_GATE_STATUSES = {"pass", "blocked", "pending"}
+
 
 def _read_source_rows() -> list[dict[str, Any]]:
     return json.loads(SOURCE_TABLE.read_text()).get("rows", [])
@@ -100,7 +118,7 @@ def _display_path(path: Path) -> str:
         return str(path)
 
 
-def _svg_sequences(svg: str, *, feature_sequence: list[str]) -> tuple[list[str], list[str], str, list[str]]:
+def _svg_sequences(svg: str) -> tuple[list[str], list[str], str, list[str]]:
     fill_sequence = _normalise_sequence(FILL_VAR.findall(svg) + STYLE_FILL_VAR.findall(svg))
     stroke_sequence = _normalise_sequence(STROKE_VAR.findall(svg) + STYLE_STROKE_VAR.findall(svg))
     pattern_tokens = []
@@ -114,7 +132,7 @@ def _svg_sequences(svg: str, *, feature_sequence: list[str]) -> tuple[list[str],
     if fill_sequence:
         sequence = fill_sequence
         source = "svg_fill_tokens"
-    elif feature_sequence and stroke_sequence:
+    elif stroke_sequence:
         sequence = stroke_sequence
         source = "svg_stroke_tokens_no_fill"
         notes.append("visual_colour_sequence_uses_strokes_because_no_fill_tokens_exist")
@@ -133,14 +151,59 @@ def _svg_sequences(svg: str, *, feature_sequence: list[str]) -> tuple[list[str],
     return sequence, stroke_sequence, pattern, notes + [f"visual_colour_source={source}"]
 
 
+def _pattern_requirements(feature_pattern: str | None) -> list[str]:
+    text = str(feature_pattern or "").lower()
+    requirements: list[str] = []
+    for token in ("horizontal", "vertical", "diagonal"):
+        if token in text:
+            requirements.append(token)
+    if "squared" in text or "checkered" in text:
+        requirements.append("checkered")
+    if "border stripe" in text:
+        requirements.append("border")
+    return requirements
+
+
+def _visual_pattern_evidence(visual_pattern: str) -> set[str]:
+    text = str(visual_pattern or "").lower()
+    evidence: set[str] = set()
+    for token in ("horizontal", "vertical", "diagonal", "border"):
+        if token in text:
+            evidence.add(token)
+    if "checkered" in text or "checker" in text or "squared" in text:
+        evidence.add("checkered")
+    return evidence
+
+
+def _positive_not_colour_bearing_evidence(row: dict[str, Any]) -> list[str]:
+    """Return positive evidence that a zero-colour row is intentionally non-colour-bearing."""
+    semantic = row.get("semantic_brief") or {}
+    notes: list[str] = []
+    if semantic.get("colour_pattern"):
+        return []
+    use_case = str(semantic.get("use_case") or "").lower()
+    shape = str(semantic.get("required_shape") or "").lower()
+    name = str(row.get("name") or "").lower()
+    text = " ".join([use_case, shape, name])
+    if any(token in text for token in ("line", "arc", "boundary", "contour", "area", "coverage")):
+        notes.append("semantic_context_marks_geometry_as_non_colour_bearing")
+    if str(row.get("kind") or "") in {"line-style", "area-fill"}:
+        notes.append("source_kind_is_non_symbol_paint_primitive")
+    return notes
+
+
 def _classify(
     *,
+    row: dict[str, Any],
     feature_sequence: list[str],
+    feature_pattern: str | None,
     visual_sequence: list[str],
+    visual_pattern: str,
     missing_svg: bool,
     missing_feature_colours: list[str],
     extra_visual_colours: list[str],
-) -> tuple[str, str, str, bool, list[str]]:
+) -> tuple[str, str, str, bool, list[str], list[str]]:
+    evidence_notes: list[str] = []
     if missing_svg:
         return (
             "unresolved",
@@ -148,22 +211,35 @@ def _classify(
             "manual_review_required",
             True,
             ["colour_authority:svg_missing"],
+            evidence_notes,
         )
     if feature_sequence and not visual_sequence:
         return (
-            "unresolved",
-            "pending",
+            "missing_visual_witness",
+            "blocked",
             "manual_review_required",
             True,
-            ["colour_authority:visual_colour_sequence_missing"],
+            ["colour_authority:missing_visual_witness"],
+            evidence_notes,
         )
     if not feature_sequence and not visual_sequence:
+        evidence_notes = _positive_not_colour_bearing_evidence(row)
+        if not evidence_notes:
+            return (
+                "missing_positive_not_colour_bearing_evidence",
+                "blocked",
+                "manual_review_required",
+                True,
+                ["colour_authority:missing_positive_not_colour_bearing_evidence"],
+                evidence_notes,
+            )
         return (
             "not_colour_bearing",
             "pass",
             "not_colour_bearing",
             False,
             [],
+            evidence_notes,
         )
     if not feature_sequence and visual_sequence:
         return (
@@ -172,37 +248,56 @@ def _classify(
             "generated_visual_recipe",
             False,
             ["colour_authority:feature_empty_visual_defined"],
+            evidence_notes,
         )
     if feature_sequence == visual_sequence:
+        missing_patterns = [
+            token
+            for token in _pattern_requirements(feature_pattern)
+            if token not in _visual_pattern_evidence(visual_pattern)
+        ]
+        if missing_patterns:
+            return (
+                "pattern_orientation_conflict",
+                "blocked",
+                "manual_review_required",
+                True,
+                [f"colour_authority:pattern_orientation_missing:{token}" for token in missing_patterns],
+                evidence_notes,
+            )
         return (
             "aligned",
             "pass",
             "feature_predicates_and_visual_recipe_aligned",
             False,
             [],
+            evidence_notes,
         )
     if missing_feature_colours:
         return (
             "feature_colour_dropped",
-            "warn",
-            "generated_visual_recipe",
-            False,
+            "blocked",
+            "manual_review_required",
+            True,
             ["colour_authority:feature_colour_dropped"],
+            evidence_notes,
         )
     if extra_visual_colours:
         return (
             "visual_colour_extra",
-            "warn",
-            "generated_visual_recipe",
-            False,
+            "blocked",
+            "manual_review_required",
+            True,
             ["colour_authority:visual_colour_extra"],
+            evidence_notes,
         )
     return (
         "feature_visual_order_difference",
-        "warn",
-        "generated_visual_recipe",
-        False,
+        "blocked",
+        "manual_review_required",
+        True,
         ["colour_authority:feature_visual_order_difference"],
+        evidence_notes,
     )
 
 
@@ -211,6 +306,7 @@ def _row_contract(row: dict[str, Any]) -> dict[str, Any]:
     semantic = row.get("semantic_brief") or {}
     helm = row.get("helm_candidate") or {}
     feature_sequence = _normalise_sequence(semantic.get("required_colours") or [])
+    feature_pattern = semantic.get("colour_pattern")
     feature_unique = _normalise_sequence(semantic.get("unique_required_colours") or [])
     if not feature_unique:
         feature_unique = _unique_sequence(feature_sequence)
@@ -225,18 +321,18 @@ def _row_contract(row: dict[str, Any]) -> dict[str, Any]:
         notes = ["canonical_svg_missing_or_unreadable"]
     else:
         svg = svg_path.read_text()
-        visual_sequence, stroke_sequence, visual_pattern, notes = _svg_sequences(
-            svg,
-            feature_sequence=feature_sequence,
-        )
+        visual_sequence, stroke_sequence, visual_pattern, notes = _svg_sequences(svg)
 
     visual_unique = _unique_sequence(visual_sequence)
     missing_feature_colours = [colour for colour in feature_unique if colour not in visual_unique]
     extra_visual_colours = [colour for colour in visual_unique if colour not in feature_unique]
 
-    status, gate_status, render_authority, runtime_blocker, reason_codes = _classify(
+    status, gate_status, render_authority, runtime_blocker, reason_codes, evidence_notes = _classify(
+        row=row,
         feature_sequence=feature_sequence,
+        feature_pattern=feature_pattern,
         visual_sequence=visual_sequence,
+        visual_pattern=visual_pattern,
         missing_svg=missing_svg,
         missing_feature_colours=missing_feature_colours,
         extra_visual_colours=extra_visual_colours,
@@ -256,6 +352,8 @@ def _row_contract(row: dict[str, Any]) -> dict[str, Any]:
         "render_colour_authority": render_authority,
         "feature_colour_sequence": feature_sequence,
         "feature_unique_colours": feature_unique,
+        "feature_colour_pattern": feature_pattern or "none",
+        "feature_pattern_requirements": _pattern_requirements(feature_pattern),
         "missing_feature_colours": missing_feature_colours,
         "feature_colour_source": "semantic_brief.required_colours",
         "visual_colour_sequence": visual_sequence,
@@ -263,11 +361,12 @@ def _row_contract(row: dict[str, Any]) -> dict[str, Any]:
         "extra_visual_colours": extra_visual_colours,
         "visual_stroke_sequence": stroke_sequence,
         "visual_pattern": visual_pattern,
+        "visual_pattern_evidence": sorted(_visual_pattern_evidence(visual_pattern)),
         "visual_colour_source": "helm_candidate.canonical_svg_css_fill_tokens",
         "canonical_svg": svg_rel,
         "candidate_status": helm.get("candidate_status") or "",
         "reason_codes": reason_codes,
-        "notes": sorted(set(notes)),
+        "notes": sorted(set(notes + evidence_notes)),
     }
 
 
@@ -291,13 +390,16 @@ def build() -> dict[str, Any]:
         "status": "colour_authority_complete",
         "authority_policy": {
             "feature_colour_sequence": "S-57/S-52 feature predicates from semantic_brief.required_colours",
-            "visual_colour_sequence": "ordered CSS fill tokens from the selected generated Helm SVG; stroke tokens are used only when a colour-bearing feature has no fill tokens",
+            "visual_colour_sequence": "ordered CSS fill tokens from the selected generated Helm SVG; stroke tokens are used when no fill tokens exist",
+            "pattern_orientation_rule": "If S-57/S-52 semantics require horizontal, vertical, diagonal, checkered, or border pattern evidence, the selected SVG must carry matching data-pattern evidence before runtime eligibility.",
             "renderer_rule": (
                 "Preserve feature predicates for audit/crosswalks. Use render_colour_authority "
                 "to decide which colour sequence a renderer may bake for a generated visual recipe."
             ),
             "s101_witness_rule": "S-101 witnesses may support shape/rule evidence but are not colour-authoritative unless the row contract says so.",
-            "fail_closed_rule": "Missing or unresolved colour authority blocks runtime export.",
+            "fail_closed_rule": "Missing, unresolved, conflicting, unknown, or pattern-incomplete colour authority blocks runtime export.",
+            "known_statuses": sorted(PASS_STATUSES | BLOCKED_STATUSES),
+            "known_gate_statuses": sorted(KNOWN_GATE_STATUSES),
         },
         "summary": {
             "source_table_rows": len(rows),
@@ -350,6 +452,9 @@ def _write_reports(result: dict[str, Any]) -> None:
         if row["status"] not in {
             "feature_colour_dropped",
             "feature_visual_order_difference",
+            "missing_positive_not_colour_bearing_evidence",
+            "missing_visual_witness",
+            "pattern_orientation_conflict",
             "visual_colour_extra",
         }:
             continue

@@ -26,12 +26,12 @@ FORGE-37 downstream runtime-readiness snapshot generated from backend DB/proof d
 | `s101_rule_file_missing` | 2043 |
 | `helm_interpretation_missing` | 1710 |
 | `helm_recipe_evidence_missing` | 1653 |
+| `colour_authority_blocker` | 1415 |
 | `s101_resolver_evidence_missing` | 1333 |
 | `runtime_gate_blocker` | 1155 |
 | `s57_semantic_evidence_missing` | 698 |
 | `non_s101_scope_boundary` | 515 |
 | `s101_feature_catalogue_binding_missing` | 453 |
-| `colour_authority_blocker` | 421 |
 | `semantic_sidecar_missing` | 421 |
 | `visual_special_case_blocker` | 198 |
 | `s52_instruction_evidence_missing` | 59 |

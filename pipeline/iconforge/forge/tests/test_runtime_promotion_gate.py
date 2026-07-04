@@ -31,12 +31,16 @@ def main() -> None:
     assert "authority_trace:runtime_candidate_not_eligible" in payload["summary"]["reason_counts"]
     assert payload["summary"]["authority_blocker_category_counts"]["runtime_eligibility_blocker"] == 3057
     assert payload["summary"]["authority_blocker_category_counts"]["visual_human_approval_blocker"] == 3057
+    assert payload["summary"]["authority_blocker_category_counts"]["colour_authority_blocker"] == 1415
     assert any(reason.startswith("gate:visual_approval:pending") for reason in payload["summary"]["reason_counts"])
     assert not payload["rows"]
     assert payload["hard_pile"][0]["reason_codes"]
     assert payload["hard_pile"][0]["authority_blocker_summary"]["runtime_blocker"] is True
     assert payload["hard_pile"][0]["authority_blocker_summary"]["blocker_category_counts"]
-    assert not any(reason.startswith("colour_authority") for reason in payload["summary"]["reason_counts"])
+    assert payload["summary"]["reason_counts"]["colour_authority_blocked"] == 994
+    assert payload["summary"]["reason_counts"]["colour_authority:feature_colour_dropped"] == 485
+    assert payload["summary"]["reason_counts"]["colour_authority:feature_visual_order_difference"] == 253
+    assert payload["summary"]["reason_counts"]["colour_authority:pattern_orientation_missing:vertical"] == 30
     assert any(reason.startswith("authority_trace:") for reason in payload["summary"]["reason_counts"])
 
     with tempfile.TemporaryDirectory() as tmp_dir:

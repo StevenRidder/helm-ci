@@ -27,10 +27,11 @@ def main() -> None:
     assert payload["summary"]["matches_runtime_promotion_gate"] is True
     assert payload["summary"]["mismatch_rows"] == []
     assert payload["summary"]["warning_only_rows"] == 0
-    assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == 18816
+    assert payload["summary"]["runtime_effect_counts"]["blocks_runtime"] == 19810
     assert payload["summary"]["blocker_category_counts"]["runtime_eligibility_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["visual_human_approval_blocker"] == 3057
     assert payload["summary"]["blocker_category_counts"]["s101_feature_catalogue_source_missing"] == 2043
+    assert payload["summary"]["blocker_category_counts"]["colour_authority_blocker"] == 1415
     assert "/private/tmp/" not in json.dumps(payload["source"], sort_keys=True)
     assert "/Users/" not in json.dumps(payload["source"], sort_keys=True)
     assert payload["source"]["review"]["db"] == "artifacts/opencpn_s52_portrayal.sqlite"

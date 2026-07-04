@@ -6,7 +6,7 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 - status: `authority_trace_gate_complete`
 - s52_lookup_rows: `3057`
 - authority_trace_rows: `3057`
-- authority_trace_gap_rows: `18816`
+- authority_trace_gap_rows: `19810`
 - asset_summary_rows: `824`
 - runtime_blocker_rows: `3057`
 - runtime_blocker_rows_from_classifier: `3057`
@@ -34,6 +34,7 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 | `authority_trace:helm_interpretation_not_ready` | 1710 |
 | `authority_trace:s101_rule_file_not_hashed` | 1490 |
 | `authority_trace:helm_recipe_not_ready` | 1232 |
+| `authority_trace:colour_authority_blocks_runtime` | 994 |
 | `authority_trace:runtime_gate_s101_crosswalk_evidence_pending` | 942 |
 | `authority_trace:s101_resolver_unresolved_reasons_present` | 834 |
 | `authority_trace:s57_attribute_predicates_empty` | 698 |
@@ -47,7 +48,6 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 | `authority_trace:runtime_gate_s57_semantic_tuple_blocked` | 206 |
 | `authority_trace:runtime_gate_topmark_daymark_special_cases_blocked` | 127 |
 | `authority_trace:non_s101_runtime_construct` | 119 |
-| `authority_trace:s101_crosswalk_class_unresolved` | 78 |
 
 ## Top Blocker Categories
 
@@ -59,12 +59,12 @@ FORGE-34 backend-owned trace from S-57/S-52 inputs to Helm runtime/package gatin
 | `s101_rule_file_missing` | 2043 |
 | `helm_interpretation_missing` | 1710 |
 | `helm_recipe_evidence_missing` | 1653 |
+| `colour_authority_blocker` | 1415 |
 | `s101_resolver_evidence_missing` | 1333 |
 | `runtime_gate_blocker` | 1155 |
 | `s57_semantic_evidence_missing` | 698 |
 | `non_s101_scope_boundary` | 515 |
 | `s101_feature_catalogue_binding_missing` | 453 |
-| `colour_authority_blocker` | 421 |
 | `semantic_sidecar_missing` | 421 |
 | `visual_special_case_blocker` | 198 |
 | `s52_instruction_evidence_missing` | 59 |

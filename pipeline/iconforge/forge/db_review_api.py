@@ -24,6 +24,21 @@ AUTHORITY_TRACE = ROOT / "catalog" / "authority_trace_gate.json"
 
 SCHEMA = "helm.iconforge.db_review_api.v1"
 
+KNOWN_COLOUR_AUTHORITY_STATUSES = {
+    "aligned",
+    "feature_colour_dropped",
+    "feature_empty_visual_defined",
+    "feature_visual_order_difference",
+    "missing_positive_not_colour_bearing_evidence",
+    "missing_visual_witness",
+    "not_colour_bearing",
+    "pattern_orientation_conflict",
+    "unresolved",
+    "visual_colour_extra",
+}
+
+KNOWN_COLOUR_GATE_STATUSES = {"pass", "blocked", "pending"}
+
 
 def _read_json(path: Path) -> dict[str, Any]:
     if not path.exists():
@@ -197,15 +212,26 @@ def _colour_authority_gate(symbol_id: str, authority: dict[str, Any] | None) -> 
             "notes": [],
             "report_path": str(COLOUR_AUTHORITY),
         }
-    gate_status = authority.get("gate_status") or "pending"
+    status = authority.get("status") or "unresolved"
+    raw_gate_status = authority.get("gate_status") or "pending"
+    reason_codes = list(authority.get("reason_codes") or [])
+    unknown_status = status not in KNOWN_COLOUR_AUTHORITY_STATUSES
+    unknown_gate = raw_gate_status not in KNOWN_COLOUR_GATE_STATUSES
+    if unknown_status:
+        reason_codes.append(f"colour_authority:unknown_status:{status}")
+    if unknown_gate:
+        reason_codes.append(f"colour_authority:unknown_gate_status:{raw_gate_status}")
+    gate_status = "blocked" if unknown_status or unknown_gate else raw_gate_status
     return {
         "schema": authority.get("schema") or "helm.iconforge.colour_authority_contract.v1",
-        "status": authority.get("status") or "unresolved",
+        "status": status,
         "gate_status": gate_status,
-        "runtime_blocker": bool(authority.get("runtime_blocker")) or gate_status == "pending",
+        "runtime_blocker": bool(authority.get("runtime_blocker")) or gate_status != "pass",
         "render_colour_authority": authority.get("render_colour_authority") or "manual_review_required",
         "feature_colour_sequence": authority.get("feature_colour_sequence") or [],
         "feature_unique_colours": authority.get("feature_unique_colours") or [],
+        "feature_colour_pattern": authority.get("feature_colour_pattern") or "none",
+        "feature_pattern_requirements": authority.get("feature_pattern_requirements") or [],
         "missing_feature_colours": authority.get("missing_feature_colours") or [],
         "feature_colour_source": authority.get("feature_colour_source") or "",
         "visual_colour_sequence": authority.get("visual_colour_sequence") or [],
@@ -213,9 +239,10 @@ def _colour_authority_gate(symbol_id: str, authority: dict[str, Any] | None) -> 
         "extra_visual_colours": authority.get("extra_visual_colours") or [],
         "visual_stroke_sequence": authority.get("visual_stroke_sequence") or [],
         "visual_pattern": authority.get("visual_pattern") or "",
+        "visual_pattern_evidence": authority.get("visual_pattern_evidence") or [],
         "visual_colour_source": authority.get("visual_colour_source") or "",
         "canonical_svg": authority.get("canonical_svg") or "",
-        "reason_codes": authority.get("reason_codes") or [],
+        "reason_codes": sorted(set(reason_codes)),
         "notes": authority.get("notes") or [],
         "report_path": str(COLOUR_AUTHORITY),
     }

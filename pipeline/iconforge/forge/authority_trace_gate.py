@@ -69,6 +69,21 @@ NON_S101_CLASSES = {
 
 WARNING_ONLY_REASONS: set[str] = set()
 
+KNOWN_COLOUR_AUTHORITY_STATUSES = {
+    "aligned",
+    "feature_colour_dropped",
+    "feature_empty_visual_defined",
+    "feature_visual_order_difference",
+    "missing_positive_not_colour_bearing_evidence",
+    "missing_visual_witness",
+    "not_colour_bearing",
+    "pattern_orientation_conflict",
+    "unresolved",
+    "visual_colour_extra",
+}
+
+KNOWN_COLOUR_GATE_STATUSES = {"pass", "blocked", "pending"}
+
 
 def _reason_category(reason: str) -> tuple[str, str, str, str]:
     """Return category, source layer, severity, remediation hint for a gap reason."""
@@ -172,7 +187,7 @@ def _reason_category(reason: str) -> tuple[str, str, str, str]:
         "authority_trace:colour_authority_missing",
         "authority_trace:colour_authority_blocks_runtime",
         "authority_trace:colour_authority_pending",
-    }:
+    } or reason.startswith("authority_trace:colour_authority_unknown_"):
         return (
             "colour_authority_blocker",
             "colour_authority",
@@ -926,6 +941,13 @@ def _row_trace(
         reason_codes.append("authority_trace:colour_authority_blocks_runtime")
     elif colour.get("gate_status") == "pending":
         reason_codes.append("authority_trace:colour_authority_pending")
+    if colour:
+        colour_status = str(colour.get("status") or "unresolved")
+        colour_gate_status = str(colour.get("gate_status") or "pending")
+        if colour_status not in KNOWN_COLOUR_AUTHORITY_STATUSES:
+            reason_codes.append(f"authority_trace:colour_authority_unknown_status:{colour_status}")
+        if colour_gate_status not in KNOWN_COLOUR_GATE_STATUSES:
+            reason_codes.append(f"authority_trace:colour_authority_unknown_gate_status:{colour_gate_status}")
 
     s101_class = str(s101.get("crosswalk_class") or "")
     if not db_row["resolver_asset"]:

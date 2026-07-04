@@ -75,7 +75,7 @@ def _reason_codes(row: dict[str, Any]) -> list[str]:
         reasons.append("colour_authority_missing")
     if colour_authority.get("runtime_blocker"):
         reasons.append("colour_authority_blocked")
-    if colour_gate not in {"pass", "warn"} or colour_authority.get("runtime_blocker"):
+    if colour_gate != "pass" or colour_authority.get("runtime_blocker"):
         reasons.extend(colour_authority.get("reason_codes") or [])
     authority_trace = row["qa"].get("authority_trace") or {}
     authority_gate = authority_trace.get("gate_status")
@@ -178,7 +178,7 @@ def build_runtime_export(*, limit: int = 10000) -> dict[str, Any]:
             "promotion_rule": (
                 "Export only rows with DB runtime_eligible=true, no blocking/pending gates, "
                 "recipe_ready, helm_interpretation_ready, style_contract pass, "
-                "colour_authority pass or documented warn, "
+                "colour_authority pass, "
                 "authority_trace pass, "
                 "final human approval, and no missing evidence."
             ),
