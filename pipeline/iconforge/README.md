@@ -376,6 +376,31 @@ PNGs are reference-only oracle inputs for repair/QA. They are not canonical
 Helm-owned artwork and should not be committed or packaged into the owned SVG
 asset pack without a deliberate license decision.
 
+## OpenCPN baseline comparison manifest
+
+`forge.electronic_chart1_opencpn_baseline` is the CHART-8 machine-readable
+comparison report. It joins each Electronic Chart 1 fixture row with available
+OpenCPN day/dusk/night reference paths, Helm fixture render paths, visual diff
+paths, proof-bundle links, tolerance checks, and human approval state:
+
+```bash
+python3 -m forge.electronic_chart1_opencpn_baseline
+python3 -m forge.tests.test_electronic_chart1_opencpn_baseline
+```
+
+Outputs:
+
+- `catalog/electronic_chart1_opencpn_baseline.json`
+- `catalog/electronic_chart1_opencpn_baseline.md`
+
+The report separates rows into `pass`, `needs-review`, and `not-comparable`.
+The current run records 6 pass rows, 2,353 needs-review rows, and 698
+not-comparable rows. The tolerance checks explicitly label palette/colour
+delta, symbol-class silhouette, anchor/bbox, and blank-render failure modes.
+OpenCPN pixels are labelled `reference_comparison_only`; comparison status
+does not approve runtime export, and all rows remain tied back to the proof
+bundle and human approval state.
+
 ## Clean-room public proof bundle
 
 `forge.proof_bundle` is the FORGE-21 public proof/package scaffold. It consumes
