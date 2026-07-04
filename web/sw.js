@@ -71,6 +71,7 @@ const APP_SHELL_URLS = [
   './ownship.js',
   './alarms.js',
   './community.js',
+  './community-shell.js',
   './measure.js',
   './offline.js',
   './ais-risk.js',
