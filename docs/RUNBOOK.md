@@ -22,6 +22,9 @@ a private port keeps the habit safe.
 
 ## 0. TL;DR
 
+For the shortest public-alpha path, start with [QUICKSTART.md](QUICKSTART.md).
+The runbook below expands that path with data, helper services, and verification.
+
 ```bash
 # 1. Prerequisites, once.
 brew install wxwidgets@3.2 gpatch cmake libarchive libusb libsndfile mpg123 lame openssl@3 gdal node python3

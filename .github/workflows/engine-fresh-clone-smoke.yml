@@ -4,15 +4,19 @@ on:
   pull_request:
     paths:
       - ".github/workflows/engine-fresh-clone-smoke.yml"
+      - "docs/QUICKSTART.md"
       - "engine/**"
       - "scripts/install-sample-enc.sh"
+      - "scripts/launch1-quickstart-smoke.sh"
   push:
     branches:
       - main
     paths:
       - ".github/workflows/engine-fresh-clone-smoke.yml"
+      - "docs/QUICKSTART.md"
       - "engine/**"
       - "scripts/install-sample-enc.sh"
+      - "scripts/launch1-quickstart-smoke.sh"
   workflow_dispatch:
 
 jobs:
@@ -26,14 +30,14 @@ jobs:
         uses: actions/checkout@v4
 
       - name: Install build dependencies
-        run: brew install cmake gpatch lame libarchive libsndfile libusb mpg123 openssl@3 wxwidgets@3.2
+        run: brew install cmake gpatch lame libarchive libsndfile libusb mpg123 node openssl@3 wxwidgets@3.2
 
       - name: Configure wxWidgets
         run: |
           echo "WX_CONFIG=$(brew --prefix wxwidgets@3.2)/bin/wx-config-3.2" >> "$GITHUB_ENV"
           echo "OPENSSL_ROOT_DIR=$(brew --prefix openssl@3)" >> "$GITHUB_ENV"
 
-      - name: Run fresh-clone smoke
+      - name: Run quickstart fresh-clone smoke
         env:
-          HELM_FRESH_JOBS: "3"
-        run: ./engine/test-fresh-clone-install.sh
+          HELM_LAUNCH1_JOBS: "3"
+        run: ./scripts/launch1-quickstart-smoke.sh

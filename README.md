@@ -103,6 +103,7 @@ input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How humans can contribute: scope, PR rules, safety/data boundaries |
 | [docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md) | What works today, what is alpha, and where help is wanted |
+| [docs/QUICKSTART.md](docs/QUICKSTART.md) | **10-minute public-alpha setup** — clone, bootstrap, install a sample ENC, run, open the cockpit |
 | [docs/REPO-MAP.md](docs/REPO-MAP.md) | Quick orientation to the directories and contribution areas |
 | [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) | Contributor workflow, ports, tests, local data rules |
 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) | Headless C++ boat server + browser/mobile client boundary |
@@ -201,9 +202,10 @@ scripts/start-helm.sh --port 9001 --fill
 open http://127.0.0.1:9001/
 ```
 
-Use [docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input,
-and end-to-end verification. In the shared development environment, do not use
-`:8080`; use a private development port instead.
+Use [docs/QUICKSTART.md](docs/QUICKSTART.md) for the short first-run path, then
+[docs/RUNBOOK.md](docs/RUNBOOK.md) for NOAA ENC setup, NMEA/SignalK input, and
+end-to-end verification. In the shared development environment, do not use `:8080`;
+use a private development port instead.
 
 ## Bring Your Own Charts
 

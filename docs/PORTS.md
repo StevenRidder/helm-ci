@@ -20,7 +20,7 @@ machine, boat server, or demo process is safe to stop or replace.
 Run examples on a private port:
 
 ```bash
-scripts/start-helm.sh --port 8080 --weather --fill
+scripts/start-helm.sh --port 9001 --weather --fill
 ```
 
 For BYO MBTiles or PMTiles, point the helper at a local directory:
@@ -57,7 +57,7 @@ of a thin one-hop proxy:
 
 ```bash
 HELM_BASEMAP_UPSTREAM="http://192.168.1.137:8091" \
-  scripts/start-helm.sh --port 8080 --weather --basemap-proxy --fill
+  scripts/start-helm.sh --port 9001 --weather --basemap-proxy --fill
 ```
 
 Commercial, proprietary, or personally acquired chart packs must stay local and
