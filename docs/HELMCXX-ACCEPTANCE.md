@@ -230,6 +230,17 @@ HELMC++ benchmarking must record:
 The comparison baseline is the previous reference path or the last accepted runtime path. If C++ does
 not win a metric, the dossier must explain why the tradeoff is acceptable.
 
+`scripts/helmcxx-benchmark-soak.mjs` is the HELMC++-5 runner for this gate. It launches
+`helm-server`, `helm-packd`, `helm-basemap-cache`, and `helm-envd` on private ports, requires a
+real local ENC for visible chart-layer timing, probes environmental grid chunks for visible weather
+layer timing, records p50/p95/p99 endpoint latencies, concurrent-client behavior, RSS/CPU samples,
+cache/no-network behavior, crash/restart recovery, disk footprint, dependency footprint, and a
+configurable soak. By default it runs a short local soak so agents can produce PR evidence quickly;
+set `HELM_HELMCXX5_SOAK_SECONDS=43200` or higher for the 12-24 hour verification pass. Set
+`HELM_HELMCXX5_BASELINE=/path/to/benchmark.json` to compare against Python/reference or the last
+accepted runtime evidence; when no baseline is supplied the artifact records `baseline_missing`
+instead of pretending a win was proven.
+
 ## Packaging proof
 
 HELMC++ requires an installable runtime, not a developer-only build.

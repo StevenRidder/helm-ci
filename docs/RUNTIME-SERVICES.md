@@ -17,6 +17,7 @@ The checked-in machine-readable inventory is
 python3 scripts/check-runtime-inventory.py
 python3 scripts/helmcxx-parity-suite.py
 bash -n scripts/helmcxx-no-python-runtime.sh
+node --check scripts/helmcxx-benchmark-soak.mjs
 ```
 
 This is an architecture guardrail, not a rewrite order to stop all product work
@@ -182,6 +183,13 @@ uses private ports only, launches the C++ runtime services together, and runs
 Playwright against the real cockpit with local chart, pack, weather, health, and
 nav assertions.
 
+The HELMC++ performance/reliability gate is
+[`scripts/helmcxx-benchmark-soak.mjs`](../scripts/helmcxx-benchmark-soak.mjs).
+It launches the same required C++ runtime services on private ports and writes
+benchmark/soak evidence for cold start, first chart/environmental layer data,
+latency percentiles, concurrent clients, RSS/CPU, disk footprint, cache/no-network
+behavior, crash/restart recovery, and optional baseline comparison.
+
 ## OpenCPN Alignment
 
 The OpenCPN public repo already has useful C++ seams:
@@ -217,5 +225,7 @@ The runtime-service policy is accepted only after the HELMC++ gate passes:
   `helm-basemap-cache`, and `helm-envd` on private ports with retained
   screenshots/artifacts;
 - the cockpit passes a C++-only Playwright proof;
+- `scripts/helmcxx-benchmark-soak.mjs` records performance, reliability, no-network,
+  crash/restart, dependency-footprint, and soak evidence;
 - packaging works on fresh machines without Docker;
 - performance, reliability, soak, and maintainability evidence is recorded.
