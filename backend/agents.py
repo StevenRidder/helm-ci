@@ -25,7 +25,7 @@ import httpx
 
 from guardrails import attach_guardrails
 
-UA = {"User-Agent": "Helm/0.1 (marine nav prototype; contact: steve@taikunai.com)"}
+UA = {"User-Agent": os.environ.get("HELM_USER_AGENT", "Helm/0.1 (marine-nav prototype)")}
 
 
 # ----------------------------- TOOLS (real data) -----------------------------
