@@ -2416,8 +2416,12 @@ struct VulkanTileMeta {
 };
 
 static ChartRendererChoice chart_renderer_default() {
-  const std::string value = lower_ascii(env_or("HELM_CHART_RENDERER", "legacy"));
-  return value == "vulkan" ? ChartRendererChoice::Vulkan : ChartRendererChoice::Legacy;
+  // INTEGRATE-1 "kill legacy": the Vulkan render path is the DEFAULT so the new path is actually
+  // exercised. Legacy stays reachable as an EXPLICIT, non-silent fallback (?renderer=legacy, or
+  // ?fallback=legacy / HELM_VULKAN_FALLBACK=legacy after a Vulkan failure); set
+  // HELM_CHART_RENDERER=legacy to force the old path.
+  const std::string value = lower_ascii(env_or("HELM_CHART_RENDERER", "vulkan"));
+  return value == "legacy" ? ChartRendererChoice::Legacy : ChartRendererChoice::Vulkan;
 }
 
 static bool chart_renderer_query_override_enabled() {

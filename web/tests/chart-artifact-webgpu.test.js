@@ -63,8 +63,11 @@ ok('HelmChartArtifactAuto reports MapLibre fallback when WebGPU flag is off', ()
   assert.ok(String(win.__helmChartModeReason).indexOf('HELM_CHART_WEBGPU=false') >= 0);
 });
 
-ok('HelmChartArtifactAuto defaults to MapLibre when feature flag is not enabled', () => {
-  const win = loadModule({ navigator: { gpu: {} }, localStorage: { getItem: () => null } });
+ok('HelmChartArtifactAuto makes WebGPU the default primary path (no silent legacy default)', () => {
+  // INTEGRATE-1 "kill legacy": with no flag set, the renderer no longer sits behind an opt-in
+  // gate. Absent a real WebGPU device (navigator.gpu missing here) it falls back for a genuine
+  // CAPABILITY reason, not a "disabled" opt-in gate.
+  const win = loadModule({ navigator: {}, localStorage: { getItem: () => null } });
   const map = {
     getPitch: () => 0,
     getProjection: () => ({ type: 'mercator' }),
@@ -76,7 +79,8 @@ ok('HelmChartArtifactAuto defaults to MapLibre when feature flag is not enabled'
   };
   const layer = win.HelmChartArtifactAuto(map);
   assert.strictEqual(layer.mode(), 'maplibre');
-  assert.ok(String(win.__helmChartModeReason).indexOf('disabled') >= 0);
+  assert.ok(String(win.__helmChartModeReason).indexOf('WebGPU unavailable') >= 0);
+  assert.strictEqual(String(win.__helmChartModeReason).indexOf('disabled'), -1);
 });
 
 ok('HelmChartArtifactAuto reports MapLibre fallback when navigator.gpu is missing', () => {

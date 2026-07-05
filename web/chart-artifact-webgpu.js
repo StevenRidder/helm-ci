@@ -23,10 +23,12 @@
  * Fallback discipline (matches wx-particles-webgpu.js / WX-25):
  *     window.__helmChartMode = 'gpu' | 'maplibre'
  *     window.__helmChartModeReason = human-readable reason
- *     One console.info line on every path switch. When WebGPU is unavailable
- *     the enc-chart MapLibre raster layer stays visible. Opt out:
- *     Opt in: HELM_CHART_WEBGPU=true or localStorage helmChartWebgpu=1
- *     Opt out: HELM_CHART_WEBGPU=false or localStorage helmChartWebgpu=0
+ *     One console.info line on every path switch. WebGPU is the DEFAULT primary
+ *     renderer (INTEGRATE-1 "kill legacy"): the enc-chart MapLibre raster layer
+ *     stays visible only as an explicit, non-silent fallback (operator opt-out or
+ *     a genuine capability failure, each with a reported reason).
+ *     Default: WebGPU on. Opt out to legacy: HELM_CHART_WEBGPU=false or
+ *     localStorage helmChartWebgpu=0.
  * --------------------------------------------------------------------------
  */
 (function (global) {
@@ -650,8 +652,10 @@
       setMode('maplibre', reason);
     }
 
-    var flagOn = (global.HELM_CHART_WEBGPU === true) ||
-      (typeof localStorage !== 'undefined' && localStorage.getItem('helmChartWebgpu') === '1');
+    // INTEGRATE-1 "kill legacy": the WebGPU nautical renderer is the DEFAULT primary path so the
+    // new path is actually exercised. Legacy MapLibre/server-PNG is kept only as an EXPLICIT,
+    // visible fallback (never silent): an operator opt-out, or a genuine capability failure, each
+    // reported via __helmChartModeReason and the renderer status surface.
     var flagOff = (global.HELM_CHART_WEBGPU === false) ||
       (typeof localStorage !== 'undefined' && localStorage.getItem('helmChartWebgpu') === '0');
     var unprojectable = false;
@@ -662,8 +666,7 @@
       if (proj && /globe/i.test((proj.type || proj.name || '') + '')) { unprojectable = true; upReason = 'globe projection'; }
     } catch (e) {}
 
-    if (flagOff) { fallbackMapLibre('HELM_CHART_WEBGPU=false'); }
-    else if (!flagOn) { fallbackMapLibre('WebGPU nautical renderer disabled (enable in Settings or set helmChartWebgpu=1)'); }
+    if (flagOff) { fallbackMapLibre('HELM_CHART_WEBGPU=false (explicit legacy opt-out)'); }
     else if (typeof navigator === 'undefined' || !navigator.gpu) { fallbackMapLibre('WebGPU unavailable (no navigator.gpu)'); }
     else if (unprojectable) { fallbackMapLibre(upReason + ' — mercator-affine draw unsupported'); }
     else {

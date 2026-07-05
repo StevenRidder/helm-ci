@@ -14,8 +14,9 @@
     var env = global.HELM_CHART_WEBGPU;
     var ls = null;
     try { ls = global.localStorage.getItem('helmChartWebgpu'); } catch (e) {}
-    var enabled = env === true || ls === '1';
-    if (env === false) enabled = false;
+    // INTEGRATE-1 "kill legacy": WebGPU is the default primary renderer. It is enabled unless an
+    // operator explicitly opts out (env HELM_CHART_WEBGPU=false or localStorage helmChartWebgpu=0).
+    var enabled = !(env === false || ls === '0');
     return { env: env, localStorage: ls, enabled: enabled };
   }
 
@@ -133,7 +134,7 @@
     var flag = featureFlagState();
     host.innerHTML =
       '<label class="conn-chk"><input type="checkbox" id="chart-renderer-flag"' +
-      (flag.enabled ? ' checked' : '') + '> WebGPU nautical renderer (experimental)</label>' +
+      (flag.enabled ? ' checked' : '') + '> WebGPU nautical renderer (default \u00b7 uncheck for legacy ENC)</label>' +
       '<div class="cr-detail" style="margin-top:8px;font-size:11px;color:var(--cdim)"></div>';
     var cb = host.querySelector('#chart-renderer-flag');
     if (cb) {

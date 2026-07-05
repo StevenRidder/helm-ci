@@ -17,13 +17,16 @@ The renderer path is selected by feature flag, not by changing the client
 contract:
 
 ```text
-HELM_CHART_RENDERER=legacy   # current OpenCPN S-52 tile path
-HELM_CHART_RENDERER=vulkan   # shared offscreen renderer path
+HELM_CHART_RENDERER=vulkan   # shared offscreen renderer path (DEFAULT — INTEGRATE-1 "kill legacy")
+HELM_CHART_RENDERER=legacy   # explicit opt-out to the OpenCPN S-52 tile path
 ```
 
-During development, `?renderer=legacy|vulkan` may override the process default
-on private ports only. The live Helm screen must continue using the default
-configured process path.
+The Vulkan render path is the process default so the new path is actually
+exercised; legacy is reachable only as an explicit, non-silent fallback
+(`HELM_CHART_RENDERER=legacy`, or `?fallback=legacy` / `HELM_VULKAN_FALLBACK=legacy`
+after a Vulkan failure). During development, `?renderer=legacy|vulkan` may override
+the process default on private ports only. The live Helm screen must continue using
+the default configured process path.
 
 The Helm REPO-4 adapter uses these support knobs:
 

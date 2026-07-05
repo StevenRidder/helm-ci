@@ -23,20 +23,25 @@ function ok(name, fn) {
   catch (e) { console.error('  FAIL - ' + name + ': ' + e.message); process.exitCode = 1; }
 }
 
-ok('feature flag defaults off without explicit enablement', () => {
+ok('feature flag defaults ON — WebGPU is the primary renderer (kill legacy)', () => {
   const win = loadStatus({ localStorage: { getItem: () => null, setItem() {} } });
+  assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, true);
+});
+
+ok('feature flag honors explicit opt-out HELM_CHART_WEBGPU=false', () => {
+  const win = loadStatus({ HELM_CHART_WEBGPU: false, localStorage: { getItem: () => null, setItem() {} } });
   assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, false);
 });
 
-ok('feature flag honors HELM_CHART_WEBGPU=true', () => {
-  const win = loadStatus({ HELM_CHART_WEBGPU: true, localStorage: { getItem: () => null, setItem() {} } });
-  assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, true);
+ok('feature flag honors explicit localStorage opt-out helmChartWebgpu=0', () => {
+  const win = loadStatus({ localStorage: { getItem: () => '0', setItem() {} } });
+  assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, false);
 });
 
 ok('snapshot reports maplibre fallback reason and artifact epoch', () => {
   const win = loadStatus({
     __helmChartMode: 'maplibre',
-    __helmChartModeReason: 'WebGPU nautical renderer disabled (enable in Settings or set helmChartWebgpu=1)',
+    __helmChartModeReason: 'WebGPU unavailable (no navigator.gpu)',
     __helmChartArtifact: {
       getArtifact: () => ({
         schema_version: 'helm.render.artifact.v1',
@@ -54,7 +59,7 @@ ok('snapshot reports maplibre fallback reason and artifact epoch', () => {
   const snap = win.HelmChartRendererStatus.snapshot();
   assert.strictEqual(snap.schema, 'helm.chart_renderer_status.v1');
   assert.strictEqual(snap.active_renderer, 'maplibre');
-  assert.ok(snap.fallback_reason.indexOf('disabled') >= 0);
+  assert.ok(snap.fallback_reason.indexOf('WebGPU unavailable') >= 0);
   assert.strictEqual(snap.artifact.schema_version, 'helm.render.artifact.v1');
   assert.strictEqual(snap.artifact.chart_epoch, 'synthetic-chart-1@2026-06-28');
   assert.strictEqual(snap.artifact.invalidation_epoch, 'deadbeef');
