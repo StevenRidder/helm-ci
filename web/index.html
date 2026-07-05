@@ -1077,7 +1077,25 @@
   const wind = window.HelmWindAuto ? HelmWindAuto(map) : (window.HelmWind ? HelmWind(map) : null);
   window.__helmWind = wind;                    // shared with the grid scene (wx-grid-scene.js) — it owns particle data/visibility
   // WEBGPU-1: artifact packet layer when WebGPU is available; enc-chart MapLibre raster stays the named fallback.
-  const chartArtifact = window.HelmChartArtifactAuto ? HelmChartArtifactAuto(map, { packetUrl: 'data/render-artifact-chart-1.json' }) : null;
+  // RENDERMODEL-3: selectable artifact cell. Default is the synthetic chart-1 smoke fixture
+  // (keeps QA-1 / e2e goldens stable); '?cell=us5ga2bc' or localStorage.helmChartCell selects a
+  // REAL NOAA ENC cell (Cumberland Sound / St. Marys, GA) captured through the render pipeline.
+  var HELM_CHART_CELLS = {
+    'chart-1':  'data/render-artifact-chart-1.json',
+    'us5ga2bc': 'data/render-artifact-us5ga2bc.json'
+  };
+  function helmChartPacketUrl() {
+    var cell = 'chart-1';
+    try {
+      var q = new URLSearchParams(location.search).get('cell');
+      var ls = (typeof localStorage !== 'undefined') ? localStorage.getItem('helmChartCell') : null;
+      cell = String(q || ls || 'chart-1').toLowerCase();
+    } catch (e) {}
+    return HELM_CHART_CELLS[cell] || HELM_CHART_CELLS['chart-1'];
+  }
+  var helmChartUrl = helmChartPacketUrl();
+  var helmChartIsRealCell = helmChartUrl !== HELM_CHART_CELLS['chart-1'];
+  const chartArtifact = window.HelmChartArtifactAuto ? HelmChartArtifactAuto(map, { packetUrl: helmChartUrl }) : null;
   window.__helmChartArtifact = chartArtifact;
   if (window.HelmChartRendererStatus) {
     HelmChartRendererStatus.mountBadge();
@@ -1087,11 +1105,22 @@
   if (chartArtifact) {
     chartArtifact.load().then(function (ok) {
       if (ok) chartArtifact.setVisible(true);
+      // RENDERMODEL-3: when viewing a real ENC cell, fly to its geographic bbox so the GPU
+      // chart is actually on-screen (the default basemap camera is elsewhere).
+      if (ok && helmChartIsRealCell) {
+        try {
+          var art = chartArtifact.getArtifact && chartArtifact.getArtifact();
+          var vp = art && art.viewport;
+          if (vp && isFinite(vp.west) && isFinite(vp.east)) {
+            map.fitBounds([[vp.west, vp.south], [vp.east, vp.north]], { padding: 24, duration: 0 });
+          }
+        } catch (e) {}
+      }
       var sched2On = window.HELM_SCHED2 === true ||
         (typeof localStorage !== 'undefined' && localStorage.getItem('helmSched2') === '1');
       if (sched2On && window.HelmChartSchedulerBlend) {
         window.__helmChartSchedulerBlend = new HelmChartSchedulerBlend(map, chartArtifact, {
-          packetUrl: 'data/render-artifact-chart-1.json'
+          packetUrl: helmChartUrl
         });
         window.__helmChartSchedulerBlend.init().catch(function (err) {
           console.warn('[chart-scheduler-blend] init failed:', err && err.message ? err.message : err);

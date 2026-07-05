@@ -463,3 +463,67 @@ test.describe('INTEGRATE-1 — A/B parity on same harbour', () => {
     writeEvidence('ab-parity.json', { png: pngState.status, gpu: gpuState.status });
   });
 });
+
+test.describe('RENDERMODEL-3 — real US5GA2BC artifact at live harbour', () => {
+  test('?cell=us5ga2bc loads real ENC artifact inside catalog bbox', async ({ page, request }) => {
+    const enc = await fetchCatalogEncCenter(request);
+    test.skip(enc.cellId !== 'US5GA2BC', 'live server must load US5GA2BC for RENDERMODEL-3 harbour proof');
+
+    await page.addInitScript(() => {
+      try { localStorage.setItem('helmChartWebgpu', '1'); } catch (e) {}
+    });
+    await bootHarbour(page, {
+      query: 'cell=us5ga2bc&chartWebgpu=1',
+      hash: encHash(enc),
+      waitArtifact: true
+    });
+
+    const state = await collectRendererState(page);
+    expect(state.status.artifact.artifact_id).toContain('US5GA2BC');
+    expect(state.status.artifact.source_epoch).toContain('US5GA2BC');
+    expect(state.status.fallback_reason || '').not.toContain('outside current viewport');
+
+    await page.screenshot({ path: path.join(BROWSER_DIR, '09-rendermodel3-real-cell.png'), fullPage: true });
+    appendManifest('rendermodel3_real_cell', {
+      pass: true,
+      enc: enc.cellId,
+      artifact_id: state.status.artifact.artifact_id,
+      active_renderer: state.status.active_renderer,
+      fallback_reason: state.status.fallback_reason || ''
+    });
+  });
+
+  test('PNG vs WebGPU+real-cell side-by-side at harbour center', async ({ page, request }) => {
+    const enc = await fetchCatalogEncCenter(request);
+    test.skip(enc.cellId !== 'US5GA2BC', 'live server must load US5GA2BC for RENDERMODEL-3 harbour proof');
+    const hash = encHash(enc);
+
+    await page.addInitScript(() => {
+      try { localStorage.removeItem('helmChartWebgpu'); } catch (e) {}
+    });
+    await bootHarbour(page, { hash });
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(BROWSER_DIR, '10-rendermodel3-png-default.png'), fullPage: true });
+    const pngState = await collectRendererState(page);
+
+    await page.goto('about:blank');
+    await page.addInitScript(() => {
+      try { localStorage.setItem('helmChartWebgpu', '1'); } catch (e) {}
+    });
+    await bootHarbour(page, { query: 'cell=us5ga2bc&chartWebgpu=1', hash, waitArtifact: true });
+    await page.waitForTimeout(800);
+    await page.screenshot({ path: path.join(BROWSER_DIR, '11-rendermodel3-webgpu-real-cell.png'), fullPage: true });
+    const gpuState = await collectRendererState(page);
+
+    expect(pngState.status.active_renderer).toBe('maplibre');
+    expect(gpuState.status.artifact.artifact_id).toContain('US5GA2BC');
+    expect(gpuState.status.fallback_reason || '').not.toContain('outside current viewport');
+    appendManifest('rendermodel3_side_by_side', {
+      pass: true,
+      png_renderer: pngState.status.active_renderer,
+      gpu_renderer: gpuState.status.active_renderer,
+      gpu_fallback: gpuState.status.fallback_reason || '',
+      artifact_id: gpuState.status.artifact.artifact_id
+    });
+  });
+});
