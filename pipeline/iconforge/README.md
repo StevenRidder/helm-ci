@@ -401,6 +401,32 @@ OpenCPN pixels are labelled `reference_comparison_only`; comparison status
 does not approve runtime export, and all rows remain tied back to the proof
 bundle and human approval state.
 
+## Symbol readiness release gate
+
+`forge.electronic_chart1_symbol_readiness_gate` is the CHART-10 final
+readiness gate for declaring Forge symbols usable in chartplotter render paths.
+It aggregates the mapping audit, proof bundle, registry, C++ runtime DB
+contract, runtime promotion gate, Vulkan render fixture, OpenCPN baseline
+comparison, and adapter handoff evidence:
+
+```bash
+python3 -m forge.electronic_chart1_symbol_readiness_gate
+python3 -m forge.tests.test_electronic_chart1_symbol_readiness_gate
+```
+
+Outputs:
+
+- `catalog/electronic_chart1_symbol_readiness_gate.json`
+- `catalog/electronic_chart1_symbol_readiness_gate.md`
+
+The current report is intentionally `release_blocked`. It records 3,057 total
+release rows, 2,636 registry symbols, 1,225 semantically accepted rows, zero
+final-approved rows, zero runtime-export rows, 3,057 runtime-blocked rows, 698
+hard-pile rows, and 494 unsupported extension/profile rows. Seven prerequisite
+checks pass, but `proof_gallery_and_human_signoff` remains blocked; this gate
+must not be used to mark all symbols ready until the human approval, visual
+parity, hard-pile, and runtime export blockers are actually cleared.
+
 ## Clean-room public proof bundle
 
 `forge.proof_bundle` is the FORGE-21 public proof/package scaffold. It consumes
