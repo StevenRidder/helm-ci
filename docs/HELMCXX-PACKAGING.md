@@ -184,16 +184,35 @@ env file (with at least `HELM_WX_OPENMETEO_KEY`) and the installer schedules it:
 scripts/install-helmcxx-runtime.sh --user --wx-env-file ~/.helm/wx/.env
 ```
 
-This installs the bake tools (`scripts/wx_refresh_once.py`, `boat_anchor.py`,
-`wx_bake_openmeteo.py`) under `<prefix>/scripts`, writes the key to a `0600`
-`helm-wx.env`, and generates a periodic unit — a launchd `StartInterval` agent
-(macOS) or a systemd `.timer` (Linux), default every 6h (`--wx-interval SECS`).
-Each firing runs one `wx_refresh_once.py` cycle: resolve the anchor
-(`HELM_WX_ANCHOR` override > live GPS via `boat_anchor.py`, drift-gated > previous
-release), bake a fresh release, publish the stable `current/current.manifest.json`
-pointer, and restart the supervised `helm-envd`. The OpenMeteo key stays only in
-the `0600` env file — never in a service unit. Omit `--wx-env-file` and `helm-envd`
-is still supervised; it just serves whatever packs already exist.
+This bundles the **whole bake chain** self-contained under `<prefix>` —
+`wx_refresh_once.py`, `boat_anchor.py`, `wx_bake_openmeteo.py`, `wx_pack_factory.py`,
+`env_grid_pack.py`, and the `services/wx/fixtures/wx-openmeteo-source.json`
+source-spec (the tools resolve each other and their fixtures by `__file__`, so the
+mirrored layout just works) — writes the key to a `0600` `helm-wx.env`, and
+generates a periodic unit: a launchd `StartInterval` agent (macOS) or a systemd
+`.timer` (Linux), default every 6h (`--wx-interval SECS`). Each firing runs one
+`wx_refresh_once.py` cycle: resolve the anchor (`HELM_WX_ANCHOR` override > live
+GPS via `boat_anchor.py`, drift-gated > previous release), bake a fresh release,
+publish the stable `current/current.manifest.json` pointer, and restart the
+supervised `helm-envd`. The OpenMeteo key stays only in the `0600` env file —
+never in a service unit. Omit `--wx-env-file` and `helm-envd` is still supervised;
+it just serves whatever packs already exist.
+
+## Controlling the stack
+
+The installer also drops a single control script, `<prefix>/bin/helmctl`, so you
+manage the whole stack with one command instead of touching each unit:
+
+```sh
+helmctl start      # bring the stack up
+helmctl stop       # take it down
+helmctl restart    # bounce all daemons
+helmctl status     # per-daemon health + pids
+```
+
+It wraps the OS supervision (launchd / systemd) for the resolved layout, which it
+reads from `<prefix>/etc/helmctl.env`. Reboot-persistence still comes from the
+units themselves; `helmctl` is the human-facing control over them.
 
 ## Upgrading a running install
 

@@ -195,9 +195,11 @@ for gos in Darwin Linux; do
     --user --staging-root "$wst" --wx-env-file "$TMP/wx.env" \
     --build-cli "$TMP/build/cli" --web-root "$TMP/web" --runtime-source "$TMP/runtime" \
     >"$EVIDENCE_DIR/wx-$gos.log"
-  for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py; do
-    [ -f "$wst$HOME/.helm/opt/scripts/$tool" ] || die "$gos: weather tool not installed: $tool"
+  # the WHOLE bake chain must be bundled (self-contained in the prefix)
+  for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py wx_pack_factory.py env_grid_pack.py; do
+    [ -f "$wst$HOME/.helm/opt/scripts/$tool" ] || die "$gos: weather tool not bundled: $tool"
   done
+  [ -f "$wst$HOME/.helm/opt/services/wx/fixtures/wx-openmeteo-source.json" ] || die "$gos: source-spec fixture not bundled"
   [ -f "$wst$HOME/.helm/opt/etc/helm-wx.env" ] || die "$gos: helm-wx.env not installed"
   perms=$(ls -l "$wst$HOME/.helm/opt/etc/helm-wx.env" | cut -c1-10)
   [ "$perms" = "-rw-------" ] || die "$gos: helm-wx.env is not 0600 (got $perms)"
@@ -215,11 +217,18 @@ for gos in Darwin Linux; do
   fi
   # the secret must live ONLY in the 0600 env file, never in a generated unit
   grep -rq 'proofkey' "$d" && die "$gos: OpenMeteo key leaked into a generated unit"
+  # unified control: helmctl + its layout descriptor
+  [ -x "$wst$HOME/.helm/opt/bin/helmctl" ] || die "$gos: helmctl not installed/executable"
+  [ -f "$wst$HOME/.helm/opt/etc/helmctl.env" ] || die "$gos: helmctl.env not written"
+  grep -q "HELM_OS=$gos" "$wst$HOME/.helm/opt/etc/helmctl.env" || die "$gos: helmctl.env has wrong HELM_OS"
+  grep -q 'HELM_HAS_WX=1' "$wst$HOME/.helm/opt/etc/helmctl.env" || die "$gos: helmctl.env missing HELM_HAS_WX"
 done
 ok "weather refresh installs its tools + a scheduled (OS-timer) bake job, key kept 0600"
+ok "full bake pipeline bundled in prefix; helmctl control + layout descriptor installed"
 
-python3 -m py_compile scripts/wx_refresh_once.py scripts/boat_anchor.py
-ok "weather refresh python tools compile"
+python3 -m py_compile scripts/wx_refresh_once.py scripts/boat_anchor.py scripts/wx_pack_factory.py scripts/env_grid_pack.py
+sh -n scripts/helmctl
+ok "weather + helmctl scripts pass syntax"
 
 if [ "$RUN_SMOKE" != 1 ]; then
   printf 'HELMC++-6 packaging proof: PASS (static/staged)\n'

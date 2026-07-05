@@ -257,11 +257,19 @@ done
 log "installing cockpit web assets"
 copy_dir "$WEB_SOURCE" "$PREFIX_DST/web"
 
-log "installing weather bake/refresh tools"
-for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py; do
+log "installing weather bake/refresh pipeline"
+# The whole bake chain, self-contained in the prefix. The tools resolve their
+# fixtures + each other by __file__-relative paths, so mirroring the repo layout
+# (scripts/ + services/wx/fixtures/) makes a keyed install bake out of the box.
+for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py wx_pack_factory.py env_grid_pack.py; do
   [ -f "$ROOT/scripts/$tool" ] || die "weather tool missing from checkout: scripts/$tool"
   install_file "$ROOT/scripts/$tool" "$PREFIX_DST/scripts/$tool" 0755
 done
+install_file "$ROOT/services/wx/fixtures/wx-openmeteo-source.json" \
+  "$PREFIX_DST/services/wx/fixtures/wx-openmeteo-source.json" 0644
+
+log "installing helmctl control script"
+install_file "$ROOT/scripts/helmctl" "$PREFIX_DST/bin/helmctl" 0755
 
 log "installing durable runtime assets"
 copy_dir "$RUNTIME_SOURCE/s57data" "$STATE_DST/runtime/s57data"
@@ -308,6 +316,15 @@ if [ -n "$WX_ENV_FILE" ]; then
   [ -f "$WX_ENV_FILE" ] || die "--wx-env-file not found: $WX_ENV_FILE"
   install_file "$WX_ENV_FILE" "$CONFIG_DST/helm-wx.env" 0600
 fi
+
+# helmctl layout descriptor (prefix-local; helmctl self-locates it at ../etc).
+write_file "$PREFIX_DST/etc/helmctl.env" 0644 <<EOF
+# Written by scripts/install-helmcxx-runtime.sh — how helmctl drives this install.
+HELM_MODE=$MODE
+HELM_OS=$OS
+HELM_LABEL_PREFIX=com.6thelement
+HELM_HAS_WX=$([ -n "$WX_ENV_FILE" ] && echo 1 || echo "")
+EOF
 
 # ===========================================================================
 # Supervision: generate reboot-persistent units for the RESOLVED layout.
@@ -456,6 +473,20 @@ fi
 # ---- bootstrap/enable into the live service manager -----------------------
 launchd_domain() { [ "$MODE" = "system" ] && printf 'system' || printf 'gui/%s' "$(id -u)"; }
 
+# Replace a launchd service without racing bootout: bootout is async, and a
+# bootstrap that lands before the old label is gone fails with EIO(5). Wait for
+# the label to disappear, then bootstrap with a few retries.
+launchd_reload() {  # $1=domain $2=label $3=plist
+  launchctl bootout "$1/$2" 2>/dev/null || true
+  local i=0
+  while launchctl print "$1/$2" >/dev/null 2>&1; do i=$((i + 1)); [ "$i" -ge 40 ] && break; sleep 0.25; done
+  i=0
+  while ! launchctl bootstrap "$1" "$3" 2>/dev/null; do
+    i=$((i + 1)); [ "$i" -ge 6 ] && return 1; sleep 0.5
+  done
+  return 0
+}
+
 if [ "$BOOTSTRAP" = 1 ]; then
   if [ "$MODE" = "system" ] && [ "$(id -u)" != 0 ]; then
     die "system mode needs root to enable services; re-run with sudo (or use --user / --no-supervision / --staging-root)"
@@ -464,14 +495,14 @@ if [ "$BOOTSTRAP" = 1 ]; then
   if [ "$OS" = "Darwin" ]; then
     dom="$(launchd_domain)"
     for spec in "${DAEMONS[@]}"; do
-      name="${spec%%|*}"; plist="$SUPERVISION_DIR/$LABEL_PREFIX.$name.plist"
-      launchctl bootout "$dom/$LABEL_PREFIX.$name" 2>/dev/null || true
-      launchctl bootstrap "$dom" "$plist" || die "launchctl bootstrap failed for $name"
+      name="${spec%%|*}"
+      launchd_reload "$dom" "$LABEL_PREFIX.$name" "$SUPERVISION_DIR/$LABEL_PREFIX.$name.plist" \
+        || die "launchctl bootstrap failed for $name"
       launchctl kickstart -k "$dom/$LABEL_PREFIX.$name" 2>/dev/null || true
     done
     if [ -n "$WX_ENV_FILE" ]; then
-      launchctl bootout "$dom/$WX_LABEL" 2>/dev/null || true
-      launchctl bootstrap "$dom" "$SUPERVISION_DIR/$WX_LABEL.plist" || die "launchctl bootstrap failed for weather refresh"
+      launchd_reload "$dom" "$WX_LABEL" "$SUPERVISION_DIR/$WX_LABEL.plist" \
+        || die "launchctl bootstrap failed for weather refresh"
     fi
   else
     if [ "$MODE" = "system" ]; then
@@ -495,6 +526,7 @@ printf '  logs:        %s%s\n' "$LOG_DIR" "${STAGING_ROOT:+ (staged at $LOG_DST)
 printf '  local packs: %s%s\n' "$PACKS_DIR" "${STAGING_ROOT:+ (staged at $PACKS_DST)}"
 printf '  wx packs:    %s%s\n' "$WX_PACKS_DIR" "${STAGING_ROOT:+ (staged at $WX_PACKS_DST)}"
 printf '  supervision: %s%s\n' "$SUPERVISION_DIR" "${STAGING_ROOT:+ (staged at $SUPERVISION_DST)}"
+printf '  control:     %s/bin/helmctl {start|stop|restart|status}\n' "$PREFIX"
 if [ -n "$WX_ENV_FILE" ]; then
   printf '  weather:     scheduled bake+publish every %ss (wx_refresh_once.py)\n' "$WX_REFRESH_INTERVAL"
 else
