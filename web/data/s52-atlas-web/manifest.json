@@ -1,0 +1,3193 @@
+{
+  "schema_version": "helm.s52.atlas.web.v2",
+  "generator": "scripts/build-web-s52-atlas.py",
+  "palettes": [
+    "day",
+    "dusk",
+    "night"
+  ],
+  "atlases": [
+    {
+      "atlas_id": "atlas.symbol.day",
+      "kind": "symbol",
+      "palette": "day",
+      "image": "data/s52-atlas-web/s52_symbols_day.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    },
+    {
+      "atlas_id": "atlas.pattern.day",
+      "kind": "pattern",
+      "palette": "day",
+      "image": "data/s52-atlas-web/s52_patterns_day.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 8
+    },
+    {
+      "atlas_id": "atlas.line.day",
+      "kind": "line",
+      "palette": "day",
+      "image": "data/s52-atlas-web/s52_lines_day.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 6
+    },
+    {
+      "atlas_id": "atlas.glyph.day",
+      "kind": "glyph",
+      "palette": "day",
+      "image": "data/s52-atlas-web/s52_glyphs_day.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    },
+    {
+      "atlas_id": "atlas.symbol.dusk",
+      "kind": "symbol",
+      "palette": "dusk",
+      "image": "data/s52-atlas-web/s52_symbols_dusk.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    },
+    {
+      "atlas_id": "atlas.pattern.dusk",
+      "kind": "pattern",
+      "palette": "dusk",
+      "image": "data/s52-atlas-web/s52_patterns_dusk.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 8
+    },
+    {
+      "atlas_id": "atlas.line.dusk",
+      "kind": "line",
+      "palette": "dusk",
+      "image": "data/s52-atlas-web/s52_lines_dusk.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 6
+    },
+    {
+      "atlas_id": "atlas.glyph.dusk",
+      "kind": "glyph",
+      "palette": "dusk",
+      "image": "data/s52-atlas-web/s52_glyphs_dusk.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    },
+    {
+      "atlas_id": "atlas.symbol.night",
+      "kind": "symbol",
+      "palette": "night",
+      "image": "data/s52-atlas-web/s52_symbols_night.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    },
+    {
+      "atlas_id": "atlas.pattern.night",
+      "kind": "pattern",
+      "palette": "night",
+      "image": "data/s52-atlas-web/s52_patterns_night.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 8
+    },
+    {
+      "atlas_id": "atlas.line.night",
+      "kind": "line",
+      "palette": "night",
+      "image": "data/s52-atlas-web/s52_lines_night.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 6
+    },
+    {
+      "atlas_id": "atlas.glyph.night",
+      "kind": "glyph",
+      "palette": "night",
+      "image": "data/s52-atlas-web/s52_glyphs_night.png",
+      "format": "png-rgba",
+      "width": 256,
+      "height": 12
+    }
+  ],
+  "entries": [
+    {
+      "name": "BOYSPP",
+      "kind": "symbol",
+      "palette": "day",
+      "atlas_id": "atlas.symbol.day",
+      "pixel_rect": [
+        0,
+        0,
+        12,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.046875,
+        1.0
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.sounding",
+      "kind": "symbol",
+      "palette": "day",
+      "atlas_id": "atlas.symbol.day",
+      "pixel_rect": [
+        13,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.05078125,
+        0.0,
+        0.08203125,
+        0.6666666666666666
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.hazard",
+      "kind": "symbol",
+      "palette": "day",
+      "atlas_id": "atlas.symbol.day",
+      "pixel_rect": [
+        22,
+        0,
+        10,
+        10
+      ],
+      "uv": [
+        0.0859375,
+        0.0,
+        0.125,
+        0.8333333333333334
+      ],
+      "anchor": [
+        5,
+        5
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPARE01",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.land",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-shallow",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-mid",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-deep",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.dredged",
+      "kind": "pattern",
+      "palette": "day",
+      "atlas_id": "atlas.pattern.day",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPCNT02",
+      "kind": "line",
+      "palette": "day",
+      "atlas_id": "atlas.line.day",
+      "pixel_rect": [
+        0,
+        0,
+        16,
+        4
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.0625,
+        0.6666666666666666
+      ],
+      "anchor": [
+        0,
+        2
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [
+        3,
+        2
+      ],
+      "char": null
+    },
+    {
+      "name": "line.coastline",
+      "kind": "line",
+      "palette": "day",
+      "atlas_id": "atlas.line.day",
+      "pixel_rect": [
+        17,
+        0,
+        16,
+        6
+      ],
+      "uv": [
+        0.06640625,
+        0.0,
+        0.12890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        3
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "glyph.0",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "0"
+    },
+    {
+      "name": "glyph.1",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "1"
+    },
+    {
+      "name": "glyph.2",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "2"
+    },
+    {
+      "name": "glyph.3",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "3"
+    },
+    {
+      "name": "glyph.4",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "4"
+    },
+    {
+      "name": "glyph.5",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "5"
+    },
+    {
+      "name": "glyph.6",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        54,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.2109375,
+        0.0,
+        0.2421875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "6"
+    },
+    {
+      "name": "glyph.7",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        63,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.24609375,
+        0.0,
+        0.27734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "7"
+    },
+    {
+      "name": "glyph.8",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        72,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.28125,
+        0.0,
+        0.3125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "8"
+    },
+    {
+      "name": "glyph.9",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        81,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.31640625,
+        0.0,
+        0.34765625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "9"
+    },
+    {
+      "name": "glyph..",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        90,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.3515625,
+        0.0,
+        0.3828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "."
+    },
+    {
+      "name": "glyph.-",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        99,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.38671875,
+        0.0,
+        0.41796875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "-"
+    },
+    {
+      "name": "glyph.+",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        108,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.421875,
+        0.0,
+        0.453125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "+"
+    },
+    {
+      "name": "glyph.S",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        117,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.45703125,
+        0.0,
+        0.48828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "S"
+    },
+    {
+      "name": "glyph.Y",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        126,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.4921875,
+        0.0,
+        0.5234375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "Y"
+    },
+    {
+      "name": "glyph.N",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        135,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.52734375,
+        0.0,
+        0.55859375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "N"
+    },
+    {
+      "name": "glyph.T",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        144,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.5625,
+        0.0,
+        0.59375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "T"
+    },
+    {
+      "name": "glyph.H",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        153,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.59765625,
+        0.0,
+        0.62890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "H"
+    },
+    {
+      "name": "glyph.E",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        162,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.6328125,
+        0.0,
+        0.6640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "E"
+    },
+    {
+      "name": "glyph.I",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        171,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.66796875,
+        0.0,
+        0.69921875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "I"
+    },
+    {
+      "name": "glyph.U",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        180,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.703125,
+        0.0,
+        0.734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "U"
+    },
+    {
+      "name": "glyph.C",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        189,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.73828125,
+        0.0,
+        0.76953125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "C"
+    },
+    {
+      "name": "glyph.B",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        198,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.7734375,
+        0.0,
+        0.8046875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "B"
+    },
+    {
+      "name": "glyph.O",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        207,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.80859375,
+        0.0,
+        0.83984375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "O"
+    },
+    {
+      "name": "glyph.V",
+      "kind": "glyph",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "pixel_rect": [
+        216,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.84375,
+        0.0,
+        0.875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "V"
+    },
+    {
+      "name": "BOYSPP",
+      "kind": "symbol",
+      "palette": "dusk",
+      "atlas_id": "atlas.symbol.dusk",
+      "pixel_rect": [
+        0,
+        0,
+        12,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.046875,
+        1.0
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.sounding",
+      "kind": "symbol",
+      "palette": "dusk",
+      "atlas_id": "atlas.symbol.dusk",
+      "pixel_rect": [
+        13,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.05078125,
+        0.0,
+        0.08203125,
+        0.6666666666666666
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.hazard",
+      "kind": "symbol",
+      "palette": "dusk",
+      "atlas_id": "atlas.symbol.dusk",
+      "pixel_rect": [
+        22,
+        0,
+        10,
+        10
+      ],
+      "uv": [
+        0.0859375,
+        0.0,
+        0.125,
+        0.8333333333333334
+      ],
+      "anchor": [
+        5,
+        5
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPARE01",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.land",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-shallow",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-mid",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-deep",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.dredged",
+      "kind": "pattern",
+      "palette": "dusk",
+      "atlas_id": "atlas.pattern.dusk",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPCNT02",
+      "kind": "line",
+      "palette": "dusk",
+      "atlas_id": "atlas.line.dusk",
+      "pixel_rect": [
+        0,
+        0,
+        16,
+        4
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.0625,
+        0.6666666666666666
+      ],
+      "anchor": [
+        0,
+        2
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [
+        3,
+        2
+      ],
+      "char": null
+    },
+    {
+      "name": "line.coastline",
+      "kind": "line",
+      "palette": "dusk",
+      "atlas_id": "atlas.line.dusk",
+      "pixel_rect": [
+        17,
+        0,
+        16,
+        6
+      ],
+      "uv": [
+        0.06640625,
+        0.0,
+        0.12890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        3
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "glyph.0",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "0"
+    },
+    {
+      "name": "glyph.1",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "1"
+    },
+    {
+      "name": "glyph.2",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "2"
+    },
+    {
+      "name": "glyph.3",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "3"
+    },
+    {
+      "name": "glyph.4",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "4"
+    },
+    {
+      "name": "glyph.5",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "5"
+    },
+    {
+      "name": "glyph.6",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        54,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.2109375,
+        0.0,
+        0.2421875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "6"
+    },
+    {
+      "name": "glyph.7",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        63,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.24609375,
+        0.0,
+        0.27734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "7"
+    },
+    {
+      "name": "glyph.8",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        72,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.28125,
+        0.0,
+        0.3125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "8"
+    },
+    {
+      "name": "glyph.9",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        81,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.31640625,
+        0.0,
+        0.34765625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "9"
+    },
+    {
+      "name": "glyph..",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        90,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.3515625,
+        0.0,
+        0.3828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "."
+    },
+    {
+      "name": "glyph.-",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        99,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.38671875,
+        0.0,
+        0.41796875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "-"
+    },
+    {
+      "name": "glyph.+",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        108,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.421875,
+        0.0,
+        0.453125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "+"
+    },
+    {
+      "name": "glyph.S",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        117,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.45703125,
+        0.0,
+        0.48828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "S"
+    },
+    {
+      "name": "glyph.Y",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        126,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.4921875,
+        0.0,
+        0.5234375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "Y"
+    },
+    {
+      "name": "glyph.N",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        135,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.52734375,
+        0.0,
+        0.55859375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "N"
+    },
+    {
+      "name": "glyph.T",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        144,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.5625,
+        0.0,
+        0.59375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "T"
+    },
+    {
+      "name": "glyph.H",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        153,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.59765625,
+        0.0,
+        0.62890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "H"
+    },
+    {
+      "name": "glyph.E",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        162,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.6328125,
+        0.0,
+        0.6640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "E"
+    },
+    {
+      "name": "glyph.I",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        171,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.66796875,
+        0.0,
+        0.69921875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "I"
+    },
+    {
+      "name": "glyph.U",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        180,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.703125,
+        0.0,
+        0.734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "U"
+    },
+    {
+      "name": "glyph.C",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        189,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.73828125,
+        0.0,
+        0.76953125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "C"
+    },
+    {
+      "name": "glyph.B",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        198,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.7734375,
+        0.0,
+        0.8046875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "B"
+    },
+    {
+      "name": "glyph.O",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        207,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.80859375,
+        0.0,
+        0.83984375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "O"
+    },
+    {
+      "name": "glyph.V",
+      "kind": "glyph",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "pixel_rect": [
+        216,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.84375,
+        0.0,
+        0.875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "V"
+    },
+    {
+      "name": "BOYSPP",
+      "kind": "symbol",
+      "palette": "night",
+      "atlas_id": "atlas.symbol.night",
+      "pixel_rect": [
+        0,
+        0,
+        12,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.046875,
+        1.0
+      ],
+      "anchor": [
+        6,
+        6
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.sounding",
+      "kind": "symbol",
+      "palette": "night",
+      "atlas_id": "atlas.symbol.night",
+      "pixel_rect": [
+        13,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.05078125,
+        0.0,
+        0.08203125,
+        0.6666666666666666
+      ],
+      "anchor": [
+        4,
+        4
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "sym.hazard",
+      "kind": "symbol",
+      "palette": "night",
+      "atlas_id": "atlas.symbol.night",
+      "pixel_rect": [
+        22,
+        0,
+        10,
+        10
+      ],
+      "uv": [
+        0.0859375,
+        0.0,
+        0.125,
+        0.8333333333333334
+      ],
+      "anchor": [
+        5,
+        5
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPARE01",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.land",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-shallow",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-mid",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.depare-deep",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "pattern.dredged",
+      "kind": "pattern",
+      "palette": "night",
+      "atlas_id": "atlas.pattern.night",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        8
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        0
+      ],
+      "repeat": [
+        8,
+        8
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "DEPCNT02",
+      "kind": "line",
+      "palette": "night",
+      "atlas_id": "atlas.line.night",
+      "pixel_rect": [
+        0,
+        0,
+        16,
+        4
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.0625,
+        0.6666666666666666
+      ],
+      "anchor": [
+        0,
+        2
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [
+        3,
+        2
+      ],
+      "char": null
+    },
+    {
+      "name": "line.coastline",
+      "kind": "line",
+      "palette": "night",
+      "atlas_id": "atlas.line.night",
+      "pixel_rect": [
+        17,
+        0,
+        16,
+        6
+      ],
+      "uv": [
+        0.06640625,
+        0.0,
+        0.12890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        3
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": null
+    },
+    {
+      "name": "glyph.0",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        0,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0,
+        0.0,
+        0.03125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "0"
+    },
+    {
+      "name": "glyph.1",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        9,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.03515625,
+        0.0,
+        0.06640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "1"
+    },
+    {
+      "name": "glyph.2",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        18,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.0703125,
+        0.0,
+        0.1015625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "2"
+    },
+    {
+      "name": "glyph.3",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        27,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.10546875,
+        0.0,
+        0.13671875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "3"
+    },
+    {
+      "name": "glyph.4",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        36,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.140625,
+        0.0,
+        0.171875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "4"
+    },
+    {
+      "name": "glyph.5",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        45,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.17578125,
+        0.0,
+        0.20703125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "5"
+    },
+    {
+      "name": "glyph.6",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        54,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.2109375,
+        0.0,
+        0.2421875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "6"
+    },
+    {
+      "name": "glyph.7",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        63,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.24609375,
+        0.0,
+        0.27734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "7"
+    },
+    {
+      "name": "glyph.8",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        72,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.28125,
+        0.0,
+        0.3125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "8"
+    },
+    {
+      "name": "glyph.9",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        81,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.31640625,
+        0.0,
+        0.34765625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "9"
+    },
+    {
+      "name": "glyph..",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        90,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.3515625,
+        0.0,
+        0.3828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "."
+    },
+    {
+      "name": "glyph.-",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        99,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.38671875,
+        0.0,
+        0.41796875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "-"
+    },
+    {
+      "name": "glyph.+",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        108,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.421875,
+        0.0,
+        0.453125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "+"
+    },
+    {
+      "name": "glyph.S",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        117,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.45703125,
+        0.0,
+        0.48828125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "S"
+    },
+    {
+      "name": "glyph.Y",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        126,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.4921875,
+        0.0,
+        0.5234375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "Y"
+    },
+    {
+      "name": "glyph.N",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        135,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.52734375,
+        0.0,
+        0.55859375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "N"
+    },
+    {
+      "name": "glyph.T",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        144,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.5625,
+        0.0,
+        0.59375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "T"
+    },
+    {
+      "name": "glyph.H",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        153,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.59765625,
+        0.0,
+        0.62890625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "H"
+    },
+    {
+      "name": "glyph.E",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        162,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.6328125,
+        0.0,
+        0.6640625,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "E"
+    },
+    {
+      "name": "glyph.I",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        171,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.66796875,
+        0.0,
+        0.69921875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "I"
+    },
+    {
+      "name": "glyph.U",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        180,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.703125,
+        0.0,
+        0.734375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "U"
+    },
+    {
+      "name": "glyph.C",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        189,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.73828125,
+        0.0,
+        0.76953125,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "C"
+    },
+    {
+      "name": "glyph.B",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        198,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.7734375,
+        0.0,
+        0.8046875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "B"
+    },
+    {
+      "name": "glyph.O",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        207,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.80859375,
+        0.0,
+        0.83984375,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "O"
+    },
+    {
+      "name": "glyph.V",
+      "kind": "glyph",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "pixel_rect": [
+        216,
+        0,
+        8,
+        12
+      ],
+      "uv": [
+        0.84375,
+        0.0,
+        0.875,
+        1.0
+      ],
+      "anchor": [
+        0,
+        10
+      ],
+      "repeat": [
+        0,
+        0
+      ],
+      "dash": [],
+      "char": "V"
+    },
+    {
+      "name": "font.chart-label",
+      "kind": "font",
+      "palette": "day",
+      "atlas_id": "atlas.glyph.day",
+      "glyph_prefix": "glyph.",
+      "anchor": [
+        0,
+        10
+      ]
+    },
+    {
+      "name": "font.chart-label",
+      "kind": "font",
+      "palette": "dusk",
+      "atlas_id": "atlas.glyph.dusk",
+      "glyph_prefix": "glyph.",
+      "anchor": [
+        0,
+        10
+      ]
+    },
+    {
+      "name": "font.chart-label",
+      "kind": "font",
+      "palette": "night",
+      "atlas_id": "atlas.glyph.night",
+      "glyph_prefix": "glyph.",
+      "anchor": [
+        0,
+        10
+      ]
+    }
+  ],
+  "ref_aliases": {
+    "sym.boyspp": "BOYSPP",
+    "line.depth-contour": "DEPCNT02",
+    "area.depare": "DEPARE01",
+    "pattern.depare": "DEPARE01"
+  }
+}

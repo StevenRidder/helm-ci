@@ -13,8 +13,8 @@
   "checksums": {
     "source_model_json_sha256": "b1e2ba0ed19a0a309d3987129bfe7fac482ca3039fbad277e2765234a6b69d42",
     "geometry_sha256": "8c05124617a343aade5c875265a3a3046e23d37f1d607bd1f0ee64b846c66343",
-    "tables_sha256": "74b44660cd41419a0ccc5968988aaeaa247639b51fdd6e6c5c3a5151368bddfb",
-    "packet_sha256": "15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c"
+    "tables_sha256": "c047bda8ba04fd10b6282110d07ec1f53dc04490184e324249e15bd374b37b65",
+    "packet_sha256": "ae4277c1c989871ec9d49878fe374ccaa0b16377e3ebf6f3e93a5df7c1e6f0c4"
   },
   "vertex_format": "helm.vertex.target_xy_material_pick.v1",
   "material_table": [
@@ -52,6 +52,10 @@
     {"primitive_id": "cmd.text.boyspp-label", "inspection_handles": ["fixture:chart-1", "scene:chart-1-day-standard-z12", "command:cmd.text.boyspp-label", "provenance:prov.boyspp-1"], "first_index": 25, "index_count": 1, "pick_id": 5},
     {"primitive_id": "cmd.sounding.soundg-1", "inspection_handles": ["fixture:chart-1", "scene:chart-1-day-standard-z12", "command:cmd.sounding.soundg-1", "provenance:prov.soundg-1"], "first_index": 26, "index_count": 1, "pick_id": 6}
   ],
+  "text_instances": [
+    {"text": "Synthetic buoy", "x": 5, "y": 2, "material_index": 4, "pick_id": 5},
+    {"text": "7.4", "x": 3, "y": 6, "material_index": 5, "pick_id": 6}
+  ],
   "diagnostics": [
     {"severity": "info", "code": "fixture.synthetic", "message": "Synthetic command-stream fixture; not a nautical chart.", "provenance_refs": [], "suggested_action": "Use for schema and harness regression only."}
   ],
@@ -80,8 +84,8 @@
       "render_artifact": "helm.render.artifact.v1",
       "vertex_format": "helm.vertex.target_xy_material_pick.v1"
     },
-    "artifact_packet_sha256": "15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c",
-    "cache_key": "backend_target=webgpu\nchart_epoch=synthetic-chart-1@2026-06-28\nsource_chain=SYNTH-CHART-1@1+0\ndisplay_palette=day\ndisplay_category=standard\nsymbol_style=paper_chart\nboundary_style=plain\nsafety_depth_m=10.000000\nsafety_contour_m=10.000000\nshow_text=1\nshow_soundings=1\nuse_scamin=1\nprojection=web_mercator_tile\ntile_z=12\ntile_x=1120\ntile_y=1756\npixel_width=8\npixel_height=8\nrender_model_schema=helm.render.model.v1\nrender_artifact_schema=helm.render.artifact.v1\nvertex_format=helm.vertex.target_xy_material_pick.v1\nartifact_packet_sha256=15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c\n",
-    "cache_key_sha256": "b1784eb2c576ec7982e7e46bba64f95846da5a8b4a282be89e5434e718a91182"
+    "artifact_packet_sha256": "ae4277c1c989871ec9d49878fe374ccaa0b16377e3ebf6f3e93a5df7c1e6f0c4",
+    "cache_key": "backend_target=webgpu\nchart_epoch=synthetic-chart-1@2026-06-28\nsource_chain=SYNTH-CHART-1@1+0\ndisplay_palette=day\ndisplay_category=standard\nsymbol_style=paper_chart\nboundary_style=plain\nsafety_depth_m=10.000000\nsafety_contour_m=10.000000\nshow_text=1\nshow_soundings=1\nuse_scamin=1\nprojection=web_mercator_tile\ntile_z=12\ntile_x=1120\ntile_y=1756\npixel_width=8\npixel_height=8\nrender_model_schema=helm.render.model.v1\nrender_artifact_schema=helm.render.artifact.v1\nvertex_format=helm.vertex.target_xy_material_pick.v1\nartifact_packet_sha256=ae4277c1c989871ec9d49878fe374ccaa0b16377e3ebf6f3e93a5df7c1e6f0c4\n",
+    "cache_key_sha256": "941bfe32f35973481a2270c5944a49d32a1612fce4cbd7cb10ea0bc7b00c4f2f"
   }
 }

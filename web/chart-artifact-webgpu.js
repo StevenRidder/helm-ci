@@ -97,6 +97,7 @@
         return (+a.order_bucket || 0) - (+b.order_bucket || 0);
       }),
       pick_records: json.pick_records || [],
+      text_instances: json.text_instances || [],
       source_model_id: json.source_model_id || '',
       // ARTIFACT-2 cache block (display_state palette, show_text/show_soundings, …).
       // Consumed by the atlas resolver for palette/display-state variants (WEBGPU-2).
@@ -216,6 +217,49 @@
     ]);
   }
 
+  function atlasGpu() { return global.HelmChartArtifactAtlasGpu || null; }
+
+  var TEX_VERTEX_STRIDE = 6; // x, y, u, v, material_index, pick_id
+
+  var WGSL_TEX = [
+    'struct View {',
+    '  west: f32, north: f32, dLonPerPx: f32, dLatPerPx: f32,',
+    '  a: f32, b: f32, tx: f32, c: f32, d: f32, ty: f32, invW: f32, invH: f32,',
+    '};',
+    '@group(0) @binding(0) var<uniform> view: View;',
+    '@group(0) @binding(1) var<uniform> materials: array<vec4<f32>, 32>;',
+    '@group(0) @binding(2) var<uniform> blend: vec4<f32>;',
+    '@group(0) @binding(3) var atlasTex: texture_2d<f32>;',
+    '@group(0) @binding(4) var atlasSmp: sampler;',
+    'struct VSOut { @builtin(position) pos: vec4<f32>, @location(0) uv: vec2<f32>, @location(1) tint: vec4<f32> };',
+    'fn tileToNdc(px: f32, py: f32) -> vec2<f32> {',
+    '  let lon = view.west + px * view.dLonPerPx;',
+    '  let lat = view.north - py * view.dLatPerPx;',
+    '  let mx = lon / 360.0 + 0.5;',
+    '  let s = clamp(sin(lat * 3.14159265 / 180.0), -0.9999, 0.9999);',
+    '  let my = 0.5 - log((1.0 + s) / (1.0 - s)) / (4.0 * 3.14159265);',
+    '  let sx = view.a * mx + view.b * my + view.tx;',
+    '  let sy = view.c * mx + view.d * my + view.ty;',
+    '  return vec2<f32>(sx * view.invW * 2.0 - 1.0, 1.0 - sy * view.invH * 2.0);',
+    '}',
+    'fn matColor(idx: f32) -> vec4<f32> {',
+    '  let i = min(u32(max(idx, 0.0)), 31u);',
+    '  return materials[i];',
+    '}',
+    '@vertex fn vsTex(@location(0) tile_xy: vec2<f32>, @location(1) uv: vec2<f32>, @location(2) mat_pick: vec2<f32>) -> VSOut {',
+    '  var o: VSOut;',
+    '  let ndc = tileToNdc(tile_xy.x, tile_xy.y);',
+    '  o.pos = vec4<f32>(ndc, 0.0, 1.0);',
+    '  o.uv = uv;',
+    '  o.tint = matColor(mat_pick.x);',
+    '  return o;',
+    '}',
+    '@fragment fn fsTex(in: VSOut) -> @location(0) vec4<f32> {',
+    '  let c = textureSample(atlasTex, atlasSmp, in.uv);',
+    '  return c * in.tint * blend;',
+    '}'
+  ].join('\n');
+
   var WGSL = [
     'struct View {',
     '  west: f32, north: f32, dLonPerPx: f32, dLatPerPx: f32,',
@@ -267,6 +311,11 @@
     this._compositeEntries = [];
     this._compositeOpts = {};
     this._artifactGpu = Object.create(null);
+    this._gpuManifest = (gpu && gpu.gpuManifest) || (this._resources && this._resources.gpuManifest) || null;
+    this._atlasTexCache = null;
+    this._atlasTexLoading = null;
+    this._texBuf = null;
+    this._texBufCapacity = 0;
     this._setMode = (gpu && gpu.setMode) || function () {};
     this._buildCanvas();
     this._buildPipelines();
@@ -328,6 +377,24 @@
     this.triPipe = mk('triangle-list');
     this.linePipe = mk('line-list');
     this.pointPipe = mk('point-list');
+    var texMod = dev.createShaderModule({ code: WGSL_TEX });
+    this.texTriPipe = dev.createRenderPipeline({
+      layout: 'auto',
+      vertex: {
+        module: texMod,
+        entryPoint: 'vsTex',
+        buffers: [{
+          arrayStride: TEX_VERTEX_STRIDE * 4,
+          attributes: [
+            { shaderLocation: 0, offset: 0, format: 'float32x2' },
+            { shaderLocation: 1, offset: 8, format: 'float32x2' },
+            { shaderLocation: 2, offset: 16, format: 'float32x2' }
+          ]
+        }]
+      },
+      fragment: { module: texMod, entryPoint: 'fsTex', targets: [{ format: this.gpu.canvasFormat, blend: blend }] },
+      primitive: { topology: 'triangle-list' }
+    });
     this.viewBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     // WEBGPU-2: 32 materials * vec4 (16B) = 512B color table, indexed by material_index.
     this.materialsBuf = dev.createBuffer({ size: 512, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
@@ -345,6 +412,87 @@
     this.viewBindTri = this._makeViewBind(this.triPipe);
     this.viewBindLine = this._makeViewBind(this.linePipe);
     this.viewBindPoint = this._makeViewBind(this.pointPipe);
+    this._texBindByKind = Object.create(null);
+  };
+
+  GpuChartArtifactLayer.prototype._ensureAtlasTextures = function () {
+    var self = this;
+    var AG = atlasGpu();
+    var A = atlas();
+    if (!AG || !A || !this._gpuManifest || this._atlasTexCache) return Promise.resolve(this._atlasTexCache);
+    if (this._atlasTexLoading) return this._atlasTexLoading;
+    var specs = A.collectGpuUploadSpecs(this._gpuManifest, this._palette);
+    this._atlasTexLoading = AG.uploadAtlasTextures(this.gpu.device, specs).then(function (cache) {
+      self._atlasTexCache = cache;
+      self._atlasTexLoading = null;
+      return cache;
+    }).catch(function () {
+      self._atlasTexLoading = null;
+      return null;
+    });
+    return this._atlasTexLoading;
+  };
+
+  GpuChartArtifactLayer.prototype._textureViewForKind = function (kind) {
+    var cache = this._atlasTexCache;
+    if (!cache || !cache.textures) return null;
+    var keys = Object.keys(cache.textures);
+    for (var i = 0; i < keys.length; i++) {
+      if (cache.textures[keys[i]].kind === kind) return cache.textures[keys[i]].view;
+    }
+    return null;
+  };
+
+  GpuChartArtifactLayer.prototype._makeTexBind = function (kind) {
+    var key = kind + '@' + this._palette;
+    if (this._texBindByKind[key]) return this._texBindByKind[key];
+    var texView = this._textureViewForKind(kind);
+    if (!texView || !this._atlasTexCache || !this._atlasTexCache.sampler) return null;
+    var bind = this.gpu.device.createBindGroup({
+      layout: this.texTriPipe.getBindGroupLayout(0),
+      entries: [
+        { binding: 0, resource: { buffer: this.viewBuf } },
+        { binding: 1, resource: { buffer: this.materialsBuf } },
+        { binding: 2, resource: { buffer: this.blendBuf } },
+        { binding: 3, resource: texView },
+        { binding: 4, resource: this._atlasTexCache.sampler }
+      ]
+    });
+    this._texBindByKind[key] = bind;
+    return bind;
+  };
+
+  GpuChartArtifactLayer.prototype._ensureTexBuf = function (byteLength) {
+    if (this._texBuf && this._texBufCapacity >= byteLength) return this._texBuf;
+    if (this._texBuf) { try { this._texBuf.destroy(); } catch (e) {} }
+    var cap = Math.max(byteLength, 1024);
+    this._texBuf = this.gpu.device.createBuffer({ size: cap, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
+    this._texBufCapacity = cap;
+    return this._texBuf;
+  };
+
+  GpuChartArtifactLayer.prototype._drawTexturedOverlays = function (pass, artifact, resolved, blendWeight) {
+    var AG = atlasGpu();
+    var A = atlas();
+    if (!AG || !A || !this._gpuManifest || !this._atlasTexCache) return;
+    var batches = artifact.draw_batches || [];
+    for (var i = 0; i < batches.length; i++) {
+      var b = batches[i];
+      var rm = resolved.materials[b.material_index];
+      if (!rm || rm.visible === false || !rm.gpu || !rm.gpu.uploadable) continue;
+      if (b.shader_family !== 'SymbolInstanced' && b.shader_family !== 'TextGlyph') continue;
+      var kind = b.shader_family === 'TextGlyph' ? 'glyph' : 'symbol';
+      var bind = this._makeTexBind(kind);
+      if (!bind) continue;
+      var texVerts = AG.buildTexQuadsForBatch(artifact, b, rm, this._gpuManifest, this._palette, A);
+      if (!texVerts || !texVerts.length) continue;
+      var buf = this._ensureTexBuf(texVerts.byteLength);
+      this.gpu.device.queue.writeBuffer(buf, 0, texVerts);
+      pass.setPipeline(this.texTriPipe);
+      pass.setBindGroup(0, bind);
+      pass.setVertexBuffer(0, buf);
+      pass.draw(texVerts.length / TEX_VERTEX_STRIDE, 1, 0, 0);
+    }
   };
 
   GpuChartArtifactLayer.prototype._uploadGeometry = function () {
@@ -484,6 +632,8 @@
     this._palette = A ? A.normalizePalette(palette) : (palette || 'day');
     this._paletteExplicit = true;
     this._resolvedCache = Object.create(null);
+    this._texBindByKind = Object.create(null);
+    this._atlasTexCache = null;
     global.__helmChartPalette = this._palette;
     if (this._visible) this._draw();
   };
@@ -495,7 +645,20 @@
 
   GpuChartArtifactLayer.prototype.setResources = function (resources) {
     this._resources = resources || null;
+    this._gpuManifest = (resources && resources.gpuManifest) || this._gpuManifest;
     this._resolvedCache = Object.create(null);
+    this._texBindByKind = Object.create(null);
+    this._atlasTexCache = null;
+    if (this._visible) this._draw();
+  };
+
+  GpuChartArtifactLayer.prototype.setGpuManifest = function (manifest) {
+    this._gpuManifest = manifest || null;
+    this._texBindByKind = Object.create(null);
+    this._atlasTexCache = null;
+    if (this._resources && this._resources.gpuManifest !== manifest) {
+      this._resources.gpuManifest = manifest;
+    }
     if (this._visible) this._draw();
   };
 
@@ -553,6 +716,8 @@
       if (!b.index_count) continue;
       var rm = resolved.materials[b.material_index];
       if (rm && rm.visible === false) continue;
+      if (rm && rm.gpu && rm.gpu.uploadable &&
+          (b.shader_family === 'SymbolInstanced' || b.shader_family === 'TextGlyph')) continue;
       if (b.topology === 'line_list' && rm && rm.line && rm.line.dash && rm.line.dash.length) continue;
       var sel = this._pipeForTopology(b.topology);
       pass.setPipeline(sel.pipe);
@@ -570,7 +735,15 @@
       pass.setVertexBuffer(0, buf);
       pass.draw(dashed.length / VERTEX_STRIDE, 1, 0, 0);
     }
+    if (this._atlasTexCache) this._drawTexturedOverlays(pass, artifact, resolved, blendWeight);
     return true;
+  };
+
+  GpuChartArtifactLayer.prototype._drawArtifactAsync = function (pass, artifact, blendWeight, done) {
+    var self = this;
+    this._ensureAtlasTextures().then(function () {
+      done(self._drawArtifact(pass, artifact, blendWeight));
+    });
   };
 
   GpuChartArtifactLayer.prototype._draw = function () {
@@ -592,29 +765,33 @@
     }
     var dev = this.gpu.device;
     var holdStale = !!(this._compositeOpts && this._compositeOpts.holdStale);
-    var enc = dev.createCommandEncoder();
-    var pass = enc.beginRenderPass({
-      colorAttachments: [{
-        view: this.ctx.getCurrentTexture().createView(),
-        clearValue: { r: 0, g: 0, b: 0, a: 0 },
-        loadOp: holdStale ? 'load' : 'clear',
-        storeOp: 'store'
-      }]
+    var self = this;
+    this._ensureAtlasTextures().then(function () {
+      if (self._destroyed || !self._visible) return;
+      var enc = dev.createCommandEncoder();
+      var pass = enc.beginRenderPass({
+        colorAttachments: [{
+          view: self.ctx.getCurrentTexture().createView(),
+          clearValue: { r: 0, g: 0, b: 0, a: 0 },
+          loadOp: holdStale ? 'load' : 'clear',
+          storeOp: 'store'
+        }]
+      });
+      var drew = false;
+      for (var i = 0; i < drawEntries.length; i++) {
+        if (self._drawArtifact(pass, drawEntries[i].artifact, drawEntries[i].blend_weight)) drew = true;
+      }
+      pass.end();
+      if (drew) {
+        dev.queue.submit([enc.finish()]);
+        self.setEncChartVisible(false);
+        self._setMode('gpu');
+      } else {
+        self._clear();
+        self.setEncChartVisible(true);
+        self._setMode('maplibre', 'WebGPU artifact projection failed for current viewport');
+      }
     });
-    var drew = false;
-    for (var i = 0; i < drawEntries.length; i++) {
-      if (this._drawArtifact(pass, drawEntries[i].artifact, drawEntries[i].blend_weight)) drew = true;
-    }
-    pass.end();
-    if (drew) {
-      dev.queue.submit([enc.finish()]);
-      this.setEncChartVisible(false);
-      this._setMode('gpu');
-    } else {
-      this._clear();
-      this.setEncChartVisible(true);
-      this._setMode('maplibre', 'WebGPU artifact projection failed for current viewport');
-    }
   };
 
   GpuChartArtifactLayer.prototype._clear = function () {
@@ -697,7 +874,9 @@
       artifact: null, visible: false, destroyed: false,
       packetUrl: opts.packetUrl || 'data/render-artifact-chart-1.json',
       atlasUrl: opts.atlasUrl || 'data/s52-atlas-fixture.json',
+      gpuAtlasUrl: opts.gpuAtlasUrl || 'data/s52-atlas-web/manifest.json',
       resources: null,
+      gpuManifest: null,
       palette: null
     };
 
@@ -718,15 +897,20 @@
 
     // Load the web atlas resource mirror (optional; resolver has a built-in copy).
     if (typeof fetch !== 'undefined' && atlas()) {
-      fetch(state.atlasUrl, { cache: 'no-cache' })
-        .then(function (r) { return r.ok ? r.json() : null; })
-        .then(function (json) {
-          if (!json) return;
-          state.resources = atlas().loadResources(json);
-          if (inner && inner.setResources) inner.setResources(state.resources);
-          publishAtlasStatus();
-        })
-        .catch(function () { /* built-in mirror stays in effect */ });
+      var atlasLoads = [
+        fetch(state.atlasUrl, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; }),
+        fetch(state.gpuAtlasUrl, { cache: 'no-cache' }).then(function (r) { return r.ok ? r.json() : null; }).catch(function () { return null; })
+      ];
+      Promise.all(atlasLoads).then(function (parts) {
+        var colorJson = parts[0];
+        var gpuJson = parts[1];
+        var gpuManifest = gpuJson && atlas().loadGpuManifest ? atlas().loadGpuManifest(gpuJson) : null;
+        state.gpuManifest = gpuManifest;
+        state.resources = atlas().loadResources(colorJson, gpuManifest);
+        if (inner && inner.setResources) inner.setResources(state.resources);
+        if (inner && inner.setGpuManifest && gpuManifest) inner.setGpuManifest(gpuManifest);
+        publishAtlasStatus();
+      });
     }
 
     function setMode(m, reason) {
@@ -798,6 +982,7 @@
           canvasFormat: navigator.gpu.getPreferredCanvasFormat(),
           palette: state.palette || undefined,
           resources: state.resources || undefined,
+          gpuManifest: state.gpuManifest || undefined,
           setMode: setMode
         }, state.artifact);
         setMode('gpu');

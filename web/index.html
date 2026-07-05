@@ -757,7 +757,8 @@
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
 <script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
-<script src="chart-artifact-atlas.js"></script><!-- WEBGPU-2: atlas/material resolver (palette day/dusk/night, symbol/line/pattern keys) -->
+<script src="chart-artifact-atlas.js"></script><!-- WEBGPU-2/3: atlas resolver + GPU bitmap manifest -->
+<script src="chart-artifact-atlas-gpu.js"></script><!-- WEBGPU-3: GPU atlas texture upload helpers -->
 <script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1/2 + SCHED-2 composite draw (visible MapLibre enc-chart fallback) -->
 <script src="chart-viewport-scheduler.js"></script><!-- SCHED-1 browser scheduler client -->
 <script src="chart-artifact-cache.js"></script><!-- SCHED-2: artifact cache keyed by scheduler hints -->
