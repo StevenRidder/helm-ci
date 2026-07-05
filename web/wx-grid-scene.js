@@ -18,7 +18,8 @@
  * explicitly, and ramped to colour with premultiplied alpha.
  *
  * Data path: HelmWxGridPacks (WX-32 range transport, checksum-verified) ->
- * HelmWxGridDecode (typed bands, tier assembly) -> rg32float textures.
+ * HelmWxGridDecode (typed bands, tier assembly) ->
+ * HelmWxFieldTextureArtifact (HELMWEBGPU-5 shared artifact) -> rg32float textures.
  * Particles: the SAME assembled u/v arrays feed window.__helmWind (the
  * WX-25 engine) via toVelocityGrid — colour and motion share one dataset
  * by construction.
@@ -61,6 +62,13 @@
 
   function D() { return global.HelmWxGridDecode; }
   function P() { return global.HelmWxGridPacks; }
+  function F() {
+    if (!global.HelmWxFieldTextureArtifact) {
+      throw loud('missing_field_texture_artifact', 'HelmWxFieldTextureArtifact is not loaded',
+        { action: 'load wx-field-texture-artifact.js before wx-grid-scene.js' });
+    }
+    return global.HelmWxFieldTextureArtifact;
+  }
 
   function record(code, extra) {
     var d = Object.assign({
@@ -98,6 +106,10 @@
       ageSeconds: ageSeconds(),
       opacity: state.opacity,
       composited: 'maplibre-raster',
+      fieldTextureArtifacts: Object.keys(state.frames).sort().map(function (vt) {
+        var f = state.frames[vt];
+        return f && f.artifact ? F().toSerializableArtifact(f.artifact) : null;
+      }).filter(Boolean),
       diagnostics: state.diagnostics.slice(-10)
     };
   }
@@ -320,20 +332,21 @@
     });
   }
 
-  // Tier field -> rg32float texture (NaN -> SENTINEL). Scalar bands land in .r.
-  function uploadFrame(assembled) {
-    var m = assembled.meta, dev = state.gpu.device;
-    var n = m.width * m.height, data = new Float32Array(n * 2);
-    var b0 = assembled.bands[m.bands[0]], b1 = m.bands.length > 1 ? assembled.bands[m.bands[1]] : null;
-    for (var i = 0; i < n; i++) {
-      var a = b0[i], b = b1 ? b1[i] : 0;
-      data[i * 2] = (a === a) ? a : SENTINEL;
-      data[i * 2 + 1] = (b === b) ? b : (b1 ? SENTINEL : 0);
-    }
-    var tex = dev.createTexture({ size: [m.width, m.height], format: 'rg32float',
-      usage: GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST });
-    dev.queue.writeTexture({ texture: tex }, data, { bytesPerRow: m.width * 8 }, [m.width, m.height]);
-    return tex;
+  // Tier field -> shared rg32float artifact -> GPU texture. Scalar bands land in .r.
+  function fieldTextureArtifact(validTime, assembled) {
+    return F().createArtifact({
+      manifest: state.manifest,
+      manifestUrl: state.manifestUrl,
+      layer: state.layer,
+      validTime: validTime,
+      assembled: assembled,
+      unitFactor: UNIT_FACTOR[state.layer] || 1,
+      sentinel: SENTINEL
+    });
+  }
+
+  function uploadFrameArtifact(artifact) {
+    return F().uploadTextureArtifact(state.gpu.device, artifact, GPUTextureUsage.TEXTURE_BINDING | GPUTextureUsage.COPY_DST);
   }
 
   // CPU half of the ramp: domain + LUT bytes (no GPU needed, fail-loud on missing ramp).
@@ -382,7 +395,7 @@
         // a hole is a REAL signal — visible in status().diagnostics, never papered over
         record('partial_frame', { validTime: validTime, placed: assembled.chunksPlaced, expected: keys.length });
       }
-      state.frames[validTime] = { assembled: assembled, tex: null };
+      state.frames[validTime] = { assembled: assembled, artifact: null, tex: null };
       return state.frames[validTime];
     });
   }
@@ -390,7 +403,8 @@
   function uploadFrames() {
     for (var vt in state.frames) {
       if (state.frames.hasOwnProperty(vt) && !state.frames[vt].tex) {
-        state.frames[vt].tex = uploadFrame(state.frames[vt].assembled);
+        state.frames[vt].artifact = state.frames[vt].artifact || fieldTextureArtifact(vt, state.frames[vt].assembled);
+        state.frames[vt].tex = uploadFrameArtifact(state.frames[vt].artifact);
       }
     }
   }
@@ -634,6 +648,6 @@
     sample: sample,
     _test: { UNIT_FACTOR: UNIT_FACTOR, DISPLAY_UNIT: DISPLAY_UNIT, SENTINEL: SENTINEL,
              buildShader: buildShader, sampleFrameCPU: sampleFrameCPU, renderExtent: renderExtent,
-             splitExtent: splitExtent, mercY: mercY }
+             splitExtent: splitExtent, mercY: mercY, fieldTextureArtifact: fieldTextureArtifact }
   };
 })(typeof window !== 'undefined' ? window : this);

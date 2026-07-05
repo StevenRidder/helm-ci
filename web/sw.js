@@ -50,6 +50,7 @@ const APP_SHELL_URLS = [
   './wx-ramp.js',
   './wx-grid-pack-client.js',
   './wx-grid-decode.js',
+  './wx-field-texture-artifact.js',
   './wx-grid-scene.js',
   './wx-particles-webgpu.js',
   './radar.js',
