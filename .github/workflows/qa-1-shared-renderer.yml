@@ -9,8 +9,10 @@ on:
     paths:
       - "engine/test-qa-1-shared-renderer.sh"
       - "engine/test-qa-1-server-png.sh"
+      - "engine/test-rendermodel-6-s52-neutral.sh"
       - "engine/test/fixtures/vulkan-render/**"
       - "engine/test/fixtures/viewport-scheduler/**"
+      - "engine/vulkan/render_model_fixture_export.cpp"
       - "pipeline/test_viewport_scheduler.py"
       - "scripts/qa-1-shared-renderer-proof.sh"
       - "scripts/vulkan-render-fixture"
@@ -29,8 +31,10 @@ on:
     paths:
       - "engine/test-qa-1-shared-renderer.sh"
       - "engine/test-qa-1-server-png.sh"
+      - "engine/test-rendermodel-6-s52-neutral.sh"
       - "engine/test/fixtures/vulkan-render/**"
       - "engine/test/fixtures/viewport-scheduler/**"
+      - "engine/vulkan/render_model_fixture_export.cpp"
       - "pipeline/test_viewport_scheduler.py"
       - "scripts/qa-1-shared-renderer-proof.sh"
       - "scripts/vulkan-render-fixture"

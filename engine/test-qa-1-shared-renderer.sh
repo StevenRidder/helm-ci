@@ -23,6 +23,7 @@ echo "ok offscreen PNG sha256=$OFFSCREEN_SHA"
 
 scripts/render-artifact-compile "$FIXTURE" --check --print-hashes | tee "$NATIVE_DIR/render-artifact-compile.log"
 scripts/render-artifact-cache-smoke | tee "$NATIVE_DIR/render-artifact-cache-smoke.log"
+engine/test-rendermodel-6-s52-neutral.sh | tee "$NATIVE_DIR/rendermodel-6-s52-neutral.log"
 scripts/inspection-trace-smoke | tee "$NATIVE_DIR/inspection-trace-smoke.log"
 scripts/viewport-scheduler-fixture-check "$SCHED_FIXTURE" --print-hashes | tee "$NATIVE_DIR/viewport-scheduler-fixture.log"
 scripts/viewport-scheduler-smoke | tee "$NATIVE_DIR/viewport-scheduler-smoke.log"

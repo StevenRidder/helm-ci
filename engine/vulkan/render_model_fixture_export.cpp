@@ -333,6 +333,14 @@ void write_file(const std::filesystem::path& path, const std::string& bytes, boo
   return out;
 }
 
+[[nodiscard]] std::vector<std::int64_t> int64_array(const Json* value) {
+  std::vector<std::int64_t> out;
+  for (const Json& item : array_value(value)) {
+    if (item.is_number()) out.push_back(static_cast<std::int64_t>(item.number()));
+  }
+  return out;
+}
+
 [[nodiscard]] Vec2 vec2_from_array(const Json& value) {
   const JsonArray& array = value.array();
   if (array.size() < 2) throw std::runtime_error("expected [x,y]");
@@ -395,6 +403,11 @@ void write_file(const std::filesystem::path& path, const std::string& bytes, boo
     case CoordinateSpace::Raster: return "raster";
   }
   return "target";
+}
+
+[[nodiscard]] const Json* s52_semantics(const Json& command) {
+  const Json* semantics = object_get(command, "s52_semantics");
+  return semantics && semantics->is_object() ? semantics : nullptr;
 }
 
 [[nodiscard]] std::string fixture_id_from_dir(const std::filesystem::path& fixture_dir) {
@@ -630,6 +643,7 @@ void append_resource_records(const Json& scene, RenderModel& model) {
 }
 
 [[nodiscard]] ScaleRange scale_for_command(const FixtureContext& context,
+                                           const Json& command,
                                            const RenderView& view,
                                            const DisplayState& display_state) {
   ScaleRange out;
@@ -640,6 +654,21 @@ void append_resource_records(const Json& scene, RenderModel& model) {
   out.use_scamin = display_state.use_scamin;
   out.use_super_scamin = display_state.use_super_scamin;
   out.overzoom = view.overzoom;
+  if (const Json* semantics = s52_semantics(command)) {
+    out.native_scale = uint_value(object_get(*semantics, "native_scale"), out.native_scale);
+    if (const Json* min_scale = object_get(*semantics, "min_scale_denom")) {
+      out.min_scale_denom = uint_value(min_scale, out.min_scale_denom.value_or(0));
+    }
+    if (const Json* max_scale = object_get(*semantics, "max_scale_denom")) {
+      out.max_scale_denom = uint_value(max_scale, out.max_scale_denom.value_or(0));
+    }
+    if (const Json* scamin = object_get(*semantics, "scamin_max_scale")) {
+      out.scamin_max_scale = uint_value(scamin, out.scamin_max_scale.value_or(0));
+    }
+    out.use_scamin = bool_value(object_get(*semantics, "use_scamin"), out.use_scamin);
+    out.use_super_scamin = bool_value(object_get(*semantics, "use_super_scamin"), out.use_super_scamin);
+    out.overzoom = bool_value(object_get(*semantics, "overzoom"), out.overzoom);
+  }
   return out;
 }
 
@@ -652,14 +681,25 @@ void append_resource_records(const Json& scene, RenderModel& model) {
   out.contour_role = string_value(object_get(command, "role"));
   out.display_state = "visible";
   out.safety_relevant = false;
+  const Json* semantics = s52_semantics(command);
+  if (semantics) {
+    out.display_category = string_value(object_get(*semantics, "display_category"), out.display_category);
+    out.safety_class = string_value(object_get(*semantics, "safety_class"), out.safety_class);
+    out.contour_role = string_value(object_get(*semantics, "contour_role"), out.contour_role);
+    out.danger_class = string_value(object_get(*semantics, "danger_class"), out.danger_class);
+    if (const Json* visible = object_get(*semantics, "visible"); visible && visible->is_bool()) {
+      out.display_state = visible->boolean() ? "visible" : "culled";
+    }
+    out.safety_relevant = bool_value(object_get(*semantics, "safety_relevant"), out.safety_relevant);
+  }
 
   if (trace.object_class == "DEPARE") {
-    out.safety_class = "shoal";
-    out.contour_role = "depth_area";
+    if (!semantics || out.safety_class.empty()) out.safety_class = "shoal";
+    if (!semantics || out.contour_role.empty()) out.contour_role = "depth_area";
     out.safety_relevant = true;
   } else if (trace.object_class == "DEPCNT") {
-    out.safety_class = "safety_contour";
-    out.contour_role = "safety_contour";
+    if (!semantics || out.safety_class.empty()) out.safety_class = "safety_contour";
+    if (!semantics || out.contour_role.empty()) out.contour_role = "safety_contour";
     out.safety_relevant = true;
   } else if (trace.object_class == "SOUNDG") {
     if (out.safety_class.empty()) out.safety_class = "shoal";
@@ -687,6 +727,19 @@ void append_resource_records(const Json& scene, RenderModel& model) {
   SourceTrace trace = it->second.trace;
   trace.presentation_authority = "vulkan.render_scene.v0";
   trace.presentation_rule_id = string_value(object_get(command, "type"));
+  if (const Json* semantics = s52_semantics(command)) {
+    trace.presentation_authority = string_value(object_get(*semantics, "presentation_authority"),
+                                                "opencpn.s52plib");
+    trace.presentation_rule_id = string_value(object_get(*semantics, "presentation_rule_id"),
+                                              trace.presentation_rule_id);
+    if (trace.presentation_rule_id == string_value(object_get(command, "type"))) {
+      trace.presentation_rule_id = string_value(object_get(*semantics, "rule_id"),
+                                                trace.presentation_rule_id);
+    }
+    trace.source_feature_id = string_value(object_get(*semantics, "source_object_id"),
+                                           trace.source_feature_id);
+    trace.object_class = string_value(object_get(*semantics, "object_class"), trace.object_class);
+  }
   trace.source_feature_sub_id = string_value(object_get(command, "command_id"));
   trace.provenance_refs = refs;
   trace.inspection_handles = {
@@ -700,6 +753,38 @@ void append_resource_records(const Json& scene, RenderModel& model) {
     trace.attributes = object_it->second.attributes;
   }
   return trace;
+}
+
+[[nodiscard]] StableOrder order_for_command(const Json& command,
+                                            const Json& group,
+                                            PrimitiveKind kind,
+                                            const std::string& type,
+                                            std::int32_t group_index,
+                                            std::int64_t sequence) {
+  const std::int32_t pass_rank = render_pass_rank(type, kind);
+  StableOrder out{
+      int_value(object_get(group, "chart_priority")),
+      int_value(object_get(group, "quilt_rank")),
+      group_index * 100 + pass_rank,
+      pass_rank,
+      sequence,
+      {int_value(object_get(command, "priority"), 0)}};
+  if (const Json* semantics = s52_semantics(command)) {
+    const std::vector<std::int64_t> key = int64_array(object_get(*semantics, "order_key"));
+    if (key.size() >= 5) {
+      out.chart_priority = static_cast<std::int32_t>(key[0]);
+      out.quilt_rank = static_cast<std::int32_t>(key[1]);
+      out.display_priority = static_cast<std::int32_t>(key[2]);
+      out.render_pass_rank = static_cast<std::int32_t>(key[3]);
+      out.source_sequence = key[4];
+      out.extension.assign(key.begin() + 5, key.end());
+    } else {
+      out.display_priority = int_value(object_get(*semantics, "display_priority"), out.display_priority);
+      out.source_sequence = int_value(object_get(*semantics, "source_sequence"),
+                                      static_cast<std::int32_t>(out.source_sequence));
+    }
+  }
+  return out;
 }
 
 [[nodiscard]] PrimitivePayload payload_for_command(const Json& command, PrimitiveKind kind) {
@@ -811,18 +896,11 @@ void append_resource_records(const Json& scene, RenderModel& model) {
   if (command_id.empty()) throw std::runtime_error("command missing command_id");
   out.primitive_id = command_id;
   out.kind = kind_for_command(command);
-  const std::int32_t pass_rank = render_pass_rank(type, out.kind);
-  out.order = StableOrder{
-      int_value(object_get(group, "chart_priority")),
-      int_value(object_get(group, "quilt_rank")),
-      group_index * 100 + pass_rank,
-      pass_rank,
-      sequence,
-      {int_value(object_get(command, "priority"), 0)}};
+  out.order = order_for_command(command, group, out.kind, type, group_index, sequence);
   out.material = material_for_command(command, display_state);
   const std::vector<std::string> provenance_refs = string_array(object_get(command, "provenance_refs"));
   out.source = trace_for_command(command, context, provenance_refs);
-  out.scale = scale_for_command(context, view, display_state);
+  out.scale = scale_for_command(context, command, view, display_state);
   out.safety = safety_for_command(command, out.source, display_state);
   out.payload = payload_for_command(command, out.kind);
   return out;

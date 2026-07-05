@@ -2,7 +2,7 @@ diff --git a/cli/CMakeLists.txt b/cli/CMakeLists.txt
 index 1909f44..52ece48 100644
 --- a/cli/CMakeLists.txt
 +++ b/cli/CMakeLists.txt
-@@ -90,3 +90,221 @@ if (APPLE)
+@@ -90,3 +90,225 @@ if (APPLE)
                                 XCODE_ATTRIBUTE_ENABLE_HARDENED_RUNTIME YES
    )
  endif ()
@@ -192,6 +192,11 @@ index 1909f44..52ece48 100644
 +set_property(TARGET helm-tiles PROPERTY ENABLE_EXPORTS ON)
 +target_include_directories(helm-tiles PRIVATE ${PROJECT_SOURCE_DIR}/libs/IXWebSocket)
 +target_link_libraries(helm-tiles PRIVATE ocpn::chart-render ixwebsocket)
++
++# ---- Helm S-52 neutral scene exporter: OpenCPN s52plib -> render commands ----
++add_executable(helm-s52-scene helm_s52_scene.cpp)
++set_property(TARGET helm-s52-scene PROPERTY ENABLE_EXPORTS ON)
++target_link_libraries(helm-s52-scene PRIVATE ocpn::chart-render)
 +
 +# ---- Helm local pack daemon: BYO MBTiles/PMTiles catalog + range/tile serving ----
 +add_executable(helm-packd helm_packd.cpp)

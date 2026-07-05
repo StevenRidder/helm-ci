@@ -194,6 +194,20 @@ It deliberately proves that:
 - S-52 order keys are sorted before backend submission;
 - depth areas, safety contours, and soundings carry resolved safety classes.
 
+RENDERMODEL-6 adds a stricter neutral-model guard over the same fixture:
+
+```bash
+engine/test-rendermodel-6-s52-neutral.sh
+```
+
+That check exports `s52-semantics` through `render-model-fixture-export` and
+fails if command-level `s52_semantics` are dropped while producing
+`helm.render.model.v1`. It specifically protects OpenCPN presentation authority,
+SCAMIN native/max-scale fields, display category, safety classes, S-52 order
+keys, sounding `formatted_text`, and `semantic.culled` diagnostics. This is the
+contract the future headless `s52plib` bridge must satisfy before GDAL capture
+can be retired for production real-cell rendering.
+
 The first real ENC capture targets should be downloaded at runtime:
 
 ```text
