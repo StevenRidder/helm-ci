@@ -253,6 +253,11 @@ log "installing C++ runtime binaries ($MODE mode)"
 for bin in helm-server helm-packd helm-envd helm-basemap-cache; do
   install_file "$BUILD_CLI/$bin" "$PREFIX_DST/bin/$bin" 0755
 done
+# helm-envd launch shim — expands the release's EVERY pack manifest (atmospheric +
+# marine) into HELM_ENV_GRID_MANIFESTS so all weather layers load, not just packs[0].
+# Installed next to helm-envd so its sibling-relative exec resolves for any prefix.
+[ -f "$ROOT/scripts/helm-envd-launch" ] || die "weather tool missing from checkout: scripts/helm-envd-launch"
+install_file "$ROOT/scripts/helm-envd-launch" "$PREFIX_DST/bin/helm-envd-launch" 0755
 
 log "installing cockpit web assets"
 copy_dir "$WEB_SOURCE" "$PREFIX_DST/web"
@@ -340,11 +345,14 @@ DAEMONS=(
 
 render_launchd() {  # render_launchd <name> <port> <extra-env>
   local name="$1" port="$2" extra="$3"
+  # helm-envd runs via the launch shim so every pack manifest (atmospheric + marine)
+  # loads; the pinned HELM_ENV_GRID_MANIFESTS below is only its graceful fallback.
+  local prog="$name"; [ "$name" = "helm-envd" ] && prog="helm-envd-launch"
   printf '<?xml version="1.0" encoding="UTF-8"?>\n'
   printf '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
   printf '<plist version="1.0">\n<dict>\n'
   printf '  <key>Label</key><string>%s.%s</string>\n' "$LABEL_PREFIX" "$name"
-  printf '  <key>ProgramArguments</key>\n  <array>\n    <string>%s/bin/%s</string>\n' "$PREFIX" "$name"
+  printf '  <key>ProgramArguments</key>\n  <array>\n    <string>%s/bin/%s</string>\n' "$PREFIX" "$prog"
   [ -n "$port" ] && printf '    <string>%s</string>\n' "$port"
   printf '  </array>\n'
   printf '  <key>WorkingDirectory</key><string>%s</string>\n' "$PREFIX"
@@ -378,7 +386,10 @@ render_launchd() {  # render_launchd <name> <port> <extra-env>
 
 render_systemd() {  # render_systemd <name> <port> <extra-env>
   local name="$1" port="$2" extra="$3"
-  local execargs="$PREFIX/bin/$name"; [ -n "$port" ] && execargs="$execargs $port"
+  # helm-envd runs via the launch shim (loads every pack manifest; the pinned
+  # HELM_ENV_GRID_MANIFESTS Environment= below is its graceful fallback).
+  local prog="$name"; [ "$name" = "helm-envd" ] && prog="helm-envd-launch"
+  local execargs="$PREFIX/bin/$prog"; [ -n "$port" ] && execargs="$execargs $port"
   printf '[Unit]\n'
   printf 'Description=Helm C++ runtime service (%s)\n' "$name"
   printf 'After=network-online.target\nWants=network-online.target\n\n'

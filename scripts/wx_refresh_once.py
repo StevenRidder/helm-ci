@@ -10,10 +10,12 @@ One cycle:
      (drift-gated) > previous release centre (LOUD). No fix and no previous release
      -> skip (exit 0).
   2. bake a fresh helm.env.grid.v1 release with wx_bake_openmeteo.py.
-  3. publish the stable pointer helm-envd reads: <packs>/current -> release packs
-     dir, and <packs>/current/current.manifest.json inside it (envd resolves chunk
-     paths relative to the manifest's own directory, so the pointer must preserve
-     that directory).
+  3. publish the stable fallback pointer: <packs>/current -> release packs dir, and
+     <packs>/current/current.manifest.json -> packs[0] inside it (envd resolves chunk
+     paths relative to the manifest's own directory, so the pointer must preserve that
+     directory). The supervised helm-envd launches via helm-envd-launch, which expands
+     current.json into EVERY pack manifest (atmospheric + marine current/swell/waves),
+     so this single pointer is only the graceful fallback if that expansion fails.
   4. restart the supervised helm-envd on the new release.
 
 Config (env, all optional): HELM_WX_PACKS_DIR, HELM_WX_LAYERS, HELM_WX_STEP_HOURS,
@@ -101,6 +103,9 @@ def publish_and_restart(out):
     cur = json.loads((base / "current.json").read_text())
     idx = base / cur["indexUrl"]
     release = json.loads(idx.read_text())
+    # packs[0] backs the single-pointer FALLBACK only. helm-envd-launch loads EVERY
+    # pack in the release from current.json; this stable symlink is what envd falls
+    # back to if that expansion ever fails (serves atmospheric rather than nothing).
     first_manifest = (idx.parent / release["packs"][0]["manifestUrl"]).resolve()
     packs_dir = first_manifest.parent
 
