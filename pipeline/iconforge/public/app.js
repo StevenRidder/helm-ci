@@ -169,16 +169,23 @@
       ${image ? `<div class="text-secondary small text-center mt-1">${esc(body || "")}</div>` : ""}
     </div>`;
   }
+  function comparisonNote(entry, fallback) {
+    if (!entry) return fallback;
+    return entry.note || entry.status || fallback;
+  }
   function comparisonSection(s, hi) {
     const helm = s.art && (s.art.canonical || s.art.day);
     const s101 = hi.s101_summary || s101Fallback(s);
     const opencpn = hi.opencpn_s52_evidence || opencpnFallback(s);
+    const cmp = s.comparison || {};
+    const s101Entry = cmp.s101 || {};
+    const opencpnEntry = cmp.opencpn || {};
     return `<div class="hr-text">public comparison</div>
-      <div class="text-secondary small mb-2">The public page shows Helm-owned art plus DB-derived S-101 and OpenCPN/S-52 comparison evidence. Third-party comparison artwork is not bundled in this Apache-2.0 proof package.</div>
+      <div class="text-secondary small mb-2">The public page shows Helm-owned art plus DB-derived S-101 and OpenCPN/S-52 comparison evidence. Comparison thumbnails are visual witnesses only, not Helm canonical artwork.</div>
       <div class="cmp-grid mb-3">
         ${comparisonPanel("Helm resolved", "Helm-owned canonical SVG", helm)}
-        ${comparisonPanel("S-101 evidence", s101 || "No S-101 evidence recorded in site-index.json.", null, "s101")}
-        ${comparisonPanel("OpenCPN / S-52 evidence", opencpn || "No OpenCPN/S-52 evidence recorded in site-index.json.")}
+        ${comparisonPanel("S-101 evidence", comparisonNote(s101Entry, s101 || "No S-101 evidence recorded in site-index.json."), s101Entry.image, "s101")}
+        ${comparisonPanel("OpenCPN / S-52 evidence", comparisonNote(opencpnEntry, opencpn || "No OpenCPN/S-52 evidence recorded in site-index.json."), opencpnEntry.image)}
       </div>`;
   }
   function descriptionCard(title, body, empty) {
