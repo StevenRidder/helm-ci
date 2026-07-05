@@ -442,6 +442,8 @@ fixtures/
     source.json
     scene.commands.json
     provenance.json
+    render-model.json
+    render-model.bin
     expected.png
 ```
 
@@ -456,6 +458,12 @@ The fixture must include at least:
 
 This is enough for OpenCPN and Helm to prove they consume the same command
 stream before attempting full S-52 coverage.
+
+`render-model.json` is the reviewable export of the typed C++
+`helm.render.model.v1` schema. `render-model.bin` is the matching deterministic
+binary-ready stream: it preserves the same primitive order, source trace ids,
+material/style keys, display/scale state, and payloads without asking a backend
+to re-run chart semantics.
 
 The initial committed fixture corpus and checker live under
 `engine/test/fixtures/vulkan-render/` and

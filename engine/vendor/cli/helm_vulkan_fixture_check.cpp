@@ -532,30 +532,46 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
   const std::string source_path = join_path(fixture_dir, string_value(object_get(manifest, "source_file"), "source.json"));
   const std::string scene_path = join_path(fixture_dir, string_value(object_get(manifest, "scene_file"), "scene.commands.json"));
   const std::string provenance_path = join_path(fixture_dir, string_value(object_get(manifest, "provenance_file"), "provenance.json"));
+  const std::string render_model_file = string_value(object_get(manifest, "render_model_file"));
+  const std::string render_model_binary_file = string_value(object_get(manifest, "render_model_binary_file"));
+  const std::string render_model_path = render_model_file.empty() ? std::string() : join_path(fixture_dir, render_model_file);
+  const std::string render_model_binary_path =
+      render_model_binary_file.empty() ? std::string() : join_path(fixture_dir, render_model_binary_file);
 
   if (!std::ifstream(source_path.c_str())) add_error(errors, fixture_id + ": missing " + base_name(source_path));
   if (!std::ifstream(scene_path.c_str())) add_error(errors, fixture_id + ": missing " + base_name(scene_path));
   if (!std::ifstream(provenance_path.c_str())) add_error(errors, fixture_id + ": missing " + base_name(provenance_path));
+  if (!render_model_path.empty() && !std::ifstream(render_model_path.c_str())) {
+    add_error(errors, fixture_id + ": missing " + base_name(render_model_path));
+  }
+  if (!render_model_binary_path.empty() && !std::ifstream(render_model_binary_path.c_str(), std::ios::binary)) {
+    add_error(errors, fixture_id + ": missing " + base_name(render_model_binary_path));
+  }
   if (!errors.empty()) {
     for (std::size_t i = 0; i < errors.size(); ++i) std::cerr << errors[i] << "\n";
     return std::make_pair(1, 0);
   }
 
-  Json source, scene, provenance;
+  Json source, scene, provenance, render_model;
   try {
     source = load_json(source_path);
     scene = load_json(scene_path);
     provenance = load_json(provenance_path);
+    if (!render_model_path.empty()) render_model = load_json(render_model_path);
   } catch (const std::exception& e) {
     std::cerr << e.what() << "\n";
     return std::make_pair(1, 0);
   }
 
   const Json* expected = object_get(manifest, "expected_hashes");
-  const std::map<std::string, std::string> actual_hashes = {
-      std::make_pair("source_json_sha256", json_sha256(source_path)),
-      std::make_pair("scene_commands_json_sha256", json_sha256(scene_path)),
-      std::make_pair("provenance_json_sha256", json_sha256(provenance_path))};
+  std::map<std::string, std::string> actual_hashes;
+  actual_hashes["source_json_sha256"] = json_sha256(source_path);
+  actual_hashes["scene_commands_json_sha256"] = json_sha256(scene_path);
+  actual_hashes["provenance_json_sha256"] = json_sha256(provenance_path);
+  if (!render_model_path.empty()) actual_hashes["render_model_json_sha256"] = json_sha256(render_model_path);
+  if (!render_model_binary_path.empty()) {
+    actual_hashes["render_model_binary_sha256"] = file_sha256(render_model_binary_path);
+  }
 
   for (std::map<std::string, std::string>::const_iterator it = actual_hashes.begin();
        it != actual_hashes.end(); ++it) {
@@ -616,6 +632,49 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
     }
   }
 
+  if (!render_model_path.empty()) {
+    if (string_value(object_get(render_model, "schema_version")) != "helm.render.model.v1") {
+      add_error(errors, fixture_id + ": render-model schema_version mismatch");
+    }
+    if (string_value(object_get(render_model, "model_id")) != string_value(object_get(scene, "scene_id"))) {
+      add_error(errors, fixture_id + ": render-model model_id does not match scene_id");
+    }
+    int render_model_primitive_count = 0;
+    const std::vector<Json>& layers = array_value(object_get(render_model, "layers"));
+    for (std::size_t layer_i = 0; layer_i < layers.size(); ++layer_i) {
+      const std::vector<Json>& primitives = array_value(object_get(layers[layer_i], "primitives"));
+      for (std::size_t primitive_i = 0; primitive_i < primitives.size(); ++primitive_i) {
+        ++render_model_primitive_count;
+        const Json* primitive = &primitives[primitive_i];
+        const std::string primitive_id = string_value(object_get(*primitive, "primitive_id"));
+        const Json* trace = object_get(*primitive, "source_trace");
+        if (primitive_id.empty()) add_error(errors, fixture_id + ": render-model primitive missing primitive_id");
+        if (!trace) {
+          add_error(errors, fixture_id + ": render-model primitive " + primitive_id + " missing source_trace");
+          continue;
+        }
+        if (string_value(object_get(*trace, "source_chart_id")).empty() ||
+            string_value(object_get(*trace, "source_feature_id")).empty() ||
+            string_value(object_get(*trace, "object_class")).empty()) {
+          add_error(errors, fixture_id + ": render-model primitive " + primitive_id + " has incomplete source ids");
+        }
+        if (array_value(object_get(*trace, "provenance_refs")).empty() ||
+            array_value(object_get(*trace, "inspection_handles")).empty()) {
+          add_error(errors, fixture_id + ": render-model primitive " + primitive_id + " has incomplete trace handles");
+        }
+      }
+    }
+    if (render_model_primitive_count != static_cast<int>(commands.size())) {
+      std::ostringstream message;
+      message << fixture_id << ": render-model primitive count " << render_model_primitive_count
+              << " does not match command count " << commands.size();
+      add_error(errors, message.str());
+    }
+    if (render_model_binary_path.empty()) {
+      add_error(errors, fixture_id + ": render_model_file requires render_model_binary_file");
+    }
+  }
+
   const std::vector<Json>& expected_images = array_value(object_get(manifest, "expected_images"));
   for (std::size_t i = 0; i < expected_images.size(); ++i) {
     const std::string rel_path = string_value(object_get(expected_images[i], "path"));
@@ -638,9 +697,14 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
 
   if (print_hashes) {
     std::cout << fixture_id << ":\n";
-    const char* order[] = {"source_json_sha256", "scene_commands_json_sha256", "provenance_json_sha256"};
-    for (std::size_t i = 0; i < 3; ++i) {
-      std::cout << "  " << order[i] << ": " << actual_hashes.find(order[i])->second << "\n";
+    const char* order[] = {"source_json_sha256",
+                           "scene_commands_json_sha256",
+                           "provenance_json_sha256",
+                           "render_model_json_sha256",
+                           "render_model_binary_sha256"};
+    for (std::size_t i = 0; i < 5; ++i) {
+      std::map<std::string, std::string>::const_iterator it = actual_hashes.find(order[i]);
+      if (it != actual_hashes.end()) std::cout << "  " << order[i] << ": " << it->second << "\n";
     }
     for (std::size_t i = 0; i < expected_images.size(); ++i) {
       const std::string rel_path = string_value(object_get(expected_images[i], "path"));

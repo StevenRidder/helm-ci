@@ -30,6 +30,8 @@ chart-1/
   source.json            # redistributable synthetic or source descriptor
   scene.commands.json    # RenderScene command stream fixture
   provenance.json        # source/object/transform/quilt provenance
+  render-model.json      # helm.render.model.v1 neutral primitive export
+  render-model.bin       # deterministic binary-ready primitive stream
   expected.ppm           # tiny dependency-free golden image placeholder
 ```
 
@@ -47,7 +49,24 @@ The same source is exercised by the dedicated fixture scripts and CI smoke.
 install, C++ target build, runtime asset install, and ENC tile render path.
 
 It validates fixture shape, canonical JSON hashes, provenance references,
-required command types, and expected image hashes.
+required command types, optional neutral render-model exports, and expected
+image hashes.
+
+`RENDERMODEL-2` adds the first C++ neutral primitive export for `chart-1`:
+
+```bash
+scripts/render-model-fixture-export engine/test/fixtures/vulkan-render/chart-1 --check --print-hashes
+```
+
+The exporter consumes the current `scene.commands.json` plus `source.json` and
+`provenance.json`, builds the typed `helm.render.model.v1` C++ model from
+`engine/vulkan/render_model.h`, and writes both `render-model.json` for review
+and `render-model.bin` as a stable length-prefixed binary-ready stream. Each
+primitive preserves deterministic order, material/style keys, SCAMIN/display
+state, and a source trace with chart id, source feature id, object class,
+provenance refs, and inspection handles. The manifest records canonical JSON
+and binary hashes so Helm/WebGPU, Vulkan/VSG, and future native paths consume
+the same semantics rather than separate chart logic.
 
 `VSG-1` adds a dependency-free C++17 fixture replay renderer:
 

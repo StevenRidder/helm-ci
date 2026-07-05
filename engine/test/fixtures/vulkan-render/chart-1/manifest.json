@@ -6,6 +6,8 @@
   "source_file": "source.json",
   "scene_file": "scene.commands.json",
   "provenance_file": "provenance.json",
+  "render_model_file": "render-model.json",
+  "render_model_binary_file": "render-model.bin",
   "license": {
     "type": "synthetic",
     "redistribution": "repo-owned",
@@ -40,7 +42,9 @@
   "expected_hashes": {
     "source_json_sha256": "fa51556785a01ed7c5a1d6da0347cc7d61ee505c6f5eb86733d832d1705a164a",
     "scene_commands_json_sha256": "cbe6b18f37bdcc57e998bd4e887b21b2b809d7e49d63a5a9eb73c83b06a1ceef",
-    "provenance_json_sha256": "7bf3873c8902bc840cb4459dbf5abf7ad2fa8c4813a1a74771069bbc2991a573"
+    "provenance_json_sha256": "7bf3873c8902bc840cb4459dbf5abf7ad2fa8c4813a1a74771069bbc2991a573",
+    "render_model_json_sha256": "b1e2ba0ed19a0a309d3987129bfe7fac482ca3039fbad277e2765234a6b69d42",
+    "render_model_binary_sha256": "0b06e548bd4e31c386d275c3552e923b2e4ac28df26d67e92ec8c73b7a8b3aba"
   },
   "expected_images": [
     {
