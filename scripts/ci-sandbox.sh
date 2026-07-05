@@ -258,8 +258,10 @@ set_canonical_status() {
 
 canonical_status_state() {
   local sha="$1"
+  local jq_filter
+  jq_filter='[.statuses[]? | select(.context == "'"$STATUS_CONTEXT"'") | .state][0] // ""'
   gh api "repos/${CANONICAL_REPO}/commits/${sha}/status" \
-    --jq --arg context "$STATUS_CONTEXT" '[.statuses[]? | select(.context == $context) | .state][0] // ""' \
+    --jq "$jq_filter" \
     2>/dev/null
 }
 
