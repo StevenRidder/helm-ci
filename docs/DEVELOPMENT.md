@@ -140,8 +140,10 @@ private Helm origin:
 
 ```bash
 scripts/ci-sandbox.sh setup          # once
+scripts/ci-sandbox.sh doctor         # verify repo/remotes/workflows/baseline
 scripts/ci-sandbox.sh push           # current branch → helm-ci, wait for green
 git push -u origin <branch>          # then open PR on Helm
+scripts/ci-sandbox.sh refresh-main   # after merge, sync helm-ci/main
 scripts/ci-sandbox.sh delete <branch> # after merge
 ```
 

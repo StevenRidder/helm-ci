@@ -5,7 +5,7 @@
 # workflows) so GitHub Actions minutes stay on the public sandbox instead of a
 # private Helm origin. This is intentionally not the sanitized helm-public
 # export. After CI is green, open/merge the PR on Helm and delete the sandbox
-# branch with: scripts/ci-sandbox.sh delete <branch>.
+# branch with: scripts/ci-sandbox.sh refresh-main && scripts/ci-sandbox.sh delete <branch>.
 #
 # Requires: git, gh (authenticated), jq, column, network.
 set -euo pipefail
@@ -15,6 +15,7 @@ CI_REPO="${CI_REPO:-StevenRidder/helm-ci}"
 CI_REMOTE="${CI_REMOTE:-ci}"
 CI_REMOTE_URL="${CI_REMOTE_URL:-https://github.com/${CI_REPO}.git}"
 CANONICAL_REPO="${CANONICAL_REPO:-StevenRidder/Helm}"
+ORIGIN_REMOTE="${ORIGIN_REMOTE:-origin}"
 WAIT_TIMEOUT_SEC="${WAIT_TIMEOUT_SEC:-7200}"
 POLL_INTERVAL_SEC="${POLL_INTERVAL_SEC:-20}"
 MAIN_REF="${MAIN_REF:-origin/main}"
@@ -71,7 +72,7 @@ Create it once as the repo owner, then re-run setup:
 Then:
 
   scripts/ci-sandbox.sh setup
-  scripts/ci-sandbox.sh sync-main
+  scripts/ci-sandbox.sh refresh-main
 EOF
   die "missing CI sandbox repo $CI_REPO"
 }
@@ -101,8 +102,10 @@ Commands:
   push [--no-wait]      Push <branch> (default: current), dispatch workflows, wait for dispatched Actions
   wait                  Wait for in-progress Actions on <branch> (default: current)
   status                Print recent Actions conclusions for <branch> (default: current)
+  doctor                Verify repo/remotes/workflows/baseline/branch wiring
   delete                Delete <branch> from the CI sandbox remote
   sync-main             Push local main to the CI sandbox (refresh baseline after merges)
+  refresh-main          Fetch canonical main, then sync it to the CI sandbox
   open-pr               Push/wait on sandbox, then open a Helm PR for <branch>
 
 Environment:
@@ -110,6 +113,7 @@ Environment:
   CI_REMOTE             Git remote name (default: $CI_REMOTE)
   CI_REMOTE_URL         Sandbox clone URL (default: derived from CI_REPO)
   CANONICAL_REPO        Helm PR target (default: $CANONICAL_REPO)
+  ORIGIN_REMOTE         Canonical git remote name (default: $ORIGIN_REMOTE)
   WAIT_TIMEOUT_SEC      Max wait for Actions (default: $WAIT_TIMEOUT_SEC)
   POLL_INTERVAL_SEC     Poll interval while waiting (default: $POLL_INTERVAL_SEC)
   MAIN_REF              Ref to seed sandbox main from (default: $MAIN_REF)
@@ -118,12 +122,14 @@ Environment:
 
 Typical agent loop:
   scripts/ci-sandbox.sh setup
+  scripts/ci-sandbox.sh doctor
   git checkout -b claude/MY-TASK-slug
   # ... edit, commit ...
   scripts/ci-sandbox.sh push
   git push -u origin claude/MY-TASK-slug
   gh pr create --repo $CANONICAL_REPO ...
   # after merge on Helm:
+  scripts/ci-sandbox.sh refresh-main
   scripts/ci-sandbox.sh delete claude/MY-TASK-slug
 
 See docs/CI-SANDBOX.md for Switchboard + private-origin notes.
@@ -136,7 +142,7 @@ cmd_setup() {
   ensure_repo
   ensure_remote
   echo "ci-sandbox: ready — remote '$CI_REMOTE' -> $(remote_url)"
-  echo "ci-sandbox: next: scripts/ci-sandbox.sh sync-main   # once, to seed main"
+  echo "ci-sandbox: next: scripts/ci-sandbox.sh refresh-main   # once, to seed main"
 }
 
 cmd_push() {
@@ -297,6 +303,180 @@ cmd_status() {
   summarize_runs "$branch" "${SANDBOX_WAIT_EVENT:-}" || exit 1
 }
 
+ok_count=0
+warn_count=0
+fail_count=0
+
+doctor_ok() {
+  ok_count=$((ok_count + 1))
+  echo "ok: $*"
+}
+
+doctor_warn() {
+  warn_count=$((warn_count + 1))
+  echo "warn: $*"
+}
+
+doctor_fail() {
+  fail_count=$((fail_count + 1))
+  echo "fail: $*"
+}
+
+ls_remote_sha() {
+  local remote="$1"
+  local ref="$2"
+  git -C "$ROOT" ls-remote "$remote" "$ref" 2>/dev/null | awk '{print $1}'
+}
+
+repo_visibility() {
+  local repo="$1"
+  gh repo view "$repo" --json visibility --jq .visibility 2>/dev/null || true
+}
+
+cmd_doctor() {
+  local branch=""
+  if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
+    cat <<EOF
+Usage: scripts/ci-sandbox.sh doctor [branch]
+
+Verifies that this checkout can use the full-tree public CI sandbox:
+  - required local tools exist
+  - canonical and sandbox GitHub repos are reachable
+  - ci remote exists and points at the expected sandbox URL
+  - origin/main and helm-ci/main point at the same baseline
+  - configured workflows exist locally, are visible on helm-ci, and support workflow_dispatch
+  - optional branch is pushed consistently to helm-ci and, when present, origin
+EOF
+    return 0
+  fi
+  branch="${1:-$(current_branch)}"
+
+  repo_root
+  need_tools
+
+  echo "ci-sandbox: doctor for $CI_REPO (canonical $CANONICAL_REPO)"
+
+  local canonical_visibility ci_visibility
+  canonical_visibility="$(repo_visibility "$CANONICAL_REPO")"
+  ci_visibility="$(repo_visibility "$CI_REPO")"
+  if [ -n "$canonical_visibility" ]; then
+    doctor_ok "canonical repo reachable: $CANONICAL_REPO ($canonical_visibility)"
+  else
+    doctor_fail "canonical repo not reachable: $CANONICAL_REPO"
+  fi
+  if [ "$ci_visibility" = "PUBLIC" ]; then
+    doctor_ok "CI sandbox repo reachable and public: $CI_REPO"
+  elif [ -n "$ci_visibility" ]; then
+    doctor_fail "CI sandbox repo is reachable but not public: $CI_REPO ($ci_visibility)"
+  else
+    doctor_fail "CI sandbox repo not reachable: $CI_REPO"
+  fi
+
+  local configured_ci_url
+  configured_ci_url="$(remote_url)"
+  if [ -n "$configured_ci_url" ]; then
+    if [ "$configured_ci_url" = "$CI_REMOTE_URL" ]; then
+      doctor_ok "remote '$CI_REMOTE' points at $CI_REMOTE_URL"
+    else
+      doctor_warn "remote '$CI_REMOTE' points at $configured_ci_url (expected $CI_REMOTE_URL)"
+    fi
+  else
+    doctor_fail "remote '$CI_REMOTE' is missing; run scripts/ci-sandbox.sh setup"
+  fi
+
+  if git -C "$ROOT" remote get-url "$ORIGIN_REMOTE" >/dev/null 2>&1; then
+    doctor_ok "canonical remote '$ORIGIN_REMOTE' exists"
+  else
+    doctor_fail "canonical remote '$ORIGIN_REMOTE' is missing"
+  fi
+
+  local local_main origin_main ci_main
+  local_main="$(git -C "$ROOT" rev-parse --verify "${MAIN_REF}^{commit}" 2>/dev/null || true)"
+  origin_main="$(ls_remote_sha "$ORIGIN_REMOTE" refs/heads/main)"
+  ci_main="$(ls_remote_sha "$CI_REMOTE_URL" refs/heads/main)"
+  if [ -n "$local_main" ]; then
+    doctor_ok "$MAIN_REF resolves to ${local_main:0:12}"
+  else
+    doctor_fail "$MAIN_REF does not resolve locally; run git fetch $ORIGIN_REMOTE main"
+  fi
+  if [ -n "$origin_main" ]; then
+    doctor_ok "$ORIGIN_REMOTE/main is reachable at ${origin_main:0:12}"
+  else
+    doctor_fail "$ORIGIN_REMOTE/main is not reachable"
+  fi
+  if [ -n "$ci_main" ]; then
+    doctor_ok "$CI_REPO/main is reachable at ${ci_main:0:12}"
+  else
+    doctor_fail "$CI_REPO/main is not reachable"
+  fi
+  if [ -n "$origin_main" ] && [ -n "$local_main" ] && [ "$origin_main" != "$local_main" ]; then
+    doctor_warn "$MAIN_REF is stale versus $ORIGIN_REMOTE/main; run scripts/ci-sandbox.sh refresh-main"
+  fi
+  if [ -n "$origin_main" ] && [ -n "$ci_main" ]; then
+    if [ "$origin_main" = "$ci_main" ]; then
+      doctor_ok "$CI_REPO/main matches $ORIGIN_REMOTE/main"
+    else
+      doctor_fail "$CI_REPO/main (${ci_main:0:12}) differs from $ORIGIN_REMOTE/main (${origin_main:0:12}); run scripts/ci-sandbox.sh refresh-main"
+    fi
+  fi
+
+  local workflow
+  for workflow in $SANDBOX_WORKFLOWS; do
+    if [ -f "$ROOT/.github/workflows/$workflow" ]; then
+      doctor_ok "workflow file exists locally: $workflow"
+      if grep -q 'workflow_dispatch:' "$ROOT/.github/workflows/$workflow"; then
+        doctor_ok "workflow supports manual dispatch locally: $workflow"
+      else
+        doctor_fail "workflow lacks workflow_dispatch locally: $workflow"
+      fi
+    else
+      doctor_fail "workflow file missing locally: $workflow"
+    fi
+    if gh workflow view "$workflow" --repo "$CI_REPO" >/dev/null 2>&1; then
+      doctor_ok "workflow visible on $CI_REPO: $workflow"
+    else
+      doctor_fail "workflow not visible on $CI_REPO: $workflow"
+    fi
+  done
+
+  if [ -n "$branch" ]; then
+    if git -C "$ROOT" rev-parse --verify "$branch^{commit}" >/dev/null 2>&1; then
+      local branch_sha ci_branch origin_branch
+      branch_sha="$(git -C "$ROOT" rev-parse "$branch")"
+      ci_branch="$(ls_remote_sha "$CI_REMOTE_URL" "refs/heads/$branch")"
+      origin_branch="$(ls_remote_sha "$ORIGIN_REMOTE" "refs/heads/$branch")"
+      doctor_ok "local branch $branch resolves to ${branch_sha:0:12}"
+      if [ -n "$ci_branch" ]; then
+        if [ "$ci_branch" = "$branch_sha" ]; then
+          doctor_ok "$CI_REPO branch $branch matches local SHA"
+        else
+          doctor_fail "$CI_REPO branch $branch is ${ci_branch:0:12}, local is ${branch_sha:0:12}"
+        fi
+      else
+        doctor_warn "$CI_REPO branch $branch is not pushed yet; run scripts/ci-sandbox.sh push $branch"
+      fi
+      if [ -n "$origin_branch" ]; then
+        if [ "$origin_branch" = "$branch_sha" ]; then
+          doctor_ok "$CANONICAL_REPO branch $branch matches local SHA"
+        else
+          doctor_warn "$CANONICAL_REPO branch $branch is ${origin_branch:0:12}, local is ${branch_sha:0:12}"
+        fi
+      else
+        doctor_warn "$CANONICAL_REPO branch $branch is not pushed yet"
+      fi
+    else
+      doctor_warn "branch $branch does not resolve locally; branch-specific checks skipped"
+    fi
+  else
+    doctor_warn "not on a branch; branch-specific checks skipped"
+  fi
+
+  echo "ci-sandbox: doctor summary: ${ok_count} ok, ${warn_count} warn, ${fail_count} fail"
+  if [ "$fail_count" -ne 0 ]; then
+    die "doctor found $fail_count failure(s)"
+  fi
+}
+
 cmd_delete() {
   local branch
   branch="$(resolve_branch "${1:-}")"
@@ -320,6 +500,17 @@ cmd_sync_main() {
   echo "ci-sandbox: main synced — https://github.com/${CI_REPO}"
 }
 
+cmd_refresh_main() {
+  need_tools
+  repo_root
+  ensure_repo
+  ensure_remote
+  echo "ci-sandbox: fetching $ORIGIN_REMOTE main"
+  git -C "$ROOT" fetch "$ORIGIN_REMOTE" main
+  local MAIN_REF="${ORIGIN_REMOTE}/main"
+  cmd_sync_main
+}
+
 cmd_open_pr() {
   local branch
   branch="$(resolve_branch "${1:-}")"
@@ -332,9 +523,8 @@ cmd_open_pr() {
 
   cmd_push "$branch"
 
-  local origin_remote="${ORIGIN_REMOTE:-origin}"
   echo "ci-sandbox: pushing $branch to canonical repo ($CANONICAL_REPO)"
-  git -C "$ROOT" push -u "$origin_remote" "$branch"
+  git -C "$ROOT" push -u "$ORIGIN_REMOTE" "$branch"
 
   if gh pr view --repo "$CANONICAL_REPO" --head "$branch" >/dev/null 2>&1; then
     gh pr view --repo "$CANONICAL_REPO" --head "$branch" --web
@@ -350,8 +540,9 @@ cmd_open_pr() {
 
 Extensive GitHub Actions ran on [\`${CI_REPO}\`](https://github.com/${CI_REPO}/actions?query=branch%3A${branch}) before opening this PR on \`${CANONICAL_REPO}\`.
 
-Sandbox branch can be deleted after merge:
+After merge, refresh the sandbox baseline and delete the temporary sandbox branch:
 \`\`\`bash
+scripts/ci-sandbox.sh refresh-main
 scripts/ci-sandbox.sh delete ${branch}
 \`\`\`
 EOF
@@ -366,8 +557,10 @@ main() {
     push) cmd_push "$@" ;;
     wait) cmd_wait "$@" ;;
     status) cmd_status "$@" ;;
+    doctor) cmd_doctor "$@" ;;
     delete) cmd_delete "$@" ;;
     sync-main) cmd_sync_main "$@" ;;
+    refresh-main) cmd_refresh_main "$@" ;;
     open-pr) cmd_open_pr "$@" ;;
     -h|--help|help|"") usage ;;
     *) die "unknown command '$cmd' (try: scripts/ci-sandbox.sh --help)" ;;

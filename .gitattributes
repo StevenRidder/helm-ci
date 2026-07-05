@@ -1,4 +1,5 @@
 .gitattributes export-ignore
+AGENTS.md export-ignore
 scripts/publish-public-mirror.sh export-ignore
 scripts/bootstrap-private-install.sh export-ignore
 scripts/update-remote-parity.sh export-ignore

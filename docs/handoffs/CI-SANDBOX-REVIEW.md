@@ -1,13 +1,31 @@
 # CI-SANDBOX-REVIEW — Switchboard handoff
 
-**Status:** Ready for review  
+**Status:** Resolved and merged; retained as historical handoff
 **Author agent:** `cursor/ci-sandbox-setup-891e` (Cloud Agent)  
 **PR:** https://github.com/StevenRidder/Helm/pull/354  
 **Branch:** `cursor/ci-sandbox-setup-891e`  
-**Suggested Switchboard task ID:** `CI-1` (create if missing)  
+**Switchboard task:** `INFRA-1`
 **Workstream:** `INFRA` or `CLIENT` (CI / agent tooling)
 
 ---
+
+## Resolution update — 2026-07-05
+
+This handoff has been executed. `StevenRidder/helm-ci` exists, is public, and
+uses the full actual Helm tree for CI. PR #354 merged into Helm `main`, and
+`helm-ci/main` was synced to the merged Helm `main` SHA.
+
+Follow-up bake-in work added:
+
+- root `AGENTS.md` so fresh agents cloning the repo see the CI policy first
+- `scripts/ci-sandbox.sh doctor` for setup/workflow/baseline verification
+- `scripts/ci-sandbox.sh refresh-main` to fetch canonical `origin/main` and
+  sync `helm-ci/main`
+- updated `docs/AGENT-BOOTSTRAP.md`, `docs/CI-SANDBOX.md`, `docs/DEVELOPMENT.md`,
+  and `docs/REPO-MAP.md`
+
+Use this file as historical context only. Current instructions live in
+`AGENTS.md` and `docs/CI-SANDBOX.md`.
 
 ## Review request (for the reviewing agent)
 
@@ -19,12 +37,12 @@ tooling.
 
 ### Review checklist
 
-- [ ] `scripts/ci-sandbox.sh` — setup/push/wait/status/delete/sync-main/open-pr behave correctly
-- [ ] Docs clearly distinguish **`helm-ci`** (full-tree CI) vs **`helm-public`** (sanitized mirror)
-- [ ] Switchboard agent loop in `docs/AGENT-BOOTSTRAP.md` and `docs/CI-SANDBOX.md` is accurate
-- [ ] Owner bootstrap steps are correct (`gh repo create` + `sync-main`)
-- [ ] No secrets, private paths, or chart blobs committed
-- [ ] Recommend whether post-merge auto-sync of `main` → `helm-ci` is worth adding
+- [x] `scripts/ci-sandbox.sh` — setup/push/wait/status/delete/refresh-main/open-pr behave correctly
+- [x] Docs clearly distinguish **`helm-ci`** (full-tree CI) vs **`helm-public`** (sanitized mirror)
+- [x] Switchboard agent loop in `AGENTS.md`, `docs/AGENT-BOOTSTRAP.md`, and `docs/CI-SANDBOX.md` is accurate
+- [x] Owner bootstrap happened; use `scripts/ci-sandbox.sh refresh-main` for baseline sync
+- [x] No secrets, private paths, or chart blobs committed by the CI tooling
+- [x] Post-merge `main` to `helm-ci` sync is available through `refresh-main`
 
 ### Files changed
 
@@ -36,17 +54,15 @@ tooling.
 | `docs/REPO-MAP.md` | Repo map entries |
 | `docs/AGENT-BOOTSTRAP.md` | Agent push-to-sandbox-before-PR guidance |
 
-### Blocked follow-up (owner-only)
+### Historical blocked follow-up (now resolved)
 
 Cloud agent token could **not** create `StevenRidder/helm-ci` (`Resource not
-accessible by integration`). After merge, repo owner must run:
+accessible by integration`). This was resolved by creating the repo and syncing
+`helm-ci/main`. The modern command is:
 
 ```bash
-gh repo create StevenRidder/helm-ci --public \
-  --description "Public CI sandbox for Helm — full tree, all GitHub Actions workflows"
-git checkout main && git pull origin main
 scripts/ci-sandbox.sh setup
-scripts/ci-sandbox.sh sync-main
+scripts/ci-sandbox.sh refresh-main
 ```
 
 ---

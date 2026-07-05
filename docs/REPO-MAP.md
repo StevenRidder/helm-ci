@@ -18,6 +18,7 @@ Use this as the quick orientation guide for the public alpha.
 | `docs/decisions/` | ADRs | architecture decision records that are public-safe |
 | `.github/workflows/` | CI | web, engine, backend, HELMC++, symbol-selection gates |
 | `scripts/ci-sandbox.sh` | CI sandbox | push full-tree branches to public `helm-ci` before Helm PRs |
+| `AGENTS.md` | agent contract | root startup rules, Switchboard discipline, full-tree CI requirement |
 | [docs/CI-SANDBOX.md](CI-SANDBOX.md) | CI sandbox docs | `helm-ci` vs `helm-public`, agent loop |
 | `.github/ISSUE_TEMPLATE/` | issue intake | bug reports, alpha tests, contribution tasks |
 

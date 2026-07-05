@@ -39,11 +39,11 @@ gh repo create StevenRidder/helm-ci --public \
   --description "Public CI sandbox for Helm - full actual tree, all GitHub Actions workflows"
 
 scripts/ci-sandbox.sh setup
-scripts/ci-sandbox.sh sync-main
+scripts/ci-sandbox.sh refresh-main
 ```
 
 This creates `StevenRidder/helm-ci` (if needed), adds a git remote named `ci`,
-and seeds `main`.
+fetches authoritative `origin/main`, and seeds `helm-ci/main`.
 
 ## Typical branch loop
 
@@ -51,17 +51,21 @@ and seeds `main`.
 git checkout -b claude/MY-TASK-slug
 # ... edit, commit ...
 
-# 1) Run full CI on the public sandbox (waits by default)
+# 1) Prove this checkout can use the sandbox
+scripts/ci-sandbox.sh doctor
+
+# 2) Run full CI on the public sandbox (waits by default)
 scripts/ci-sandbox.sh push
 
-# 2) Open the real PR on Helm after sandbox CI is green
+# 3) Open the real PR on Helm after sandbox CI is green
 git push -u origin claude/MY-TASK-slug
 gh pr create --repo StevenRidder/Helm --fill
 
 # Or combine sandbox push/wait + canonical push + PR:
 # scripts/ci-sandbox.sh open-pr claude/MY-TASK-slug
 
-# 3) After merge on Helm, delete the sandbox branch
+# 4) After merge on Helm, refresh baseline and delete the sandbox branch
+scripts/ci-sandbox.sh refresh-main
 scripts/ci-sandbox.sh delete claude/MY-TASK-slug
 ```
 
@@ -71,6 +75,8 @@ scripts/ci-sandbox.sh delete claude/MY-TASK-slug
 |---|---|
 | `scripts/ci-sandbox.sh setup` | Create repo + `ci` remote |
 | `scripts/ci-sandbox.sh sync-main` | Refresh sandbox `main` from local `main` |
+| `scripts/ci-sandbox.sh refresh-main` | Fetch canonical `origin/main`, then sync sandbox `main` |
+| `scripts/ci-sandbox.sh doctor [branch]` | Verify tools, repos, remotes, baseline, workflows, and optional branch pushes |
 | `scripts/ci-sandbox.sh push [branch]` | Push branch, dispatch all sandbox workflows, wait for the dispatched Actions batch |
 | `scripts/ci-sandbox.sh push --no-wait [branch]` | Push and dispatch workflows without waiting |
 | `scripts/ci-sandbox.sh push --no-dispatch [branch]` | Push only; rely on normal path-filter triggers |
@@ -80,9 +86,10 @@ scripts/ci-sandbox.sh delete claude/MY-TASK-slug
 | `scripts/ci-sandbox.sh open-pr [branch]` | Push to sandbox, wait for green CI, push to Helm, open PR |
 
 Environment overrides: `CI_REPO`, `CI_REMOTE`, `CANONICAL_REPO`,
-`WAIT_TIMEOUT_SEC` (default 7200), `MAIN_REF` (default `origin/main` for
-`sync-main`), `SANDBOX_WORKFLOWS` (space-separated workflow file list), and
-`SANDBOX_WAIT_EVENT` for manual `wait`/`status` event filtering.
+`ORIGIN_REMOTE`, `WAIT_TIMEOUT_SEC` (default 7200), `MAIN_REF` (default
+`origin/main` for `sync-main`), `SANDBOX_WORKFLOWS` (space-separated workflow
+file list), and `SANDBOX_WAIT_EVENT` for manual `wait`/`status` event
+filtering.
 
 By default, `push` treats the explicit `workflow_dispatch` batch as the
 authoritative sandbox CI suite. GitHub may also start duplicate push-triggered
@@ -98,10 +105,11 @@ marks tasks Done (`github_pr_merged`).
 Agent flow:
 
 1. Claim task on Switchboard.
-2. Push branch to **`helm-ci`** and wait for green (`scripts/ci-sandbox.sh push`).
-3. Push the same branch to **`Helm`** and open a PR.
-4. Call `complete_claim` with the **Helm** PR URL (not the sandbox).
-5. After merge, `scripts/ci-sandbox.sh delete <branch>`.
+2. Run `scripts/ci-sandbox.sh doctor` and fix any failures.
+3. Push branch to **`helm-ci`** and wait for green (`scripts/ci-sandbox.sh push`).
+4. Push the same branch to **`Helm`** and open a PR.
+5. Call `complete_claim` with the **Helm** PR URL (not the sandbox) and include the `helm-ci` Actions URL.
+6. After merge, run `scripts/ci-sandbox.sh refresh-main`, then `scripts/ci-sandbox.sh delete <branch>`.
 
 Add the sandbox Actions URL to a task comment when helpful:
 
@@ -114,11 +122,12 @@ https://github.com/StevenRidder/helm-ci/actions?query=branch%3A<branch>
 After merging to Helm `main`, refresh the sandbox baseline:
 
 ```bash
-git checkout main && git pull origin main
-scripts/ci-sandbox.sh sync-main
+scripts/ci-sandbox.sh refresh-main
 ```
 
-Optional: run this from a post-merge hook or scheduled job on a trusted machine.
+`refresh-main` fetches canonical `origin/main` and pushes that exact commit to
+`helm-ci/main`; it does not require checking out `main`. Optional: run this from
+a post-merge hook or scheduled job on a trusted machine.
 
 ## Private Helm origin
 

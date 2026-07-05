@@ -28,7 +28,7 @@ cursor/SHELL-2-style-fragments
 
 Before touching files:
 
-1. Read this file or the local `AGENTS.md` mirror in full.
+1. Read the root `AGENTS.md`, then this file, in full.
 2. Read `docs/EPICS.md` for your assigned epic or task. Record the outcome, owned files, wave,
    dependencies, and task list.
 3. Skim `docs/ARCHITECTURE.md`, `docs/OPENCPN-REUSE.md`, `docs/FEATURE-TRACKER.md`, and
@@ -144,17 +144,26 @@ Work in a private branch/worktree. Obey the live branch convention returned by
 
 Never push directly to `main`. Push your branch before claiming progress.
 
-For expensive GitHub Actions (macOS engine smoke), run CI on the public
-full-tree sandbox first, then open the Helm PR:
+For any substantial code change, run CI on the public full-tree sandbox before
+opening or merging the Helm PR. This avoids burning private-origin minutes and
+proves the actual code tree, not the sanitized public mirror:
 
 ```bash
+scripts/ci-sandbox.sh doctor
 scripts/ci-sandbox.sh push
 git push -u origin <branch>
 ```
 
 See [CI-SANDBOX.md](CI-SANDBOX.md). `complete_claim` must reference the **Helm**
-PR URL; delete the sandbox branch after merge with `scripts/ci-sandbox.sh delete
-<branch>`.
+PR URL and should include the `helm-ci` Actions URL. After the Helm PR merges,
+refresh the sandbox baseline and delete the temporary sandbox branch:
+
+```bash
+scripts/ci-sandbox.sh refresh-main
+scripts/ci-sandbox.sh delete <branch>
+```
+
+`helm-ci` is full-tree CI. It is not `helm-public`, and it is not sanitized.
 
 During long work, keep presence fresh:
 
@@ -188,7 +197,7 @@ headless model/nav core behind web/mobile clients. You are assigned:
     EPIC: <EPIC>
     TASK: <TASK-ID or "claim next unblocked task in this epic">
 
-Start by reading docs/AGENT-BOOTSTRAP.md or AGENTS.md, then docs/EPICS.md for <EPIC>, then the
+Start by reading AGENTS.md and docs/AGENT-BOOTSTRAP.md, then docs/EPICS.md for <EPIC>, then the
 architecture/runbook docs named there. Enlist with Switchboard via the taikun-plan MCP using
 project="helm": call get_working_agreement, register_agent with agent_id="<runtime>/<scope>-<slug>",
 drain list_unacked_messages and list_unblock_requests, then read or claim your task. Before that
@@ -201,6 +210,9 @@ unless the live board says the SHELL prerequisite has landed and your task owns 
 private branch/worktree, private test ports, and never touch the live :8080 Helm screen.
 
 Before work, check dependencies and active agents. During work, add task comments for decisions,
-blockers, and cross-epic needs. When pushed and ready for review, call complete_claim with branch,
-head_sha, and PR evidence; never set Done yourself.
+blockers, and cross-epic needs. Before opening or merging the Helm PR, run
+scripts/ci-sandbox.sh doctor and scripts/ci-sandbox.sh push so the full actual tree passes in
+StevenRidder/helm-ci. When pushed and ready for review, call complete_claim with branch, head_sha,
+the Helm PR URL, and the helm-ci Actions URL; never set Done yourself. After merge, run
+scripts/ci-sandbox.sh refresh-main and scripts/ci-sandbox.sh delete <branch>.
 ```
