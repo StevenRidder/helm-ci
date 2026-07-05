@@ -8,6 +8,11 @@
 
   var INDEX_SCHEMA = 'helm.render.artifact_index.v1';
 
+  function authFetch(url, opts) {
+    if (global.HelmEndpoint && global.HelmEndpoint.authUrl) url = global.HelmEndpoint.authUrl(url);
+    return fetch(url, opts || {});
+  }
+
   function tileKey(tile) {
     return (+tile.z) + ',' + (+tile.x) + ',' + (+tile.y);
   }
@@ -40,7 +45,7 @@
     var self = this;
     if (this._loadPromise) return this._loadPromise;
     function tryUrl(url, fromServer) {
-      return fetch(url, { cache: 'no-cache' })
+      return authFetch(url, { cache: 'no-cache' })
         .then(function (r) {
           if (!r.ok) throw new Error('artifact index HTTP ' + r.status);
           return r.json();

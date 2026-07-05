@@ -2417,6 +2417,19 @@ static bool read_file_to_string(const std::string& path, std::string& body) {
   return true;
 }
 
+static std::string artifact_packet_sha256_from_json(const std::string& body) {
+  const char* key = "\"packet_sha256\":\"";
+  const size_t pos = body.find(key);
+  if (pos == std::string::npos) return {};
+  const size_t start = pos + std::strlen(key);
+  if (start + 64 > body.size()) return {};
+  const std::string hex = body.substr(start, 64);
+  for (char c : hex) {
+    if (!std::isxdigit(static_cast<unsigned char>(c))) return {};
+  }
+  return hex;
+}
+
 static ix::HttpResponsePtr serve_render_artifact_file(ix::WebSocketHttpHeaders h,
                                                     const std::string& file_path,
                                                     const ix::HttpRequestPtr& req) {
@@ -2428,7 +2441,8 @@ static ix::HttpResponsePtr serve_render_artifact_file(ix::WebSocketHttpHeaders h
     return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h,
       std::string("{\"ok\":false,\"error\":\"artifact packet not found\"}"));
   }
-  const std::string sha = sha256_hex(body);
+  const std::string packet_sha = artifact_packet_sha256_from_json(body);
+  const std::string sha = packet_sha.empty() ? sha256_hex(body) : packet_sha;
   const std::string etag = "\"artifact:" + sha + "\"";
   h["Content-Type"] = "application/json";
   h["Cache-Control"] = "public, max-age=31536000, immutable";

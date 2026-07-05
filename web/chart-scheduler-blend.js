@@ -76,16 +76,29 @@
     return bboxIntersects(bboxFromViewport(artifact && artifact.viewport), bboxFromViewport(viewport));
   }
 
-  HelmChartSchedulerBlend.prototype._fetchArtifactForEntry = function (entry) {
-    var self = this;
-    var url = this._artifactUrlForEntry(entry);
-    if (!url) return Promise.resolve(null);
-    var cached = this.cache.get(entry.cache_key);
+  HelmChartSchedulerBlend.prototype._artifactFetchHeaders = function (entry) {
     var headers = {};
+    if (this.opts.artifactIndex) {
+      var idxEntry = this.opts.artifactIndex.lookup(entry.tile);
+      if (idxEntry && idxEntry.packet_sha256) {
+        headers['If-None-Match'] = '"artifact:' + idxEntry.packet_sha256 + '"';
+        return headers;
+      }
+    }
+    var cached = this.cache.get(entry.cache_key);
     if (cached && cached.artifact && cached.artifact.checksums &&
         cached.artifact.checksums.packet_sha256) {
       headers['If-None-Match'] = '"artifact:' + cached.artifact.checksums.packet_sha256 + '"';
     }
+    return headers;
+  };
+
+  HelmChartSchedulerBlend.prototype._fetchArtifactForEntry = function (entry) {
+    var self = this;
+    var url = this._artifactUrlForEntry(entry);
+    if (!url) return Promise.resolve(null);
+    if (global.HelmEndpoint && global.HelmEndpoint.authUrl) url = global.HelmEndpoint.authUrl(url);
+    var headers = this._artifactFetchHeaders(entry);
     return fetch(url, { cache: 'no-cache', headers: headers })
       .then(function (r) {
         if (r.status === 304) {
