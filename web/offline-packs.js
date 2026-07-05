@@ -9,6 +9,7 @@
   var SOURCE_ID = 'helm-offline-active-pack';
   var LAYER_ID = 'helm-offline-active-pack';
   var STORE_KEY = 'offline.activePack';
+  var OFFLINE20_STRIP_ID = 'helm-offline20-strip';
   var DEFAULT_PORT = '8091';
   var STATIC_BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis', 'satellite', 'charts'];
   var state = { body: null, map: null, packs: [], activeId: null, loading: false, error: '', lastInspect: null };
@@ -460,6 +461,107 @@
     return state.packs.find(function (p) { return String(p.id) === String(state.activeId); }) || null;
   }
 
+  function stripEnabled() {
+    try {
+      var q = new URLSearchParams(location.search);
+      return q.get('offline20') === '1' || q.get('satFirstProof') === '1' || window.HELM_OFFLINE20_PROOF === true;
+    } catch (e) {
+      return window.HELM_OFFLINE20_PROOF === true;
+    }
+  }
+
+  function shortIso(s) {
+    if (!s) return 'none';
+    var text = String(s);
+    return text.replace('T', ' ').replace(/:00Z$/, 'Z');
+  }
+
+  function packSourceLabel(pack) {
+    var src = pack && pack.source_info || {};
+    return src.label || (pack && (pack.source || pack.attribution || pack.title || pack.id)) || 'none';
+  }
+
+  function packFreshnessLabel(pack) {
+    var fresh = pack && (pack.staleness || pack.freshness) || {};
+    return fresh.status || fresh.state || (pack ? 'unknown' : 'none');
+  }
+
+  function wxStatusSummary() {
+    var st = null;
+    try { st = window.HelmWxGrid && HelmWxGrid.status && HelmWxGrid.status(); } catch (e) {}
+    if (!st) return { mode: 'missing', detail: 'grid module missing', css: 'warn' };
+    var diag = (st.diagnostics || []).map(function (d) { return d && d.code; }).filter(Boolean).join(', ');
+    if (st.state !== 'on') {
+      return {
+        mode: 'off',
+        detail: diag || 'not enabled',
+        css: diag ? 'warn' : ''
+      };
+    }
+    var frames = st.frames ? shortIso(st.frames.a) + ' -> ' + shortIso(st.frames.b) : 'no frame';
+    return {
+      mode: st.layer || 'grid',
+      detail: (st.packId || 'pack') + ' · ' + frames + (diag ? ' · ' + diag : ''),
+      css: diag ? 'warn' : 'ok'
+    };
+  }
+
+  function depthSummary(map) {
+    var names = ['depare-fill', 'depcnt-line', 'soundg-text'];
+    var present = names.filter(function (id) { try { return !!(map && map.getLayer && map.getLayer(id)); } catch (e) { return false; } });
+    var visible = present.filter(function (id) {
+      try { return map.getLayoutProperty(id, 'visibility') !== 'none'; } catch (e) { return true; }
+    });
+    if (!present.length) return { mode: 'missing', detail: 'no depth layers', css: 'warn' };
+    return { mode: visible.length ? 'on' : 'hidden', detail: visible.join(', ') || present.join(', '), css: visible.length ? 'ok' : 'warn' };
+  }
+
+  function ensureOffline20Strip() {
+    if (!stripEnabled()) return;
+    installStyle();
+    var el = document.getElementById(OFFLINE20_STRIP_ID);
+    if (!el) {
+      el = document.createElement('div');
+      el.id = OFFLINE20_STRIP_ID;
+      el.innerHTML = [
+        '<div class="helm-o20-title">SAT-FIRST FIJI</div>',
+        '<div class="helm-o20-grid">',
+        '<span>Base</span><b data-o20-base>none</b>',
+        '<span>Depth</span><b data-o20-depth>unknown</b>',
+        '<span>WX</span><b data-o20-wx>unknown</b>',
+        '<span>Fresh</span><b data-o20-fresh>unknown</b>',
+        '</div>'
+      ].join('');
+      document.body.appendChild(el);
+    }
+    refreshOffline20Strip();
+    if (!window.__helmOffline20StripTimer) {
+      window.__helmOffline20StripTimer = setInterval(refreshOffline20Strip, 750);
+    }
+  }
+
+  function refreshOffline20Strip() {
+    var el = document.getElementById(OFFLINE20_STRIP_ID);
+    if (!el) return;
+    var pack = activePack();
+    var map = state.map || window.map;
+    var depth = depthSummary(map);
+    var wx = wxStatusSummary();
+    var base = pack ? ((pack.title || pack.id) + ' · ' + packSourceLabel(pack)) : 'no active offline pack';
+    var fresh = 'sat ' + packFreshnessLabel(pack);
+    var wxSt = null;
+    try { wxSt = window.HelmWxGrid && HelmWxGrid.status && HelmWxGrid.status(); } catch (e) {}
+    if (wxSt && wxSt.generatedAt) fresh += ' · wx ' + shortIso(wxSt.generatedAt);
+    if (wxSt && wxSt.ageSeconds != null) fresh += ' · age ' + Math.round(wxSt.ageSeconds / 3600) + 'h';
+    el.querySelector('[data-o20-base]').textContent = base;
+    el.querySelector('[data-o20-depth]').textContent = depth.mode + ' · ' + depth.detail;
+    el.querySelector('[data-o20-wx]').textContent = wx.mode + ' · ' + wx.detail;
+    el.querySelector('[data-o20-fresh]').textContent = fresh;
+    el.dataset.wx = wx.css || '';
+    el.dataset.depth = depth.css || '';
+    el.dataset.base = pack ? 'ok' : 'warn';
+  }
+
   function persistActive(id) {
     state.activeId = id || null;
     try {
@@ -476,6 +578,7 @@
     persistActive(pack.id);
     addDynamicLayer(pack);
     renderList();
+    ensureOffline20Strip();
     if (!opts || opts.fit !== false) fitPack(pack);
   }
 
@@ -582,6 +685,7 @@
       });
     }
     fetchCatalog();
+    ensureOffline20Strip();
   }
 
   function installStyle() {
@@ -606,7 +710,15 @@
       '.helm-raster-inspect-grid{display:grid;grid-template-columns:max-content 1fr;gap:4px 10px}',
       '.helm-raster-inspect-grid div{display:contents}',
       '.helm-raster-inspect-grid b{color:var(--cdim2,#7e8c99);font-weight:600}',
-      '.helm-raster-inspect-grid span{min-width:0;overflow-wrap:anywhere}'
+      '.helm-raster-inspect-grid span{min-width:0;overflow-wrap:anywhere}',
+      '#helm-offline20-strip{position:fixed;left:164px;right:188px;bottom:112px;z-index:34;display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid rgba(91,192,255,.35);border-radius:8px;background:rgba(8,15,22,.86);box-shadow:0 8px 24px rgba(0,0,0,.32);backdrop-filter:blur(12px);color:var(--ctext,#e8edf2);font:11px/1.35 system-ui,-apple-system,sans-serif;pointer-events:none}',
+      '#helm-offline20-strip .helm-o20-title{font-size:11px;font-weight:800;letter-spacing:.7px;color:#5bc0ff;white-space:nowrap}',
+      '#helm-offline20-strip .helm-o20-grid{display:grid;grid-template-columns:repeat(4,max-content minmax(70px,1fr));gap:2px 7px;align-items:center;width:100%;min-width:0}',
+      '#helm-offline20-strip span{color:var(--cdim2,#7e8c99);font-weight:700;text-transform:uppercase;letter-spacing:.4px}',
+      '#helm-offline20-strip b{font-weight:650;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ctext,#e8edf2)}',
+      '#helm-offline20-strip[data-base="warn"] [data-o20-base],#helm-offline20-strip[data-depth="warn"] [data-o20-depth],#helm-offline20-strip[data-wx="warn"] [data-o20-wx]{color:var(--warn,#e0a23a)}',
+      '#helm-offline20-strip[data-base="ok"] [data-o20-base],#helm-offline20-strip[data-depth="ok"] [data-o20-depth],#helm-offline20-strip[data-wx="ok"] [data-o20-wx]{color:var(--ok,#5fd08a)}',
+      '@media(max-width:900px){#helm-offline20-strip{left:12px;right:12px;bottom:132px;align-items:flex-start}#helm-offline20-strip .helm-o20-grid{grid-template-columns:max-content 1fr;gap:2px 8px}}'
     ].join('\n');
     document.head.appendChild(style);
   }
@@ -643,6 +755,7 @@
 
   bindStaticBasemapFallback();
   register();
+  ensureOffline20Strip();
   // CLIENT-22: bind the viewport prefetch/coverage hook as soon as the REAL map exists, independent
   // of panel-render or pack-activation timing — both were unreliable (panel may be lazy; restore can
   // run before window.map has .on, see other modules' "map.on is not a function" deferral).
@@ -655,6 +768,7 @@
     activate: activate,
     fit: fitPack,
     ensurePmtilesProtocol: ensurePmtilesProtocol,   // boot registers pmtiles:// before the basemap sources load (OFFLINE-19)
+    refreshOffline20Strip: refreshOffline20Strip,
     state: state
   };
 })();
