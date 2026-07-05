@@ -6,9 +6,10 @@ pipeline/iconforge/public/proof/site-index.json.  This script makes the
 comparison images explicit in that index and copies only files that exist in the
 local source tree into the public bundle.
 
-OpenCPN render paths are recorded as comparison evidence, but this branch does
-not ship the generated OpenCPN PNGs.  Missing paths are therefore recorded as
-missing instead of guessed or silently replaced.
+OpenCPN render PNGs are comparison evidence only.  When a checked-in public
+comparison PNG exists, it is indexed with an explicit non-Helm-art role.  When
+only a declared generator path exists, the missing state is still recorded
+instead of guessed or silently replaced.
 """
 from __future__ import annotations
 
@@ -61,18 +62,35 @@ def _find_s101_exact(row: dict[str, Any]) -> Path | None:
     return None
 
 
-def _find_opencpn_day(row: dict[str, Any]) -> tuple[Path | None, dict[str, str]]:
+def _find_public_opencpn(sid: str, palette: str) -> Path | None:
+    public_path = COMPARISON_DIR / "opencpn" / f"{sid}__{palette}.png"
+    if public_path.exists():
+        return public_path
+    return None
+
+
+def _find_opencpn_palette(sid: str, row: dict[str, Any]) -> tuple[dict[str, Path], dict[str, str]]:
     declared: dict[str, str] = {}
     for example in row.get("examples") or []:
         if example.get("source") != "opencpn_s52_reference_render":
             continue
         declared = dict(example.get("paths") or {})
-        day = declared.get("day")
-        if day:
-            path = ICONFORGE / day
+        found: dict[str, Path] = {}
+        for palette in ("day", "dusk", "night"):
+            rel = declared.get(palette)
+            if not rel:
+                continue
+            path = ICONFORGE / rel
             if path.exists():
-                return path, declared
-    return None, declared
+                found[palette] = path
+                continue
+            public_path = _find_public_opencpn(sid, palette)
+            if public_path:
+                found[palette] = public_path
+        if found:
+            return found, declared
+    found = {palette: path for palette in ("day", "dusk", "night") if (path := _find_public_opencpn(sid, palette))}
+    return found, declared
 
 
 def build() -> dict[str, Any]:
@@ -100,17 +118,24 @@ def build() -> dict[str, Any]:
         else:
             counts["s101_missing"] += 1
 
-        opencpn, declared = _find_opencpn_day(source_row)
-        if opencpn:
-            public_path = _copy_public(opencpn, f"assets/comparison/opencpn/{sid}__day{opencpn.suffix}")
+        opencpn_images, declared = _find_opencpn_palette(sid, source_row)
+        if opencpn_images:
+            public_images = {
+                palette: _copy_public(path, f"assets/comparison/opencpn/{sid}__{palette}{path.suffix}")
+                for palette, path in sorted(opencpn_images.items())
+            }
+            preferred = public_images.get("day") or next(iter(public_images.values()))
             comparison["opencpn"] = {
-                "image": public_path,
+                "image": preferred,
+                "images": public_images,
                 "role": "comparison_target_only",
                 "source": "opencpn_s52_reference_render",
                 "status": "available",
-                "note": "OpenCPN render output is comparison evidence only.",
+                "license": "GPL-2.0-or-later comparison evidence from OpenCPN/S-52 rendering; not Helm-owned Apache artwork.",
+                "note": "OpenCPN/S-52 render output is GPL comparison evidence only; it is not Helm canonical artwork.",
             }
             counts["opencpn_available"] += 1
+            counts[f"opencpn_palette_images_{len(public_images)}"] += 1
         elif declared:
             comparison["opencpn"] = {
                 "role": "comparison_target_only",
