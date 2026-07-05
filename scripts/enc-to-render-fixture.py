@@ -1,13 +1,19 @@
 #!/usr/bin/env python3
-"""RENDERMODEL-3 — ENC (.000 / S-57) -> vulkan.render_scene.v0 command-stream fixture.
+"""RENDERMODEL-4 — ENC (.000 / S-57) -> vulkan.render_scene.v0 command-stream fixture.
 
-This is the missing "stage 1" of the chart render pipeline: it turns a REAL NOAA ENC
-cell into the neutral command stream that the already-working downstream stages
-consume unchanged:
+This is "stage 1" of the chart render pipeline: it turns a REAL NOAA ENC cell into
+the neutral command stream that the already-working downstream stages consume
+unchanged:
 
     ENC .000  --[THIS TOOL]-->  scene.commands.json (+ source/provenance/manifest)
               --render-model-fixture-export-->  helm.render.model.v1
               --render-artifact-compile------->  helm.render.artifact.v1  (WebGPU packet)
+
+RENDERMODEL-4 (visual parity): area features (DEPARE depth bands, LNDARE land,
+DRGARE dredged) are emitted as ACTUAL FILLED polygons — pre-triangulated on the CPU
+with earcut (handles concavity + holes) so each triangle is a convex 3-point ring —
+not thin outlines.  Depth is banded from DRVAL1 into S-52 day bands, and colours use
+the S-52 day palette (mirrored into web/data/s52-atlas-fixture.json).
 
 Design constraints discovered in the pipeline (and how we honour them):
 
@@ -17,10 +23,15 @@ Design constraints discovered in the pipeline (and how we honour them):
     not one per feature.  Category count stays well under 32.
 
   * render_artifact_compiler.cpp triangulates each fill ring with a simple FAN, which is
-    only correct for CONVEX rings.  => We never hand it a raw ENC polygon.  Every feature
-    is pre-expanded on the CPU into CONVEX primitives: line segments become thin quads,
-    points become small squares, area boundaries become quads.  A quad/triangle fans
-    correctly.
+    only correct for CONVEX rings.  => We never hand it a raw ENC polygon.  Areas are
+    earcut-triangulated into CONVEX triangles (emitted as 3-point rings); line segments
+    become thin quads; points become small squares.  A triangle/quad fans correctly.
+
+  * Draw order: every category is a fill_area command (order_bucket == render_pass_rank
+    == 10 for AreaFill), so relative order follows the STABLE compile order, which the
+    exporter derives from command_group chart_priority.  CATEGORIES is therefore listed
+    bottom-to-top: depth fills < dredged < land < depth contours < coastline < soundings
+    < symbols.
 
   * The browser maps the artifact's target-pixel rect onto viewport.geographic_bbox with a
     linear-in-lon/lat mapping (see chart-artifact-webgpu.js tileToNdc):
@@ -49,24 +60,31 @@ import subprocess
 import sys
 import tempfile
 
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+from _earcut import triangulate_rings  # noqa: E402  (repo-vendored, dependency-free)
+
 # --- S-57 object class -> visual category ------------------------------------------------
-# Each category becomes exactly ONE fill_area command (many convex rings), so the whole cell
-# uses <=32 materials.  `color` is written into the command `fill.color` (used by the CPU
-# reference renderer + render-model) AND `ref`/`ref_kind` set the material's
+# Each category becomes exactly ONE fill_area command, so the whole cell uses <=32
+# materials.  `color` is written into the command `fill.color` (used by the CPU reference
+# renderer + render-model) AND `ref`/`ref_kind` set the material's
 # symbol_ref/line_style_ref/pattern_ref so the browser S-52 atlas resolves the same colour.
-#   ref_kind: pattern -> translucent fill, line -> opaque stroke, symbol -> opaque marker.
+#   ref_kind: pattern -> area fill, line -> opaque stroke, symbol -> opaque marker.
+# ORDER MATTERS: listed bottom-to-top (draw/stack order). S-52 day palette values are kept
+# byte-parallel with web/data/s52-atlas-fixture.json.  Depth ramp goes deep(lightest) ->
+# shallow(most blue), matching ECDIS four-shade day portrayal.
 CATEGORIES = [
-    # id             layers                         geom     color(day)  ref                     ref_kind  hw
-    ("land",         ["LNDARE", "BUAARE"],          "poly",  "#d9c7a6",  "pattern.land",         "pattern", 1.0),
-    ("depth_deep",   ["DEPARE:deep"],               "poly",  "#9fc9e0",  "pattern.depare-deep",  "pattern", 1.0),
-    ("depth_mid",    ["DEPARE:mid"],                "poly",  "#c4e0ef",  "pattern.depare-mid",   "pattern", 1.0),
-    ("depth_shallow",["DEPARE:shallow"],            "poly",  "#e6f2f9",  "pattern.depare-shallow","pattern",1.0),
-    ("coastline",    ["COALNE", "SLCONS"],          "line",  "#5a4b30",  "line.coastline",       "line",    1.6),
-    ("depth_contour",["DEPCNT"],                    "line",  "#4a6f8a",  "line.depth-contour",   "line",    1.0),
-    ("sounding",     ["SOUNDG"],                    "point", "#1b2a36",  "sym.sounding",         "symbol",  1.0),
+    # id             layers                          geom     color(day)  ref                      ref_kind  hw
+    ("depth_deep",   ["DEPARE:deep"],                "poly",  "#ecf5fb",  "pattern.depare-deep",   "pattern", 1.0),
+    ("depth_mid",    ["DEPARE:mid"],                 "poly",  "#cfe6f4",  "pattern.depare-mid",    "pattern", 1.0),
+    ("depth_shallow",["DEPARE:shallow"],             "poly",  "#a9d3ea",  "pattern.depare-shallow","pattern", 1.0),
+    ("dredged",      ["DRGARE"],                     "poly",  "#cfe3ea",  "pattern.dredged",       "pattern", 1.0),
+    ("land",         ["LNDARE", "BUAARE"],           "poly",  "#d9c7a6",  "pattern.land",          "pattern", 1.0),
+    ("depth_contour",["DEPCNT"],                     "line",  "#4a6f8a",  "line.depth-contour",    "line",    1.0),
+    ("coastline",    ["COALNE", "SLCONS"],           "line",  "#5a4b30",  "line.coastline",        "line",    1.6),
+    ("sounding",     ["SOUNDG"],                     "point", "#1b2a36",  "sym.sounding",          "symbol",  1.0),
     ("aid",          ["BOYLAT", "BOYSAW", "BOYSPP", "BOYISD", "BOYCAR",
-                      "BCNLAT", "BCNSPP", "BCNCAR", "LIGHTS"], "point", "#f0a020", "sym.boyspp",  "symbol",  1.0),
-    ("hazard",       ["UWTROC", "OBSTRN", "WRECKS", "ROCKS"], "point", "#c8322d", "sym.hazard",   "symbol",  1.0),
+                      "BCNLAT", "BCNSPP", "BCNCAR", "LIGHTS"], "point", "#f0a020", "sym.boyspp",   "symbol",  1.0),
+    ("hazard",       ["UWTROC", "OBSTRN", "WRECKS", "ROCKS"], "point", "#c8322d", "sym.hazard",    "symbol",  1.0),
 ]
 
 # Layers we read from the ENC.  DEPARE is split into depth bands after reading.
@@ -116,6 +134,21 @@ def iter_rings(geom):
         for poly in c:
             for ring in poly:
                 yield ring
+
+
+def iter_polygons(geom):
+    """Yield (exterior_ring, [hole_rings]) per polygon for Polygon/MultiPolygon."""
+    if not geom:
+        return
+    t = geom.get("type")
+    c = geom.get("coordinates")
+    if t == "Polygon":
+        if c:
+            yield c[0], list(c[1:])
+    elif t == "MultiPolygon":
+        for poly in c or []:
+            if poly:
+                yield poly[0], list(poly[1:])
 
 
 def iter_lines(geom):
@@ -252,6 +285,14 @@ def main() -> int:
         h = max(1, int(round(half_px)))
         return [[x - h, y - h], [x + h, y - h], [x + h, y + h], [x - h, y + h], [x - h, y - h]]
 
+    def tri_ring(tri):
+        # Round earcut triangle to integer target pixels; drop rounding-degenerate ones.
+        ring = [[ri(x), ri(y)] for x, y in tri]
+        (ax, ay), (bx, by), (cx, cy) = ring
+        if abs((bx - ax) * (cy - ay) - (cx - ax) * (by - ay)) < 1:
+            return None
+        return ring
+
     def simplify(pts, tol):
         # Iterative Douglas-Peucker in target-pixel space.
         if tol <= 0 or len(pts) < 3:
@@ -316,8 +357,24 @@ def main() -> int:
                 if want_band and want_band != band:
                     continue
                 added = False
-                if kind in ("poly", "line"):
-                    # Outline polygon rings / draw lines as thin quads (robust; convex; no concave fan).
+                if kind == "poly":
+                    # Fill areas: project + simplify each ring in target pixels, earcut the
+                    # polygon (concave + holes) into triangles, emit each as a 3-point ring.
+                    for exterior, holes in iter_polygons(g):
+                        ext = simplify([project(p[0], p[1]) for p in exterior], args.simplify_px)
+                        if len(ext) < 3:
+                            continue
+                        hs = []
+                        for hole in holes:
+                            hp = simplify([project(p[0], p[1]) for p in hole], args.simplify_px)
+                            if len(hp) >= 3:
+                                hs.append(hp)
+                        for tri in triangulate_rings(ext, hs):
+                            ring = tri_ring(tri)
+                            if ring:
+                                cat_rings[cid].append(ring); added = True
+                elif kind == "line":
+                    # Draw lines / area boundaries as thin quads (robust; convex; no concave fan).
                     for line in iter_lines(g):
                         pts = simplify([project(p[0], p[1]) for p in line], args.simplify_px)
                         for i in range(len(pts) - 1):
@@ -435,7 +492,7 @@ def main() -> int:
         "diagnostics": [{
             "severity": "info",
             "code": "capture.real_enc",
-            "message": f"Real NOAA ENC cell {cell_id} captured via GDAL/OGR S-57 (RENDERMODEL-3).",
+            "message": f"Real NOAA ENC cell {cell_id} captured via GDAL/OGR S-57 with earcut area fills (RENDERMODEL-4).",
             "provenance_refs": [],
             "suggested_action": "",
         }],
@@ -477,7 +534,7 @@ def main() -> int:
 
     manifest = {
         "fixture_id": cell_id,
-        "title": f"Real NOAA ENC {cell_id} command-stream capture (RENDERMODEL-3)",
+        "title": f"Real NOAA ENC {cell_id} filled-polygon command-stream capture (RENDERMODEL-4)",
         "schema_version": "vulkan.render_scene.v0",
         "scene_id": scene_id,
         "source_file": "source.json",

@@ -527,3 +527,71 @@ test.describe('RENDERMODEL-3 — real US5GA2BC artifact at live harbour', () => 
     });
   });
 });
+
+test.describe('RENDERMODEL-4 — filled S-52 portrayal at US5GA2BC', () => {
+  // Browser side of the RENDERMODEL-4 acceptance (the deterministic GPU-free gate is
+  // web/test/rendermodel4-fill-parity.test.cjs). When a real WebGPU adapter is present
+  // this samples the live GPU canvas and proves it draws FILLED buff land + blue water —
+  // i.e. NOT a wireframe. Skips gracefully (asserting opt-in state) when headless has no GPU.
+  test('WebGPU draws filled land + water for the real cell (not wireframe)', async ({ page, request }) => {
+    const enc = await fetchCatalogEncCenter(request);
+    test.skip(enc.cellId !== 'US5GA2BC', 'live server must load US5GA2BC for RENDERMODEL-4 fill proof');
+
+    await page.addInitScript(() => {
+      try { localStorage.setItem('helmChartWebgpu', '1'); } catch (e) {}
+      window.HELM_SCHED2 = true;
+    });
+    await bootHarbour(page, { query: 'cell=us5ga2bc&chartWebgpu=1', hash: encHash(enc), waitArtifact: true });
+    await page.waitForFunction(
+      () => window.__helmChartSchedulerBlend || window.__helmChartScheduler,
+      null, { timeout: 30000 }
+    );
+
+    const state = await collectRendererState(page);
+    expect(state.status.artifact.artifact_id).toContain('US5GA2BC');
+
+    if (!webgpuPrimaryExpectations(state)) {
+      test.info().annotations.push({
+        type: 'webgpu-capability',
+        description: `No WebGPU adapter — fill proof deferred to headed Chrome. reason: ${state.status.fallback_reason}`
+      });
+      expect(state.status.feature_flag.enabled).toBe(true);
+      appendManifest('rendermodel4_fill', { pass: true, skipped_primary: true, reason: state.status.fallback_reason });
+      return;
+    }
+
+    // Sample the live GPU canvas: filled chart pixels (buff land + blue water) must
+    // dominate. A wireframe/outline packet leaves the canvas almost entirely empty.
+    const sample = await page.evaluate(() => {
+      const c = document.querySelector('.helm-chart-artifact-canvas');
+      if (!c) return null;
+      const off = document.createElement('canvas');
+      off.width = c.width; off.height = c.height;
+      const ctx = off.getContext('2d');
+      ctx.drawImage(c, 0, 0);
+      const { data } = ctx.getImageData(0, 0, off.width, off.height);
+      let total = 0, filled = 0, buff = 0, blue = 0;
+      for (let i = 0; i < data.length; i += 4) {
+        total++;
+        const r = data[i], g = data[i + 1], b = data[i + 2], a = data[i + 3];
+        if (a < 24) continue;                     // transparent = nothing drawn there
+        filled++;
+        if (r > 150 && r >= g && g >= b) buff++;   // land buff
+        else if (b > 150 && b >= r) blue++;        // water blue
+      }
+      return { total, filled, buff, blue };
+    });
+
+    expect(sample, 'gpu canvas must be sampleable').toBeTruthy();
+    const filledFrac = sample.filled / sample.total;
+    expect(filledFrac, `filled fraction ${filledFrac.toFixed(3)} must exceed 0.4 (wireframe ~ 0.05)`).toBeGreaterThan(0.4);
+    expect(sample.buff, 'buff land pixels present').toBeGreaterThan(0);
+    expect(sample.blue, 'blue water pixels present').toBeGreaterThan(0);
+
+    await page.screenshot({ path: path.join(BROWSER_DIR, '12-rendermodel4-webgpu-filled.png'), fullPage: true });
+    appendManifest('rendermodel4_fill', {
+      pass: true, skipped_primary: false,
+      filled_fraction: +filledFrac.toFixed(3), buff: sample.buff, blue: sample.blue
+    });
+  });
+});
