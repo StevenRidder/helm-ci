@@ -16,7 +16,9 @@ Use this as the quick orientation guide for the public alpha.
 | `backend/` | optional backend/agent experiments | Python requirements are scoped here |
 | `docs/` | public docs | architecture, runbook, licensing, data, integrations |
 | `docs/decisions/` | ADRs | architecture decision records that are public-safe |
-| `.github/workflows/` | CI | web unit tests and Playwright E2E |
+| `.github/workflows/` | CI | web, engine, backend, HELMC++, symbol-selection gates |
+| `scripts/ci-sandbox.sh` | CI sandbox | push full-tree branches to public `helm-ci` before Helm PRs |
+| [docs/CI-SANDBOX.md](CI-SANDBOX.md) | CI sandbox docs | `helm-ci` vs `helm-public`, agent loop |
 | `.github/ISSUE_TEMPLATE/` | issue intake | bug reports, alpha tests, contribution tasks |
 
 ## Common Entry Points

@@ -144,6 +144,18 @@ Work in a private branch/worktree. Obey the live branch convention returned by
 
 Never push directly to `main`. Push your branch before claiming progress.
 
+For expensive GitHub Actions (macOS engine smoke), run CI on the public
+full-tree sandbox first, then open the Helm PR:
+
+```bash
+scripts/ci-sandbox.sh push
+git push -u origin <branch>
+```
+
+See [CI-SANDBOX.md](CI-SANDBOX.md). `complete_claim` must reference the **Helm**
+PR URL; delete the sandbox branch after merge with `scripts/ci-sandbox.sh delete
+<branch>`.
+
 During long work, keep presence fresh:
 
 ```text

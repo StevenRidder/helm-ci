@@ -132,12 +132,32 @@ fixtures.
 | `pipeline/` | read `pipeline/README.md` and `docs/CHART-PIPELINE.md` | generated files stay outside Git unless they are safe fixtures |
 | `docs/` | check public links and safety wording | links resolve in the public mirror |
 
+## CI Sandbox (`helm-ci`)
+
+For heavy GitHub Actions (especially the macOS engine fresh-clone smoke), push
+feature branches to the public full-tree CI sandbox first so minutes stay off a
+private Helm origin:
+
+```bash
+scripts/ci-sandbox.sh setup          # once
+scripts/ci-sandbox.sh push           # current branch → helm-ci, wait for green
+git push -u origin <branch>          # then open PR on Helm
+scripts/ci-sandbox.sh delete <branch> # after merge
+```
+
+Full details: [CI-SANDBOX.md](CI-SANDBOX.md).
+
 ## Public Mirror
 
 The public repository is maintained from a sanitized export of the private
 source tree. Public cleanup should not mutate the live runtime UX or remove the
 bring-your-own chart path. Private chart data and internal planning material
 must stay out of the exported tree.
+
+The CI sandbox ([CI-SANDBOX.md](CI-SANDBOX.md)) is **not** the public mirror.
+Use `StevenRidder/helm-ci` for the full actual code tree and full CI; use
+`StevenRidder/helm-public` only for the scrubbed external snapshot
+(`scripts/publish-public-mirror.sh`).
 
 If you are reading the public mirror, you do not need private publish tooling to
 contribute. Open issues and pull requests against the public repo with small,
