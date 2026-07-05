@@ -84,8 +84,15 @@ install_file() {
     return
   fi
   mkdir -p "$(dirname "$dst")"
-  cp "$src" "$dst"
-  chmod "$mode" "$dst"
+  # Atomic replace: copy to a temp beside the destination, then rename into place.
+  # A plain in-place `cp` over a running/mmap'd binary poisons the kernel's cached
+  # code signature for that vnode, and macOS then kills every new exec with
+  # OS_REASON_CODESIGNING. `mv` gives the destination path a fresh inode, so an
+  # upgrade over a live install starts cleanly.
+  local tmp="$dst.install.$$"
+  cp "$src" "$tmp"
+  chmod "$mode" "$tmp"
+  mv -f "$tmp" "$dst"
 }
 
 copy_dir() {

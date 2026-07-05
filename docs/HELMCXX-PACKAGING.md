@@ -152,3 +152,29 @@ That installs the real C++ binaries into a staging root, starts `helm-server` an
 `helm-packd` on private ports, checks `/health`, core `/catalog`, local pack
 `/catalog`, and shuts the processes down cleanly. It never uses the shared
 `:8080` screen.
+
+## Upgrading a running install
+
+Replace runtime binaries **atomically** — never overwrite a running/mmap'd binary
+in place. On macOS, a plain in-place `cp` over a binary that is currently running
+(or was, and is still mapped by a supervisor's respawn) poisons the kernel's
+cached code signature for that file's vnode; every subsequent `exec` is then
+killed with `OS_REASON_CODESIGNING` (symptom: processes stuck in uninterruptible
+`UE` state, 0 CPU, empty log, unkillable until reboot — even though `codesign -v`
+reports the on-disk file as valid). `scripts/install-helmcxx-runtime.sh` does this
+correctly: it copies to a temp path beside the destination and `mv`s it into place,
+giving the destination a fresh inode.
+
+Stop the service through its supervisor before (or after) the swap, and restart it
+through the supervisor rather than launching a second copy by hand — a manual
+launch races a `KeepAlive`/`Restart=always` respawn, and two concurrent chart
+inits on the same runtime state wedge both. On systemd:
+
+```sh
+sudo systemctl stop helm-server.service
+sudo scripts/install-helmcxx-runtime.sh
+sudo systemctl start helm-server.service
+```
+
+On a launchd-managed macOS install, restart with
+`launchctl kickstart -k gui/$(id -u)/<label>` rather than a manual `nohup`.
