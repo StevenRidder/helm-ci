@@ -4,8 +4,8 @@
 
 Before this task the entire chart render chain (RENDERMODEL → ARTIFACT → WEBGPU → QA) had
 only ever been exercised on the synthetic **`chart-1`** fixture: a hand-authored 8×8 test
-tile (`source_type: synthetic`, "intentionally tiny"). The browser WebGPU path — now the
-default renderer — literally drew that toy tile and nothing else. It had **never rendered a
+tile (`source_type: synthetic`, "intentionally tiny"). The browser WebGPU path (opt-in via
+`?chartWebgpu=1`) literally drew that toy tile and nothing else. It had **never rendered a
 real chart**, because the "stage 1" step that turns a real ENC cell into the neutral render
 command stream did not exist anywhere in the repo (the S-52 presentation compiler is future
 OpenCPN-branch work, and `helm-server` only rasterises ENC → PNG).
@@ -71,6 +71,14 @@ draw the real cell:
 
 The map auto-fits to the cell's bounds. The renderer-status surface reports the active
 renderer, fallback reason, and artifact schema/epoch as usual.
+
+Harbour acceptance against live `:8080` (requires US5GA2BC loaded):
+
+```bash
+bash scripts/rendermodel-3-harbour-proof.sh
+```
+
+Evidence lands in `test-results/rendermodel-3-harbour/`.
 
 ## Rebuild
 
