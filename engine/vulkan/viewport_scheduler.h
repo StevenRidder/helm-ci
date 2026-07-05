@@ -66,6 +66,7 @@ struct VisibleViewport {
   std::string projection = "web_mercator_tile";
   std::uint32_t z = 0;
   LonLat center;
+  bool has_center = false;
   std::optional<TileCoord> anchor_tile;
   std::uint32_t viewport_width_px = 0;
   std::uint32_t viewport_height_px = 0;
@@ -145,6 +146,17 @@ struct ScheduleResponse {
   ScheduleTotals totals;
   std::vector<ScheduleDiagnostic> diagnostics;
 };
+
+class ScheduleError : public std::runtime_error {
+ public:
+  using std::runtime_error::runtime_error;
+};
+
+// Canonical helm.render.schedule.v1 implementation (parity with pipeline/viewport_scheduler.py).
+[[nodiscard]] ScheduleResponse BuildScheduleResponse(const ScheduleRequest& request,
+                                                     const std::string& source_epoch = {});
+
+[[nodiscard]] bool ScheduleResponseEqual(const ScheduleResponse& lhs, const ScheduleResponse& rhs);
 
 [[nodiscard]] inline const char* ScheduleIntentName(ScheduleIntent intent) {
   switch (intent) {

@@ -2,14 +2,29 @@
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
-MAIN="$ROOT/engine/vulkan/viewport_scheduler_smoke.cpp"
+SRC=(
+  "$ROOT/engine/vulkan/viewport_scheduler.cpp"
+  "$ROOT/engine/vulkan/viewport_scheduler_smoke.cpp"
+)
 HDR="$ROOT/engine/vulkan/viewport_scheduler.h"
 BIN="${HELM_VIEWPORT_SCHEDULER_SMOKE_BIN:-${TMPDIR:-/tmp}/helm-viewport-scheduler-smoke}"
 CXX_BIN="${CXX:-c++}"
 
-if [ ! -x "$BIN" ] || [ "$MAIN" -nt "$BIN" ] || [ "$HDR" -nt "$BIN" ]; then
+needs_build=0
+if [ ! -x "$BIN" ]; then
+  needs_build=1
+else
+  for f in "${SRC[@]}" "$HDR"; do
+    if [ "$f" -nt "$BIN" ]; then
+      needs_build=1
+      break
+    fi
+  done
+fi
+
+if [ "$needs_build" -eq 1 ]; then
   mkdir -p "$(dirname "$BIN")"
-  "$CXX_BIN" -std=c++17 -O2 -Wall -Wextra -pedantic -I "$ROOT/engine/vulkan" "$MAIN" -o "$BIN"
+  "$CXX_BIN" -std=c++17 -O2 -Wall -Wextra -pedantic -I "$ROOT/engine/vulkan" "${SRC[@]}" -o "$BIN"
 fi
 
 exec "$BIN" "$@"

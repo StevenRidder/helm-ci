@@ -3,6 +3,10 @@
 
 Deterministic tile math only — no chart semantics. Used by fixtures, tests, and
 future server/browser integration.
+
+NOTE: Canonical implementation is C++ — engine/vulkan/viewport_scheduler.cpp
+(BuildScheduleResponse). This module is retained as a cross-check oracle only;
+scripts/viewport-scheduler-fixture-check calls the C++ binary.
 """
 from __future__ import annotations
 

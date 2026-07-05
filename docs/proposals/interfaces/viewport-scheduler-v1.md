@@ -3,7 +3,7 @@
 Schema family: `helm.render.schedule.*.v1`  
 Producer: `helm-chartd`, browser cache scheduler (using server hints)  
 Consumers: browser WebGPU path, artifact cache, prefetch executors, debug tools  
-Current code anchors: `engine/vulkan/viewport_scheduler.h`, `pipeline/viewport_scheduler.py`, `helm.render.model.v1`
+Current code anchors: `engine/vulkan/viewport_scheduler.h`, `engine/vulkan/viewport_scheduler.cpp` (canonical), `pipeline/viewport_scheduler.py` (oracle)
 
 ## Purpose
 
