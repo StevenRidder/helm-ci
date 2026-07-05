@@ -537,6 +537,12 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
   const std::string render_model_path = render_model_file.empty() ? std::string() : join_path(fixture_dir, render_model_file);
   const std::string render_model_binary_path =
       render_model_binary_file.empty() ? std::string() : join_path(fixture_dir, render_model_binary_file);
+  const std::string render_artifact_file = string_value(object_get(manifest, "render_artifact_file"));
+  const std::string render_artifact_binary_file = string_value(object_get(manifest, "render_artifact_binary_file"));
+  const std::string render_artifact_path =
+      render_artifact_file.empty() ? std::string() : join_path(fixture_dir, render_artifact_file);
+  const std::string render_artifact_binary_path =
+      render_artifact_binary_file.empty() ? std::string() : join_path(fixture_dir, render_artifact_binary_file);
 
   if (!std::ifstream(source_path.c_str())) add_error(errors, fixture_id + ": missing " + base_name(source_path));
   if (!std::ifstream(scene_path.c_str())) add_error(errors, fixture_id + ": missing " + base_name(scene_path));
@@ -547,17 +553,24 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
   if (!render_model_binary_path.empty() && !std::ifstream(render_model_binary_path.c_str(), std::ios::binary)) {
     add_error(errors, fixture_id + ": missing " + base_name(render_model_binary_path));
   }
+  if (!render_artifact_path.empty() && !std::ifstream(render_artifact_path.c_str())) {
+    add_error(errors, fixture_id + ": missing " + base_name(render_artifact_path));
+  }
+  if (!render_artifact_binary_path.empty() && !std::ifstream(render_artifact_binary_path.c_str(), std::ios::binary)) {
+    add_error(errors, fixture_id + ": missing " + base_name(render_artifact_binary_path));
+  }
   if (!errors.empty()) {
     for (std::size_t i = 0; i < errors.size(); ++i) std::cerr << errors[i] << "\n";
     return std::make_pair(1, 0);
   }
 
-  Json source, scene, provenance, render_model;
+  Json source, scene, provenance, render_model, render_artifact;
   try {
     source = load_json(source_path);
     scene = load_json(scene_path);
     provenance = load_json(provenance_path);
     if (!render_model_path.empty()) render_model = load_json(render_model_path);
+    if (!render_artifact_path.empty()) render_artifact = load_json(render_artifact_path);
   } catch (const std::exception& e) {
     std::cerr << e.what() << "\n";
     return std::make_pair(1, 0);
@@ -571,6 +584,10 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
   if (!render_model_path.empty()) actual_hashes["render_model_json_sha256"] = json_sha256(render_model_path);
   if (!render_model_binary_path.empty()) {
     actual_hashes["render_model_binary_sha256"] = file_sha256(render_model_binary_path);
+  }
+  if (!render_artifact_path.empty()) actual_hashes["render_artifact_json_sha256"] = json_sha256(render_artifact_path);
+  if (!render_artifact_binary_path.empty()) {
+    actual_hashes["render_artifact_binary_sha256"] = file_sha256(render_artifact_binary_path);
   }
 
   for (std::map<std::string, std::string>::const_iterator it = actual_hashes.begin();
@@ -675,6 +692,44 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
     }
   }
 
+  if (!render_artifact_path.empty()) {
+    if (string_value(object_get(render_artifact, "schema_version")) != "helm.render.artifact.v1") {
+      add_error(errors, fixture_id + ": render-artifact schema_version mismatch");
+    }
+    if (string_value(object_get(render_artifact, "source_model_id")) != string_value(object_get(scene, "scene_id"))) {
+      add_error(errors, fixture_id + ": render-artifact source_model_id does not match scene_id");
+    }
+    const Json* checksums = object_get(render_artifact, "checksums");
+    if (!checksums) {
+      add_error(errors, fixture_id + ": render-artifact missing checksums");
+    } else {
+      if (string_value(object_get(*checksums, "source_model_json_sha256")).empty() ||
+          string_value(object_get(*checksums, "geometry_sha256")).empty() ||
+          string_value(object_get(*checksums, "tables_sha256")).empty() ||
+          string_value(object_get(*checksums, "packet_sha256")).empty()) {
+        add_error(errors, fixture_id + ": render-artifact checksums incomplete");
+      }
+    }
+    const Json* geometry = object_get(render_artifact, "geometry");
+    if (!geometry) {
+      add_error(errors, fixture_id + ": render-artifact missing geometry");
+    } else {
+      if (array_value(object_get(*geometry, "vertices_f32")).empty() ||
+          array_value(object_get(*geometry, "indices_u32")).empty()) {
+        add_error(errors, fixture_id + ": render-artifact geometry must not be empty");
+      }
+    }
+    if (array_value(object_get(render_artifact, "material_table")).empty()) {
+      add_error(errors, fixture_id + ": render-artifact material_table must not be empty");
+    }
+    if (array_value(object_get(render_artifact, "draw_batches")).empty()) {
+      add_error(errors, fixture_id + ": render-artifact draw_batches must not be empty");
+    }
+    if (render_artifact_binary_path.empty()) {
+      add_error(errors, fixture_id + ": render_artifact_file requires render_artifact_binary_file");
+    }
+  }
+
   const std::vector<Json>& expected_images = array_value(object_get(manifest, "expected_images"));
   for (std::size_t i = 0; i < expected_images.size(); ++i) {
     const std::string rel_path = string_value(object_get(expected_images[i], "path"));
@@ -701,8 +756,10 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
                            "scene_commands_json_sha256",
                            "provenance_json_sha256",
                            "render_model_json_sha256",
-                           "render_model_binary_sha256"};
-    for (std::size_t i = 0; i < 5; ++i) {
+                           "render_model_binary_sha256",
+                           "render_artifact_json_sha256",
+                           "render_artifact_binary_sha256"};
+    for (std::size_t i = 0; i < 7; ++i) {
       std::map<std::string, std::string>::const_iterator it = actual_hashes.find(order[i]);
       if (it != actual_hashes.end()) std::cout << "  " << order[i] << ": " << it->second << "\n";
     }

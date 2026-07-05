@@ -32,6 +32,8 @@ chart-1/
   provenance.json        # source/object/transform/quilt provenance
   render-model.json      # helm.render.model.v1 neutral primitive export
   render-model.bin       # deterministic binary-ready primitive stream
+  render-artifact.json   # helm.render.artifact.v1 WebGPU-ready browser packet
+  render-artifact.bin    # deterministic binary browser packet
   expected.ppm           # tiny dependency-free golden image placeholder
 ```
 
@@ -67,6 +69,22 @@ state, and a source trace with chart id, source feature id, object class,
 provenance refs, and inspection handles. The manifest records canonical JSON
 and binary hashes so Helm/WebGPU, Vulkan/VSG, and future native paths consume
 the same semantics rather than separate chart logic.
+
+`ARTIFACT-1` adds the first C++ compiler from the neutral render model into
+browser-consumable WebGPU artifact packets:
+
+```bash
+scripts/render-artifact-compile engine/test/fixtures/vulkan-render/chart-1 --check --print-hashes
+```
+
+The compiler builds the typed `helm.render.model.v1` C++ model from the
+fixture command stream, then emits `helm.render.artifact.v1` packets with
+vertices, indices, material/style tables, symbol/glyph/line atlas references,
+tile/viewport metadata, draw batches, pick records, and stable checksums.
+`render-artifact.json` is reviewable; `render-artifact.bin` is a compact
+binary handoff for browser consumers. The manifest records canonical JSON and
+binary hashes so WebGPU clients can load compiled geometry without re-running
+chart semantics in the browser.
 
 `VSG-1` adds a dependency-free C++17 fixture replay renderer:
 

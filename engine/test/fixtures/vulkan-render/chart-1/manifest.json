@@ -8,6 +8,8 @@
   "provenance_file": "provenance.json",
   "render_model_file": "render-model.json",
   "render_model_binary_file": "render-model.bin",
+  "render_artifact_file": "render-artifact.json",
+  "render_artifact_binary_file": "render-artifact.bin",
   "license": {
     "type": "synthetic",
     "redistribution": "repo-owned",
@@ -44,7 +46,9 @@
     "scene_commands_json_sha256": "cbe6b18f37bdcc57e998bd4e887b21b2b809d7e49d63a5a9eb73c83b06a1ceef",
     "provenance_json_sha256": "7bf3873c8902bc840cb4459dbf5abf7ad2fa8c4813a1a74771069bbc2991a573",
     "render_model_json_sha256": "b1e2ba0ed19a0a309d3987129bfe7fac482ca3039fbad277e2765234a6b69d42",
-    "render_model_binary_sha256": "0b06e548bd4e31c386d275c3552e923b2e4ac28df26d67e92ec8c73b7a8b3aba"
+    "render_model_binary_sha256": "0b06e548bd4e31c386d275c3552e923b2e4ac28df26d67e92ec8c73b7a8b3aba",
+    "render_artifact_json_sha256": "427e05a385d96df4eb3a35c8b4f4f143b0e4e66e6696ea9190f3beb51decca31",
+    "render_artifact_binary_sha256": "15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c"
   },
   "expected_images": [
     {

@@ -1584,6 +1584,7 @@ struct Options {
 
 }  // namespace
 
+#ifndef HELM_RENDER_ARTIFACT_COMPILER
 int main(int argc, char** argv) {
   try {
     const Options options = parse_args(argc, argv);
@@ -1617,3 +1618,4 @@ int main(int argc, char** argv) {
     return 1;
   }
 }
+#endif  // HELM_RENDER_ARTIFACT_COMPILER
