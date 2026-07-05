@@ -256,6 +256,13 @@ set_canonical_status() {
     -f target_url="$target_url" >/dev/null
 }
 
+canonical_status_state() {
+  local sha="$1"
+  gh api "repos/${CANONICAL_REPO}/commits/${sha}/status" \
+    --jq --arg context "$STATUS_CONTEXT" '.statuses[]? | select(.context == $context) | .state' \
+    2>/dev/null | head -n 1
+}
+
 maybe_stamp_existing_canonical_branch() {
   local branch="$1"
   local sha origin_branch
@@ -576,10 +583,14 @@ EOF
       if [ -n "$origin_branch" ]; then
         if [ "$origin_branch" = "$branch_sha" ]; then
           doctor_ok "$CANONICAL_REPO branch $branch matches local SHA"
-          if assert_sandbox_green_for_sha "$branch" "$branch_sha"; then
+          local status_state
+          status_state="$(canonical_status_state "$branch_sha")"
+          if [ "$status_state" = "success" ]; then
+            doctor_ok "$STATUS_CONTEXT status is success for ${branch_sha:0:12}"
+          elif assert_sandbox_green_for_sha "$branch" "$branch_sha"; then
             doctor_ok "$CI_REPO full workflow_dispatch suite is green for ${branch_sha:0:12}"
           else
-            doctor_warn "$CI_REPO full workflow_dispatch suite is not green/proven for ${branch_sha:0:12}"
+            doctor_warn "$CI_REPO full workflow_dispatch suite is not green/proven and $STATUS_CONTEXT is not success for ${branch_sha:0:12}"
           fi
         else
           doctor_warn "$CANONICAL_REPO branch $branch is ${origin_branch:0:12}, local is ${branch_sha:0:12}"
