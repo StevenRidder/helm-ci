@@ -150,13 +150,25 @@ proves the actual code tree, not the sanitized public mirror:
 
 ```bash
 scripts/ci-sandbox.sh doctor
-scripts/ci-sandbox.sh push
-git push -u origin <branch>
+scripts/ci-sandbox.sh open-pr <branch>
 ```
 
 See [CI-SANDBOX.md](CI-SANDBOX.md). `complete_claim` must reference the **Helm**
-PR URL and should include the `helm-ci` Actions URL. After the Helm PR merges,
-refresh the sandbox baseline and delete the temporary sandbox branch:
+PR URL and should include the `helm-ci` Actions URL. The script stamps the
+required `helm-ci/full-suite` status on the exact SHA after public CI passes;
+Helm `main` branch protection requires that status before it can move.
+
+If you do the steps manually, run:
+
+```bash
+scripts/ci-sandbox.sh push <branch>
+git push -u origin <branch>
+scripts/ci-sandbox.sh prove <branch>
+gh pr create --repo StevenRidder/Helm --fill
+```
+
+After the Helm PR merges, refresh the sandbox baseline and delete the temporary
+sandbox branch:
 
 ```bash
 scripts/ci-sandbox.sh refresh-main
@@ -211,8 +223,8 @@ private branch/worktree, private test ports, and never touch the live :8080 Helm
 
 Before work, check dependencies and active agents. During work, add task comments for decisions,
 blockers, and cross-epic needs. Before opening or merging the Helm PR, run
-scripts/ci-sandbox.sh doctor and scripts/ci-sandbox.sh push so the full actual tree passes in
-StevenRidder/helm-ci. When pushed and ready for review, call complete_claim with branch, head_sha,
+scripts/ci-sandbox.sh doctor and scripts/ci-sandbox.sh open-pr so the full actual tree passes in
+StevenRidder/helm-ci and stamps helm-ci/full-suite on the exact Helm SHA. When pushed and ready for review, call complete_claim with branch, head_sha,
 the Helm PR URL, and the helm-ci Actions URL; never set Done yourself. After merge, run
 scripts/ci-sandbox.sh refresh-main and scripts/ci-sandbox.sh delete <branch>.
 ```

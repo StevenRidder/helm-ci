@@ -20,6 +20,7 @@ WAIT_TIMEOUT_SEC="${WAIT_TIMEOUT_SEC:-7200}"
 POLL_INTERVAL_SEC="${POLL_INTERVAL_SEC:-20}"
 MAIN_REF="${MAIN_REF:-origin/main}"
 SANDBOX_WORKFLOWS="${SANDBOX_WORKFLOWS:-backend-tests.yml engine-fresh-clone-smoke.yml helmcxx-runtime-guard.yml symbol-selection-smoke.yml web-e2e.yml web-tests.yml}"
+STATUS_CONTEXT="${STATUS_CONTEXT:-helm-ci/full-suite}"
 
 die() {
   echo "ci-sandbox: $*" >&2
@@ -102,7 +103,9 @@ Commands:
   push [--no-wait]      Push <branch> (default: current), dispatch workflows, wait for dispatched Actions
   wait                  Wait for in-progress Actions on <branch> (default: current)
   status                Print recent Actions conclusions for <branch> (default: current)
+  prove                 Stamp canonical repo status after exact SHA passed helm-ci
   doctor                Verify repo/remotes/workflows/baseline/branch wiring
+  protect-main          Require the helm-ci status before main can move
   delete                Delete <branch> from the CI sandbox remote
   sync-main             Push local main to the CI sandbox (refresh baseline after merges)
   refresh-main          Fetch canonical main, then sync it to the CI sandbox
@@ -119,15 +122,14 @@ Environment:
   MAIN_REF              Ref to seed sandbox main from (default: $MAIN_REF)
   SANDBOX_WORKFLOWS     Space-separated workflow files to dispatch after push
   SANDBOX_WAIT_EVENT    Optional event filter for manual wait/status, e.g. workflow_dispatch
+  STATUS_CONTEXT        Canonical required status context (default: $STATUS_CONTEXT)
 
 Typical agent loop:
   scripts/ci-sandbox.sh setup
   scripts/ci-sandbox.sh doctor
   git checkout -b claude/MY-TASK-slug
   # ... edit, commit ...
-  scripts/ci-sandbox.sh push
-  git push -u origin claude/MY-TASK-slug
-  gh pr create --repo $CANONICAL_REPO ...
+  scripts/ci-sandbox.sh open-pr claude/MY-TASK-slug
   # after merge on Helm:
   scripts/ci-sandbox.sh refresh-main
   scripts/ci-sandbox.sh delete claude/MY-TASK-slug
@@ -181,6 +183,7 @@ cmd_push() {
     else
       wait_for_runs "$branch" "${SANDBOX_WAIT_EVENT:-}" "" 1
     fi
+    maybe_stamp_existing_canonical_branch "$branch"
   else
     echo "ci-sandbox: pushed; check https://github.com/${CI_REPO}/actions?query=branch%3A${branch}"
   fi
@@ -191,6 +194,12 @@ workflow_count() {
   printf '%s' "$#"
 }
 
+actions_url() {
+  local branch="$1"
+  local encoded="${branch//\//%2F}"
+  printf 'https://github.com/%s/actions?query=branch%%3A%s' "$CI_REPO" "$encoded"
+}
+
 dispatch_workflows() {
   local branch="$1"
   local workflow
@@ -199,6 +208,116 @@ dispatch_workflows() {
     echo "ci-sandbox: gh workflow run $workflow --ref $branch"
     gh workflow run "$workflow" --repo "$CI_REPO" --ref "$branch"
   done
+}
+
+matching_runs_for_sha_json() {
+  local branch="$1"
+  local sha="$2"
+  list_runs_json "$branch" | jq --arg sha "$sha" '[.[] | select(.headSha == $sha and .event == "workflow_dispatch")]'
+}
+
+latest_runs_by_workflow_for_sha_json() {
+  local branch="$1"
+  local sha="$2"
+  matching_runs_for_sha_json "$branch" "$sha" | jq 'sort_by(.name, .createdAt) | group_by(.name) | map(max_by(.createdAt))'
+}
+
+assert_sandbox_green_for_sha() {
+  local branch="$1"
+  local sha="$2"
+  local matching matching_count pending failed required
+  required="$(workflow_count)"
+  matching="$(latest_runs_by_workflow_for_sha_json "$branch" "$sha")"
+  matching_count="$(printf '%s' "$matching" | jq 'length')"
+  if [ "$matching_count" -lt "$required" ]; then
+    return 10
+  fi
+  pending="$(printf '%s' "$matching" | jq '[.[] | select(.status != "completed")] | length')"
+  if [ "$pending" != "0" ]; then
+    return 11
+  fi
+  failed="$(printf '%s' "$matching" | jq '[.[] | select(.conclusion != "success" and .conclusion != "skipped")] | length')"
+  if [ "$failed" != "0" ]; then
+    return 12
+  fi
+  return 0
+}
+
+set_canonical_status() {
+  local sha="$1"
+  local state="$2"
+  local description="$3"
+  local target_url="$4"
+  echo "ci-sandbox: setting $CANONICAL_REPO status $STATUS_CONTEXT=$state on ${sha:0:12}"
+  gh api "repos/${CANONICAL_REPO}/statuses/${sha}" \
+    -f state="$state" \
+    -f context="$STATUS_CONTEXT" \
+    -f description="$description" \
+    -f target_url="$target_url" >/dev/null
+}
+
+canonical_status_state() {
+  local sha="$1"
+  local jq_filter
+  jq_filter='[.statuses[]? | select(.context == "'"$STATUS_CONTEXT"'") | .state][0] // ""'
+  gh api "repos/${CANONICAL_REPO}/commits/${sha}/status" \
+    --jq "$jq_filter" \
+    2>/dev/null
+}
+
+maybe_stamp_existing_canonical_branch() {
+  local branch="$1"
+  local sha origin_branch
+  sha="$(git -C "$ROOT" rev-parse "$branch")"
+  origin_branch="$(ls_remote_sha "$ORIGIN_REMOTE" "refs/heads/$branch")"
+  if [ "$origin_branch" = "$sha" ]; then
+    cmd_prove "$branch"
+  else
+    echo "ci-sandbox: $STATUS_CONTEXT not stamped yet; push the exact SHA to $CANONICAL_REPO and run: scripts/ci-sandbox.sh prove $branch"
+  fi
+}
+
+cmd_prove() {
+  local branch
+  branch="$(resolve_branch "${1:-}")"
+  need_tools
+  repo_root
+  ensure_remote
+
+  local sha ci_branch origin_branch target_url
+  sha="$(git -C "$ROOT" rev-parse "$branch")"
+  ci_branch="$(ls_remote_sha "$CI_REMOTE_URL" "refs/heads/$branch")"
+  origin_branch="$(ls_remote_sha "$ORIGIN_REMOTE" "refs/heads/$branch")"
+  target_url="$(actions_url "$branch")"
+
+  [ "$ci_branch" = "$sha" ] || die "$CI_REPO branch $branch is not the local tested SHA ${sha:0:12}"
+  [ "$origin_branch" = "$sha" ] || die "$CANONICAL_REPO branch $branch is not the local tested SHA ${sha:0:12}; push it first"
+
+  if assert_sandbox_green_for_sha "$branch" "$sha"; then
+    set_canonical_status "$sha" "success" "Full helm-ci suite passed for exact SHA ${sha:0:12}" "$target_url"
+    echo "ci-sandbox: proof stamped on $CANONICAL_REPO for ${sha:0:12}"
+    return 0
+  fi
+
+  local result=$?
+  case "$result" in
+    10)
+      set_canonical_status "$sha" "pending" "Waiting for full helm-ci workflow_dispatch suite" "$target_url"
+      die "not enough helm-ci workflow_dispatch runs found for ${sha:0:12}"
+      ;;
+    11)
+      set_canonical_status "$sha" "pending" "helm-ci suite still running" "$target_url"
+      die "helm-ci workflow_dispatch suite still running for ${sha:0:12}"
+      ;;
+    12)
+      set_canonical_status "$sha" "failure" "helm-ci suite failed for exact SHA ${sha:0:12}" "$target_url"
+      die "helm-ci workflow_dispatch suite failed for ${sha:0:12}"
+      ;;
+    *)
+      set_canonical_status "$sha" "error" "helm-ci proof could not be evaluated" "$target_url"
+      die "helm-ci proof could not be evaluated for ${sha:0:12}"
+      ;;
+  esac
 }
 
 list_runs_json() {
@@ -420,6 +539,14 @@ EOF
     fi
   fi
 
+  local protection_contexts
+  protection_contexts="$(gh api "repos/${CANONICAL_REPO}/branches/main/protection/required_status_checks" --jq '.contexts[]?' 2>/dev/null || true)"
+  if printf '%s\n' "$protection_contexts" | grep -Fx "$STATUS_CONTEXT" >/dev/null 2>&1; then
+    doctor_ok "main requires canonical status: $STATUS_CONTEXT"
+  else
+    doctor_warn "main does not require $STATUS_CONTEXT yet; run scripts/ci-sandbox.sh protect-main"
+  fi
+
   local workflow
   for workflow in $SANDBOX_WORKFLOWS; do
     if [ -f "$ROOT/.github/workflows/$workflow" ]; then
@@ -458,6 +585,15 @@ EOF
       if [ -n "$origin_branch" ]; then
         if [ "$origin_branch" = "$branch_sha" ]; then
           doctor_ok "$CANONICAL_REPO branch $branch matches local SHA"
+          local status_state
+          status_state="$(canonical_status_state "$branch_sha")"
+          if [ "$status_state" = "success" ]; then
+            doctor_ok "$STATUS_CONTEXT status is success for ${branch_sha:0:12}"
+          elif assert_sandbox_green_for_sha "$branch" "$branch_sha"; then
+            doctor_ok "$CI_REPO full workflow_dispatch suite is green for ${branch_sha:0:12}"
+          else
+            doctor_warn "$CI_REPO full workflow_dispatch suite is not green/proven and $STATUS_CONTEXT is not success for ${branch_sha:0:12}"
+          fi
         else
           doctor_warn "$CANONICAL_REPO branch $branch is ${origin_branch:0:12}, local is ${branch_sha:0:12}"
         fi
@@ -475,6 +611,36 @@ EOF
   if [ "$fail_count" -ne 0 ]; then
     die "doctor found $fail_count failure(s)"
   fi
+}
+
+cmd_protect_main() {
+  need_tools
+  repo_root
+  local main_sha ci_main payload
+  main_sha="$(ls_remote_sha "$ORIGIN_REMOTE" refs/heads/main)"
+  ci_main="$(ls_remote_sha "$CI_REMOTE_URL" refs/heads/main)"
+  [ -n "$main_sha" ] || die "$ORIGIN_REMOTE/main is not reachable"
+  [ "$ci_main" = "$main_sha" ] || die "$CI_REPO/main must match $ORIGIN_REMOTE/main first; run scripts/ci-sandbox.sh refresh-main"
+
+  set_canonical_status "$main_sha" "success" "helm-ci/main matches canonical main ${main_sha:0:12}" "https://github.com/${CI_REPO}/actions"
+
+  payload="$(jq -n --arg context "$STATUS_CONTEXT" '{
+    required_status_checks: {
+      strict: true,
+      contexts: [$context]
+    },
+    enforce_admins: true,
+    required_pull_request_reviews: null,
+    restrictions: null
+  }')"
+
+  printf '%s' "$payload" | gh api \
+    --method PUT \
+    -H "Accept: application/vnd.github+json" \
+    "repos/${CANONICAL_REPO}/branches/main/protection" \
+    --input - >/dev/null
+
+  echo "ci-sandbox: protected $CANONICAL_REPO main; required status: $STATUS_CONTEXT"
 }
 
 cmd_delete() {
@@ -525,6 +691,7 @@ cmd_open_pr() {
 
   echo "ci-sandbox: pushing $branch to canonical repo ($CANONICAL_REPO)"
   git -C "$ROOT" push -u "$ORIGIN_REMOTE" "$branch"
+  cmd_prove "$branch"
 
   if gh pr view --repo "$CANONICAL_REPO" --head "$branch" >/dev/null 2>&1; then
     gh pr view --repo "$CANONICAL_REPO" --head "$branch" --web
@@ -557,7 +724,9 @@ main() {
     push) cmd_push "$@" ;;
     wait) cmd_wait "$@" ;;
     status) cmd_status "$@" ;;
+    prove) cmd_prove "$@" ;;
     doctor) cmd_doctor "$@" ;;
+    protect-main) cmd_protect_main "$@" ;;
     delete) cmd_delete "$@" ;;
     sync-main) cmd_sync_main "$@" ;;
     refresh-main) cmd_refresh_main "$@" ;;
