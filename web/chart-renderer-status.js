@@ -14,9 +14,14 @@
     var env = global.HELM_CHART_WEBGPU;
     var ls = null;
     try { ls = global.localStorage.getItem('helmChartWebgpu'); } catch (e) {}
-    // INTEGRATE-1 "kill legacy": WebGPU is the default primary renderer. It is enabled unless an
-    // operator explicitly opts out (env HELM_CHART_WEBGPU=false or localStorage helmChartWebgpu=0).
-    var enabled = !(env === false || ls === '0');
+    // INTEGRATE-1: PNG enc-chart stays default. Opt in via HELM_CHART_WEBGPU=true,
+    // localStorage helmChartWebgpu=1, or ?chartWebgpu=1 on the cockpit URL.
+    var enabled = (env === true || ls === '1');
+    try {
+      var qp = new URLSearchParams(global.location && global.location.search || '');
+      if (qp.get('chartWebgpu') === '1') enabled = true;
+      if (qp.get('chartWebgpu') === '0') enabled = false;
+    } catch (e) {}
     return { env: env, localStorage: ls, enabled: enabled };
   }
 
@@ -134,7 +139,7 @@
     var flag = featureFlagState();
     host.innerHTML =
       '<label class="conn-chk"><input type="checkbox" id="chart-renderer-flag"' +
-      (flag.enabled ? ' checked' : '') + '> WebGPU nautical renderer (default \u00b7 uncheck for legacy ENC)</label>' +
+      (flag.enabled ? ' checked' : '') + '> WebGPU nautical renderer (opt-in \u00b7 PNG ENC is default)</label>' +
       '<div class="cr-detail" style="margin-top:8px;font-size:11px;color:var(--cdim)"></div>';
     var cb = host.querySelector('#chart-renderer-flag');
     if (cb) {

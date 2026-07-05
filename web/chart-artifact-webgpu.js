@@ -23,12 +23,9 @@
  * Fallback discipline (matches wx-particles-webgpu.js / WX-25):
  *     window.__helmChartMode = 'gpu' | 'maplibre'
  *     window.__helmChartModeReason = human-readable reason
- *     One console.info line on every path switch. WebGPU is the DEFAULT primary
- *     renderer (INTEGRATE-1 "kill legacy"): the enc-chart MapLibre raster layer
- *     stays visible only as an explicit, non-silent fallback (operator opt-out or
- *     a genuine capability failure, each with a reported reason).
- *     Default: WebGPU on. Opt out to legacy: HELM_CHART_WEBGPU=false or
- *     localStorage helmChartWebgpu=0.
+ *     One console.info line on every path switch. PNG enc-chart is the default;
+ *     WebGPU is opt-in (HELM_CHART_WEBGPU=true, localStorage helmChartWebgpu=1,
+ *     or ?chartWebgpu=1). Any fallback to MapLibre is explicit and non-silent.
  * --------------------------------------------------------------------------
  */
 (function (global) {
@@ -122,6 +119,79 @@
     };
   }
 
+  function isFiniteNumber(v) {
+    return typeof v === 'number' && Number.isFinite(v);
+  }
+
+  function artifactBbox(artifact) {
+    var vp = artifact && artifact.viewport;
+    if (!vp) return null;
+    var box = {
+      west: +vp.west,
+      south: +vp.south,
+      east: +vp.east,
+      north: +vp.north
+    };
+    if (!isFiniteNumber(box.west) || !isFiniteNumber(box.south) ||
+        !isFiniteNumber(box.east) || !isFiniteNumber(box.north)) return null;
+    if (box.east < box.west || box.north < box.south) return null;
+    return box;
+  }
+
+  function bboxIntersects(a, b) {
+    if (!a || !b) return false;
+    return !(a.east < b.west || a.west > b.east || a.north < b.south || a.south > b.north);
+  }
+
+  function boundsToBbox(bounds) {
+    if (!bounds) return null;
+    if (typeof bounds.getWest === 'function') {
+      return {
+        west: +bounds.getWest(),
+        south: +bounds.getSouth(),
+        east: +bounds.getEast(),
+        north: +bounds.getNorth()
+      };
+    }
+    if (Array.isArray(bounds) && bounds.length >= 2) {
+      var west = Math.min(+bounds[0][0], +bounds[1][0]);
+      var east = Math.max(+bounds[0][0], +bounds[1][0]);
+      var south = Math.min(+bounds[0][1], +bounds[1][1]);
+      var north = Math.max(+bounds[0][1], +bounds[1][1]);
+      return { west: west, south: south, east: east, north: north };
+    }
+    return null;
+  }
+
+  function mapBbox(map) {
+    try {
+      return map && map.getBounds ? boundsToBbox(map.getBounds()) : null;
+    } catch (e) {
+      return null;
+    }
+  }
+
+  function artifactIntersectsBounds(artifact, bounds) {
+    return bboxIntersects(artifactBbox(artifact), boundsToBbox(bounds) || bounds);
+  }
+
+  function artifactIntersectsMap(artifact, map) {
+    var mapBox = mapBbox(map);
+    if (!mapBox) return true;
+    return artifactIntersectsBounds(artifact, mapBox);
+  }
+
+  function bboxLabel(box) {
+    if (!box) return 'unknown bbox';
+    function f(v) { return Number(v).toFixed(4); }
+    return f(box.south) + '..' + f(box.north) + ', ' + f(box.west) + '..' + f(box.east);
+  }
+
+  function outsideViewportReason(artifact, map) {
+    return 'artifact outside current viewport (artifact ' + bboxLabel(artifactBbox(artifact)) +
+      ', map ' + bboxLabel(mapBbox(map)) + ')';
+  }
+
   function buildViewUniform(map, artifact, w, h) {
     var vp = artifact.viewport;
     var c = tilePixelToLonLat(vp.pixel_width * 0.5, vp.pixel_height * 0.5, vp);
@@ -197,6 +267,7 @@
     this._compositeEntries = [];
     this._compositeOpts = {};
     this._artifactGpu = Object.create(null);
+    this._setMode = (gpu && gpu.setMode) || function () {};
     this._buildCanvas();
     this._buildPipelines();
     if (this.artifact) this._uploadGeometry();
@@ -466,6 +537,7 @@
   };
 
   GpuChartArtifactLayer.prototype._drawArtifact = function (pass, artifact, blendWeight) {
+    if (!artifactIntersectsMap(artifact, this.map)) return false;
     var gpuArt = this._ensureArtifactGpu(artifact);
     var view = buildViewUniform(this.map, artifact, this._w, this._h);
     if (!view) return false;
@@ -506,7 +578,18 @@
     var entries = this._compositeEntries.length ? this._compositeEntries : (
       this.artifact ? [{ artifact: this.artifact, blend_weight: 1 }] : []
     );
-    if (!entries.length) return;
+    var drawEntries = [];
+    var outsideReason = '';
+    for (var ei = 0; ei < entries.length; ei++) {
+      if (artifactIntersectsMap(entries[ei].artifact, this.map)) drawEntries.push(entries[ei]);
+      else if (!outsideReason) outsideReason = outsideViewportReason(entries[ei].artifact, this.map);
+    }
+    if (!drawEntries.length) {
+      this._clear();
+      this.setEncChartVisible(true);
+      this._setMode('maplibre', outsideReason || 'no WebGPU artifact covering current viewport');
+      return;
+    }
     var dev = this.gpu.device;
     var holdStale = !!(this._compositeOpts && this._compositeOpts.holdStale);
     var enc = dev.createCommandEncoder();
@@ -519,12 +602,35 @@
       }]
     });
     var drew = false;
-    for (var i = 0; i < entries.length; i++) {
-      if (this._drawArtifact(pass, entries[i].artifact, entries[i].blend_weight)) drew = true;
+    for (var i = 0; i < drawEntries.length; i++) {
+      if (this._drawArtifact(pass, drawEntries[i].artifact, drawEntries[i].blend_weight)) drew = true;
     }
     pass.end();
-    if (drew) dev.queue.submit([enc.finish()]);
-    else if (this._compositeOpts && this._compositeOpts.strictMissing) this.setEncChartVisible(true);
+    if (drew) {
+      dev.queue.submit([enc.finish()]);
+      this.setEncChartVisible(false);
+      this._setMode('gpu');
+    } else {
+      this._clear();
+      this.setEncChartVisible(true);
+      this._setMode('maplibre', 'WebGPU artifact projection failed for current viewport');
+    }
+  };
+
+  GpuChartArtifactLayer.prototype._clear = function () {
+    if (this._destroyed || !this.ctx || !this.gpu || !this.gpu.device) return;
+    var dev = this.gpu.device;
+    var enc = dev.createCommandEncoder();
+    var pass = enc.beginRenderPass({
+      colorAttachments: [{
+        view: this.ctx.getCurrentTexture().createView(),
+        clearValue: { r: 0, g: 0, b: 0, a: 0 },
+        loadOp: 'clear',
+        storeOp: 'store'
+      }]
+    });
+    pass.end();
+    dev.queue.submit([enc.finish()]);
   };
 
   GpuChartArtifactLayer.prototype.setCompositeEntries = function (entries, opts) {
@@ -560,7 +666,6 @@
     this._visible = !!v;
     if (this._visible) {
       this.canvas.style.display = 'block';
-      this.setEncChartVisible(false);
       this._resize();
       this._draw();
     } else {
@@ -625,12 +730,15 @@
     }
 
     function setMode(m, reason) {
+      var same = mode === m && (global.__helmChartModeReason || '') === (reason || '');
       mode = m;
       global.__helmChartMode = m;
       global.__helmChartModeReason = reason || '';
-      console.info('[chart-artifact] ' + (m === 'gpu'
-        ? 'WebGPU artifact layer active'
-        : 'MapLibre enc-chart fallback — ' + reason));
+      if (!same) {
+        console.info('[chart-artifact] ' + (m === 'gpu'
+          ? 'WebGPU artifact layer active'
+          : 'MapLibre enc-chart fallback — ' + reason));
+      }
       try {
         if (map.getLayer(ENC_LAYER)) {
           map.setLayoutProperty(ENC_LAYER, 'visibility', m === 'gpu' && state.visible ? 'none' : 'visible');
@@ -652,12 +760,17 @@
       setMode('maplibre', reason);
     }
 
-    // INTEGRATE-1 "kill legacy": the WebGPU nautical renderer is the DEFAULT primary path so the
-    // new path is actually exercised. Legacy MapLibre/server-PNG is kept only as an EXPLICIT,
-    // visible fallback (never silent): an operator opt-out, or a genuine capability failure, each
-    // reported via __helmChartModeReason and the renderer status surface.
-    var flagOff = (global.HELM_CHART_WEBGPU === false) ||
-      (typeof localStorage !== 'undefined' && localStorage.getItem('helmChartWebgpu') === '0');
+    function webgpuFlagEnabled() {
+      if (global.HELM_CHART_WEBGPU === true) return true;
+      if (global.HELM_CHART_WEBGPU === false) return false;
+      try {
+        var qp = new URLSearchParams(global.location && global.location.search || '');
+        if (qp.get('chartWebgpu') === '1') return true;
+        if (qp.get('chartWebgpu') === '0') return false;
+        return global.localStorage && global.localStorage.getItem('helmChartWebgpu') === '1';
+      } catch (e) { return false; }
+    }
+
     var unprojectable = false;
     var upReason = '';
     try {
@@ -666,7 +779,7 @@
       if (proj && /globe/i.test((proj.type || proj.name || '') + '')) { unprojectable = true; upReason = 'globe projection'; }
     } catch (e) {}
 
-    if (flagOff) { fallbackMapLibre('HELM_CHART_WEBGPU=false (explicit legacy opt-out)'); }
+    if (!webgpuFlagEnabled()) { fallbackMapLibre('HELM_CHART_WEBGPU not enabled (PNG enc-chart default)'); }
     else if (typeof navigator === 'undefined' || !navigator.gpu) { fallbackMapLibre('WebGPU unavailable (no navigator.gpu)'); }
     else if (unprojectable) { fallbackMapLibre(upReason + ' — mercator-affine draw unsupported'); }
     else {
@@ -684,7 +797,8 @@
           device: dev,
           canvasFormat: navigator.gpu.getPreferredCanvasFormat(),
           palette: state.palette || undefined,
-          resources: state.resources || undefined
+          resources: state.resources || undefined,
+          setMode: setMode
         }, state.artifact);
         setMode('gpu');
         replay();
@@ -747,7 +861,10 @@
         call(function (e) { if (e.setVisible) e.setVisible(v); });
         if (mode === 'maplibre' && v) setMode('maplibre', global.__helmChartModeReason || 'WebGPU unavailable');
       },
-      isVisible: function () { return inner && inner.isVisible ? inner.isVisible() : state.visible; },
+      isVisible: function () {
+        if (mode === 'maplibre') return !!state.visible;
+        return inner && inner.isVisible ? inner.isVisible() : !!state.visible;
+      },
       getArtifact: function () { return state.artifact; },
       getGpuLayer: function () { return inner; },
       pickAtLngLat: function (lngLat) {
@@ -769,6 +886,11 @@
     parseArtifactJson: parseArtifactJson,
     tilePixelToLonLat: tilePixelToLonLat,
     buildViewUniform: buildViewUniform,
+    artifactBbox: artifactBbox,
+    bboxIntersects: bboxIntersects,
+    artifactIntersectsBounds: artifactIntersectsBounds,
+    artifactIntersectsMap: artifactIntersectsMap,
+    boundsToBbox: boundsToBbox,
     MATERIAL_RGBA: MATERIAL_RGBA
   };
   HelmChartArtifactAuto.GpuLayer = GpuChartArtifactLayer;

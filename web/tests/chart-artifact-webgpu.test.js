@@ -46,6 +46,27 @@ ok('tilePixelToLonLat maps tile corners to geographic bbox', () => {
   assert.ok(Math.abs(se.lat - vp.south) < 1e-9);
 });
 
+ok('artifact bbox gate accepts Key West fixture bounds and rejects Fiji', () => {
+  const art = T.parseArtifactJson(fixture);
+  const bbox = T.artifactBbox(art);
+  assert.strictEqual(bbox.west, -81.805);
+  assert.strictEqual(bbox.south, 24.495);
+  assert.strictEqual(bbox.east, -81.795);
+  assert.strictEqual(bbox.north, 24.505);
+  assert.strictEqual(T.artifactIntersectsBounds(art, {
+    west: -81.82,
+    south: 24.48,
+    east: -81.78,
+    north: 24.52
+  }), true);
+  assert.strictEqual(T.artifactIntersectsBounds(art, {
+    west: 177.3,
+    south: -17.8,
+    east: 177.5,
+    north: -17.6
+  }), false);
+});
+
 ok('HelmChartArtifactAuto reports MapLibre fallback when WebGPU flag is off', () => {
   const win = loadModule({ HELM_CHART_WEBGPU: false, navigator: {} });
   const map = {
@@ -60,13 +81,10 @@ ok('HelmChartArtifactAuto reports MapLibre fallback when WebGPU flag is off', ()
   const layer = win.HelmChartArtifactAuto(map);
   assert.strictEqual(layer.mode(), 'maplibre');
   assert.strictEqual(win.__helmChartMode, 'maplibre');
-  assert.ok(String(win.__helmChartModeReason).indexOf('HELM_CHART_WEBGPU=false') >= 0);
+  assert.ok(String(win.__helmChartModeReason).indexOf('not enabled') >= 0);
 });
 
-ok('HelmChartArtifactAuto makes WebGPU the default primary path (no silent legacy default)', () => {
-  // INTEGRATE-1 "kill legacy": with no flag set, the renderer no longer sits behind an opt-in
-  // gate. Absent a real WebGPU device (navigator.gpu missing here) it falls back for a genuine
-  // CAPABILITY reason, not a "disabled" opt-in gate.
+ok('HelmChartArtifactAuto stays on MapLibre when WebGPU flag is not enabled', () => {
   const win = loadModule({ navigator: {}, localStorage: { getItem: () => null } });
   const map = {
     getPitch: () => 0,
@@ -79,8 +97,7 @@ ok('HelmChartArtifactAuto makes WebGPU the default primary path (no silent legac
   };
   const layer = win.HelmChartArtifactAuto(map);
   assert.strictEqual(layer.mode(), 'maplibre');
-  assert.ok(String(win.__helmChartModeReason).indexOf('WebGPU unavailable') >= 0);
-  assert.strictEqual(String(win.__helmChartModeReason).indexOf('disabled'), -1);
+  assert.ok(String(win.__helmChartModeReason).indexOf('not enabled') >= 0);
 });
 
 ok('HelmChartArtifactAuto reports MapLibre fallback when navigator.gpu is missing', () => {

@@ -3,12 +3,13 @@ const { expect } = require('@playwright/test');
 
 // Boot the app and wait until the map + error surface + ownship are wired and the style is loaded.
 async function boot(page) {
+  const timeout = Number(process.env.HELM_E2E_BOOT_TIMEOUT || (process.env.HELM_E2E_URL ? 60000 : 20000));
   await page.goto('/');
   await expect(page).toHaveTitle(/Helm/);
   await page.waitForFunction(
     () => !!window.map && typeof window.__helmDegrade === 'function' && !!window.__ownship,
-    null, { timeout: 20000 });
-  await page.waitForFunction(() => window.map.isStyleLoaded(), null, { timeout: 20000 });
+    null, { timeout });
+  await page.waitForFunction(() => window.map.isStyleLoaded(), null, { timeout });
 }
 
 // Feed the ownship module a fix directly (deterministic; independent of the SIM cadence).

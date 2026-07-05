@@ -2,25 +2,15 @@
 
 **One screen for everything on the water.**
 
-Helm is a source-available, pre-alpha marine chartplotter experiment. Today it
-is **not** a packaged macOS app, Windows installer, Linux package, or mobile
-app. The current public alpha is a working hybrid: the primary nav/chart path is
-a local C++ `helm-server` that reuses [OpenCPN](https://opencpn.org)'s `model/`
-navigation core and S-52/S-57 renderer headlessly, while Python remains in
-weather/reference services, data tools, and optional AI/community experiments.
-The maintained product target is narrower: C++ for required boat-side runtime
-and browser JavaScript/WebGPU for the cockpit.
+Helm is a **local-first boat server** with **thin cockpit clients** — browser, tablet, or native shell — all talking to one origin on the boat LAN. The safety core runs headless: OpenCPN-derived navigation and true **S-52 vector ENC** chart rendering over HTTP/WebSocket. The cockpit composites charts, satellite, weather, AIS, routes, tides, and instruments into **one situational picture**.
 
-The long-term direction is a modern, cross-platform chartplotter that carries
-OpenCPN's feature set forward and fuses the data a sailor currently juggles
-across four apps into a single situational picture:
+Not a cloud dashboard. Not four apps duct-taped together. **One system.**
 
-> charts + satellite imagery + Windy-class weather layers + PredictWind routing +
-> AIS + instruments — composited on one chart, offline-first.
+> **North Star:** UI + intelligence on top of **probeable, citable boat state** — tap the chart object, trust the alarm, ask the boat and get engine-backed answers. Full vision: [docs/NORTH-STAR.md](docs/NORTH-STAR.md).
 
-Today a cruiser bounces between Windy (for some weather layers), PredictWind (for
-routing), a separate weather app (for the rest), and a charting/nav app (for the
-chart itself). Nothing on the market shows it all on one screen. **That is the product.**
+Helm is source-available and **pre-alpha**. It is not a packaged macOS app, Windows installer, Linux package, or mobile app yet. The current public alpha is a working hybrid: C++ `helm-server` (OpenCPN `model/` + S-52/S-57 renderer) plus a MapLibre/WebGPU browser cockpit. Python remains in weather/reference services and optional non-safety AI experiments.
+
+Today's cruiser bounces between Windy, PredictWind, a weather app, and a chartplotter. Nothing shows it all on one screen, offline, with honest freshness. **That is the product.**
 
 ## How it fits together
 
@@ -100,6 +90,7 @@ input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 
 | Doc | What it is |
 |-----|------------|
+| [docs/NORTH-STAR.md](docs/NORTH-STAR.md) | **Product vision + Phase A–D backend priority** — UI/AI North Star and what to build next |
 | [SAFETY.md](SAFETY.md) | Alpha navigation disclaimer - supplemental aid only, not primary navigation |
 | [CONTRIBUTING.md](CONTRIBUTING.md) | How humans can contribute: scope, PR rules, safety/data boundaries |
 | [docs/PROJECT-STATUS.md](docs/PROJECT-STATUS.md) | What works today, what is alpha, and where help is wanted |

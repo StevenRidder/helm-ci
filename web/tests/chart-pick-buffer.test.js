@@ -103,4 +103,39 @@ ok('no-hit trace does not claim feature metadata', () => {
   assert.strictEqual(trace.resolution.feature_metadata_available, false);
 });
 
+ok('server /query array builds vector trace with decoded attributes', () => {
+  const query = [{
+    acronym: 'BOYSPP',
+    class_desc: 'Buoy, special purpose',
+    geometry: 'point',
+    attributes: { OBJNAM: { decoded: 'G 1' } }
+  }];
+  const trace = P.buildTraceFromServerQuery(query, { backend: 'enc-query' });
+  assert.strictEqual(trace.resolution.kind, 'vector_feature');
+  assert.strictEqual(trace.source.object_class, 'BOYSPP');
+  assert.strictEqual(trace.source.attributes[0].code, 'OBJNAM');
+  assert.strictEqual(trace.source.attributes[0].value, 'G 1');
+});
+
+ok('queryHits accepts bare server array', () => {
+  const hits = P.queryHits([{ acronym: 'DEPARE' }]);
+  assert.strictEqual(hits.length, 1);
+  assert.strictEqual(hits[0].acronym, 'DEPARE');
+});
+
+ok('enrichTraceAttributes decodes helm-server attribute objects', () => {
+  const trace = P.buildInspectionTrace({
+    artifact: artifact,
+    pick_id: 5,
+    pixel: [5, 3],
+    backend: 'cpu-pick',
+    provenance: provenanceJson
+  });
+  const enriched = P.enrichTraceAttributes(trace, [{
+    acronym: 'BOYSPP',
+    attributes: { OBJNAM: { decoded: 'G 1' } }
+  }]);
+  assert.strictEqual(enriched.source.attributes[0].value, 'G 1');
+});
+
 console.log('\n' + pass + ' passed');

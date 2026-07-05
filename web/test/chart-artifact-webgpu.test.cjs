@@ -53,6 +53,23 @@ ok('parseArtifactJson preserves the ARTIFACT-2 cache display_state', () => {
   assert.strictEqual(art.cache.display_state.show_text, true);
 });
 
+ok('artifact bbox gate rejects unrelated harbour bounds', () => {
+  const T = loadModules({ navigator: {} }).HelmChartArtifactAuto._test;
+  const art = T.parseArtifactJson(fixture);
+  assert.strictEqual(T.artifactIntersectsBounds(art, {
+    west: -81.82,
+    south: 24.48,
+    east: -81.78,
+    north: 24.52
+  }), true);
+  assert.strictEqual(T.artifactIntersectsBounds(art, {
+    west: 177.3,
+    south: -17.8,
+    east: 177.5,
+    north: -17.6
+  }), false);
+});
+
 ok('MapLibre fallback still holds when WebGPU is unavailable', () => {
   const win = loadModules({ navigator: {} });
   const layer = win.HelmChartArtifactAuto(fakeMap());

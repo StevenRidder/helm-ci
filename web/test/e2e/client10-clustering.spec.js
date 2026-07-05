@@ -25,6 +25,11 @@ test.describe("CLIENT-10 — 'clean charts in a crowded harbour' (POI clustering
     });
 
     await page.waitForFunction(
+      () => window.map && window.map.isStyleLoaded() && !window.map.isMoving(),
+      null,
+      { timeout: 15000, polling: 200 });
+
+    await page.waitForFunction(
       () => {
         const src = window.map && window.map.getSource && window.map.getSource('places');
         const data = src && src.serialize && src.serialize().data;
