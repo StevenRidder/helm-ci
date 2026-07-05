@@ -94,14 +94,6 @@ cd "$ROOT"
 
 FILES=(
   "scripts/install-helmcxx-runtime.sh"
-  "packaging/systemd/helm-server.service"
-  "packaging/systemd/helm-packd.service"
-  "packaging/systemd/helm-envd.service"
-  "packaging/systemd/helm-basemap-cache.service"
-  "packaging/launchd/com.6thelement.helm-server.plist"
-  "packaging/launchd/com.6thelement.helm-packd.plist"
-  "packaging/launchd/com.6thelement.helm-envd.plist"
-  "packaging/launchd/com.6thelement.helm-basemap-cache.plist"
   "docs/HELMCXX-PACKAGING.md"
 )
 
@@ -114,35 +106,18 @@ bash -n scripts/install-helmcxx-runtime.sh
 bash -n scripts/helmcxx-packaging-proof.sh
 ok "install/proof scripts pass shell syntax"
 
-SCAN_FILES=(
-  "scripts/install-helmcxx-runtime.sh"
-  "packaging/systemd/helm-server.service"
-  "packaging/systemd/helm-packd.service"
-  "packaging/systemd/helm-envd.service"
-  "packaging/systemd/helm-basemap-cache.service"
-  "packaging/launchd/com.6thelement.helm-server.plist"
-  "packaging/launchd/com.6thelement.helm-packd.plist"
-  "packaging/launchd/com.6thelement.helm-envd.plist"
-  "packaging/launchd/com.6thelement.helm-basemap-cache.plist"
-)
-if grep -RInE 'docker|docker-compose|containerd|podman|uvicorn|fastapi|FastAPI|python[0-9.]*|/tmp|/private/tmp' "${SCAN_FILES[@]}" >"$EVIDENCE_DIR/forbidden-scan.txt"; then
+if grep -RInE 'docker|docker-compose|containerd|podman|uvicorn|fastapi|FastAPI|python[0-9.]*|/tmp|/private/tmp' scripts/install-helmcxx-runtime.sh >"$EVIDENCE_DIR/forbidden-scan.txt"; then
   sed 's/^/  /' "$EVIDENCE_DIR/forbidden-scan.txt" >&2
-  die "packaging/runtime artifacts contain forbidden Docker/Python/temp-path dependency"
+  die "installer contains forbidden Docker/Python/temp-path dependency"
 fi
 ok "service/install artifacts do not require Docker, Python daemons, or temp-path runtime dirs"
 
 for path in /opt/helm /etc/helm /var/lib/helm /var/cache/helm /var/log/helm /srv/helm/packs /srv/helm/wx-packs; do
-  if ! grep -RIl -- "$path" scripts/install-helmcxx-runtime.sh packaging docs/HELMCXX-PACKAGING.md >/dev/null; then
+  if ! grep -RIl -- "$path" scripts/install-helmcxx-runtime.sh docs/HELMCXX-PACKAGING.md >/dev/null; then
     die "deterministic path is not documented/enforced: $path"
   fi
 done
 ok "deterministic install/state/cache/log/pack directories are documented and enforced"
-
-for service in helm-server helm-packd helm-envd helm-basemap-cache; do
-  grep -q "/opt/helm/bin/$service" "packaging/systemd/$service.service" || die "systemd $service does not launch /opt/helm/bin/$service"
-  grep -q "/opt/helm/bin/$service" "packaging/launchd/com.6thelement.$service.plist" || die "launchd $service does not launch /opt/helm/bin/$service"
-done
-ok "launchd and systemd templates launch installed C++ binaries"
 
 TMP="${HELM_HELMCXX6_TMP:-$(mktemp -d "${TMPDIR:-/tmp}/helmcxx6.XXXXXX")}"
 mkdir -p "$TMP/build/cli" "$TMP/web" "$TMP/runtime/s57data" "$TMP/runtime/tcdata"
@@ -173,6 +148,41 @@ if grep -E '/tmp|/private/tmp|docker|uvicorn|fastapi|FastAPI|python[0-9.]*' "$TM
 fi
 find "$TMP/stage" -maxdepth 4 -type d -o -type f | sort >"$EVIDENCE_DIR/staged-tree.txt"
 ok "installer populates staging root without leaking build paths into runtime env"
+
+# --- reboot-persistent supervision units are generated for every layout ------
+verify_units() {  # verify_units <stage> <os> <mode>
+  local stage="$1" os="$2" mode="$3" dir unit svc
+  if [ "$os" = Darwin ]; then
+    [ "$mode" = system ] && dir="$stage/Library/LaunchDaemons" || dir="$stage$HOME/Library/LaunchAgents"
+  else
+    [ "$mode" = system ] && dir="$stage/etc/systemd/system" || dir="$stage${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+  fi
+  for svc in helm-server helm-packd helm-envd helm-basemap-cache; do
+    [ "$os" = Darwin ] && unit="$dir/com.6thelement.$svc.plist" || unit="$dir/$svc.service"
+    [ -f "$unit" ] || die "$os/$mode: missing supervision unit for $svc"
+    grep -q "bin/$svc" "$unit" || die "$os/$mode: $svc unit does not launch its installed binary"
+    if [ "$os" = Darwin ]; then
+      grep -Eq 'RunAtLoad</key>[[:space:]]*<true/>' "$unit" || die "$os/$mode: $svc launchd unit is not RunAtLoad (not reboot-persistent)"
+    else
+      grep -q '^WantedBy=' "$unit" || die "$os/$mode: $svc systemd unit has no [Install] WantedBy (not reboot-persistent)"
+    fi
+  done
+  if grep -RInE 'docker|uvicorn|fastapi|FastAPI|python[0-9.]*|/private/tmp' "$dir" >/dev/null 2>&1; then
+    die "$os/$mode: generated units leak a forbidden dependency"
+  fi
+}
+
+for gos in Darwin Linux; do
+  for gmode in system user; do
+    gst="$TMP/units-$gos-$gmode"
+    HELM_INSTALL_OS_OVERRIDE="$gos" scripts/install-helmcxx-runtime.sh \
+      --mode "$gmode" --staging-root "$gst" \
+      --build-cli "$TMP/build/cli" --web-root "$TMP/web" --runtime-source "$TMP/runtime" \
+      >"$EVIDENCE_DIR/units-$gos-$gmode.log"
+    verify_units "$gst" "$gos" "$gmode"
+  done
+done
+ok "reboot-persistent launchd + systemd units generated for system and user modes"
 
 if [ "$RUN_SMOKE" != 1 ]; then
   printf 'HELMC++-6 packaging proof: PASS (static/staged)\n'

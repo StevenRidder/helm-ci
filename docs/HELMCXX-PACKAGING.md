@@ -13,8 +13,9 @@ The supported boat-runtime install path is:
 1. build the C++ runtime with `engine/bootstrap.sh`;
 2. install the built binaries, web cockpit, and durable S-52/tide assets with
    `scripts/install-helmcxx-runtime.sh`;
-3. supervise the installed binaries with either the checked-in `systemd` units or
-   the checked-in `launchd` plists;
+3. supervise the installed binaries as a reboot-persistent stack — the installer
+   generates and enables `systemd` units (Linux) or `launchd` plists (macOS) for
+   the resolved layout, in `--system` or `--user` mode;
 4. put user-owned ENC, MBTiles/PMTiles, and environmental packs in deterministic
    runtime directories;
 5. run smoke checks on private ports before enabling a live boat port.
@@ -55,27 +56,46 @@ engine/bootstrap.sh --smoke
 scripts/install-sample-enc.sh
 ```
 
-Install the C++ runtime:
+Install the C++ runtime as a reboot-persistent supervised stack. Pick a model:
+
+**System service (boat appliance — starts at boot, no login, needs root):**
 
 ```sh
-sudo scripts/install-helmcxx-runtime.sh
+sudo scripts/install-helmcxx-runtime.sh --system
 ```
 
-Install launchd supervision:
+Installs binaries to `/opt/helm`, generates launchd `LaunchDaemons` for the
+resolved paths, and `launchctl bootstrap`s all four daemons. `RunAtLoad` +
+`KeepAlive` make them survive reboot and crash.
+
+**Per-user (app foundation — no root, reboot-persists on login):**
 
 ```sh
-sudo install -m 0644 packaging/launchd/com.6thelement.helm-server.plist /Library/LaunchDaemons/
-sudo install -m 0644 packaging/launchd/com.6thelement.helm-packd.plist /Library/LaunchDaemons/
-sudo install -m 0644 packaging/launchd/com.6thelement.helm-envd.plist /Library/LaunchDaemons/
-sudo install -m 0644 packaging/launchd/com.6thelement.helm-basemap-cache.plist /Library/LaunchDaemons/
-
-sudo launchctl bootstrap system /Library/LaunchDaemons/com.6thelement.helm-server.plist
-sudo launchctl bootstrap system /Library/LaunchDaemons/com.6thelement.helm-packd.plist
+scripts/install-helmcxx-runtime.sh --user
 ```
 
-`helm-envd` and `helm-basemap-cache` are installed but not `RunAtLoad` by
-default in launchd. Enable them only after the boat has local environmental packs
-or online-fill/cache policy configured.
+Installs everything under `~/.helm/opt`, writes launchd `LaunchAgents` to
+`~/Library/LaunchAgents`, and bootstraps them into your GUI session. This is the
+layout a double-click `.app` bundle wraps. To dogfood against charts/packs you
+already have instead of copying them, point the install at them:
+
+```sh
+scripts/install-helmcxx-runtime.sh --user \
+  --enc "$HOME/.helm/runtime/enc/US5GA2BC/US5GA2BC.000" \
+  --mbtiles-dir "$HOME/.helm/charts/fiji" \
+  --serve-web "$HOME/.helm/live/web"
+```
+
+Use `--no-supervision` to install files only, or `--staging-root DIR` to render
+everything (including units) into a staging tree without touching the live
+service manager. Upgrades are atomic (see below) and restarts go through the
+supervisor:
+
+```sh
+# macOS
+launchctl kickstart -k gui/$(id -u)/com.6thelement.helm-server   # --user
+sudo launchctl kickstart -k system/com.6thelement.helm-server    # --system
+```
 
 Smoke:
 
@@ -83,9 +103,6 @@ Smoke:
 curl -fsS http://127.0.0.1:8080/health
 curl -fsS http://127.0.0.1:8080/catalog
 curl -fsS http://127.0.0.1:8091/catalog
-
-sudo launchctl bootout system /Library/LaunchDaemons/com.6thelement.helm-packd.plist
-sudo launchctl bootout system /Library/LaunchDaemons/com.6thelement.helm-server.plist
 ```
 
 For public macOS distribution, the thin native client follows
@@ -103,22 +120,26 @@ with the same source path:
 engine/bootstrap.sh --smoke
 scripts/install-sample-enc.sh
 sudo useradd --system --home /var/lib/helm --shell /usr/sbin/nologin helm || true
-sudo scripts/install-helmcxx-runtime.sh
+sudo scripts/install-helmcxx-runtime.sh --system
 sudo chown -R helm:helm /etc/helm /var/lib/helm /var/cache/helm /var/log/helm /srv/helm
 ```
 
-Install systemd supervision:
+`--system` on Linux generates hardened systemd units (`User=helm`,
+`ProtectSystem`, `NoNewPrivileges`, `EnvironmentFile=/etc/helm/helm-runtime.env`)
+into `/etc/systemd/system`, runs `daemon-reload`, and `systemctl enable --now`s
+all four so they start on boot. For a rootless per-user service set (`systemctl
+--user`, units under `~/.config/systemd/user`) use `--user` instead.
 
-```sh
-sudo install -m 0644 packaging/systemd/*.service /etc/systemd/system/
-sudo systemctl daemon-reload
-sudo systemctl enable --now helm-server.service helm-packd.service
-```
-
-`helm-envd.service` is gated by `/etc/helm/helm-envd-manifests.env`, which should
-define `HELM_ENV_GRID_MANIFESTS` after environmental packs are baked and copied
-under `/srv/helm/wx-packs`. `helm-basemap-cache.service` is optional for
-online-fill or remote-pack cache policy.
+`helm-envd` reads `HELM_ENV_GRID_MANIFESTS` (defaulted to
+`<wx-packs>/current/current.manifest.json`) and serves pre-baked packs from disk —
+no weather API key is needed to *serve* (the key is only for the offline bake).
+Because envd resolves a manifest's chunk paths relative to the manifest file's own
+directory, the stable pointer is a `current` symlink to the live release's packs
+dir plus a stable-named `current.manifest.json` inside it; the bake/publish step
+maintains both and `launchctl kickstart`/`systemctl restart`s envd after a new
+release. A fresh install has no packs yet — envd starts and serves nothing until
+weather is baked. `helm-basemap-cache` is idle unless online-fill or remote-pack
+cache policy is configured.
 
 Smoke:
 
