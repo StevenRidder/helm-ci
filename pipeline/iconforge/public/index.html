@@ -91,10 +91,17 @@
   <div class="offcanvas-body" id="detailBody"></div>
 </div>
 
+<div class="offcanvas offcanvas-end offcanvas-wide" tabindex="-1" id="feedbackDashboard" aria-labelledby="feedbackDashboardTitle">
+  <div class="offcanvas-header"><div><h2 class="offcanvas-title" id="feedbackDashboardTitle">Feedback Dashboard</h2><div class="text-secondary">Browser-local decisions ready to export or file as a GitHub issue.</div></div>
+    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button></div>
+  <div class="offcanvas-body" id="feedbackDashboardBody"></div>
+</div>
+
 <div class="review-dock" id="reviewDock" hidden>
   <div class="dropdown dropup">
     <button class="btn btn-primary shadow" data-bs-toggle="dropdown" aria-expanded="false"><span id="reviewCount">0</span> review decisions</button>
     <div class="dropdown-menu dropdown-menu-end p-2" style="min-width: 240px">
+      <button class="dropdown-item" id="openFeedbackDashboard">Feedback dashboard</button>
       <button class="dropdown-item" id="exportJson">⬇︎ Download decisions JSON</button>
       <a class="dropdown-item" id="openIssue" target="_blank" rel="noopener">↗ Open GitHub review issue</a>
       <div class="dropdown-divider"></div>

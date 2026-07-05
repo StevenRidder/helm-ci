@@ -48,6 +48,11 @@ can let reviewers export a JSON review file, open an issue, or prepare a pull
 request, but canonical approvals should be imported back through the private
 review workflow and regenerated from the database.
 
+The durable intake loop is documented in
+[PUBLIC-SYMBOL-FEEDBACK.md](PUBLIC-SYMBOL-FEEDBACK.md). Public feedback creates
+normalized review artifacts only; it does not mutate canonical art, the private
+database, or runtime eligibility.
+
 ## Update Pipeline
 
 The public site should update automatically when the public mirror updates.
@@ -105,6 +110,12 @@ Outside feedback should be structured. Good public review artifacts include:
 - A pull request containing review JSON.
 - A generated review-export file from the static page.
 - A screenshot with symbol ID, palette, and evidence context.
+
+The static page stores decisions in the reviewer's browser first. Reviewers then
+use the per-symbol `Report this symbol` link, the feedback dashboard's GitHub
+issue link, or the JSON download. The public `public-symbol-feedback` workflow
+validates those submissions against `proof/site-index.json` and uploads a
+normalized artifact for private repair triage.
 
 The public process should never silently change runtime eligibility. Reviews
 feed the canonical repair workflow; the regenerated database decides what is

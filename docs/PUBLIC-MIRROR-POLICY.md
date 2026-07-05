@@ -57,6 +57,7 @@ Public symbol artifacts may include:
 - Runtime eligibility gates.
 - Blocker reasons and remediation status.
 - Public proof pages showing comparison evidence.
+- Public feedback artifacts that reference symbol ids and review notes.
 
 Public symbol artifacts must not include copied IHO catalogue files, copied IHO
 SVG assets, copied OpenCPN rasters, copied OpenCPN SVG wrappers, private chart
@@ -64,6 +65,11 @@ data, or private generated chart products.
 
 OpenCPN and S-101 evidence can be used as comparison and standards evidence.
 They must not become the owned source artwork for Helm.
+
+Public feedback issues and normalized review artifacts are advisory inputs. They
+must not directly update canonical private SVG/database rows or runtime
+eligibility; those changes happen only through the private repair and
+regeneration pipeline.
 
 ## Runtime Claims
 

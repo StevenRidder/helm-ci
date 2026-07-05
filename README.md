@@ -109,6 +109,7 @@ input. See [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md).
 | [docs/WEATHER.md](docs/WEATHER.md) | Own-GRIB overlay + Windy + PredictWind |
 | [docs/WEATHER-DATA.md](docs/WEATHER-DATA.md) | Data sources — Windy's models are public; we use the same |
 | [docs/OPENCPN-REUSE.md](docs/OPENCPN-REUSE.md) | Read OpenCPN file-by-file: reuse its nav core; the new plan |
+| [docs/PUBLIC-SYMBOL-FEEDBACK.md](docs/PUBLIC-SYMBOL-FEEDBACK.md) | How to review the public clean-room symbol catalog and submit machine-readable feedback |
 | [docs/CHART-QUILTING.md](docs/CHART-QUILTING.md) | Multi-cell S-52 tiler → quilting; where OpenCPN's quilt code falls short vs ours |
 | [docs/RUNBOOK.md](docs/RUNBOOK.md) | **Build & run on macOS** — bootstrap the engine, run the stack, feature-by-feature verification checklist |
 | [docs/integrations/noforeignland.md](docs/integrations/noforeignland.md) | NoForeignLand + community-places overlay scope |
