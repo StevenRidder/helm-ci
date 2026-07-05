@@ -1,0 +1,150 @@
+{
+  "schema": "helm.helmcxx7.maintainability_audit.v1",
+  "generatedAt": "2026-07-05T00:06:32.571Z",
+  "host": "Steves-MacBook-14-PRO.local",
+  "task": "HELMC++-7",
+  "services": [
+    {
+      "id": "helm-server",
+      "source": "engine/vendor/cli/helm_server.cpp",
+      "target": "helm-server",
+      "lines": 4489,
+      "maxLines": 5000,
+      "warnLines": 3000,
+      "includes": 76,
+      "patternCounts": {
+        "raw_new": 12,
+        "raw_delete": 6,
+        "malloc": 0,
+        "free": 0,
+        "goto": 0,
+        "boost": 0,
+        "novel_template": 0
+      },
+      "rawOwnershipException": true,
+      "tests": [
+        "scripts/helmcxx-no-python-runtime.sh",
+        "scripts/helmcxx-cockpit-proof.sh",
+        "scripts/helmcxx-benchmark-soak.mjs"
+      ],
+      "docs": [
+        "docs/HELMCXX-ACCEPTANCE.md",
+        "docs/RUNTIME-SERVICES.md"
+      ],
+      "rationale": "OpenCPN/ixwebsocket adapter and one-origin server; raw ownership remains legacy debt but is bounded by end-to-end harnesses.",
+      "warnings": [
+        "missing explicit target_compile_features(... cxx_std_17) for helm-server",
+        "engine/vendor/cli/helm_server.cpp has 4489 lines; keep future work from growing this file"
+      ],
+      "failures": []
+    },
+    {
+      "id": "helm-packd",
+      "source": "engine/vendor/cli/helm_packd.cpp",
+      "target": "helm-packd",
+      "lines": 2232,
+      "maxLines": 2500,
+      "warnLines": 2200,
+      "includes": 35,
+      "patternCounts": {
+        "raw_new": 0,
+        "raw_delete": 0,
+        "malloc": 0,
+        "free": 0,
+        "goto": 0,
+        "boost": 0,
+        "novel_template": 0
+      },
+      "rawOwnershipException": false,
+      "tests": [
+        "engine/test-packd.sh",
+        "scripts/helmcxx-no-python-runtime.sh",
+        "scripts/helmcxx-benchmark-soak.mjs"
+      ],
+      "docs": [
+        "docs/HELMCXX-ACCEPTANCE.md",
+        "docs/RUNTIME-SERVICES.md"
+      ],
+      "rationale": "Local pack daemon should remain a bounded C++17 service with RAII ownership.",
+      "warnings": [
+        "engine/vendor/cli/helm_packd.cpp has 2232 lines; keep future work from growing this file"
+      ],
+      "failures": []
+    },
+    {
+      "id": "helm-basemap-cache",
+      "source": "engine/vendor/cli/helm_basemap_cache.cpp",
+      "target": "helm-basemap-cache",
+      "lines": 771,
+      "maxLines": 1400,
+      "warnLines": 1000,
+      "includes": 29,
+      "patternCounts": {
+        "raw_new": 0,
+        "raw_delete": 0,
+        "malloc": 0,
+        "free": 0,
+        "goto": 0,
+        "boost": 0,
+        "novel_template": 0
+      },
+      "rawOwnershipException": false,
+      "tests": [
+        "engine/test-basemap-cache.sh",
+        "scripts/helmcxx-no-python-runtime.sh",
+        "scripts/helmcxx-benchmark-soak.mjs"
+      ],
+      "docs": [
+        "docs/HELMCXX-ACCEPTANCE.md",
+        "docs/RUNTIME-SERVICES.md"
+      ],
+      "rationale": "Cache/proxy daemon should stay byte-cache only, not a chart semantics service.",
+      "warnings": [],
+      "failures": []
+    },
+    {
+      "id": "helm-envd",
+      "source": "engine/vendor/cli/helm_envd.cpp",
+      "target": "helm-envd",
+      "lines": 838,
+      "maxLines": 1400,
+      "warnLines": 1000,
+      "includes": 28,
+      "patternCounts": {
+        "raw_new": 0,
+        "raw_delete": 0,
+        "malloc": 0,
+        "free": 0,
+        "goto": 0,
+        "boost": 0,
+        "novel_template": 0
+      },
+      "rawOwnershipException": false,
+      "tests": [
+        "engine/test-envd.sh",
+        "scripts/helmcxx-no-python-runtime.sh",
+        "scripts/helmcxx-benchmark-soak.mjs"
+      ],
+      "docs": [
+        "docs/HELMCXX-ACCEPTANCE.md",
+        "docs/RUNTIME-SERVICES.md",
+        "docs/WX-20-HELM-ENVD.md"
+      ],
+      "rationale": "Environmental replay daemon should stay local-pack validation/replay only.",
+      "warnings": [],
+      "failures": []
+    }
+  ],
+  "summary": {
+    "serviceCount": 4,
+    "failures": 0,
+    "warnings": 3,
+    "pass": true
+  },
+  "failures": [],
+  "warnings": [
+    "helm-server: missing explicit target_compile_features(... cxx_std_17) for helm-server",
+    "helm-server: engine/vendor/cli/helm_server.cpp has 4489 lines; keep future work from growing this file",
+    "helm-packd: engine/vendor/cli/helm_packd.cpp has 2232 lines; keep future work from growing this file"
+  ]
+}

@@ -301,6 +301,9 @@ legacy-adapter exception, while smaller daemons fail if that ownership style spr
 
 ## Go/no-go rule
 
+The final HELMC++-8 evidence dossier and signoff is recorded in
+[`HELMCXX-DOSSIER.md`](HELMCXX-DOSSIER.md).
+
 HELMC++ passes only when all of the following are true:
 
 - required boat/runtime daemons are C++;

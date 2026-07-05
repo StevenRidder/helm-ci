@@ -608,7 +608,11 @@ public:
   bool start() {
     server_.setOnConnectionCallback(
         [this](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
-          return handle(req);
+          auto resp = handle(req);
+          // ixwebsocket serves one request per connection — advertise the close so
+          // keep-alive clients don't race a reused socket (BUG-1).
+          if (resp) resp->headers["Connection"] = "close";
+          return resp;
         });
     return server_.listenAndStart();
   }

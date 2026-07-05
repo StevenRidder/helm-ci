@@ -4239,7 +4239,7 @@ public:
       });
 
     // HTTP side: tiles, health, catalog, then the static UI.
-    server->setOnConnectionCallback(
+    auto http_handler =
       [](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState>) -> ix::HttpResponsePtr {
         ix::WebSocketHttpHeaders h; h["Access-Control-Allow-Origin"] = "*";
         const std::string path = req->uri.substr(0, req->uri.find('?'));   // route on the PATH — a ?token= query must not break exact-match routes
@@ -4431,6 +4431,14 @@ public:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body); }
         h["Content-Type"] = "text/plain";
         return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h, std::string("not found\n"));
+      };
+    server->setOnConnectionCallback(
+      [http_handler](ix::HttpRequestPtr req, std::shared_ptr<ix::ConnectionState> cs) -> ix::HttpResponsePtr {
+        auto resp = http_handler(std::move(req), std::move(cs));
+        // ixwebsocket serves one request per connection — advertise the close so
+        // keep-alive clients don't race a reused socket (BUG-1).
+        if (resp) resp->headers["Connection"] = "close";
+        return resp;
       });
 
     if (!server->listenAndStart()) { printf("listen on %s:%d FAILED\n", bindHost, port); return false; }

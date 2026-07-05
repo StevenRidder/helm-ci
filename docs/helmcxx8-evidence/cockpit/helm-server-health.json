@@ -1,0 +1,1 @@
+{"status":"ok","engine":"helm-server","chart_loaded":true,"chart_status":"loaded","nav":{"fix_status":"offline","reason":"no_required_fix_fields","required":["pos","sog","cog"],"missing":["pos","sog","cog"],"sources":{"pos":"missing","sog":"missing","cog":"missing"},"ageSec":-1,"fields":{"posAgeSec":-1,"sogAgeSec":-1,"cogAgeSec":-1}}}

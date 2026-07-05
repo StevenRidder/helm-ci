@@ -1,0 +1,297 @@
+{
+  "schema": "helm.helmcxx5.benchmark_soak.v1",
+  "generatedAt": "2026-07-05T00:05:28.326Z",
+  "task": "HELMC++-5",
+  "runtime": {
+    "portBase": 9410,
+    "ports": {
+      "core": 9410,
+      "packd": 9411,
+      "cache": 9412,
+      "envd": 9413,
+      "relay": 9414
+    },
+    "binaries": {
+      "helm-server": "/private/tmp/helm-helmcxx8-opencpn/build/cli/helm-server",
+      "helm-packd": "/private/tmp/helm-helmcxx8-opencpn/build/cli/helm-packd",
+      "helm-basemap-cache": "/private/tmp/helm-helmcxx8-opencpn/build/cli/helm-basemap-cache",
+      "helm-envd": "/private/tmp/helm-helmcxx8-opencpn/build/cli/helm-envd"
+    },
+    "requiredServices": [
+      "helm-server",
+      "helm-packd",
+      "helm-basemap-cache",
+      "helm-envd"
+    ],
+    "enc": "/Users/steveridder/.helm/runtime/enc/US5GA2BC/US5GA2BC.000",
+    "envPackId": "helmcxx/envd/no-python-fixture",
+    "envChunkKey": "global-low/wind/20260701T000000Z/-180_-90"
+  },
+  "config": {
+    "iterations": 24,
+    "concurrentClients": 4,
+    "concurrentRequests": 80,
+    "soakSeconds": 900,
+    "longSoakSeconds": 43200,
+    "baseline": null,
+    "strictBaseline": false
+  },
+  "coldStart": {
+    "helm-packd": 31.6,
+    "helm-basemap-cache": 103.7,
+    "helm-envd": 103.7,
+    "helm-server": 309
+  },
+  "firstVisible": {
+    "chartLayerMs": 36.9,
+    "environmentalLayerMs": 1.1
+  },
+  "endpoints": {
+    "helm-server.health": {
+      "count": 24,
+      "min_ms": 0.48,
+      "p50_ms": 0.68,
+      "p95_ms": 3.83,
+      "p99_ms": 30.4,
+      "max_ms": 30.4,
+      "bytes": 8064,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/health"
+    },
+    "helm-server.catalog": {
+      "count": 24,
+      "min_ms": 0.43,
+      "p50_ms": 0.64,
+      "p95_ms": 1.72,
+      "p99_ms": 2.95,
+      "max_ms": 2.95,
+      "bytes": 3792,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/catalog"
+    },
+    "helm-server.chart_tile": {
+      "count": 24,
+      "min_ms": 2.56,
+      "p50_ms": 2.74,
+      "p95_ms": 3.41,
+      "p99_ms": 3.48,
+      "max_ms": 3.48,
+      "bytes": 800856,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/chart/11/560/839.png"
+    },
+    "helm-packd.catalog": {
+      "count": 24,
+      "min_ms": 0.38,
+      "p50_ms": 0.48,
+      "p95_ms": 0.7,
+      "p99_ms": 0.7,
+      "max_ms": 0.7,
+      "bytes": 65208,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/catalog"
+    },
+    "helm-packd.layers": {
+      "count": 24,
+      "min_ms": 0.52,
+      "p50_ms": 0.62,
+      "p95_ms": 1.03,
+      "p99_ms": 1.17,
+      "max_ms": 1.17,
+      "bytes": 401328,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/layers?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+    },
+    "helm-packd.prefetch": {
+      "count": 24,
+      "min_ms": 0.36,
+      "p50_ms": 0.43,
+      "p95_ms": 0.88,
+      "p99_ms": 1.58,
+      "max_ms": 1.58,
+      "bytes": 34368,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/prefetch?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&packs=fiji-sat&env_layers=wind"
+    },
+    "helm-packd.bundle": {
+      "count": 24,
+      "min_ms": 0.45,
+      "p50_ms": 0.55,
+      "p95_ms": 1.09,
+      "p99_ms": 1.18,
+      "max_ms": 1.18,
+      "bytes": 135768,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/bundle?bundle_id=helmcxx5&bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0"
+    },
+    "helm-packd.range": {
+      "count": 24,
+      "min_ms": 0.32,
+      "p50_ms": 0.36,
+      "p95_ms": 0.47,
+      "p99_ms": 0.79,
+      "max_ms": 0.79,
+      "bytes": 24576,
+      "status": [
+        200,
+        206
+      ],
+      "url": "http://127.0.0.1:<private>/fiji-sat.pmtiles"
+    },
+    "helm-envd.packs": {
+      "count": 24,
+      "min_ms": 0.32,
+      "p50_ms": 0.36,
+      "p95_ms": 0.45,
+      "p99_ms": 1.09,
+      "max_ms": 1.09,
+      "bytes": 13296,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/packs"
+    },
+    "helm-envd.chunk": {
+      "count": 24,
+      "min_ms": 0.33,
+      "p50_ms": 0.43,
+      "p95_ms": 0.88,
+      "p99_ms": 0.91,
+      "max_ms": 0.91,
+      "bytes": 54456,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/chunk?pack=helmcxx%2Fenvd%2Fno-python-fixture&chunk=global-low%2Fwind%2F20260701T000000Z%2F-180_-90"
+    },
+    "helm-basemap-cache.catalog": {
+      "count": 24,
+      "min_ms": 0.31,
+      "p50_ms": 0.39,
+      "p95_ms": 0.73,
+      "p99_ms": 1.44,
+      "max_ms": 1.44,
+      "bytes": 64488,
+      "status": [
+        200
+      ],
+      "url": "http://127.0.0.1:<private>/catalog"
+    }
+  },
+  "cache": {
+    "online": {
+      "first": "miss-store",
+      "second": "hit"
+    },
+    "noNetwork": {
+      "cachedCatalogStatus": 200,
+      "cachedCatalogHeader": "hit",
+      "hardMissStatus": 204,
+      "hardMissHeader": "miss-transparent"
+    }
+  },
+  "concurrency": {
+    "clients": 4,
+    "requests": 80,
+    "errors": 0,
+    "failures": [],
+    "count": 80,
+    "min_ms": 0.5,
+    "p50_ms": 1.32,
+    "p95_ms": 4.13,
+    "p99_ms": 8.54,
+    "max_ms": 8.54
+  },
+  "soak": {
+    "mode": "short",
+    "seconds": 900,
+    "recommendedLongSoakSeconds": 43200,
+    "requests": 4395,
+    "navFrames": 879,
+    "errors": 0,
+    "failures": [],
+    "count": 4395,
+    "min_ms": 0.33,
+    "p50_ms": 0.85,
+    "p95_ms": 4.76,
+    "p99_ms": 5.18,
+    "max_ms": 17.05
+  },
+  "restart": {
+    "helmServerMs": 665.6
+  },
+  "resources": {
+    "processes": {
+      "helm-packd": {
+        "rss_kb": 8160,
+        "rss_p95_kb": 6944,
+        "cpu_p95_pct": 0,
+        "cpu_max_pct": 0.2
+      },
+      "helm-basemap-cache": {
+        "rss_kb": 6528,
+        "rss_p95_kb": 5696,
+        "cpu_p95_pct": 0,
+        "cpu_max_pct": 0
+      },
+      "helm-envd": {
+        "rss_kb": 6800,
+        "rss_p95_kb": 5664,
+        "cpu_p95_pct": 0,
+        "cpu_max_pct": 0.1
+      },
+      "helm-server": {
+        "rss_kb": 107200,
+        "rss_p95_kb": 69296,
+        "cpu_p95_pct": 0,
+        "cpu_max_pct": 7.6
+      }
+    },
+    "diskBytes": {
+      "tempRuntime": 1678028,
+      "config": 0,
+      "cache": 2687,
+      "packs": 1977406,
+      "envFixture": 8429
+    }
+  },
+  "dependencyFootprint": {
+    "runtimeDaemons": [
+      "helm-server",
+      "helm-packd",
+      "helm-basemap-cache",
+      "helm-envd"
+    ],
+    "dockerRequired": false,
+    "pythonRuntimeDaemonRequired": false,
+    "testHarnessLanguages": [
+      "JavaScript/Node"
+    ],
+    "fixtureGeneration": [
+      "scripts/helmcxx-make-envd-fixture.mjs"
+    ]
+  },
+  "correctness": [
+    "required runtime process trees contain no Python/FastAPI/uvicorn daemon",
+    "required runtime process trees contain no Python/FastAPI/uvicorn daemon"
+  ],
+  "comparison": {
+    "status": "baseline_missing",
+    "note": "Set HELM_HELMCXX5_BASELINE=/path/to/benchmark.json to compare against Python/reference or last accepted runtime evidence."
+  },
+  "pass": true
+}

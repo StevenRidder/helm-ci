@@ -1,0 +1,8 @@
+  ok   packaging artifacts are checked in
+  ok   install/proof scripts pass shell syntax
+  ok   service/install artifacts do not require Docker, Python daemons, or temp-path runtime dirs
+  ok   deterministic install/state/cache/log/pack directories are documented and enforced
+  ok   launchd and systemd templates launch installed C++ binaries
+  ok   installer populates staging root without leaking build paths into runtime env
+HELMC++-6 packaging proof: PASS (static/staged + runtime smoke)
+  evidence: /private/tmp/helm-helmcxx8/test-results/helmcxx6-packaging

@@ -1,0 +1,13 @@
+HELMC++-5 benchmark and soak proof
+  ports: core=9410 packd=9411 cache=9412 envd=9413 relay=9414
+  evidence: /private/tmp/helm-helmcxx8/test-results/helmcxx5-benchmark
+  ok   required C++ runtime services are ready
+  ok   required runtime process trees contain no Python/FastAPI/uvicorn daemon
+  ok   chart and environmental runtime data are visible
+  ok   endpoint latency percentiles recorded
+  ok   concurrent client load completed
+  ok   soak completed for 900s
+  ok   helm-server restart recovery completed
+  ok   no-network cache replay and hard-miss behavior verified
+HELMC++-5 benchmark and soak proof: PASS (/private/tmp/helm-helmcxx8/test-results/helmcxx5-benchmark/benchmark.json)
+BENCH_EXIT=0

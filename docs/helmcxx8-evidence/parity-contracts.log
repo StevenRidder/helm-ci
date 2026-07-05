@@ -1,0 +1,5 @@
+HELMC++ parity suite: PASS
+  services: 4
+  required surfaces: 11
+  contract commands passed: 8
+  contract commands skipped: 0

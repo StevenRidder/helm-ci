@@ -1,0 +1,6 @@
+< HTTP/1.1 200 OK
+< Connection: close
+* Closing connection
+< HTTP/1.1 200 OK
+< Connection: close
+* Closing connection

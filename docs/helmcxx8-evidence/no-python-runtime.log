@@ -1,0 +1,15 @@
+HELMC++-3 no-Python runtime harness
+  ports: core=9400 packd=9401 cache=9402 envd=9403 bad-envd=9404 relay=9405
+  ok   helm-packd /health is C++ and ready
+  ok   helm-basemap-cache /health is C++ and ready
+  ok   helm-envd /health is C++ and ready
+  ok   helm-envd bad-manifest path reports explicit error
+  ok   helm-server cold-starts from fresh runtime dir and reports no-fix/offline truth
+  ok   required runtime process trees contain no Python/FastAPI/uvicorn daemon
+  ok   helm-server serves catalog and explicit transparent chart tile in missing-ENC mode
+  ok   helm-server /nav WebSocket produces usable snapshot frames
+  ok   helm-packd serves catalog/layers/prefetch/bundle and fails missing packs loudly
+  ok   helm-envd serves local chunks and exposes missing/bad-manifest failures
+  ok   helm-basemap-cache serves cached data after no-network and returns transparent hard misses
+  ok   reboot-style restart reuses fresh runtime dir and remains no-Python
+HELMC++-3 no-Python runtime harness: PASS

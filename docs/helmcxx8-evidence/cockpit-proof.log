@@ -1,0 +1,18 @@
+HELMC++-4 cockpit proof
+  ports: core=9430 packd=9431 cache=9432 envd=9433 relay=9434
+  ENC: /Users/steveridder/.helm/runtime/enc/US5GA2BC/US5GA2BC.000
+  evidence: /private/tmp/helm-helmcxx8/test-results/helmcxx8-verifier/cockpit
+  ok   helm-packd is ready
+  ok   helm-basemap-cache is ready
+  ok   helm-envd is ready
+  ok   helm-server is ready
+  ok   chart catalog loaded; cockpit hash #11/30.86250/-81.48750
+  ok   required runtime process trees contain no Python/FastAPI/uvicorn daemon
+
+Running 1 test using 1 worker
+
+  ✓  1 [chromium] › e2e/helmcxx4-cockpit.spec.js:76:1 › C++ runtime drives the cockpit: chart, packs, weather, nav, health, and offline guards (7.0s)
+
+  1 passed (7.5s)
+HELMC++-4 cockpit proof: PASS
+evidence: /private/tmp/helm-helmcxx8/test-results/helmcxx8-verifier/cockpit

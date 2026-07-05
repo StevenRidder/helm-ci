@@ -1,0 +1,91 @@
+{
+  "at": "2026-07-05T00:05:12.058Z",
+  "endpoint": {
+    "endpoint": "127.0.0.1:9430",
+    "healthUrl": "http://127.0.0.1:9430/health",
+    "token": false,
+    "fingerprint": ""
+  },
+  "health": {
+    "ok": true,
+    "age": "0s",
+    "error": "",
+    "payload": {
+      "status": "ok",
+      "engine": "helm-server",
+      "chart_loaded": true,
+      "chart_status": "loaded",
+      "nav": {
+        "fix_status": "live",
+        "reason": "ok",
+        "required": [
+          "pos",
+          "sog",
+          "cog"
+        ],
+        "missing": [],
+        "sources": {
+          "pos": "nmea",
+          "sog": "nmea",
+          "cog": "nmea"
+        },
+        "ageSec": 4,
+        "fields": {
+          "posAgeSec": 4,
+          "sogAgeSec": 4,
+          "cogAgeSec": 4
+        }
+      }
+    }
+  },
+  "runtime": {
+    "version": null,
+    "s57data": null,
+    "enc": null,
+    "senc": null
+  },
+  "degraded": {
+    "visible": false,
+    "title": "",
+    "detail": ""
+  },
+  "logs": {
+    "warn": 0,
+    "error": 0,
+    "recent": []
+  },
+  "navStatus": {
+    "phase": "live",
+    "endpoint": "127.0.0.1:9430",
+    "age": 297,
+    "seq": 6
+  },
+  "lastNavAge": "0s",
+  "subsystems": {
+    "nav": {
+      "label": "live",
+      "sev": "ok",
+      "detail": "frame 0s ago / seq 6"
+    },
+    "ais": {
+      "label": "no AIS data",
+      "sev": "warn",
+      "detail": "1 data sources reported"
+    },
+    "weather": {
+      "label": "off",
+      "sev": "ok",
+      "detail": "weather modules loaded"
+    },
+    "chart": {
+      "label": "loaded",
+      "sev": "ok",
+      "detail": "loaded"
+    },
+    "browser": {
+      "label": "online",
+      "sev": "ok",
+      "detail": "service worker controlling page"
+    }
+  }
+}
