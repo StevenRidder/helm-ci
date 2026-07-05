@@ -210,6 +210,12 @@
       "path": "scripts/wx_refresh_once.py",
       "HELMCXX_2_role": "offline-bake",
       "removal_status": "permanent offline-bake tooling; never part of required C++ runtime — helm-envd (C++) serves, this one-shot only bakes and republishes on an OS timer"
+    },
+    {
+      "inventory_entry": "viewport-scheduler-python-oracle",
+      "path": "pipeline/viewport_scheduler.py",
+      "HELMCXX_2_role": "oracle-only",
+      "removal_status": "C++ viewport_scheduler.cpp is canonical; fixture gate uses C++ only; delete oracle after QA-1 drops Python cross-check"
     }
   ]
 }
