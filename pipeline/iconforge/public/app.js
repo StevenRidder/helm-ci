@@ -181,7 +181,7 @@
     const s101Entry = cmp.s101 || {};
     const opencpnEntry = cmp.opencpn || {};
     return `<div class="hr-text">public comparison</div>
-      <div class="text-secondary small mb-2">The public page shows Helm-owned art plus DB-derived S-101 and OpenCPN/S-52 comparison evidence. Comparison thumbnails are visual witnesses only, not Helm canonical artwork.</div>
+      <div class="text-secondary small mb-2">The public page shows Helm-owned art plus DB-derived S-101 and OpenCPN/S-52 comparison evidence. Comparison thumbnails are visual witnesses only, not Helm canonical artwork. OpenCPN PNGs are GPL comparison evidence, not Apache Helm assets.</div>
       <div class="cmp-grid mb-3">
         ${comparisonPanel("Helm resolved", "Helm-owned canonical SVG", helm)}
         ${comparisonPanel("S-101 evidence", comparisonNote(s101Entry, s101 || "No S-101 evidence recorded in site-index.json."), s101Entry.image, "s101")}
