@@ -259,8 +259,8 @@ set_canonical_status() {
 canonical_status_state() {
   local sha="$1"
   gh api "repos/${CANONICAL_REPO}/commits/${sha}/status" \
-    --jq --arg context "$STATUS_CONTEXT" '.statuses[]? | select(.context == $context) | .state' \
-    2>/dev/null | head -n 1
+    --jq --arg context "$STATUS_CONTEXT" '[.statuses[]? | select(.context == $context) | .state][0] // ""' \
+    2>/dev/null
 }
 
 maybe_stamp_existing_canonical_branch() {
