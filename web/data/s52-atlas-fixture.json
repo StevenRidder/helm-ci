@@ -38,25 +38,36 @@
       "name": "pattern.land",
       "kind": "pattern",
       "width": 8, "height": 8, "anchor": [0, 0], "repeat": [8, 8], "dash": [],
+      "alpha": 0.96,
       "colors": { "day": "#d9c7a6", "dusk": "#8a7d5f", "night": "#4a4432" }
     },
     {
       "name": "pattern.depare-shallow",
       "kind": "pattern",
       "width": 8, "height": 8, "anchor": [0, 0], "repeat": [8, 8], "dash": [],
-      "colors": { "day": "#e6f2f9", "dusk": "#7c94a1", "night": "#254655" }
+      "alpha": 0.96,
+      "colors": { "day": "#a9d3ea", "dusk": "#5f7c8a", "night": "#123845" }
     },
     {
       "name": "pattern.depare-mid",
       "kind": "pattern",
       "width": 8, "height": 8, "anchor": [0, 0], "repeat": [8, 8], "dash": [],
-      "colors": { "day": "#c4e0ef", "dusk": "#6c8794", "night": "#1f3d4c" }
+      "alpha": 0.96,
+      "colors": { "day": "#cfe6f4", "dusk": "#52707d", "night": "#0f303c" }
     },
     {
       "name": "pattern.depare-deep",
       "kind": "pattern",
       "width": 8, "height": 8, "anchor": [0, 0], "repeat": [8, 8], "dash": [],
-      "colors": { "day": "#9fc9e0", "dusk": "#5c7784", "night": "#173441" }
+      "alpha": 0.96,
+      "colors": { "day": "#ecf5fb", "dusk": "#46626f", "night": "#0b2731" }
+    },
+    {
+      "name": "pattern.dredged",
+      "kind": "pattern",
+      "width": 8, "height": 8, "anchor": [0, 0], "repeat": [8, 8], "dash": [],
+      "alpha": 0.96,
+      "colors": { "day": "#cfe3ea", "dusk": "#556e78", "night": "#123039" }
     },
     {
       "name": "line.coastline",

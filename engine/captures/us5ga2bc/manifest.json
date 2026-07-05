@@ -1,6 +1,6 @@
 {
   "fixture_id": "US5GA2BC",
-  "title": "Real NOAA ENC US5GA2BC command-stream capture (RENDERMODEL-3)",
+  "title": "Real NOAA ENC US5GA2BC filled-polygon command-stream capture (RENDERMODEL-4)",
   "schema_version": "vulkan.render_scene.v0",
   "scene_id": "US5GA2BC-day-standard",
   "source_file": "source.json",

@@ -3,29 +3,6 @@
   "schema_version": "vulkan.provenance.v0",
   "provenance_table": [
     {
-      "provenance_id": "prov.land",
-      "source_chart_id": "US5GA2BC",
-      "source_chart_edition": "1",
-      "source_update": "0",
-      "source_object_id": "LAND-GROUP",
-      "source_object_class": "LNDARE",
-      "source_geometry_hash": "enc-ogr-land",
-      "conversion_stage": "enc-ogr-capture",
-      "transform_chain": [
-        "wgs84",
-        "web-mercator",
-        "target-pixels"
-      ],
-      "quilt_decision_id": "quilt.US5GA2BC.primary",
-      "target_bounds": [
-        0,
-        0,
-        2048,
-        2048
-      ],
-      "warnings": []
-    },
-    {
       "provenance_id": "prov.depth_mid",
       "source_chart_id": "US5GA2BC",
       "source_chart_edition": "1",
@@ -72,13 +49,36 @@
       "warnings": []
     },
     {
-      "provenance_id": "prov.coastline",
+      "provenance_id": "prov.dredged",
       "source_chart_id": "US5GA2BC",
       "source_chart_edition": "1",
       "source_update": "0",
-      "source_object_id": "COASTLINE-GROUP",
-      "source_object_class": "COALNE",
-      "source_geometry_hash": "enc-ogr-coastline",
+      "source_object_id": "DREDGED-GROUP",
+      "source_object_class": "DRGARE",
+      "source_geometry_hash": "enc-ogr-dredged",
+      "conversion_stage": "enc-ogr-capture",
+      "transform_chain": [
+        "wgs84",
+        "web-mercator",
+        "target-pixels"
+      ],
+      "quilt_decision_id": "quilt.US5GA2BC.primary",
+      "target_bounds": [
+        0,
+        0,
+        2048,
+        2048
+      ],
+      "warnings": []
+    },
+    {
+      "provenance_id": "prov.land",
+      "source_chart_id": "US5GA2BC",
+      "source_chart_edition": "1",
+      "source_update": "0",
+      "source_object_id": "LAND-GROUP",
+      "source_object_class": "LNDARE",
+      "source_geometry_hash": "enc-ogr-land",
       "conversion_stage": "enc-ogr-capture",
       "transform_chain": [
         "wgs84",
@@ -102,6 +102,29 @@
       "source_object_id": "DEPTH_CONTOUR-GROUP",
       "source_object_class": "DEPCNT",
       "source_geometry_hash": "enc-ogr-depth_contour",
+      "conversion_stage": "enc-ogr-capture",
+      "transform_chain": [
+        "wgs84",
+        "web-mercator",
+        "target-pixels"
+      ],
+      "quilt_decision_id": "quilt.US5GA2BC.primary",
+      "target_bounds": [
+        0,
+        0,
+        2048,
+        2048
+      ],
+      "warnings": []
+    },
+    {
+      "provenance_id": "prov.coastline",
+      "source_chart_id": "US5GA2BC",
+      "source_chart_edition": "1",
+      "source_update": "0",
+      "source_object_id": "COASTLINE-GROUP",
+      "source_object_class": "COALNE",
+      "source_geometry_hash": "enc-ogr-coastline",
       "conversion_stage": "enc-ogr-capture",
       "transform_chain": [
         "wgs84",
