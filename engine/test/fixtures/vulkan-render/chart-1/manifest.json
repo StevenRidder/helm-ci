@@ -47,9 +47,9 @@
     "provenance_json_sha256": "7bf3873c8902bc840cb4459dbf5abf7ad2fa8c4813a1a74771069bbc2991a573",
     "render_model_json_sha256": "b1e2ba0ed19a0a309d3987129bfe7fac482ca3039fbad277e2765234a6b69d42",
     "render_model_binary_sha256": "0b06e548bd4e31c386d275c3552e923b2e4ac28df26d67e92ec8c73b7a8b3aba",
-    "render_artifact_json_sha256": "5446ed6cc9291c463ddfee685830755c3de5ed7060c3d481637e48d4b6561afa",
-    "render_artifact_binary_sha256": "15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c",
-    "render_artifact_cache_key_sha256": "b1784eb2c576ec7982e7e46bba64f95846da5a8b4a282be89e5434e718a91182"
+    "render_artifact_json_sha256": "d92f993b06f85a4b99474bd476d53b5891c8f08ba495f6eff83131d2dba9ccd2",
+    "render_artifact_binary_sha256": "ae4277c1c989871ec9d49878fe374ccaa0b16377e3ebf6f3e93a5df7c1e6f0c4",
+    "render_artifact_cache_key_sha256": "941bfe32f35973481a2270c5944a49d32a1612fce4cbd7cb10ea0bc7b00c4f2f"
   },
   "expected_images": [
     {
