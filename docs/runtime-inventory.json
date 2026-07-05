@@ -1,12 +1,54 @@
 {
   "schema": "helm.runtime_inventory.v1",
-  "updated": "2026-07-05",
-  "owner": "HELMC++-9",
+  "updated": "2026-07-06",
+  "owner": "HELMC++-10",
   "policy": {
     "required_runtime": "Required boat-side/backend runtime is C++/CMake/OpenCPN-native.",
     "frontend": "The cockpit remains browser JavaScript/WebGPU.",
     "python_allowance": "Python is allowed only for optional non-safety services, transitional references/oracles, offline-bake tooling, dev tooling, and fixtures/tests.",
-    "guard": "A required-runtime entry must not launch python, uvicorn, FastAPI, or another scripting-language daemon."
+    "backend_python_growth": "No new backend/**/*.py surface or FastAPI route may be added silently. Net-new backend Python must be explicitly listed in backend_python_policy.exceptions with owner+rationale, route growth must be listed in route_exceptions, and any path trending toward required runtime must name a C++ exit task.",
+    "guard": "A required-runtime entry must not launch python, uvicorn, FastAPI, or another scripting-language daemon. The guard also fails closed on net-new backend/**/*.py files or FastAPI routes outside the recorded baselines or explicit exceptions."
+  },
+  "backend_python_policy": {
+    "mode": "fail-closed-net-new",
+    "owner": "HELMC++-10",
+    "rationale": "Freeze the accepted optional :8090 FastAPI companion surface so new backend Python is a visible opt-in decision. Default implementation choices remain C++/OpenCPN-native for boat runtime and JavaScript/WebGPU for the cockpit frontend.",
+    "baseline": [
+      "backend/agents.py",
+      "backend/context.py",
+      "backend/engine_client.py",
+      "backend/guardrails.py",
+      "backend/labs/__init__.py",
+      "backend/labs/s100_spike.py",
+      "backend/llm.py",
+      "backend/main.py",
+      "backend/probe_contract.py",
+      "backend/probe_layers.py",
+      "backend/publisher.py",
+      "backend/store.py",
+      "backend/test_ai_guardrails.py",
+      "backend/test_probe_contract.py",
+      "backend/test_s100_spike.py",
+      "backend/test_smoke.py"
+    ],
+    "exceptions": [],
+    "route_baseline": [
+      "GET /giveback/status",
+      "GET /health",
+      "GET /places",
+      "GET /saved",
+      "GET /weather",
+      "POST /briefing",
+      "POST /context",
+      "POST /dossier",
+      "POST /giveback/nfl/push",
+      "POST /giveback/osm-note",
+      "POST /narrate",
+      "POST /reviews",
+      "POST /saved",
+      "POST /whereto"
+    ],
+    "route_exceptions": []
   },
   "classifications": [
     "required-runtime",

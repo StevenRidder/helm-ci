@@ -9,6 +9,7 @@ on:
       - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/HELMCXX-PACKAGING.md"
       - "docs/RUNTIME-SERVICES.md"
+      - "backend/**/*.py"
       - "packaging/**"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
@@ -29,6 +30,7 @@ on:
       - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/HELMCXX-PACKAGING.md"
       - "docs/RUNTIME-SERVICES.md"
+      - "backend/**/*.py"
       - "packaging/**"
       - "scripts/check-runtime-inventory.py"
       - "scripts/helmcxx-parity-suite.py"
@@ -53,6 +55,8 @@ jobs:
           python-version: "3.11"
       - name: Check runtime inventory
         run: python3 scripts/check-runtime-inventory.py
+      - name: Check runtime inventory negative smoke
+        run: python3 scripts/check-runtime-inventory.py --negative-smoke-backend-python
       - name: Check HELMC++ parity suite
         run: python3 scripts/helmcxx-parity-suite.py
       - name: Check HELMC++ no-Python harness syntax

@@ -28,6 +28,10 @@ or break working helpers before parity exists. The rule is:
 - Browser JavaScript/WebGPU owns the cockpit UI and client rendering.
 - Python may remain for AI/lab/dev tooling, fixture generation, transitional
   reference/oracle implementations, and explicitly optional non-safety companion services.
+- The existing optional `backend/` FastAPI companion is frozen by a baseline in
+  `runtime-inventory.json`: new `backend/**/*.py` files or FastAPI routes must
+  add an explicit inventory exception with owner and rationale, plus a C++ exit
+  task if the path is trending toward required runtime.
 - Data-preparation tools and test harnesses stay outside required boat runtime unless
   they become part of a shipped boat appliance path.
 - Any non-C++ daemon that becomes required for normal chartplotter runtime needs a frozen contract
@@ -43,7 +47,7 @@ or break working helpers before parity exists. The rule is:
 | `helm-packd` local packs | C++ port merged; Python oracle may remain for tests | C++ required runtime |
 | tile cache/proxy | C++ cache/proxy merged for runtime use | C++ when enabled |
 | weather/environment grid packs | C++ `helm-envd` first replay/validation slice exists; Python `services/wx` remains reference/oracle and provider bridge until full parity | C++ `helm-envd`/`helm-wxd` grid-pack service required runtime after parity |
-| `backend/` FastAPI/AI/community | Optional prototype/companion path | Optional non-safety only, or ported if ever promoted to required runtime |
+| `backend/` FastAPI/AI/community | Optional prototype/companion path; current Python files and routes are explicitly baselined | Optional non-safety only, or ported if ever promoted to required runtime; no net-new backend Python or route surface without an inventory exception |
 | `pipeline/` and generators | Python and shell tooling | Allowed outside required runtime; selected appliance paths may be ported |
 | `web/` cockpit | Browser JavaScript/MapLibre/WebGPU | Browser JavaScript/WebGPU product UI |
 
