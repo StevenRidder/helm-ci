@@ -78,11 +78,11 @@ Requires GDAL (S-57 driver) on `PATH` and the ENC cell (e.g.
 `~/.helm/runtime/enc/US5GA2BC/US5GA2BC.000`; NOAA public domain).
 
 ```bash
-scripts/enc-to-render-fixture.py "$ENC" engine/test/fixtures/vulkan-render/us5ga2bc \
+scripts/enc-to-render-fixture.py "$ENC" engine/captures/us5ga2bc \
     --cell-id US5GA2BC --pixel-size 2048 --simplify-px 2.0 --half-width-px 1.6
-scripts/render-model-fixture-export engine/test/fixtures/vulkan-render/us5ga2bc --print-hashes
-scripts/render-artifact-compile     engine/test/fixtures/vulkan-render/us5ga2bc --print-hashes
-cp engine/test/fixtures/vulkan-render/us5ga2bc/render-artifact.json \
+scripts/render-model-fixture-export engine/captures/us5ga2bc --print-hashes
+scripts/render-artifact-compile     engine/captures/us5ga2bc --print-hashes
+cp engine/captures/us5ga2bc/render-artifact.json \
    web/data/render-artifact-us5ga2bc.json
 ```
 
