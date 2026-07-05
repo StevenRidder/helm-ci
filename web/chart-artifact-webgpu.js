@@ -1,13 +1,23 @@
 /*
- * Helm — chart-artifact-webgpu.js (WEBGPU-1)
+ * Helm — chart-artifact-webgpu.js (WEBGPU-1 + WEBGPU-2)
  * --------------------------------------------------------------------------
- * First browser WebGPU nautical layer: load helm.render.artifact.v1 packets
- * produced by the C++ artifact compiler (ARTIFACT-1) and draw primitive
- * geometry over MapLibre. Chart semantics stay server-side; this module only
- * consumes compiled vertices/indices/draw batches.
+ * Browser WebGPU nautical layer: load helm.render.artifact.v1 packets produced
+ * by the C++ artifact compiler (ARTIFACT-1) and draw primitive geometry over
+ * MapLibre. Chart semantics stay server-side; this module only consumes
+ * compiled vertices/indices/draw batches and material/atlas keys.
+ *
+ * WEBGPU-2 (atlas support): material colors, symbol color, line dash/width,
+ * pattern color, and palette/display-state variants (day|dusk|night) are
+ * resolved by chart-artifact-atlas.js from the compiler's style/material keys +
+ * the ARTIFACT-2 cache display_state. show_text/show_soundings toggles are
+ * honored. Real symbol/glyph/pattern *bitmaps* are deferred until upstream
+ * ships atlas bytes via atlas_refs[].content_hash; unresolved refs surface as
+ * visible diagnostics (window.__helmChartAtlas.diagnostics) rather than silent
+ * substitution.
  *
  * Public API — HelmChartArtifactAuto(map, opts):
  *     load(url?) / setArtifact(json) / setVisible(v) / isVisible()
+ *     setDisplayState(day|dusk|night) / getPalette() / getDiagnostics()
  *     destroy() / mode()
  *
  * Fallback discipline (matches wx-particles-webgpu.js / WX-25):
@@ -88,10 +98,17 @@
       }),
       pick_records: json.pick_records || [],
       source_model_id: json.source_model_id || '',
+      // ARTIFACT-2 cache block (display_state palette, show_text/show_soundings, …).
+      // Consumed by the atlas resolver for palette/display-state variants (WEBGPU-2).
+      cache: json.cache || null,
       vertices: new Float32Array(verts),
       indices: new Uint32Array(inds)
     };
   }
+
+  // Atlas resolver (WEBGPU-2) is optional; when absent we keep the WEBGPU-1
+  // debug palette so the layer still draws. Never a silent chart-color claim.
+  function atlas() { return global.HelmChartArtifactAtlas || null; }
 
   function tilePixelToLonLat(x, y, vp) {
     var pw = vp.pixel_width || 1;
@@ -132,6 +149,9 @@
     '  a: f32, b: f32, tx: f32, c: f32, d: f32, ty: f32, invW: f32, invH: f32,',
     '};',
     '@group(0) @binding(0) var<uniform> view: View;',
+    // WEBGPU-2: per-material RGBA indexed by material_index, filled from the atlas
+    // resolver (palette/display-state aware) — replaces the WEBGPU-1 hardcoded switch.
+    '@group(0) @binding(1) var<uniform> materials: array<vec4<f32>, 32>;',
     'struct VSOut { @builtin(position) pos: vec4<f32>, @location(0) color: vec4<f32> };',
     'fn tileToNdc(px: f32, py: f32) -> vec2<f32> {',
     '  let lon = view.west + px * view.dLonPerPx;',
@@ -144,15 +164,8 @@
     '  return vec2<f32>(sx * view.invW * 2.0 - 1.0, 1.0 - sy * view.invH * 2.0);',
     '}',
     'fn matColor(idx: f32) -> vec4<f32> {',
-    '  let i = u32(clamp(idx, 0.0, 5.0));',
-    '  switch (i) {',
-    '    case 0u: { return vec4<f32>(0.35, 0.35, 0.40, 0.85); }',
-    '    case 1u: { return vec4<f32>(0.12, 0.42, 0.72, 0.55); }',
-    '    case 2u: { return vec4<f32>(0.05, 0.55, 0.35, 0.95); }',
-    '    case 3u: { return vec4<f32>(0.90, 0.55, 0.10, 0.90); }',
-    '    case 4u: { return vec4<f32>(0.85, 0.85, 0.20, 0.90); }',
-    '    default: { return vec4<f32>(0.70, 0.20, 0.55, 0.90); }',
-    '  }',
+    '  let i = min(u32(max(idx, 0.0)), 31u);',
+    '  return materials[i];',
     '}',
     '@vertex fn vs(@location(0) tile_xy: vec2<f32>, @location(1) mat_idx: f32) -> VSOut {',
     '  var o: VSOut;',
@@ -171,6 +184,11 @@
     this._visible = false;
     this._destroyed = false;
     this._raf = null;
+    this._palette = (gpu && gpu.palette) || 'day';   // display-state palette (day|dusk|night)
+    this._resources = (gpu && gpu.resources) || null; // web atlas fixture resources (optional)
+    this._resolvedCache = Object.create(null);
+    this._dashBuf = null;
+    this._dashCapacity = 0;
     this._buildCanvas();
     this._buildPipelines();
     if (this.artifact) this._uploadGeometry();
@@ -232,6 +250,8 @@
     this.linePipe = mk('line-list');
     this.pointPipe = mk('point-list');
     this.viewBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    // WEBGPU-2: 32 materials * vec4 (16B) = 512B color table, indexed by material_index.
+    this.materialsBuf = dev.createBuffer({ size: 512, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
   };
 
   GpuChartArtifactLayer.prototype._uploadGeometry = function () {
@@ -250,19 +270,131 @@
     });
     dev.queue.writeBuffer(this.vertexBuf, 0, art.vertices);
     dev.queue.writeBuffer(this.indexBuf, 0, art.indices);
-    this.viewBindTri = dev.createBindGroup({
-      layout: this.triPipe.getBindGroupLayout(0),
-      entries: [{ binding: 0, resource: { buffer: this.viewBuf } }]
-    });
-    this.viewBindLine = dev.createBindGroup({
-      layout: this.linePipe.getBindGroupLayout(0),
-      entries: [{ binding: 0, resource: { buffer: this.viewBuf } }]
-    });
-    this.viewBindPoint = dev.createBindGroup({
-      layout: this.pointPipe.getBindGroupLayout(0),
-      entries: [{ binding: 0, resource: { buffer: this.viewBuf } }]
-    });
+    var mkBind = function (pipe) {
+      return dev.createBindGroup({
+        layout: pipe.getBindGroupLayout(0),
+        entries: [
+          { binding: 0, resource: { buffer: this.viewBuf } },
+          { binding: 1, resource: { buffer: this.materialsBuf } }
+        ]
+      });
+    }.bind(this);
+    this.viewBindTri = mkBind(this.triPipe);
+    this.viewBindLine = mkBind(this.linePipe);
+    this.viewBindPoint = mkBind(this.pointPipe);
   };
+
+  // Resolve (and cache) material styles for an artifact under the current
+  // display-state palette. Keyed by artifact id + palette so a palette change
+  // recomputes. Falls back to the WEBGPU-1 debug palette when the atlas module
+  // is absent, so the layer always has colors.
+  GpuChartArtifactLayer.prototype._resolvedFor = function (artifact) {
+    var A = atlas();
+    var id = (artifact.artifact_id || 'default') + '@' + this._palette;
+    if (this._resolvedCache[id]) return this._resolvedCache[id];
+    var resolved;
+    if (A) {
+      resolved = A.resolveArtifact(artifact, this._palette, this._resources);
+    } else {
+      resolved = { palette: this._palette, materials: (artifact.material_table || []).map(function (m, i) {
+        var c = MATERIAL_RGBA[i % MATERIAL_RGBA.length];
+        return { rgba: c.slice(), visible: true, style_key: (m && m.style_key) || '' };
+      }), diagnostics: [], displayState: (artifact.cache && artifact.cache.display_state) || {} };
+    }
+    this._resolvedCache[id] = resolved;
+    return resolved;
+  };
+
+  GpuChartArtifactLayer.prototype._writeMaterials = function (resolved) {
+    var A = atlas();
+    var colors;
+    if (A) {
+      colors = A.packMaterialColors(resolved.materials, 32);
+    } else {
+      colors = new Float32Array(32 * 4);
+      for (var i = 0; i < resolved.materials.length && i < 32; i++) {
+        var c = resolved.materials[i].rgba || [0, 0, 0, 0];
+        colors[i * 4] = c[0]; colors[i * 4 + 1] = c[1]; colors[i * 4 + 2] = c[2]; colors[i * 4 + 3] = c[3];
+      }
+    }
+    this.gpu.device.queue.writeBuffer(this.materialsBuf, 0, colors);
+  };
+
+  // Build a flat (x,y,mat,pick) line-list vertex array of the DASHED sub-segments
+  // for every line batch whose resolved material carries a dash. Dash lengths are
+  // pixel-space (S-52 line style), converted to tile-space per segment via the
+  // live projection so the pattern holds its on-screen cadence across zoom.
+  GpuChartArtifactLayer.prototype._buildDashedVerts = function (artifact, resolved) {
+    var A = atlas();
+    if (!A) return null;
+    var vp = artifact.viewport;
+    var verts = artifact.vertices;
+    var inds = artifact.indices;
+    var out = [];
+    var batches = artifact.draw_batches || [];
+    for (var bi = 0; bi < batches.length; bi++) {
+      var b = batches[bi];
+      if (b.topology !== 'line_list') continue;
+      var rm = resolved.materials[b.material_index];
+      if (!rm || rm.visible === false || !rm.line || !rm.line.dash || !rm.line.dash.length) continue;
+      for (var k = 0; k + 1 < b.index_count; k += 2) {
+        var i0 = inds[b.first_index + k], i1 = inds[b.first_index + k + 1];
+        var x0 = verts[i0 * 4], y0 = verts[i0 * 4 + 1];
+        var x1 = verts[i1 * 4], y1 = verts[i1 * 4 + 1];
+        var mat = verts[i0 * 4 + 2], pick = verts[i0 * 4 + 3];
+        var upp = this._tileUnitsPerPixel(x0, y0, x1, y1, vp);
+        var subs = A.dashSegments(x0, y0, x1, y1, rm.line.dash, upp);
+        for (var s = 0; s < subs.length; s++) {
+          var seg = subs[s];
+          out.push(seg[0], seg[1], mat, pick, seg[2], seg[3], mat, pick);
+        }
+      }
+    }
+    return out.length ? new Float32Array(out) : null;
+  };
+
+  // tile-space units per on-screen pixel along a segment (for dash cadence).
+  GpuChartArtifactLayer.prototype._tileUnitsPerPixel = function (x0, y0, x1, y1, vp) {
+    try {
+      var a = tilePixelToLonLat(x0, y0, vp), b = tilePixelToLonLat(x1, y1, vp);
+      var pa = this.map.project([a.lon, a.lat]), pb = this.map.project([b.lon, b.lat]);
+      var screen = Math.sqrt((pb.x - pa.x) * (pb.x - pa.x) + (pb.y - pa.y) * (pb.y - pa.y));
+      var tile = Math.sqrt((x1 - x0) * (x1 - x0) + (y1 - y0) * (y1 - y0));
+      if (screen > 1e-6 && tile > 1e-9) return tile / screen;
+    } catch (e) {}
+    return 1;
+  };
+
+  GpuChartArtifactLayer.prototype._ensureDashBuf = function (byteLength) {
+    if (this._dashBuf && this._dashCapacity >= byteLength) return this._dashBuf;
+    if (this._dashBuf) { try { this._dashBuf.destroy(); } catch (e) {} }
+    var cap = Math.max(byteLength, 1024);
+    this._dashBuf = this.gpu.device.createBuffer({ size: cap, usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST });
+    this._dashCapacity = cap;
+    return this._dashBuf;
+  };
+
+  GpuChartArtifactLayer.prototype.setDisplayState = function (palette) {
+    var A = atlas();
+    this._palette = A ? A.normalizePalette(palette) : (palette || 'day');
+    this._paletteExplicit = true;
+    this._resolvedCache = Object.create(null);
+    global.__helmChartPalette = this._palette;
+    if (this._visible) this._draw();
+  };
+
+  GpuChartArtifactLayer.prototype.getDiagnostics = function () {
+    if (!this.artifact) return [];
+    return this._resolvedFor(this.artifact).diagnostics || [];
+  };
+
+  GpuChartArtifactLayer.prototype.setResources = function (resources) {
+    this._resources = resources || null;
+    this._resolvedCache = Object.create(null);
+    if (this._visible) this._draw();
+  };
+
+  GpuChartArtifactLayer.prototype.getPalette = function () { return this._palette; };
 
   GpuChartArtifactLayer.prototype._bindMap = function () {
     var self = this;
@@ -314,10 +446,18 @@
         storeOp: 'store'
       }]
     });
+    // WEBGPU-2: per-material palette colors (day/dusk/night) from the atlas resolver.
+    var resolved = this._resolvedFor(this.artifact);
+    this._writeMaterials(resolved);
     var batches = this.artifact.draw_batches || [];
     for (var i = 0; i < batches.length; i++) {
       var b = batches[i];
       if (!b.index_count) continue;
+      var rm = resolved.materials[b.material_index];
+      // display-state toggles (show_text / show_soundings) from the artifact cache.
+      if (rm && rm.visible === false) continue;
+      // dashed contours are rendered from CPU-expanded segments below.
+      if (b.topology === 'line_list' && rm && rm.line && rm.line.dash && rm.line.dash.length) continue;
       var sel = this._pipeForTopology(b.topology);
       pass.setPipeline(sel.pipe);
       pass.setBindGroup(0, sel.bind);
@@ -325,12 +465,29 @@
       pass.setIndexBuffer(this.indexBuf, 'uint32');
       pass.drawIndexed(b.index_count, 1, b.first_index, 0, 0);
     }
+    var dashed = this._buildDashedVerts(this.artifact, resolved);
+    if (dashed && dashed.length) {
+      var buf = this._ensureDashBuf(dashed.byteLength);
+      dev.queue.writeBuffer(buf, 0, dashed);
+      pass.setPipeline(this.linePipe);
+      pass.setBindGroup(0, this.viewBindLine);
+      pass.setVertexBuffer(0, buf);
+      pass.draw(dashed.length / VERTEX_STRIDE, 1, 0, 0);
+    }
     pass.end();
     dev.queue.submit([enc.finish()]);
   };
 
   GpuChartArtifactLayer.prototype.setArtifact = function (artifact) {
     this.artifact = artifact;
+    this._resolvedCache = Object.create(null);
+    // Default the palette from the artifact cache display_state (ARTIFACT-2) unless
+    // an explicit display state was already chosen this session.
+    var A = atlas();
+    if (A && !this._paletteExplicit) {
+      this._palette = A.paletteFromDisplayState(artifact);
+      global.__helmChartPalette = this._palette;
+    }
     this._uploadGeometry();
     if (this._visible) this._draw();
     return true;
@@ -366,7 +523,7 @@
     this.setEncChartVisible(true);
     if (this.canvas && this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas);
     this.canvas = null;
-    var kill = ['vertexBuf', 'indexBuf', 'viewBuf'];
+    var kill = ['vertexBuf', 'indexBuf', 'viewBuf', 'materialsBuf', '_dashBuf'];
     for (var i = 0; i < kill.length; i++) {
       try { this[kill[i]] && this[kill[i]].destroy(); } catch (e) {}
     }
@@ -376,7 +533,41 @@
     opts = opts || {};
     var inner = null;
     var mode = 'initializing';
-    var state = { artifact: null, visible: false, destroyed: false, packetUrl: opts.packetUrl || 'data/render-artifact-chart-1.json' };
+    var state = {
+      artifact: null, visible: false, destroyed: false,
+      packetUrl: opts.packetUrl || 'data/render-artifact-chart-1.json',
+      atlasUrl: opts.atlasUrl || 'data/s52-atlas-fixture.json',
+      resources: null,
+      palette: null
+    };
+
+    function publishAtlasStatus() {
+      var A = atlas();
+      var diags = (inner && inner.getDiagnostics) ? inner.getDiagnostics() : [];
+      var pal = (inner && inner.getPalette) ? inner.getPalette()
+        : (state.palette || (A && state.artifact ? A.paletteFromDisplayState(state.artifact) : 'day'));
+      global.__helmChartPalette = pal;
+      global.__helmChartAtlas = {
+        available: !!A,
+        palette: pal,
+        resourcesLoaded: !!state.resources,
+        diagnostics: diags,
+        materialCount: state.artifact ? (state.artifact.material_table || []).length : 0
+      };
+    }
+
+    // Load the web atlas resource mirror (optional; resolver has a built-in copy).
+    if (typeof fetch !== 'undefined' && atlas()) {
+      fetch(state.atlasUrl, { cache: 'no-cache' })
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (json) {
+          if (!json) return;
+          state.resources = atlas().loadResources(json);
+          if (inner && inner.setResources) inner.setResources(state.resources);
+          publishAtlasStatus();
+        })
+        .catch(function () { /* built-in mirror stays in effect */ });
+    }
 
     function setMode(m, reason) {
       mode = m;
@@ -429,10 +620,13 @@
         });
         inner = new GpuChartArtifactLayer(map, {
           device: dev,
-          canvasFormat: navigator.gpu.getPreferredCanvasFormat()
+          canvasFormat: navigator.gpu.getPreferredCanvasFormat(),
+          palette: state.palette || undefined,
+          resources: state.resources || undefined
         }, state.artifact);
         setMode('gpu');
         replay();
+        publishAtlasStatus();
       }).catch(function (err) {
         fallbackMapLibre('WebGPU init failed: ' + (err && err.message ? err.message : err));
       });
@@ -451,6 +645,7 @@
           .then(function (json) {
             state.artifact = parseArtifactJson(json);
             var r2 = call(function (e) { return e.setArtifact ? e.setArtifact(state.artifact) : true; });
+            publishAtlasStatus();
             return r2 !== false;
           })
           .catch(function (err) {
@@ -465,7 +660,22 @@
       setArtifact: function (json) {
         state.artifact = parseArtifactJson(json);
         var r = call(function (e) { return e.setArtifact ? e.setArtifact(state.artifact) : true; });
+        publishAtlasStatus();
         return r === undefined ? true : r;
+      },
+      // WEBGPU-2: switch S-52 display-state palette (day|dusk|night).
+      setDisplayState: function (palette) {
+        var A = atlas();
+        state.palette = A ? A.normalizePalette(palette) : (palette || 'day');
+        call(function (e) { if (e.setDisplayState) e.setDisplayState(state.palette); });
+        publishAtlasStatus();
+        return state.palette;
+      },
+      getPalette: function () {
+        return (inner && inner.getPalette) ? inner.getPalette() : (state.palette || 'day');
+      },
+      getDiagnostics: function () {
+        return (inner && inner.getDiagnostics) ? inner.getDiagnostics() : [];
       },
       setVisible: function (v) {
         state.visible = !!v;

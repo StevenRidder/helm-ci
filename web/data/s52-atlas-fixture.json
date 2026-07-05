@@ -1,0 +1,38 @@
+{
+  "schema_version": "helm.s52.atlas.web.v1",
+  "generator": "web mirror of engine/test/fixtures/s52-atlas/s52_atlas.fixture (see docs/VULKAN-S52-ATLAS-PIPELINE.md)",
+  "note": "Synthetic, repo-owned day/dusk/night values kept byte-parallel with the engine fixture. Not authoritative S-52 colors; replaced when upstream delivers atlas bytes via atlas_refs[].content_hash.",
+  "palettes": ["day", "dusk", "night"],
+  "entries": [
+    {
+      "name": "BOYSPP",
+      "kind": "symbol",
+      "width": 12,
+      "height": 12,
+      "anchor": [6, 6],
+      "repeat": [0, 0],
+      "dash": [],
+      "colors": { "day": "#f5d76e", "dusk": "#b38b2e", "night": "#8a5a22" }
+    },
+    {
+      "name": "DEPARE01",
+      "kind": "pattern",
+      "width": 8,
+      "height": 8,
+      "anchor": [0, 0],
+      "repeat": [8, 8],
+      "dash": [],
+      "colors": { "day": "#b9d7e8", "dusk": "#5f7a88", "night": "#1b3c4b" }
+    },
+    {
+      "name": "DEPCNT02",
+      "kind": "line",
+      "width": 16,
+      "height": 4,
+      "anchor": [0, 2],
+      "repeat": [0, 0],
+      "dash": [3, 2],
+      "colors": { "day": "#4a6f8a", "dusk": "#304a5a", "night": "#7eb6d6" }
+    }
+  ]
+}

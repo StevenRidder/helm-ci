@@ -752,7 +752,8 @@
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
 <script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
-<script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1: nautical artifact packets (visible MapLibre enc-chart fallback) -->
+<script src="chart-artifact-atlas.js"></script><!-- WEBGPU-2: atlas/material resolver (palette day/dusk/night, symbol/line/pattern keys) -->
+<script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1/2: nautical artifact packets + atlas support (visible MapLibre enc-chart fallback) -->
 <script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
 <script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
@@ -1367,6 +1368,9 @@
       paintRasters(p);
       document.documentElement.classList.toggle('theme-night', t === 'night');   // swaps every colour var
       document.documentElement.classList.toggle('theme-dusk', t === 'dusk');
+      // WEBGPU-2: drive the WebGPU chart artifact layer's S-52 display-state palette
+      // from the same day/dusk/night control (no-op under the MapLibre fallback).
+      try { if (window.__helmChartArtifact && window.__helmChartArtifact.setDisplayState) window.__helmChartArtifact.setDisplayState(t); } catch (e) {}
       if (window.HelmUiText) HelmUiText.apply();   // release/re-apply ui-text's inline --cdim so night/dusk own the muted-text colour
       if (brilWrap) brilWrap.hidden = (t !== 'night');
       applyBrilliance();
