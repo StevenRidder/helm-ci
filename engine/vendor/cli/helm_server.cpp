@@ -2416,11 +2416,9 @@ struct VulkanTileMeta {
 };
 
 static ChartRendererChoice chart_renderer_default() {
-  // INTEGRATE-1 "kill legacy": the Vulkan render path is the DEFAULT so the new path is actually
-  // exercised. Legacy stays reachable as an EXPLICIT, non-silent fallback (?renderer=legacy, or
-  // ?fallback=legacy / HELM_VULKAN_FALLBACK=legacy after a Vulkan failure); set
-  // HELM_CHART_RENDERER=legacy to force the old path.
-  const std::string value = lower_ascii(env_or("HELM_CHART_RENDERER", "vulkan"));
+  // INTEGRATE-1: legacy S-52 ENC PNG is the process default on live harbour screens.
+  // Vulkan is opt-in via HELM_CHART_RENDERER=vulkan (or ?renderer=vulkan on private ports).
+  const std::string value = lower_ascii(env_or("HELM_CHART_RENDERER", "legacy"));
   return value == "legacy" ? ChartRendererChoice::Legacy : ChartRendererChoice::Vulkan;
 }
 

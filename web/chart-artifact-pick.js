@@ -230,20 +230,76 @@
     return { pick_id: pickId, pixel: [px.x, px.y] };
   }
 
+  function queryHits(queryJson) {
+    if (!queryJson) return [];
+    if (Array.isArray(queryJson)) return queryJson;
+    return queryJson.hits || queryJson.features || [];
+  }
+
+  function attributesFromQueryHit(hit) {
+    var attrs = (hit && (hit.attributes || hit.properties)) || {};
+    return Object.keys(attrs).map(function (k) {
+      var v = attrs[k];
+      var decoded = (v && typeof v === 'object' && v.decoded != null) ? String(v.decoded) : String(v);
+      return { code: k.trim(), value: decoded };
+    });
+  }
+
+  function buildTraceFromServerQuery(queryJson, opts) {
+    opts = opts || {};
+    var hits = queryHits(queryJson);
+    if (!hits.length) return null;
+    var hit = hits[0];
+    var backend = opts.backend || 'enc-query';
+    return {
+      schema_version: TRACE_SCHEMA,
+      trace_id: 'inspect.enc-query.' + (hit.acronym || hit.objl_code || 'hit'),
+      pick: {
+        pixel: [0, 0],
+        device_pixel_ratio: 1,
+        viewport_id: 'server-enc',
+        backend: backend,
+        scene_id: 'enc-chart',
+        model_id: ''
+      },
+      resolution: { kind: 'vector_feature', feature_metadata_available: true },
+      draw_record: {
+        command_id: hit.acronym || '—',
+        primitive_id: hit.geometry || '—',
+        artifact_id: 'enc-chart',
+        layer_id: 'layer.enc-chart'
+      },
+      presentation: {
+        presentation_authority: 's52',
+        presentation_rule_id: hit.acronym ? ('rule.' + hit.acronym) : ''
+      },
+      source: {
+        source_chart_id: hit.chart_id || null,
+        source_chart_edition: hit.edition || hit.source_edition || null,
+        object_class: hit.acronym || hit.class_desc || null,
+        attributes: attributesFromQueryHit(hit)
+      },
+      raster_fallback: { active: false, sidecar_metadata_available: false },
+      inspection_handles: [],
+      warnings: []
+    };
+  }
+
   function enrichTraceAttributes(trace, queryJson) {
     if (!queryJson || !trace || trace.resolution.kind !== 'vector_feature') return trace;
-    var hits = queryJson.hits || queryJson.features || [];
+    if (trace.source && trace.source.attributes && trace.source.attributes.length) return trace;
+    var hits = queryHits(queryJson);
     if (!hits.length) return trace;
     var hit = hits[0];
-    var attrs = hit.attributes || hit.properties || {};
-    trace.source.attributes = Object.keys(attrs).map(function (k) {
-      return { code: k, value: String(attrs[k]) };
-    });
+    trace.source = trace.source || {};
+    trace.source.attributes = attributesFromQueryHit(hit);
+    if (hit.class_desc && !trace.source.object_class) trace.source.object_class = hit.class_desc;
+    if (hit.acronym && !trace.source.object_class) trace.source.object_class = hit.acronym;
     if (hit.edition || hit.source_edition) {
       trace.source.source_chart_edition = String(hit.edition || hit.source_edition);
     }
     trace.warnings = trace.warnings || [];
-    if (queryJson.freshness || queryJson.edition) {
+    if (!Array.isArray(queryJson) && (queryJson.freshness || queryJson.edition)) {
       trace.freshness = queryJson.freshness || { edition: queryJson.edition };
     }
     return trace;
@@ -257,6 +313,8 @@
     pickAtLngLat: pickAtLngLat,
     pickRecordById: pickRecordById,
     buildInspectionTrace: buildInspectionTrace,
+    buildTraceFromServerQuery: buildTraceFromServerQuery,
+    queryHits: queryHits,
     enrichTraceAttributes: enrichTraceAttributes,
     provenanceForHandles: provenanceForHandles
   };

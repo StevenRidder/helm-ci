@@ -36,6 +36,36 @@
     return this.opts.packetUrl || 'data/render-artifact-chart-1.json';
   };
 
+  function bboxFromViewport(vp) {
+    if (!vp) return null;
+    var box = {
+      west: +vp.west,
+      south: +vp.south,
+      east: +vp.east,
+      north: +vp.north
+    };
+    if (!Number.isFinite(box.west) || !Number.isFinite(box.south) ||
+        !Number.isFinite(box.east) || !Number.isFinite(box.north)) return null;
+    if (box.east < box.west || box.north < box.south) return null;
+    return box;
+  }
+
+  function bboxIntersects(a, b) {
+    if (!a || !b) return false;
+    return !(a.east < b.west || a.west > b.east || a.north < b.south || a.south > b.north);
+  }
+
+  function viewportLabel(vp) {
+    var b = bboxFromViewport(vp);
+    if (!b) return 'unknown bbox';
+    function f(v) { return Number(v).toFixed(4); }
+    return f(b.south) + '..' + f(b.north) + ', ' + f(b.west) + '..' + f(b.east);
+  }
+
+  function artifactIntersectsViewport(artifact, viewport) {
+    return bboxIntersects(bboxFromViewport(artifact && artifact.viewport), bboxFromViewport(viewport));
+  }
+
   HelmChartSchedulerBlend.prototype._fetchArtifactForEntry = function (entry) {
     var self = this;
     var url = this._artifactUrlForEntry(entry);
@@ -51,7 +81,13 @@
         if (!parse) throw new Error('HelmChartArtifactAuto parser unavailable');
         var artifact = parse(json);
         var tile = entry.tile || {};
-        artifact.viewport = self.scheduler.tileViewport(+tile.z, +tile.x, +tile.y);
+        var requestedViewport = self.scheduler.tileViewport(+tile.z, +tile.x, +tile.y);
+        if (!artifactIntersectsViewport(artifact, requestedViewport)) {
+          throw new Error('artifact ' + (artifact.artifact_id || 'packet') +
+            ' does not cover scheduled tile z' + tile.z + '/x' + tile.x + '/y' + tile.y +
+            ' (artifact ' + viewportLabel(artifact.viewport) +
+            ', tile ' + viewportLabel(requestedViewport) + ')');
+        }
         return artifact;
       });
   };
@@ -146,6 +182,13 @@
     this.map.off('moveend', this._handlers.moveend);
     this.map.off('zoom', this._handlers.zoom);
     this.map.off('zoomend', this._handlers.zoomend);
+  };
+
+  HelmChartSchedulerBlend._test = {
+    bboxFromViewport: bboxFromViewport,
+    bboxIntersects: bboxIntersects,
+    artifactIntersectsViewport: artifactIntersectsViewport,
+    viewportLabel: viewportLabel
   };
 
   if (typeof module !== 'undefined' && module.exports) module.exports = HelmChartSchedulerBlend;

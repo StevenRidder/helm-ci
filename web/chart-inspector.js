@@ -97,6 +97,9 @@
     var provenanceUrl = opts.provenanceUrl || 'data/chart-fixture-provenance.json';
     var queryEnabled = opts.queryEnabled !== false;
     var lastTrace = null;
+    var dragging = false;
+    var suppressClickUntil = 0;
+    var dragSuppressMs = opts.dragSuppressMs == null ? 400 : +opts.dragSuppressMs;
 
     function loadProvenance() {
       return fetch(provenanceUrl, { cache: 'no-cache' })
@@ -105,25 +108,58 @@
         .catch(function () { provenance = null; return null; });
     }
 
+    function chartMode() {
+      return chartLayer && chartLayer.mode ? chartLayer.mode() : 'unknown';
+    }
+
     function artifactReady() {
       return chartLayer && chartLayer.getArtifact && chartLayer.getArtifact();
     }
 
-    function resolvePick(lngLat) {
+    function resolveArtifactPick(lngLat) {
       var art = artifactReady();
       if (!art || !pickApi) return null;
       var hit = pickApi.pickAtLngLat(art, lngLat.lng, lngLat.lat);
+      if (!hit.pick_id) return null;
       return pickApi.buildInspectionTrace({
         artifact: art,
         pick_id: hit.pick_id,
         pixel: hit.pixel || [0, 0],
-        backend: chartLayer.mode ? chartLayer.mode() : 'unknown',
+        backend: chartMode(),
         provenance: provenance || {}
       });
     }
 
+    function fetchServerPick(lngLat) {
+      if (!queryEnabled || !map || !pickApi) return Promise.resolve(null);
+      var z = map.getZoom ? Math.round(map.getZoom()) : 12;
+      var url = '/query?lat=' + encodeURIComponent(lngLat.lat) +
+        '&lon=' + encodeURIComponent(lngLat.lng) + '&z=' + z + '&radius=8';
+      return fetch(url)
+        .then(function (r) { return r.ok ? r.json() : null; })
+        .then(function (j) {
+          if (!j) return null;
+          return pickApi.buildTraceFromServerQuery(j, {
+            backend: chartMode() === 'gpu' ? 'enc-query-fallback' : 'enc-query'
+          });
+        })
+        .catch(function () { return null; });
+    }
+
+    function resolvePick(lngLat) {
+      if (chartMode() === 'gpu') {
+        var artifactTrace = resolveArtifactPick(lngLat);
+        if (artifactTrace) return Promise.resolve(artifactTrace);
+        return fetchServerPick(lngLat);
+      }
+      return fetchServerPick(lngLat);
+    }
+
     function maybeQuery(trace, lngLat) {
       if (!queryEnabled || !trace || trace.resolution.kind !== 'vector_feature') {
+        return Promise.resolve(trace);
+      }
+      if (trace.source && trace.source.attributes && trace.source.attributes.length) {
         return Promise.resolve(trace);
       }
       var z = map && map.getZoom ? Math.round(map.getZoom()) : 12;
@@ -133,6 +169,13 @@
         .then(function (r) { return r.ok ? r.json() : null; })
         .then(function (j) { return j ? pickApi.enrichTraceAttributes(trace, j) : trace; })
         .catch(function () { return trace; });
+    }
+
+    function shouldSuppressClick() {
+      if (dragging) return true;
+      if (suppressClickUntil && Date.now() < suppressClickUntil) return true;
+      if (map && map.isMoving && map.isMoving()) return true;
+      return false;
     }
 
     function showCard(trace, lngLat, point) {
@@ -150,12 +193,25 @@
       try { global.__helmChartInspectTrace = trace; } catch (e) {}
     }
 
+    function onDragStart() { dragging = true; }
+
+    function onDragEnd() {
+      dragging = false;
+      suppressClickUntil = Date.now() + dragSuppressMs;
+    }
+
     function onMapClick(e) {
       if (global.__helmMeasure && global.__helmMeasure.active && global.__helmMeasure.active()) return;
+      if (shouldSuppressClick()) return;
       if (!chartLayer || !chartLayer.isVisible || !chartLayer.isVisible()) return;
-      var trace = resolvePick(e.lngLat);
-      if (!trace) return;
-      maybeQuery(trace, e.lngLat).then(function (t) { showCard(t, e.lngLat, e.point); });
+      resolvePick(e.lngLat)
+        .then(function (trace) {
+          if (!trace || trace.resolution.kind === 'no_hit') return null;
+          return maybeQuery(trace, e.lngLat);
+        })
+        .then(function (trace) {
+          if (trace) showCard(trace, e.lngLat, e.point);
+        });
     }
 
     return {
@@ -163,11 +219,17 @@
         if (!map) return;
         loadProvenance();
         map.on('click', onMapClick);
+        map.on('dragstart', onDragStart);
+        map.on('dragend', onDragEnd);
       },
       destroy: function () {
-        if (map) map.off('click', onMapClick);
+        if (!map) return;
+        map.off('click', onMapClick);
+        map.off('dragstart', onDragStart);
+        map.off('dragend', onDragEnd);
       },
-      resolvePick: resolvePick,
+      resolvePick: resolveArtifactPick,
+      resolvePickAsync: resolvePick,
       showCard: showCard,
       lastTrace: function () { return lastTrace; },
       traceHtml: traceHtml

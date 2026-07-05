@@ -23,8 +23,18 @@ function ok(name, fn) {
   catch (e) { console.error('  FAIL - ' + name + ': ' + e.message); process.exitCode = 1; }
 }
 
-ok('feature flag defaults ON — WebGPU is the primary renderer (kill legacy)', () => {
+ok('feature flag defaults OFF — PNG enc-chart stays default until opt-in', () => {
   const win = loadStatus({ localStorage: { getItem: () => null, setItem() {} } });
+  assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, false);
+});
+
+ok('feature flag honors explicit opt-in HELM_CHART_WEBGPU=true', () => {
+  const win = loadStatus({ HELM_CHART_WEBGPU: true, localStorage: { getItem: () => null, setItem() {} } });
+  assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, true);
+});
+
+ok('feature flag honors explicit localStorage opt-in helmChartWebgpu=1', () => {
+  const win = loadStatus({ localStorage: { getItem: () => '1', setItem() {} } });
   assert.strictEqual(win.HelmChartRendererStatus.featureFlagState().enabled, true);
 });
 
