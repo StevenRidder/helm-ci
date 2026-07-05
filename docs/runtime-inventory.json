@@ -433,6 +433,67 @@
       "notes": "Tests may use Python helpers to generate fixtures or inspect JSON. HELMC++-3 adds a no-Python runtime harness that may use shell/Node as test tooling but launches only C++ required-runtime daemons. HELMC++-4 adds a Playwright cockpit harness over the same C++ runtime shape. HELMC++-5 adds benchmark/soak evidence for latency, resources, cache/no-network behavior, restart recovery, and baseline comparison. HELMC++-7 adds maintainability evidence for CMake/test/doc coverage, bounded files, raw ownership spread, and warning dispositions."
     },
     {
+      "id": "render-model-vulkan-pipeline",
+      "title": "Neutral render-model / artifact / scheduler C++ toolchain",
+      "classification": "dev-tooling",
+      "status": "implemented",
+      "required_runtime": false,
+      "final_acceptance_required": false,
+      "language": "C++17",
+      "process_type": "compile-on-demand CLI",
+      "ports": [],
+      "paths": [
+        "engine/vulkan/enc_to_render_fixture.cpp",
+        "engine/vulkan/render_artifact_pyramid.cpp",
+        "engine/vulkan/render_artifact_preview.cpp",
+        "engine/vulkan/viewport_scheduler.cpp",
+        "engine/vulkan/viewport_scheduler_fixture_check.cpp",
+        "scripts/enc-to-render-fixture",
+        "scripts/render-artifact-pyramid",
+        "scripts/render-artifact-preview",
+        "scripts/render-artifact-compile",
+        "scripts/render-model-fixture-export",
+        "scripts/viewport-scheduler-fixture-check",
+        "scripts/viewport-scheduler-smoke"
+      ],
+      "launch": [
+        "scripts/enc-to-render-fixture",
+        "scripts/render-artifact-pyramid",
+        "scripts/render-artifact-preview",
+        "scripts/viewport-scheduler-fixture-check"
+      ],
+      "starts_python_daemon": false,
+      "python_allowed": false,
+      "owner": "RENDERMODEL",
+      "evidence_tasks": ["RENDERMODEL-3", "RENDERMODEL-4", "RENDERMODEL-5", "QA-1"],
+      "feeds_helmcxx": ["HELMC++-8"],
+      "notes": "Stage-1 ENC capture, artifact compile, CPU preview, and helm.render.schedule.v1 scheduler are C++ compile-on-demand tools. Browser cockpit remains JavaScript/WebGPU; optional FastAPI backend remains Python for AI-only surfaces."
+    },
+    {
+      "id": "viewport-scheduler-python-oracle",
+      "title": "Python viewport scheduler cross-check oracle",
+      "classification": "transitional-reference",
+      "status": "implemented",
+      "required_runtime": false,
+      "final_acceptance_required": false,
+      "language": "Python",
+      "process_type": "oracle/tests",
+      "ports": [],
+      "paths": [
+        "pipeline/viewport_scheduler.py",
+        "pipeline/test_viewport_scheduler.py"
+      ],
+      "launch": ["python3 -m unittest pipeline.test_viewport_scheduler"],
+      "starts_python_daemon": false,
+      "python_allowed": true,
+      "allowed_python_reason": "Cross-check oracle after C++ BuildScheduleResponse became canonical; not used by fixture gates.",
+      "cxx_exit_task": "RENDERMODEL-5",
+      "owner": "RENDERMODEL",
+      "evidence_tasks": ["QA-1"],
+      "feeds_helmcxx": ["HELMC++-8"],
+      "notes": "scripts/viewport-scheduler-fixture-check calls C++ only. Retain Python unittest as parity oracle until deleted."
+    },
+    {
       "id": "web-test-harnesses",
       "title": "Web unit and Playwright E2E tests",
       "classification": "fixture/test",

@@ -57,7 +57,8 @@ depth contours, 130 coastline edges, 92 land areas, 250 soundings, 47 aids →
 
 ![US5GA2BC drawn by the render pipeline](images/rendermodel-3-us5ga2bc.png)
 
-`preview.png` / the image above is produced by `scripts/render-artifact-preview.py`, a CPU
+`preview.png` / the image above is produced by `scripts/render-artifact-preview` (C++,
+`engine/vulkan/render_artifact_preview.cpp`), a CPU reference renderer that proves
 reference renderer that runs the **exact** WGSL projection math (`tileToNdc` web-mercator)
 against the compiled artifact — i.e. what the WebGPU shader draws, without needing a
 WebGPU-capable browser in CI.
