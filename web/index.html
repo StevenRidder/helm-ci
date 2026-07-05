@@ -753,7 +753,10 @@
 <script src="wind-layer.js"></script>
 <script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
 <script src="chart-artifact-atlas.js"></script><!-- WEBGPU-2: atlas/material resolver (palette day/dusk/night, symbol/line/pattern keys) -->
-<script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1/2: nautical artifact packets + atlas support (visible MapLibre enc-chart fallback) -->
+<script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1/2 + SCHED-2 composite draw (visible MapLibre enc-chart fallback) -->
+<script src="chart-viewport-scheduler.js"></script><!-- SCHED-1 browser scheduler client -->
+<script src="chart-artifact-cache.js"></script><!-- SCHED-2: artifact cache keyed by scheduler hints -->
+<script src="chart-scheduler-blend.js"></script><!-- SCHED-2: prefetch + zoom blend orchestration -->
 <script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
 <script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
@@ -1073,6 +1076,16 @@
   if (chartArtifact) {
     chartArtifact.load().then(function (ok) {
       if (ok) chartArtifact.setVisible(true);
+      var sched2On = window.HELM_SCHED2 === true ||
+        (typeof localStorage !== 'undefined' && localStorage.getItem('helmSched2') === '1');
+      if (sched2On && window.HelmChartSchedulerBlend) {
+        window.__helmChartSchedulerBlend = HelmChartSchedulerBlend(map, chartArtifact, {
+          packetUrl: 'data/render-artifact-chart-1.json'
+        });
+        window.__helmChartSchedulerBlend.init().catch(function (err) {
+          console.warn('[chart-scheduler-blend] init failed:', err && err.message ? err.message : err);
+        });
+      }
       if (window.HelmChartInspector) {
         window.__helmChartInspector = HelmChartInspector({ map: map, chartLayer: chartArtifact });
         window.__helmChartInspector.init();

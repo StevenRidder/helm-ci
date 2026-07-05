@@ -152,6 +152,8 @@
     // WEBGPU-2: per-material RGBA indexed by material_index, filled from the atlas
     // resolver (palette/display-state aware) — replaces the WEBGPU-1 hardcoded switch.
     '@group(0) @binding(1) var<uniform> materials: array<vec4<f32>, 32>;',
+    // SCHED-2: zoom/pan blend weight for adjacent-level composite draws.
+    '@group(0) @binding(2) var<uniform> blend: vec4<f32>;',
     'struct VSOut { @builtin(position) pos: vec4<f32>, @location(0) color: vec4<f32> };',
     'fn tileToNdc(px: f32, py: f32) -> vec2<f32> {',
     '  let lon = view.west + px * view.dLonPerPx;',
@@ -174,7 +176,7 @@
     '  o.color = matColor(mat_idx);',
     '  return o;',
     '}',
-    '@fragment fn fs(in: VSOut) -> @location(0) vec4<f32> { return in.color; }'
+    '@fragment fn fs(in: VSOut) -> @location(0) vec4<f32> { return in.color * blend; }'
   ].join('\n');
 
   function GpuChartArtifactLayer(map, gpu, artifact) {
@@ -189,6 +191,9 @@
     this._resolvedCache = Object.create(null);
     this._dashBuf = null;
     this._dashCapacity = 0;
+    this._compositeEntries = [];
+    this._compositeOpts = {};
+    this._artifactGpu = Object.create(null);
     this._buildCanvas();
     this._buildPipelines();
     if (this.artifact) this._uploadGeometry();
@@ -252,6 +257,20 @@
     this.viewBuf = dev.createBuffer({ size: 64, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
     // WEBGPU-2: 32 materials * vec4 (16B) = 512B color table, indexed by material_index.
     this.materialsBuf = dev.createBuffer({ size: 512, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    this.blendBuf = dev.createBuffer({ size: 16, usage: GPUBufferUsage.UNIFORM | GPUBufferUsage.COPY_DST });
+    this._makeViewBind = function (pipe) {
+      return dev.createBindGroup({
+        layout: pipe.getBindGroupLayout(0),
+        entries: [
+          { binding: 0, resource: { buffer: this.viewBuf } },
+          { binding: 1, resource: { buffer: this.materialsBuf } },
+          { binding: 2, resource: { buffer: this.blendBuf } }
+        ]
+      });
+    }.bind(this);
+    this.viewBindTri = this._makeViewBind(this.triPipe);
+    this.viewBindLine = this._makeViewBind(this.linePipe);
+    this.viewBindPoint = this._makeViewBind(this.pointPipe);
   };
 
   GpuChartArtifactLayer.prototype._uploadGeometry = function () {
@@ -270,18 +289,30 @@
     });
     dev.queue.writeBuffer(this.vertexBuf, 0, art.vertices);
     dev.queue.writeBuffer(this.indexBuf, 0, art.indices);
-    var mkBind = function (pipe) {
-      return dev.createBindGroup({
-        layout: pipe.getBindGroupLayout(0),
-        entries: [
-          { binding: 0, resource: { buffer: this.viewBuf } },
-          { binding: 1, resource: { buffer: this.materialsBuf } }
-        ]
-      });
-    }.bind(this);
-    this.viewBindTri = mkBind(this.triPipe);
-    this.viewBindLine = mkBind(this.linePipe);
-    this.viewBindPoint = mkBind(this.pointPipe);
+  };
+
+  GpuChartArtifactLayer.prototype._ensureArtifactGpu = function (artifact) {
+    var id = artifact.artifact_id || (artifact.viewport && artifact.viewport.tile
+      ? ('z' + artifact.viewport.tile.z + 'x' + artifact.viewport.tile.x + 'y' + artifact.viewport.tile.y)
+      : 'default');
+    if (this._artifactGpu[id]) return this._artifactGpu[id];
+    var dev = this.gpu.device;
+    var row = {
+      id: id,
+      artifact: artifact,
+      vertexBuf: dev.createBuffer({
+        size: artifact.vertices.byteLength,
+        usage: GPUBufferUsage.VERTEX | GPUBufferUsage.COPY_DST
+      }),
+      indexBuf: dev.createBuffer({
+        size: artifact.indices.byteLength,
+        usage: GPUBufferUsage.INDEX | GPUBufferUsage.COPY_DST
+      })
+    };
+    dev.queue.writeBuffer(row.vertexBuf, 0, artifact.vertices);
+    dev.queue.writeBuffer(row.indexBuf, 0, artifact.indices);
+    this._artifactGpu[id] = row;
+    return row;
   };
 
   // Resolve (and cache) material styles for an artifact under the current
@@ -431,41 +462,31 @@
     return { pipe: this.triPipe, bind: this.viewBindTri };
   };
 
-  GpuChartArtifactLayer.prototype._draw = function () {
-    if (this._destroyed || !this._visible || !this.artifact) return;
-    var view = buildViewUniform(this.map, this.artifact, this._w, this._h);
-    if (!view) return;
+  GpuChartArtifactLayer.prototype._drawArtifact = function (pass, artifact, blendWeight) {
+    var gpuArt = this._ensureArtifactGpu(artifact);
+    var view = buildViewUniform(this.map, artifact, this._w, this._h);
+    if (!view) return false;
     var dev = this.gpu.device;
     dev.queue.writeBuffer(this.viewBuf, 0, view);
-    var enc = dev.createCommandEncoder();
-    var pass = enc.beginRenderPass({
-      colorAttachments: [{
-        view: this.ctx.getCurrentTexture().createView(),
-        clearValue: { r: 0, g: 0, b: 0, a: 0 },
-        loadOp: 'clear',
-        storeOp: 'store'
-      }]
-    });
-    // WEBGPU-2: per-material palette colors (day/dusk/night) from the atlas resolver.
-    var resolved = this._resolvedFor(this.artifact);
+    var w = Math.max(0, Math.min(1, blendWeight == null ? 1 : blendWeight));
+    dev.queue.writeBuffer(this.blendBuf, 0, new Float32Array([w, w, w, w]));
+    var resolved = this._resolvedFor(artifact);
     this._writeMaterials(resolved);
-    var batches = this.artifact.draw_batches || [];
+    var batches = artifact.draw_batches || [];
     for (var i = 0; i < batches.length; i++) {
       var b = batches[i];
       if (!b.index_count) continue;
       var rm = resolved.materials[b.material_index];
-      // display-state toggles (show_text / show_soundings) from the artifact cache.
       if (rm && rm.visible === false) continue;
-      // dashed contours are rendered from CPU-expanded segments below.
       if (b.topology === 'line_list' && rm && rm.line && rm.line.dash && rm.line.dash.length) continue;
       var sel = this._pipeForTopology(b.topology);
       pass.setPipeline(sel.pipe);
       pass.setBindGroup(0, sel.bind);
-      pass.setVertexBuffer(0, this.vertexBuf);
-      pass.setIndexBuffer(this.indexBuf, 'uint32');
+      pass.setVertexBuffer(0, gpuArt.vertexBuf);
+      pass.setIndexBuffer(gpuArt.indexBuf, 'uint32');
       pass.drawIndexed(b.index_count, 1, b.first_index, 0, 0);
     }
-    var dashed = this._buildDashedVerts(this.artifact, resolved);
+    var dashed = this._buildDashedVerts(artifact, resolved);
     if (dashed && dashed.length) {
       var buf = this._ensureDashBuf(dashed.byteLength);
       dev.queue.writeBuffer(buf, 0, dashed);
@@ -474,8 +495,39 @@
       pass.setVertexBuffer(0, buf);
       pass.draw(dashed.length / VERTEX_STRIDE, 1, 0, 0);
     }
+    return true;
+  };
+
+  GpuChartArtifactLayer.prototype._draw = function () {
+    if (this._destroyed || !this._visible) return;
+    var entries = this._compositeEntries.length ? this._compositeEntries : (
+      this.artifact ? [{ artifact: this.artifact, blend_weight: 1 }] : []
+    );
+    if (!entries.length) return;
+    var dev = this.gpu.device;
+    var holdStale = !!(this._compositeOpts && this._compositeOpts.holdStale);
+    var enc = dev.createCommandEncoder();
+    var pass = enc.beginRenderPass({
+      colorAttachments: [{
+        view: this.ctx.getCurrentTexture().createView(),
+        clearValue: { r: 0, g: 0, b: 0, a: 0 },
+        loadOp: holdStale ? 'load' : 'clear',
+        storeOp: 'store'
+      }]
+    });
+    var drew = false;
+    for (var i = 0; i < entries.length; i++) {
+      if (this._drawArtifact(pass, entries[i].artifact, entries[i].blend_weight)) drew = true;
+    }
     pass.end();
-    dev.queue.submit([enc.finish()]);
+    if (drew) dev.queue.submit([enc.finish()]);
+    else if (this._compositeOpts && this._compositeOpts.strictMissing) this.setEncChartVisible(true);
+  };
+
+  GpuChartArtifactLayer.prototype.setCompositeEntries = function (entries, opts) {
+    this._compositeEntries = (entries || []).slice();
+    this._compositeOpts = opts || {};
+    if (this._visible) this._draw();
   };
 
   GpuChartArtifactLayer.prototype.setArtifact = function (artifact) {
@@ -523,7 +575,7 @@
     this.setEncChartVisible(true);
     if (this.canvas && this.canvas.parentNode) this.canvas.parentNode.removeChild(this.canvas);
     this.canvas = null;
-    var kill = ['vertexBuf', 'indexBuf', 'viewBuf', 'materialsBuf', '_dashBuf'];
+    var kill = ['vertexBuf', 'indexBuf', 'viewBuf', 'materialsBuf', 'blendBuf', '_dashBuf'];
     for (var i = 0; i < kill.length; i++) {
       try { this[kill[i]] && this[kill[i]].destroy(); } catch (e) {}
     }
@@ -684,6 +736,7 @@
       },
       isVisible: function () { return inner && inner.isVisible ? inner.isVisible() : state.visible; },
       getArtifact: function () { return state.artifact; },
+      getGpuLayer: function () { return inner; },
       pickAtLngLat: function (lngLat) {
         if (!state.artifact || !global.HelmChartArtifactPick) return { pick_id: 0, pixel: null, trace: null };
         var hit = global.HelmChartArtifactPick.pickAtLngLat(state.artifact, lngLat.lng, lngLat.lat);
