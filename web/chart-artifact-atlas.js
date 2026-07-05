@@ -17,10 +17,8 @@
  * silently invent an authoritative S-52 color.
  *
  * Pure + dependency-free so it unit-tests under node (web/test/*.test.cjs).
- * GPU upload of real symbol/glyph/pattern bitmaps is deferred until upstream
- * delivers atlas bytes via atlas_refs[].content_hash (see the "Deferred"
- * section of the atlas pipeline doc); this slice renders atlas-driven colors,
- * dashes, and toggles.
+ * WEBGPU-3: when a helm.s52.atlas.web.v2 manifest is loaded, resolveMaterial
+ * also returns gpu { uv, anchor, atlasImage, uploadable } for bitmap draws.
  * --------------------------------------------------------------------------
  */
 (function (global) {
@@ -45,7 +43,16 @@
     'sym.boyspp': 'BOYSPP',
     'line.depth-contour': 'DEPCNT02',
     'area.depare': 'DEPARE01',
-    'pattern.depare': 'DEPARE01'
+    'pattern.depare': 'DEPARE01',
+    'pattern.depare-shallow': 'pattern.depare-shallow',
+    'pattern.depare-mid': 'pattern.depare-mid',
+    'pattern.depare-deep': 'pattern.depare-deep',
+    'pattern.dredged': 'pattern.dredged',
+    'pattern.land': 'pattern.land',
+    'line.coastline': 'line.coastline',
+    'sym.sounding': 'sym.sounding',
+    'sym.hazard': 'sym.hazard',
+    'font.chart-label': 'font.chart-label'
   };
 
   // NAMED dev palette fallback, keyed by the compiler's style_key, for materials
@@ -107,23 +114,127 @@
 
   var DEFAULT_RESOURCES = buildResources(FIXTURE_ENTRIES);
 
+  // WEBGPU-3: helm.s52.atlas.web.v2 manifest (PNG sheets + UV rects).
+  function loadGpuManifest(json) {
+    if (!json || json.schema_version !== 'helm.s52.atlas.web.v2') return null;
+    var byKey = Object.create(null);
+    var atlases = Object.create(null);
+    (json.atlases || []).forEach(function (a) {
+      atlases[a.atlas_id] = a;
+    });
+    (json.entries || []).forEach(function (e) {
+      var key = (e.name || '') + '@' + (e.kind || '') + '@' + (e.palette || 'day');
+      byKey[key] = e;
+    });
+    var aliases = Object.assign({}, REF_ALIASES, json.ref_aliases || {});
+    return { schema_version: json.schema_version, atlases: atlases, byKey: byKey, refAliases: aliases, entries: (json.entries || []).slice() };
+  }
+
+  function gpuManifestKey(name, kind, palette) {
+    return (name || '') + '@' + (kind || '') + '@' + normalizePalette(palette);
+  }
+
+  function resolveGpuEntry(ref, kind, palette, gpuManifest) {
+    if (!gpuManifest || !ref) return null;
+    var aliases = gpuManifest.refAliases || REF_ALIASES;
+    var name = aliases[ref] || ref;
+    var pal = normalizePalette(palette);
+    var entry = gpuManifest.byKey[gpuManifestKey(name, kind, pal)];
+    if (!entry && kind === 'font') {
+      entry = gpuManifest.byKey[gpuManifestKey('font.chart-label', 'font', pal)];
+    }
+    if (!entry) return null;
+    var atlas = gpuManifest.atlases[entry.atlas_id];
+    if (!atlas || !atlas.image) return null;
+    return {
+      name: name,
+      kind: kind,
+      palette: pal,
+      atlas_id: entry.atlas_id,
+      atlasImage: atlas.image,
+      format: atlas.format || 'png-rgba',
+      uv: (entry.uv || []).slice(),
+      pixel_rect: (entry.pixel_rect || []).slice(),
+      anchor: (entry.anchor || [0, 0]).slice(),
+      repeat: (entry.repeat || [0, 0]).slice(),
+      glyph_prefix: entry.glyph_prefix || 'glyph.',
+      uploadable: true
+    };
+  }
+
+  function resolveGlyphGpu(char, palette, gpuManifest) {
+    if (!gpuManifest || !char) return null;
+    var name = 'glyph.' + char;
+    return resolveGpuEntry(name, 'glyph', palette, gpuManifest);
+  }
+
+  // Collect distinct atlas images that must be uploaded for a palette.
+  function collectGpuUploadSpecs(gpuManifest, palette) {
+    if (!gpuManifest) return [];
+    var pal = normalizePalette(palette);
+    var seen = Object.create(null);
+    var out = [];
+    (gpuManifest.entries || []).forEach(function (e) {
+      if (normalizePalette(e.palette) !== pal) return;
+      var atlas = gpuManifest.atlases[e.atlas_id];
+      if (!atlas || !atlas.image || seen[atlas.atlas_id]) return;
+      seen[atlas.atlas_id] = true;
+      out.push({
+        atlas_id: atlas.atlas_id,
+        kind: atlas.kind,
+        palette: pal,
+        image: atlas.image,
+        format: atlas.format || 'png-rgba',
+        width: atlas.width || 0,
+        height: atlas.height || 0,
+        uploadable: true
+      });
+    });
+    return out;
+  }
+
+  function atlasRefsGpuComplete(artifact, palette, gpuManifest) {
+    if (!gpuManifest || !artifact) return { complete: false, missing: [] };
+    var missing = [];
+    (artifact.atlas_refs || []).forEach(function (ref) {
+      if (!ref || !ref.atlas_id) return;
+      if (String(ref.content_hash || '').indexOf('raster.') >= 0 ||
+          ref.kind === 'raster_textures') return;
+      var kind = ref.kind === 'symbols' ? 'symbol'
+        : ref.kind === 'area_patterns' ? 'pattern'
+        : ref.kind === 'line_styles' ? 'line'
+        : ref.kind === 'fonts' ? 'font'
+        : ref.kind === 'palettes' ? null
+        : ref.kind;
+      if (!kind) return;
+      var gpu = resolveGpuEntry(ref.atlas_id, kind, palette, gpuManifest);
+      if (!gpu) missing.push(ref.atlas_id);
+    });
+    return { complete: missing.length === 0, missing: missing };
+  }
+
   // Load a web-consumable atlas resource JSON (web/data/s52-atlas-fixture.json).
   // Falls back to the built-in mirror when the payload is absent/malformed so the
   // layer still resolves colors — but records why.
-  function loadResources(json) {
-    if (!json || !Array.isArray(json.entries) || !json.entries.length) return DEFAULT_RESOURCES;
+  function loadResources(json, gpuManifest) {
+    if (!json || !Array.isArray(json.entries) || !json.entries.length) {
+      var base = buildResources(FIXTURE_ENTRIES);
+      if (gpuManifest) base.gpuManifest = gpuManifest;
+      return base;
+    }
     var entries = json.entries.map(function (e) {
       return {
         name: e.name, kind: e.kind,
         width: +e.width || 0, height: +e.height || 0,
         anchor: e.anchor || [0, 0], repeat: e.repeat || [0, 0],
         dash: Array.isArray(e.dash) ? e.dash.slice() : [],
-        // Optional per-entry fill alpha (area patterns). Absent => legacy default.
         alpha: (e.alpha == null ? null : +e.alpha),
         colors: e.colors || {}
       };
     });
-    return buildResources(entries);
+    var res = buildResources(entries);
+    if (gpuManifest) res.gpuManifest = gpuManifest;
+    return res;
   }
 
   function resolveEntryForRef(ref, resources) {
@@ -159,9 +270,11 @@
       font: material.font_ref || null,
       source: 'palette-fallback',
       missing: false,
-      note: ''
+      note: '',
+      gpu: null
     };
 
+    var gpuManifest = res.gpuManifest || null;
     var symEntry = resolveEntryForRef(material.symbol_ref, res);
     var lineEntry = resolveEntryForRef(material.line_style_ref, res);
     var patEntry = resolveEntryForRef(material.pattern_ref, res);
@@ -170,10 +283,12 @@
       out.source = 'atlas';
       out.rgba = rgbToUnit(entryColor(symEntry, palette), 1);
       out.symbol = { name: symEntry.name, width: symEntry.width, height: symEntry.height, anchor: symEntry.anchor.slice() };
+      out.gpu = resolveGpuEntry(material.symbol_ref, 'symbol', palette, gpuManifest);
     } else if (lineEntry) {
       out.source = 'atlas';
       out.rgba = rgbToUnit(entryColor(lineEntry, palette), 1);
       out.line = { name: lineEntry.name, width: Math.max(1, lineEntry.height || 1), dash: lineEntry.dash.slice() };
+      out.gpu = resolveGpuEntry(material.line_style_ref, 'line', palette, gpuManifest);
     } else if (patEntry) {
       out.source = 'atlas';
       // Area fills honor an explicit atlas alpha (S-52 day areas are near-opaque);
@@ -181,6 +296,19 @@
       var patAlpha = (patEntry.alpha == null ? 0.6 : patEntry.alpha);
       out.rgba = rgbToUnit(entryColor(patEntry, palette), patAlpha);
       out.pattern = { name: patEntry.name, width: patEntry.width, height: patEntry.height, repeat: patEntry.repeat.slice() };
+      out.gpu = resolveGpuEntry(material.pattern_ref, 'pattern', palette, gpuManifest);
+    } else if (material.font_ref) {
+      out.gpu = resolveGpuEntry(material.font_ref, 'font', palette, gpuManifest);
+      if (out.gpu) {
+        out.source = 'atlas';
+        var fontFb = STYLE_FALLBACK[out.style_key] || STYLE_FALLBACK.draw_text;
+        out.rgba = rgbToUnit(hexToRgb(fontFb[palette] || fontFb.day), fontFb.alpha == null ? 1 : fontFb.alpha);
+      }
+    }
+
+    if (out.gpu && out.gpu.uploadable) {
+      out.missing = false;
+      if (out.source === 'palette-fallback') out.source = 'atlas-gpu';
     }
 
     if (!out.rgba) {
@@ -192,9 +320,13 @@
       if (material.symbol_ref || material.line_style_ref || material.pattern_ref || material.raster_texture_ref) {
         out.missing = true;
         out.note = 'unresolved atlas ref (' +
-          [material.symbol_ref, material.line_style_ref, material.pattern_ref, material.raster_texture_ref]
+          [material.symbol_ref, material.line_style_ref, material.pattern_ref, material.raster_texture_ref, material.font_ref]
             .filter(Boolean).join(',') + ') — using named palette fallback';
       }
+    }
+    if (material.font_ref && !out.gpu && (out.style_key === 'draw_text' || out.style_key === 'draw_sounding')) {
+      out.missing = true;
+      out.note = 'unresolved font atlas ref (' + material.font_ref + ')';
     }
     return out;
   }
@@ -276,6 +408,11 @@
     normalizePalette: normalizePalette,
     paletteFromDisplayState: paletteFromDisplayState,
     loadResources: loadResources,
+    loadGpuManifest: loadGpuManifest,
+    resolveGpuEntry: resolveGpuEntry,
+    resolveGlyphGpu: resolveGlyphGpu,
+    collectGpuUploadSpecs: collectGpuUploadSpecs,
+    atlasRefsGpuComplete: atlasRefsGpuComplete,
     defaultResources: function () { return DEFAULT_RESOURCES; },
     resolveMaterial: resolveMaterial,
     resolveArtifact: resolveArtifact,

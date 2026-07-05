@@ -37,6 +37,7 @@ struct CompilerState {
   std::vector<AtlasRef> atlas_refs;
   std::vector<DrawBatchRecord> draw_batches;
   std::vector<PickRecord> pick_records;
+  std::vector<TextInstanceRecord> text_instances;
   std::uint32_t next_pick_id = 1;
 };
 
@@ -331,6 +332,24 @@ void compile_primitive(CompilerState& state, const RenderPrimitive& primitive, c
   pick.index_count = index_count;
   pick.pick_id = pick_id;
   state.pick_records.push_back(std::move(pick));
+
+  if (primitive.kind == PrimitiveKind::TextLabel || primitive.kind == PrimitiveKind::Sounding) {
+    TextInstanceRecord text_instance;
+    text_instance.material_index = material_index;
+    text_instance.pick_id = pick_id;
+    if (const auto* label = std::get_if<TextLabel>(&primitive.payload)) {
+      text_instance.text = label->text;
+      text_instance.x = label->position.x;
+      text_instance.y = label->position.y;
+    } else if (const auto* sounding = std::get_if<Sounding>(&primitive.payload)) {
+      text_instance.text = sounding->formatted_text;
+      text_instance.x = sounding->position.x;
+      text_instance.y = sounding->position.y;
+    }
+    if (!text_instance.text.empty()) {
+      state.text_instances.push_back(std::move(text_instance));
+    }
+  }
 }
 
 [[nodiscard]] std::string float_bytes(const std::vector<float>& values) {
@@ -510,6 +529,15 @@ std::string RenderArtifactToJson(const RenderArtifact& artifact,
         << ", \"pick_id\": " << pick.pick_id << "}"
         << (i + 1 == artifact.pick_records.size() ? "\n" : ",\n");
   }
+  out << "  ],\n  \"text_instances\": [\n";
+  for (std::size_t i = 0; i < artifact.text_instances.size(); ++i) {
+    const TextInstanceRecord& text = artifact.text_instances[i];
+    out << "    {\"text\": ";
+    write_string(out, text.text);
+    out << ", \"x\": " << text.x << ", \"y\": " << text.y << ", \"material_index\": " << text.material_index
+        << ", \"pick_id\": " << text.pick_id << "}"
+        << (i + 1 == artifact.text_instances.size() ? "\n" : ",\n");
+  }
   out << "  ],\n  \"diagnostics\": [\n";
   for (std::size_t i = 0; i < artifact.diagnostics.size(); ++i) {
     const Diagnostic& diagnostic = artifact.diagnostics[i];
@@ -626,6 +654,7 @@ RenderArtifact CompileRenderArtifact(const RenderModel& model,
   artifact.indices = std::move(state.indices);
   artifact.draw_batches = std::move(state.draw_batches);
   artifact.pick_records = std::move(state.pick_records);
+  artifact.text_instances = std::move(state.text_instances);
   artifact.diagnostics = model.diagnostics;
 
   const std::string geometry_bytes = float_bytes(artifact.vertices) + index_bytes(artifact.indices);

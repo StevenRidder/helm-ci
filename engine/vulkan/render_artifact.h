@@ -80,6 +80,14 @@ struct PickRecord {
   std::uint32_t pick_id = 0;
 };
 
+struct TextInstanceRecord {
+  std::string text;
+  double x = 0;
+  double y = 0;
+  std::int32_t material_index = -1;
+  std::uint32_t pick_id = 0;
+};
+
 struct RenderArtifact {
   std::string schema_version = kRenderArtifactSchemaVersion;
   std::string artifact_id;
@@ -93,6 +101,7 @@ struct RenderArtifact {
   std::vector<std::uint32_t> indices;
   std::vector<DrawBatchRecord> draw_batches;
   std::vector<PickRecord> pick_records;
+  std::vector<TextInstanceRecord> text_instances;
   std::vector<Diagnostic> diagnostics;
 };
 
