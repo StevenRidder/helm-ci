@@ -100,8 +100,9 @@ rebuildable and git-ignored in the fixture dir; the committed runtime asset is
 
 ## Honest limitations (scope for follow-ups)
 
-* Areas are drawn as **outlines** (convex quads), not filled polygons — recognisable, but not
-  yet solid depth shading (needs constrained polygon triangulation).
+* ~~Areas are drawn as **outlines** (convex quads), not filled polygons~~ — **landed in
+  RENDERMODEL-4**: DEPARE/LNDARE/DRGARE are now earcut-triangulated **filled** polygons with
+  the S-52 day palette (see `scripts/_earcut.py` and `web/test/rendermodel4-fill-parity.test.cjs`).
 * Colours are approximate S-52 (a small repo-owned atlas), not full S-52 conditional
   symbology; text/soundings render as markers, not glyph labels (the base shader has no glyph
   atlas yet).

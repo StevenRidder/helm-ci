@@ -118,6 +118,8 @@
         width: +e.width || 0, height: +e.height || 0,
         anchor: e.anchor || [0, 0], repeat: e.repeat || [0, 0],
         dash: Array.isArray(e.dash) ? e.dash.slice() : [],
+        // Optional per-entry fill alpha (area patterns). Absent => legacy default.
+        alpha: (e.alpha == null ? null : +e.alpha),
         colors: e.colors || {}
       };
     });
@@ -174,7 +176,10 @@
       out.line = { name: lineEntry.name, width: Math.max(1, lineEntry.height || 1), dash: lineEntry.dash.slice() };
     } else if (patEntry) {
       out.source = 'atlas';
-      out.rgba = rgbToUnit(entryColor(patEntry, palette), 0.6);
+      // Area fills honor an explicit atlas alpha (S-52 day areas are near-opaque);
+      // patterns without one keep the legacy translucent default.
+      var patAlpha = (patEntry.alpha == null ? 0.6 : patEntry.alpha);
+      out.rgba = rgbToUnit(entryColor(patEntry, palette), patAlpha);
       out.pattern = { name: patEntry.name, width: patEntry.width, height: patEntry.height, repeat: patEntry.repeat.slice() };
     }
 

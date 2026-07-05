@@ -16,32 +16,32 @@
       },
       "objects": [
         {
-          "source_object_id": "LAND-GROUP",
-          "source_object_class": "LNDARE",
-          "geometry_type": "polygon",
-          "feature_count": 92,
-          "convex_ring_count": 2762
-        },
-        {
           "source_object_id": "DEPTH_MID-GROUP",
           "source_object_class": "DEPARE",
           "geometry_type": "polygon",
           "feature_count": 15,
-          "convex_ring_count": 175
+          "convex_ring_count": 145
         },
         {
           "source_object_id": "DEPTH_SHALLOW-GROUP",
           "source_object_class": "DEPARE",
           "geometry_type": "polygon",
-          "feature_count": 172,
-          "convex_ring_count": 5486
+          "feature_count": 165,
+          "convex_ring_count": 5282
         },
         {
-          "source_object_id": "COASTLINE-GROUP",
-          "source_object_class": "COALNE",
-          "geometry_type": "line",
-          "feature_count": 136,
-          "convex_ring_count": 2762
+          "source_object_id": "DREDGED-GROUP",
+          "source_object_class": "DRGARE",
+          "geometry_type": "polygon",
+          "feature_count": 2,
+          "convex_ring_count": 36
+        },
+        {
+          "source_object_id": "LAND-GROUP",
+          "source_object_class": "LNDARE",
+          "geometry_type": "polygon",
+          "feature_count": 90,
+          "convex_ring_count": 2574
         },
         {
           "source_object_id": "DEPTH_CONTOUR-GROUP",
@@ -49,6 +49,13 @@
           "geometry_type": "line",
           "feature_count": 179,
           "convex_ring_count": 1347
+        },
+        {
+          "source_object_id": "COASTLINE-GROUP",
+          "source_object_class": "COALNE",
+          "geometry_type": "line",
+          "feature_count": 136,
+          "convex_ring_count": 2762
         },
         {
           "source_object_id": "SOUNDING-GROUP",
