@@ -92,6 +92,9 @@
       cache: this.cache.snapshot(),
       strictMissing: cover.strictMissing
     };
+    if (global.HelmChartRendererStatus && global.HelmChartRendererStatus.publish) {
+      global.HelmChartRendererStatus.publish();
+    }
   };
 
   HelmChartSchedulerBlend.prototype._onMove = function () {

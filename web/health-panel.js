@@ -138,6 +138,19 @@
     return { label: 'off', sev: 'ok', detail: (w.codec && w.ramp ? 'weather modules loaded' : 'module status partial') };
   }
   function chartSubsystem() {
+    var st = (typeof window !== 'undefined' && window.__helmChartRendererStatus) || null;
+    if (st) {
+      var label = st.active_renderer === 'webgpu' ? 'webgpu' : 'maplibre fallback';
+      var sev = st.active_renderer === 'webgpu' ? 'ok' : 'warn';
+      var detail = st.fallback_reason || '';
+      if (st.artifact && st.artifact.schema_version) {
+        detail = (detail ? detail + ' · ' : '') + st.artifact.schema_version;
+      }
+      if (st.artifact && st.artifact.chart_epoch) {
+        detail = (detail ? detail + ' · ' : '') + 'epoch ' + st.artifact.chart_epoch;
+      }
+      return { label: label, sev: sev, detail: detail || 'status reported' };
+    }
     var h = state.health || {};
     var mode = (typeof window !== 'undefined' && window.__helmChartMode) || '';
     var reason = (typeof window !== 'undefined' && window.__helmChartModeReason) || '';
@@ -194,6 +207,14 @@
     var subs = snap.subsystems;
     var endpoint = snap.endpoint;
     var nav = h.nav || {};
+    var crs = (typeof window !== 'undefined' && window.__helmChartRendererStatus) || null;
+    var chartRendererRows = crs ? (
+      row('Renderer path', crs.active_renderer, crs.active_renderer === 'webgpu' ? 'ok' : 'warn', crs.fallback_reason || 'primary path active') +
+      row('Feature flag', crs.feature_flag.enabled ? 'enabled' : 'disabled', crs.feature_flag.enabled ? 'ok' : 'warn') +
+      row('Artifact schema', (crs.artifact && crs.artifact.schema_version) || 'not loaded', crs.artifact && crs.artifact.schema_version ? 'ok' : 'warn') +
+      row('Chart epoch', (crs.artifact && crs.artifact.chart_epoch) || 'not reported', crs.artifact && crs.artifact.chart_epoch ? 'ok' : 'warn') +
+      row('Cache freshness', (crs.artifact && crs.artifact.invalidation_epoch) || 'not reported', crs.artifact && crs.artifact.invalidation_epoch ? 'ok' : 'warn')
+    ) : '';
 
     var summary =
       row('Navigation', subs.nav.label, subs.nav.sev, subs.nav.detail) +
@@ -231,6 +252,7 @@
         '<span class="hp-stamp">Updated ' + esc(new Date().toLocaleTimeString()) + '</span>' +
       '</div>' +
       section('Subsystems', summary) +
+      (chartRendererRows ? section('Chart Renderer', chartRendererRows) : '') +
       section('Engine Runtime', engine) +
       section('Nav Fix Health', navRows) +
       section('Live Data Sources', connRows) +

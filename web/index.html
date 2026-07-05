@@ -470,6 +470,7 @@
   <div class="traffic"><span style="background:#ff5f57"></span><span style="background:#febc2e"></span><span style="background:#28c840"></span></div>
   <span class="wordmark">Helm</span>
   <span class="srcbadge sim" id="data-src" title="Navigation data source"><span class="dot"></span><span id="data-src-txt">SIM</span></span>
+  <span class="srcbadge sim" id="chart-renderer-badge" hidden title="Chart renderer path"><span class="dot"></span><span id="chart-renderer-badge-txt">ENC</span></span>
   <div class="spacer"></div>
   <div class="search">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><line x1="21" y1="21" x2="16.5" y2="16.5"/></svg>
@@ -631,6 +632,10 @@
   </form>
   <div id="conn-msg" class="conn-msg"></div>
 
+  <div class="lbl">Chart renderer</div>
+  <div id="chart-renderer-settings-host"></div>
+  <div class="hint" style="margin:4px 0 10px">WebGPU artifact path is experimental. MapLibre ENC raster and server PNG tiles remain explicit fallbacks.</div>
+
   <div class="lbl">Units</div>
   <div class="row" style="color:var(--ctext);cursor:default">Nautical miles · knots</div>
   <div class="lbl">Appearance</div>
@@ -759,6 +764,7 @@
 <script src="chart-scheduler-blend.js"></script><!-- SCHED-2: prefetch + zoom blend orchestration -->
 <script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
 <script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
+<script src="chart-renderer-status.js"></script><!-- INTEGRATE-1: WebGPU renderer status + feature flag surface -->
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
 <script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
 <script src="wx-grid-scene.js"></script><!-- WX-33: WebGPU model-grid renderer (HelmWxGrid; no tiles, no substitution) -->
@@ -1073,13 +1079,18 @@
   // WEBGPU-1: artifact packet layer when WebGPU is available; enc-chart MapLibre raster stays the named fallback.
   const chartArtifact = window.HelmChartArtifactAuto ? HelmChartArtifactAuto(map, { packetUrl: 'data/render-artifact-chart-1.json' }) : null;
   window.__helmChartArtifact = chartArtifact;
+  if (window.HelmChartRendererStatus) {
+    HelmChartRendererStatus.mountBadge();
+    var crHost = document.getElementById('chart-renderer-settings-host');
+    if (crHost) HelmChartRendererStatus.mountSettings(crHost);
+  }
   if (chartArtifact) {
     chartArtifact.load().then(function (ok) {
       if (ok) chartArtifact.setVisible(true);
       var sched2On = window.HELM_SCHED2 === true ||
         (typeof localStorage !== 'undefined' && localStorage.getItem('helmSched2') === '1');
       if (sched2On && window.HelmChartSchedulerBlend) {
-        window.__helmChartSchedulerBlend = HelmChartSchedulerBlend(map, chartArtifact, {
+        window.__helmChartSchedulerBlend = new HelmChartSchedulerBlend(map, chartArtifact, {
           packetUrl: 'data/render-artifact-chart-1.json'
         });
         window.__helmChartSchedulerBlend.init().catch(function (err) {

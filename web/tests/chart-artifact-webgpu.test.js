@@ -63,8 +63,24 @@ ok('HelmChartArtifactAuto reports MapLibre fallback when WebGPU flag is off', ()
   assert.ok(String(win.__helmChartModeReason).indexOf('HELM_CHART_WEBGPU=false') >= 0);
 });
 
+ok('HelmChartArtifactAuto defaults to MapLibre when feature flag is not enabled', () => {
+  const win = loadModule({ navigator: { gpu: {} }, localStorage: { getItem: () => null } });
+  const map = {
+    getPitch: () => 0,
+    getProjection: () => ({ type: 'mercator' }),
+    getLayer: () => null,
+    setLayoutProperty: () => {},
+    on: () => {},
+    off: () => {},
+    getCanvas: () => ({ parentNode: { appendChild() {} }, clientWidth: 800, clientHeight: 600 })
+  };
+  const layer = win.HelmChartArtifactAuto(map);
+  assert.strictEqual(layer.mode(), 'maplibre');
+  assert.ok(String(win.__helmChartModeReason).indexOf('disabled') >= 0);
+});
+
 ok('HelmChartArtifactAuto reports MapLibre fallback when navigator.gpu is missing', () => {
-  const win = loadModule({ navigator: {} });
+  const win = loadModule({ HELM_CHART_WEBGPU: true, navigator: {} });
   const map = {
     getPitch: () => 0,
     getProjection: () => ({ type: 'mercator' }),

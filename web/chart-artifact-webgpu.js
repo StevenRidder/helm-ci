@@ -25,7 +25,8 @@
  *     window.__helmChartModeReason = human-readable reason
  *     One console.info line on every path switch. When WebGPU is unavailable
  *     the enc-chart MapLibre raster layer stays visible. Opt out:
- *     HELM_CHART_WEBGPU=false or localStorage helmChartWebgpu=0
+ *     Opt in: HELM_CHART_WEBGPU=true or localStorage helmChartWebgpu=1
+ *     Opt out: HELM_CHART_WEBGPU=false or localStorage helmChartWebgpu=0
  * --------------------------------------------------------------------------
  */
 (function (global) {
@@ -633,6 +634,9 @@
           map.setLayoutProperty(ENC_LAYER, 'visibility', m === 'gpu' && state.visible ? 'none' : 'visible');
         }
       } catch (e) {}
+      if (global.HelmChartRendererStatus && global.HelmChartRendererStatus.publish) {
+        global.HelmChartRendererStatus.publish();
+      }
     }
 
     function replay() {
@@ -646,6 +650,8 @@
       setMode('maplibre', reason);
     }
 
+    var flagOn = (global.HELM_CHART_WEBGPU === true) ||
+      (typeof localStorage !== 'undefined' && localStorage.getItem('helmChartWebgpu') === '1');
     var flagOff = (global.HELM_CHART_WEBGPU === false) ||
       (typeof localStorage !== 'undefined' && localStorage.getItem('helmChartWebgpu') === '0');
     var unprojectable = false;
@@ -657,6 +663,7 @@
     } catch (e) {}
 
     if (flagOff) { fallbackMapLibre('HELM_CHART_WEBGPU=false'); }
+    else if (!flagOn) { fallbackMapLibre('WebGPU nautical renderer disabled (enable in Settings or set helmChartWebgpu=1)'); }
     else if (typeof navigator === 'undefined' || !navigator.gpu) { fallbackMapLibre('WebGPU unavailable (no navigator.gpu)'); }
     else if (unprojectable) { fallbackMapLibre(upReason + ' — mercator-affine draw unsupported'); }
     else {
@@ -698,6 +705,9 @@
             state.artifact = parseArtifactJson(json);
             var r2 = call(function (e) { return e.setArtifact ? e.setArtifact(state.artifact) : true; });
             publishAtlasStatus();
+            if (global.HelmChartRendererStatus && global.HelmChartRendererStatus.publish) {
+              global.HelmChartRendererStatus.publish();
+            }
             return r2 !== false;
           })
           .catch(function (err) {
@@ -710,7 +720,7 @@
           });
       },
       setArtifact: function (json) {
-        state.artifact = parseArtifactJson(json);
+        state.artifact = (json && json.vertices && json.indices) ? json : parseArtifactJson(json);
         var r = call(function (e) { return e.setArtifact ? e.setArtifact(state.artifact) : true; });
         publishAtlasStatus();
         return r === undefined ? true : r;
