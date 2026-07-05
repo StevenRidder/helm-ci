@@ -14,9 +14,10 @@ on:
       - "engine/test-symbol-selection-db-conformance.sh"
       - "engine/test-symbol-runtime-gate.sh"
       - "engine/test-symbol-package-loader.sh"
+      - "engine/test-vulkan-fixture-check.sh"
       - "engine/test-vulkan-symbol-selection-render.sh"
       - "engine/test/fixtures/symbol-selection/**"
-      - "engine/test/fixtures/vulkan-render/symbol-selection/**"
+      - "engine/test/fixtures/vulkan-render/**"
       - "engine/vulkan/render_fixture.cpp"
       - "engine/vendor/cli/**"
       - "scripts/vulkan-render-fixture"
@@ -32,9 +33,10 @@ on:
       - "engine/test-symbol-selection-db-conformance.sh"
       - "engine/test-symbol-runtime-gate.sh"
       - "engine/test-symbol-package-loader.sh"
+      - "engine/test-vulkan-fixture-check.sh"
       - "engine/test-vulkan-symbol-selection-render.sh"
       - "engine/test/fixtures/symbol-selection/**"
-      - "engine/test/fixtures/vulkan-render/symbol-selection/**"
+      - "engine/test/fixtures/vulkan-render/**"
       - "engine/vulkan/render_fixture.cpp"
       - "engine/vendor/cli/**"
       - "scripts/vulkan-render-fixture"
@@ -70,6 +72,9 @@ jobs:
 
       - name: Runtime eligibility gate blocks unapproved defaults
         run: ./engine/test-symbol-runtime-gate.sh
+
+      - name: Vulkan render fixture checker (full corpus, BUG-1)
+        run: ./engine/test-vulkan-fixture-check.sh
 
       - name: Flagged Forge render smoke (day/dusk/night, no witness-red)
         run: ./engine/test-vulkan-symbol-selection-render.sh

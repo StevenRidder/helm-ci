@@ -517,6 +517,141 @@ void add_error(std::vector<std::string>& errors, const std::string& message) {
   errors.push_back(message);
 }
 
+const char kInspectionTraceSchemaVersion[] = "helm.inspect.trace.v1";
+
+void collect_json_files(const std::string& root, std::vector<std::string>& out) {
+  DIR* dir = opendir(root.c_str());
+  if (!dir) throw std::runtime_error(root + ": " + std::strerror(errno));
+  while (dirent* entry = readdir(dir)) {
+    const std::string name = entry->d_name;
+    if (name == "." || name == "..") continue;
+    const std::string path = join_path(root, name);
+    if (is_dir(path)) continue;
+    if (name.size() >= 5 && name.compare(name.size() - 5, 5, ".json") == 0) out.push_back(path);
+  }
+  closedir(dir);
+  std::sort(out.begin(), out.end());
+}
+
+std::pair<int, int> check_inspection_trace_fixture(const std::string& fixture_dir, bool print_hashes) {
+  (void)print_hashes;
+  std::vector<std::string> errors;
+  const std::string manifest_path = join_path(fixture_dir, "manifest.json");
+  Json manifest;
+  try {
+    manifest = load_json(manifest_path);
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << "\n";
+    return std::make_pair(1, 0);
+  }
+
+  const std::string fixture_id = string_value(object_get(manifest, "fixture_id"), base_name(fixture_dir));
+  if (string_value(object_get(manifest, "schema_version")) != kInspectionTraceSchemaVersion) {
+    add_error(errors, fixture_id + ": inspection-trace manifest schema_version mismatch");
+  }
+
+  const std::string trace_dir_rel = string_value(object_get(manifest, "trace_dir"), "traces");
+  const std::string trace_dir = join_path(fixture_dir, trace_dir_rel);
+  if (!is_dir(trace_dir)) {
+    add_error(errors, fixture_id + ": missing trace_dir " + trace_dir_rel);
+  }
+
+  const std::string source_fixture_rel = string_value(object_get(manifest, "source_fixture"));
+  if (!source_fixture_rel.empty()) {
+    const std::string source_fixture = join_path(fixture_dir, source_fixture_rel);
+    if (!is_dir(source_fixture)) {
+      add_error(errors, fixture_id + ": missing source_fixture " + source_fixture_rel);
+    }
+  }
+
+  std::vector<std::string> trace_paths;
+  if (is_dir(trace_dir)) {
+    collect_json_files(trace_dir, trace_paths);
+    if (trace_paths.empty()) add_error(errors, fixture_id + ": trace_dir has no .json traces");
+  }
+
+  std::set<std::string> resolution_kinds;
+  for (std::size_t i = 0; i < trace_paths.size(); ++i) {
+    const std::string& trace_path = trace_paths[i];
+    Json trace;
+    try {
+      trace = load_json(trace_path);
+    } catch (const std::exception& e) {
+      add_error(errors, fixture_id + ": " + base_name(trace_path) + ": " + e.what());
+      continue;
+    }
+
+    if (string_value(object_get(trace, "schema_version")) != kInspectionTraceSchemaVersion) {
+      add_error(errors, fixture_id + ": " + base_name(trace_path) + ": schema_version mismatch");
+    }
+    if (string_value(object_get(trace, "trace_id")).empty()) {
+      add_error(errors, fixture_id + ": " + base_name(trace_path) + ": missing trace_id");
+    }
+
+    const Json* resolution = object_get(trace, "resolution");
+    const std::string kind = string_value(object_get(resolution, "kind"));
+    if (kind.empty()) {
+      add_error(errors, fixture_id + ": " + base_name(trace_path) + ": missing resolution.kind");
+      continue;
+    }
+    resolution_kinds.insert(kind);
+
+    const bool feature_metadata_available =
+        resolution && object_get(*resolution, "feature_metadata_available") &&
+        object_get(*resolution, "feature_metadata_available")->type == Json::BOOL &&
+        object_get(*resolution, "feature_metadata_available")->bool_value;
+
+    if (kind == "vector_feature") {
+      if (!feature_metadata_available) {
+        add_error(errors, fixture_id + ": " + base_name(trace_path) + ": vector_feature requires feature_metadata_available");
+      }
+      const Json* draw_record = object_get(trace, "draw_record");
+      if (array_value(object_get(draw_record, "provenance_refs")).empty()) {
+        add_error(errors, fixture_id + ": " + base_name(trace_path) + ": vector_feature requires provenance_refs");
+      }
+    } else if (kind == "raster_fallback") {
+      const Json* raster = object_get(trace, "raster_fallback");
+      if (!raster || object_get(*raster, "active") == nullptr ||
+          object_get(*raster, "active")->type != Json::BOOL || !object_get(*raster, "active")->bool_value) {
+        add_error(errors, fixture_id + ": " + base_name(trace_path) + ": raster_fallback must be active");
+      }
+      if (string_value(object_get(raster, "message")).empty()) {
+        add_error(errors, fixture_id + ": " + base_name(trace_path) + ": raster_fallback message required");
+      }
+    } else if (kind == "no_hit") {
+      if (feature_metadata_available) {
+        add_error(errors, fixture_id + ": " + base_name(trace_path) + ": no_hit must not claim feature metadata");
+      }
+    } else {
+      add_error(errors, fixture_id + ": " + base_name(trace_path) + ": unknown resolution.kind " + kind);
+    }
+  }
+
+  const std::vector<Json>& required_kinds = array_value(object_get(manifest, "required_resolution_kinds"));
+  for (std::size_t i = 0; i < required_kinds.size(); ++i) {
+    const std::string required_kind = string_value(&required_kinds[i]);
+    if (!required_kind.empty() && resolution_kinds.find(required_kind) == resolution_kinds.end()) {
+      add_error(errors, fixture_id + ": missing required resolution kind " + required_kind);
+    }
+  }
+
+  if (!errors.empty()) {
+    for (std::size_t i = 0; i < errors.size(); ++i) std::cerr << errors[i] << "\n";
+    return std::make_pair(1, 0);
+  }
+
+  std::cout << "ok " << fixture_id << ": " << trace_paths.size() << " inspection traces ("
+            << resolution_kinds.size() << " resolution kinds)\n";
+  return std::make_pair(0, 1);
+}
+
+bool is_inspection_trace_manifest(const Json& manifest) {
+  if (string_value(object_get(manifest, "schema_version")) == kInspectionTraceSchemaVersion) return true;
+  // trace_dir without render-scene file pointers is an inspection-trace bundle, not vulkan.render_scene.v0.
+  return object_get(manifest, "trace_dir") != nullptr && object_get(manifest, "source_file") == nullptr &&
+         object_get(manifest, "scene_file") == nullptr && object_get(manifest, "provenance_file") == nullptr;
+}
+
 std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_hashes) {
   std::vector<std::string> errors;
   const std::string manifest_path = join_path(fixture_dir, "manifest.json");
@@ -526,6 +661,10 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
   } catch (const std::exception& e) {
     std::cerr << e.what() << "\n";
     return std::make_pair(1, 0);
+  }
+
+  if (is_inspection_trace_manifest(manifest)) {
+    return check_inspection_trace_fixture(fixture_dir, print_hashes);
   }
 
   const std::string fixture_id = string_value(object_get(manifest, "fixture_id"), base_name(fixture_dir));
