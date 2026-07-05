@@ -26,6 +26,7 @@ PUBLIC = ICONFORGE / "public"
 SITE_INDEX = PUBLIC / "proof" / "site-index.json"
 SOURCE_PRIORITY = ICONFORGE / "catalog" / "source_priority_icon_pack.json"
 COMPARISON_DIR = PUBLIC / "assets" / "comparison"
+PUBLIC_OPENCPN_PALETTES = ("day",)
 
 
 def _load_json(path: Path) -> dict[str, Any]:
@@ -76,7 +77,7 @@ def _find_opencpn_palette(sid: str, row: dict[str, Any]) -> tuple[dict[str, Path
             continue
         declared = dict(example.get("paths") or {})
         found: dict[str, Path] = {}
-        for palette in ("day", "dusk", "night"):
+        for palette in PUBLIC_OPENCPN_PALETTES:
             rel = declared.get(palette)
             if not rel:
                 continue
@@ -89,7 +90,11 @@ def _find_opencpn_palette(sid: str, row: dict[str, Any]) -> tuple[dict[str, Path
                 found[palette] = public_path
         if found:
             return found, declared
-    found = {palette: path for palette in ("day", "dusk", "night") if (path := _find_public_opencpn(sid, palette))}
+    found = {
+        palette: path
+        for palette in PUBLIC_OPENCPN_PALETTES
+        if (path := _find_public_opencpn(sid, palette))
+    }
     return found, declared
 
 
