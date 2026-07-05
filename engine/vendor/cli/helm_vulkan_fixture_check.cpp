@@ -725,6 +725,33 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
     if (array_value(object_get(render_artifact, "draw_batches")).empty()) {
       add_error(errors, fixture_id + ": render-artifact draw_batches must not be empty");
     }
+    const Json* cache = object_get(render_artifact, "cache");
+    if (!cache) {
+      add_error(errors, fixture_id + ": render-artifact missing cache");
+    } else {
+      if (string_value(object_get(*cache, "schema_version")) != "helm.render.artifact_cache.v1") {
+        add_error(errors, fixture_id + ": render-artifact cache schema_version mismatch");
+      }
+      if (string_value(object_get(*cache, "backend_target")) != "webgpu") {
+        add_error(errors, fixture_id + ": render-artifact cache backend_target must be webgpu for chart-1");
+      }
+      if (string_value(object_get(*cache, "rebuild_policy")) != "machine_local_rebuildable") {
+        add_error(errors, fixture_id + ": render-artifact cache rebuild_policy mismatch");
+      }
+      if (string_value(object_get(*cache, "chart_epoch")) != string_value(object_get(scene, "source_epoch"))) {
+        add_error(errors, fixture_id + ": render-artifact cache chart_epoch does not match source_epoch");
+      }
+      if (string_value(object_get(*cache, "artifact_packet_sha256")) !=
+          string_value(object_get(*checksums, "packet_sha256"))) {
+        add_error(errors, fixture_id + ": render-artifact cache artifact_packet_sha256 mismatch");
+      }
+      if (string_value(object_get(*cache, "cache_key_sha256")).empty() ||
+          string_value(object_get(*cache, "cache_key")).empty()) {
+        add_error(errors, fixture_id + ": render-artifact cache key fields are incomplete");
+      }
+      actual_hashes["render_artifact_cache_key_sha256"] =
+          string_value(object_get(*cache, "cache_key_sha256"));
+    }
     if (render_artifact_binary_path.empty()) {
       add_error(errors, fixture_id + ": render_artifact_file requires render_artifact_binary_file");
     }
@@ -758,8 +785,9 @@ std::pair<int, int> check_fixture(const std::string& fixture_dir, bool print_has
                            "render_model_json_sha256",
                            "render_model_binary_sha256",
                            "render_artifact_json_sha256",
-                           "render_artifact_binary_sha256"};
-    for (std::size_t i = 0; i < 7; ++i) {
+                           "render_artifact_binary_sha256",
+                           "render_artifact_cache_key_sha256"};
+    for (std::size_t i = 0; i < 8; ++i) {
       std::map<std::string, std::string>::const_iterator it = actual_hashes.find(order[i]);
       if (it != actual_hashes.end()) std::cout << "  " << order[i] << ": " << it->second << "\n";
     }

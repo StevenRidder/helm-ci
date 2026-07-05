@@ -3,6 +3,8 @@
 
 #include "render_artifact.h"
 
+#include "render_artifact_cache.h"
+
 #include <algorithm>
 #include <cmath>
 #include <cstdint>
@@ -405,7 +407,8 @@ void write_u32_array(std::ostream& out, const std::vector<std::uint32_t>& values
 
 }  // namespace
 
-std::string RenderArtifactToJson(const RenderArtifact& artifact) {
+std::string RenderArtifactToJson(const RenderArtifact& artifact,
+                                 const ArtifactCacheRecord* cache) {
   std::ostringstream out;
   out << std::setprecision(17);
   out << "{\n";
@@ -522,7 +525,13 @@ std::string RenderArtifactToJson(const RenderArtifact& artifact) {
     write_string(out, diagnostic.suggested_action);
     out << "}" << (i + 1 == artifact.diagnostics.size() ? "\n" : ",\n");
   }
-  out << "  ]\n}\n";
+  out << "  ]";
+  if (cache != nullptr) {
+    out << ",\n  \"cache\": " << ArtifactCacheRecordToJson(*cache) << "\n";
+  } else {
+    out << "\n";
+  }
+  out << "}\n";
   return out.str();
 }
 
@@ -533,7 +542,7 @@ namespace {
   tables_only.vertices.clear();
   tables_only.indices.clear();
   tables_only.checksums.packet_sha256.clear();
-  return RenderArtifactToJson(tables_only);
+  return RenderArtifactToJson(tables_only, nullptr);
 }
 
 }  // namespace
@@ -735,7 +744,16 @@ int main(int argc, char** argv) {
       throw std::runtime_error(validation_error);
     }
 
-    const std::string json = helm::render::RenderArtifactToJson(artifact);
+    const helm::render::ArtifactCacheRecord cache =
+        helm::render::BuildArtifactCacheRecord(model, artifact, "webgpu");
+    if (!helm::render::ValidateArtifactCacheRecord(cache, &validation_error)) {
+      throw std::runtime_error(validation_error);
+    }
+    if (cache.artifact_packet_sha256 != artifact.checksums.packet_sha256) {
+      throw std::runtime_error("cache artifact_packet_sha256 does not match packet_sha256");
+    }
+
+    const std::string json = helm::render::RenderArtifactToJson(artifact, &cache);
     const std::string binary = helm::render::RenderArtifactBinary(artifact);
     const std::filesystem::path json_path = options.output_dir / "render-artifact.json";
     const std::filesystem::path binary_path = options.output_dir / "render-artifact.bin";
@@ -755,6 +773,7 @@ int main(int argc, char** argv) {
       std::cout << "render_artifact_binary_sha256: " << sha256_bytes(binary) << "\n";
       std::cout << "render_artifact_geometry_sha256: " << artifact.checksums.geometry_sha256 << "\n";
       std::cout << "render_artifact_tables_sha256: " << artifact.checksums.tables_sha256 << "\n";
+      std::cout << "render_artifact_cache_key_sha256: " << cache.cache_key_sha256 << "\n";
       std::cout << "source_model_json_sha256: " << source_model_json_sha256 << "\n";
     }
 

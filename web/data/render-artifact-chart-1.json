@@ -54,5 +54,34 @@
   ],
   "diagnostics": [
     {"severity": "info", "code": "fixture.synthetic", "message": "Synthetic command-stream fixture; not a nautical chart.", "provenance_refs": [], "suggested_action": "Use for schema and harness regression only."}
-  ]
+  ],
+  "cache": {
+    "schema_version": "helm.render.artifact_cache.v1",
+    "backend_target": "webgpu",
+    "rebuild_policy": "machine_local_rebuildable",
+    "chart_epoch": "synthetic-chart-1@2026-06-28",
+    "invalidation_epoch": "e9732a4698fee90f",
+    "source_edition_chain": [
+      {"source_chart_id": "SYNTH-CHART-1", "source_chart_edition": "1", "source_update": "0"}
+    ],
+    "display_state": {
+      "palette": "day",
+      "display_category": "standard",
+      "symbol_style": "paper_chart",
+      "boundary_style": "plain",
+      "safety_depth_m": 10,
+      "safety_contour_m": 10,
+      "show_text": true,
+      "show_soundings": true,
+      "use_scamin": true
+    },
+    "schema_versions": {
+      "render_model": "helm.render.model.v1",
+      "render_artifact": "helm.render.artifact.v1",
+      "vertex_format": "helm.vertex.target_xy_material_pick.v1"
+    },
+    "artifact_packet_sha256": "15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c",
+    "cache_key": "backend_target=webgpu\nchart_epoch=synthetic-chart-1@2026-06-28\nsource_chain=SYNTH-CHART-1@1+0\ndisplay_palette=day\ndisplay_category=standard\nsymbol_style=paper_chart\nboundary_style=plain\nsafety_depth_m=10.000000\nsafety_contour_m=10.000000\nshow_text=1\nshow_soundings=1\nuse_scamin=1\nprojection=web_mercator_tile\ntile_z=12\ntile_x=1120\ntile_y=1756\npixel_width=8\npixel_height=8\nrender_model_schema=helm.render.model.v1\nrender_artifact_schema=helm.render.artifact.v1\nvertex_format=helm.vertex.target_xy_material_pick.v1\nartifact_packet_sha256=15cd1497e408a6d2373ffb315dd39581ad8029550c928d767592b9994db1fe1c\n",
+    "cache_key_sha256": "b1784eb2c576ec7982e7e46bba64f95846da5a8b4a282be89e5434e718a91182"
+  }
 }

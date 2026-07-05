@@ -8,6 +8,8 @@
 
 namespace helm::render {
 
+struct ArtifactCacheRecord;
+
 inline constexpr const char* kRenderArtifactSchemaVersion = "helm.render.artifact.v1";
 inline constexpr const char* kRenderArtifactVertexFormat = "helm.vertex.target_xy_material_pick.v1";
 
@@ -98,7 +100,8 @@ struct RenderArtifact {
                                                    const std::string& source_model_json_sha256,
                                                    const TileRef& tile = {});
 
-[[nodiscard]] std::string RenderArtifactToJson(const RenderArtifact& artifact);
+[[nodiscard]] std::string RenderArtifactToJson(const RenderArtifact& artifact,
+                                               const ArtifactCacheRecord* cache = nullptr);
 
 [[nodiscard]] std::string RenderArtifactBinary(const RenderArtifact& artifact);
 

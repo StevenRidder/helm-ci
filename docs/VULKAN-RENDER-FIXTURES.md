@@ -86,6 +86,20 @@ binary handoff for browser consumers. The manifest records canonical JSON and
 binary hashes so WebGPU clients can load compiled geometry without re-running
 chart semantics in the browser.
 
+`ARTIFACT-2` adds machine-local cache identity and invalidation metadata:
+
+```bash
+scripts/render-artifact-compile engine/test/fixtures/vulkan-render/chart-1 --check --print-hashes
+scripts/render-artifact-cache-smoke
+```
+
+Each `helm.render.artifact.v1` packet now carries a `cache` block
+(`helm.render.artifact_cache.v1`) with chart epoch, source edition/update chain,
+display-state snapshot, renderer schema versions, artifact packet checksum,
+backend-specific cache keys for WebGPU and Vulkan/native consumers, and an
+invalidation epoch. Artifacts remain rebuildable machine-local GPU/tile cache
+entries; portable nautical truth stays in the neutral render model.
+
 `VSG-1` adds a dependency-free C++17 fixture replay renderer:
 
 ```bash
