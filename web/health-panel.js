@@ -139,6 +139,14 @@
   }
   function chartSubsystem() {
     var h = state.health || {};
+    var mode = (typeof window !== 'undefined' && window.__helmChartMode) || '';
+    var reason = (typeof window !== 'undefined' && window.__helmChartModeReason) || '';
+    if (mode === 'gpu') {
+      return { label: 'webgpu', sev: 'ok', detail: 'artifact packets' + (h.chart_status ? ' · ' + h.chart_status : '') };
+    }
+    if (mode === 'maplibre') {
+      return { label: 'maplibre fallback', sev: 'warn', detail: reason || 'enc-chart raster' };
+    }
     if (!state.health && state.healthError) return { label: 'unreachable', sev: 'bad', detail: state.healthError };
     if (!state.health) return { label: 'not checked', sev: 'warn', detail: 'open panel to poll /health' };
     if (h.chart_loaded) return { label: 'loaded', sev: 'ok', detail: h.chart_status || '' };

@@ -752,6 +752,9 @@
 <script src="wx-ramp.js"></script><!-- CLIENT-14: one weather colour-ramp source; must precede wind-layer/field/live -->
 <script src="wind-layer.js"></script>
 <script src="wx-particles-webgpu.js"></script><!-- WX-25: WebGPU compute advection (visible CPU fallback via HelmWindAuto) -->
+<script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1: nautical artifact packets (visible MapLibre enc-chart fallback) -->
+<script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
+<script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
 <script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
 <script src="wx-grid-scene.js"></script><!-- WX-33: WebGPU model-grid renderer (HelmWxGrid; no tiles, no substitution) -->
@@ -1063,6 +1066,18 @@
   // (window.__helmWindMode says which path is live). Same API either way; the scene doesn't care.
   const wind = window.HelmWindAuto ? HelmWindAuto(map) : (window.HelmWind ? HelmWind(map) : null);
   window.__helmWind = wind;                    // shared with the grid scene (wx-grid-scene.js) — it owns particle data/visibility
+  // WEBGPU-1: artifact packet layer when WebGPU is available; enc-chart MapLibre raster stays the named fallback.
+  const chartArtifact = window.HelmChartArtifactAuto ? HelmChartArtifactAuto(map, { packetUrl: 'data/render-artifact-chart-1.json' }) : null;
+  window.__helmChartArtifact = chartArtifact;
+  if (chartArtifact) {
+    chartArtifact.load().then(function (ok) {
+      if (ok) chartArtifact.setVisible(true);
+      if (window.HelmChartInspector) {
+        window.__helmChartInspector = HelmChartInspector({ map: map, chartLayer: chartArtifact });
+        window.__helmChartInspector.init();
+      }
+    });
+  }
   if (wind) wind.setNeutral(true);            // particles are white; color comes from the field
   let field = null;   // CLIENT-14: legacy HelmField retired — stays null; Live owns the field, legend via HelmWxRamp. Residual `if (field)` guards below are vestigial no-ops (removed with the renderer rewrite in WX-19).
   const radar = window.HelmRadar ? HelmRadar(map, { beforeId: 'route-line' }) : null;
