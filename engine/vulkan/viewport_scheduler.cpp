@@ -1,6 +1,7 @@
 #include "viewport_scheduler.h"
 
 #include <algorithm>
+#include <array>
 #include <cmath>
 #include <map>
 #include <set>
