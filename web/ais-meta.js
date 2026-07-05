@@ -52,9 +52,26 @@
     if (s.charAt(0) === '0') return s.substr(1, 3);                                   // group station
     return p3;                                                                        // standard ship
   }
+  function countryCode(mmsi) { return MID[midOf(mmsi)] || ''; }
+  var _regionNames = null;
+  function regionNames() {
+    if (!_regionNames && typeof Intl !== 'undefined' && Intl.DisplayNames) {
+      try { _regionNames = new Intl.DisplayNames(['en'], { type: 'region' }); } catch (e) { /* old runtimes */ }
+    }
+    return _regionNames;
+  }
+  function countryName(mmsi) {
+    var cc = countryCode(mmsi); if (!cc) return '';
+    var dn = regionNames();
+    return (dn && dn.of(cc)) || cc;
+  }
   function flag(mmsi) {
-    var cc = MID[midOf(mmsi)]; if (!cc) return '';
+    var cc = countryCode(mmsi); if (!cc) return '';
     return cc.replace(/./g, function (c) { return String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65); });
+  }
+  function flagTitleAttr(mmsi) {
+    var n = countryName(mmsi);
+    return n ? (' title="' + n.replace(/&/g, '&amp;').replace(/"/g, '&quot;') + '"') : '';
   }
   // AIS navigational status (Msg 1/2/3) -> label + tone.
   var NAV = {
@@ -148,7 +165,8 @@
   }
 
   global.HelmAisMeta = {
-    flag: flag, midOf: midOf, navStatus: navStatus, navStyle: navStyle,
+    flag: flag, flagTitleAttr: flagTitleAttr, countryCode: countryCode, countryName: countryName,
+    midOf: midOf, navStatus: navStatus, navStyle: navStyle,
     shipType: shipType, rot: rot,
     symbolKind: symbolKind, symbol: symbol, isLost: isLost, LOST_SEC: LOST_SEC,
     isMooredSlow: isMooredSlow

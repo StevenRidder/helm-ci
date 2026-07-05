@@ -190,7 +190,7 @@ function aisPopupHTML(p) {
 
   return '<div class="ais-card" style="min-width:240px' + (stale ? ';opacity:.6' : '') + '">'
     + '<div style="display:flex;align-items:center;gap:9px;margin-bottom:2px">'
-    +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:1.15em;line-height:1;vertical-align:-1px">' + fl + '</span>' : '') + '</span>'
+    +   '<span style="font-weight:600;font-size:18px;flex:1;line-height:1.15">' + aisEsc(name) + (fl ? ' <span style="font-size:1.15em;line-height:1;vertical-align:-1px;cursor:help"' + (meta.flagTitleAttr ? meta.flagTitleAttr(p.mmsi) : '') + '>' + fl + '</span>' : '') + '</span>'
     +   buddyBtn + pinBtn
     + '</div>'
     + (subline ? '<div style="font-size:12px;color:var(--cdim);margin-bottom:6px">' + subline + '</div>' : '')

@@ -508,7 +508,7 @@
           return '<tr class="ais-row' + (lost ? ' lost' : '') + '" data-lon="' + t.lon + '" data-lat="' + t.lat +
             '" data-mmsi="' + esc(t.mmsi) + '">' +
             '<td class="nm"><span class="gl" style="color:' + col + '">' + sym.glyph + '</span>' +
-              (fl ? '<span class="fl">' + fl + '</span>' : '') + '<span class="tx">' + esc(nameOf(t)) + '</span></td>' +
+              (fl ? '<span class="fl" style="cursor:help"' + (meta().flagTitleAttr ? meta().flagTitleAttr(t.mmsi) : '') + '>' + fl + '</span>' : '') + '<span class="tx">' + esc(nameOf(t)) + '</span></td>' +
             '<td class="ty">' + esc(sym.label) + '</td>' +
             '<td class="rg">' + fmtNM(t.range) + '</td>' +
             '<td class="cp" style="color:' + col + '">' + fmtNM(t.cpa) + '</td>' +
@@ -567,7 +567,7 @@
         return '<div style="min-width:180px' + (kind === 'lost' ? ';opacity:.6' : '') + '">' +
           '<div style="display:flex;align-items:baseline;gap:6px">' +
             '<span style="font-weight:700;font-size:13px;flex:1">' + esc(nameOf(t)) + '</span>' +
-            (fl ? '<span style="font-size:14px">' + fl + '</span>' : '') +
+            (fl ? '<span style="font-size:14px;cursor:help"' + (m.flagTitleAttr ? m.flagTitleAttr(t.mmsi) : '') + '>' + fl + '</span>' : '') +
             '<span style="font-size:9.5px;color:var(--cdim,#9bb0c0)">' + esc(sym.label) + '</span></div>' +
           (type || t.mmsi ? '<div style="font-size:10px;color:var(--cdim,#9bb0c0);margin-bottom:3px">' +
             [type, t.mmsi ? 'MMSI ' + t.mmsi : ''].filter(Boolean).join(' · ') + '</div>' : '') +

@@ -12,6 +12,17 @@ async function boot(page) {
   await page.waitForFunction(() => window.map.isStyleLoaded(), null, { timeout });
 }
 
+// Lighter boot for specs that only need AIS helpers (works against live helm-server :8080 where
+// headless chart/style load may never settle).
+async function bootAis(page) {
+  const timeout = Number(process.env.HELM_E2E_BOOT_TIMEOUT || 30000);
+  await page.goto('/');
+  await expect(page).toHaveTitle(/Helm/);
+  await page.waitForFunction(
+    () => !!(window.HelmAisMeta && window.HelmAisMeta.countryName && window.openAisCard),
+    null, { timeout });
+}
+
 // Feed the ownship module a fix directly (deterministic; independent of the SIM cadence).
 async function feedFix(page, lat, lon, cog, sog) {
   await page.evaluate(({ lat, lon, cog, sog }) =>
@@ -31,4 +42,4 @@ async function watchSetData(page, sourceId) {
 const resetCount = (page, id) => page.evaluate((i) => { window.__sd[i] = 0; }, id);
 const getCount = (page, id) => page.evaluate((i) => window.__sd[i], id);
 
-module.exports = { boot, feedFix, watchSetData, resetCount, getCount };
+module.exports = { boot, bootAis, feedFix, watchSetData, resetCount, getCount };
