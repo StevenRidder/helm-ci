@@ -6,6 +6,9 @@ test.skip(!BASE_URL, 'Set HELM_PUBLIC_CATALOG_URL to run the public catalog comp
 
 async function loadedImage(locator) {
   await expect(locator).toBeVisible();
+  await expect.poll(async () => locator.evaluate((img) => img.naturalWidth), {
+    message: 'image should decode to a nonzero width',
+  }).toBeGreaterThan(0);
   return locator.evaluate((img) => ({
     complete: img.complete,
     naturalWidth: img.naturalWidth,
@@ -24,9 +27,7 @@ test('public symbol detail renders bundled S-101 comparison images', async ({ pa
   const helmImage = await loadedImage(helm);
   const s101Image = await loadedImage(s101);
 
-  expect(helmImage.complete).toBeTruthy();
   expect(helmImage.naturalWidth).toBeGreaterThan(0);
-  expect(s101Image.complete).toBeTruthy();
   expect(s101Image.naturalWidth).toBeGreaterThan(0);
   expect(s101Image.src).toContain('/assets/comparison/s101/ACHARE02.svg');
 });
