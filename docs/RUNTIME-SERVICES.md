@@ -15,6 +15,7 @@ The checked-in machine-readable inventory is
 
 ```bash
 python3 scripts/check-runtime-inventory.py
+node scripts/check-helmwebgpu-runtime-artifacts.mjs
 python3 scripts/helmcxx-parity-suite.py
 bash -n scripts/helmcxx-no-python-runtime.sh
 node --check scripts/helmcxx-benchmark-soak.mjs
@@ -110,6 +111,12 @@ exit tasks. HELMC++-2 consumes that inventory through
 required runtime service to its parity probes and records whether remaining
 Python paths are oracle-only, dev-only, offline-bake, fixture/test, or optional
 non-safety.
+HELMWEBGPU-6 adds
+[`helmwebgpu-render-runtime-inventory.json`](helmwebgpu-render-runtime-inventory.json)
+and [`HELMWEBGPU-6-NO-PYTHON-RUNTIME.md`](HELMWEBGPU-6-NO-PYTHON-RUNTIME.md)
+for the render-artifact-specific slice: browser WebGPU artifacts, OpenCPN/VSG
+proof paths, and the C++ source services that feed them must not introduce a
+Python runtime dependency.
 
 | Target service | Accepted role | C++ runtime decision |
 |---|---|---|

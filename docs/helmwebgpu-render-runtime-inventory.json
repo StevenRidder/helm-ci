@@ -1,0 +1,160 @@
+{
+  "schema": "helm.helmwebgpu_render_runtime_inventory.v1",
+  "updated": "2026-07-06",
+  "owner": "HELMWEBGPU-6",
+  "policy": {
+    "required_boat_runtime": "Renderer and artifact producer services required on the boat are C++/CMake/OpenCPN-native.",
+    "client_runtime": "Helm browser rendering is JavaScript/WebGPU over MapLibre composition.",
+    "native_runtime": "OpenCPN/VSG proof paths are C++ native proof artifacts.",
+    "python_allowance": "Python is allowed only for tooling, reference/oracle paths, offline bake jobs, fixture generation, and tests. It must not be required by renderer or artifact launch paths."
+  },
+  "classifications": [
+    "browser-client-render-artifact",
+    "native-cxx-render-proof",
+    "required-cxx-runtime-source",
+    "tooling-reference",
+    "fixture-test"
+  ],
+  "entries": [
+    {
+      "id": "helm-webgpu-chart-artifact-consumer",
+      "title": "Browser WebGPU chart artifact consumer",
+      "classification": "browser-client-render-artifact",
+      "language": "JavaScript/WebGPU",
+      "runtime_facing": true,
+      "required_python_runtime": false,
+      "python_role": "none",
+      "artifact_contracts": ["helm.render.artifact.v1"],
+      "runtime_contract": "Consumes compiled chart artifacts in the browser. Chart semantics stay server-side; PNG/server-raster remains the fallback.",
+      "paths": [
+        "web/chart-artifact-webgpu.js",
+        "web/chart-artifact-atlas.js",
+        "web/chart-artifact-cache.js",
+        "web/chart-artifact-pick.js",
+        "web/tests/chart-artifact-webgpu.test.js",
+        "web/test/chart-artifact-webgpu.test.cjs",
+        "web/test/chart-artifact-atlas.test.cjs"
+      ],
+      "launch": [
+        "browser loads web/chart-artifact-webgpu.js from helm-server static UI"
+      ],
+      "evidence": [
+        "docs/VULKAN-HELM-WEBGPU-PROOF.md",
+        "web/test/e2e/harbour-chart-renderer.spec.js"
+      ]
+    },
+    {
+      "id": "helm-webgpu-wx-field-texture-artifact",
+      "title": "Browser WebGPU environmental field-texture artifact",
+      "classification": "browser-client-render-artifact",
+      "language": "JavaScript/WebGPU",
+      "runtime_facing": true,
+      "required_python_runtime": false,
+      "python_role": "none",
+      "artifact_contracts": ["helm.env.fieldTexture.artifact.v1", "helm.env.grid.v1"],
+      "runtime_contract": "Consumes validated environmental grid packs as rg32float WebGPU textures. MapLibre remains compositor; native/VSG gets a compatible field-texture contract.",
+      "paths": [
+        "web/wx-field-texture-artifact.js",
+        "web/wx-grid-scene.js",
+        "web/wx-grid-pack-client.js",
+        "web/wx-grid-decode.js",
+        "web/wx-particles-webgpu.js",
+        "web/tests/wx-field-texture-artifact.test.js",
+        "web/tests/wx-grid-decode.test.js",
+        "web/tests/wx-grid-shader.test.js"
+      ],
+      "launch": [
+        "browser loads web/wx-field-texture-artifact.js and web/wx-grid-scene.js from helm-server static UI"
+      ],
+      "evidence": [
+        "docs/HELMWEBGPU-5-FIELD-TEXTURE-CONVERGENCE.md"
+      ]
+    },
+    {
+      "id": "helm-cxx-chart-and-pack-runtime",
+      "title": "C++ chart, pack, and environmental artifact source services",
+      "classification": "required-cxx-runtime-source",
+      "language": "C++17",
+      "runtime_facing": true,
+      "required_python_runtime": false,
+      "python_role": "none",
+      "required_runtime_inventory_ids": ["helm-server", "helm-packd", "helm-envd-target"],
+      "artifact_contracts": ["chart tiles", "local pack catalog", "helm.env.grid.v1"],
+      "runtime_contract": "Provides the boat-side chart, pack, and environmental data source services that WebGPU consumers read from. Python references may remain outside the accepted runtime path.",
+      "paths": [
+        "engine/vendor/cli/helm_server.cpp",
+        "engine/vendor/cli/helm_packd.cpp",
+        "engine/vendor/cli/helm_envd.cpp",
+        "engine/test-packd.sh",
+        "engine/test-envd.sh",
+        "scripts/helmcxx-no-python-runtime.sh",
+        "docs/runtime-inventory.json",
+        "docs/RUNTIME-SERVICES.md"
+      ],
+      "launch": [
+        "$HELM_SERVER_BIN",
+        "$HELM_PACKD_BIN <private-port>",
+        "$HELM_ENVD_BIN <private-port>"
+      ],
+      "evidence": [
+        "docs/HELMCXX-ACCEPTANCE.md",
+        "docs/RUNTIME-SERVICES.md"
+      ]
+    },
+    {
+      "id": "opencpn-vsg-native-proof",
+      "title": "OpenCPN/VSG native renderer proof artifacts",
+      "classification": "native-cxx-render-proof",
+      "language": "C++17/CMake/VSG",
+      "runtime_facing": true,
+      "required_python_runtime": false,
+      "python_role": "none",
+      "artifact_contracts": ["vulkan.render.fixture.v1", "vulkan command stream", "vsg backend resources"],
+      "runtime_contract": "Native proof paths compile and validate renderer fixtures from C++ without Python daemons. Helm consumes outputs through the headless adapter boundary instead of copying renderer core code.",
+      "paths": [
+        "engine/vendor/cli/helm_vulkan_fixture_check.cpp",
+        "engine/test-vulkan-fixture-check.sh",
+        "docs/VULKAN-RENDERER-SEAM.md",
+        "docs/VULKAN-RENDER-ADAPTERS.md",
+        "docs/VULKAN-RENDERER-STRUCTURE.md",
+        "docs/VULKAN-HEADLESS-TILE-ADAPTER.md",
+        "docs/VULKAN-VSG-RESOURCE-OWNERSHIP.md"
+      ],
+      "launch": [
+        "engine/test-vulkan-fixture-check.sh",
+        "OpenCPN CMake builds the VSG/native renderer proof branch"
+      ],
+      "evidence": [
+        "docs/VULKAN-HELM-WEBGPU-PROOF.md"
+      ]
+    },
+    {
+      "id": "python-environment-tooling",
+      "title": "Environmental pack generation and reference tooling",
+      "classification": "tooling-reference",
+      "language": "Python/JavaScript tooling",
+      "runtime_facing": false,
+      "required_python_runtime": false,
+      "python_role": "tooling/reference/fixture-only",
+      "artifact_contracts": ["helm.env.grid.v1"],
+      "runtime_contract": "May create or verify packs before runtime, but is not a required renderer or boat daemon path.",
+      "paths": [
+        "scripts/wx_pack_factory.py",
+        "scripts/wx_bake_openmeteo.py",
+        "scripts/env_grid_pack.py",
+        "scripts/helmcxx-make-envd-fixture.mjs",
+        "pipeline/test_helm_envd_contract.py",
+        "docs/WX-PACK-FACTORY.md"
+      ],
+      "launch": [
+        "python3 scripts/wx_pack_factory.py ...",
+        "python3 scripts/wx_bake_openmeteo.py ...",
+        "node scripts/helmcxx-make-envd-fixture.mjs ..."
+      ],
+      "evidence": [
+        "docs/WX-PACK-FACTORY.md",
+        "docs/RUNTIME-SERVICES.md"
+      ]
+    }
+  ]
+}

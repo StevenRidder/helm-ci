@@ -4,14 +4,18 @@ on:
   push:
     paths:
       - "docs/runtime-inventory.json"
+      - "docs/helmwebgpu-render-runtime-inventory.json"
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/HELMCXX-PACKAGING.md"
+      - "docs/HELMWEBGPU-5-FIELD-TEXTURE-CONVERGENCE.md"
+      - "docs/HELMWEBGPU-6-NO-PYTHON-RUNTIME.md"
       - "docs/RUNTIME-SERVICES.md"
       - "backend/**/*.py"
       - "packaging/**"
       - "scripts/check-runtime-inventory.py"
+      - "scripts/check-helmwebgpu-runtime-artifacts.mjs"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
@@ -20,19 +24,26 @@ on:
       - "scripts/helmcxx-packaging-proof.sh"
       - "scripts/install-helmcxx-runtime.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
+      - "web/chart-artifact-*.js"
+      - "web/wx-field-texture-artifact.js"
+      - "web/wx-grid-*.js"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   pull_request:
     paths:
       - "docs/runtime-inventory.json"
+      - "docs/helmwebgpu-render-runtime-inventory.json"
       - "docs/helmcxx-parity-suite.json"
       - "docs/HELMCXX-ACCEPTANCE.md"
       - "docs/HELMCXX-MAINTAINABILITY.md"
       - "docs/HELMCXX-PACKAGING.md"
+      - "docs/HELMWEBGPU-5-FIELD-TEXTURE-CONVERGENCE.md"
+      - "docs/HELMWEBGPU-6-NO-PYTHON-RUNTIME.md"
       - "docs/RUNTIME-SERVICES.md"
       - "backend/**/*.py"
       - "packaging/**"
       - "scripts/check-runtime-inventory.py"
+      - "scripts/check-helmwebgpu-runtime-artifacts.mjs"
       - "scripts/helmcxx-parity-suite.py"
       - "scripts/helmcxx-no-python-runtime.sh"
       - "scripts/helmcxx-cockpit-proof.sh"
@@ -41,6 +52,9 @@ on:
       - "scripts/helmcxx-packaging-proof.sh"
       - "scripts/install-helmcxx-runtime.sh"
       - "scripts/helmcxx-make-envd-fixture.mjs"
+      - "web/chart-artifact-*.js"
+      - "web/wx-field-texture-artifact.js"
+      - "web/wx-grid-*.js"
       - "web/test/e2e/helmcxx4-cockpit.spec.js"
       - ".github/workflows/helmcxx-runtime-guard.yml"
   workflow_dispatch:
@@ -57,6 +71,10 @@ jobs:
         run: python3 scripts/check-runtime-inventory.py
       - name: Check runtime inventory negative smoke
         run: python3 scripts/check-runtime-inventory.py --negative-smoke-backend-python
+      - name: Check HELMWEBGPU render runtime artifacts
+        run: |
+          node scripts/check-helmwebgpu-runtime-artifacts.mjs
+          node scripts/check-helmwebgpu-runtime-artifacts.mjs --negative-smoke-python-runtime
       - name: Check HELMC++ parity suite
         run: python3 scripts/helmcxx-parity-suite.py
       - name: Check HELMC++ no-Python harness syntax
@@ -65,6 +83,7 @@ jobs:
           bash -n scripts/helmcxx-cockpit-proof.sh
           bash -n scripts/install-helmcxx-runtime.sh
           bash -n scripts/helmcxx-packaging-proof.sh
+          node --check scripts/check-helmwebgpu-runtime-artifacts.mjs
           node --check scripts/helmcxx-make-envd-fixture.mjs
           node --check scripts/helmcxx-benchmark-soak.mjs
           node --check scripts/helmcxx-maintainability-audit.mjs
