@@ -19,6 +19,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 CATALOG = ROOT / "catalog"
 DEFAULT_PROOF_DIR = ROOT / "out" / "electronic_chart1_proof_bundle"
 DEFAULT_JSON = CATALOG / "electronic_chart1_runtime_promotion_gate.json"
@@ -73,7 +74,7 @@ def _load_json(path: Path) -> dict[str, Any]:
 
 def _display_path(path: Path) -> str:
     try:
-        return path.relative_to(ROOT).as_posix()
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
     except ValueError:
         return path.as_posix()
 

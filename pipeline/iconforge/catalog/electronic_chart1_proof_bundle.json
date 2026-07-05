@@ -136,27 +136,27 @@
   "schema": "helm.forge.electronic_chart1_proof_bundle.v1",
   "source": {
     "authority_corpus": {
-      "path": "catalog/electronic_chart1_authority_corpus.json",
+      "path": "pipeline/iconforge/catalog/electronic_chart1_authority_corpus.json",
       "schema": "helm.forge.electronic_chart1_authority_corpus.v1",
-      "sha256": "1df8f0331c532d10d03fe2ba5975f52f50108b12d79ccdcb83c4575c1035a5d1"
+      "sha256": "ac320b3880d6cfe9f52ff3273eb1ce93fbe7cba7b6a91438b7c995673efacc49"
     },
     "diff_engine": {
-      "path": "catalog/electronic_chart1_diff_engine.json",
+      "path": "pipeline/iconforge/catalog/electronic_chart1_diff_engine.json",
       "schema": "helm.forge.electronic_chart1_diff_engine.v1",
-      "sha256": "44a2d24102f5cfe3c09ff6888f50d0a3417e94ceadec973a2915ca71ca4306b7"
+      "sha256": "68d7a13469b1d0f48da316c8bdd2ac541b30ad535d1b3f4724e054f5a94eff97"
     },
     "helm_s101_render": {
-      "path": "catalog/electronic_chart1_helm_s101_render.json",
+      "path": "pipeline/iconforge/catalog/electronic_chart1_helm_s101_render.json",
       "schema": "helm.forge.electronic_chart1_helm_s101_render.v1",
       "sha256": "841d9bed8012822bdae20c8e110b5d17313e07982563be34bde4c6e0482e5d28"
     },
     "helm_s57_render": {
-      "path": "catalog/electronic_chart1_helm_s57_render.json",
+      "path": "pipeline/iconforge/catalog/electronic_chart1_helm_s57_render.json",
       "schema": "helm.forge.electronic_chart1_helm_s57_render.v1",
       "sha256": "c243cd4a2d78406899c0845e9915a4f57592be26fe9cc23f3bb1e1ae3a1cb8b4"
     },
     "opencpn_reference": {
-      "path": "catalog/electronic_chart1_opencpn_reference.json",
+      "path": "pipeline/iconforge/catalog/electronic_chart1_opencpn_reference.json",
       "schema": "helm.forge.electronic_chart1_opencpn_reference.v1",
       "sha256": "6354a1359d18e2d65155aaefc9feb431791d105a3dd8b0812e01146973783acf"
     }

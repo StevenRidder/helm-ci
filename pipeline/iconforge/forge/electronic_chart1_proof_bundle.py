@@ -25,6 +25,7 @@ from urllib.parse import parse_qs, unquote, urlparse
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 CATALOG = ROOT / "catalog"
 DEFAULT_OUT = ROOT / "out" / "electronic_chart1_proof_bundle"
 DEFAULT_CATALOG_JSON = CATALOG / "electronic_chart1_proof_bundle.json"
@@ -68,7 +69,7 @@ def _sha256(path: Path) -> str:
 
 def _display_path(path: Path) -> str:
     try:
-        return path.relative_to(ROOT).as_posix()
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
     except ValueError:
         return path.as_posix()
 
