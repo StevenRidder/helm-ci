@@ -174,6 +174,27 @@ That installs the real C++ binaries into a staging root, starts `helm-server` an
 `/catalog`, and shuts the processes down cleanly. It never uses the shared
 `:8080` screen.
 
+## Weather refresh
+
+`helm-envd` only *serves* pre-baked packs; something has to *bake* them on a
+cadence. That is a packaged, OS-scheduled job — not a shell loop. Pass a weather
+env file (with at least `HELM_WX_OPENMETEO_KEY`) and the installer schedules it:
+
+```sh
+scripts/install-helmcxx-runtime.sh --user --wx-env-file ~/.helm/wx/.env
+```
+
+This installs the bake tools (`scripts/wx_refresh_once.py`, `boat_anchor.py`,
+`wx_bake_openmeteo.py`) under `<prefix>/scripts`, writes the key to a `0600`
+`helm-wx.env`, and generates a periodic unit — a launchd `StartInterval` agent
+(macOS) or a systemd `.timer` (Linux), default every 6h (`--wx-interval SECS`).
+Each firing runs one `wx_refresh_once.py` cycle: resolve the anchor
+(`HELM_WX_ANCHOR` override > live GPS via `boat_anchor.py`, drift-gated > previous
+release), bake a fresh release, publish the stable `current/current.manifest.json`
+pointer, and restart the supervised `helm-envd`. The OpenMeteo key stays only in
+the `0600` env file — never in a service unit. Omit `--wx-env-file` and `helm-envd`
+is still supervised; it just serves whatever packs already exist.
+
 ## Upgrading a running install
 
 Replace runtime binaries **atomically** — never overwrite a running/mmap'd binary

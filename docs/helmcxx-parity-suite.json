@@ -204,6 +204,12 @@
       "path": "scripts/update-remote-parity.sh",
       "HELMCXX_2_role": "dev-operator-hybrid-only",
       "removal_status": "must not become HELMC++ packaging proof; HELMC++-6 owns no-Python install/start path"
+    },
+    {
+      "inventory_entry": "wx-refresh-scheduled-bake",
+      "path": "scripts/wx_refresh_once.py",
+      "HELMCXX_2_role": "offline-bake",
+      "removal_status": "permanent offline-bake tooling; never part of required C++ runtime — helm-envd (C++) serves, this one-shot only bakes and republishes on an OS timer"
     }
   ]
 }

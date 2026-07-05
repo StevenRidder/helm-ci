@@ -40,6 +40,13 @@ STAGING_ROOT="${HELM_INSTALL_STAGING_ROOT:-}"
 ENABLE_SUPERVISION=1
 DRY_RUN=0
 
+# Weather refresh (optional): a KEY=VAL env file with at least HELM_WX_OPENMETEO_KEY.
+# When given, the installer schedules a periodic bake+publish cycle (launchd
+# StartInterval / systemd timer) that runs wx_refresh_once.py. Without it, envd is
+# still supervised but nothing bakes new weather.
+WX_ENV_FILE="${HELM_INSTALL_WX_ENV_FILE:-}"
+WX_REFRESH_INTERVAL="${HELM_INSTALL_WX_INTERVAL:-21600}"
+
 # Data-pointing overrides (used to dogfood an install against existing charts/packs
 # instead of copying them). Empty => use the installed defaults.
 ENC_OVERRIDE="${HELM_INSTALL_ENC:-}"
@@ -76,6 +83,12 @@ Point at existing data instead of copying (for dogfooding a live box):
   --enc PATH            HELM_ENC chart to run (default: <state>/runtime/enc sample).
   --mbtiles-dir DIR     HELM_MBTILES_DIR local pack dir (default: --packs-dir).
   --serve-web DIR       HELM_WEB_ROOT to serve (default: <prefix>/web).
+
+Weather refresh (optional):
+  --wx-env-file FILE    Env file with HELM_WX_OPENMETEO_KEY (+ tuning). Enables a
+                        scheduled bake+publish cycle (launchd StartInterval /
+                        systemd timer). Omit to supervise envd without baking.
+  --wx-interval SECS    Refresh cadence (default 21600 = 6h).
 
 Supervision:
   --no-supervision      Install files only; do not generate/enable services.
@@ -165,6 +178,8 @@ while [ $# -gt 0 ]; do
     --enc) shift; ENC_OVERRIDE="${1:-}" ;;
     --mbtiles-dir) shift; MBTILES_OVERRIDE="${1:-}" ;;
     --serve-web) shift; WEBROOT_OVERRIDE="${1:-}" ;;
+    --wx-env-file) shift; WX_ENV_FILE="${1:-}" ;;
+    --wx-interval) shift; WX_REFRESH_INTERVAL="${1:-}" ;;
     --no-supervision) ENABLE_SUPERVISION=0 ;;
     --staging-root) shift; STAGING_ROOT="${1:-}" ;;
     --dry-run) DRY_RUN=1 ;;
@@ -242,6 +257,12 @@ done
 log "installing cockpit web assets"
 copy_dir "$WEB_SOURCE" "$PREFIX_DST/web"
 
+log "installing weather bake/refresh tools"
+for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py; do
+  [ -f "$ROOT/scripts/$tool" ] || die "weather tool missing from checkout: scripts/$tool"
+  install_file "$ROOT/scripts/$tool" "$PREFIX_DST/scripts/$tool" 0755
+done
+
 log "installing durable runtime assets"
 copy_dir "$RUNTIME_SOURCE/s57data" "$STATE_DST/runtime/s57data"
 if [ -d "$RUNTIME_SOURCE/tcdata" ]; then
@@ -280,6 +301,13 @@ HELM_ENVD_PORT=8094
 HELM_BASEMAP_CACHE_PORT=8095
 HELM_TILES_NO_WARMUP=1
 EOF
+
+# Optional weather-source env (OpenMeteo key + tuning). Kept in a 0600 file the
+# scheduled refresh sources; never baked into world-readable places.
+if [ -n "$WX_ENV_FILE" ]; then
+  [ -f "$WX_ENV_FILE" ] || die "--wx-env-file not found: $WX_ENV_FILE"
+  install_file "$WX_ENV_FILE" "$CONFIG_DST/helm-wx.env" 0600
+fi
 
 # ===========================================================================
 # Supervision: generate reboot-persistent units for the RESOLVED layout.
@@ -355,6 +383,46 @@ render_systemd() {  # render_systemd <name> <port> <extra-env>
   if [ "$MODE" = "system" ]; then printf 'WantedBy=multi-user.target\n'; else printf 'WantedBy=default.target\n'; fi
 }
 
+WX_LABEL="$LABEL_PREFIX.helm-wx-refresh"
+PY="${HELM_PYTHON:-/usr/bin/python3}"
+
+render_wx_launchd() {  # a periodic bake+publish job (StartInterval), not a daemon
+  printf '<?xml version="1.0" encoding="UTF-8"?>\n'
+  printf '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
+  printf '<plist version="1.0">\n<dict>\n'
+  printf '  <key>Label</key><string>%s</string>\n' "$WX_LABEL"
+  printf '  <key>ProgramArguments</key>\n  <array>\n'
+  printf '    <string>%s</string>\n    <string>%s/scripts/wx_refresh_once.py</string>\n  </array>\n' "$PY" "$PREFIX"
+  printf '  <key>WorkingDirectory</key><string>%s</string>\n' "$PREFIX"
+  printf '  <key>EnvironmentVariables</key>\n  <dict>\n'
+  printf '    <key>HELM_WX_PACKS_DIR</key><string>%s</string>\n' "$WX_PACKS_DIR"
+  printf '    <key>HELM_ENVD_LABEL</key><string>%s.helm-envd</string>\n' "$LABEL_PREFIX"
+  printf '    <key>HELM_WX_CONNECTIONS</key><string>%s/connections.json</string>\n' "$CONFIG_DIR"
+  printf '    <key>HELM_WX_ENV_FILE</key><string>%s/helm-wx.env</string>\n' "$CONFIG_DIR"
+  printf '  </dict>\n'
+  printf '  <key>RunAtLoad</key><true/>\n  <key>StartInterval</key><integer>%s</integer>\n' "$WX_REFRESH_INTERVAL"
+  printf '  <key>StandardOutPath</key><string>%s/helm-wx-refresh.log</string>\n' "$LOG_DIR"
+  printf '  <key>StandardErrorPath</key><string>%s/helm-wx-refresh.log</string>\n' "$LOG_DIR"
+  printf '</dict>\n</plist>\n'
+}
+
+render_wx_systemd_service() {
+  printf '[Unit]\nDescription=Helm weather bake+publish cycle\nAfter=network-online.target\nWants=network-online.target\n\n'
+  printf '[Service]\nType=oneshot\n'
+  if [ "$MODE" = "system" ]; then printf 'User=helm\nGroup=helm\n'; fi
+  printf 'EnvironmentFile=%s/helm-runtime.env\n' "$CONFIG_DIR"
+  printf 'EnvironmentFile=%s/helm-wx.env\n' "$CONFIG_DIR"
+  printf 'Environment=HELM_ENVD_UNIT=helm-envd.service\n'
+  printf 'ExecStart=%s %s/scripts/wx_refresh_once.py\n' "$PY" "$PREFIX"
+}
+
+render_wx_systemd_timer() {
+  printf '[Unit]\nDescription=Helm weather refresh cadence\n\n'
+  printf '[Timer]\nOnBootSec=2min\nOnUnitActiveSec=%s\nPersistent=true\n\n' "$WX_REFRESH_INTERVAL"
+  printf '[Install]\n'
+  if [ "$MODE" = "system" ]; then printf 'WantedBy=timers.target\n'; else printf 'WantedBy=default.target\n'; fi
+}
+
 # Resolve where units go and how they are (un)loaded.
 if [ "$OS" = "Darwin" ]; then
   if [ "$MODE" = "system" ]; then SUPERVISION_DIR="/Library/LaunchDaemons"; else SUPERVISION_DIR="$HOME/Library/LaunchAgents"; fi
@@ -375,6 +443,14 @@ EOF
       render_systemd "$name" "$port" "$extra" | write_file "$SUPERVISION_DST/$name.service" 0644
     fi
   done
+  if [ -n "$WX_ENV_FILE" ]; then
+    if [ "$OS" = "Darwin" ]; then
+      render_wx_launchd | write_file "$SUPERVISION_DST/$WX_LABEL.plist" 0644
+    else
+      render_wx_systemd_service | write_file "$SUPERVISION_DST/helm-wx-refresh.service" 0644
+      render_wx_systemd_timer   | write_file "$SUPERVISION_DST/helm-wx-refresh.timer" 0644
+    fi
+  fi
 fi
 
 # ---- bootstrap/enable into the live service manager -----------------------
@@ -393,13 +469,19 @@ if [ "$BOOTSTRAP" = 1 ]; then
       launchctl bootstrap "$dom" "$plist" || die "launchctl bootstrap failed for $name"
       launchctl kickstart -k "$dom/$LABEL_PREFIX.$name" 2>/dev/null || true
     done
+    if [ -n "$WX_ENV_FILE" ]; then
+      launchctl bootout "$dom/$WX_LABEL" 2>/dev/null || true
+      launchctl bootstrap "$dom" "$SUPERVISION_DIR/$WX_LABEL.plist" || die "launchctl bootstrap failed for weather refresh"
+    fi
   else
     if [ "$MODE" = "system" ]; then
       systemctl daemon-reload
       for spec in "${DAEMONS[@]}"; do systemctl enable --now "${spec%%|*}.service" || die "systemctl enable failed for ${spec%%|*}"; done
+      [ -n "$WX_ENV_FILE" ] && { systemctl enable --now helm-wx-refresh.timer || die "systemctl enable failed for weather refresh timer"; }
     else
       systemctl --user daemon-reload
       for spec in "${DAEMONS[@]}"; do systemctl --user enable --now "${spec%%|*}.service" || die "systemctl --user enable failed for ${spec%%|*}"; done
+      [ -n "$WX_ENV_FILE" ] && { systemctl --user enable --now helm-wx-refresh.timer || die "systemctl --user enable failed for weather refresh timer"; }
     fi
   fi
 fi
@@ -413,6 +495,11 @@ printf '  logs:        %s%s\n' "$LOG_DIR" "${STAGING_ROOT:+ (staged at $LOG_DST)
 printf '  local packs: %s%s\n' "$PACKS_DIR" "${STAGING_ROOT:+ (staged at $PACKS_DST)}"
 printf '  wx packs:    %s%s\n' "$WX_PACKS_DIR" "${STAGING_ROOT:+ (staged at $WX_PACKS_DST)}"
 printf '  supervision: %s%s\n' "$SUPERVISION_DIR" "${STAGING_ROOT:+ (staged at $SUPERVISION_DST)}"
+if [ -n "$WX_ENV_FILE" ]; then
+  printf '  weather:     scheduled bake+publish every %ss (wx_refresh_once.py)\n' "$WX_REFRESH_INTERVAL"
+else
+  printf '  weather:     envd supervised; no bake scheduled (no --wx-env-file)\n'
+fi
 if [ "$BOOTSTRAP" = 1 ]; then
   printf '  services:    enabled + reboot-persistent (%s)\n' "$([ "$OS" = Darwin ] && echo launchd || echo systemd)"
 elif [ "$ENABLE_SUPERVISION" = 1 ]; then

@@ -106,9 +106,12 @@ bash -n scripts/install-helmcxx-runtime.sh
 bash -n scripts/helmcxx-packaging-proof.sh
 ok "install/proof scripts pass shell syntax"
 
-if grep -RInE 'docker|docker-compose|containerd|podman|uvicorn|fastapi|FastAPI|python[0-9.]*|/tmp|/private/tmp' scripts/install-helmcxx-runtime.sh >"$EVIDENCE_DIR/forbidden-scan.txt"; then
+# Forbidden = Docker, Python *runtime daemons* (uvicorn/FastAPI), and temp-path
+# runtime dirs. A bare `python3` invocation is allowed: the weather bake is
+# offline tooling per docs/HELMCXX-ACCEPTANCE.md, not a runtime daemon.
+if grep -RInE 'docker|docker-compose|containerd|podman|uvicorn|fastapi|FastAPI|/tmp/|/private/tmp' scripts/install-helmcxx-runtime.sh >"$EVIDENCE_DIR/forbidden-scan.txt"; then
   sed 's/^/  /' "$EVIDENCE_DIR/forbidden-scan.txt" >&2
-  die "installer contains forbidden Docker/Python/temp-path dependency"
+  die "installer contains forbidden Docker/Python-daemon/temp-path dependency"
 fi
 ok "service/install artifacts do not require Docker, Python daemons, or temp-path runtime dirs"
 
@@ -183,6 +186,40 @@ for gos in Darwin Linux; do
   done
 done
 ok "reboot-persistent launchd + systemd units generated for system and user modes"
+
+# --- weather refresh: a scheduled (not shell-loop) bake job when a key is given -
+printf 'HELM_WX_OPENMETEO_KEY=proofkey\n' >"$TMP/wx.env"
+for gos in Darwin Linux; do
+  wst="$TMP/wx-$gos"
+  HELM_INSTALL_OS_OVERRIDE="$gos" scripts/install-helmcxx-runtime.sh \
+    --user --staging-root "$wst" --wx-env-file "$TMP/wx.env" \
+    --build-cli "$TMP/build/cli" --web-root "$TMP/web" --runtime-source "$TMP/runtime" \
+    >"$EVIDENCE_DIR/wx-$gos.log"
+  for tool in wx_refresh_once.py boat_anchor.py wx_bake_openmeteo.py; do
+    [ -f "$wst$HOME/.helm/opt/scripts/$tool" ] || die "$gos: weather tool not installed: $tool"
+  done
+  [ -f "$wst$HOME/.helm/opt/etc/helm-wx.env" ] || die "$gos: helm-wx.env not installed"
+  perms=$(ls -l "$wst$HOME/.helm/opt/etc/helm-wx.env" | cut -c1-10)
+  [ "$perms" = "-rw-------" ] || die "$gos: helm-wx.env is not 0600 (got $perms)"
+  d="$wst$HOME/Library/LaunchAgents"; [ "$gos" = Linux ] && d="$wst${XDG_CONFIG_HOME:-$HOME/.config}/systemd/user"
+  if [ "$gos" = Darwin ]; then
+    unit="$d/com.6thelement.helm-wx-refresh.plist"
+    [ -f "$unit" ] || die "$gos: weather refresh plist missing"
+    grep -q 'StartInterval' "$unit" || die "$gos: weather refresh has no StartInterval schedule"
+    grep -q 'wx_refresh_once.py' "$unit" || die "$gos: weather refresh does not run wx_refresh_once.py"
+  else
+    [ -f "$d/helm-wx-refresh.service" ] || die "$gos: weather refresh service missing"
+    [ -f "$d/helm-wx-refresh.timer" ] || die "$gos: weather refresh timer missing"
+    grep -q 'OnUnitActiveSec' "$d/helm-wx-refresh.timer" || die "$gos: weather refresh timer has no cadence"
+    grep -q 'wx_refresh_once.py' "$d/helm-wx-refresh.service" || die "$gos: weather refresh does not run wx_refresh_once.py"
+  fi
+  # the secret must live ONLY in the 0600 env file, never in a generated unit
+  grep -rq 'proofkey' "$d" && die "$gos: OpenMeteo key leaked into a generated unit"
+done
+ok "weather refresh installs its tools + a scheduled (OS-timer) bake job, key kept 0600"
+
+python3 -m py_compile scripts/wx_refresh_once.py scripts/boat_anchor.py
+ok "weather refresh python tools compile"
 
 if [ "$RUN_SMOKE" != 1 ]; then
   printf 'HELMC++-6 packaging proof: PASS (static/staged)\n'

@@ -300,6 +300,37 @@
       "notes": "Generated private data stays outside Git and outside required daemon policy."
     },
     {
+      "id": "wx-refresh-scheduled-bake",
+      "title": "Scheduled weather bake+publish cycle (helm-envd feeder)",
+      "classification": "offline-bake",
+      "status": "implemented",
+      "required_runtime": false,
+      "final_acceptance_required": false,
+      "language": "Python",
+      "process_type": "scheduled one-shot (launchd StartInterval / systemd timer)",
+      "ports": [],
+      "paths": [
+        "scripts/wx_refresh_once.py",
+        "scripts/boat_anchor.py",
+        "scripts/wx_bake_openmeteo.py"
+      ],
+      "launch": [
+        "python3 <prefix>/scripts/wx_refresh_once.py via com.6thelement.helm-wx-refresh / helm-wx-refresh.timer"
+      ],
+      "starts_python_daemon": false,
+      "python_allowed": true,
+      "allowed_python_reason": "One-shot offline bake+publish run on an OS timer, not a runtime daemon; it bakes weather packs and restarts the C++ helm-envd, which is the serving runtime.",
+      "owner": "WX/packaging",
+      "evidence_tasks": [
+        "WX-26",
+        "HELMC++-6"
+      ],
+      "feeds_helmcxx": [
+        "HELMC++-6"
+      ],
+      "notes": "Packaged replacement for the machine-local refresh.sh while-loop. The OpenMeteo key lives only in a 0600 helm-wx.env, never in a service unit."
+    },
+    {
       "id": "web-static-dev-server",
       "title": "Static web development server",
       "classification": "dev-tooling",
