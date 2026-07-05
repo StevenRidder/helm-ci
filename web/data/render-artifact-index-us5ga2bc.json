@@ -1,0 +1,2135 @@
+{
+  "schema_version": "helm.render.artifact_index.v1",
+  "cell_id": "US5GA2BC",
+  "source_epoch": "US5GA2BC@enc",
+  "cell_bbox": {
+    "west": -81.5265,
+    "south": 30.8235,
+    "east": -81.4485,
+    "north": 30.9015
+  },
+  "z_range": [
+    11,
+    15
+  ],
+  "pixel_size": [
+    2048,
+    2048
+  ],
+  "reference_zoom": 13,
+  "nodata_z_levels": [
+    16
+  ],
+  "tile_count": 111,
+  "entries": [
+    {
+      "tile": {
+        "z": 11,
+        "x": 560,
+        "y": 839
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.7512777762578,
+        "east": -81.38671875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/11/560/839/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z11/x560/y839.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17702,
+      "index_count": 25266,
+      "packet_sha256": "2739705eb0cd548fe27d4fbc586af085ff551551f3c8c67c308a35fcece83891"
+    },
+    {
+      "tile": {
+        "z": 12,
+        "x": 1120,
+        "y": 1678
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.8267809047798,
+        "east": -81.474609375,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/12/1120/1678/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z12/x1120/y1678.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 42193,
+      "index_count": 58065,
+      "packet_sha256": "3e33e51795e898f68d8f1ca0dfaefdd4d37023f88ed45d3627e42eaf5baa55ff"
+    },
+    {
+      "tile": {
+        "z": 12,
+        "x": 1120,
+        "y": 1679
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.7512777762578,
+        "east": -81.474609375,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/12/1120/1679/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z12/x1120/y1679.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 8484,
+      "index_count": 11124,
+      "packet_sha256": "cc331ba33163808d9b0b70c339e14a69ed2cb7ac9dbcbad0de13913458640500"
+    },
+    {
+      "tile": {
+        "z": 12,
+        "x": 1121,
+        "y": 1678
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8267809047798,
+        "east": -81.38671875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/12/1121/1678/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z12/x1121/y1678.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 14509,
+      "index_count": 20229,
+      "packet_sha256": "c58e1871d094b6d1c47f1879ea510a7a338d959abcdbf482bf9198c4593703b2"
+    },
+    {
+      "tile": {
+        "z": 12,
+        "x": 1121,
+        "y": 1679
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.7512777762578,
+        "east": -81.38671875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/12/1121/1679/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z12/x1121/y1679.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 2493,
+      "index_count": 3117,
+      "packet_sha256": "5e1a1ce984032efeba2529520d376b905157880aa0b643a96cb66f1167517e12"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2240,
+        "y": 3356
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.8645102262584,
+        "east": -81.5185546875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/13/2240/3356/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2240/y3356.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3516,
+      "index_count": 3516,
+      "packet_sha256": "e132cfa744e07a5e02d7156825c5a33cd65d1ca841bc74c6152170f1fb44c0cc"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2240,
+        "y": 3357
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.8267809047798,
+        "east": -81.5185546875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/13/2240/3357/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2240/y3357.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17233,
+      "index_count": 22797,
+      "packet_sha256": "57f0df4e4ce26f56d9bdaaa23910a73064fb79dc62f1df4c48cbcb6eebb9009a"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2240,
+        "y": 3358
+      },
+      "geographic_bbox": {
+        "west": -81.5625,
+        "south": 30.7890367512611,
+        "east": -81.5185546875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/13/2240/3358/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2240/y3358.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 5534,
+      "index_count": 7254,
+      "packet_sha256": "003c2bb246f7e641ca014889094b77ececd8ab05977480e65eef6d8cb3e5d7b3"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2241,
+        "y": 3356
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8645102262584,
+        "east": -81.474609375,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/13/2241/3356/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2241/y3356.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 53841,
+      "index_count": 72093,
+      "packet_sha256": "beb7b5802707afd6aa80aff5abb87ba040468faffe0afa915737297a2ef8589e"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2241,
+        "y": 3357
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8267809047798,
+        "east": -81.474609375,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/13/2241/3357/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2241/y3357.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 63515,
+      "index_count": 84879,
+      "packet_sha256": "99babb5213385dd3be0e9f3d33741c917188356c8b201c105991b92b8f733337"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2241,
+        "y": 3358
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.7890367512611,
+        "east": -81.474609375,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/13/2241/3358/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2241/y3358.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17889,
+      "index_count": 23277,
+      "packet_sha256": "71a698212b25d510cb7495bc9f43c92ec9b31b887ed457f430cb42adb16d9cfc"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2242,
+        "y": 3356
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8645102262584,
+        "east": -81.4306640625,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/13/2242/3356/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2242/y3356.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 26941,
+      "index_count": 37233,
+      "packet_sha256": "dc1f39b8fe48cb88ff548f927cd9657da185eb984aa32366e76e576a52e98bd8"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2242,
+        "y": 3357
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8267809047798,
+        "east": -81.4306640625,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/13/2242/3357/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2242/y3357.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 18680,
+      "index_count": 24936,
+      "packet_sha256": "6ecb1352d7557e39cb20d613158f657ae63fbbe506d8cc22adea878e3ee3d193"
+    },
+    {
+      "tile": {
+        "z": 13,
+        "x": 2242,
+        "y": 3358
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.7890367512611,
+        "east": -81.4306640625,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/13/2242/3358/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z13/x2242/y3358.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 5616,
+      "index_count": 6984,
+      "packet_sha256": "11d9f2f5e8c20ca1e967fd1b35f326df6254ed36c7ed8a1f4088e162c6086092"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4481,
+        "y": 6712
+      },
+      "geographic_bbox": {
+        "west": -81.54052734375,
+        "south": 30.8833693216923,
+        "east": -81.5185546875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/14/4481/6712/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4481/y6712.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 5400,
+      "index_count": 5400,
+      "packet_sha256": "8b028452c3f756e0210cd5e1809403506cac32cf5e7b20e234fa3c3e0d1f228d"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4481,
+        "y": 6713
+      },
+      "geographic_bbox": {
+        "west": -81.54052734375,
+        "south": 30.8645102262584,
+        "east": -81.5185546875,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/14/4481/6713/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4481/y6713.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 5382,
+      "index_count": 5382,
+      "packet_sha256": "4b598307b6e94bd40acd78428f26f3f741f21cdd58d1fe77007de8afa4ea4190"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4481,
+        "y": 6714
+      },
+      "geographic_bbox": {
+        "west": -81.54052734375,
+        "south": 30.8456474201826,
+        "east": -81.5185546875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/14/4481/6714/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4481/y6714.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 15643,
+      "index_count": 20307,
+      "packet_sha256": "81b982b6e8e28e23dfc0215dab8f8d2b63f7cb385129393fcd495f2a3145ae50"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4481,
+        "y": 6715
+      },
+      "geographic_bbox": {
+        "west": -81.54052734375,
+        "south": 30.8267809047798,
+        "east": -81.5185546875,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/14/4481/6715/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4481/y6715.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 25345,
+      "index_count": 33237,
+      "packet_sha256": "3a053f9b3a8912a4872c6acf2a20a379474cb56052fc7fd66e95c9113d090077"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4481,
+        "y": 6716
+      },
+      "geographic_bbox": {
+        "west": -81.54052734375,
+        "south": 30.8079106813665,
+        "east": -81.5185546875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/14/4481/6716/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4481/y6716.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 8585,
+      "index_count": 11241,
+      "packet_sha256": "bf43173c24abcf8522414e734610ecd10eb97022593349b178800d39de64c576"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4482,
+        "y": 6712
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8833693216923,
+        "east": -81.49658203125,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/14/4482/6712/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4482/y6712.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 38442,
+      "index_count": 50190,
+      "packet_sha256": "17e673b555de42e3288348b5214b69d83a6590ab601184576fd1d150bdac93b1"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4482,
+        "y": 6713
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8645102262584,
+        "east": -81.49658203125,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/14/4482/6713/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4482/y6713.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 54665,
+      "index_count": 73461,
+      "packet_sha256": "2e06413c4771bfb8007303110056d395dcbdd50f53dd64324b461de7a64608f2"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4482,
+        "y": 6714
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8456474201826,
+        "east": -81.49658203125,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/14/4482/6714/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4482/y6714.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 49607,
+      "index_count": 65079,
+      "packet_sha256": "66f8e359b743f914878225b03cbb2b9e879410ba7dd6d2ae8fe71abe6a22e2e8"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4482,
+        "y": 6715
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8267809047798,
+        "east": -81.49658203125,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/14/4482/6715/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4482/y6715.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 39343,
+      "index_count": 52203,
+      "packet_sha256": "cf5df94af3da6934b706b2b0770ec3e56ee003fbf3c8639cd72f636631dae262"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4482,
+        "y": 6716
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8079106813665,
+        "east": -81.49658203125,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/14/4482/6716/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4482/y6716.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17853,
+      "index_count": 23517,
+      "packet_sha256": "4ebb5fe346bc5f3576960405f64ff721aca704f018868773f01b51a9148e11fb"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4483,
+        "y": 6712
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8833693216923,
+        "east": -81.474609375,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/14/4483/6712/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4483/y6712.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 42780,
+      "index_count": 55848,
+      "packet_sha256": "889df93391cbd666f15dd0c239e84f574e89630cd3437e9634c541e803de74f5"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4483,
+        "y": 6713
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8645102262584,
+        "east": -81.474609375,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/14/4483/6713/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4483/y6713.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 54808,
+      "index_count": 70368,
+      "packet_sha256": "85f4857892491f19b39c7acaf70905ed0a1c8fe33d9f83ad701e2b09f1b65d6e"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4483,
+        "y": 6714
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8456474201826,
+        "east": -81.474609375,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/14/4483/6714/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4483/y6714.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 54037,
+      "index_count": 69513,
+      "packet_sha256": "a2c2324c6471fec2dada4efd6211569d2bfa5312e90cb9885671dc162ef3f0c4"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4483,
+        "y": 6715
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8267809047798,
+        "east": -81.474609375,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/14/4483/6715/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4483/y6715.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 38478,
+      "index_count": 51246,
+      "packet_sha256": "8da72cccc767deca435a8bb1c01eb6f5ec00834455745a291a3f657e397b83b6"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4483,
+        "y": 6716
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8079106813665,
+        "east": -81.474609375,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/14/4483/6716/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4483/y6716.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17156,
+      "index_count": 21972,
+      "packet_sha256": "4826fab70c080b0cf9236b2686eed737475f44715f5ecc6dc059d8d37fb45342"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4484,
+        "y": 6712
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8833693216923,
+        "east": -81.45263671875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/14/4484/6712/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4484/y6712.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 30176,
+      "index_count": 42300,
+      "packet_sha256": "ebe59444d55886dd2653c7380e1fd21bc0d65acfa46951da83d7804bed5cd8e2"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4484,
+        "y": 6713
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8645102262584,
+        "east": -81.45263671875,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/14/4484/6713/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4484/y6713.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34406,
+      "index_count": 47346,
+      "packet_sha256": "0220a061c16291a63d5657c9984bf704ccfd93536a8c17717f4dbb445991ca61"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4484,
+        "y": 6714
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8456474201826,
+        "east": -81.45263671875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/14/4484/6714/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4484/y6714.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 25591,
+      "index_count": 34371,
+      "packet_sha256": "37837e3c5934eb0b2f48a9171e87c42e90d6047b402d6a97026048cd66ad22ea"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4484,
+        "y": 6715
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8267809047798,
+        "east": -81.45263671875,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/14/4484/6715/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4484/y6715.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 10806,
+      "index_count": 13986,
+      "packet_sha256": "ecc277ef6c529d033ff9e9650047b8bdc047621e0f2e4810f98eb67cb2a6807c"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4484,
+        "y": 6716
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8079106813665,
+        "east": -81.45263671875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/14/4484/6716/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4484/y6716.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 8503,
+      "index_count": 10503,
+      "packet_sha256": "63c5c4dbe279fde539caf58d744fe748901676f18ffae880faa682225a530101"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4485,
+        "y": 6712
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8833693216923,
+        "east": -81.4306640625,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/14/4485/6712/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4485/y6712.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 18783,
+      "index_count": 25239,
+      "packet_sha256": "3c092436452ab66207e7e275f1d1e4563ae3be5e6f91d6c2a75fcf0ec424f7b9"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4485,
+        "y": 6713
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8645102262584,
+        "east": -81.4306640625,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/14/4485/6713/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4485/y6713.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17541,
+      "index_count": 23601,
+      "packet_sha256": "396bfa7c1ad0e5fa7ff71c59a025824162d50d429ebdd5c20870bd0842d856ff"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4485,
+        "y": 6714
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8456474201826,
+        "east": -81.4306640625,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/14/4485/6714/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4485/y6714.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 16067,
+      "index_count": 21723,
+      "packet_sha256": "e8062ddbebaa5f2380d5115747afe8956f63377c8601b5d11e234d3eff335dd1"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4485,
+        "y": 6715
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8267809047798,
+        "east": -81.4306640625,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/14/4485/6715/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4485/y6715.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 2799,
+      "index_count": 2799,
+      "packet_sha256": "5ccf4448ff7aa33708c0aa79c5a7bf94a117587589506009500b8689c75c065f"
+    },
+    {
+      "tile": {
+        "z": 14,
+        "x": 4485,
+        "y": 6716
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8079106813665,
+        "east": -81.4306640625,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/14/4485/6716/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z14/x4485/y6716.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 2796,
+      "index_count": 2796,
+      "packet_sha256": "bbf42d35050129340c3e31c91e2bf3a839f96af15f24e638a8588586aeba2d2b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8927974775082,
+        "east": -81.5185546875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 6093,
+      "index_count": 6093,
+      "packet_sha256": "c365028d924cddc7abe5d844b05df9d18aa729798a2ce75647a4e530001b7635"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8833693216923,
+        "east": -81.5185546875,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 6093,
+      "index_count": 6093,
+      "packet_sha256": "5ec9f48c438d295b20b2aed8d66a330e3e79d17cb3fc2e0f69166cadbcdc1d20"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8739402378876,
+        "east": -81.5185546875,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 6093,
+      "index_count": 6093,
+      "packet_sha256": "fda3e0053a2e766a0620e28464c7c2ce5c4b87a51d21b2a22d9d8d0f8a6bae1e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8645102262584,
+        "east": -81.5185546875,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 6093,
+      "index_count": 6093,
+      "packet_sha256": "30b3fdb921bc9f513665d736d8ab644a77b5a0bb7f93bdfc34d98468e8e2f6f9"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8550792869686,
+        "east": -81.5185546875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 12241,
+      "index_count": 15897,
+      "packet_sha256": "e6313fcd04dd80c0c6872f8576132d55e6ee82b569682a538bdd59f2c4d1a748"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8456474201826,
+        "east": -81.5185546875,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 18073,
+      "index_count": 23409,
+      "packet_sha256": "b93bc4f2a597d5547e6c1f91555c44283078dcb19128443cdfd75f369ec8fd76"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8362146260648,
+        "east": -81.5185546875,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 22194,
+      "index_count": 28302,
+      "packet_sha256": "55be774cc7533a259a404508d3f6cb2154f7999d46e1563c57f99eb64d1498ad"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8267809047798,
+        "east": -81.5185546875,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 10518,
+      "index_count": 13698,
+      "packet_sha256": "c7d5d17ebc7f2bc3411b6645619be400b24adfb2f883ad648d675937e2a290d7"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8963,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.529541015625,
+        "south": 30.8173462564921,
+        "east": -81.5185546875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8963/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8963/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 9450,
+      "index_count": 12342,
+      "packet_sha256": "dbcbd27d676b5efbf236d4cceb16c659f7b8d3aefe042b83da650a5ddeefc9c8"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8927974775082,
+        "east": -81.507568359375,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 29598,
+      "index_count": 36354,
+      "packet_sha256": "89035850e941dc87127abb5a8bb0dd6e828f4356501017656251c13ddcaa1a5b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8833693216923,
+        "east": -81.507568359375,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 31365,
+      "index_count": 39225,
+      "packet_sha256": "92228f51e2d75291ae367092d7207ba6bc0fd9eccfee3e1072ef35e0be4ad79e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8739402378876,
+        "east": -81.507568359375,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 33601,
+      "index_count": 42249,
+      "packet_sha256": "6b217f0e00bb5f63883be9ca62b98697dc2367e88f835fd37fc6304b361f0cd6"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8645102262584,
+        "east": -81.507568359375,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34736,
+      "index_count": 41412,
+      "packet_sha256": "3f00f3010cc6175bc505cc52c3d1e9d34daf462eb184d33cbb54bd514b17735a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8550792869686,
+        "east": -81.507568359375,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 39200,
+      "index_count": 47820,
+      "packet_sha256": "befe195dcd8ca2e4921e7ecc041237ba2aeca6018383bf076edb8d629342d544"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8456474201826,
+        "east": -81.507568359375,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 40554,
+      "index_count": 50190,
+      "packet_sha256": "a1a1d86373fa38ebf30e2e7affa11b649063d413f7de60f60ae244337f1ce1be"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8362146260648,
+        "east": -81.507568359375,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 31110,
+      "index_count": 40302,
+      "packet_sha256": "03973ff6161dea4d37b57bef843d6e3da6e6ff10b1b4b49a6f5378c27b7616af"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8267809047798,
+        "east": -81.507568359375,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 19148,
+      "index_count": 25068,
+      "packet_sha256": "7b853d41ceeb0189c82b2e0267888d7520e9b8c6b848c3dc825bf7d351ae04ca"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8964,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.5185546875,
+        "south": 30.8173462564921,
+        "east": -81.507568359375,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8964/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8964/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17285,
+      "index_count": 22629,
+      "packet_sha256": "bf181f5b53828c9c70ffef6b4f75095ac925c480e2dc40c8ceb0960d7f0c8c3b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8927974775082,
+        "east": -81.49658203125,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34317,
+      "index_count": 42153,
+      "packet_sha256": "a8db614d33fcd677bfef5b8602036f902851c544bd976b69f1c78c5fd5ef48bf"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8833693216923,
+        "east": -81.49658203125,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 40260,
+      "index_count": 51648,
+      "packet_sha256": "f65c861a2d569f361851e1582dda566d93f38b33ee43043fd1098b32b02a4a5a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8739402378876,
+        "east": -81.49658203125,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 45180,
+      "index_count": 59724,
+      "packet_sha256": "5b8c56a6b7d5ed3125b63e3ad9dace4eb7310dd5393a630478b1a57f08cf9f5a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8645102262584,
+        "east": -81.49658203125,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 46471,
+      "index_count": 59079,
+      "packet_sha256": "52ea994e589ce3f70752d91e4490f8ab1fc431b598c87c627d8f13fc698af799"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8550792869686,
+        "east": -81.49658203125,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 45236,
+      "index_count": 58284,
+      "packet_sha256": "c6f196336347f0c8d547b632be88284cdeb6de78921850a293b2145f41f6c194"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8456474201826,
+        "east": -81.49658203125,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 44094,
+      "index_count": 57642,
+      "packet_sha256": "a4b70e2c93a5f24336c9555b3379b727851dc6a777926de94a7b519e2dbe7245"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8362146260648,
+        "east": -81.49658203125,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34410,
+      "index_count": 44982,
+      "packet_sha256": "535f20d22a36ba6005a9543d423d1c7026c5e32efc5e1493653c9f7f7705451a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8267809047798,
+        "east": -81.49658203125,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 18964,
+      "index_count": 24168,
+      "packet_sha256": "4d3d794ae54e2439eadb8ce5159cc896c34c4959e12e551cf118dba083ea2ff2"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8965,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.507568359375,
+        "south": 30.8173462564921,
+        "east": -81.49658203125,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8965/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8965/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 15341,
+      "index_count": 19521,
+      "packet_sha256": "d6a317044a9884b0b2472f570f9b9fc1ec0524037c0d8a5e2d408a44d632d964"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8927974775082,
+        "east": -81.485595703125,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 30133,
+      "index_count": 36561,
+      "packet_sha256": "70fb2c4324a8972aebb3de2919b18557c47f9a19a290447e8c3c437e974f451e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8833693216923,
+        "east": -81.485595703125,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34969,
+      "index_count": 44277,
+      "packet_sha256": "4890d35aea4f36d14b4b579490407022f1032675ca0c8f19ed5e44314ff61f24"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8739402378876,
+        "east": -81.485595703125,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 42778,
+      "index_count": 55542,
+      "packet_sha256": "958c1927334777a9d90cbcb0f809a4047d500c2295c009fc15773be66cf8a92a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8645102262584,
+        "east": -81.485595703125,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 45244,
+      "index_count": 54936,
+      "packet_sha256": "0c02c7092b5310b1a85c77eb662ae316118b6c3d379248b02f0c245f02d0436e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8550792869686,
+        "east": -81.485595703125,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 47244,
+      "index_count": 58140,
+      "packet_sha256": "eeeeb5850217b0497fc965eafcfac30240960d4b4f9ea8d09d25c696fca0a314"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8456474201826,
+        "east": -81.485595703125,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 40497,
+      "index_count": 50805,
+      "packet_sha256": "a68e19fad28256c5a6dc7f1f43ba32862c3bba8b6ee435eb77b412c21dff5314"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8362146260648,
+        "east": -81.485595703125,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 31981,
+      "index_count": 41625,
+      "packet_sha256": "b732a4a640501ffec07b25e09fe51117668911d408129b1746318a2eb9f29b5b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8267809047798,
+        "east": -81.485595703125,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 16275,
+      "index_count": 20307,
+      "packet_sha256": "78b784a3f7702e546936a63065c4550eae1ea709f4f27e803fa23b0474922659"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8966,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.49658203125,
+        "south": 30.8173462564921,
+        "east": -81.485595703125,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8966/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8966/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 13374,
+      "index_count": 16662,
+      "packet_sha256": "a58ac59b3ff73b6addbc184980d93e4061648df3fc05eefba1ca3520d38460eb"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8927974775082,
+        "east": -81.474609375,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 29649,
+      "index_count": 36645,
+      "packet_sha256": "90907153004db74c71cda084e0adf2d778bb115de1d35a33913cbba5a772a97a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8833693216923,
+        "east": -81.474609375,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 39701,
+      "index_count": 51369,
+      "packet_sha256": "ec51c69a4cc8fc6600426644b71bf2bb0e058c19855ea70af848a175ac69d82a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8739402378876,
+        "east": -81.474609375,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 45610,
+      "index_count": 60486,
+      "packet_sha256": "1651a2cc5dc109309283658409e341219924c0748720d57fcfda568c7d1cf371"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8645102262584,
+        "east": -81.474609375,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 45414,
+      "index_count": 57930,
+      "packet_sha256": "dd29f2f0d1fc10d0d6f442a24659d05ea161bd4ca3a67497e75e57e7c868fab2"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8550792869686,
+        "east": -81.474609375,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 48345,
+      "index_count": 61773,
+      "packet_sha256": "06c237cf4863ae8b23f70fa2f3c63506da15df9eb75480663cc65c82ef1ac138"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8456474201826,
+        "east": -81.474609375,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 44906,
+      "index_count": 58398,
+      "packet_sha256": "b6cfe7835cfc76fae3f1087f9655a116afdc6496286c83644cc22c3437f0c080"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8362146260648,
+        "east": -81.474609375,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 35616,
+      "index_count": 46332,
+      "packet_sha256": "829bf2c011f24de36b2862e45cb33ded5dac184c7b6e922f04117e6e4a82d5bf"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8267809047798,
+        "east": -81.474609375,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 19979,
+      "index_count": 25299,
+      "packet_sha256": "1bf48ab8fd298096dd65be0c3c6e7a0b805bc5be0f9fa3465279e59bc240d78a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8967,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.485595703125,
+        "south": 30.8173462564921,
+        "east": -81.474609375,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8967/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8967/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 14955,
+      "index_count": 18483,
+      "packet_sha256": "632d93f232025d0aacb7d69f8ddb4a72226cf691c036db88b349702ed41c32fc"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8927974775082,
+        "east": -81.463623046875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17488,
+      "index_count": 23484,
+      "packet_sha256": "97a39eea3a9c6780e38f35a81c832c06f9226b49485e6e918b8a6f684ce8dd06"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8833693216923,
+        "east": -81.463623046875,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 30427,
+      "index_count": 42483,
+      "packet_sha256": "2b6e402e8187a3d8033ccbf373297aaad7730c213cc3615eb4388dbe9469825b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8739402378876,
+        "east": -81.463623046875,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 34873,
+      "index_count": 48117,
+      "packet_sha256": "12916b35cfc62d63d992315a4f8ff55d61224b1da40d12e3f1f190852f7fc720"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8645102262584,
+        "east": -81.463623046875,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 31612,
+      "index_count": 41724,
+      "packet_sha256": "3b647b5f183e8d74b3c44caaf6a21cec98d5085e4ce0feb484d26721c5e7e210"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8550792869686,
+        "east": -81.463623046875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 26565,
+      "index_count": 34605,
+      "packet_sha256": "ab20d3c24e2e6ba65c6e7cd697e359d3886585821d3209944c2807a61e06e16b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8456474201826,
+        "east": -81.463623046875,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 22312,
+      "index_count": 29244,
+      "packet_sha256": "931f8c06e3089666e5a7c2fdc1f99925706cce65d4daaa9b64ceb610eefb1182"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8362146260648,
+        "east": -81.463623046875,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 11609,
+      "index_count": 14997,
+      "packet_sha256": "0e18c2de35746e857ae55488c51f4c7a6f460251ba28f09a1f75bc35c0349c8e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8267809047798,
+        "east": -81.463623046875,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 11380,
+      "index_count": 14628,
+      "packet_sha256": "83e38dca46b76aa8323934fbf7c1d703958f9fde1e04eaa0fa5c15f3abb7dad7"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8968,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.474609375,
+        "south": 30.8173462564921,
+        "east": -81.463623046875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8968/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8968/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 9202,
+      "index_count": 11358,
+      "packet_sha256": "b36b60c370c93164c33e293e11a21556be412c50723e2b62d022237e7194c80b"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8927974775082,
+        "east": -81.45263671875,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 10537,
+      "index_count": 12117,
+      "packet_sha256": "920c0aa736202adde8973e42128ee8b934839ccb88e37ea088c4cd5c5a5f2f77"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8833693216923,
+        "east": -81.45263671875,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 25369,
+      "index_count": 33813,
+      "packet_sha256": "9dbfeb3eed9b2bac7f4ab23ea1d51f4a20f851d042058475715e0879dbb042c2"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8739402378876,
+        "east": -81.45263671875,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 21163,
+      "index_count": 27891,
+      "packet_sha256": "ef98be815b4352f6b8e1e5367a70955a0850d0e224875460c6c70a42850531bf"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8645102262584,
+        "east": -81.45263671875,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 19457,
+      "index_count": 25713,
+      "packet_sha256": "3b25df46eb0668afb3b65dc6ebc51b143be410a94ff349b6bc809030576b7540"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8550792869686,
+        "east": -81.45263671875,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17804,
+      "index_count": 24060,
+      "packet_sha256": "72388c96a719da0222751a197f53c7bdb26eb637812bb75025a1bc7905f18920"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8456474201826,
+        "east": -81.45263671875,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 15259,
+      "index_count": 19479,
+      "packet_sha256": "167ba6f39ba8f3a7312df20d64d55bc5b10c4f944eb3a8e0c345eca64e9a512a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8362146260648,
+        "east": -81.45263671875,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "b16c16067a97c27a1ddbaa47e7731d8ebe1d24f53fe9fbc55ec8a03791732377"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8267809047798,
+        "east": -81.45263671875,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "fae6fdb42e24880b6d2676b731d7dd4d95a1c89d6589ff3b4b7af0cebdc3ba13"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8969,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.463623046875,
+        "south": 30.8173462564921,
+        "east": -81.45263671875,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8969/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8969/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "f8849a193f8087388014519f62b8e29db362c91fc8f403ba98d3f22f9aeedfa1"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13424
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8927974775082,
+        "east": -81.441650390625,
+        "north": 30.9022247051714
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13424/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13424.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 7629,
+      "index_count": 7917,
+      "packet_sha256": "a9dfc9d4abce2626add24c3fc65b4ff1295bba801b9e69ec1884665156b4548c"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13425
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8833693216923,
+        "east": -81.441650390625,
+        "north": 30.8927974775082
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13425/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13425.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 20504,
+      "index_count": 27492,
+      "packet_sha256": "7eeb78c7c4d18bb5ec4d0a9da0263d42d6f152a85d463b868db39bed1f86c79e"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13426
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8739402378876,
+        "east": -81.441650390625,
+        "north": 30.8833693216923
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13426/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13426.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 19667,
+      "index_count": 26475,
+      "packet_sha256": "1f3cfca647cf5134de69506fc4aeeb833fe96873770ddd8d9deb2ddbfa25a21a"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13427
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8645102262584,
+        "east": -81.441650390625,
+        "north": 30.8739402378876
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13427/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13427.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17807,
+      "index_count": 24063,
+      "packet_sha256": "8f260a54ceac239332230b2f2258e5b965d68417975291ea6b1cee284329f278"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13428
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8550792869686,
+        "east": -81.441650390625,
+        "north": 30.8645102262584
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13428/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13428.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 17804,
+      "index_count": 24060,
+      "packet_sha256": "f3eed88e431f5627558d82a730ea0dc5d03384acf5415437149a0c279abf0575"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13429
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8456474201826,
+        "east": -81.441650390625,
+        "north": 30.8550792869686
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13429/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13429.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 15259,
+      "index_count": 19479,
+      "packet_sha256": "544b1c30d264e7c7cca79a7aca781429409ef717bc15eb59e5faa4701e8166c8"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13430
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8362146260648,
+        "east": -81.441650390625,
+        "north": 30.8456474201826
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13430/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13430.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "5ec7c5799f60c601707507dd3d759443ff179ed652b3d9998ef45620781f6444"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13431
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8267809047798,
+        "east": -81.441650390625,
+        "north": 30.8362146260648
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13431/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13431.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "cac78e01e82ea9baa5f921600d2a9b691ec2a341b52cf0c3e42a47e0a26dd235"
+    },
+    {
+      "tile": {
+        "z": 15,
+        "x": 8970,
+        "y": 13432
+      },
+      "geographic_bbox": {
+        "west": -81.45263671875,
+        "south": 30.8173462564921,
+        "east": -81.441650390625,
+        "north": 30.8267809047798
+      },
+      "fixture_relpath": "pyramid/tiles/15/8970/13432/render-artifact.json",
+      "artifact_url": "data/artifacts/us5ga2bc/z15/x8970/y13432.json",
+      "artifact_id": "US5GA2BC-day-standard.webgpu",
+      "vertex_count": 3042,
+      "index_count": 3042,
+      "packet_sha256": "bb6ee4801423efcf475eaba2a557aafbf75d545eedfcbe341cff4fd6b1c5d00e"
+    }
+  ]
+}

@@ -17,7 +17,7 @@ harbour**.
 
 ```
 ENC .000 (S-57)
-   │  scripts/enc-to-render-fixture.py        ← NEW (this task); GDAL/OGR S-57, no s52plib
+   │  scripts/enc-to-render-fixture            ← C++ (engine/vulkan/enc_to_render_fixture.cpp); GDAL/OGR S-57
    ▼
 scene.commands.json (+ source/provenance/manifest)   vulkan.render_scene.v0
    │  scripts/render-model-fixture-export     (existing, unchanged)
@@ -31,7 +31,7 @@ render-artifact.json / .bin                           helm.render.artifact.v1  (
 browser WebGPU layer (chart-artifact-webgpu.js)  +  S-52 atlas colours (chart-artifact-atlas.js)
 ```
 
-`enc-to-render-fixture.py` reads a real cell with GDAL's S-57 driver (no OpenCPN / s52plib
+`scripts/enc-to-render-fixture` reads a real cell with GDAL's S-57 driver (no OpenCPN / s52plib
 engine required) and emits the neutral command stream the existing, already-working
 downstream stages consume unchanged.
 
@@ -57,7 +57,8 @@ depth contours, 130 coastline edges, 92 land areas, 250 soundings, 47 aids →
 
 ![US5GA2BC drawn by the render pipeline](images/rendermodel-3-us5ga2bc.png)
 
-`preview.png` / the image above is produced by `scripts/render-artifact-preview.py`, a CPU
+`preview.png` / the image above is produced by `scripts/render-artifact-preview` (C++,
+`engine/vulkan/render_artifact_preview.cpp`), a CPU reference renderer that proves
 reference renderer that runs the **exact** WGSL projection math (`tileToNdc` web-mercator)
 against the compiled artifact — i.e. what the WebGPU shader draws, without needing a
 WebGPU-capable browser in CI.
@@ -86,7 +87,7 @@ Requires GDAL (S-57 driver) on `PATH` and the ENC cell (e.g.
 `~/.helm/runtime/enc/US5GA2BC/US5GA2BC.000`; NOAA public domain).
 
 ```bash
-scripts/enc-to-render-fixture.py "$ENC" engine/captures/us5ga2bc \
+scripts/enc-to-render-fixture "$ENC" engine/captures/us5ga2bc \
     --cell-id US5GA2BC --pixel-size 2048 --simplify-px 2.0 --half-width-px 1.6
 scripts/render-model-fixture-export engine/captures/us5ga2bc --print-hashes
 scripts/render-artifact-compile     engine/captures/us5ga2bc --print-hashes
@@ -102,7 +103,7 @@ rebuildable and git-ignored in the fixture dir; the committed runtime asset is
 
 * ~~Areas are drawn as **outlines** (convex quads), not filled polygons~~ — **landed in
   RENDERMODEL-4**: DEPARE/LNDARE/DRGARE are now earcut-triangulated **filled** polygons with
-  the S-52 day palette (see `scripts/_earcut.py` and `web/test/rendermodel4-fill-parity.test.cjs`).
+  the S-52 day palette (see `engine/vulkan/earcut.h` / `mapbox_earcut.hpp` and `web/test/rendermodel4-fill-parity.test.cjs`).
 * Colours are approximate S-52 (a small repo-owned atlas), not full S-52 conditional
   symbology; text/soundings render as markers, not glyph labels (the base shader has no glyph
   atlas yet).

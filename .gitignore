@@ -8,8 +8,8 @@ DerivedData/
 .build/
 *.swiftpm/
 
-# Build artifacts
-build/
+# Local ENC pyramid build tree (committed runtime packets live under web/data/artifacts/)
+engine/captures/us5ga2bc/pyramid/tiles/
 dist/
 test-results/
 *.o
