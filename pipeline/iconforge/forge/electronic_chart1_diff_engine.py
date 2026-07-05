@@ -20,6 +20,7 @@ from PIL import Image, ImageChops, ImageStat
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 CATALOG = ROOT / "catalog"
 OPENCPN_JSON = CATALOG / "electronic_chart1_opencpn_reference.json"
 HELM_S57_JSON = CATALOG / "electronic_chart1_helm_s57_render.json"
@@ -112,6 +113,14 @@ def _artifact_path(path: Path) -> str:
         return str(path.relative_to(ROOT))
     except ValueError:
         return str(path)
+
+
+def _rel(path: Path) -> str:
+    """Repo-relative POSIX path so provenance never bakes a build-host absolute path."""
+    try:
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def _open_rgba(path: Path) -> Image.Image:
@@ -441,10 +450,10 @@ def build_diff(
         },
         "thresholds": THRESHOLDS,
         "source": {
-            "opencpn_reference": {"path": str(opencpn_path), "schema": opencpn["schema"], "sha256": _sha256(opencpn_path)},
-            "helm_s57_render": {"path": str(helm_s57_path), "schema": helm_s57["schema"], "sha256": _sha256(helm_s57_path)},
-            "helm_s101_trace": {"path": str(helm_s101_path), "schema": helm_s101["schema"], "sha256": _sha256(helm_s101_path)},
-            "authority_corpus": {"path": str(authority_path), "schema": authority["schema"], "sha256": _sha256(authority_path)},
+            "opencpn_reference": {"path": _rel(opencpn_path), "schema": opencpn["schema"], "sha256": _sha256(opencpn_path)},
+            "helm_s57_render": {"path": _rel(helm_s57_path), "schema": helm_s57["schema"], "sha256": _sha256(helm_s57_path)},
+            "helm_s101_trace": {"path": _rel(helm_s101_path), "schema": helm_s101["schema"], "sha256": _sha256(helm_s101_path)},
+            "authority_corpus": {"path": _rel(authority_path), "schema": authority["schema"], "sha256": _sha256(authority_path)},
             "diff_output_dir": _artifact_path(out_dir),
         },
         "summary": summary,

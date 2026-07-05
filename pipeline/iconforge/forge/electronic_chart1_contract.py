@@ -19,6 +19,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 DB_PATH = ROOT.parent.parent / "artifacts" / "opencpn_s52_portrayal.sqlite"
 CATALOG = ROOT / "catalog"
 CONTRACT_JSON = CATALOG / "electronic_chart1_contract.json"
@@ -41,6 +42,14 @@ def _sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _rel(path: Path) -> str:
+    """Repo-relative POSIX path so provenance never bakes a build-host absolute path."""
+    try:
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def _connect(db_path: Path) -> sqlite3.Connection:
@@ -127,7 +136,7 @@ def build_contract(*, db_path: Path = DB_PATH, limit: int | None = None) -> dict
             "clean_room_boundary": "metadata/proof contract only; no bundled IHO/OpenCPN artwork",
         },
         "source": {
-            "db_path": str(db_path),
+            "db_path": _rel(db_path),
             "db_sha256": _sha256(db_path),
             "view": "electronic_chart1_entry_v1",
             "generator": "scripts/augment-opencpn-s52-s101-semantics.py",

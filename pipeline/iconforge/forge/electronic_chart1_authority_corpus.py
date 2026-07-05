@@ -17,6 +17,7 @@ from typing import Any
 
 
 ROOT = Path(__file__).resolve().parent.parent
+REPO_ROOT = ROOT.parent.parent
 CATALOG = ROOT / "catalog"
 CONTRACT_JSON = CATALOG / "electronic_chart1_contract.json"
 FIXTURES_JSON = CATALOG / "electronic_chart1_fixtures.json"
@@ -35,6 +36,14 @@ def _canonical_json(payload: dict[str, Any]) -> str:
 def _write_json(path: Path, payload: dict[str, Any]) -> None:
     path.parent.mkdir(parents=True, exist_ok=True)
     path.write_text(_canonical_json(payload))
+
+
+def _rel(path: Path) -> str:
+    """Repo-relative POSIX path so provenance never bakes a build-host absolute path."""
+    try:
+        return path.resolve().relative_to(REPO_ROOT).as_posix()
+    except ValueError:
+        return path.as_posix()
 
 
 def _sha256(path: Path) -> str:
@@ -448,11 +457,11 @@ def build_corpus(
             "clean_room_boundary": "Authority text is generated from backend metadata/proof artifacts; comparison references are not bundled Helm source artwork.",
         },
         "source": {
-            "contract": {"path": str(contract_path), "schema": contract["schema"], "sha256": _sha256(contract_path)},
-            "fixtures": {"path": str(fixtures_path), "schema": fixtures["schema"], "sha256": _sha256(fixtures_path)},
-            "opencpn_reference": {"path": str(opencpn_path), "schema": opencpn["schema"], "sha256": _sha256(opencpn_path)},
-            "helm_s57_render": {"path": str(helm_s57_path), "schema": helm_s57["schema"], "sha256": _sha256(helm_s57_path)},
-            "helm_s101_trace": {"path": str(helm_s101_path), "schema": helm_s101["schema"], "sha256": _sha256(helm_s101_path)},
+            "contract": {"path": _rel(contract_path), "schema": contract["schema"], "sha256": _sha256(contract_path)},
+            "fixtures": {"path": _rel(fixtures_path), "schema": fixtures["schema"], "sha256": _sha256(fixtures_path)},
+            "opencpn_reference": {"path": _rel(opencpn_path), "schema": opencpn["schema"], "sha256": _sha256(opencpn_path)},
+            "helm_s57_render": {"path": _rel(helm_s57_path), "schema": helm_s57["schema"], "sha256": _sha256(helm_s57_path)},
+            "helm_s101_trace": {"path": _rel(helm_s101_path), "schema": helm_s101["schema"], "sha256": _sha256(helm_s101_path)},
         },
         "global_language": _global_language(),
         "summary": summary,
