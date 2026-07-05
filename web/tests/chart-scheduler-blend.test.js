@@ -63,7 +63,7 @@ async function main() {
     const blend = new ctx.HelmChartSchedulerBlend(fakeMap(), { getGpuLayer: () => null }, {});
     const keyWest = S.deg2num(-81.8, 24.5, 12);
     const art = await blend._fetchArtifactForEntry({ tile: { z: 12, x: keyWest[0], y: keyWest[1] } });
-    assert.strictEqual(art.viewport.west, -81.805);
+    assert.strictEqual(art.viewport.west != null ? art.viewport.west : art.viewport.geographic_bbox.west, -81.805);
     assert.strictEqual(art.viewport.pixel_width, 8);
 
     const fiji = S.deg2num(177.4, -17.7, 12);

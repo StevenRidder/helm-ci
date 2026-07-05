@@ -761,7 +761,8 @@
 <script src="chart-artifact-webgpu.js"></script><!-- WEBGPU-1/2 + SCHED-2 composite draw (visible MapLibre enc-chart fallback) -->
 <script src="chart-viewport-scheduler.js"></script><!-- SCHED-1 browser scheduler client -->
 <script src="chart-artifact-cache.js"></script><!-- SCHED-2: artifact cache keyed by scheduler hints -->
-<script src="chart-scheduler-blend.js"></script><!-- SCHED-2: prefetch + zoom blend orchestration -->
+<script src="chart-scheduler-artifact-index.js"></script><!-- SCHED-3: live pyramid index resolver -->
+<script src="chart-scheduler-blend.js"></script><!-- SCHED-2/3: prefetch + zoom blend orchestration -->
 <script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
 <script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
 <script src="chart-renderer-status.js"></script><!-- INTEGRATE-1: WebGPU renderer status + feature flag surface -->
@@ -1117,13 +1118,32 @@
           }
         } catch (e) {}
       }
-      var sched2On = window.HELM_SCHED2 === true ||
+      var sched3On = window.HELM_SCHED3 === true ||
+        (typeof localStorage !== 'undefined' && localStorage.getItem('helmSched3') === '1');
+      var sched2On = sched3On || window.HELM_SCHED2 === true ||
         (typeof localStorage !== 'undefined' && localStorage.getItem('helmSched2') === '1');
+      function bootSchedulerBlend() {
+        var blendOpts = { packetUrl: helmChartUrl };
+        if (sched3On && window.HelmChartSchedulerArtifactIndex) {
+          var artifactIndex = new HelmChartSchedulerArtifactIndex({
+            indexUrl: '/artifact/index.json',
+            staticFallbackUrl: helmChartIsRealCell ? 'data/render-artifact-index-us5ga2bc.json' : null
+          });
+          return artifactIndex.load().then(function (idx) {
+            window.__helmChartSchedulerArtifactIndex = artifactIndex;
+            blendOpts.source_epoch = idx.source_epoch;
+            blendOpts.artifactIndex = artifactIndex;
+            blendOpts.liveMode = true;
+            blendOpts.renderer_sha = 'rendermodel5-pyramid';
+            window.__helmChartSchedulerBlend = new HelmChartSchedulerBlend(map, chartArtifact, blendOpts);
+            return window.__helmChartSchedulerBlend.init();
+          });
+        }
+        window.__helmChartSchedulerBlend = new HelmChartSchedulerBlend(map, chartArtifact, blendOpts);
+        return window.__helmChartSchedulerBlend.init();
+      }
       if (sched2On && window.HelmChartSchedulerBlend) {
-        window.__helmChartSchedulerBlend = new HelmChartSchedulerBlend(map, chartArtifact, {
-          packetUrl: helmChartUrl
-        });
-        window.__helmChartSchedulerBlend.init().catch(function (err) {
+        bootSchedulerBlend().catch(function (err) {
           console.warn('[chart-scheduler-blend] init failed:', err && err.message ? err.message : err);
         });
       }
