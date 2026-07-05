@@ -7,6 +7,7 @@ from typing import Any, Callable, Dict, Optional
 
 import store
 from agents import get_weather
+from engine_client import tides_summary_provider
 
 from probe_contract import LayerSample, ProbeLayer, ProbeRegistry, SampleRequest
 
@@ -192,43 +193,103 @@ class AISProbeLayer(ProbeLayer):
 
 class TidesProbeLayer(ProbeLayer):
     layer_id = "tides"
-    product_id = "tides.contract.pending"
-    dataset_name = "Tides and currents sample face"
-    producer = "Helm TIDES"
+    product_id = "tides.opencpn-harmonic.summary"
+    dataset_name = "Nearest-station tide prediction"
+    producer = "Helm helm-server / OpenCPN TCMgr"
+
+    def __init__(self, tides_provider=tides_summary_provider()):
+        self.tides_provider = tides_provider
 
     def sample(self, req: SampleRequest) -> LayerSample:
+        summary = self.tides_provider(req.lat, req.lon, req.t)
+        if not summary.get("ok"):
+            error = summary.get("error") or "tide summary unavailable"
+            return LayerSample(
+                layer=self.layer_id,
+                status="not_available",
+                value={
+                    "error": error,
+                    "engineUrl": summary.get("engineUrl"),
+                    "note": "Engine tide summary unavailable; verify helm-server is running.",
+                },
+                unit="m",
+                source="engine",
+                source_ref=_source_ref(
+                    self.product_id,
+                    self.dataset_name,
+                    self.producer,
+                    title="Helm helm-server tides",
+                    url=summary.get("engineUrl"),
+                    trace=summary.get("trace", "backend.engine_client.get_tides_summary"),
+                ),
+                freshness="unavailable",
+                valid_time=req.t,
+                confidence="none",
+                horizon="requires live helm-server /tides/summary",
+                coverage={"status": "not_available"},
+                trace="probe:tides",
+                not_for_navigation=True,
+                disclaimer=SUPPLEMENTAL,
+                note=error,
+            )
+
+        station = summary.get("station") or {}
+        confidence = summary.get("confidence") or {}
+        next_event = summary.get("next_event") or {}
+        station_name = station.get("name") or station.get("reference") or "nearest station"
+        value = {
+            "valueM": summary.get("value_m"),
+            "directionDeg": summary.get("direction_deg"),
+            "hasDirection": summary.get("has_direction"),
+            "timeUtc": summary.get("time_utc"),
+            "station": station,
+            "nextEvent": next_event if next_event.get("ok") else None,
+            "confidence": confidence,
+            "engine": summary.get("engine"),
+            "sourcePolicy": summary.get("source_policy"),
+            "note": "Engine-backed harmonic tide prediction; verify datum and station on official publications.",
+        }
         return LayerSample(
             layer=self.layer_id,
-            status="not_implemented",
-            value=None,
-            source="pending",
+            status="ok",
+            value=value,
+            unit="m",
+            source="engine",
             source_ref=_source_ref(
                 self.product_id,
                 self.dataset_name,
                 self.producer,
-                title="Helm TIDES",
-                trace="TIDES sample(point,time) adapter pending",
+                title=station_name,
+                url=summary.get("engineUrl"),
+                trace=summary.get("trace", "helm-server:/tides/summary"),
+                stationIndex=station.get("index"),
+                stationSource=station.get("source"),
             ),
-            freshness="not_available",
-            valid_time=req.t,
-            confidence="none",
-            horizon="pending TIDES sample adapter",
-            coverage={"status": "not_available"},
+            freshness=summary.get("time_utc") or "engine-live",
+            valid_time=summary.get("time_utc") or req.t,
+            confidence=confidence.get("tier") or "engine",
+            horizon="harmonic prediction at requested valid time",
+            coverage={
+                "status": "nearest-station",
+                "distanceNm": station.get("distance_nm"),
+            },
             trace="probe:tides",
             not_for_navigation=True,
             disclaimer=SUPPLEMENTAL,
-            note="Tides sample face is registered but not implemented yet.",
         )
 
 
-def build_default_registry(weather_provider: Callable[[float, float], dict] = get_weather) -> ProbeRegistry:
+def build_default_registry(
+    weather_provider: Callable[[float, float], dict] = get_weather,
+    tides_provider=tides_summary_provider(),
+) -> ProbeRegistry:
     registry = ProbeRegistry()
     for layer in (
         WeatherProbeLayer(weather_provider),
         ClimateProbeLayer(),
         DepthProbeLayer(),
         AISProbeLayer(),
-        TidesProbeLayer(),
+        TidesProbeLayer(tides_provider),
     ):
         registry.register(layer)
     return registry

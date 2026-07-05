@@ -12,6 +12,10 @@ from probe_contract import LayerSample, ProbeContractError, ProbeLayer, ProbeReg
 from probe_layers import build_default_registry
 
 
+def build_test_registry():
+    return build_default_registry(fake_weather, tides_provider=lambda lat, lon, t=None: fake_tides(lat, lon, t))
+
+
 def fake_weather(lat, lon):
     return {
         "source": "Open-Meteo",
@@ -29,17 +33,53 @@ def fake_weather(lat, lon):
     }
 
 
+def fake_tides(lat, lon, t=None):
+    return {
+        "ok": True,
+        "engine": "opencpn-tcmgr",
+        "source_policy": "redistributable-only",
+        "time_utc": t or "2026-06-29T03:00:00Z",
+        "lat": lat,
+        "lon": lon,
+        "value_m": 1.42,
+        "has_direction": False,
+        "direction_deg": None,
+        "station": {
+            "index": 12,
+            "name": "Key West",
+            "reference": "Key West",
+            "lat": 24.553,
+            "lon": -81.808,
+            "distance_nm": 1.6,
+            "source": "harmonic",
+        },
+        "confidence": {
+            "tier": "medium",
+            "score": 0.72,
+            "summary": "Nearest harmonic station within 2 nm",
+        },
+        "next_event": {
+            "ok": True,
+            "kind": "high",
+            "event_utc": "2026-06-29T14:22:00Z",
+            "value_m": 1.8,
+        },
+        "engineUrl": "http://127.0.0.1:8080",
+        "trace": "helm-server:/tides/summary",
+    }
+
+
 class ProbeContractTest(unittest.TestCase):
     def test_default_registry_exposes_required_probe_faces(self):
-        registry = build_default_registry(fake_weather)
+        registry = build_test_registry()
         registry.require(["weather", "climate", "depth", "ais", "tides"])
         self.assertEqual(registry.layer_ids(), ["ais", "climate", "depth", "tides", "weather"])
         metadata = {item["layer"]: item for item in registry.metadata()}
         self.assertEqual(metadata["weather"]["productId"], "weather.open-meteo.forecast")
-        self.assertEqual(metadata["tides"]["datasetName"], "Tides and currents sample face")
+        self.assertEqual(metadata["tides"]["productId"], "tides.opencpn-harmonic.summary")
 
     def test_samples_have_required_provenance_and_status(self):
-        registry = build_default_registry(fake_weather)
+        registry = build_test_registry()
         samples = registry.sample_many(
             ["weather", "depth", "ais", "climate", "tides"],
             24.553,
@@ -58,8 +98,10 @@ class ProbeContractTest(unittest.TestCase):
         self.assertEqual(samples["depth"]["unit"], "m")
         self.assertGreater(samples["ais"]["value"]["count"], 0)
         self.assertEqual(samples["climate"]["status"], "not_implemented")
-        self.assertEqual(samples["tides"]["status"], "not_implemented")
-        self.assertIn("not implemented", samples["tides"]["note"])
+        self.assertEqual(samples["tides"]["status"], "ok")
+        self.assertEqual(samples["tides"]["value"]["valueM"], 1.42)
+        self.assertEqual(samples["tides"]["sourceRef"]["producer"], "Helm helm-server / OpenCPN TCMgr")
+        self.assertEqual(samples["tides"]["coverage"]["status"], "nearest-station")
 
     def test_registry_rejects_layers_without_contract(self):
         registry = ProbeRegistry()
@@ -85,7 +127,7 @@ class ProbeContractTest(unittest.TestCase):
 
     def test_context_resolver_attaches_sample_envelopes(self):
         original = context.PROBES
-        context.PROBES = build_default_registry(fake_weather)
+        context.PROBES = build_test_registry()
         try:
             ctx = context.resolve_context(
                 24.553,
@@ -101,7 +143,19 @@ class ProbeContractTest(unittest.TestCase):
         self.assertEqual(ctx["layers"]["weather"]["atTime"]["windKt"], 15)
         self.assertIsNotNone(ctx["layers"]["depth"]["nearestChartedM"])
         self.assertEqual(ctx["layers"]["ais"]["sample"]["trace"], "probe:ais")
-        self.assertEqual(ctx["layers"]["tides"]["sample"]["status"], "not_implemented")
+        self.assertEqual(ctx["layers"]["tides"]["sample"]["status"], "ok")
+        self.assertEqual(ctx["layers"]["tides"]["valueM"], 1.42)
+        self.assertEqual(ctx["layers"]["tides"]["nextEvent"]["kind"], "high")
+
+    def test_tides_face_degrades_honestly_when_engine_unavailable(self):
+        def broken_tides(lat, lon, t=None):
+            return {"ok": False, "error": "connection refused", "engineUrl": "http://127.0.0.1:8080"}
+
+        registry = build_default_registry(fake_weather, tides_provider=broken_tides)
+        sample = registry.sample("tides", 24.553, -81.782, "2026-06-29T03:00")
+        self.assertEqual(sample["status"], "not_available")
+        self.assertIn("connection refused", sample["note"])
+        self.assertEqual(sample["sourceRef"]["trace"], "backend.engine_client.get_tides_summary")
 
 
 if __name__ == "__main__":

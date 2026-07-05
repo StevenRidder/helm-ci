@@ -82,7 +82,8 @@ def resolve_context(lat, lon, t=None, boat=None, radius_nm=15, nfl_enabled=False
 
     if on("tides"):
         sample = PROBES.sample("tides", lat, lon, t)
-        L["tides"] = {"sample": sample_metadata(sample), "note": sample.get("note")}
+        value = sample.get("value") or {}
+        L["tides"] = dict(value, sample=sample_metadata(sample), note=sample.get("note"))
 
     if on("chart"):
         L["chart"] = {"note": "Cross-reference the S-52 chart for depth, contours and hazards here.",

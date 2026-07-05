@@ -67,11 +67,12 @@ registers a `ProbeLayer` and returns a validated `LayerSample` with:
   `out_of_coverage`, or `error`
 
 `probe_layers.py` registers the current backend faces for weather, climate,
-depth, AIS, and tides. The tides face is intentionally registered as
-`not_implemented`, so missing data is visible and testable instead of silently
-dropping from the fused context. `context.resolve_context` keeps its existing
-layer payload shape and adds a nested `sample` provenance envelope to each
-probeable layer.
+depth, AIS, and tides. Tides samples call optional `helm-server`
+`/tides/summary` via `engine_client.py` (`HELM_ENGINE_URL`, default
+`http://127.0.0.1:8080`) and degrade to `not_available` when the engine is
+absent. Climate remains explicitly `not_implemented` until AI-15 wires live
+climatology. `context.resolve_context` keeps its existing layer payload shape
+and adds a nested `sample` provenance envelope to each probeable layer.
 
 ## Advisory guardrails
 
