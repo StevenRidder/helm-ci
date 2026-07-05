@@ -164,6 +164,12 @@ Use `StevenRidder/helm-ci` for the full actual code tree and full CI; use
 `StevenRidder/helm-public` only for the scrubbed external snapshot
 (`scripts/publish-public-mirror.sh`).
 
+For the current publish policy and symbol-review site plan, see:
+
+- [PUBLIC-MIRROR-POLICY.md](PUBLIC-MIRROR-POLICY.md)
+- [PUBLIC-SYMBOL-PUBLISHING.md](PUBLIC-SYMBOL-PUBLISHING.md)
+- [OPENCPN-CORE-SYMBOL-INTEGRATION.md](OPENCPN-CORE-SYMBOL-INTEGRATION.md)
+
 If you are reading the public mirror, you do not need private publish tooling to
 contribute. Open issues and pull requests against the public repo with small,
 reviewable changes and clear verification notes.

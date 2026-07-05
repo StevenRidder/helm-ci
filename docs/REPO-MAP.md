@@ -18,7 +18,6 @@ Use this as the quick orientation guide for the public alpha.
 | `docs/decisions/` | ADRs | architecture decision records that are public-safe |
 | `.github/workflows/` | CI | web, engine, backend, HELMC++, symbol-selection gates |
 | `scripts/ci-sandbox.sh` | CI sandbox | push full-tree branches to public `helm-ci` before Helm PRs |
-| `AGENTS.md` | agent contract | root startup rules, Switchboard discipline, full-tree CI requirement |
 | [docs/CI-SANDBOX.md](CI-SANDBOX.md) | CI sandbox docs | `helm-ci` vs `helm-public`, agent loop |
 | `.github/ISSUE_TEMPLATE/` | issue intake | bug reports, alpha tests, contribution tasks |
 
@@ -32,6 +31,9 @@ Use this as the quick orientation guide for the public alpha.
 | Check alpha readiness | [docs/PROJECT-STATUS.md](PROJECT-STATUS.md) |
 | Work on chart data | [docs/CHART-PIPELINE.md](CHART-PIPELINE.md) |
 | Work on OpenCPN reuse | [docs/OPENCPN-REUSE.md](OPENCPN-REUSE.md) |
+| Review public mirror policy | [docs/PUBLIC-MIRROR-POLICY.md](PUBLIC-MIRROR-POLICY.md) |
+| Review public symbol publishing | [docs/PUBLIC-SYMBOL-PUBLISHING.md](PUBLIC-SYMBOL-PUBLISHING.md) |
+| Review OpenCPN symbol integration | [docs/OPENCPN-CORE-SYMBOL-INTEGRATION.md](OPENCPN-CORE-SYMBOL-INTEGRATION.md) |
 | Review the Helm/WebGPU renderer path | [docs/VULKAN-HELM-WEBGPU-PROOF.md](VULKAN-HELM-WEBGPU-PROOF.md) |
 | Work on streaming clients | [docs/STREAMING-API.md](STREAMING-API.md) |
 | Check licensing boundaries | [docs/LEGAL.md](LEGAL.md) |

@@ -1,0 +1,39 @@
+name: Public Symbol Catalog Pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "pipeline/iconforge/public/**"
+      - ".github/workflows/public-symbol-pages.yml"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: "public-symbol-pages"
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Configure Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+      - name: Upload symbol catalog
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: pipeline/iconforge/public
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v4

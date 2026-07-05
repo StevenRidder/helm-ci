@@ -109,9 +109,9 @@ Helm PR cannot merge.
 
 ## Switchboard agents
 
-Switchboard (`plan.taikunai.com` / `taikun-plan` MCP) coordinates tasks; it does
-**not** run GitHub Actions. The merge webhook on **`StevenRidder/Helm`** still
-marks tasks Done (`github_pr_merged`).
+The private planning board coordinates tasks; it does **not** run GitHub Actions.
+The merge webhook on **`StevenRidder/Helm`** still marks tasks Done
+(`github_pr_merged`).
 
 Agent flow:
 
