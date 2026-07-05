@@ -78,6 +78,8 @@
     healthUrl: () => cur.healthUrl(),
     origin: () => cur.origin(),
     describe: () => cur.describe(),
+    // CONTRACT-15: attach paired token to same-origin artifact routes (SCHED-3).
+    authUrl: (path) => withTok(path),
     refresh: () => { cur = resolve(); return cur.describe(); },
     // CONTRACT-14 (TOFU pairing): the bearer token + pinned cert fingerprint a paired client holds.
     // Stored in localStorage on a successful pair(); CONTRACT-15 attaches token() to /nav + tile requests.

@@ -24,25 +24,35 @@
   }
 
   HelmChartSchedulerBlend.prototype._scheduleOpts = function () {
+    var idx = this.opts.artifactIndex && this.opts.artifactIndex._index;
     return {
-      source_epoch: this.opts.source_epoch || 'synthetic-chart-1@2026-06-28',
+      source_epoch: this.opts.source_epoch || (idx && idx.source_epoch) || 'synthetic-chart-1@2026-06-28',
       display_fingerprint: this.opts.display_fingerprint || 'day:standard:10:5:10:20:text:on:soundings:on',
       renderer_sha: this.opts.renderer_sha || 'fixture-renderer-sha'
     };
   };
 
   HelmChartSchedulerBlend.prototype._artifactUrlForEntry = function (entry) {
-    if (this.opts.artifactUrlForEntry) return this.opts.artifactUrlForEntry(entry);
+    if (this.opts.artifactUrlForEntry) {
+      var custom = this.opts.artifactUrlForEntry(entry);
+      if (custom) return custom;
+    }
+    if (this.opts.artifactIndex) {
+      var liveUrl = this.opts.artifactIndex.urlForEntry(entry);
+      if (liveUrl) return liveUrl;
+      return null;
+    }
     return this.opts.packetUrl || 'data/render-artifact-chart-1.json';
   };
 
   function bboxFromViewport(vp) {
     if (!vp) return null;
+    var geo = vp.geographic_bbox || vp;
     var box = {
-      west: +vp.west,
-      south: +vp.south,
-      east: +vp.east,
-      north: +vp.north
+      west: +(geo.west != null ? geo.west : vp.west),
+      south: +(geo.south != null ? geo.south : vp.south),
+      east: +(geo.east != null ? geo.east : vp.east),
+      north: +(geo.north != null ? geo.north : vp.north)
     };
     if (!Number.isFinite(box.west) || !Number.isFinite(box.south) ||
         !Number.isFinite(box.east) || !Number.isFinite(box.north)) return null;
@@ -66,12 +76,37 @@
     return bboxIntersects(bboxFromViewport(artifact && artifact.viewport), bboxFromViewport(viewport));
   }
 
+  HelmChartSchedulerBlend.prototype._artifactFetchHeaders = function (entry) {
+    var headers = {};
+    if (this.opts.artifactIndex) {
+      var idxEntry = this.opts.artifactIndex.lookup(entry.tile);
+      if (idxEntry && idxEntry.packet_sha256) {
+        headers['If-None-Match'] = '"artifact:' + idxEntry.packet_sha256 + '"';
+        return headers;
+      }
+    }
+    var cached = this.cache.get(entry.cache_key);
+    if (cached && cached.artifact && cached.artifact.checksums &&
+        cached.artifact.checksums.packet_sha256) {
+      headers['If-None-Match'] = '"artifact:' + cached.artifact.checksums.packet_sha256 + '"';
+    }
+    return headers;
+  };
+
   HelmChartSchedulerBlend.prototype._fetchArtifactForEntry = function (entry) {
     var self = this;
     var url = this._artifactUrlForEntry(entry);
-    return fetch(url, { cache: 'no-cache' })
+    if (!url) return Promise.resolve(null);
+    if (global.HelmEndpoint && global.HelmEndpoint.authUrl) url = global.HelmEndpoint.authUrl(url);
+    var headers = this._artifactFetchHeaders(entry);
+    return fetch(url, { cache: 'no-cache', headers: headers })
       .then(function (r) {
-        if (!r.ok) throw new Error('artifact HTTP ' + r.status);
+        if (r.status === 304) {
+          var row = self.cache.get(entry.cache_key);
+          if (row && row.artifact) return row.artifact;
+          throw new Error('artifact 304 without cached packet for ' + url);
+        }
+        if (!r.ok) throw new Error('artifact HTTP ' + r.status + ' for ' + url);
         return r.json();
       })
       .then(function (json) {
@@ -110,9 +145,26 @@
     });
   };
 
+  HelmChartSchedulerBlend.prototype._collectMissingPackets = function (response) {
+    var self = this;
+    var missing = [];
+    if (!this.opts.liveMode) return missing;
+    (response.entries || []).forEach(function (entry) {
+      if (entry.role !== 'visible') return;
+      if (self.cache.get(entry.cache_key)) return;
+      missing.push({
+        tile: entry.tile,
+        cache_key: entry.cache_key,
+        reason: 'server packet missing or fetch failed'
+      });
+    });
+    return missing;
+  };
+
   HelmChartSchedulerBlend.prototype._applyDraw = function (response) {
     if (this._destroyed || !this.chartLayer) return;
     var cover = this.cache.coveringDrawEntries(response);
+    var missingPackets = this._collectMissingPackets(response);
     var gpu = this.chartLayer.getGpuLayer && this.chartLayer.getGpuLayer();
     if (gpu && gpu.setCompositeEntries) {
       gpu.setCompositeEntries(cover.entries, {
@@ -126,7 +178,9 @@
       request: this._lastRequest,
       response: response,
       cache: this.cache.snapshot(),
-      strictMissing: cover.strictMissing
+      strictMissing: cover.strictMissing,
+      missing_packets: missingPackets,
+      missing_reason: missingPackets.length ? missingPackets[0].reason : ''
     };
     if (global.HelmChartRendererStatus && global.HelmChartRendererStatus.publish) {
       global.HelmChartRendererStatus.publish();

@@ -47,9 +47,12 @@
     if (!s) return null;
     return {
       cache_epoch: (s.response && s.response.cache_epoch) || '',
+      source_epoch: (s.response && s.response.source_epoch) || '',
       visible_tiles: (s.response && s.response.totals && s.response.totals.visible) || 0,
       cache_size: (s.cache && s.cache.size) || 0,
-      strict_missing: !!s.strictMissing
+      strict_missing: !!s.strictMissing,
+      missing_packets: s.missing_packets || [],
+      missing_reason: s.missing_reason || ''
     };
   }
 
@@ -71,7 +74,10 @@
       artifact: artifactBlock(art),
       atlas: global.__helmChartAtlas || null,
       scheduler: schedulerBlock(),
-      sched2_enabled: !!global.__helmChartSchedulerBlend
+      sched2_enabled: !!global.__helmChartSchedulerBlend,
+      sched3_enabled: !!global.__helmChartSchedulerArtifactIndex,
+      artifact_index: global.__helmChartSchedulerArtifactIndex
+        ? global.__helmChartSchedulerArtifactIndex.snapshot() : null
     };
   }
 
@@ -123,7 +129,9 @@
       ['Chart epoch', art.chart_epoch || 'not reported'],
       ['Invalidation epoch', art.invalidation_epoch || 'not reported'],
       ['Packet SHA-256', shortSha(art.packet_sha256) || 'not loaded'],
-      ['Scheduler cache', st.scheduler ? String(st.scheduler.cache_size) + ' entries' : 'not active']
+      ['Scheduler cache', st.scheduler ? String(st.scheduler.cache_size) + ' entries' : 'not active'],
+      ['Live scheduler', st.sched3_enabled ? 'SCHED-3 (server artifacts)' : (st.sched2_enabled ? 'SCHED-2 (fixture)' : 'off')],
+      ['Missing packets', st.scheduler && st.scheduler.missing_reason ? st.scheduler.missing_reason : '(none)']
     ];
     var detail = host.querySelector('.cr-detail');
     if (detail) {

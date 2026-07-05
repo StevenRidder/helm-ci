@@ -6,6 +6,8 @@
 //
 //   ws   /nav                       OpenCPN model/ nav — snapshot+delta, seq, ~1 Hz
 //   GET  /chart/{z}/{x}/{y}.png      S-52 ENC tiles (immutable-cached)  [helm_tiles path]
+//   GET  /artifact/index.json        render-artifact pyramid index for loaded ENC cell (SCHED-3)
+//   GET  /artifact/{z}/{x}/{y}.json  per-tile WebGPU artifact packets (immutable ETag/304)
 //   GET  /health  /catalog          liveness + chart catalog
 //   GET  /* (anything else)         the Helm UI, served from HELM_WEB_ROOT
 //
@@ -2393,6 +2395,65 @@ static std::string header_safe(std::string s) {
   return s;
 }
 
+// SCHED-3: server-fed render-artifact packets keyed by tile (mirror PNG tile addressing).
+static std::string artifact_tile_file_path(int z, long x, long y) {
+  if (g_cell_name.empty() || g_cell_name == "no-enc") return {};
+  std::ostringstream oss;
+  oss << g_webroot << "/data/artifacts/" << lower_ascii(g_cell_name)
+      << "/z" << z << "/x" << x << "/y" << y << ".json";
+  return oss.str();
+}
+
+static std::string artifact_index_file_path() {
+  if (g_cell_name.empty() || g_cell_name == "no-enc") return {};
+  return g_webroot + "/data/render-artifact-index-" + lower_ascii(g_cell_name) + ".json";
+}
+
+static bool read_file_to_string(const std::string& path, std::string& body) {
+  std::ifstream f(path, std::ios::binary);
+  if (!f) return false;
+  std::ostringstream ss; ss << f.rdbuf();
+  body = ss.str();
+  return true;
+}
+
+static std::string artifact_packet_sha256_from_json(const std::string& body) {
+  const char* key = "\"packet_sha256\":\"";
+  const size_t pos = body.find(key);
+  if (pos == std::string::npos) return {};
+  const size_t start = pos + std::strlen(key);
+  if (start + 64 > body.size()) return {};
+  const std::string hex = body.substr(start, 64);
+  for (char c : hex) {
+    if (!std::isxdigit(static_cast<unsigned char>(c))) return {};
+  }
+  return hex;
+}
+
+static ix::HttpResponsePtr serve_render_artifact_file(ix::WebSocketHttpHeaders h,
+                                                    const std::string& file_path,
+                                                    const ix::HttpRequestPtr& req) {
+  std::string body;
+  if (!read_file_to_string(file_path, body)) {
+    h["Content-Type"] = "application/json";
+    h["Cache-Control"] = "no-store";
+    h["X-Helm-Artifact-Status"] = "missing";
+    return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h,
+      std::string("{\"ok\":false,\"error\":\"artifact packet not found\"}"));
+  }
+  const std::string packet_sha = artifact_packet_sha256_from_json(body);
+  const std::string sha = packet_sha.empty() ? sha256_hex(body) : packet_sha;
+  const std::string etag = "\"artifact:" + sha + "\"";
+  h["Content-Type"] = "application/json";
+  h["Cache-Control"] = "public, max-age=31536000, immutable";
+  h["ETag"] = etag;
+  h["X-Helm-Artifact-Sha"] = sha;
+  h["X-Helm-Artifact-Status"] = "ok";
+  if (header_ci(req->headers, "If-None-Match") == etag)
+    return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
+  return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, body);
+}
+
 static bool png_signature_ok(const std::string& bytes) {
   static const unsigned char sig[8] = {0x89, 'P', 'N', 'G', '\r', '\n', 0x1a, '\n'};
   return bytes.size() >= sizeof(sig) &&
@@ -4246,7 +4307,7 @@ public:
         ix::WebSocketHttpHeaders h; h["Access-Control-Allow-Origin"] = "*";
         const std::string path = req->uri.substr(0, req->uri.find('?'));   // route on the PATH — a ?token= query must not break exact-match routes
         if (g_require_auth) {                        // CONTRACT-15: gate chart tiles + catalog on a paired token (UI/health/pair stay open)
-          bool prot = (path.rfind("/chart/", 0) == 0) || (path == "/catalog");
+          bool prot = (path.rfind("/chart/", 0) == 0) || (path.rfind("/artifact/", 0) == 0) || (path == "/catalog");
           if (prot && token_role(extract_token(req->uri, req->headers)).empty()) {
             h["Content-Type"] = "application/json";
             return std::make_shared<ix::HttpResponse>(401, "Unauthorized", ix::HttpErrorCode::Ok, h, std::string("{\"ok\":false,\"error\":\"unauthorized — pair first\"}"));
@@ -4333,6 +4394,31 @@ public:
               std::string("Vulkan tile render failed; see server log\n"));
           }
           return serve_legacy_tile(nullptr);
+        }
+        if (path == "/artifact/index.json") {   // SCHED-3: pyramid index for the loaded ENC cell
+          const std::string idx = artifact_index_file_path();
+          if (idx.empty()) {
+            h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
+            h["X-Helm-Artifact-Status"] = "no_chart";
+            return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h,
+              std::string("{\"ok\":false,\"error\":\"no chart loaded\"}"));
+          }
+          return serve_render_artifact_file(h, idx, req);
+        }
+        if (std::sscanf(path.c_str(), "/artifact/%d/%ld/%ld.json", &z, &x, &y) == 3) {   // SCHED-3
+          if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
+            h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
+            return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h,
+              std::string("{\"ok\":false,\"error\":\"invalid tile coordinates\"}"));
+          }
+          const std::string file = artifact_tile_file_path(z, x, y);
+          if (file.empty()) {
+            h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";
+            h["X-Helm-Artifact-Status"] = "no_chart";
+            return std::make_shared<ix::HttpResponse>(404, "Not Found", ix::HttpErrorCode::Ok, h,
+              std::string("{\"ok\":false,\"error\":\"no chart loaded\"}"));
+          }
+          return serve_render_artifact_file(h, file, req);
         }
         if (req->uri.rfind("/query", 0) == 0) {   // CHART-10: GET /query?lat=&lon=[&z=][&radius=][&p=][&cat=] (worker thread: parse + marshal ONLY)
           const std::string& u = req->uri;
