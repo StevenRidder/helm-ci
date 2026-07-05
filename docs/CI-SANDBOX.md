@@ -54,19 +54,22 @@ git checkout -b claude/MY-TASK-slug
 # 1) Prove this checkout can use the sandbox
 scripts/ci-sandbox.sh doctor
 
-# 2) Run full CI on the public sandbox (waits by default)
-scripts/ci-sandbox.sh push
+# 2) Push to helm-ci, wait for green, push exact SHA to Helm,
+#    stamp the required Helm status, and open the PR.
+scripts/ci-sandbox.sh open-pr claude/MY-TASK-slug
 
-# 3) Open the real PR on Helm after sandbox CI is green
-git push -u origin claude/MY-TASK-slug
-gh pr create --repo StevenRidder/Helm --fill
-
-# Or combine sandbox push/wait + canonical push + PR:
-# scripts/ci-sandbox.sh open-pr claude/MY-TASK-slug
-
-# 4) After merge on Helm, refresh baseline and delete the sandbox branch
+# 3) After merge on Helm, refresh baseline and delete the sandbox branch
 scripts/ci-sandbox.sh refresh-main
 scripts/ci-sandbox.sh delete claude/MY-TASK-slug
+```
+
+Manual equivalent:
+
+```bash
+scripts/ci-sandbox.sh push claude/MY-TASK-slug
+git push -u origin claude/MY-TASK-slug
+scripts/ci-sandbox.sh prove claude/MY-TASK-slug
+gh pr create --repo StevenRidder/Helm --fill
 ```
 
 ### Command reference
@@ -77,6 +80,8 @@ scripts/ci-sandbox.sh delete claude/MY-TASK-slug
 | `scripts/ci-sandbox.sh sync-main` | Refresh sandbox `main` from local `main` |
 | `scripts/ci-sandbox.sh refresh-main` | Fetch canonical `origin/main`, then sync sandbox `main` |
 | `scripts/ci-sandbox.sh doctor [branch]` | Verify tools, repos, remotes, baseline, workflows, and optional branch pushes |
+| `scripts/ci-sandbox.sh prove [branch]` | Require exact SHA on `helm-ci` and Helm, then stamp `helm-ci/full-suite` on Helm |
+| `scripts/ci-sandbox.sh protect-main` | Configure Helm `main` to require `helm-ci/full-suite` before it can move |
 | `scripts/ci-sandbox.sh push [branch]` | Push branch, dispatch all sandbox workflows, wait for the dispatched Actions batch |
 | `scripts/ci-sandbox.sh push --no-wait [branch]` | Push and dispatch workflows without waiting |
 | `scripts/ci-sandbox.sh push --no-dispatch [branch]` | Push only; rely on normal path-filter triggers |
@@ -89,12 +94,18 @@ Environment overrides: `CI_REPO`, `CI_REMOTE`, `CANONICAL_REPO`,
 `ORIGIN_REMOTE`, `WAIT_TIMEOUT_SEC` (default 7200), `MAIN_REF` (default
 `origin/main` for `sync-main`), `SANDBOX_WORKFLOWS` (space-separated workflow
 file list), and `SANDBOX_WAIT_EVENT` for manual `wait`/`status` event
-filtering.
+filtering. `STATUS_CONTEXT` defaults to `helm-ci/full-suite`; branch protection
+requires that status context.
 
 By default, `push` treats the explicit `workflow_dispatch` batch as the
 authoritative sandbox CI suite. GitHub may also start duplicate push-triggered
 jobs for the same SHA; those are useful signal, but they are not the gate for
 the full-tree sandbox path unless you run `push --no-dispatch` or wait manually.
+
+After a green dispatched suite, `prove` stamps the required status back on the
+canonical Helm commit. GitHub branch protection on Helm `main` requires this
+status. That is the mechanical guard: if an agent skips public `helm-ci`, the
+Helm PR cannot merge.
 
 ## Switchboard agents
 
@@ -106,8 +117,8 @@ Agent flow:
 
 1. Claim task on Switchboard.
 2. Run `scripts/ci-sandbox.sh doctor` and fix any failures.
-3. Push branch to **`helm-ci`** and wait for green (`scripts/ci-sandbox.sh push`).
-4. Push the same branch to **`Helm`** and open a PR.
+3. Run `scripts/ci-sandbox.sh open-pr <branch>`.
+4. Confirm the Helm PR shows the required `helm-ci/full-suite` status.
 5. Call `complete_claim` with the **Helm** PR URL (not the sandbox) and include the `helm-ci` Actions URL.
 6. After merge, run `scripts/ci-sandbox.sh refresh-main`, then `scripts/ci-sandbox.sh delete <branch>`.
 

@@ -141,11 +141,14 @@ private Helm origin:
 ```bash
 scripts/ci-sandbox.sh setup          # once
 scripts/ci-sandbox.sh doctor         # verify repo/remotes/workflows/baseline
-scripts/ci-sandbox.sh push           # current branch → helm-ci, wait for green
-git push -u origin <branch>          # then open PR on Helm
+scripts/ci-sandbox.sh open-pr <branch> # helm-ci CI → exact SHA status → Helm PR
 scripts/ci-sandbox.sh refresh-main   # after merge, sync helm-ci/main
 scripts/ci-sandbox.sh delete <branch> # after merge
 ```
+
+`open-pr` stamps the required `helm-ci/full-suite` status on the canonical Helm
+commit after public CI passes. Branch protection requires that status before
+`main` can move.
 
 Full details: [CI-SANDBOX.md](CI-SANDBOX.md).
 

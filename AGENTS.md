@@ -56,13 +56,27 @@ merging the canonical Helm PR:
 
 ```bash
 scripts/ci-sandbox.sh doctor
-scripts/ci-sandbox.sh push
-git push -u origin <branch>
-gh pr create --repo StevenRidder/Helm --fill
+scripts/ci-sandbox.sh open-pr <branch>
 ```
 
 `helm-ci` is the public CI sandbox with the full actual Helm tree. It is not
 `helm-public`, and it is not sanitized. Do not use `helm-public` for CI.
+
+`open-pr` pushes the branch to public `helm-ci`, waits for the full dispatched
+CI suite, pushes the exact same SHA back to canonical Helm, stamps the required
+`helm-ci/full-suite` status on that SHA, and then opens the Helm PR. If you run
+the steps manually, the required sequence is:
+
+```bash
+scripts/ci-sandbox.sh push <branch>
+git push -u origin <branch>
+scripts/ci-sandbox.sh prove <branch>
+gh pr create --repo StevenRidder/Helm --fill
+```
+
+GitHub branch protection requires `helm-ci/full-suite` before `main` can move.
+If public CI did not run and pass for the exact SHA, the private/canonical PR is
+not mergeable.
 
 After the Helm PR merges:
 
