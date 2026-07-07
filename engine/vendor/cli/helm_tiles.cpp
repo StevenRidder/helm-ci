@@ -42,6 +42,7 @@
 #include "ocpn_pixel.h"
 #include "color_types.h"
 #include "s52plib.h"
+#include "helm_chart_profile.h"
 #include "chartsymbols.h"
 #include "s57registrar_mgr.h"
 #include "o_senc.h"
@@ -106,7 +107,8 @@ static bool g_nodtaOk = false;
 // Outcomes are kept DISTINCT (fail-and-fix-early): a render failure must NEVER
 // be masked as an empty/transparent tile that the navigator reads as open water.
 enum class TileStatus { Ok, NoCoverage, BadRequest, RenderFailed };
-struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string cells; double overzoom = 0.0; std::string result;
+struct Job { int z; long x, y; ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD;
+             EncPngProfile enc_profile = EncPngProfile::Standard; std::string cells; double overzoom = 0.0; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -231,6 +233,7 @@ static void apply_palette(ColorScheme scheme) {   // main-thread only (called fr
 // it changes. Default = the renderer's default (captured at init) so a request without ?cat= is unchanged.
 static DisCat g_default_cat = STANDARD;
 static DisCat g_display_cat = STANDARD;
+static EncPngProfileState g_enc_png_profile_state;
 static const char* cat_name(DisCat c) {
   return c == DISPLAYBASE ? "base" : (c == OTHER ? "all" : (c == MARINERS_STANDARD ? "mariner" : "std"));
 }
@@ -251,7 +254,7 @@ static void apply_category(DisCat cat) {   // main-thread only (from render_tile
   g_display_cat = cat;
 }
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, const std::string& cells, std::string& out, double& overzoom) {
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, EncPngProfile enc_profile, const std::string& cells, std::string& out, double& overzoom) {
   overzoom = 0.0;
   // boundary validation: reject malformed tile coordinates loudly
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
@@ -266,6 +269,7 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat
   if (layers.empty()) return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
   apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
+  enc_png_profile_apply(ps52plib, &g_enc_png_profile_state, enc_profile);   // ENC-3
 
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   // CHART-9: overzoom warning — viewing finer than the finest covering cell's survey scale (SCAMIN hides detail).
@@ -443,19 +447,21 @@ public:
           // a year. Mirrors helm-server's immutable ETag+304 (which standalone helm-tiles lacked).
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
           const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
+          const EncPngProfile enc_profile = enc_png_profile_from_query(req->uri);   // ENC-3
           std::string cells;                                      // CHART-11: ?cells=ID,ID region set (empty => all)
           { auto cp = req->uri.find("cells="); if (cp != std::string::npos) { cells = req->uri.substr(cp + 6); auto a = cells.find('&'); if (a != std::string::npos) cells.erase(a); } }
           std::string cseg;                                       // region-set segment, only when filtering (no-filter ETag stays byte-identical to CHART-9)
           if (!cells.empty()) { unsigned long long hc = 1469598103934665603ULL; for (unsigned char cc : cells) { hc ^= cc; hc *= 1099511628211ULL; } char b[20]; std::snprintf(b, sizeof b, ".g%06llx", (unsigned long long)(hc & 0xffffff)); cseg = b; }
-          char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), cat_name(cat), cseg.c_str(), z, x, y);
+          char et[160]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%s%s.%d.%ld.%ld\"", g_charts_version.c_str(), palette_name(pal), cat_name(cat), enc_png_profile_name(enc_profile), cseg.c_str(), z, x, y);
           const std::string etag(et);
           const auto inm = req->headers.find("If-None-Match");   // ix headers compare case-insensitively
           if (inm != req->headers.end() && inm->second == etag) {
             h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+            h["X-Helm-Profile"] = enc_png_profile_name(enc_profile);
             return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
           }
           // hand the render to the main thread (CoreGraphics) and wait
-          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat; job.cells = cells;
+          Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat; job.enc_profile = enc_profile; job.cells = cells;
           { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
           g_jobs_cv.notify_one();
           { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -463,6 +469,7 @@ public:
             case TileStatus::Ok:
               h["Content-Type"] = "image/png";
               h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
+              h["X-Helm-Profile"] = enc_png_profile_name(enc_profile);
               if (job.overzoom >= 2.0) { char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", job.overzoom); h["X-Helm-Overzoom"] = oz; }   // CHART-9
               return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
             case TileStatus::NoCoverage:           // legitimately no chart here -> transparent (still immutable)
@@ -521,7 +528,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m);
       g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
-    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->cells, j->result, j->overzoom);
+    j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->enc_profile, j->cells, j->result, j->overzoom);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; }
     j->cv.notify_one();
   }

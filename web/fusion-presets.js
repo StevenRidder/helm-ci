@@ -75,6 +75,7 @@
       if (typeof enc[k] === 'boolean') state[k] = enc[k];
     });
     window.HelmEncLayers.applyAll(map, state, { persist: opts && opts.persist !== false });
+    if (window.HelmEncTileProfile) window.HelmEncTileProfile.sync(map);
   }
 
   function setOverlayVisibility(map, layerId, visible) {

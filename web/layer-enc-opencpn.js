@@ -32,9 +32,21 @@
   function tileTemplate() {
     try {
       var ep = global.HelmEndpoint;
-      return ep && ep.tileTemplate && ep.tileTemplate();
+      if (!ep || !ep.tileTemplate) return null;
+      if (global.HelmEncTileProfile && global.HelmEncTileProfile.tileUrl) {
+        return global.HelmEncTileProfile.tileUrl();
+      }
+      return ep.tileTemplate();
     } catch (e) {
       return null;
+    }
+  }
+
+  function activeProfile() {
+    try {
+      return global.HelmEncTileProfile ? global.HelmEncTileProfile.resolve() : 'standard';
+    } catch (e) {
+      return 'standard';
     }
   }
 
@@ -49,7 +61,8 @@
       enc_visible: encVisible(map),
       satellite_basemap: sat,
       fused_on_satellite: !!(sat && encVisible(map)),
-      tile_template: tileTemplate()
+      tile_template: tileTemplate(),
+      enc_profile: activeProfile()
     };
   }
 

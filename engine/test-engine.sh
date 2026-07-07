@@ -127,6 +127,15 @@ if [ -n "${etag:-}" ]; then
   c304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "http://127.0.0.1:$SPORT/chart/12/1117/1760.png" || echo ERR)
   [ "$c304" = 304 ] && P "tile: If-None-Match → 304 (cache revalidation works)" || F "If-None-Match → $c304"
 else F "tile missing ETag"; fi
+# ENC-3: selective PNG profiles (?profile=depth|aids|standard)
+curl -s -D /tmp/te-th-aids -o /tmp/te-tile-aids.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png?profile=aids"
+aids_prof=$(grep -i '^x-helm-profile:' /tmp/te-th-aids 2>/dev/null | tr -d '\r' | awk '{print $2}')
+aids_etag=$(grep -i '^etag:' /tmp/te-th-aids 2>/dev/null | tr -d '\r' | awk '{print $2}')
+[ "$aids_prof" = aids ] && P "tile ?profile=aids → X-Helm-Profile: aids (ENC-3)" || F "tile ?profile=aids profile header → ${aids_prof:-?}"
+[ -n "${aids_etag:-}" ] && [ "$aids_etag" != "$etag" ] && P "tile ?profile=aids → distinct ETag from default (ENC-3)" || F "profile=aids ETag not distinct (${aids_etag:-?} vs ${etag:-?})"
+curl -s -D /tmp/te-th-std -o /tmp/te-tile-std.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png?profile=standard"
+std_prof=$(grep -i '^x-helm-profile:' /tmp/te-th-std 2>/dev/null | tr -d '\r' | awk '{print $2}')
+[ "$std_prof" = standard ] && P "tile ?profile=standard → X-Helm-Profile: standard (ENC-3)" || F "tile ?profile=standard profile header → ${std_prof:-?}"
 vurl="http://127.0.0.1:$SPORT/chart/12/1117/1760.png?renderer=vulkan"
 curl -s -D /tmp/te-vulkan-th -o /tmp/te-vulkan-tile.png "$vurl"
 vcode=$(awk 'NR==1{print $2}' /tmp/te-vulkan-th 2>/dev/null); vsz=$(wc -c </tmp/te-vulkan-tile.png 2>/dev/null | tr -d ' ')

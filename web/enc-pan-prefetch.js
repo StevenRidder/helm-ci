@@ -88,7 +88,8 @@
 
   function prefetchEnc(map) {
     if (!map || !encOn() || offlineActive()) return 0;
-    var tmpl = window.HelmEndpoint && window.HelmEndpoint.tileTemplate();
+    var tmpl = window.HelmEncTileProfile ? window.HelmEncTileProfile.tileUrl()
+      : (window.HelmEndpoint && window.HelmEndpoint.tileTemplate());
     if (!tmpl) return 0;
     var bounds;
     try { bounds = map.getBounds(); } catch (e) { return 0; }

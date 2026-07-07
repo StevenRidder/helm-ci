@@ -777,6 +777,7 @@
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
 <script src="enc-layers.js"></script><!-- ENC-1/2: depare / depcnt / soundg / enc-chart toggles + per-layer opacity -->
+<script src="enc-tile-profile.js"></script><!-- ENC-3: ?profile=depth|aids|standard selective engine PNG -->
 <script src="enc-pan-prefetch.js"></script><!-- SAT-2: ENC tile prefetch + basemap underlay during pan -->
 <script src="fusion-presets.js"></script><!-- FUSE-1: Depth-on-sat | Standard ENC | Sat-only | Passage prep -->
 <script src="board.js"></script><!-- BOARD-1: Smart Board composable persisted tile grid -->
@@ -1042,7 +1043,10 @@
     if (!window.HelmEndpoint) { console.error('Helm: server-endpoint.js not loaded — ENC tiles fall back to the style.json default, not the resolved engine origin'); return; }
     const enc = map.getSource('enc');
     if (!enc) { console.error('Helm: no "enc" source in style.json — cannot point ENC tiles at the engine'); return; }
-    try { enc.setTiles([HelmEndpoint.tileTemplate()]); }
+    try {
+      var encUrl = window.HelmEncTileProfile ? HelmEncTileProfile.tileUrl() : HelmEndpoint.tileTemplate();
+      enc.setTiles([encUrl]);
+    }
     catch (e) { console.error('Helm: failed to set ENC tile origin:', e); }
   });
   map.addControl(new maplibregl.NavigationControl({ showCompass: true }), 'bottom-right');
@@ -1081,6 +1085,7 @@
   })();
 
   if (window.HelmEncLayers) HelmEncLayers.bind(map);
+  if (window.HelmEncTileProfile) HelmEncTileProfile.bind(map);
   if (window.HelmFusionPresets) HelmFusionPresets.bind(map);
 
   // Basemap picker (radios): persist + restore last choice (SAT-1). Offline packs win via offline-packs.js.

@@ -56,7 +56,14 @@
       http: secure ? 'https' : 'http',
       origin: function () { return this.http + '://' + host + ':' + port; },
       navUrl: function () { return this.ws + '://' + host + ':' + port + '/nav'; },
-      tileTemplate: function () { return this.http + '://' + host + ':' + port + '/chart/{z}/{x}/{y}.png'; },
+      tileTemplate: function (opts) {
+        opts = opts || {};
+        var base = this.http + '://' + host + ':' + port + '/chart/{z}/{x}/{y}.png';
+        if (opts.profile && opts.profile !== 'standard') {
+          base += (base.indexOf('?') >= 0 ? '&' : '?') + 'profile=' + encodeURIComponent(opts.profile);
+        }
+        return base;
+      },
       healthUrl: function () { return this.http + '://' + host + ':' + port + '/health'; },
       describe: function () { return host + ':' + port + (secure ? ' (tls)' : ''); }
     };
@@ -74,7 +81,7 @@
     port: () => cur.port,
     secure: () => cur.secure,
     navUrl: () => withTok(cur.navUrl()),
-    tileTemplate: () => withTok(cur.tileTemplate()),
+    tileTemplate: (opts) => withTok(cur.tileTemplate(opts || {})),
     healthUrl: () => cur.healthUrl(),
     origin: () => cur.origin(),
     describe: () => cur.describe(),
