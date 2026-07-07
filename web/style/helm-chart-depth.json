@@ -1,6 +1,6 @@
 {
   "_epic": "CHART",
-  "_note": "Depth-on-satellite: depth-area shading, depth contours, soundings (CHART-7). Owned by CHART. Legacy ids depare-fill/depcnt-line/soundg-text are referenced by enc-layers.js (data-enc-layer checkboxes) + the soundg click popup in index.html.",
+  "_note": "Depth-on-satellite: depth-area shading, depth contours, soundings (CHART-7). Owned by CHART. Legacy ids depare-fill/depcnt-line/soundg-text are referenced by enc-layers.js (data-enc-layer toggles + data-enc-opacity sliders) + the soundg click popup in index.html.",
   "sources": {
     "depare": {
       "type": "geojson",
