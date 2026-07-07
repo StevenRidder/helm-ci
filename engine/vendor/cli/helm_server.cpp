@@ -64,6 +64,7 @@
 #include "color_types.h"
 #include "helm_tides.h"
 #include "s52plib.h"
+#include "helm_chart_profile.h"
 #include "chartsymbols.h"
 #include "s57registrar_mgr.h"
 #include "o_senc.h"
@@ -185,6 +186,7 @@ static void apply_palette(ColorScheme scheme) {               // main-thread onl
 // render thread, only when it changes. Default = the renderer's own default (captured at init) so a
 // request without ?cat= is byte-identical to before.
 static DisCat g_default_cat = STANDARD;          // captured from ps52plib->GetDisplayCategory() at init
+static EncPngProfileState g_enc_png_profile_state;
 static DisCat g_display_cat = STANDARD;          // currently-applied
 static const char* cat_name(DisCat c) {
   return c == DISPLAYBASE ? "base" : (c == OTHER ? "all" : (c == MARINERS_STANDARD ? "mariner" : "std"));
@@ -224,7 +226,8 @@ enum class JobKind { Render, Query };
 struct Job { JobKind kind = JobKind::Render;
              int z = 0; long x = 0, y = 0;                       // render inputs (z reused as the query zoom hint)
              double qlat = 0, qlon = 0; int qradius_px = 5;      // query inputs
-             ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD; std::string result;
+             ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD;
+             EncPngProfile enc_profile = EncPngProfile::Standard; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -241,7 +244,7 @@ static double display_scale(int z, double lat) {
   return 559082264.029 * std::cos(lat * M_PI / 180.0) / std::pow(2.0, z);
 }
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, std::string& out) {
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, EncPngProfile enc_profile, std::string& out) {
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld\n", z, x, y);
     return TileStatus::BadRequest;
@@ -253,6 +256,7 @@ static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat
     return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
   apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
+  enc_png_profile_apply(ps52plib, &g_enc_png_profile_state, enc_profile);   // ENC-3: depth|aids|standard selective PNG
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
   double span_m = (north - south) * 1852.0 * 60.0;
   if (span_m <= 0) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: span\n", z, x, y); return TileStatus::RenderFailed; }
@@ -381,7 +385,7 @@ static void warmup_render() {
   long x = (long)((clon + 180.0) / 360.0 * n);
   double lr = clat * M_PI / 180.0;
   long y = (long)((1.0 - std::log(std::tan(lr) + 1.0 / std::cos(lr)) / M_PI) / 2.0 * n);
-  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, g_default_cat, scratch);
+  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, g_default_cat, EncPngProfile::Standard, scratch);
   printf("warmup render z%d/%ld/%ld -> status=%d (%zuB)\n", z, x, y, (int)st, scratch.size());
 }
 
@@ -2507,7 +2511,7 @@ static std::string fixed_double(double v, int precision = 8) {
   return out.str();
 }
 
-static VulkanTileMeta make_vulkan_tile_meta(int z, long x, long y, ColorScheme pal, DisCat cat) {
+static VulkanTileMeta make_vulkan_tile_meta(int z, long x, long y, ColorScheme pal, DisCat cat, EncPngProfile enc_profile) {
   const double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   const double north = tile_lat(y, z), south = tile_lat(y + 1, z);
   const double center_lat = (north + south) / 2.0;
@@ -2538,6 +2542,7 @@ static VulkanTileMeta make_vulkan_tile_meta(int z, long x, long y, ColorScheme p
       << "scale_denom=" << meta.scale_denom << "\n"
       << "palette=" << meta.palette << "\n"
       << "category=" << meta.category << "\n"
+      << "profile=" << enc_png_profile_name(enc_profile) << "\n"
       << "safety=" << env_or("HELM_CHART_SAFETY_DEPTHS", "default") << "\n"
       << "text=" << env_or("HELM_CHART_TEXT", "default") << "\n"
       << "soundings=" << env_or("HELM_CHART_SOUNDINGS", "default") << "\n"
@@ -4317,6 +4322,7 @@ public:
         if (std::sscanf(req->uri.c_str(), "/chart/%d/%ld/%ld.png", &z, &x, &y) == 3) {
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
           const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
+          const EncPngProfile enc_profile = enc_png_profile_from_query(req->uri);   // ENC-3: ?profile=depth|aids|standard
           auto serve_legacy_tile = [&](const char* fallback_reason) -> ix::HttpResponsePtr {
             h.erase("X-Helm-Renderer-Sha");
             h.erase("X-Helm-Scene-Schema");
@@ -4325,16 +4331,17 @@ public:
             h.erase("X-Helm-Renderer-Output-Sha");
             h.erase("X-Helm-Renderer-Error");
             h["X-Helm-Renderer"] = "legacy";
+            h["X-Helm-Profile"] = enc_png_profile_name(enc_profile);
             h["X-Helm-Chart-Status"] = g_chart_status;
             if (!g_chart_unavailable_reason.empty()) h["X-Helm-Chart-Unavailable-Reason"] = header_safe(g_chart_unavailable_reason);
             if (fallback_reason && *fallback_reason) h["X-Helm-Renderer-Fallback"] = fallback_reason;
             else h.erase("X-Helm-Renderer-Fallback");
-            char et[128]; std::snprintf(et, sizeof et, "\"%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), g_native_scale);
+            char et[160]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), enc_png_profile_name(enc_profile), g_native_scale);
             const std::string etag(et);
             h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
             if (header_ci(req->headers, "If-None-Match") == etag)
               return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
-            Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
+            Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat; job.enc_profile = enc_profile;
             { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
             g_jobs_cv.notify_one();
             { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
@@ -4362,8 +4369,9 @@ public:
               h["X-Helm-Renderer"] = "vulkan";
               return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
             }
-            const VulkanTileMeta meta = make_vulkan_tile_meta(z, x, y, pal, cat);
+            const VulkanTileMeta meta = make_vulkan_tile_meta(z, x, y, pal, cat, enc_profile);
             h["X-Helm-Renderer"] = "vulkan";
+            h["X-Helm-Profile"] = enc_png_profile_name(enc_profile);
             h["X-Helm-Renderer-Sha"] = header_safe(meta.renderer_sha);
             h["X-Helm-Scene-Schema"] = header_safe(meta.scene_schema);
             h["X-Helm-Chart-Epoch"] = header_safe(meta.chart_epoch);
@@ -4568,7 +4576,7 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m); g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
     if (j->kind == JobKind::Query) j->status = run_query(j->qlat, j->qlon, j->z, j->qradius_px, j->palette, j->cat, j->result);
-    else                           j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->result);
+    else                           j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->enc_profile, j->result);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; } j->cv.notify_one();
   }
   wxEntryCleanup();
