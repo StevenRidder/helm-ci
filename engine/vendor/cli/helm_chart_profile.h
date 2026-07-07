@@ -33,7 +33,6 @@ struct EncPngProfileState {
   EncPngProfile applied = EncPngProfile::Standard;
   std::vector<std::string> noshow;
   bool soundings_off = false;
-  bool lights_off = false;
 };
 
 static inline void enc_png_noshow(s52plib* lib, EncPngProfileState* st, const char* obj) {
@@ -50,10 +49,6 @@ static inline void enc_png_profile_clear(s52plib* lib, EncPngProfileState* st) {
     lib->SetShowSoundings(true);
     st->soundings_off = false;
   }
-  if (st->lights_off) {
-    lib->m_lightsOff = false;
-    st->lights_off = false;
-  }
   st->applied = EncPngProfile::Standard;
 }
 
@@ -68,8 +63,6 @@ static inline void enc_png_profile_apply(s52plib* lib, EncPngProfileState* st, E
       "LIGHTS", "LITFLT", "LITVES", "TOPMAR", "DAYMAR", "FOGSIG", "OBSTRN"
     };
     for (const char* obj : kDepthHide) enc_png_noshow(lib, st, obj);
-    lib->m_lightsOff = true;
-    st->lights_off = true;
   } else if (profile == EncPngProfile::Aids) {
     static const char* kAidsHide[] = { "DEPARE", "DEPCNT", "SOUNDG", "DRGARE" };
     for (const char* obj : kAidsHide) enc_png_noshow(lib, st, obj);
