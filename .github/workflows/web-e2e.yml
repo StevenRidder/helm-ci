@@ -31,3 +31,8 @@ jobs:
         run: npx playwright install --with-deps chromium
       - name: Run E2E (serves web/ via serve.py in SIM mode)
         run: npx playwright test
+      - name: Run OFFLINE-20 sat-first Fiji proof (QA-L-1)
+        env:
+          HELM_OFFLINE20: '1'
+          HELM_OFFLINE20_MOCK_PACKD: '1'
+        run: npx playwright test e2e/offline20-sat-first-fiji.spec.js

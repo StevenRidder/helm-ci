@@ -528,6 +528,7 @@
         '<div class="helm-o20-grid">',
         '<span>Base</span><b data-o20-base>none</b>',
         '<span>Depth</span><b data-o20-depth>unknown</b>',
+        '<span>ENC</span><b data-o20-enc>unknown</b>',
         '<span>WX</span><b data-o20-wx>unknown</b>',
         '<span>Fresh</span><b data-o20-fresh>unknown</b>',
         '</div>'
@@ -547,6 +548,10 @@
     var map = state.map || window.map;
     var depth = depthSummary(map);
     var wx = wxStatusSummary();
+    var enc = { mode: 'missing', detail: 'module missing', css: 'warn' };
+    try {
+      if (window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.summary) enc = HelmLayerEncOpenCPN.summary(map);
+    } catch (e) {}
     var base = pack ? ((pack.title || pack.id) + ' · ' + packSourceLabel(pack)) : 'no active offline pack';
     var fresh = 'sat ' + packFreshnessLabel(pack);
     var wxSt = null;
@@ -555,6 +560,7 @@
     if (wxSt && wxSt.ageSeconds != null) fresh += ' · age ' + Math.round(wxSt.ageSeconds / 3600) + 'h';
     el.querySelector('[data-o20-base]').textContent = base;
     el.querySelector('[data-o20-depth]').textContent = depth.mode + ' · ' + depth.detail;
+    el.querySelector('[data-o20-enc]').textContent = enc.mode + ' · ' + enc.detail;
     el.querySelector('[data-o20-wx]').textContent = wx.mode + ' · ' + wx.detail;
     el.querySelector('[data-o20-fresh]').textContent = fresh;
     el.dataset.wx = wx.css || '';
