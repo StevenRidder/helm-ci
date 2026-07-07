@@ -33,6 +33,10 @@
 
   var SCHEMA = 'helm.render.artifact.v1';
   var ENC_LAYER = 'enc-chart';
+
+  function encChartUserOn() {
+    return !global.HelmEncLayers || global.HelmEncLayers.isOn('enc-chart');
+  }
   var VERTEX_STRIDE = 4; // x, y, material_index, pick_id
 
   // Fixture/debug palette only — not S-52 presentation decisions.
@@ -832,9 +836,10 @@
   };
 
   GpuChartArtifactLayer.prototype.setEncChartVisible = function (visible) {
+    var show = visible && encChartUserOn();
     try {
       if (this.map.getLayer(ENC_LAYER)) {
-        this.map.setLayoutProperty(ENC_LAYER, 'visibility', visible ? 'visible' : 'none');
+        this.map.setLayoutProperty(ENC_LAYER, 'visibility', show ? 'visible' : 'none');
       }
     } catch (e) {}
   };
@@ -925,7 +930,9 @@
       }
       try {
         if (map.getLayer(ENC_LAYER)) {
-          map.setLayoutProperty(ENC_LAYER, 'visibility', m === 'gpu' && state.visible ? 'none' : 'visible');
+          var userOn = encChartUserOn();
+          var showMapLibre = userOn && !(m === 'gpu' && state.visible);
+          map.setLayoutProperty(ENC_LAYER, 'visibility', showMapLibre ? 'visible' : 'none');
         }
       } catch (e) {}
       if (global.HelmChartRendererStatus && global.HelmChartRendererStatus.publish) {

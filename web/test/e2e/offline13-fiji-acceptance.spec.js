@@ -181,10 +181,10 @@ test('Fiji local packs survive offline pan/zoom/layer/tap acceptance', async ({ 
       return 'ok';
     }
     const results = {
-      depthOff: toggle('input[data-layer="depare-fill"]', false),
-      depthOn: toggle('input[data-layer="depare-fill"]', true),
-      soundingsOff: toggle('input[data-layer="soundg-text"]', false),
-      soundingsOn: toggle('input[data-layer="soundg-text"]', true),
+      depthOff: toggle('input[data-enc-layer="depare"]', false),
+      depthOn: toggle('input[data-enc-layer="depare"]', true),
+      soundingsOff: toggle('input[data-enc-layer="soundg"]', false),
+      soundingsOn: toggle('input[data-enc-layer="soundg"]', true),
       routeOff: toggle('input[data-layer="route-line"]', false),
       routeOn: toggle('input[data-layer="route-line"]', true),
       aisOff: toggle('input[data-layer="ais"]', false),
