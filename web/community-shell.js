@@ -82,13 +82,18 @@
     // selectable layers drive the slice (ADR-0007): only checked layers join the probe
     function enabledLayers() {
       const on = id => { const cb = document.querySelector('.row input[data-layer="' + id + '"]'); return cb ? cb.checked : false; };
+      const encOn = key => {
+        if (window.HelmEncLayers) return HelmEncLayers.isOn(key);
+        const mapId = { depare: 'depare-fill', depcnt: 'depcnt-line', soundg: 'soundg-text', 'enc-chart': 'enc-chart' }[key];
+        return on(mapId || key);
+      };
       const layers = [];
       if (window.__activeWx && window.__activeWx !== 'off') layers.push('weather');
       if (on('places')) layers.push('places');
       if (on('saved')) layers.push('saved');
-      if (on('soundg-text') || on('depare-fill')) layers.push('depth');
+      if (encOn('soundg') || encOn('depare')) layers.push('depth');
       if (on('ais')) layers.push('ais');
-      if (on('charts') || on('enc-chart') || on('depare-fill')) layers.push('chart');
+      if (on('charts') || encOn('enc-chart') || encOn('depare')) layers.push('chart');
       layers.push('climate');                              // contextual, always available
       return layers;
     }
