@@ -52,15 +52,29 @@
   function renderStats() {
     const c = DATA.coverage || {};
     const g = c.proof_gate_counts || {};
+    const s52 = c.s52_portrayal_inventory || {};
+    const s52c = s52.counts || {};
+    const s52Gate = s52.proof_gate || {};
     const contexts = SYMS.reduce((n, s) => n + (s.uses || 1), 0);
-    el("stats").innerHTML = [
+    const cards = [
       statCard("Symbols", SYMS.length.toLocaleString(), "unique final icons"),
       statCard("Chart contexts", contexts.toLocaleString(), "reuse instances"),
       statCard("Owner signoff", (c.human_review_approved_symbols ?? 0).toLocaleString(), c.human_review_status || "not recorded", "green"),
       statCard("Registry symbols", (c.registry_symbols ?? 0).toLocaleString(), `${(c.registry_blocked_candidates ?? 0).toLocaleString()} non-symbol candidates`),
       statCard("Proof gates", `${g.green ?? 0}/${g.yellow ?? 0}/${g.red ?? 0}`, "green / yellow / red (by context)"),
       statCard("Runtime export", (c.runtime_export_rows ?? 0).toLocaleString(), "fail-closed", "danger"),
-    ].join("");
+    ];
+    if (s52c.lookup_rows) {
+      cards.push(
+        statCard(
+          "S-52 inventory",
+          Number(s52c.lookup_rows).toLocaleString(),
+          `${Number(s52c.distinct_symbol_names || 0).toLocaleString()} symbols · ${Number(s52c.distinct_line_styles || 0).toLocaleString()} lines · ${Number(s52c.distinct_area_patterns || 0).toLocaleString()} patterns`,
+          s52Gate.full_s52_proof_claim_allowed ? "green" : "yellow",
+        )
+      );
+    }
+    el("stats").innerHTML = cards.join("");
   }
   function buildFilters() {
     const f = DATA.facets || {};

@@ -1,0 +1,41 @@
+# S-52 Public Symbol Gap Audit
+
+This audit explains the apparent gap between OpenCPN S-52 symbol resource names and Helm public symbol IDs.
+
+## Set Math
+
+- OpenCPN distinct symbol resource names: `1018`
+- Helm public distinct symbol IDs: `805`
+- Shared names: `718`
+- OpenCPN-only names: `300`
+- Helm-public-only names: `87`
+- Net count delta: `213`
+
+The net delta is not a missing-icon count. It is OpenCPN-only names minus Helm-public-only names.
+
+## Render Conclusion
+
+- Normal point symbols missing from the public package: `0`
+- Component assets to render first: `5`
+- Text/sounding rules to model instead of icon-render: `125`
+- Component/conditional resources to audit before rendering: `170`
+
+## Action Counts
+
+- `component_or_conditional_usage_audit`: `170`
+- `render_as_component_asset`: `5`
+- `text_sounding_rule`: `125`
+
+## Component Assets To Render First
+
+- `ADDMRK01`: additional mark, traiangle to the right (referenced by `32` lookup rows)
+- `ADDMRK02`: additional mark, traiangle to the left (referenced by `33` lookup rows)
+- `ADDMRK05`: additional mark, board, bottom (referenced by `32` lookup rows)
+- `DWRTPT51`: part of deep water route (referenced by `10` lookup rows)
+- `PLNPOS02`: crossline for planned position (referenced by `2` lookup rows)
+
+## Top Prefixes By Action
+
+- `component_or_conditional_usage_audit`: TOPMAR=29, NMKINF=27, LIGHTS=13, NMKPRH=11, TOPSHP=11, BOYPIL=8, ADDMRK=7, NMKREG=7, TOPMA=7, DAYTRI=4, BOYSPH=3, CATHAF=3
+- `render_as_component_asset`: ADDMRK=3, DWRTPT=1, PLNPOS=1
+- `text_sounding_rule`: SOUNDS=60, SOUNDG=59, SOUNDGA=1, SOUNDGB=1, SOUNDGC=1, SOUNDSA=1, SOUNDSB=1, SOUNDSC=1

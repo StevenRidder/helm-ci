@@ -406,3 +406,60 @@ CREATE VIEW runtime_symbol_portrayal_v1 AS
               AND g.gate_status IN ('blocked', 'pending')
           )
 /* runtime_symbol_portrayal_v1(s52_lookup_id,row_key,object_class,s52_symbol_id,s52_asset_kind,category,geometry,display_mode,candidate_status,runtime_eligible,blocking_gate_count,pending_gate_count,warning_gate_count,gate_summary,semantic_tuple,s101_feature_type,s101_attributes,s52_instruction,source_refs) */;
+CREATE TABLE s52_proof_inventory_lookup (
+          s52_lookup_id integer primary key references s52_portrayal_lookup(id) on delete cascade,
+          inventory_key text not null unique,
+          source_git_sha text not null,
+          source_file text not null,
+          upstream_master_sha text,
+          source_freshness_status text not null,
+          object_acronym text not null,
+          object_name text,
+          primitive_type text not null,
+          lookup_table text not null,
+          display_category text,
+          portrayal_class text not null,
+          opencpn_reference_status text not null,
+          helm_candidate_status text not null,
+          helm_public_status text not null,
+          s101_candidate_status text not null,
+          s101_mapping_type text,
+          s101_feature_type text,
+          symbol_refs text not null check (json_valid(symbol_refs)),
+          line_style_refs text not null check (json_valid(line_style_refs)),
+          pattern_refs text not null check (json_valid(pattern_refs)),
+          conditional_refs text not null check (json_valid(conditional_refs)),
+          text_refs text not null check (json_valid(text_refs)),
+          colour_refs text not null check (json_valid(colour_refs)),
+          proof_columns text not null check (json_valid(proof_columns)),
+          classification_reasons text not null check (json_valid(classification_reasons)),
+          created_at text not null default current_timestamp
+        );
+CREATE TABLE s52_proof_inventory_resource (
+          resource_id integer primary key references s52_portrayal_resource(id) on delete cascade,
+          source_git_sha text not null,
+          source_file text not null,
+          upstream_master_sha text,
+          source_freshness_status text not null,
+          resource_type text not null,
+          name text not null,
+          normalized_name text not null,
+          description text,
+          resource_class text not null,
+          referenced_by_lookup_count integer not null,
+          helm_candidate_status text not null,
+          helm_public_status text not null,
+          s101_candidate_status text not null,
+          proof_columns text not null check (json_valid(proof_columns)),
+          classification_reasons text not null check (json_valid(classification_reasons)),
+          created_at text not null default current_timestamp
+        );
+CREATE TABLE s52_proof_inventory_summary (
+          key text primary key,
+          value text not null check (json_valid(value)),
+          created_at text not null default current_timestamp
+        );
+CREATE INDEX s52_proof_inventory_lookup_class_idx on s52_proof_inventory_lookup(portrayal_class);
+CREATE INDEX s52_proof_inventory_lookup_public_idx on s52_proof_inventory_lookup(helm_public_status);
+CREATE INDEX s52_proof_inventory_resource_class_idx on s52_proof_inventory_resource(resource_class);
+CREATE INDEX s52_proof_inventory_resource_public_idx on s52_proof_inventory_resource(helm_public_status);
