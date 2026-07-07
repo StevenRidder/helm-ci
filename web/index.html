@@ -753,6 +753,7 @@
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
 <script src="enc-layers.js"></script><!-- ENC-1: depare / depcnt / soundg / enc-chart toggles + HelmStore persistence -->
+<script src="enc-pan-prefetch.js"></script><!-- SAT-2: ENC tile prefetch + basemap underlay during pan -->
 <script src="board.js"></script><!-- BOARD-1: Smart Board composable persisted tile grid -->
 <script src="offline-packs.js"></script><!-- OFFLINE-4: BYO MBTiles/PMTiles catalog + pack selector -->
 <script src="tooltip.js"></script><!-- fast custom hover tooltips (replaces the slow ~1.5s native title delay) -->
@@ -1068,6 +1069,7 @@
       });
     });
   }
+  if (window.HelmEncPanPrefetch) HelmEncPanPrefetch.bind(map);
 
   // DEM depth/terrain contours (maplibre-contour, off-thread) — lazy-loaded the
   // first time it's switched on, from the LOCAL vendored bundle + LOCAL DEM tiles.
