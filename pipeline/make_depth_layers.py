@@ -80,6 +80,15 @@ def mosaic(W, S, E, N):
 
 def main():
     os.makedirs(OUT_DIR, exist_ok=True)
+    prov_path = os.path.join(OUT_DIR, "depth-provenance.json")
+    if os.path.isfile(prov_path):
+        try:
+            prov = json.load(open(prov_path))
+            if prov.get("source") == "enc":
+                print(f"  skip: ENC depth already in {OUT_DIR} ({prov.get('cell', '?')})")
+                return
+        except (OSError, json.JSONDecodeError):
+            pass
     W, S, E, N = region()
     elev, x0, y0 = mosaic(W, S, E, N)
     depth = -gaussian2d(elev, BLUR)            # positive = deeper; land is negative
@@ -124,7 +133,10 @@ def main():
 
     for name, feats in (("depare", depare), ("depcnt", depcnt), ("soundg", soundg)):
         path = os.path.join(OUT_DIR, name + ".geojson")
-        json.dump({"type": "FeatureCollection", "features": feats}, open(path, "w"), separators=(",", ":"))
+        json.dump({"type": "FeatureCollection",
+                   "metadata": {"source": "dem", "note": "Synthetic DEM depth — NOT FOR NAVIGATION",
+                                "schema": "helm.depth_provenance.v1"},
+                   "features": feats}, open(path, "w"), separators=(",", ":"))
         print(f"  {name}.geojson: {len(feats)} features, {os.path.getsize(path)//1024} KB")
 
 

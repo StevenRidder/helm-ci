@@ -22,5 +22,34 @@ ogr2ogr -f GeoJSON -t_srs EPSG:4326 "$OUT/depare.geojson" "$ENC" DEPARE   # dept
 ogr2ogr -f GeoJSON -t_srs EPSG:4326 "$OUT/depcnt.geojson" "$ENC" DEPCNT   # depth contours (lines)
 ogr2ogr -f GeoJSON -t_srs EPSG:4326 "$OUT/soundg.geojson" "$ENC" SOUNDG   # soundings (points + DEPTH)
 
+# ENC-4: stamp provenance so client + pipeline can prefer real ENC depth over demo/DEM synthetic.
+CELL_ID="$(basename "$ENC" .000)"
+python3 - "$OUT" "$ENC" "$CELL_ID" <<'PY'
+import json, os, sys, time
+out, enc, cell = sys.argv[1], sys.argv[2], sys.argv[3]
+prov = {
+    "schema": "helm.depth_provenance.v1",
+    "source": "enc",
+    "cell": cell,
+    "enc_path": os.path.abspath(enc),
+    "enc_mtime": int(os.path.getmtime(enc)) if os.path.isfile(enc) else None,
+    "extracted_at": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+}
+for name in ("depare", "depcnt", "soundg"):
+    path = os.path.join(out, name + ".geojson")
+    if not os.path.isfile(path):
+        continue
+    with open(path, encoding="utf-8") as f:
+        doc = json.load(f)
+    meta = doc.setdefault("metadata", {})
+    meta.update({"source": "enc", "cell": cell, "schema": "helm.depth_provenance.v1"})
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(doc, f, separators=(",", ":"))
+with open(os.path.join(out, "depth-provenance.json"), "w", encoding="utf-8") as f:
+    json.dump(prov, f, indent=2)
+    f.write("\n")
+print(f"stamped ENC depth provenance for {cell} -> {out}/depth-provenance.json")
+PY
+
 echo "wrote depare.geojson, depcnt.geojson, soundg.geojson -> $OUT"
 echo "tip: list every layer in a cell with:  ogrinfo -so \"$ENC\""

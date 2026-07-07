@@ -12,7 +12,8 @@ set -u
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 ROOT="$(cd "$SCRIPT_DIR/.." && pwd)"
 DATA="$ROOT/web/data"
-mkdir -p "$DATA"
+USER_DATA="${HELM_USER_DATA_ROOT:-${HELM_CONFIG:-${HOME:-.}/.helm}/data}"
+mkdir -p "$DATA" "$USER_DATA"
 # shellcheck disable=SC1091
 REGION_ENV="${HELM_REGION_ENV:-$SCRIPT_DIR/region.env}"
 if [ ! -f "$REGION_ENV" ]; then
@@ -67,15 +68,22 @@ else
 fi
 
 # --- ENC depth (optional; needs GDAL + a downloaded cell) ---
-step "depth  (NOAA ENC -> GeoJSON)"
+step "depth  (NOAA ENC -> GeoJSON user-data)"
+if [ -z "$ENC" ] && [ -n "${HELM_ENC:-}" ] && [ -f "$HELM_ENC" ]; then
+  ENC="$HELM_ENC"
+fi
+if [ -z "$ENC" ]; then
+  _cell="$(find "${HELM_ENC_ROOT:-$HOME/.helm/runtime/enc}" -name '*.000' -type f 2>/dev/null | head -1)"
+  [ -n "$_cell" ] && ENC="$_cell"
+fi
 if [ -n "$ENC" ] && [ -f "$ENC" ]; then
   if have ogr2ogr; then
-    bash "$SCRIPT_DIR/extract_depth.sh" "$ENC" "$DATA" || echo "  ! depth step failed — continuing"
+    bash "$SCRIPT_DIR/extract_depth.sh" "$ENC" "$USER_DATA" || echo "  ! depth step failed — continuing"
   else
     echo "  ! GDAL not found (brew install gdal) — skipping depth"
   fi
 else
-  echo "  - no ENC cell passed; skipping depth"
+  echo "  - no ENC cell found; skipping depth"
   echo "    (usage: build.sh /path/to/USxxxx.000 — cells at https://www.charts.noaa.gov/ENCs/ENCs.shtml)"
 fi
 

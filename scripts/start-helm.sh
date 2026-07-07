@@ -98,6 +98,11 @@ fi
 
 [ -n "${HELM_ENC:-}" ] || die "no ENC chart found. Run scripts/install-sample-enc.sh or set HELM_ENC to a .000 chart cell."
 
+# ENC-4: ensure region depth GeoJSON lives in user-data (not bundled demo) when GDAL is available.
+if [ -x "$REPO_ROOT/scripts/extract-user-depth.sh" ]; then
+  "$REPO_ROOT/scripts/extract-user-depth.sh" || echo "start-helm: depth extract skipped ($(command -v ogr2ogr >/dev/null || echo 'install gdal'))"
+fi
+
 echo "start-helm: launching core helm-server on :$HELM_PORT (web=$HELM_WEB_ROOT)…"
 port_busy "$HELM_PORT" && die "port $HELM_PORT already serving /health — core not started (use --port N for a private port)."
 env HELM_PORT="$HELM_PORT" HELM_WEB_ROOT="$HELM_WEB_ROOT" HELM_CONFIG="$HELM_CONFIG" \

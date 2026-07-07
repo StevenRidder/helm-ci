@@ -547,7 +547,7 @@
     <input type="range" class="enc-opacity" data-enc-opacity="enc-chart" min="0" max="100" value="100" aria-label="S-52 aids opacity">
   </div>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
-  <div class="lbl">Depth on satellite</div>
+  <div class="lbl">Depth on satellite <span id="enc-depth-source" class="enc-depth-source warn" style="float:right;font-size:9.5px;font-weight:400"></span></div>
   <div class="enc-layer-row">
     <label class="row"><input type="checkbox" data-enc-layer="depare" checked> Depth shading</label>
     <input type="range" class="enc-opacity" data-enc-opacity="depare" min="0" max="100" value="100" aria-label="Depth shading opacity">
@@ -776,6 +776,7 @@
 <script src="command-palette.js"></script><!-- SHELL-3: ⌘K command palette (extracted from index.html) -->
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
+<script src="enc-depth-sources.js"></script><!-- ENC-4: user-data depth GeoJSON from extract_depth.sh -->
 <script src="enc-layers.js"></script><!-- ENC-1/2: depare / depcnt / soundg / enc-chart toggles + per-layer opacity -->
 <script src="enc-tile-profile.js"></script><!-- ENC-3: ?profile=depth|aids|standard selective engine PNG -->
 <script src="enc-pan-prefetch.js"></script><!-- SAT-2: ENC tile prefetch + basemap underlay during pan -->
@@ -931,21 +932,11 @@
     const lon = Math.round(c.lng * 100000) / 100000;
     return '#' + z + '/' + lat + '/' + lon;
   }
-  async function helmResourceExists(url) {
-    try {
-      const r = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-      return !!(r && r.ok);
-    } catch (e) { return false; }
-  }
   async function preferUserDepthData(style) {
-    if (!style || !style.sources) return;
-    const files = { depare: 'depare.geojson', depcnt: 'depcnt.geojson', soundg: 'soundg.geojson' };
-    await Promise.all(Object.keys(files).map(async (id) => {
-      const src = style.sources[id];
-      if (!src || src.type !== 'geojson') return;
-      const url = 'user-data/' + files[id];
-      if (await helmResourceExists(url)) src.data = url;
-    }));
+    if (!window.HelmEncDepthSources) return;
+    var st = await HelmEncDepthSources.preferUserDepthData(style);
+    HelmEncDepthSources.applyBadge(document.getElementById('enc-depth-source'));
+    return st;
   }
   // Assemble the merged style from the per-domain fragments (SHELL-2). If shell.js somehow didn't
   // load, fall back to the monolithic style.json so the map still draws (degraded, no registration API).
