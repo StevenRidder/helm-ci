@@ -268,6 +268,22 @@ test('satellite-first Fiji base + MapLibre depth + WebGPU grid proof/fallback', 
   expect(depthState.depare || depthState.depcnt || depthState.soundg, 'MapLibre depth/feature layers exist').toBeTruthy();
   expect(depthState.strip).toMatch(/DEPTH/i);
 
+  const encState = await page.evaluate(() => {
+    if (window.map.getLayer('enc-chart')) window.map.setLayoutProperty('enc-chart', 'visibility', 'visible');
+    window.HelmOfflinePacks.refreshOffline20Strip();
+    return {
+      enc: window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.status(),
+      strip: document.getElementById('helm-offline20-strip') && document.getElementById('helm-offline20-strip').innerText,
+      encVisible: window.map.getLayer('enc-chart')
+        ? window.map.getLayoutProperty('enc-chart', 'visibility')
+        : 'missing'
+    };
+  });
+  expect(encState.encVisible).toBe('visible');
+  expect(encState.enc && encState.enc.symbol_authority).toBe('opencpn-engine-png');
+  expect(encState.strip).toMatch(/ENC/i);
+  expect(encState.strip).toMatch(/OpenCPN/i);
+
   const hasGpu = await page.evaluate(async () =>
     !!(navigator.gpu && await navigator.gpu.requestAdapter().catch(() => null)));
   const manifestUrl = process.env.HELM_OFFLINE20_WX_MANIFEST_URL || '/test-results/offline20-e2e/wx/manifest.json';

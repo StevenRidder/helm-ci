@@ -516,6 +516,13 @@
     return { mode: visible.length ? 'on' : 'hidden', detail: visible.join(', ') || present.join(', '), css: visible.length ? 'ok' : 'warn' };
   }
 
+  function encSummary(map) {
+    try {
+      if (window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.summary) return HelmLayerEncOpenCPN.summary(map);
+    } catch (e) {}
+    return { mode: 'unknown', detail: 'enc-chart', css: 'warn' };
+  }
+
   function ensureOffline20Strip() {
     if (!stripEnabled()) return;
     installStyle();
@@ -528,6 +535,7 @@
         '<div class="helm-o20-grid">',
         '<span>Base</span><b data-o20-base>none</b>',
         '<span>Depth</span><b data-o20-depth>unknown</b>',
+        '<span>ENC</span><b data-o20-enc>unknown</b>',
         '<span>WX</span><b data-o20-wx>unknown</b>',
         '<span>Fresh</span><b data-o20-fresh>unknown</b>',
         '</div>'
@@ -546,6 +554,7 @@
     var pack = activePack();
     var map = state.map || window.map;
     var depth = depthSummary(map);
+    var enc = encSummary(map);
     var wx = wxStatusSummary();
     var base = pack ? ((pack.title || pack.id) + ' · ' + packSourceLabel(pack)) : 'no active offline pack';
     var fresh = 'sat ' + packFreshnessLabel(pack);
@@ -555,10 +564,12 @@
     if (wxSt && wxSt.ageSeconds != null) fresh += ' · age ' + Math.round(wxSt.ageSeconds / 3600) + 'h';
     el.querySelector('[data-o20-base]').textContent = base;
     el.querySelector('[data-o20-depth]').textContent = depth.mode + ' · ' + depth.detail;
+    el.querySelector('[data-o20-enc]').textContent = enc.mode + ' · ' + enc.detail;
     el.querySelector('[data-o20-wx]').textContent = wx.mode + ' · ' + wx.detail;
     el.querySelector('[data-o20-fresh]').textContent = fresh;
     el.dataset.wx = wx.css || '';
     el.dataset.depth = depth.css || '';
+    el.dataset.enc = enc.css || '';
     el.dataset.base = pack ? 'ok' : 'warn';
   }
 
@@ -713,7 +724,7 @@
       '.helm-raster-inspect-grid span{min-width:0;overflow-wrap:anywhere}',
       '#helm-offline20-strip{position:fixed;left:164px;right:188px;bottom:112px;z-index:34;display:flex;align-items:center;gap:12px;padding:8px 12px;border:1px solid rgba(91,192,255,.35);border-radius:8px;background:rgba(8,15,22,.86);box-shadow:0 8px 24px rgba(0,0,0,.32);backdrop-filter:blur(12px);color:var(--ctext,#e8edf2);font:11px/1.35 system-ui,-apple-system,sans-serif;pointer-events:none}',
       '#helm-offline20-strip .helm-o20-title{font-size:11px;font-weight:800;letter-spacing:.7px;color:#5bc0ff;white-space:nowrap}',
-      '#helm-offline20-strip .helm-o20-grid{display:grid;grid-template-columns:repeat(4,max-content minmax(70px,1fr));gap:2px 7px;align-items:center;width:100%;min-width:0}',
+      '#helm-offline20-strip .helm-o20-grid{display:grid;grid-template-columns:repeat(5,max-content minmax(70px,1fr));gap:2px 7px;align-items:center;width:100%;min-width:0}',
       '#helm-offline20-strip span{color:var(--cdim2,#7e8c99);font-weight:700;text-transform:uppercase;letter-spacing:.4px}',
       '#helm-offline20-strip b{font-weight:650;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ctext,#e8edf2)}',
       '#helm-offline20-strip[data-base="warn"] [data-o20-base],#helm-offline20-strip[data-depth="warn"] [data-o20-depth],#helm-offline20-strip[data-wx="warn"] [data-o20-wx]{color:var(--warn,#e0a23a)}',
