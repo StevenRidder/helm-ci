@@ -530,13 +530,13 @@
   <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row"><input type="checkbox" data-enc-layer="enc-chart" checked> S-52 ENC<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">engine</span></label>
+  <label class="row" title="Buoys, lights, and daymarks from OpenCPN engine PNG tiles — Icon Forge deferred."><input type="checkbox" data-layer="enc-chart" checked> S-52 aids &amp; chart<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">OpenCPN</span></label>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
-  <label class="row"><input type="checkbox" data-enc-layer="depare" checked> Depth shading</label>
-  <label class="row"><input type="checkbox" data-enc-layer="depcnt" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
+  <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
+  <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
   <label class="row"><input type="checkbox" data-contours> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">DEM · smooth</span></label>
-  <label class="row"><input type="checkbox" data-enc-layer="soundg" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
+  <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
   <div class="lbl">Overlays</div>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
@@ -768,6 +768,7 @@
 <script src="chart-artifact-pick.js"></script><!-- INSPECT-2: pick-buffer resolution + inspect trace assembly -->
 <script src="chart-inspector.js"></script><!-- INSPECT-2: chart object inspection card -->
 <script src="chart-renderer-status.js"></script><!-- INTEGRATE-1: WebGPU renderer status + feature flag surface -->
+<script src="layer-enc-opencpn.js"></script><!-- LAYER-5: OpenCPN engine PNG symbol authority on satellite -->
 <script src="wx-grid-pack-client.js"></script><!-- WX-32: helm.env.grid.v1 pack transport (range + checksum, fail-loud) -->
 <script src="wx-grid-decode.js"></script><!-- WX-33: grid.v1 chunk decode + tier assembly (pure, fail-loud) -->
 <script src="wx-field-texture-artifact.js"></script><!-- HELMWEBGPU-5: shared field-texture artifact seam for WX/WebGPU/VSG convergence -->

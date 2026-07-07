@@ -595,3 +595,54 @@ test.describe('RENDERMODEL-4 — filled S-52 portrayal at US5GA2BC', () => {
     });
   });
 });
+
+test.describe('LAYER-5 — OpenCPN aids symbols on satellite', () => {
+  test('satellite basemap + enc-chart fuses OpenCPN engine PNG aids', async ({ page, request }) => {
+    ensureEvidenceDir();
+    const bag = { chartTiles: [] };
+    page.on('response', resp => {
+      if (/\/chart\/\d+\/\d+\/\d+\.png/.test(resp.url())) {
+        bag.chartTiles.push({ url: resp.url(), status: resp.status() });
+      }
+    });
+
+    await bootHarbour(page);
+    await clickRail(page, 'layers');
+    await page.locator('input[data-base="googlesat"]').check();
+    await page.locator('input[data-layer="enc-chart"]').check();
+    await page.waitForTimeout(1200);
+
+    const state = await page.evaluate(() => ({
+      enc: window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.status(),
+      encVis: window.map.getLayer('enc-chart')
+        ? window.map.getLayoutProperty('enc-chart', 'visibility')
+        : 'missing',
+      satVis: window.map.getLayer('googlesat')
+        ? window.map.getLayoutProperty('googlesat', 'visibility')
+        : 'missing'
+    }));
+
+    expect(state.encVis).toBe('visible');
+    expect(state.satVis).toBe('visible');
+    expect(state.enc).toBeTruthy();
+    expect(state.enc.symbol_authority).toBe('opencpn-engine-png');
+    expect(state.enc.icon_forge_deferred).toBe(true);
+    expect(state.enc.fused_on_satellite).toBe(true);
+    expect(bag.chartTiles.some(t => t.status === 200), 'engine /chart PNG tiles requested').toBeTruthy();
+
+    const center = hashCenter(HASH);
+    const z = Math.max(10, Math.min(14, Math.round(center.zoom)));
+    const tile = await request.get(
+      `/chart/${z}/${lon2tile(center.lon, z)}/${lat2tile(center.lat, z)}.png`
+    );
+    expect(tile.ok()).toBeTruthy();
+    expect((await tile.body()).byteLength).toBeGreaterThan(200);
+
+    await page.screenshot({ path: path.join(BROWSER_DIR, '13-layer5-opencpn-aids-on-satellite.png'), fullPage: true });
+    appendManifest('layer5_opencpn_aids_sat', {
+      pass: true,
+      fused_on_satellite: state.enc.fused_on_satellite,
+      chart_tile_requests: bag.chartTiles.length
+    });
+  });
+});
