@@ -609,7 +609,7 @@ test.describe('LAYER-5 — OpenCPN aids symbols on satellite', () => {
     await bootHarbour(page);
     await clickRail(page, 'layers');
     await page.locator('input[data-base="googlesat"]').check();
-    await page.locator('input[data-layer="enc-chart"]').check();
+    await page.locator('input[data-enc-layer="enc-chart"]').check();
     await page.waitForTimeout(1200);
 
     const state = await page.evaluate(() => ({
@@ -644,5 +644,61 @@ test.describe('LAYER-5 — OpenCPN aids symbols on satellite', () => {
       fused_on_satellite: state.enc.fused_on_satellite,
       chart_tile_requests: bag.chartTiles.length
     });
+  });
+});
+
+test.describe('FUSE-1 — fusion presets', () => {
+  test('depth-on-sat preset fuses satellite + depth without aids', async ({ page }) => {
+    ensureEvidenceDir();
+    await bootHarbour(page);
+    await clickRail(page, 'layers');
+    await page.locator('[data-fusion-preset="depth-on-sat"]').click();
+    await page.waitForTimeout(800);
+
+    const state = await page.evaluate(() => ({
+      preset: window.HelmFusionPresets && HelmFusionPresets.describe('depth-on-sat'),
+      satVis: window.map.getLayer('googlesat')
+        ? window.map.getLayoutProperty('googlesat', 'visibility')
+        : 'missing',
+      encVis: window.map.getLayer('enc-chart')
+        ? window.map.getLayoutProperty('enc-chart', 'visibility')
+        : 'missing',
+      depareVis: window.map.getLayer('depare-fill')
+        ? window.map.getLayoutProperty('depare-fill', 'visibility')
+        : 'missing',
+      fused: window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.status()
+    }));
+
+    expect(state.preset && state.preset.id).toBe('depth-on-sat');
+    expect(state.satVis).toBe('visible');
+    expect(state.depareVis).toBe('visible');
+    expect(state.encVis).toBe('none');
+    expect(state.fused && state.fused.fused_on_satellite).toBe(false);
+
+    await page.screenshot({ path: path.join(BROWSER_DIR, '14-fuse1-depth-on-sat.png'), fullPage: true });
+    appendManifest('fuse1_depth_on_sat', { pass: true, preset: state.preset.id });
+  });
+
+  test('passage-prep preset enables satellite depth + OpenCPN aids', async ({ page }) => {
+    ensureEvidenceDir();
+    await bootHarbour(page);
+    await clickRail(page, 'layers');
+    await page.locator('[data-fusion-preset="passage-prep"]').click();
+    await page.waitForTimeout(1000);
+
+    const state = await page.evaluate(() => ({
+      preset: window.HelmFusionPresets && HelmFusionPresets.readActive(),
+      encVis: window.map.getLayer('enc-chart')
+        ? window.map.getLayoutProperty('enc-chart', 'visibility')
+        : 'missing',
+      fused: window.HelmLayerEncOpenCPN && HelmLayerEncOpenCPN.status()
+    }));
+
+    expect(state.preset).toBe('passage-prep');
+    expect(state.encVis).toBe('visible');
+    expect(state.fused && state.fused.fused_on_satellite).toBe(true);
+
+    await page.screenshot({ path: path.join(BROWSER_DIR, '15-fuse1-passage-prep.png'), fullPage: true });
+    appendManifest('fuse1_passage_prep', { pass: true, fused_on_satellite: state.fused.fused_on_satellite });
   });
 });

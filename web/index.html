@@ -150,6 +150,9 @@
   .drawer .sub{font-size:10.5px;color:var(--cdim);margin:0 0 10px}
   .lbl{font-size:10px;color:var(--cdim2);margin:12px 0 6px;letter-spacing:.08em;text-transform:uppercase}
   .row{display:flex;align-items:center;gap:9px;font-size:12.5px;color:#cdd9e3;padding:3px 0;cursor:pointer}
+  .enc-layer-row{margin:2px 0 6px}
+  .enc-layer-row .row{padding:2px 0}
+  .enc-opacity{width:100%;margin:0 0 4px;accent-color:var(--accent);height:16px;cursor:pointer}
   .row input{accent-color:var(--accent);width:14px;height:14px}
   /* ---- Connections settings panel ---- */
   .conn-list{display:flex;flex-direction:column;gap:6px;margin:6px 0}
@@ -176,6 +179,8 @@
 
   /* weather switcher */
   .wx{display:flex;flex-wrap:wrap;gap:6px}
+  .fuse-presets{display:flex;flex-wrap:wrap;gap:6px;margin:4px 0 10px}
+  .fuse-presets button{font-size:10.5px;padding:6px 8px;border-radius:7px}
   .wx button{font-size:11px;color:#cdd9e3;background:rgba(255,255,255,.05);border:.5px solid var(--line);
     border-radius:8px;padding:5px 9px;cursor:pointer;transition:background .12s,color .12s}
   .wx button:hover{background:rgba(255,255,255,.1)}
@@ -525,18 +530,25 @@
 <div class="drawer glass" id="drawer-layers" hidden>
   <h2>Layers</h2>
   <p class="sub">Chart &amp; data overlays</p>
+  <div class="lbl">Fusion presets</div>
+  <div class="fuse-presets wx" id="helm-fusion-presets" role="group" aria-label="Fusion presets">
+    <button type="button" data-fusion-preset="depth-on-sat" title="Satellite + depth shading, contours, soundings">Depth on sat</button>
+    <button type="button" data-fusion-preset="standard-enc" title="Navionics chart + full ENC stack">Standard ENC</button>
+    <button type="button" data-fusion-preset="sat-only" title="Satellite basemap, ENC overlays off">Sat only</button>
+    <button type="button" data-fusion-preset="passage-prep" title="Satellite + depth + aids + route &amp; AIS">Passage prep</button>
+  </div>
   <div class="lbl">Basemap</div>
   <label class="row"><input type="radio" name="basemap" data-base="navionics" checked> Navionics chart<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row" title="Buoys, lights, and daymarks from OpenCPN engine PNG tiles — Icon Forge deferred."><input type="checkbox" data-layer="enc-chart" checked> S-52 aids &amp; chart<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">OpenCPN</span></label>
+  <label class="row" title="Buoys, lights, and daymarks from OpenCPN engine PNG tiles — Icon Forge deferred."><input type="checkbox" data-enc-layer="enc-chart" checked> S-52 aids &amp; chart<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">OpenCPN</span></label>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
-  <label class="row"><input type="checkbox" data-layer="depare-fill" checked> Depth shading</label>
-  <label class="row"><input type="checkbox" data-layer="depcnt-line" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
+  <label class="row"><input type="checkbox" data-enc-layer="depare" checked> Depth shading</label>
+  <label class="row"><input type="checkbox" data-enc-layer="depcnt" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
   <label class="row"><input type="checkbox" data-contours> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">DEM · smooth</span></label>
-  <label class="row"><input type="checkbox" data-layer="soundg-text" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
+  <label class="row"><input type="checkbox" data-enc-layer="soundg" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
   <div class="lbl">Overlays</div>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
@@ -754,6 +766,7 @@
 <script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
 <script src="enc-layers.js"></script><!-- ENC-1: depare / depcnt / soundg / enc-chart toggles + HelmStore persistence -->
 <script src="enc-pan-prefetch.js"></script><!-- SAT-2: ENC tile prefetch + basemap underlay during pan -->
+<script src="fusion-presets.js"></script><!-- FUSE-1: Depth-on-sat | Standard ENC | Sat-only | Passage prep -->
 <script src="board.js"></script><!-- BOARD-1: Smart Board composable persisted tile grid -->
 <script src="offline-packs.js"></script><!-- OFFLINE-4: BYO MBTiles/PMTiles catalog + pack selector -->
 <script src="tooltip.js"></script><!-- fast custom hover tooltips (replaces the slow ~1.5s native title delay) -->
@@ -1056,6 +1069,7 @@
   })();
 
   if (window.HelmEncLayers) HelmEncLayers.bind(map);
+  if (window.HelmFusionPresets) HelmFusionPresets.bind(map);
 
   // Basemap picker (radios): persist + restore last choice (SAT-1). Offline packs win via offline-packs.js.
   if (window.HelmBasemapPrefs) HelmBasemapPrefs.bind(map);
