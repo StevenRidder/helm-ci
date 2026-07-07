@@ -16,9 +16,18 @@ import http.server, os, re, struct, sys, socketserver, zlib
 
 os.chdir(os.path.dirname(os.path.abspath(__file__)))
 PORT = int(sys.argv[1]) if len(sys.argv) > 1 else 8080
+USER_DATA_ROOT = os.environ.get('HELM_USER_DATA_ROOT') or os.path.join(
+    os.environ.get('HELM_CONFIG', os.path.expanduser('~/.helm')), 'data')
 
 MIME = {'.pmtiles': 'application/octet-stream', '.tif': 'image/tiff',
         '.geojson': 'application/geo+json'}
+
+def _safe_user_data_path(rel):
+    root = os.path.realpath(USER_DATA_ROOT)
+    path = os.path.realpath(os.path.join(root, rel))
+    if path == root or path.startswith(root + os.sep):
+        return path
+    return None
 
 def _png_chunk(tag, data):
     return struct.pack('>I', len(data)) + tag + data + struct.pack('>I', zlib.crc32(tag + data) & 0xffffffff)
@@ -56,13 +65,39 @@ class Handler(http.server.SimpleHTTPRequestHandler):
                 pass
         return True
 
+    def _serve_user_data(self, include_body=True):
+        m = re.match(r'^/user-data/(.+)$', self.path.split('?', 1)[0])
+        if not m:
+            return False
+        path = _safe_user_data_path(m.group(1))
+        if not path or not os.path.isfile(path):
+            self.send_error(404)
+            return True
+        ctype = self.guess_type(path)
+        size = os.path.getsize(path)
+        self.send_response(200)
+        self.send_header('Content-Type', ctype)
+        self.send_header('Content-Length', str(size))
+        self.end_headers()
+        if include_body:
+            with open(path, 'rb') as f:
+                try:
+                    self.wfile.write(f.read())
+                except (BrokenPipeError, ConnectionResetError):
+                    pass
+        return True
+
     def do_HEAD(self):
         if self._serve_chart_tile(include_body=False):
+            return
+        if self._serve_user_data(include_body=False):
             return
         super().do_HEAD()
 
     def do_GET(self):
         if self._serve_chart_tile():
+            return
+        if self._serve_user_data():
             return
         rng = self.headers.get('Range')
         path = self.translate_path(self.path.split('?')[0])
