@@ -19,7 +19,7 @@ ORIGIN_REMOTE="${ORIGIN_REMOTE:-origin}"
 WAIT_TIMEOUT_SEC="${WAIT_TIMEOUT_SEC:-7200}"
 POLL_INTERVAL_SEC="${POLL_INTERVAL_SEC:-20}"
 MAIN_REF="${MAIN_REF:-origin/main}"
-SANDBOX_WORKFLOWS="${SANDBOX_WORKFLOWS:-backend-tests.yml engine-fresh-clone-smoke.yml helmcxx-runtime-guard.yml symbol-selection-smoke.yml web-e2e.yml web-tests.yml}"
+SANDBOX_WORKFLOWS="${SANDBOX_WORKFLOWS:-backend-tests.yml engine-fresh-clone-smoke.yml fallback-1-proof.yml helmcxx-runtime-guard.yml qa-1-shared-renderer.yml symbol-selection-smoke.yml web-e2e.yml web-tests.yml}"
 STATUS_CONTEXT="${STATUS_CONTEXT:-helm-ci/full-suite}"
 
 die() {
@@ -101,6 +101,7 @@ Usage: scripts/ci-sandbox.sh <command> [options] [branch]
 Commands:
   setup                 Create $CI_REPO (if missing) and add git remote '$CI_REMOTE'
   push [--no-wait]      Push <branch> (default: current), dispatch workflows, wait for dispatched Actions
+                        Use --no-dispatch only to push the branch without starting CI.
   wait                  Wait for in-progress Actions on <branch> (default: current)
   status                Print recent Actions conclusions for <branch> (default: current)
   prove                 Stamp canonical repo status after exact SHA passed helm-ci

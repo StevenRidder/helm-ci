@@ -176,6 +176,10 @@ scripts/ci-sandbox.sh delete <branch>
 ```
 
 `helm-ci` is full-tree CI. It is not `helm-public`, and it is not sanitized.
+Helm's private/canonical CI workflows are intentionally `workflow_dispatch`
+only; do not re-add `pull_request` or `push` triggers to the CI suite. Normal PR
+verification comes from the public `helm-ci/full-suite` status stamped by
+`scripts/ci-sandbox.sh`.
 
 During long work, keep presence fresh:
 

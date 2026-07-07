@@ -1,48 +1,6 @@
 name: HELMC++ runtime guard
 
 on:
-  push:
-    paths:
-      - "docs/runtime-inventory.json"
-      - "docs/helmcxx-parity-suite.json"
-      - "docs/HELMCXX-ACCEPTANCE.md"
-      - "docs/HELMCXX-MAINTAINABILITY.md"
-      - "docs/HELMCXX-PACKAGING.md"
-      - "docs/RUNTIME-SERVICES.md"
-      - "backend/**/*.py"
-      - "packaging/**"
-      - "scripts/check-runtime-inventory.py"
-      - "scripts/helmcxx-parity-suite.py"
-      - "scripts/helmcxx-no-python-runtime.sh"
-      - "scripts/helmcxx-cockpit-proof.sh"
-      - "scripts/helmcxx-benchmark-soak.mjs"
-      - "scripts/helmcxx-maintainability-audit.mjs"
-      - "scripts/helmcxx-packaging-proof.sh"
-      - "scripts/install-helmcxx-runtime.sh"
-      - "scripts/helmcxx-make-envd-fixture.mjs"
-      - "web/test/e2e/helmcxx4-cockpit.spec.js"
-      - ".github/workflows/helmcxx-runtime-guard.yml"
-  pull_request:
-    paths:
-      - "docs/runtime-inventory.json"
-      - "docs/helmcxx-parity-suite.json"
-      - "docs/HELMCXX-ACCEPTANCE.md"
-      - "docs/HELMCXX-MAINTAINABILITY.md"
-      - "docs/HELMCXX-PACKAGING.md"
-      - "docs/RUNTIME-SERVICES.md"
-      - "backend/**/*.py"
-      - "packaging/**"
-      - "scripts/check-runtime-inventory.py"
-      - "scripts/helmcxx-parity-suite.py"
-      - "scripts/helmcxx-no-python-runtime.sh"
-      - "scripts/helmcxx-cockpit-proof.sh"
-      - "scripts/helmcxx-benchmark-soak.mjs"
-      - "scripts/helmcxx-maintainability-audit.mjs"
-      - "scripts/helmcxx-packaging-proof.sh"
-      - "scripts/install-helmcxx-runtime.sh"
-      - "scripts/helmcxx-make-envd-fixture.mjs"
-      - "web/test/e2e/helmcxx4-cockpit.spec.js"
-      - ".github/workflows/helmcxx-runtime-guard.yml"
   workflow_dispatch:
 
 jobs:

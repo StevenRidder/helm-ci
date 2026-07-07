@@ -8,42 +8,6 @@ name: Symbol-selection Forge smoke
 # evidence snapshot.
 
 on:
-  pull_request:
-    paths:
-      - "engine/test-symbol-selection-fixtures.sh"
-      - "engine/test-symbol-selection-db-conformance.sh"
-      - "engine/test-symbol-runtime-gate.sh"
-      - "engine/test-symbol-package-loader.sh"
-      - "engine/test-vulkan-fixture-check.sh"
-      - "engine/test-vulkan-symbol-selection-render.sh"
-      - "engine/test/fixtures/symbol-selection/**"
-      - "engine/test/fixtures/vulkan-render/**"
-      - "engine/vulkan/render_fixture.cpp"
-      - "engine/vendor/cli/**"
-      - "scripts/vulkan-render-fixture"
-      - "artifacts/opencpn_s52_portrayal.sqlite"
-      - "artifacts/opencpn_s52_portrayal.schema.sql"
-      - "pipeline/iconforge/catalog/runtime_evidence_snapshot.json"
-      - ".github/workflows/symbol-selection-smoke.yml"
-  push:
-    branches:
-      - main
-    paths:
-      - "engine/test-symbol-selection-fixtures.sh"
-      - "engine/test-symbol-selection-db-conformance.sh"
-      - "engine/test-symbol-runtime-gate.sh"
-      - "engine/test-symbol-package-loader.sh"
-      - "engine/test-vulkan-fixture-check.sh"
-      - "engine/test-vulkan-symbol-selection-render.sh"
-      - "engine/test/fixtures/symbol-selection/**"
-      - "engine/test/fixtures/vulkan-render/**"
-      - "engine/vulkan/render_fixture.cpp"
-      - "engine/vendor/cli/**"
-      - "scripts/vulkan-render-fixture"
-      - "artifacts/opencpn_s52_portrayal.sqlite"
-      - "artifacts/opencpn_s52_portrayal.schema.sql"
-      - "pipeline/iconforge/catalog/runtime_evidence_snapshot.json"
-      - ".github/workflows/symbol-selection-smoke.yml"
   workflow_dispatch:
 
 jobs:

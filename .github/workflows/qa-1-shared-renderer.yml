@@ -5,48 +5,6 @@ name: QA-1 shared renderer regression
 # via scripts/qa-1-shared-renderer-proof.sh (HELM_QA1=1, HELM_QA1_BROWSER=1).
 
 on:
-  pull_request:
-    paths:
-      - "engine/test-qa-1-shared-renderer.sh"
-      - "engine/test-qa-1-server-png.sh"
-      - "engine/test-rendermodel-6-s52-neutral.sh"
-      - "engine/test/fixtures/vulkan-render/**"
-      - "engine/test/fixtures/viewport-scheduler/**"
-      - "engine/vulkan/render_model_fixture_export.cpp"
-      - "pipeline/test_viewport_scheduler.py"
-      - "scripts/qa-1-shared-renderer-proof.sh"
-      - "scripts/vulkan-render-fixture"
-      - "scripts/render-artifact-*"
-      - "scripts/viewport-scheduler-*"
-      - "scripts/inspection-trace-smoke"
-      - "web/chart-*.js"
-      - "web/data/render-artifact-chart-1.json"
-      - "web/tests/chart-*.test.js"
-      - "web/test/chart-artifact-*.test.cjs"
-      - "web/test/e2e/qa-1-shared-renderer.spec.js"
-      - ".github/workflows/qa-1-shared-renderer.yml"
-  push:
-    branches:
-      - main
-    paths:
-      - "engine/test-qa-1-shared-renderer.sh"
-      - "engine/test-qa-1-server-png.sh"
-      - "engine/test-rendermodel-6-s52-neutral.sh"
-      - "engine/test/fixtures/vulkan-render/**"
-      - "engine/test/fixtures/viewport-scheduler/**"
-      - "engine/vulkan/render_model_fixture_export.cpp"
-      - "pipeline/test_viewport_scheduler.py"
-      - "scripts/qa-1-shared-renderer-proof.sh"
-      - "scripts/vulkan-render-fixture"
-      - "scripts/render-artifact-*"
-      - "scripts/viewport-scheduler-*"
-      - "scripts/inspection-trace-smoke"
-      - "web/chart-*.js"
-      - "web/data/render-artifact-chart-1.json"
-      - "web/tests/chart-*.test.js"
-      - "web/test/chart-artifact-*.test.cjs"
-      - "web/test/e2e/qa-1-shared-renderer.spec.js"
-      - ".github/workflows/qa-1-shared-renderer.yml"
   workflow_dispatch:
 
 jobs:

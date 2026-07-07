@@ -95,6 +95,11 @@ https://github.com/StevenRidder/helm-ci/actions?query=branch%3A<branch>
 If `scripts/ci-sandbox.sh doctor` fails, fix the reported setup issue before
 claiming CI is green.
 
+The private/canonical CI workflows are intentionally `workflow_dispatch` only.
+Do not re-enable `pull_request` or `push` triggers for the CI suite; the normal
+PR gate is the public `helm-ci/full-suite` status stamped by
+`scripts/ci-sandbox.sh`.
+
 ## Work Boundaries
 
 Each epic in [`docs/EPICS.md`](docs/EPICS.md) lists owned files. Stay in those

@@ -3,7 +3,10 @@
 Helm keeps the canonical source tree on **`StevenRidder/Helm`**. GitHub Actions
 are expensive on a **private** origin (especially the macOS engine fresh-clone
 smoke, which bills at 10x wall-clock minutes). The **CI sandbox** is a separate
-**public** repo with the **full actual Helm tree** and **all** workflows:
+**public** repo with the **full actual Helm tree** and the full CI workflow
+suite. The canonical private repo keeps those CI workflows manual-only so PR
+review stays on `Helm` while automated CI minutes and required status evidence
+come from `helm-ci`.
 
 | Repo | Role |
 |---|---|
@@ -17,11 +20,16 @@ not scrubbed: it tests the same code tree that will be pushed to `Helm`.
 
 ## Workflows on the sandbox
 
-The sandbox runs the same GitHub Actions as Helm:
+The CI workflows in `.github/workflows/` are `workflow_dispatch` driven. The
+sandbox script dispatches this full suite on `StevenRidder/helm-ci` and then
+stamps the required `helm-ci/full-suite` status back onto the exact canonical
+Helm SHA:
 
 - `backend-tests`
 - `engine-fresh-clone-smoke` (macOS, up to 120 min)
+- `fallback-1-proof`
 - `helmcxx-runtime-guard`
+- `qa-1-shared-renderer`
 - `symbol-selection-smoke`
 - `web-tests`
 - `web-e2e`
@@ -84,7 +92,7 @@ gh pr create --repo StevenRidder/Helm --fill
 | `scripts/ci-sandbox.sh protect-main` | Configure Helm `main` to require `helm-ci/full-suite` before it can move |
 | `scripts/ci-sandbox.sh push [branch]` | Push branch, dispatch all sandbox workflows, wait for the dispatched Actions batch |
 | `scripts/ci-sandbox.sh push --no-wait [branch]` | Push and dispatch workflows without waiting |
-| `scripts/ci-sandbox.sh push --no-dispatch [branch]` | Push only; rely on normal path-filter triggers |
+| `scripts/ci-sandbox.sh push --no-dispatch [branch]` | Push only; no CI is dispatched by this command |
 | `scripts/ci-sandbox.sh wait [branch]` | Wait for in-progress runs |
 | `scripts/ci-sandbox.sh status [branch]` | Print recent run conclusions |
 | `scripts/ci-sandbox.sh delete [branch]` | Remove branch from sandbox |
@@ -98,9 +106,10 @@ filtering. `STATUS_CONTEXT` defaults to `helm-ci/full-suite`; branch protection
 requires that status context.
 
 By default, `push` treats the explicit `workflow_dispatch` batch as the
-authoritative sandbox CI suite. GitHub may also start duplicate push-triggered
-jobs for the same SHA; those are useful signal, but they are not the gate for
-the full-tree sandbox path unless you run `push --no-dispatch` or wait manually.
+authoritative sandbox CI suite. The Helm CI workflows are intentionally
+dispatch-only, so duplicate push/PR CI jobs are not expected for this suite.
+If you run `push --no-dispatch`, you have only moved the branch; run a dispatch
+or use an existing green `workflow_dispatch` batch before calling `prove`.
 
 After a green dispatched suite, `prove` stamps the required status back on the
 canonical Helm commit. GitHub branch protection on Helm `main` requires this
@@ -142,10 +151,11 @@ a post-merge hook or scheduled job on a trusted machine.
 
 ## Private Helm origin
 
-While `Helm` is public, Actions minutes are already free on both repos. The
-sandbox pattern matters when `Helm` is **private** again: run heavy CI on
-`helm-ci`, keep PR review on `Helm`, and optionally narrow which workflows run
-on private PRs to avoid double-billing.
+The sandbox pattern matters while `Helm` is private: run CI on `helm-ci`, keep
+PR review on `Helm`, and let `helm-ci/full-suite` be the required branch
+protection gate. CI workflows in this repo should stay `workflow_dispatch` only.
+Product/publication automations may have their own triggers, but they are not
+the PR CI gate.
 
 ## Security notes
 

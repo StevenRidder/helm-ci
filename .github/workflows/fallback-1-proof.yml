@@ -9,28 +9,6 @@ name: FALLBACK-1 render fallback proof
 # while still failing loudly on a real regression.
 
 on:
-  pull_request:
-    paths:
-      - "scripts/fallback-1-proof.sh"
-      - "scripts/fallback1-assert.py"
-      - "scripts/vulkan-render-fixture"
-      - "scripts/render-artifact-compile"
-      - "scripts/render-artifact-cache-smoke"
-      - "engine/vulkan/render_fixture.cpp"
-      - "engine/test/fixtures/vulkan-render/chart-1/**"
-      - ".github/workflows/fallback-1-proof.yml"
-  push:
-    branches:
-      - main
-    paths:
-      - "scripts/fallback-1-proof.sh"
-      - "scripts/fallback1-assert.py"
-      - "scripts/vulkan-render-fixture"
-      - "scripts/render-artifact-compile"
-      - "scripts/render-artifact-cache-smoke"
-      - "engine/vulkan/render_fixture.cpp"
-      - "engine/test/fixtures/vulkan-render/chart-1/**"
-      - ".github/workflows/fallback-1-proof.yml"
   workflow_dispatch:
 
 jobs:

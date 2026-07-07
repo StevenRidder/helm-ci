@@ -4,14 +4,6 @@
 name: web-tests
 
 on:
-  push:
-    paths:
-      - 'web/**'
-      - '.github/workflows/web-tests.yml'
-  pull_request:
-    paths:
-      - 'web/**'
-      - '.github/workflows/web-tests.yml'
   workflow_dispatch:
 
 jobs:
