@@ -1,9 +1,7 @@
-// OFFLINE-20: satellite-first Fiji overlay proof.
+// OFFLINE-20 / QA-L-1: satellite-first Fiji overlay proof.
 //
-// Opt-in because the full proof uses local packs/services and may need a real
-// WebGPU adapter. In mock-packd mode it still exercises the cockpit client,
-// generated numeric WX pack, screenshots, no-network guard, and fail-loud
-// fallback path without touching the live :8080 boat screen.
+// Enabled with HELM_OFFLINE20=1. Mock packd (HELM_OFFLINE20_MOCK_PACKD=1) runs in helm-ci
+// web-e2e without live C++ services. Full private-stack proof: scripts/verify-offline20-sat-first-fiji.sh
 const { test, expect } = require('@playwright/test');
 const { execFileSync } = require('child_process');
 const fs = require('fs');
