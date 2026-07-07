@@ -542,13 +542,25 @@
   <label class="row"><input type="radio" name="basemap" data-base="googlesat"> Google satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="bingsat"> Bing satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
   <label class="row"><input type="radio" name="basemap" data-base="arcgis"> ArcGIS satellite<span style="margin-left:auto;font-size:9.5px;color:#f5c451">yours</span></label>
-  <label class="row" title="Buoys, lights, and daymarks from OpenCPN engine PNG tiles — Icon Forge deferred."><input type="checkbox" data-enc-layer="enc-chart" checked> S-52 aids &amp; chart<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">OpenCPN</span></label>
+  <div class="enc-layer-row">
+    <label class="row" title="Buoys, lights, and daymarks from OpenCPN engine PNG tiles — Icon Forge deferred."><input type="checkbox" data-enc-layer="enc-chart" checked> S-52 aids &amp; chart<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">OpenCPN</span></label>
+    <input type="range" class="enc-opacity" data-enc-opacity="enc-chart" min="0" max="100" value="100" aria-label="S-52 aids opacity">
+  </div>
   <label class="row"><input type="checkbox" data-layer="helm-chart-online-fill"> Online fill<span style="margin-left:auto;font-size:9.5px;color:var(--accent)">internet</span></label>
   <div class="lbl">Depth on satellite</div>
-  <label class="row"><input type="checkbox" data-enc-layer="depare" checked> Depth shading</label>
-  <label class="row"><input type="checkbox" data-enc-layer="depcnt" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
+  <div class="enc-layer-row">
+    <label class="row"><input type="checkbox" data-enc-layer="depare" checked> Depth shading</label>
+    <input type="range" class="enc-opacity" data-enc-opacity="depare" min="0" max="100" value="100" aria-label="Depth shading opacity">
+  </div>
+  <div class="enc-layer-row">
+    <label class="row"><input type="checkbox" data-enc-layer="depcnt" checked> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">ENC</span></label>
+    <input type="range" class="enc-opacity" data-enc-opacity="depcnt" min="0" max="100" value="100" aria-label="Depth contours opacity">
+  </div>
   <label class="row"><input type="checkbox" data-contours> Depth contours <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">DEM · smooth</span></label>
-  <label class="row"><input type="checkbox" data-enc-layer="soundg" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
+  <div class="enc-layer-row">
+    <label class="row"><input type="checkbox" data-enc-layer="soundg" checked> Soundings <span style="margin-left:auto;font-size:9.5px;color:var(--cdim2)">shallow = warm</span></label>
+    <input type="range" class="enc-opacity" data-enc-opacity="soundg" min="0" max="100" value="100" aria-label="Soundings opacity">
+  </div>
   <div class="lbl">Overlays</div>
   <label class="row"><input type="checkbox" data-layer="route-line" checked> Route</label>
   <label class="row"><input type="checkbox" data-layer="places" checked> Places</label>
@@ -764,7 +776,7 @@
 <script src="command-palette.js"></script><!-- SHELL-3: ⌘K command palette (extracted from index.html) -->
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
 <script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
-<script src="enc-layers.js"></script><!-- ENC-1: depare / depcnt / soundg / enc-chart toggles + HelmStore persistence -->
+<script src="enc-layers.js"></script><!-- ENC-1/2: depare / depcnt / soundg / enc-chart toggles + per-layer opacity -->
 <script src="enc-pan-prefetch.js"></script><!-- SAT-2: ENC tile prefetch + basemap underlay during pan -->
 <script src="fusion-presets.js"></script><!-- FUSE-1: Depth-on-sat | Standard ENC | Sat-only | Passage prep -->
 <script src="board.js"></script><!-- BOARD-1: Smart Board composable persisted tile grid -->
@@ -1134,6 +1146,7 @@
       if (ok) {
         var encOn = window.HelmEncLayers ? HelmEncLayers.isOn('enc-chart') : true;
         chartArtifact.setVisible(encOn);
+        if (window.HelmEncLayers) HelmEncLayers.applyOpacity(map, 'enc-chart');
       }
       // RENDERMODEL-3: when viewing a real ENC cell, fly to its geographic bbox so the GPU
       // chart is actually on-screen (the default basemap camera is elsewhere).
