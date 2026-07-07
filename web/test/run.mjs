@@ -25,6 +25,7 @@ const WIRED = [
   { name: 'alarms', file: join(WEB, 'alarms.smoke.js') },
   { name: 'true-wind (TWS/TWD/TWA)', file: join(WEB, 'true-wind.js') },
   { name: 'wx-value-codec (encode/decode/tiles)', file: join(WEB, 'wx-value-codec.js') },
+  { name: 'fuse-2 layer z-order lint', file: join(WEB, 'tests', 'fuse-2-layer-order.test.js') },
 ];
 // New unit tests — auto-discovered so future *.test.cjs join the suite with no edit here.
 const UNIT = readdirSync(HERE)
