@@ -130,6 +130,22 @@ clobber another epic's layer.
 `helm-base` → `helm-chart-basemaps` → `helm-chart-depth` → `helm-route-line` → `helm-wx-wind` →
 `helm-place-whereto` → `helm-place-poi` → `helm-ais-targets` → `helm-place-saved`.
 
+#### North Star layer stack (FUSE-2)
+
+The sat-first fused map draws in five bands, **bottom → top** (same as manifest merge order). Lint:
+`node web/tests/fuse-2-layer-order.test.js` (also wired in `web/test/run.mjs`).
+
+| Band | Layers | Notes |
+|------|--------|-------|
+| **basemap** | `ocean`, `helm-chart-online-fill`, `navionics` / `googlesat` / `bingsat` / `arcgis` / `satellite` / `charts` | Offline PMTiles packs insert `helm-offline-active-pack` immediately **before** `enc-chart` at runtime (`offline-packs.js`). |
+| **enc** | `enc-chart`, `depare-fill`, `depcnt-line`, `soundg-text` | OpenCPN PNG raster then vector depth overlays (depth-on-sat paints above the raster). |
+| **overlays** | `route-line` | Passage / planning vectors. |
+| **weather** | `wind-arrows` | Legacy CPU layer stays `visibility:none`; WebGPU grid (`HelmWxGrid`) is a canvas overlay above the map. |
+| **nav** | `whereto-*`, `places-*`, `ais-*`, `saved-*` | Touch targets and labels on top. |
+
+Fusion presets (`fusion-presets.js`) toggle visibility inside these bands; they must not reorder the
+manifest. New layers belong in the correct fragment file **and** position in `manifest.json`.
+
 > **Grandfathered legacy ids.** The split preserves the original un-prefixed layer/source ids
 > (`enc-chart`, `route-line`, `places-icon`, `ais-vessels`, …) because `index.html` and the feature
 > modules reference them by name. Don't rename them. The `helm-<epic>-*` rule applies to **new**
