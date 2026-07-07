@@ -751,6 +751,7 @@
 <script src="shell.js"></script>
 <script src="command-palette.js"></script><!-- SHELL-3: ⌘K command palette (extracted from index.html) -->
 <script src="persist.js"></script><!-- TOOLS-7: HelmStore — the one fail-loud persistence layer (settings survive reload) -->
+<script src="basemap-prefs.js"></script><!-- SAT-1: remember last static basemap (Navionics / Google / Bing / ArcGIS) -->
 <script src="enc-layers.js"></script><!-- ENC-1: depare / depcnt / soundg / enc-chart toggles + HelmStore persistence -->
 <script src="board.js"></script><!-- BOARD-1: Smart Board composable persisted tile grid -->
 <script src="offline-packs.js"></script><!-- OFFLINE-4: BYO MBTiles/PMTiles catalog + pack selector -->
@@ -1055,15 +1056,18 @@
 
   if (window.HelmEncLayers) HelmEncLayers.bind(map);
 
-  // Basemap picker (radios): show the chosen base (your charts vs your satellite), hide the others.
-  const BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis'];
-  document.querySelectorAll('input[name="basemap"]').forEach(rb => {
-    rb.addEventListener('change', () => {
-      if (!rb.checked) return;
-      const pick = rb.dataset.base;
-      BASEMAPS.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', id === pick ? 'visible' : 'none'); });
+  // Basemap picker (radios): persist + restore last choice (SAT-1). Offline packs win via offline-packs.js.
+  if (window.HelmBasemapPrefs) HelmBasemapPrefs.bind(map);
+  else {
+    const BASEMAPS = ['navionics', 'googlesat', 'bingsat', 'arcgis'];
+    document.querySelectorAll('input[name="basemap"]').forEach(rb => {
+      rb.addEventListener('change', () => {
+        if (!rb.checked) return;
+        const pick = rb.dataset.base;
+        BASEMAPS.forEach(id => { if (map.getLayer(id)) map.setLayoutProperty(id, 'visibility', id === pick ? 'visible' : 'none'); });
+      });
     });
-  });
+  }
 
   // DEM depth/terrain contours (maplibre-contour, off-thread) — lazy-loaded the
   // first time it's switched on, from the LOCAL vendored bundle + LOCAL DEM tiles.
