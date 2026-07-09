@@ -36,3 +36,8 @@ jobs:
           HELM_OFFLINE20: '1'
           HELM_OFFLINE20_MOCK_PACKD: '1'
         run: npx playwright test e2e/offline20-sat-first-fiji.spec.js
+      - name: Run QA-L-2 depth-on-sat Fiji proof
+        env:
+          HELM_QAL2: '1'
+          HELM_OFFLINE20_MOCK_PACKD: '1'
+        run: npx playwright test e2e/qa-l2-depth-on-sat-fiji-st-marys.spec.js --config=playwright.qa-l2.config.js --grep Fiji

@@ -1,0 +1,6 @@
+{
+  "type": "FeatureCollection",
+  "features": [
+    { "type": "Feature", "properties": { "VALDCO": 10 }, "geometry": { "type": "LineString", "coordinates": [[177.4, -17.75], [178.8, -17.75]] } }
+  ]
+}

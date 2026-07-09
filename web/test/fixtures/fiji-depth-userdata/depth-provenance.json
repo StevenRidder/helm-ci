@@ -1,0 +1,6 @@
+{
+  "schema": "helm.depth_provenance.v1",
+  "source": "enc",
+  "cell": "FJ-FIXTURE-BLIGH-WATER",
+  "note": "Committed Fiji-viewport depth fixture for the QA-L-2 CI leg. Served by web/serve.py as /user-data/ via HELM_USER_DATA_ROOT (see playwright.qa-l2.config.js) so the real enc-depth-sources.js user-data preference path runs without a real Fiji ENC. Deliberately NOT a NOAA cell id."
+}

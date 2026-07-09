@@ -6,6 +6,7 @@
     "test:unit": "node run.mjs",
     "test:e2e": "playwright test",
     "test:e2e:offline20": "HELM_OFFLINE20=1 HELM_OFFLINE20_MOCK_PACKD=1 playwright test e2e/offline20-sat-first-fiji.spec.js",
+    "test:e2e:qal2": "HELM_QAL2=1 HELM_OFFLINE20_MOCK_PACKD=1 playwright test e2e/qa-l2-depth-on-sat-fiji-st-marys.spec.js --config=playwright.qa-l2.config.js --grep Fiji",
     "test:e2e:client23": "playwright test e2e/client23-windy-parity.spec.js",
     "test": "node run.mjs && playwright test"
   },

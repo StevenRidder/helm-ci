@@ -14,6 +14,7 @@ machine, boat server, or demo process is safe to stop or replace.
 | 8094 | Weather data plane | C++ `helm-envd` — serves validated `helm.env.grid.v1` chunks to the cockpit (`/chunk`), plus `/health` and `/packs`. Started by `scripts/start-helm.sh --weather` from the baked release tree. |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
 | 9001+ | Private development servers | Recommended for local agent/test runs. |
+| 9160 | Miami depth-on-sat regression server | Private `helm-server` with NOAA US5MIABB for the QA-L-2 US regression path (`scripts/start-miami-helm-server.sh`, `scripts/verify-miami-dinner-key-depth-on-sat.sh`). Never touches :8080. |
 
 ## Public-Alpha Rule
 
