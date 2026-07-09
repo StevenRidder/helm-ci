@@ -258,6 +258,19 @@ done
 # Installed next to helm-envd so its sibling-relative exec resolves for any prefix.
 [ -f "$ROOT/scripts/helm-envd-launch" ] || die "weather tool missing from checkout: scripts/helm-envd-launch"
 install_file "$ROOT/scripts/helm-envd-launch" "$PREFIX_DST/bin/helm-envd-launch" 0755
+# helm-server launch shim — refreshes the ENC depth extract (idempotent via the
+# depth-provenance.json path+mtime check) before exec'ing the daemon, so swapping
+# the loaded cell re-extracts at the next (re)start instead of silently serving
+# stale or bundled-demo depth. Installed next to helm-server so its
+# sibling-relative exec resolves for any prefix.
+[ -f "$ROOT/scripts/helm-server-launch" ] || die "server shim missing from checkout: scripts/helm-server-launch"
+install_file "$ROOT/scripts/helm-server-launch" "$PREFIX_DST/bin/helm-server-launch" 0755
+install_file "$ROOT/scripts/extract-user-depth.sh" "$PREFIX_DST/scripts/extract-user-depth.sh" 0755
+install_file "$ROOT/pipeline/extract_depth.sh" "$PREFIX_DST/pipeline/extract_depth.sh" 0755
+# GDAL-less fallback extractor ships with QA-L-2 (#407); stage it when the checkout has it.
+if [ -f "$ROOT/scripts/extract-enc-depth-pyogrio.py" ]; then
+  install_file "$ROOT/scripts/extract-enc-depth-pyogrio.py" "$PREFIX_DST/scripts/extract-enc-depth-pyogrio.py" 0755
+fi
 
 log "installing cockpit web assets"
 copy_dir "$WEB_SOURCE" "$PREFIX_DST/web"
@@ -347,7 +360,9 @@ render_launchd() {  # render_launchd <name> <port> <extra-env>
   local name="$1" port="$2" extra="$3"
   # helm-envd runs via the launch shim so every pack manifest (atmospheric + marine)
   # loads; the pinned HELM_ENV_GRID_MANIFESTS below is only its graceful fallback.
+  # helm-server runs via its shim too (boot-time ENC depth extract, ENC-4).
   local prog="$name"; [ "$name" = "helm-envd" ] && prog="helm-envd-launch"
+  [ "$name" = "helm-server" ] && prog="helm-server-launch"
   printf '<?xml version="1.0" encoding="UTF-8"?>\n'
   printf '<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">\n'
   printf '<plist version="1.0">\n<dict>\n'
@@ -388,7 +403,9 @@ render_systemd() {  # render_systemd <name> <port> <extra-env>
   local name="$1" port="$2" extra="$3"
   # helm-envd runs via the launch shim (loads every pack manifest; the pinned
   # HELM_ENV_GRID_MANIFESTS Environment= below is its graceful fallback).
+  # helm-server runs via its shim too (boot-time ENC depth extract, ENC-4).
   local prog="$name"; [ "$name" = "helm-envd" ] && prog="helm-envd-launch"
+  [ "$name" = "helm-server" ] && prog="helm-server-launch"
   local execargs="$PREFIX/bin/$prog"; [ -n "$port" ] && execargs="$execargs $port"
   printf '[Unit]\n'
   printf 'Description=Helm C++ runtime service (%s)\n' "$name"

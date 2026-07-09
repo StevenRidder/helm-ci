@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 # ENC-4 — extract region depth GeoJSON from the active ENC cell into user-data (~/.helm/data).
 # Idempotent: skips when depth-provenance.json matches the current HELM_ENC mtime.
+# Extractor: GDAL ogr2ogr (pipeline/extract_depth.sh) when installed, otherwise the
+# pyogrio+geopandas fallback (scripts/extract-enc-depth-pyogrio.py) — same layers, same
+# provenance schema, no GDAL install needed.
 set -euo pipefail
 
 REPO_ROOT="$(cd "$(dirname "$0")/.." && pwd)"
@@ -20,10 +23,16 @@ fi
   echo "extract-user-depth: no ENC .000 cell (set HELM_ENC or install sample ENC)" >&2
   exit 1
 }
-command -v ogr2ogr >/dev/null 2>&1 || {
-  echo "extract-user-depth: GDAL ogr2ogr not found (brew install gdal)" >&2
+EXTRACTOR=""
+if command -v ogr2ogr >/dev/null 2>&1; then
+  EXTRACTOR=gdal
+elif [ -f "$REPO_ROOT/scripts/extract-enc-depth-pyogrio.py" ] \
+    && python3 -c 'import pyogrio, geopandas' >/dev/null 2>&1; then
+  EXTRACTOR=pyogrio
+else
+  echo "extract-user-depth: no ENC extractor — install GDAL (brew install gdal) or the python fallback deps (pip3 install pyogrio geopandas)" >&2
   exit 1
-}
+fi
 
 mkdir -p "$OUT"
 PROV="$OUT/depth-provenance.json"
@@ -52,5 +61,9 @@ PY
   fi
 fi
 
-echo "extract-user-depth: extracting $(basename "$ENC" .000) -> $OUT"
-bash "$REPO_ROOT/pipeline/extract_depth.sh" "$ENC" "$OUT"
+echo "extract-user-depth: extracting $(basename "$ENC" .000) -> $OUT ($EXTRACTOR)"
+if [ "$EXTRACTOR" = gdal ]; then
+  bash "$REPO_ROOT/pipeline/extract_depth.sh" "$ENC" "$OUT"
+else
+  python3 "$REPO_ROOT/scripts/extract-enc-depth-pyogrio.py" "$ENC" "$OUT"
+fi

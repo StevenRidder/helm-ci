@@ -1,0 +1,29 @@
+#!/bin/sh
+# helm-server launch shim (ENC-4 depth-on-sat boot extract).
+#
+# The supervised unit used to exec helm-server directly, so nothing refreshed the
+# ENC depth extract when the loaded cell changed: /user-data/ kept serving the
+# previous cell's depth (or 404), and the depth-on-sat preset silently rendered
+# the bundled demo vectors — the failure QA-L-2's proof bar exists to catch.
+# This shim runs the idempotent extract (scripts/extract-user-depth.sh skips when
+# depth-provenance.json already matches the ENC path+mtime), then exec's the daemon.
+#
+# It FAILS GRACEFULLY: unset HELM_ENC, a missing extractor, or a failed extract
+# logs the real reason and still starts helm-server — the chartplotter must come
+# up, and /user-data/depth-provenance.json plus the cockpit proof bar keep the
+# degraded depth state visible. Never a KeepAlive/Restart thrash.
+set -eu
+
+self_dir=$(CDPATH= cd -- "$(dirname -- "$0")" && pwd)
+prefix=$(dirname -- "$self_dir")
+
+if [ -z "${HELM_ENC:-}" ] || [ ! -f "${HELM_ENC:-}" ]; then
+  echo "helm-server-launch: HELM_ENC unset or not a file ('${HELM_ENC:-}') — depth extract skipped" >&2
+elif [ ! -x "$prefix/scripts/extract-user-depth.sh" ]; then
+  echo "helm-server-launch: $prefix/scripts/extract-user-depth.sh missing — depth extract skipped (re-run scripts/install-helmcxx-runtime.sh)" >&2
+else
+  "$prefix/scripts/extract-user-depth.sh" \
+    || echo "helm-server-launch: depth extract FAILED (reason above) — /user-data/ depth stays stale or absent; depth-on-sat falls back to bundled demo vectors" >&2
+fi
+
+exec "$self_dir/helm-server" "$@"

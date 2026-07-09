@@ -98,9 +98,14 @@ fi
 
 [ -n "${HELM_ENC:-}" ] || die "no ENC chart found. Run scripts/install-sample-enc.sh or set HELM_ENC to a .000 chart cell."
 
-# ENC-4: ensure region depth GeoJSON lives in user-data (not bundled demo) when GDAL is available.
+# ENC-4: ensure region depth GeoJSON lives in user-data (not bundled demo). Extracts via
+# GDAL or the pyogrio fallback; pass the resolved ENC so the extract targets the same cell
+# the server is about to load (HELM_ENC here is a local var, not exported).
 if [ -x "$REPO_ROOT/scripts/extract-user-depth.sh" ]; then
-  "$REPO_ROOT/scripts/extract-user-depth.sh" || echo "start-helm: depth extract skipped ($(command -v ogr2ogr >/dev/null || echo 'install gdal'))"
+  env ${HELM_ENC:+HELM_ENC="$HELM_ENC"} "$REPO_ROOT/scripts/extract-user-depth.sh" \
+    || echo "start-helm: depth extract skipped — depth-on-sat falls back to bundled demo vectors (reason above)" >&2
+else
+  echo "start-helm: scripts/extract-user-depth.sh missing or not executable — depth extract skipped; depth-on-sat falls back to bundled demo vectors" >&2
 fi
 
 echo "start-helm: launching core helm-server on :$HELM_PORT (web=$HELM_WEB_ROOT)…"
