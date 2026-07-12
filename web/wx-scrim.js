@@ -7,6 +7,9 @@
 //
 // Self-contained: hooks the weather toggle buttons + reconciles to window.__activeWx (the single
 // source of truth wx-controls.js maintains). Never dims the weather raster itself. Fail-open.
+//
+// FUSE-3: the dim is opt-out via the #wx-scrim checkbox in the Weather drawer (index.html). Absent
+// checkbox (older markup, tests) preserves the original always-on-when-weather-active behaviour.
 (function () {
   'use strict';
   // Tuned for "rain pops, chart still legible". brightness-max darkens, saturation mutes the
@@ -31,16 +34,21 @@
     });
   }
   function weatherOn() { var a = window.__activeWx; return !!(a && a !== 'off'); }
-  function reconcile() { setDim(weatherOn()); }
+  // No checkbox in the DOM (older markup, non-drawer tests) → scrim stays on, matching the
+  // pre-FUSE-3 always-on behaviour.
+  function scrimEnabled() { var cb = document.getElementById('wx-scrim'); return !cb || !!cb.checked; }
+  function reconcile() { setDim(weatherOn() && scrimEnabled()); }
 
   function wire() {
     // Every weather toggle button → re-assert after wx-controls applies the change.
     document.querySelectorAll('[data-wx]').forEach(function (b) {
       b.addEventListener('click', function () { setTimeout(reconcile, 240); });
     });
+    var scrimToggle = document.getElementById('wx-scrim');
+    if (scrimToggle) scrimToggle.addEventListener('change', reconcile);
     reconcile();
   }
   if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', wire); else wire();
   document.addEventListener('helm:shell-ready', reconcile);   // map exists by now
-  window.HelmWxScrim = { setDim: setDim, reconcile: reconcile };
+  window.HelmWxScrim = { setDim: setDim, reconcile: reconcile, scrimEnabled: scrimEnabled };
 })();
