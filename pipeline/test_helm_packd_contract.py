@@ -201,6 +201,31 @@ def request_json_allow_error(url: str) -> tuple[int, dict]:
         return exc.code, json.loads(exc.read().decode("utf-8"))
 
 
+def spawn_packd(bin_path, mbtiles_dir, extra_env):
+    """Start a helm-packd with the given env, wait for /health, return (proc, port)."""
+    port = free_port()
+    env = os.environ.copy()
+    env["HELM_MBTILES_DIR"] = str(mbtiles_dir)
+    env["HELM_BIND"] = "127.0.0.1"
+    env.update(extra_env)
+    proc = subprocess.Popen(
+        [str(bin_path), str(port)], cwd=str(ROOT), env=env,
+        stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+    )
+    deadline = time.time() + 5
+    while time.time() < deadline:
+        if proc.poll() is not None:
+            out = proc.stdout.read() if proc.stdout else ""
+            raise AssertionError(f"helm-packd exited early: {out}")
+        try:
+            status, data = request_json(f"http://127.0.0.1:{port}/health")
+            if status == 200 and data.get("engine") == "helm-packd":
+                return proc, port
+        except (OSError, urllib.error.URLError, json.JSONDecodeError):
+            time.sleep(0.05)
+    raise AssertionError("helm-packd did not become ready")
+
+
 @unittest.skipUnless(os.environ.get("HELM_PACKD_BIN"), "set HELM_PACKD_BIN to the built helm-packd binary")
 class HelmPackdContractTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -406,6 +431,37 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(status, 422)
         self.assertEqual(body["error"], "missing_basemap")
         self.assertEqual(body["profile"], "sat_first")
+
+    def test_startup_writes_user_layers_readme(self) -> None:
+        # LAYER-6: helm-packd self-heals the drop folder on startup. The server in setUp ran with
+        # HELM_USER_DATA_ROOT=self.user_data (which already has a layers/), so it wrote the README.
+        readme = self.user_data / "layers" / "README.md"
+        self.assertTrue(readme.is_file())
+        self.assertIn("helm-user-layers-readme", readme.read_text())
+
+    def test_startup_seeds_user_layers_on_fresh_root(self) -> None:
+        # A fresh boat (no layers folder yet) gets the folder + README + a working sample, and the
+        # sample renders through /layer-manifest.
+        with tempfile.TemporaryDirectory() as fresh:
+            proc, port = spawn_packd(self.bin, self.tmp_path, {"HELM_USER_DATA_ROOT": fresh})
+            try:
+                layers = Path(fresh) / "layers"
+                self.assertTrue((layers / "README.md").is_file())
+                self.assertTrue((layers / "example-harbor-notes.geojson").is_file())
+                self.assertTrue((layers / "example-harbor-notes.metadata.json").is_file())
+                status, manifest = request_json(f"http://127.0.0.1:{port}/layer-manifest")
+                self.assertEqual(status, 200)
+                layer = next(l for l in manifest["layers"] if l["id"] == "example-harbor-notes")
+                self.assertEqual(layer["tier"], "overlay")
+                self.assertEqual(layer["format"], "geojson")
+            finally:
+                proc.terminate()
+                try:
+                    proc.wait(timeout=5)
+                except subprocess.TimeoutExpired:
+                    proc.kill()
+                if proc.stdout:
+                    proc.stdout.close()
 
     def test_layer_manifest_endpoint(self) -> None:
         status, manifest = request_json(f"http://127.0.0.1:{self.port}/layer-manifest")

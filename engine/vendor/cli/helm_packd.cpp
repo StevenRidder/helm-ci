@@ -2464,6 +2464,9 @@ private:
 
 }  // namespace
 
+// LAYER-6: user overlay drop-folder self-heal at startup (create + document {user_data_root}/layers).
+#include "helm_packd_user_layers.h"
+
 int main(int argc, char** argv) {
   const int port = argc > 1 ? std::atoi(argv[1]) : 8091;
   const std::string bind = get_env("HELM_BIND", "0.0.0.0");
@@ -2482,6 +2485,7 @@ int main(int argc, char** argv) {
     return 2;
   }
   std::printf("helm-packd local pack server: http://%s:%d/  (packs from %s)\n", bind.c_str(), port, base.c_str());
+  ensure_user_layers_dir();  // LAYER-6: create + self-document the user overlay drop folder
   for (;;) std::this_thread::sleep_for(std::chrono::hours(24));
   return 0;
 }
