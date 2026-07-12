@@ -4,7 +4,7 @@ Schema family: `helm.chart_intake.*.v1`<br>
 Producer: `helm chart import` CLI + `helm-packd` (auto-discovery) + `helm-server` (ENC load)<br>
 Consumers: the MapLibre cockpit (Chart Library panel), `/catalog`, offline tooling<br>
 Deliverable: `helm-northstar-fused-map` / milestone `p1-chart-intake`<br>
-Tasks: INTAKE-1 (this spec) → INTAKE-2..6<br>
+Tasks: INTAKE-1 (this spec) → INTAKE-2..8<br>
 Related: [package-service-v1.md](package-service-v1.md), [region-bundle-sat-first-v1.md](region-bundle-sat-first-v1.md), [layer-manifest-v1.md](layer-manifest-v1.md), [chart-service-v1.md](chart-service-v1.md)
 
 ## Purpose
@@ -82,6 +82,18 @@ inherited from vanilla OpenCPN as the SENC compile. Raster tiles need no compile
 equivalent "is this current / what's loaded" need is the **catalog + freshness** surface,
 which is CAT-1 (`/catalog` staleness) and CAT-2 (UI banners), not a database rebuild.
 
+## Depth extraction on ENC import (INTAKE-7)
+
+Importing an ENC gives you the S-52 *chart* immediately (OpenCPN renders it), but the
+**depth-on-satellite** overlay (depare/depcnt/soundg shading) is a *distinct* product
+derived from the same cell by the ENC-4 depth pipeline. To make "drop an ENC → depth just
+appears" true rather than a manual second step, the importer runs that extraction as part of
+ENC intake: on placing a `*.000` into `enc/`, it emits the depth GeoJSON for that cell into
+the depth/overlays root (honoring the no-GDAL / pyogrio constraint) and registers it via the
+layer manifest with a depth-provenance sidecar. Idempotent; a cell that cannot be extracted
+fails loud (named error + catalog status), never a silent skip. INTAKE-7 wires the existing
+ENC-4 extraction into this flow.
+
 ## Importer contract (`helm chart import`)
 
 `helm.chart_intake.import.v1`. INTAKE-2 owns this.
@@ -103,6 +115,15 @@ which is CAT-1 (`/catalog` staleness) and CAT-2 (UI banners), not a database reb
 and expose every `*.mbtiles`/`*.pmtiles` by filename stem, honoring sidecars — retiring the
 hand-wired `HELM_MBTILES_PACKS` map for the common case (the explicit map stays as an
 advanced override). `/catalog` reflects whatever is in the library, no restart. INTAKE-3.
+
+## Download convergence (INTAKE-8)
+
+The "lasso an area → download PMTiles" offline drawer and file import are **one library, two
+front doors**. The drawer deposits its output straight into `HELM_CHART_LIBRARY/tiles/` with
+a sidecar (source, license, bbox, download date), so a downloaded pack and a hand-imported
+pack land in the same place and the auto-discovery above picks it up with no extra step —
+the lasso result immediately becomes a toggleable library layer. INTAKE-8. (This supersedes
+the original v1 stance that kept download and import as separate surfaces.)
 
 ## Chart Library panel (cockpit)
 
@@ -127,8 +148,12 @@ turns "hand-edited server + shell scripts" into a customer-usable flow.
 - Collapsing ENC and tile storage into one folder shape (they are different data models).
 - Routing customer tiles through OpenCPN's `ChartMbTiles` (dead by design — see above).
 - Server-fetching or hosting proprietary packs (BYO only — see docs/LEGAL.md).
-- Downloading/estimating new packs — that is the existing offline download drawer, a
-  different surface from importing files the customer already has.
+- **Weather.** Environmental/met-ocean data is a separate pipeline (the WX system: Open-Meteo
+  bakes → `helm-envd` packs) with its own storage and refresh. Chart intake is charts, depth,
+  and overlays only; it never ingests or implies weather.
+- Fetching *new* pack bytes from a provider is still the download drawer's job — INTAKE-8 only
+  converges *where its output lands* (into the library), it does not fold provider fetching
+  into the importer.
 
 ## Code anchors
 
