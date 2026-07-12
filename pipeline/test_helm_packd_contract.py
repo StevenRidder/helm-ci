@@ -192,6 +192,15 @@ def request_json(url: str) -> tuple[int, dict]:
         return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+def request_json_allow_error(url: str) -> tuple[int, dict]:
+    """Like request_json but returns (status, body) for 4xx/5xx instead of raising."""
+    try:
+        with urllib.request.urlopen(url, timeout=2) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+
 @unittest.skipUnless(os.environ.get("HELM_PACKD_BIN"), "set HELM_PACKD_BIN to the built helm-packd binary")
 class HelmPackdContractTest(unittest.TestCase):
     def setUp(self) -> None:
@@ -371,6 +380,32 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(len(chart_component["fingerprint"]), 64)
         self.assertNotIn(self.tmp.name, json.dumps(bundle))
         self.assertNotIn("/private/tmp/should-not-leak", json.dumps(bundle))
+
+    def test_bundle_sat_first_profile_returns_basemap_estimate(self) -> None:
+        # OFFLINE-L-4: C++ /bundle honors ?profile=sat_first for the download drawer's live estimate.
+        status, bundle = request_json(
+            f"http://127.0.0.1:{self.port}/bundle?"
+            "bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0&profile=sat_first"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(bundle["profile"], "sat_first")
+        # chart packs are dropped from the sat-first estimate; the satellite basemap stays.
+        self.assertNotIn("chart", bundle["summary"]["roles"])
+        self.assertEqual(bundle["summary"]["roles"]["basemap"], 1)
+        self.assertIsNotNone(bundle["summary"].get("estimated_bytes"))
+        basemap = next(c for c in bundle["components"] if c["role"] == "basemap")
+        self.assertEqual(basemap["pack_id"], "sat")
+        self.assertTrue(basemap["primary"])
+
+    def test_bundle_sat_first_missing_basemap_returns_422(self) -> None:
+        # A bbox with no satellite coverage must fail closed, not return a basemap-less "ok".
+        status, body = request_json_allow_error(
+            f"http://127.0.0.1:{self.port}/bundle?"
+            "bbox=170.0,-18.0,170.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0&profile=sat_first"
+        )
+        self.assertEqual(status, 422)
+        self.assertEqual(body["error"], "missing_basemap")
+        self.assertEqual(body["profile"], "sat_first")
 
     def test_layer_manifest_endpoint(self) -> None:
         status, manifest = request_json(f"http://127.0.0.1:{self.port}/layer-manifest")

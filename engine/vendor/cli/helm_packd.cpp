@@ -1541,6 +1541,10 @@ JsonValue component_status(const JsonValue& component, JsonAllocator& a) {
   return status;
 }
 
+// Sat-first offline bundle profile (OFFLINE-L-4) producer + validation, split into a companion
+// header to keep this daemon within the HELMC++-7 maintainability budget.
+#include "helm_packd_sat_first.h"
+
 Query bundle_query_with_defaults(const std::map<std::string, std::shared_ptr<PackRecord>>& packs, const Query& query) {
   Query q = query;
   if (qfirst(q, "include_tiles").empty()) q["include_tiles"] = {"0"};
@@ -1563,7 +1567,14 @@ JsonValue bundle_value(const std::map<std::string, std::shared_ptr<PackRecord>>&
                        const std::string& origin,
                        const Query& query,
                        JsonAllocator& a) {
-  const Query q = bundle_query_with_defaults(packs, query);
+  Query q = bundle_query_with_defaults(packs, query);
+  const std::string profile = lower(qfirst(q, "profile"));
+  if (!profile.empty() && profile != "sat_first")
+    throw std::runtime_error("unsupported profile: " + profile);
+  const bool sat_first = (profile == "sat_first");
+  // Sat-first auto-select: bbox-match packs, drop charts unless include_chart=1 (producer rules).
+  if (sat_first && qfirst(query, "packs").empty())
+    q["packs"] = {sat_first_pack_csv(packs, query, q)};
   JsonValue prefetch = prefetch_value(packs, env_bundles, origin, q, a);
   JsonValue bundle(rapidjson::kObjectType);
   add_string_allow_empty(bundle, "schema", "helm.region_bundle.manifest.v1", a);
@@ -1638,7 +1649,10 @@ JsonValue bundle_value(const std::map<std::string, std::shared_ptr<PackRecord>>&
   add_int(summary, "warnings", warnings, a);
   add_int(summary, "prefetch_tiles", prefetch["totals"]["tiles"].GetInt(), a);
   add_bool(summary, "prefetch_truncated", prefetch["totals"]["truncated"].GetBool(), a);
+  if (prefetch["totals"].HasMember("estimated_bytes"))
+    add_clone(summary, "estimated_bytes", prefetch["totals"]["estimated_bytes"], a);
   bundle.AddMember("summary", summary, a);
+  if (sat_first) sat_first_finalize(bundle, a);  // stamp profile, mark primary basemap, validate
   return bundle;
 }
 
@@ -2413,6 +2427,10 @@ private:
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string());
         }
         return response(200, "OK", std::move(h), body);
+      } catch (const SatFirstError& e) {
+        std::string body = std::string("{\"error\":\"") + e.code + "\",\"message\":\"" +
+          json_escape(e.what()) + "\",\"profile\":\"sat_first\"}";
+        return response(422, "Unprocessable Entity", std::move(h), body);
       } catch (const std::exception& e) {
         const char* code = path == "/prefetch" ? "bad_prefetch_request" :
           (path == "/bundle" ? "bad_bundle_request" : "bad_layer_inventory_request");
