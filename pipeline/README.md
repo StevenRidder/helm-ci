@@ -70,4 +70,7 @@ http://localhost:8080.
   per-component fingerprints, stale/out-of-coverage status, and a delta-plan helper for
   comparing an available bundle with an installed one. This is still read-only; clients
   decide how to download, retain, or evict packs.
+- **OFFLINE-L-1** adds the sat-first profile (`helm.region_bundle.profile.sat_first.v1`):
+  see [../docs/proposals/interfaces/region-bundle-sat-first-v1.md](../docs/proposals/interfaces/region-bundle-sat-first-v1.md).
+  Validate with `python3 pipeline/test_region_bundle_sat_first.py`.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.
