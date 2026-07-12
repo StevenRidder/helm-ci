@@ -6,6 +6,7 @@ JSON, which MapLibre (GL JS *and* Native) consume identically.
 
 | Script | Does | Needs |
 |---|---|---|
+| `chart_intake.py` | register existing chart roots + recursively validate/index recognized charts in place | python3 (stdlib; optional `pyogrio` for S-57 bbox validation) |
 | `fetch_tiles.py` | lasso bbox → XYZ tiles → offline `.mbtiles` (TMS Y-flip handled) | python3 (stdlib) |
 | `bake_s52_region_pack.py` | live S-52 chart tiles → stamped region `.pmtiles` pack | private `helm-tiles`/`helm-server` chart tile origin |
 | `region_bundle.py` | `/catalog` JSON + route/bbox → region bundle manifest + delta plan | python3 (stdlib) |

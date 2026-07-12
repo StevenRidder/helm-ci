@@ -64,6 +64,43 @@ incrementally, show an estimated size before download.
 The full ChartLocker workflow is preserved 1:1 via **"import my own `.mbtiles`"** — so
 the product never has to touch a prohibited tile.
 
+## Register existing chart folders (INTAKE-2)
+
+Helm follows OpenCPN's **Add Directory** model: register a folder you already use and
+index its recognized charts recursively, in place. Helm never moves, renames, or rewrites
+customer chart files. The default root is `~/.helm/charts`; additional roots can point at
+an existing ChartLocker, OpenCPN, removable-drive, or voyage layout.
+
+```bash
+# Creates the default root/registry on first use, then indexes it.
+python3 pipeline/chart_intake.py rescan
+
+# Add an existing tree. Region subfolders remain the customer's organization.
+python3 pipeline/chart_intake.py register "$HOME/Charts/South Pacific" \
+  --label "South Pacific"
+
+python3 pipeline/chart_intake.py list
+python3 pipeline/chart_intake.py catalog
+```
+
+The private root registry lives at `$HELM_CONFIG/chart-roots.json` (default
+`~/.helm/config/chart-roots.json`, mode `0600`). The derived public index lives at
+`$HELM_CONFIG/chart-index.json`. The index contains stable root/chart ids and relative
+paths, never registered absolute paths. Use `list --show-paths` only when an operator
+explicitly needs the local path readback.
+
+Recognized files are `.mbtiles`, `.pmtiles`, S-57 base cells (`.000`, with sibling update
+files tracked), and `.geojson`. First index opens the declared container/schema and derives
+a coverage bbox. A contents/extension mismatch, malformed sidecar, missing bbox, orphan ENC
+update, or disappeared root remains visible as a named error/warning. Optional
+`<stem>.metadata.json` sidecars contribute only allow-listed public source/license fields;
+path- and secret-shaped fields do not enter the index.
+
+Rescan fingerprints recognized names, sizes, mtimes, and sidecars. If nothing changed it
+does not rewrite the index, so repeated scans are idempotent. The index is the handoff to
+the type-specific runtime consumers: INTAKE-3 makes `helm-packd` serve tile packs from all
+registered roots, while the ENC and overlay paths continue to own their bytes/rendering.
+
 ## Depth-on-satellite (the wholybee technique, generalized)
 
 [wholybee/chartplotter](https://github.com/wholybee/chartplotter) is a Qt6 + GDAL **S-57
