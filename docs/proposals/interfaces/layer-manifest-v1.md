@@ -4,6 +4,7 @@ Schema family: `helm.layer.*.v1`
 Producer: `helm-layerd`, `helm-packd`
 Consumers: clients, debug tools
 Current code anchors: `helm_packd.cpp`, `pipeline/layer_inventory.py`, `/user-data` serving
+User drop-folder guide + setup (LAYER-4): [docs/USER-LAYERS.md](../../USER-LAYERS.md), `pipeline/user_layers.py`
 
 ## Purpose
 

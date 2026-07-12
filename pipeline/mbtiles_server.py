@@ -41,6 +41,7 @@ from layer_inventory import LayerInventoryError, build_layer_inventory, build_la
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
 from region_bundle_sat_first import SAT_FIRST_PROFILE, SatFirstBundleError, validate_sat_first_bundle
+from user_layers import check_user_layers, ensure_user_layers_dir
 
 BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
 ENV_BUNDLE_SOURCES = os.environ.get("HELM_ENV_BUNDLE_MANIFESTS", "").strip()
@@ -986,4 +987,17 @@ if __name__ == "__main__":
         print(f"  {k}: {v['title']}  {v['container']}  {zoom}  {v['format']}")
     if ENV_BUNDLES:
         print(f"  environmental bundles: {len(ENV_BUNDLES)}")
+    # LAYER-4: make the user overlay drop folder exist + self-document, and surface any invalid
+    # GeoJSON instead of letting it vanish silently from /layer-manifest (fail-fix-early).
+    try:
+        info = ensure_user_layers_dir()
+        print(
+            f"  user layers: {info['layers_dir']}"
+            + (" (created)" if info["created"] else "")
+            + (" +sample" if info["sample_seeded"] else "")
+        )
+        for name, problem in check_user_layers():
+            print(f"  WARNING user layer {name}: {problem}", file=sys.stderr)
+    except OSError as e:
+        print(f"  warning: could not set up user layers folder: {e}", file=sys.stderr)
     TS(("0.0.0.0", port), H).serve_forever()
