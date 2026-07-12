@@ -13,7 +13,12 @@ ROOT = Path(__file__).resolve().parents[1]
 SCRIPT = ROOT / "pipeline" / "region_bundle.py"
 sys.path.insert(0, str(ROOT / "pipeline"))
 
-from region_bundle import build_region_bundle, diff_region_bundles
+from region_bundle import BundleError, build_region_bundle, diff_region_bundles
+from region_bundle_sat_first import (
+    SAT_FIRST_PROFILE,
+    SatFirstBundleError,
+    validate_sat_first_bundle,
+)
 
 
 def sample_catalog():
@@ -215,6 +220,80 @@ class RegionBundleTest(unittest.TestCase):
             self.assertEqual(payload["id"], "fiji")
             self.assertEqual([c["id"] for c in payload["components"]], ["pack:chart"])
             self.assertNotIn(tmp, proc.stdout)
+
+
+def chart_only_catalog():
+    """A catalog whose only bbox-matching pack is a chart (no satellite basemap)."""
+    return {"chart": sample_catalog()["chart"]}
+
+
+def offset_sat_catalog():
+    """Chart over the request bbox; the only satellite pack sits far away."""
+    catalog = sample_catalog()
+    catalog["sat"] = dict(catalog["sat"], bounds_array=[10.0, 10.0, 11.0, 11.0])
+    return catalog
+
+
+class SatFirstBundleProducerTest(unittest.TestCase):
+    """OFFLINE-L-3: the download drawer's live estimate builds on ?profile=sat_first."""
+
+    BBOX = "178.0,-18.0,178.5,-17.5"
+
+    def _build(self, catalog, **extra):
+        query = {
+            "profile": [SAT_FIRST_PROFILE],
+            "bbox": [self.BBOX],
+            "minzoom": ["7"],
+            "maxzoom": ["8"],
+            "include_tiles": ["0"],
+        }
+        for key, value in extra.items():
+            query[key] = [value]
+        return build_region_bundle(catalog, query, generated_at="2026-06-29T00:00:00Z")
+
+    def test_profile_drops_chart_and_marks_primary_basemap(self):
+        bundle = self._build(sample_catalog())
+        self.assertEqual(bundle["profile"], SAT_FIRST_PROFILE)
+        self.assertEqual([c["id"] for c in bundle["components"]], ["pack:sat"])
+        sat = bundle["components"][0]
+        self.assertEqual(sat["role"], "basemap")
+        self.assertTrue(sat["primary"])
+        self.assertEqual(bundle["summary"]["roles"], {"basemap": 1})
+        self.assertGreater(bundle["summary"].get("estimated_bytes", 0), 0)
+        result = validate_sat_first_bundle(bundle, require_profile=True)
+        self.assertTrue(result["valid"])
+        self.assertEqual(result["primary_basemap_id"], "pack:sat")
+
+    def test_include_chart_keeps_chart_as_non_primary_overlay(self):
+        bundle = self._build(sample_catalog(), include_chart="1")
+        self.assertEqual(sorted(c["id"] for c in bundle["components"]), ["pack:chart", "pack:sat"])
+        chart = next(c for c in bundle["components"] if c["id"] == "pack:chart")
+        self.assertNotEqual(chart.get("primary"), True)
+        self.assertEqual(bundle["summary"]["roles"]["basemap"], 1)
+        self.assertEqual(bundle["summary"]["roles"]["chart"], 1)
+        validate_sat_first_bundle(bundle, require_profile=True)
+
+    def test_missing_basemap_when_only_chart_matches(self):
+        bundle = self._build(chart_only_catalog())
+        self.assertEqual(bundle["components"], [])
+        self.assertNotIn("basemap", bundle["summary"]["roles"])
+        with self.assertRaises(SatFirstBundleError) as ctx:
+            validate_sat_first_bundle(bundle, require_profile=True)
+        self.assertIn("missing_basemap", str(ctx.exception))
+
+    def test_missing_basemap_when_satellite_outside_bbox(self):
+        # Chart covers the bbox but the satellite pack is elsewhere: sat-first must not
+        # promote the chart to basemap even with include_chart=1.
+        bundle = self._build(offset_sat_catalog(), include_chart="1")
+        ids = [c["id"] for c in bundle["components"]]
+        self.assertIn("pack:chart", ids)
+        self.assertNotIn("pack:sat", ids)
+        with self.assertRaises(SatFirstBundleError):
+            validate_sat_first_bundle(bundle, require_profile=True)
+
+    def test_unsupported_profile_is_rejected(self):
+        with self.assertRaises(BundleError):
+            build_region_bundle(sample_catalog(), {"profile": ["chart_first"], "bbox": [self.BBOX]})
 
 
 if __name__ == "__main__":

@@ -24,6 +24,11 @@ REGION_BUNDLE_DIFF_SCHEMA = "helm.region_bundle.diff.v1"
 DEFAULT_BUNDLE_ID = "local-region"
 DEFAULT_TITLE = "Local Region Bundle"
 
+# Sat-first offline profile (OFFLINE-L-1 / region-bundle-sat-first-v1.md). The generic
+# builder stays profile-agnostic; passing profile=sat_first applies the producer rules
+# (bbox-matched packs, satellite basemap required, chart packs off by default).
+SAT_FIRST_PROFILE = "sat_first"
+
 PACK_COMPONENT_KEYS = (
     "id",
     "name",
@@ -250,6 +255,46 @@ def _component_role(pack: dict) -> str:
     return kind or "pack"
 
 
+def _truthy(value) -> bool:
+    if value is None:
+        return False
+    return str(value).strip().lower() in ("1", "true", "yes", "on")
+
+
+def _num_or(value, default: float) -> float:
+    try:
+        return float(value)
+    except (TypeError, ValueError):
+        return default
+
+
+def _pack_intersects(pack: dict, bbox: list[float]) -> bool:
+    """True when a pack's bounds overlap the request bbox (unknown bounds -> keep)."""
+    pb = _bounds_array(pack.get("bounds_array") or pack.get("bounds"))
+    if pb is None:
+        return True
+    return not (pb[2] < bbox[0] or pb[0] > bbox[2] or pb[3] < bbox[1] or pb[1] > bbox[3])
+
+
+def _mark_primary_basemap(components: list[dict]) -> None:
+    """Mark exactly one basemap component primary (sat-first rule 3).
+
+    Prefers highest maxzoom, then largest size_bytes, then stable id. Respects an
+    existing primary=True so an explicit producer choice is never overridden.
+    """
+    basemaps = [c for c in components if str(c.get("role") or "").lower() == "basemap"]
+    if not basemaps or any(c.get("primary") is True for c in basemaps):
+        return
+    basemaps.sort(
+        key=lambda c: (
+            -_num_or(c.get("maxzoom"), -1.0),
+            -_num_or(c.get("size_bytes"), -1.0),
+            str(c.get("id") or ""),
+        )
+    )
+    basemaps[0]["primary"] = True
+
+
 def _fingerprint(payload: dict) -> str:
     data = json.dumps(_json_safe(payload), sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(data).hexdigest()
@@ -379,6 +424,30 @@ def _summary(components: list[dict], prefetch: dict) -> dict:
     return summary
 
 
+def _empty_prefetch(bbox: list[float] | None) -> dict:
+    """Minimal prefetch manifest for a request that matched no packs.
+
+    Used so a sat-first bbox with no satellite coverage yields an empty-component
+    bundle (validator -> missing_basemap) instead of ``_select_packs`` treating an
+    empty pack list as "select every pack" and over-counting the estimate.
+    """
+    corridor = {"bbox": bbox, "route_points": 0} if bbox else {}
+    return {
+        "schema": "helm.prefetch.manifest.v1",
+        "source": "bbox" if bbox else "none",
+        "corridor": corridor,
+        "packs": [],
+        "totals": {
+            "packs": 0,
+            "tiles": 0,
+            "truncated_tile_count": 0,
+            "truncated": False,
+            "environmental_bundles": 0,
+            "environmental_layers": 0,
+        },
+    }
+
+
 def build_region_bundle(
     catalog: dict,
     query: dict | None = None,
@@ -390,12 +459,29 @@ def build_region_bundle(
     """Build a region bundle from a public pack catalog and request query."""
 
     query = copy.deepcopy(query or {})
+    profile = _first(query, "profile") or None
+    if profile not in (None, SAT_FIRST_PROFILE):
+        raise BundleError(f"unsupported profile {profile!r}")
     pack_names = _selected_pack_names(catalog, query)
-    prefetch_query = _query_for_prefetch(catalog, query, pack_names)
-    try:
-        prefetch = build_prefetch_manifest(catalog, prefetch_query)
-    except PrefetchError as e:
-        raise BundleError(str(e))
+    if profile == SAT_FIRST_PROFILE and not _first(query, "packs"):
+        # Producer rules (docs/proposals/interfaces/region-bundle-sat-first-v1.md):
+        # auto-select only packs overlapping the request bbox, and drop chart packs
+        # unless include_chart=1 so a chart raster can neither pad the size estimate
+        # nor stand in for a missing satellite basemap.
+        req_bbox = _bounds_array(_first(query, "bbox"))
+        if req_bbox:
+            pack_names = [n for n in pack_names if _pack_intersects(catalog[n], req_bbox)]
+        if not _truthy(_first(query, "include_chart")):
+            pack_names = [n for n in pack_names if _component_role(catalog[n]) != "chart"]
+    prefetch_query = copy.deepcopy(query)
+    if pack_names:
+        prefetch_query = _query_for_prefetch(catalog, query, pack_names)
+        try:
+            prefetch = build_prefetch_manifest(catalog, prefetch_query)
+        except PrefetchError as e:
+            raise BundleError(str(e))
+    else:
+        prefetch = _empty_prefetch(_bounds_array(_first(query, "bbox")))
 
     prefetch_by_id = {entry.get("id"): entry for entry in prefetch.get("packs", [])}
     components = [
@@ -418,7 +504,7 @@ def build_region_bundle(
     if _first(prefetch_query, "bbox"):
         request["bbox"] = _first(prefetch_query, "bbox")
 
-    return {
+    bundle = {
         "schema": REGION_BUNDLE_SCHEMA,
         "id": str(_first(query, "bundle_id", _first(query, "id", DEFAULT_BUNDLE_ID))),
         "title": str(_first(query, "title", DEFAULT_TITLE)),
@@ -429,6 +515,10 @@ def build_region_bundle(
         "components": components,
         "summary": _summary(components, prefetch),
     }
+    if profile == SAT_FIRST_PROFILE:
+        bundle["profile"] = SAT_FIRST_PROFILE
+        _mark_primary_basemap(bundle["components"])
+    return bundle
 
 
 def _component_map(bundle: dict | None) -> dict[str, dict]:
@@ -538,6 +628,10 @@ def _query_from_args(args: argparse.Namespace) -> dict:
         query["route"] = [args.route]
     if args.packs:
         query["packs"] = [args.packs]
+    if args.profile:
+        query["profile"] = [args.profile]
+    if args.include_chart:
+        query["include_chart"] = ["1"]
     return query
 
 
@@ -557,6 +651,8 @@ def main(argv: list[str] | None = None) -> int:
     ap.add_argument("--maxzoom", type=int, default=12)
     ap.add_argument("--packs", help="Comma-separated pack ids to include.")
     ap.add_argument("--include-tiles", action="store_true", help="Include explicit z/x/y tile URLs.")
+    ap.add_argument("--profile", choices=[SAT_FIRST_PROFILE], help="Apply an offline bundle profile (e.g. sat_first).")
+    ap.add_argument("--include-chart", action="store_true", help="Sat-first: keep chart packs in auto-selection.")
     ap.add_argument("--places-json", help="Optional public places dataset descriptor JSON.")
     ap.add_argument("--depth-json", help="Optional public depth dataset descriptor JSON.")
     ap.add_argument("--diff-against", help="Optional installed bundle JSON to compare against.")

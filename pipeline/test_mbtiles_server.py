@@ -160,6 +160,15 @@ def request_json(url):
         return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+def request_json_allow_error(url):
+    """Like request_json but returns (status, body) for 4xx/5xx instead of raising."""
+    try:
+        with urllib.request.urlopen(url, timeout=2) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+
 class PackServerTest(unittest.TestCase):
     def setUp(self):
         self.tmp = tempfile.TemporaryDirectory()
@@ -342,6 +351,32 @@ class PackServerTest(unittest.TestCase):
         self.assertEqual(env_current["product_identifier"], "S-111")
         self.assertNotIn(self.tmp.name, json.dumps(inventory))
         self.assertNotIn(str(ENV_FIXTURE), json.dumps(inventory))
+
+    def test_bundle_sat_first_profile_returns_basemap_estimate(self):
+        # OFFLINE-L-3: the download drawer requests ?profile=sat_first for a live estimate.
+        status, bundle = request_json(
+            f"http://127.0.0.1:{self.port}/bundle?"
+            "bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0&profile=sat_first"
+        )
+        self.assertEqual(status, 200)
+        self.assertEqual(bundle["profile"], "sat_first")
+        # chart packs are dropped from the sat-first estimate; the satellite basemap stays.
+        self.assertNotIn("chart", bundle["summary"]["roles"])
+        self.assertEqual(bundle["summary"]["roles"]["basemap"], 1)
+        self.assertIsNotNone(bundle["summary"].get("estimated_bytes"))
+        basemap = next(c for c in bundle["components"] if c["role"] == "basemap")
+        self.assertEqual(basemap["pack_id"], "sat")
+        self.assertTrue(basemap["primary"])
+
+    def test_bundle_sat_first_missing_basemap_returns_422(self):
+        # A bbox with no satellite coverage must fail closed, not return a basemap-less "ok".
+        status, body = request_json_allow_error(
+            f"http://127.0.0.1:{self.port}/bundle?"
+            "bbox=170.0,-18.0,170.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0&profile=sat_first"
+        )
+        self.assertEqual(status, 422)
+        self.assertEqual(body["error"], "missing_basemap")
+        self.assertEqual(body["profile"], "sat_first")
 
 
 if __name__ == "__main__":

@@ -40,6 +40,7 @@ import urllib.request
 from layer_inventory import LayerInventoryError, build_layer_inventory, build_layer_manifest
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
+from region_bundle_sat_first import SAT_FIRST_PROFILE, SatFirstBundleError, validate_sat_first_bundle
 
 BASE = os.path.abspath(os.path.expanduser(os.environ.get("HELM_MBTILES_DIR", "web/data")))
 ENV_BUNDLE_SOURCES = os.environ.get("HELM_ENV_BUNDLE_MANIFESTS", "").strip()
@@ -800,6 +801,16 @@ class H(http.server.BaseHTTPRequestHandler):
         except BundleError as e:
             self._json_response(400, {"error": "bad_bundle_request", "message": str(e)})
             return
+        # Sat-first bundles must fail closed rather than return a basemap-less "ok"
+        # (region-bundle-sat-first-v1.md failure table): surface missing_basemap etc. as 422.
+        profile = (query.get("profile") or [None])[0]
+        if profile == SAT_FIRST_PROFILE:
+            try:
+                validate_sat_first_bundle(payload, require_profile=True)
+            except SatFirstBundleError as e:
+                code = str(e).split(":", 1)[0].strip() or "sat_first_invalid"
+                self._json_response(422, {"error": code, "message": str(e), "profile": SAT_FIRST_PROFILE})
+                return
         self._json_response(200, payload)
 
     def _layer_manifest_response(self):
