@@ -131,6 +131,62 @@ def write_sidecar(path: Path) -> None:
     )
 
 
+def write_user_data_fixtures(user_root: Path) -> None:
+    (user_root / "depare.geojson").write_text(
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "metadata": {"source": "enc", "cell": "FJ-FIXTURE"},
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[178.0, -18.0], [178.5, -18.0], [178.5, -17.5], [178.0, -17.5], [178.0, -18.0]]],
+                        },
+                        "properties": {},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    layers_dir = user_root / "layers"
+    layers_dir.mkdir()
+    (layers_dir / "anchorages.geojson").write_text(
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {"type": "Point", "coordinates": [178.2, -17.8]},
+                        "properties": {"name": "Fixture Anchorage"},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (layers_dir / "anchorages.metadata.json").write_text(
+        json.dumps(
+            {
+                "id": "owned-anchorage-notes",
+                "title": "Owned anchorage notes",
+                "source": {
+                    "label": "owned",
+                    "license": "private-local",
+                    "api_key": "do-not-publish",
+                    "token": "also-secret",
+                    "url": "file:///private/tmp/source",
+                },
+                "private_path": "/private/tmp/should-not-leak",
+            }
+        ),
+        encoding="utf-8",
+    )
+
+
 def request_json(url: str) -> tuple[int, dict]:
     with urllib.request.urlopen(url, timeout=2) as resp:
         return resp.status, json.loads(resp.read().decode("utf-8"))
@@ -144,12 +200,16 @@ class HelmPackdContractTest(unittest.TestCase):
             self.skipTest(f"HELM_PACKD_BIN is not executable: {self.bin}")
         self.tmp = tempfile.TemporaryDirectory()
         self.tmp_path = Path(self.tmp.name)
+        self.user_data = self.tmp_path / "user-data"
+        self.user_data.mkdir()
+        write_user_data_fixtures(self.user_data)
         write_mbtiles(self.tmp_path / "chart.mbtiles")
         write_sidecar(self.tmp_path / "chart.metadata.json")
         write_pmtiles(self.tmp_path / "sat.pmtiles")
         self.port = free_port()
         env = os.environ.copy()
         env["HELM_MBTILES_DIR"] = self.tmp.name
+        env["HELM_USER_DATA_ROOT"] = str(self.user_data)
         env["HELM_ENV_BUNDLE_MANIFESTS"] = str(ENV_FIXTURE)
         env["HELM_BIND"] = "127.0.0.1"
         self.proc = subprocess.Popen(
@@ -311,6 +371,31 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(len(chart_component["fingerprint"]), 64)
         self.assertNotIn(self.tmp.name, json.dumps(bundle))
         self.assertNotIn("/private/tmp/should-not-leak", json.dumps(bundle))
+
+    def test_layer_manifest_endpoint(self) -> None:
+        status, manifest = request_json(f"http://127.0.0.1:{self.port}/layer-manifest")
+        self.assertEqual(status, 200)
+        self.assertEqual(manifest["schema"], "helm.layer.manifest.v1")
+        depare = next(layer for layer in manifest["layers"] if layer["id"] == "depare")
+        self.assertEqual(depare["tier"], "enc")
+        self.assertEqual(depare["format"], "geojson")
+        self.assertEqual(depare["url"], "/user-data/depare.geojson")
+        overlay = next(layer for layer in manifest["layers"] if layer["id"] == "owned-anchorage-notes")
+        self.assertEqual(overlay["tier"], "overlay")
+        self.assertEqual(overlay["inspection"]["mode"], "feature-properties")
+        self.assertEqual(overlay["source"], {"label": "owned", "license": "private-local"})
+        self.assertNotIn("do-not-publish", json.dumps(manifest))
+        self.assertNotIn("also-secret", json.dumps(manifest))
+        self.assertNotIn("file:///private/tmp/source", json.dumps(manifest))
+        self.assertNotIn(self.tmp.name, json.dumps(manifest))
+        self.assertNotIn(str(self.user_data), json.dumps(manifest))
+        self.assertNotIn("/private/tmp/should-not-leak", json.dumps(manifest))
+
+        head = urllib.request.Request(f"http://127.0.0.1:{self.port}/layer-manifest", method="HEAD")
+        with urllib.request.urlopen(head, timeout=2) as resp:
+            self.assertEqual(resp.status, 200)
+            self.assertGreater(int(resp.headers.get("Content-Length", "0")), 10)
+            self.assertEqual(resp.read(), b"")
 
 
 if __name__ == "__main__":

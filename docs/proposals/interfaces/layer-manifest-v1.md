@@ -28,6 +28,10 @@ Describe extra georeferenced layers that augment the displayed chart without bec
 
 Schema: `helm.layer.manifest.v1`
 
+Producer endpoint (interim): `GET /layer-manifest` on `helm-packd` (and Python oracle `pipeline/mbtiles_server.py`).
+
+`tier` values align with FUSE-2 draw bands (`web/SHELL.md`): `basemap`, `enc`, `overlay`, `weather`, `nav`. The manifest classifies overlays only; it does not own chart z-order.
+
 ```json
 {
   "schema": "helm.layer.manifest.v1",

@@ -6,6 +6,7 @@
   HEAD /{name}.pmtiles            -> PMTiles headers for protocol probes
   GET /catalog                    -> JSON of available packs + bounds/zoom/URLs
   GET /layers                     -> local maritime layer inventory
+  GET /layer-manifest             -> helm.layer.manifest.v1 overlay catalog
 
 Offline-first: everything is local and read-only. Bind 0.0.0.0 so an iPad or
 phone on the boat LAN can load the same packs through the boat server.
@@ -36,7 +37,7 @@ from typing import Optional, Tuple
 import urllib.parse
 import urllib.request
 
-from layer_inventory import LayerInventoryError, build_layer_inventory
+from layer_inventory import LayerInventoryError, build_layer_inventory, build_layer_manifest
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
 
@@ -801,6 +802,17 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         self._json_response(200, payload)
 
+    def _layer_manifest_response(self):
+        body = json.dumps(build_layer_manifest(), sort_keys=True).encode("utf-8")
+        self.send_response(200)
+        self.send_header("Content-Type", "application/json")
+        self._cors()
+        self.send_header("Cache-Control", "no-cache")
+        self.send_header("Content-Length", str(len(body)))
+        self.end_headers()
+        if self.command != "HEAD":
+            self.wfile.write(body)
+
     def _layers_response(self, query: dict):
         try:
             payload = build_layer_inventory(_catalog(_origin(self)), query, environmental_bundles=ENV_BUNDLES)
@@ -906,6 +918,15 @@ class H(http.server.BaseHTTPRequestHandler):
             self.send_header("Content-Length", str(len(body)))
             self.end_headers()
             return
+        if path == "layer-manifest":
+            body = json.dumps(build_layer_manifest(), sort_keys=True).encode("utf-8")
+            self.send_response(200)
+            self.send_header("Content-Type", "application/json")
+            self._cors()
+            self.send_header("Cache-Control", "no-cache")
+            self.send_header("Content-Length", str(len(body)))
+            self.end_headers()
+            return
         self._empty(404)
 
     def do_GET(self):
@@ -922,6 +943,9 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         if path == "layers":
             self._layers_response(urllib.parse.parse_qs(parsed.query))
+            return
+        if path == "layer-manifest":
+            self._layer_manifest_response()
             return
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])

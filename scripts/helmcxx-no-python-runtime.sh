@@ -259,12 +259,14 @@ assert_http 200 "http://127.0.0.1:$PACKD_PORT/catalog" "$TMP/packd-catalog.json"
 grep -q 'fiji-sat' "$TMP/packd-catalog.json" || die "packd catalog did not expose local PMTiles pack"
 assert_http 200 "http://127.0.0.1:$PACKD_PORT/layers?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0" "$TMP/packd-layers.json"
 assert_json_field "$TMP/packd-layers.json" schema helm.maritime_layer_inventory.v1
+assert_http 200 "http://127.0.0.1:$PACKD_PORT/layer-manifest" "$TMP/packd-layer-manifest.json"
+assert_json_field "$TMP/packd-layer-manifest.json" schema helm.layer.manifest.v1
 assert_http 200 "http://127.0.0.1:$PACKD_PORT/prefetch?bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&packs=fiji-sat&env_layers=wind" "$TMP/packd-prefetch.json"
 assert_json_field "$TMP/packd-prefetch.json" schema helm.prefetch.manifest.v1
 assert_http 200 "http://127.0.0.1:$PACKD_PORT/bundle?bundle_id=helmcxx&bbox=178.0,-18.0,178.5,-17.5&minzoom=0&maxzoom=1&include_tiles=0" "$TMP/packd-bundle.json"
 assert_json_field "$TMP/packd-bundle.json" schema helm.region_bundle.manifest.v1
 assert_http 404 "http://127.0.0.1:$PACKD_PORT/missing-pack.pmtiles" "$TMP/packd-missing.out"
-note "helm-packd serves catalog/layers/prefetch/bundle and fails missing packs loudly"
+note "helm-packd serves catalog/layers/layer-manifest/prefetch/bundle and fails missing packs loudly"
 
 assert_http 200 "http://127.0.0.1:$ENVD_PORT/packs" "$TMP/envd-packs.json"
 assert_json_field "$TMP/envd-packs.json" schema helm.envd.inventory.v1

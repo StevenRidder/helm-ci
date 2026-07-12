@@ -13,6 +13,7 @@
     "health",
     "catalog",
     "layers",
+    "layer_manifest",
     "prefetch",
     "bundle",
     "tile_or_range_response",
@@ -64,6 +65,7 @@
         "health": ["pipeline/test_helm_packd_contract.py"],
         "catalog": ["pipeline/test_helm_packd_contract.py"],
         "layers": ["pipeline/test_helm_packd_contract.py", "pipeline/test_layer_inventory.py"],
+        "layer_manifest": ["pipeline/test_helm_packd_contract.py", "pipeline/test_layer_inventory.py"],
         "prefetch": ["pipeline/test_helm_packd_contract.py", "pipeline/test_prefetch_manifest.py"],
         "bundle": ["pipeline/test_helm_packd_contract.py", "pipeline/test_region_bundle.py"],
         "tile_or_range_response": ["pipeline/test_helm_packd_contract.py"],
@@ -78,13 +80,13 @@
           "id": "helm-packd-contract",
           "command": ["python3", "pipeline/test_helm_packd_contract.py"],
           "requires_env": ["HELM_PACKD_BIN"],
-          "proves": ["health", "catalog", "layers", "prefetch", "bundle", "tile_or_range_response", "metadata_allowlist", "stale_offline_out_of_coverage", "expected_404_204_invalid", "environmental_manifest_or_chunk", "headers_cache_semantics"]
+          "proves": ["health", "catalog", "layers", "layer_manifest", "prefetch", "bundle", "tile_or_range_response", "metadata_allowlist", "stale_offline_out_of_coverage", "expected_404_204_invalid", "environmental_manifest_or_chunk", "headers_cache_semantics"]
         },
         {
           "id": "pack-oracle-layer-inventory",
           "command": ["python3", "pipeline/test_layer_inventory.py"],
           "oracle_only": true,
-          "proves": ["layers", "metadata_allowlist"]
+          "proves": ["layers", "layer_manifest", "metadata_allowlist"]
         },
         {
           "id": "pack-oracle-prefetch",

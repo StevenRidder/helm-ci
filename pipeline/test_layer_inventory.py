@@ -15,7 +15,7 @@ sys.path.insert(0, str(ROOT / "pipeline"))
 sys.path.insert(0, str(ROOT / "backend"))
 
 from labs.s100_spike import build_fixture_inventory
-from layer_inventory import LAYER_INVENTORY_SCHEMA, build_layer_inventory
+from layer_inventory import LAYER_INVENTORY_SCHEMA, LAYER_MANIFEST_SCHEMA, build_layer_inventory, build_layer_manifest
 
 
 def sample_catalog():
@@ -200,6 +200,75 @@ class LayerInventoryTest(unittest.TestCase):
             self.assertIn("S-102", payload["summary"]["products"])
             self.assertIn("helm.env.bundle.v1", payload["summary"]["products"])
             self.assertNotIn(tmp, proc.stdout)
+
+
+class LayerManifestTest(unittest.TestCase):
+    def test_empty_user_data_returns_schema_with_no_layers(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            payload = build_layer_manifest(tmp)
+            self.assertEqual(payload["schema"], LAYER_MANIFEST_SCHEMA)
+            self.assertEqual(payload["layers"], [])
+
+    def test_enc_and_overlay_geojson_are_indexed(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            (root / "depare.geojson").write_text(
+                json.dumps(
+                    {
+                        "type": "FeatureCollection",
+                        "metadata": {"source": "enc", "cell": "FJ-FIXTURE"},
+                        "features": [
+                            {
+                                "type": "Feature",
+                                "geometry": {"type": "Polygon", "coordinates": [[[178.0, -18.0], [178.5, -18.0], [178.5, -17.5], [178.0, -17.5], [178.0, -18.0]]]},
+                                "properties": {},
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            layers_dir = root / "layers"
+            layers_dir.mkdir()
+            (layers_dir / "anchorages.geojson").write_text(
+                json.dumps(
+                    {
+                        "type": "FeatureCollection",
+                        "features": [
+                            {
+                                "type": "Feature",
+                                "geometry": {"type": "Point", "coordinates": [178.2, -17.8]},
+                                "properties": {"name": "Test Anchorage"},
+                            }
+                        ],
+                    }
+                ),
+                encoding="utf-8",
+            )
+            (layers_dir / "anchorages.metadata.json").write_text(
+                json.dumps(
+                    {
+                        "id": "owned-anchorage-notes",
+                        "title": "Owned anchorage notes",
+                        "source": {"label": "owned", "license": "private-local"},
+                        "private_path": "/private/tmp/should-not-leak",
+                    }
+                ),
+                encoding="utf-8",
+            )
+            payload = build_layer_manifest(tmp)
+            self.assertEqual(payload["schema"], LAYER_MANIFEST_SCHEMA)
+            depare = next(layer for layer in payload["layers"] if layer["id"] == "depare")
+            self.assertEqual(depare["tier"], "enc")
+            self.assertEqual(depare["kind"], "polygons")
+            self.assertEqual(depare["url"], "/user-data/depare.geojson")
+            self.assertEqual(depare["source"]["label"], "enc")
+            self.assertEqual(depare["bbox"], [178.0, -18.0, 178.5, -17.5])
+            overlay = next(layer for layer in payload["layers"] if layer["id"] == "owned-anchorage-notes")
+            self.assertEqual(overlay["tier"], "overlay")
+            self.assertEqual(overlay["url"], "/user-data/layers/anchorages.geojson")
+            self.assertNotIn(tmp, json.dumps(payload))
+            self.assertNotIn("/private/tmp/should-not-leak", json.dumps(payload))
 
 
 if __name__ == "__main__":

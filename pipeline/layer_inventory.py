@@ -21,8 +21,17 @@ from region_bundle import BundleError, build_region_bundle
 
 
 LAYER_INVENTORY_SCHEMA = "helm.maritime_layer_inventory.v1"
+LAYER_MANIFEST_SCHEMA = "helm.layer.manifest.v1"
 DEFAULT_INVENTORY_ID = "local-maritime-layers"
 DEFAULT_TITLE = "Local Maritime Layer Inventory"
+
+VALID_MANIFEST_TIERS = frozenset({"basemap", "enc", "overlay", "weather", "nav"})
+
+ENC_GEOJSON_LAYERS = {
+    "depare": {"kind": "polygons", "tier": "enc", "title": "Depth areas"},
+    "depcnt": {"kind": "lines", "tier": "enc", "title": "Depth contours"},
+    "soundg": {"kind": "points", "tier": "enc", "title": "Soundings"},
+}
 
 PRIVATE_KEYS = {
     "_path",
@@ -690,6 +699,227 @@ def _s100_records(s100_inventory: dict | list | None) -> list[dict]:
     if isinstance(s100_inventory, dict):
         return _as_list(s100_inventory.get("layers"))
     return _as_list(s100_inventory)
+
+
+def _humanize_slug(stem: str) -> str:
+    text = re.sub(r"[_\-]+", " ", stem).strip()
+    return text[:1].upper() + text[1:] if text else stem
+
+
+def _load_sidecar_dict(path: str) -> dict:
+    base, _ = os.path.splitext(path)
+    for candidate in (
+        base + ".metadata.json",
+        base + ".sidecar.json",
+        path + ".metadata.json",
+        path + ".sidecar.json",
+    ):
+        if not os.path.isfile(candidate):
+            continue
+        try:
+            with open(candidate, encoding="utf-8") as handle:
+                payload = json.load(handle)
+        except (OSError, json.JSONDecodeError):
+            continue
+        if isinstance(payload, dict):
+            return _public_json(payload)
+    return {}
+
+
+def _walk_coordinates(value, bbox: list[float], *, limit: int) -> int:
+    if limit <= 0:
+        return 0
+    if isinstance(value, (list, tuple)):
+        if value and isinstance(value[0], (int, float)) and len(value) >= 2:
+            lon = float(value[0])
+            lat = float(value[1])
+            bbox[0] = min(bbox[0], lon)
+            bbox[1] = min(bbox[1], lat)
+            bbox[2] = max(bbox[2], lon)
+            bbox[3] = max(bbox[3], lat)
+            return 1
+        used = 0
+        for child in value:
+            used += _walk_coordinates(child, bbox, limit=limit - used)
+            if used >= limit:
+                break
+        return used
+    return 0
+
+
+def _geojson_bbox(doc: dict, sidecar: Optional[dict] = None) -> Optional[List[float]]:
+    metadata = doc.get("metadata") if isinstance(doc.get("metadata"), dict) else {}
+    for source in (sidecar, metadata, doc):
+        if not isinstance(source, dict):
+            continue
+        for key in ("bounds_array", "bounds", "bbox"):
+            bbox = _bounds_array(source.get(key))
+            if bbox:
+                return bbox
+    features = doc.get("features")
+    if not isinstance(features, list) or not features:
+        return None
+    bbox = [float("inf"), float("inf"), float("-inf"), float("-inf")]
+    used = 0
+    for feature in features[:32]:
+        if not isinstance(feature, dict):
+            continue
+        geometry = feature.get("geometry")
+        if not isinstance(geometry, dict):
+            continue
+        coords = geometry.get("coordinates")
+        if coords is None:
+            continue
+        used += _walk_coordinates(coords, bbox, limit=256 - used)
+        if used >= 256:
+            break
+    if used == 0 or bbox[0] >= bbox[2] or bbox[1] >= bbox[3]:
+        return None
+    return bbox
+
+
+def _manifest_source(doc: dict, sidecar: dict, *, default_label: str, default_license: str) -> dict:
+    for source in (sidecar.get("source"), doc.get("metadata", {}).get("source") if isinstance(doc.get("metadata"), dict) else None):
+        if isinstance(source, dict):
+            payload = _drop_none({
+                "label": source.get("label"),
+                "license": source.get("license"),
+                "id": source.get("id"),
+            })
+            if payload:
+                return _public_json(payload)
+        if isinstance(source, str) and source:
+            label = "enc" if source == "enc" else source
+            license_value = "enc-local" if source == "enc" else default_license
+            cell = None
+            metadata = doc.get("metadata")
+            if isinstance(metadata, dict):
+                cell = metadata.get("cell")
+            payload = {"label": label, "license": license_value}
+            if cell:
+                payload["id"] = str(cell)
+            return payload
+    return {"label": default_label, "license": default_license}
+
+
+def _manifest_freshness(path: str, sidecar: dict) -> dict:
+    freshness = sidecar.get("freshness") if isinstance(sidecar.get("freshness"), dict) else {}
+    status = freshness.get("status")
+    if not status:
+        status = "ok" if os.path.isfile(path) else "unknown"
+    payload = {"status": str(status)}
+    updated = freshness.get("updated")
+    if not updated and os.path.isfile(path):
+        try:
+            mtime = os.path.getmtime(path)
+            updated = _dt.datetime.fromtimestamp(mtime, _dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
+        except OSError:
+            updated = None
+    if updated:
+        payload["updated"] = updated
+    warning = freshness.get("warning")
+    if warning:
+        payload["warning"] = str(warning)
+    return _drop_none(payload)
+
+
+def _manifest_inspection(sidecar: dict) -> dict:
+    inspection = sidecar.get("inspection") if isinstance(sidecar.get("inspection"), dict) else {}
+    mode = inspection.get("mode") or "feature-properties"
+    return _drop_none(_public_json({"mode": mode, **{k: v for k, v in inspection.items() if k != "mode"}}))
+
+
+def _layer_from_geojson_file(
+    root: str,
+    rel_path: str,
+    *,
+    layer_id: Optional[str] = None,
+    title: Optional[str] = None,
+    kind: Optional[str] = None,
+    tier: Optional[str] = None,
+    default_label: str = "owned",
+    default_license: str = "private-local",
+) -> Optional[dict]:
+    abs_path = os.path.join(root, rel_path)
+    if not os.path.isfile(abs_path):
+        return None
+    try:
+        with open(abs_path, encoding="utf-8") as handle:
+            doc = json.load(handle)
+    except (OSError, json.JSONDecodeError):
+        return None
+    if not isinstance(doc, dict):
+        return None
+    sidecar = _load_sidecar_dict(abs_path)
+    stem = os.path.splitext(os.path.basename(rel_path))[0]
+    resolved_id = str(sidecar.get("id") or layer_id or _slug(stem))
+    resolved_title = str(sidecar.get("title") or title or _humanize_slug(stem))
+    resolved_kind = str(sidecar.get("kind") or kind or "geojson")
+    resolved_tier = str(sidecar.get("tier") or tier or "overlay")
+    if resolved_tier not in VALID_MANIFEST_TIERS:
+        resolved_tier = "overlay"
+    bbox = _geojson_bbox(doc, sidecar)
+    payload = _drop_none({
+        "id": resolved_id,
+        "title": resolved_title,
+        "kind": resolved_kind,
+        "format": "geojson",
+        "tier": resolved_tier,
+        "url": "/user-data/" + rel_path.replace(os.sep, "/"),
+        "bbox": bbox,
+        "source": _manifest_source(doc, sidecar, default_label=default_label, default_license=default_license),
+        "freshness": _manifest_freshness(abs_path, sidecar),
+        "inspection": _manifest_inspection(sidecar),
+    })
+    return payload
+
+
+def _overlay_geojson_paths(root: str) -> list[str]:
+    layers_dir = os.path.join(root, "layers")
+    if not os.path.isdir(layers_dir):
+        return []
+    paths = []
+    for name in sorted(os.listdir(layers_dir)):
+        if name.startswith(".") or not name.lower().endswith(".geojson"):
+            continue
+        paths.append(os.path.join("layers", name))
+    return paths
+
+
+def _default_user_data_root() -> str:
+    explicit = os.environ.get("HELM_USER_DATA_ROOT")
+    if explicit:
+        return os.path.expanduser(explicit)
+    config = os.environ.get("HELM_CONFIG")
+    if config:
+        return os.path.join(os.path.expanduser(config), "data")
+    return os.path.join(os.path.expanduser("~"), ".helm", "data")
+
+
+def build_layer_manifest(user_data_root: Optional[str] = None) -> dict:
+    """Build helm.layer.manifest.v1 from local user-data GeoJSON overlays."""
+
+    root = os.path.expanduser(user_data_root or _default_user_data_root())
+    layers: list[dict] = []
+    for stem, spec in ENC_GEOJSON_LAYERS.items():
+        layer = _layer_from_geojson_file(
+            root,
+            f"{stem}.geojson",
+            layer_id=stem,
+            title=spec["title"],
+            kind=spec["kind"],
+            tier=spec["tier"],
+            default_label="enc",
+            default_license="enc-local",
+        )
+        if layer:
+            layers.append(layer)
+    for rel_path in _overlay_geojson_paths(root):
+        layer = _layer_from_geojson_file(root, rel_path)
+        if layer:
+            layers.append(layer)
+    layers.sort(key=lambda item: (str(item.get("tier")), str(item.get("id"))))
+    return {"schema": LAYER_MANIFEST_SCHEMA, "layers": layers}
 
 
 def build_layer_inventory(

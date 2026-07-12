@@ -8,8 +8,10 @@
 //   GET  /{pack}.pmtiles             -> PMTiles archive bytes with HTTP Range
 //   HEAD /{pack}.pmtiles             -> PMTiles protocol probe
 //
-// Python pipeline/mbtiles_server.py remains the reference/oracle until the C++
-// service reaches full parity. OFFLINE-17 owns /layers, /prefetch, and /bundle.
+//   GET  /layers                     -> helm.maritime_layer_inventory.v1
+//   GET  /layer-manifest             -> helm.layer.manifest.v1 user overlays
+//   GET  /prefetch                   -> helm.prefetch.manifest.v1
+//   GET  /bundle                     -> helm.region_bundle.manifest.v1
 
 #include <algorithm>
 #include <cerrno>
@@ -211,7 +213,7 @@ const std::set<std::string>& sidecar_metadata_keys() {
     "source_created", "source_updated", "source_downloaded", "source_freshness",
     "source_confidence", "edition", "update", "updated", "created", "coverage_note", "name",
     "title", "kind", "source", "license", "attribution", "description", "bounds", "minzoom",
-    "maxzoom", "center", "inspection",
+    "maxzoom", "center", "inspection", "id", "tier", "format", "freshness",
   };
   return keys;
 }
@@ -1823,6 +1825,227 @@ JsonValue env_data_layer(const JsonValue& manifest, const std::string& name, con
   return layer;
 }
 
+std::string user_data_root() {
+  const char* explicit_root = std::getenv("HELM_USER_DATA_ROOT");
+  if (explicit_root && *explicit_root) return expand_user(explicit_root);
+  const std::string config = get_env("HELM_CONFIG");
+  if (!config.empty()) return expand_user(config) + "/data";
+  return expand_user(get_env("HOME", ".") + "/.helm/data");
+}
+
+std::vector<double> bounds_from_json_value(const JsonValue& value) {
+  if (value.IsArray() && value.Size() == 4) {
+    std::vector<double> bbox;
+    for (auto it = value.Begin(); it != value.End(); ++it) {
+      if (!it->IsNumber()) return {};
+      bbox.push_back(it->GetDouble());
+    }
+    if (bbox.size() != 4 || bbox[0] >= bbox[2] || bbox[1] >= bbox[3]) return {};
+    return bbox;
+  }
+  if (value.IsString()) return parse_bounds_array(value.GetString());
+  return {};
+}
+
+struct BboxAccum {
+  bool init = false;
+  double west = 0.0;
+  double south = 0.0;
+  double east = 0.0;
+  double north = 0.0;
+
+  void add(double lon, double lat) {
+    if (!init) {
+      west = east = lon;
+      south = north = lat;
+      init = true;
+      return;
+    }
+    west = std::min(west, lon);
+    south = std::min(south, lat);
+    east = std::max(east, lon);
+    north = std::max(north, lat);
+  }
+};
+
+int walk_coordinates(const JsonValue& value, BboxAccum& out, int limit) {
+  if (limit <= 0) return 0;
+  if (value.IsArray()) {
+    if (!value.Empty() && value[0].IsNumber() && value.Size() >= 2) {
+      out.add(value[0].GetDouble(), value[1].GetDouble());
+      return 1;
+    }
+    int used = 0;
+    for (auto it = value.Begin(); it != value.End(); ++it) {
+      used += walk_coordinates(*it, out, limit - used);
+      if (used >= limit) break;
+    }
+    return used;
+  }
+  return 0;
+}
+
+std::vector<double> geojson_bbox(const JsonValue& doc, const JsonValue* sidecar) {
+  const char* keys[] = {"bounds_array", "bounds", "bbox"};
+  const JsonValue* sources[] = {sidecar, rj_object(doc, "metadata"), &doc};
+  for (const JsonValue* source : sources) {
+    if (!source || !source->IsObject()) continue;
+    for (const char* key : keys) {
+      if (!source->HasMember(key)) continue;
+      const std::vector<double> bbox = bounds_from_json_value((*source)[key]);
+      if (!bbox.empty()) return bbox;
+    }
+  }
+  const JsonValue* features = doc.HasMember("features") && doc["features"].IsArray() ? &doc["features"] : nullptr;
+  if (!features) return {};
+  BboxAccum accum;
+  int scanned = 0;
+  for (auto it = features->Begin(); it != features->End() && scanned < 32; ++it) {
+  if (!it->IsObject() || !it->HasMember("geometry")) continue;
+    const JsonValue& geometry = (*it)["geometry"];
+    if (!geometry.IsObject() || !geometry.HasMember("coordinates")) continue;
+    walk_coordinates(geometry["coordinates"], accum, 256);
+    ++scanned;
+  }
+  if (!accum.init || accum.west >= accum.east || accum.south >= accum.north) return {};
+  return {accum.west, accum.south, accum.east, accum.north};
+}
+
+JsonValue manifest_source_json(const JsonValue& doc, const JsonValue* sidecar,
+                               const std::string& default_label, const std::string& default_license,
+                               JsonAllocator& a) {
+  JsonValue source(rapidjson::kObjectType);
+  const JsonValue* sidecar_source = sidecar ? rj_object(*sidecar, "source") : nullptr;
+  const JsonValue* metadata = rj_object(doc, "metadata");
+  const JsonValue* meta_source = metadata ? rj_object(*metadata, "source") : nullptr;
+  const JsonValue* candidates[] = {sidecar_source, meta_source};
+  const char* allowed_keys[] = {"label", "license", "id"};
+  for (const JsonValue* candidate : candidates) {
+    if (!candidate || !candidate->IsObject()) continue;
+    JsonValue allowed(rapidjson::kObjectType);
+    for (const char* key : allowed_keys) {
+      if (candidate->HasMember(key) && !(*candidate)[key].IsNull()) {
+        copy_public_value(allowed, key, (*candidate)[key], a);
+      }
+    }
+    if (allowed.MemberCount() > 0) return allowed;
+  }
+  if (metadata && metadata->HasMember("source") && (*metadata)["source"].IsString()) {
+    const std::string label = (*metadata)["source"].GetString();
+    add_string_allow_empty(source, "label", label, a);
+    add_string_allow_empty(source, "license", label == "enc" ? "enc-local" : default_license, a);
+    const std::string cell = rj_string(*metadata, "cell");
+    if (!cell.empty()) add_string_allow_empty(source, "id", cell, a);
+    return source;
+  }
+  add_string_allow_empty(source, "label", default_label, a);
+  add_string_allow_empty(source, "license", default_license, a);
+  return source;
+}
+
+JsonValue manifest_freshness_json(const std::string& path, const JsonValue* sidecar, JsonAllocator& a) {
+  JsonValue freshness(rapidjson::kObjectType);
+  std::string status = "ok";
+  if (sidecar) {
+    const JsonValue* sidecar_freshness = rj_object(*sidecar, "freshness");
+    if (sidecar_freshness) status = rj_string(*sidecar_freshness, "status", status);
+  }
+  add_string_allow_empty(freshness, "status", status, a);
+  struct stat st {};
+  if (stat_file(path, st)) {
+    add_string_allow_empty(freshness, "updated", iso_from_epoch(static_cast<std::uint64_t>(st.st_mtime)), a);
+  }
+  return freshness;
+}
+
+JsonValue manifest_inspection_json(const JsonValue* sidecar, JsonAllocator& a) {
+  JsonValue inspection(rapidjson::kObjectType);
+  const JsonValue* sidecar_inspection = sidecar ? rj_object(*sidecar, "inspection") : nullptr;
+  if (sidecar_inspection) {
+    copy_public_object(inspection, *sidecar_inspection, a);
+  }
+  if (!inspection.HasMember("mode")) add_string_allow_empty(inspection, "mode", "feature-properties", a);
+  return inspection;
+}
+
+bool append_manifest_geojson_layer(JsonValue& layers, const std::string& root, const std::string& rel_path,
+                                   const std::string& layer_id, const std::string& title,
+                                   const std::string& kind, const std::string& tier,
+                                   const std::string& default_label, const std::string& default_license,
+                                   JsonAllocator& a) {
+  const std::string path = root + "/" + rel_path;
+  struct stat st {};
+  if (!stat_file(path, st) || !S_ISREG(st.st_mode)) return false;
+  auto doc = load_json_document(path);
+  if (!doc) return false;
+  auto sidecar = load_sidecar_metadata(path);
+  const JsonValue* sidecar_obj = sidecar.get();
+  const std::string stem = basename_no_ext(rel_path.substr(rel_path.find_last_of('/') + 1));
+  JsonValue layer(rapidjson::kObjectType);
+  add_string_allow_empty(layer, "id", sidecar_obj ? rj_string(*sidecar_obj, "id", layer_id.empty() ? stem : layer_id) : (layer_id.empty() ? stem : layer_id), a);
+  add_string_allow_empty(layer, "title", sidecar_obj ? rj_string(*sidecar_obj, "title", title.empty() ? stem : title) : (title.empty() ? stem : title), a);
+  add_string_allow_empty(layer, "kind", sidecar_obj ? rj_string(*sidecar_obj, "kind", kind.empty() ? "geojson" : kind) : (kind.empty() ? "geojson" : kind), a);
+  add_string(layer, "format", "geojson", a);
+  std::string resolved_tier = sidecar_obj ? rj_string(*sidecar_obj, "tier", tier.empty() ? "overlay" : tier) : (tier.empty() ? "overlay" : tier);
+  if (resolved_tier != "basemap" && resolved_tier != "enc" && resolved_tier != "overlay" &&
+      resolved_tier != "weather" && resolved_tier != "nav") {
+    resolved_tier = "overlay";
+  }
+  add_string_allow_empty(layer, "tier", resolved_tier, a);
+  add_string(layer, "url", "/user-data/" + rel_path, a);
+  const std::vector<double> bbox = geojson_bbox(*doc, sidecar_obj);
+  if (!bbox.empty()) {
+    JsonValue bbox_json(rapidjson::kArrayType);
+    for (double v : bbox) bbox_json.PushBack(v, a);
+    layer.AddMember("bbox", bbox_json, a);
+  }
+  layer.AddMember("source", manifest_source_json(*doc, sidecar_obj, default_label, default_license, a), a);
+  layer.AddMember("freshness", manifest_freshness_json(path, sidecar_obj, a), a);
+  layer.AddMember("inspection", manifest_inspection_json(sidecar_obj, a), a);
+  layers.PushBack(layer, a);
+  return true;
+}
+
+JsonValue layer_manifest_value(JsonAllocator& a) {
+  JsonValue manifest(rapidjson::kObjectType);
+  add_string_allow_empty(manifest, "schema", "helm.layer.manifest.v1", a);
+  JsonValue layers(rapidjson::kArrayType);
+  const std::string root = user_data_root();
+  struct EncLayerSpec {
+    const char* stem;
+    const char* kind;
+    const char* tier;
+    const char* title;
+  };
+  static const EncLayerSpec enc_layers[] = {
+    {"depare", "polygons", "enc", "Depth areas"},
+    {"depcnt", "lines", "enc", "Depth contours"},
+    {"soundg", "points", "enc", "Soundings"},
+  };
+  for (const EncLayerSpec& spec : enc_layers) {
+    append_manifest_geojson_layer(layers, root, std::string(spec.stem) + ".geojson",
+                                  spec.stem, spec.title, spec.kind, spec.tier, "enc", "enc-local", a);
+  }
+  const std::string overlay_dir = root + "/layers";
+  DIR* dir = ::opendir(overlay_dir.c_str());
+  if (dir) {
+    std::vector<std::string> names;
+    while (dirent* ent = ::readdir(dir)) {
+      const std::string filename = ent->d_name;
+      if (filename.empty() || filename[0] == '.') continue;
+      if (extension_of(filename) != ".geojson") continue;
+      names.push_back(filename);
+    }
+    ::closedir(dir);
+    std::sort(names.begin(), names.end());
+    for (const std::string& filename : names) {
+      append_manifest_geojson_layer(layers, root, "layers/" + filename, "", "", "", "overlay", "owned", "private-local", a);
+    }
+  }
+  manifest.AddMember("layers", layers, a);
+  return manifest;
+}
+
 JsonValue layers_value(const std::map<std::string, std::shared_ptr<PackRecord>>& packs,
                        const std::vector<EnvBundle>& env_bundles,
                        const std::string& origin,
@@ -2150,6 +2373,21 @@ private:
     if (path == "/catalog") {
       h["Content-Type"] = "application/json";
       const std::string body = catalog_json(packs_, origin_for(req, bind_, port_));
+      if (is_head) {
+        h["Content-Length"] = std::to_string(body.size());
+        return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string());
+      }
+      return response(200, "OK", std::move(h), body);
+    }
+
+    if (path == "/layer-manifest") {
+      if (req->method != "GET" && !is_head) {
+        return empty_response(405, "Method Not Allowed", std::move(h));
+      }
+      h["Content-Type"] = "application/json";
+      const std::string body = json_endpoint([&](JsonAllocator& a) -> JsonValue {
+        return layer_manifest_value(a);
+      });
       if (is_head) {
         h["Content-Length"] = std::to_string(body.size());
         return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string());
