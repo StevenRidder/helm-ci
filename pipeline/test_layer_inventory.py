@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 """Tests for OFFLINE-14 local maritime layer inventory manifests."""
 
+import datetime as dt
 import json
 import subprocess
 import sys
@@ -208,6 +209,8 @@ class LayerManifestTest(unittest.TestCase):
             payload = build_layer_manifest(tmp)
             self.assertEqual(payload["schema"], LAYER_MANIFEST_SCHEMA)
             self.assertEqual(payload["layers"], [])
+            self.assertEqual(payload["enc"]["present"], [])
+            self.assertEqual(payload["enc"]["missing"], ["depare", "depcnt", "soundg"])
 
     def test_enc_and_overlay_geojson_are_indexed(self) -> None:
         with tempfile.TemporaryDirectory() as tmp:
@@ -267,8 +270,84 @@ class LayerManifestTest(unittest.TestCase):
             overlay = next(layer for layer in payload["layers"] if layer["id"] == "owned-anchorage-notes")
             self.assertEqual(overlay["tier"], "overlay")
             self.assertEqual(overlay["url"], "/user-data/layers/anchorages.geojson")
+            # Honest enc coverage: depare present, depcnt/soundg missing (the enc gap CAT-2 renders).
+            self.assertEqual(
+                payload["enc"],
+                {"expected": ["depare", "depcnt", "soundg"], "present": ["depare"], "missing": ["depcnt", "soundg"]},
+            )
+            self.assertEqual(depare["freshness"]["status"], "ok")
+            self.assertIn("age_days", depare["freshness"])
             self.assertNotIn(tmp, json.dumps(payload))
             self.assertNotIn("/private/tmp/should-not-leak", json.dumps(payload))
+
+    def test_manifest_freshness_flags_declared_window_as_stale(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            layers_dir = Path(tmp) / "layers"
+            layers_dir.mkdir()
+            (layers_dir / "note.geojson").write_text(
+                json.dumps({"type": "FeatureCollection", "features": []}), encoding="utf-8"
+            )
+            old = (
+                (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=400))
+                .replace(microsecond=0)
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
+            (layers_dir / "note.metadata.json").write_text(
+                json.dumps({"id": "note", "freshness": {"render_date": old, "stale_after_days": 1}}),
+                encoding="utf-8",
+            )
+            payload = build_layer_manifest(tmp)
+            note = next(layer for layer in payload["layers"] if layer["id"] == "note")
+            self.assertEqual(note["freshness"]["status"], "stale")
+            self.assertGreaterEqual(note["freshness"]["age_days"], 300)
+            self.assertIn("stale_at", note["freshness"])
+            self.assertIn("warning", note["freshness"])
+
+    def test_manifest_freshness_without_window_stays_ok_with_age(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            layers_dir = Path(tmp) / "layers"
+            layers_dir.mkdir()
+            (layers_dir / "plain.geojson").write_text(
+                json.dumps({"type": "FeatureCollection", "features": []}), encoding="utf-8"
+            )
+            payload = build_layer_manifest(tmp)
+            plain = next(layer for layer in payload["layers"] if layer["id"] == "plain")
+            self.assertEqual(plain["freshness"]["status"], "ok")
+            self.assertIn("age_days", plain["freshness"])  # derived from file mtime
+            self.assertNotIn("warning", plain["freshness"])
+
+    def test_manifest_freshness_edge_cases_are_honest(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            layers_dir = Path(tmp) / "layers"
+            layers_dir.mkdir()
+            old = (
+                (dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=400))
+                .replace(microsecond=0)
+                .isoformat()
+                .replace("+00:00", "Z")
+            )
+
+            def write(stem: str, sidecar: dict) -> None:
+                (layers_dir / f"{stem}.geojson").write_text(
+                    json.dumps({"type": "FeatureCollection", "features": []}), encoding="utf-8"
+                )
+                (layers_dir / f"{stem}.metadata.json").write_text(json.dumps(sidecar), encoding="utf-8")
+
+            # Explicit non-stale sidecar status + an expired window -> honestly stale (no
+            # contradictory "fresh"+warning), matching the /catalog rule.
+            write("forced", {"id": "forced", "freshness": {"status": "fresh", "render_date": old, "stale_after_days": 1}})
+            # A stringified window is NOT a window (parity with strict C++ rj_int64) -> stays ok.
+            write("strwin", {"id": "strwin", "freshness": {"render_date": old, "stale_after_days": "1"}})
+            # A malformed render_date is rejected, never fabricating staleness -> ok, age from mtime.
+            write("baddate", {"id": "baddate", "freshness": {"render_date": "2026-02-30", "stale_after_days": 1}})
+
+            layers = {layer["id"]: layer for layer in build_layer_manifest(tmp)["layers"]}
+            self.assertEqual(layers["forced"]["freshness"]["status"], "stale")
+            self.assertEqual(layers["strwin"]["freshness"]["status"], "ok")
+            self.assertNotIn("stale_at", layers["strwin"]["freshness"])
+            self.assertEqual(layers["baddate"]["freshness"]["status"], "ok")
+            self.assertIn("age_days", layers["baddate"]["freshness"])  # from mtime, not the bad date
 
 
 if __name__ == "__main__":

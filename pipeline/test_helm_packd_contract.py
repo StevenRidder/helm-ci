@@ -13,6 +13,7 @@ Set HELM_PACKD_BIN to the built binary, for example:
 
 from __future__ import annotations
 
+import datetime as dt
 import gzip
 import json
 import os
@@ -30,6 +31,11 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 ENV_FIXTURE = ROOT / "services" / "wx" / "fixtures" / "fiji-env-bundle-v1.json"
+
+
+def _iso_days_ago(days: float) -> str:
+    moment = dt.datetime.now(dt.timezone.utc) - dt.timedelta(days=days)
+    return moment.replace(microsecond=0).isoformat().replace("+00:00", "Z")
 
 
 def free_port() -> int:
@@ -181,6 +187,33 @@ def write_user_data_fixtures(user_root: Path) -> None:
                     "url": "file:///private/tmp/source",
                 },
                 "private_path": "/private/tmp/should-not-leak",
+            }
+        ),
+        encoding="utf-8",
+    )
+    # An overlay whose sidecar declares a freshness window that has already expired, so the
+    # manifest must report it as honestly stale (drives CAT-2's "stale overlay" banner).
+    (layers_dir / "stale_note.geojson").write_text(
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {"type": "Point", "coordinates": [178.3, -17.7]},
+                        "properties": {"name": "Stale note"},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (layers_dir / "stale_note.metadata.json").write_text(
+        json.dumps(
+            {
+                "id": "stale-note",
+                "title": "Stale note",
+                "freshness": {"render_date": _iso_days_ago(400), "stale_after_days": 1},
             }
         ),
         encoding="utf-8",
@@ -475,6 +508,17 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(overlay["tier"], "overlay")
         self.assertEqual(overlay["inspection"]["mode"], "feature-properties")
         self.assertEqual(overlay["source"], {"label": "owned", "license": "private-local"})
+        # CAT-1: honest enc coverage summary (present depare; depcnt/soundg are the enc gap).
+        self.assertEqual(manifest["enc"]["expected"], ["depare", "depcnt", "soundg"])
+        self.assertEqual(manifest["enc"]["present"], ["depare"])
+        self.assertEqual(manifest["enc"]["missing"], ["depcnt", "soundg"])
+        self.assertEqual(depare["freshness"]["status"], "ok")
+        self.assertIn("age_days", depare["freshness"])
+        # CAT-1: an overlay past its declared freshness window is honestly reported stale.
+        stale_overlay = next(layer for layer in manifest["layers"] if layer["id"] == "stale-note")
+        self.assertEqual(stale_overlay["freshness"]["status"], "stale")
+        self.assertGreaterEqual(stale_overlay["freshness"]["age_days"], 300)
+        self.assertIn("warning", stale_overlay["freshness"])
         self.assertNotIn("do-not-publish", json.dumps(manifest))
         self.assertNotIn("also-secret", json.dumps(manifest))
         self.assertNotIn("file:///private/tmp/source", json.dumps(manifest))
@@ -487,6 +531,99 @@ class HelmPackdContractTest(unittest.TestCase):
             self.assertEqual(resp.status, 200)
             self.assertGreater(int(resp.headers.get("Content-Length", "0")), 10)
             self.assertEqual(resp.read(), b"")
+
+
+@unittest.skipUnless(os.environ.get("HELM_PACKD_BIN"), "set HELM_PACKD_BIN to the built helm-packd binary")
+class HelmPackdCatalogStalenessTest(unittest.TestCase):
+    """CAT-1: /catalog reports honest, COMPUTED staleness for packs (satellite/enc/overlay share
+    this daemon path). A pack past its own declared freshness window is stale even when no sidecar
+    pre-stamped the flag; a render_date without a window stays fresh; no render_date is unknown
+    (never a fabricated 'fresh')."""
+
+    PACKS = {
+        "stalewin": {"render_date": _iso_days_ago(400), "stale_after_days": 90},
+        "freshwin": {"render_date": _iso_days_ago(5), "stale_after_days": 90},
+        "staleat": {"render_date": _iso_days_ago(10), "stale_at": _iso_days_ago(2)},
+        "nowindow": {"render_date": _iso_days_ago(5)},
+        "nodate": {"chart_edition": "NO-RENDER-DATE"},
+    }
+
+    def setUp(self) -> None:
+        self.bin = Path(os.environ["HELM_PACKD_BIN"])
+        if not self.bin.exists() or not os.access(self.bin, os.X_OK):
+            self.skipTest(f"HELM_PACKD_BIN is not executable: {self.bin}")
+        self.tmp = tempfile.TemporaryDirectory()
+        base = Path(self.tmp.name)
+        for stem, meta in self.PACKS.items():
+            write_mbtiles(base / f"{stem}.mbtiles")
+            (base / f"{stem}.metadata.json").write_text(json.dumps(meta), encoding="utf-8")
+        self.port = free_port()
+        env = os.environ.copy()
+        env["HELM_MBTILES_DIR"] = self.tmp.name
+        env["HELM_BIND"] = "127.0.0.1"
+        self.proc = subprocess.Popen(
+            [str(self.bin), str(self.port)],
+            cwd=str(ROOT),
+            env=env,
+            stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT,
+            text=True,
+        )
+        deadline = time.time() + 5
+        last = None
+        while time.time() < deadline:
+            if self.proc.poll() is not None:
+                out = self.proc.stdout.read() if self.proc.stdout else ""
+                self.fail(f"helm-packd exited early with {self.proc.returncode}: {out}")
+            try:
+                status, data = request_json(f"http://127.0.0.1:{self.port}/health")
+                if status == 200 and data.get("engine") == "helm-packd":
+                    return
+            except (OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
+                last = exc
+                time.sleep(0.05)
+        self.fail(f"helm-packd did not become ready: {last}")
+
+    def tearDown(self) -> None:
+        self.proc.terminate()
+        try:
+            self.proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+        if self.proc.stdout:
+            self.proc.stdout.close()
+        self.tmp.cleanup()
+
+    def test_catalog_staleness_is_computed_from_declared_window(self) -> None:
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+
+        # Past render_date + stale_after_days -> honestly stale, though nothing pre-stamped it.
+        stale = catalog["stalewin"]["staleness"]
+        self.assertEqual(stale["status"], "stale")
+        self.assertGreaterEqual(stale["age_days"], 300)
+        self.assertIn("stale_at", stale)  # derived deadline is exposed
+        self.assertIn("warning", stale)
+        self.assertTrue(any(w["code"] == "pack_stale" for w in catalog["stalewin"]["warnings"]))
+
+        # Within the window -> fresh, with an honest age and no warning.
+        fresh = catalog["freshwin"]["staleness"]
+        self.assertEqual(fresh["status"], "fresh")
+        self.assertLessEqual(fresh["age_days"], 60)
+        self.assertNotIn("warning", fresh)
+
+        # Explicit stale_at already in the past -> stale.
+        self.assertEqual(catalog["staleat"]["staleness"]["status"], "stale")
+
+        # render_date but NO declared window -> fresh (we do not fabricate staleness) + age.
+        nowindow = catalog["nowindow"]["staleness"]
+        self.assertEqual(nowindow["status"], "fresh")
+        self.assertIn("age_days", nowindow)
+
+        # No render_date -> unknown, never a fabricated "fresh"; no age emitted.
+        nodate = catalog["nodate"]["staleness"]
+        self.assertEqual(nodate["status"], "unknown")
+        self.assertNotIn("age_days", nodate)
 
 
 if __name__ == "__main__":

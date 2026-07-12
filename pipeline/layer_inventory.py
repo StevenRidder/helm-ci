@@ -802,22 +802,89 @@ def _manifest_source(doc: dict, sidecar: dict, *, default_label: str, default_li
     return {"label": default_label, "license": default_license}
 
 
+def _iso_from_epoch(epoch: float) -> str:
+    return (
+        _dt.datetime.fromtimestamp(epoch, _dt.timezone.utc)
+        .replace(microsecond=0)
+        .isoformat()
+        .replace("+00:00", "Z")
+    )
+
+
+def _epoch_from_iso(value: Optional[str]) -> Optional[float]:
+    """Parse an ISO-8601 UTC timestamp to epoch seconds, or None if unparseable.
+
+    Mirrors the C++ helm_packd epoch_from_iso: accepts "YYYY-MM-DDTHH:MM:SSZ" and
+    date-only "YYYY-MM-DD". Returns None rather than fabricating a date so callers
+    report freshness as unknown instead of guessing.
+    """
+    if not isinstance(value, str) or not value.strip():
+        return None
+    text = value.strip().rstrip("Z")
+    for length, fmt in ((19, "%Y-%m-%dT%H:%M:%S"), (10, "%Y-%m-%d")):
+        try:
+            parsed = _dt.datetime.strptime(text[:length], fmt)
+        except ValueError:
+            continue
+        return parsed.replace(tzinfo=_dt.timezone.utc).timestamp()
+    return None
+
+
 def _manifest_freshness(path: str, sidecar: dict) -> dict:
     freshness = sidecar.get("freshness") if isinstance(sidecar.get("freshness"), dict) else {}
     status = freshness.get("status")
     if not status:
         status = "ok" if os.path.isfile(path) else "unknown"
-    payload = {"status": str(status)}
-    updated = freshness.get("updated")
-    if not updated and os.path.isfile(path):
+    status = str(status)
+
+    now = _dt.datetime.now(_dt.timezone.utc).timestamp()
+    mtime: Optional[float] = None
+    if os.path.isfile(path):
         try:
             mtime = os.path.getmtime(path)
-            updated = _dt.datetime.fromtimestamp(mtime, _dt.timezone.utc).replace(microsecond=0).isoformat().replace("+00:00", "Z")
         except OSError:
-            updated = None
+            mtime = None
+    updated = freshness.get("updated")
+    if not updated and mtime is not None:
+        updated = _iso_from_epoch(mtime)
+
+    # Age is measured from an explicit sidecar render_date when present, else the file mtime.
+    render_date = freshness.get("render_date")
+    ref_epoch = _epoch_from_iso(render_date)
+    if ref_epoch is None:
+        ref_epoch = mtime
+
+    # A layer is "stale" only when its sidecar declares a window (stale_at, or
+    # render_date + stale_after_days) and that deadline has passed. We never fabricate it.
+    stale_at = freshness.get("stale_at")
+    stale_at_epoch = _epoch_from_iso(stale_at)
+    stale_after = freshness.get("stale_after_days")
+    if (
+        stale_at_epoch is None
+        and render_date
+        and isinstance(stale_after, int)
+        and not isinstance(stale_after, bool)  # reject bool/str/float, mirroring C++ rj_int64
+        and stale_after > 0
+    ):
+        rd = _epoch_from_iso(render_date)
+        if rd is not None:
+            stale_at_epoch = rd + stale_after * 86400
+            stale_at = _iso_from_epoch(stale_at_epoch)
+    computed_stale = stale_at_epoch is not None and now >= stale_at_epoch
+    # An expired window is stale regardless of a non-forced sidecar status (matches C++).
+    if computed_stale:
+        status = "stale"
+
+    payload: dict = {"status": status}
     if updated:
         payload["updated"] = updated
+    if ref_epoch is not None:
+        payload["age_days"] = max(0, int((now - ref_epoch) // 86400))
+    if stale_at:
+        payload["stale_at"] = stale_at
     warning = freshness.get("warning")
+    if computed_stale and not warning:
+        warning = "Layer render date is older than the configured freshness window."
     if warning:
         payload["warning"] = str(warning)
     return _drop_none(payload)
@@ -901,6 +968,9 @@ def build_layer_manifest(user_data_root: Optional[str] = None) -> dict:
 
     root = os.path.expanduser(user_data_root or _default_user_data_root())
     layers: list[dict] = []
+    enc_expected: list[str] = []
+    enc_present: list[str] = []
+    enc_missing: list[str] = []
     for stem, spec in ENC_GEOJSON_LAYERS.items():
         layer = _layer_from_geojson_file(
             root,
@@ -912,14 +982,24 @@ def build_layer_manifest(user_data_root: Optional[str] = None) -> dict:
             default_label="enc",
             default_license="enc-local",
         )
+        enc_expected.append(stem)
         if layer:
             layers.append(layer)
+            enc_present.append(stem)
+        else:
+            enc_missing.append(stem)
     for rel_path in _overlay_geojson_paths(root):
         layer = _layer_from_geojson_file(root, rel_path)
         if layer:
             layers.append(layer)
     layers.sort(key=lambda item: (str(item.get("tier")), str(item.get("id"))))
-    return {"schema": LAYER_MANIFEST_SCHEMA, "layers": layers}
+    return {
+        "schema": LAYER_MANIFEST_SCHEMA,
+        "layers": layers,
+        # Honest coverage of the expected ENC set so CAT-2 can surface an "enc gap"
+        # without inventing placeholder layers. present + missing partition expected.
+        "enc": {"expected": enc_expected, "present": enc_present, "missing": enc_missing},
+    }
 
 
 def build_layer_inventory(

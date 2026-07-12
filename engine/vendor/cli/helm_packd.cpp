@@ -190,6 +190,41 @@ std::string now_iso() {
   return iso_from_epoch(static_cast<std::uint64_t>(std::time(nullptr)));
 }
 
+// Parse an ISO-8601 UTC timestamp ("YYYY-MM-DDTHH:MM:SSZ" or date-only "YYYY-MM-DD")
+// to a Unix epoch (seconds). Returns false when the string cannot be parsed — callers
+// must treat freshness as unknown rather than fabricate an age from a bad date. Computes
+// the epoch directly (days_from_civil) to stay independent of timegm/timezone state.
+bool epoch_from_iso(const std::string& iso, std::int64_t& out) {
+  int y = 0, mo = 0, d = 0, h = 0, mi = 0, s = 0;
+  // Bounded field widths keep a garbage year like "999999999999" from overflowing int (UB).
+  const int n = std::sscanf(iso.c_str(), "%4d-%2d-%2dT%2d:%2d:%2d", &y, &mo, &d, &h, &mi, &s);
+  if (n < 3) return false;
+  if (y < 1 || y > 9999 || mo < 1 || mo > 12 || d < 1 || d > 31) return false;
+  if (h < 0 || h > 23 || mi < 0 || mi > 59 || s < 0 || s > 60) return false;
+  // days_from_civil (Howard Hinnant): days since 1970-01-01 for a proleptic Gregorian date.
+  const int yy = y - (mo <= 2 ? 1 : 0);
+  const int era = (yy >= 0 ? yy : yy - 399) / 400;
+  const unsigned yoe = static_cast<unsigned>(yy - era * 400);
+  const unsigned doy = (153u * static_cast<unsigned>(mo + (mo > 2 ? -3 : 9)) + 2) / 5 + static_cast<unsigned>(d) - 1;
+  const unsigned doe = yoe * 365 + yoe / 4 - yoe / 100 + doy;
+  const std::int64_t days = static_cast<std::int64_t>(era) * 146097 + static_cast<std::int64_t>(doe) - 719468;
+  // Reject non-existent civil dates (e.g. 2026-02-30) that the arithmetic would silently
+  // normalize: round-trip through civil_from_days and require an exact match (Python's
+  // strptime rejects them, so this keeps the C++ and Python oracles in agreement).
+  const std::int64_t z = days + 719468;
+  const std::int64_t era2 = (z >= 0 ? z : z - 146096) / 146097;
+  const unsigned doe2 = static_cast<unsigned>(z - era2 * 146097);
+  const unsigned yoe2 = (doe2 - doe2 / 1460 + doe2 / 36524 - doe2 / 146096) / 365;
+  const unsigned doy2 = doe2 - (365 * yoe2 + yoe2 / 4 - yoe2 / 100);
+  const unsigned mp = (5 * doy2 + 2) / 153;
+  const int rd_day = static_cast<int>(doy2 - (153 * mp + 2) / 5 + 1);
+  const int rd_mon = static_cast<int>(mp < 10 ? mp + 3 : mp - 9);
+  const int rd_year = static_cast<int>(yoe2) + static_cast<int>(era2) * 400 + (rd_mon <= 2 ? 1 : 0);
+  if (rd_year != y || rd_mon != mo || rd_day != d) return false;
+  out = days * 86400 + static_cast<std::int64_t>(h) * 3600 + static_cast<std::int64_t>(mi) * 60 + s;
+  return true;
+}
+
 const std::set<std::string>& private_keys() {
   static const std::set<std::string> keys = {
     "_path", "path", "file_path", "filepath", "local_path", "private_path", "directory", "dir",
@@ -883,13 +918,39 @@ JsonValue staleness_json(const PackRecord& rec, JsonAllocator& a, JsonValue* war
     }
     return staleness;
   }
+  const std::int64_t now = static_cast<std::int64_t>(std::time(nullptr));
+  std::int64_t render_epoch = 0;
+  const bool have_render_epoch = epoch_from_iso(render_date, render_epoch);
+  if (have_render_epoch) {
+    std::int64_t age_days = (now - render_epoch) / 86400;
+    if (age_days < 0) age_days = 0;  // a future render_date is not "negative days old"
+    staleness.AddMember("age_days", age_days, a);
+  }
+
+  // An explicit sidecar flag still forces stale...
   const bool forced_stale = lower(json_str(rec, "staleness_status")) == "stale" || json_bool(rec, "is_stale");
-  add_string_allow_empty(staleness, "status", forced_stale ? "stale" : "fresh", a);
-  add_string_allow_empty(staleness, "render_date", render_date, a);
+
+  // ...but freshness is ALSO computed from the pack's own declared window so a pack that
+  // has quietly aged past stale_at (or render_date + stale_after_days) is reported honestly
+  // even when nothing re-stamped the sidecar. render_date without any window stays "fresh".
   std::int64_t stale_after = 0;
-  if (json_int64(rec, "stale_after_days", stale_after)) staleness.AddMember("stale_after_days", stale_after, a);
-  add_string(staleness, "stale_at", json_str(rec, "stale_at"), a);
-  if (forced_stale) {
+  const bool have_stale_after = json_int64(rec, "stale_after_days", stale_after);
+  std::string stale_at = json_str(rec, "stale_at");
+  std::int64_t stale_at_epoch = 0;
+  bool have_deadline = !stale_at.empty() && epoch_from_iso(stale_at, stale_at_epoch);
+  if (!have_deadline && have_render_epoch && have_stale_after && stale_after > 0) {
+    stale_at_epoch = render_epoch + stale_after * 86400;
+    have_deadline = true;
+    stale_at = iso_from_epoch(static_cast<std::uint64_t>(stale_at_epoch));  // expose the derived deadline
+  }
+  const bool computed_stale = have_deadline && now >= stale_at_epoch;
+  const bool is_stale = forced_stale || computed_stale;
+
+  add_string_allow_empty(staleness, "status", is_stale ? "stale" : "fresh", a);
+  add_string_allow_empty(staleness, "render_date", render_date, a);
+  if (have_stale_after) staleness.AddMember("stale_after_days", stale_after, a);
+  add_string(staleness, "stale_at", stale_at, a);
+  if (is_stale) {
     const std::string message = "Pack render date is older than the configured freshness window.";
     add_string(staleness, "warning", message, a);
     if (warnings) {
@@ -1260,6 +1321,14 @@ std::string rj_string(const JsonValue& obj, const char* key, const std::string& 
 const JsonValue* rj_object(const JsonValue& obj, const char* key) {
   if (!obj.IsObject() || !obj.HasMember(key) || !obj[key].IsObject()) return nullptr;
   return &obj[key];
+}
+
+bool rj_int64(const JsonValue& obj, const char* key, std::int64_t& out) {
+  if (!obj.IsObject() || !obj.HasMember(key)) return false;
+  const JsonValue& v = obj[key];
+  if (v.IsInt64()) { out = v.GetInt64(); return true; }
+  if (v.IsUint64()) { out = static_cast<std::int64_t>(v.GetUint64()); return true; }
+  return false;  // reject strings/bools/floats so C++ and the Python oracle agree on the window
 }
 
 JsonValue env_bbox_value(const JsonValue& manifest, JsonAllocator& a, bool* crosses = nullptr) {
@@ -1925,140 +1994,7 @@ std::vector<double> geojson_bbox(const JsonValue& doc, const JsonValue* sidecar)
   return {accum.west, accum.south, accum.east, accum.north};
 }
 
-JsonValue manifest_source_json(const JsonValue& doc, const JsonValue* sidecar,
-                               const std::string& default_label, const std::string& default_license,
-                               JsonAllocator& a) {
-  JsonValue source(rapidjson::kObjectType);
-  const JsonValue* sidecar_source = sidecar ? rj_object(*sidecar, "source") : nullptr;
-  const JsonValue* metadata = rj_object(doc, "metadata");
-  const JsonValue* meta_source = metadata ? rj_object(*metadata, "source") : nullptr;
-  const JsonValue* candidates[] = {sidecar_source, meta_source};
-  const char* allowed_keys[] = {"label", "license", "id"};
-  for (const JsonValue* candidate : candidates) {
-    if (!candidate || !candidate->IsObject()) continue;
-    JsonValue allowed(rapidjson::kObjectType);
-    for (const char* key : allowed_keys) {
-      if (candidate->HasMember(key) && !(*candidate)[key].IsNull()) {
-        copy_public_value(allowed, key, (*candidate)[key], a);
-      }
-    }
-    if (allowed.MemberCount() > 0) return allowed;
-  }
-  if (metadata && metadata->HasMember("source") && (*metadata)["source"].IsString()) {
-    const std::string label = (*metadata)["source"].GetString();
-    add_string_allow_empty(source, "label", label, a);
-    add_string_allow_empty(source, "license", label == "enc" ? "enc-local" : default_license, a);
-    const std::string cell = rj_string(*metadata, "cell");
-    if (!cell.empty()) add_string_allow_empty(source, "id", cell, a);
-    return source;
-  }
-  add_string_allow_empty(source, "label", default_label, a);
-  add_string_allow_empty(source, "license", default_license, a);
-  return source;
-}
-
-JsonValue manifest_freshness_json(const std::string& path, const JsonValue* sidecar, JsonAllocator& a) {
-  JsonValue freshness(rapidjson::kObjectType);
-  std::string status = "ok";
-  if (sidecar) {
-    const JsonValue* sidecar_freshness = rj_object(*sidecar, "freshness");
-    if (sidecar_freshness) status = rj_string(*sidecar_freshness, "status", status);
-  }
-  add_string_allow_empty(freshness, "status", status, a);
-  struct stat st {};
-  if (stat_file(path, st)) {
-    add_string_allow_empty(freshness, "updated", iso_from_epoch(static_cast<std::uint64_t>(st.st_mtime)), a);
-  }
-  return freshness;
-}
-
-JsonValue manifest_inspection_json(const JsonValue* sidecar, JsonAllocator& a) {
-  JsonValue inspection(rapidjson::kObjectType);
-  const JsonValue* sidecar_inspection = sidecar ? rj_object(*sidecar, "inspection") : nullptr;
-  if (sidecar_inspection) {
-    copy_public_object(inspection, *sidecar_inspection, a);
-  }
-  if (!inspection.HasMember("mode")) add_string_allow_empty(inspection, "mode", "feature-properties", a);
-  return inspection;
-}
-
-bool append_manifest_geojson_layer(JsonValue& layers, const std::string& root, const std::string& rel_path,
-                                   const std::string& layer_id, const std::string& title,
-                                   const std::string& kind, const std::string& tier,
-                                   const std::string& default_label, const std::string& default_license,
-                                   JsonAllocator& a) {
-  const std::string path = root + "/" + rel_path;
-  struct stat st {};
-  if (!stat_file(path, st) || !S_ISREG(st.st_mode)) return false;
-  auto doc = load_json_document(path);
-  if (!doc) return false;
-  auto sidecar = load_sidecar_metadata(path);
-  const JsonValue* sidecar_obj = sidecar.get();
-  const std::string stem = basename_no_ext(rel_path.substr(rel_path.find_last_of('/') + 1));
-  JsonValue layer(rapidjson::kObjectType);
-  add_string_allow_empty(layer, "id", sidecar_obj ? rj_string(*sidecar_obj, "id", layer_id.empty() ? stem : layer_id) : (layer_id.empty() ? stem : layer_id), a);
-  add_string_allow_empty(layer, "title", sidecar_obj ? rj_string(*sidecar_obj, "title", title.empty() ? stem : title) : (title.empty() ? stem : title), a);
-  add_string_allow_empty(layer, "kind", sidecar_obj ? rj_string(*sidecar_obj, "kind", kind.empty() ? "geojson" : kind) : (kind.empty() ? "geojson" : kind), a);
-  add_string(layer, "format", "geojson", a);
-  std::string resolved_tier = sidecar_obj ? rj_string(*sidecar_obj, "tier", tier.empty() ? "overlay" : tier) : (tier.empty() ? "overlay" : tier);
-  if (resolved_tier != "basemap" && resolved_tier != "enc" && resolved_tier != "overlay" &&
-      resolved_tier != "weather" && resolved_tier != "nav") {
-    resolved_tier = "overlay";
-  }
-  add_string_allow_empty(layer, "tier", resolved_tier, a);
-  add_string(layer, "url", "/user-data/" + rel_path, a);
-  const std::vector<double> bbox = geojson_bbox(*doc, sidecar_obj);
-  if (!bbox.empty()) {
-    JsonValue bbox_json(rapidjson::kArrayType);
-    for (double v : bbox) bbox_json.PushBack(v, a);
-    layer.AddMember("bbox", bbox_json, a);
-  }
-  layer.AddMember("source", manifest_source_json(*doc, sidecar_obj, default_label, default_license, a), a);
-  layer.AddMember("freshness", manifest_freshness_json(path, sidecar_obj, a), a);
-  layer.AddMember("inspection", manifest_inspection_json(sidecar_obj, a), a);
-  layers.PushBack(layer, a);
-  return true;
-}
-
-JsonValue layer_manifest_value(JsonAllocator& a) {
-  JsonValue manifest(rapidjson::kObjectType);
-  add_string_allow_empty(manifest, "schema", "helm.layer.manifest.v1", a);
-  JsonValue layers(rapidjson::kArrayType);
-  const std::string root = user_data_root();
-  struct EncLayerSpec {
-    const char* stem;
-    const char* kind;
-    const char* tier;
-    const char* title;
-  };
-  static const EncLayerSpec enc_layers[] = {
-    {"depare", "polygons", "enc", "Depth areas"},
-    {"depcnt", "lines", "enc", "Depth contours"},
-    {"soundg", "points", "enc", "Soundings"},
-  };
-  for (const EncLayerSpec& spec : enc_layers) {
-    append_manifest_geojson_layer(layers, root, std::string(spec.stem) + ".geojson",
-                                  spec.stem, spec.title, spec.kind, spec.tier, "enc", "enc-local", a);
-  }
-  const std::string overlay_dir = root + "/layers";
-  DIR* dir = ::opendir(overlay_dir.c_str());
-  if (dir) {
-    std::vector<std::string> names;
-    while (dirent* ent = ::readdir(dir)) {
-      const std::string filename = ent->d_name;
-      if (filename.empty() || filename[0] == '.') continue;
-      if (extension_of(filename) != ".geojson") continue;
-      names.push_back(filename);
-    }
-    ::closedir(dir);
-    std::sort(names.begin(), names.end());
-    for (const std::string& filename : names) {
-      append_manifest_geojson_layer(layers, root, "layers/" + filename, "", "", "", "overlay", "owned", "private-local", a);
-    }
-  }
-  manifest.AddMember("layers", layers, a);
-  return manifest;
-}
+#include "helm_packd_manifest.hpp"
 
 JsonValue layers_value(const std::map<std::string, std::shared_ptr<PackRecord>>& packs,
                        const std::vector<EnvBundle>& env_bundles,
