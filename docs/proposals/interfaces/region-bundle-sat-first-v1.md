@@ -212,3 +212,5 @@ A bundle passes when:
 - Layer stack: `web/SHELL.md`, `web/tests/fuse-2-layer-order.test.js`
 - Fiji proof: `web/test/e2e/offline20-sat-first-fiji.spec.js`, `scripts/verify-offline20-sat-first-fiji.sh`
 - ENC depth extract: `pipeline/extract_depth.sh` (ENC-4)
+- ENC bake execution (OFFLINE-L-2): `pipeline/bake_s52_region_pack.py`, end-to-end proof in
+  `pipeline/test_offline_l2_enc_snapshot_bake.py`

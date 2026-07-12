@@ -73,4 +73,9 @@ http://localhost:8080.
 - **OFFLINE-L-1** adds the sat-first profile (`helm.region_bundle.profile.sat_first.v1`):
   see [../docs/proposals/interfaces/region-bundle-sat-first-v1.md](../docs/proposals/interfaces/region-bundle-sat-first-v1.md).
   Validate with `python3 pipeline/test_region_bundle_sat_first.py`.
+- **OFFLINE-L-2** proves the loop closes end to end: bake a real ENC snapshot with
+  `bake_s52_region_pack.py`, mount it next to a satellite pack through the same
+  catalog builder `mbtiles_server`/`helm-packd` use, and assert the assembled bundle
+  passes the sat-first validator as an optional non-primary `chart` overlay.
+  Run `python3 pipeline/test_offline_l2_enc_snapshot_bake.py`.
 - See [../docs/LEGAL.md](../docs/LEGAL.md) before adding Google/Bing/Navionics.
