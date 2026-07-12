@@ -160,6 +160,12 @@ def request_json(url):
         return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+def post_json(url):
+    request = urllib.request.Request(url, data=b"", method="POST")
+    with urllib.request.urlopen(request, timeout=2) as resp:
+        return resp.status, json.loads(resp.read().decode("utf-8"))
+
+
 def request_json_allow_error(url):
     """Like request_json but returns (status, body) for 4xx/5xx instead of raising."""
     try:
@@ -304,6 +310,140 @@ class PackServerTest(unittest.TestCase):
             self.assertEqual(resp.status, 200)
             self.assertGreater(int(resp.headers.get("Content-Length", "0")), 127)
             self.assertEqual(resp.read(), b"")
+
+    def test_recursive_discovery_auto_refresh_and_explicit_rescan(self):
+        nested = self.tmp_path / "FIJI" / "SAT"
+        nested.mkdir(parents=True)
+        write_mbtiles(nested / "lagoon.mbtiles")
+        (nested / "lagoon.metadata.json").write_text(
+            json.dumps({"title": "Fiji Lagoon", "license": "fixture-license"}),
+            encoding="utf-8",
+        )
+
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertEqual(catalog["lagoon"]["title"], "Fiji Lagoon")
+        self.assertEqual(catalog["lagoon"]["license"], "fixture-license")
+        self.assertNotIn(self.tmp.name, json.dumps(catalog))
+
+        (nested / "lagoon.metadata.json").write_text(
+            json.dumps({"title": "Fiji Lagoon Updated", "license": "fixture-license"}),
+            encoding="utf-8",
+        )
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertEqual(catalog["lagoon"]["title"], "Fiji Lagoon Updated")
+
+        status, rescan = post_json(f"http://127.0.0.1:{self.port}/rescan")
+        self.assertEqual(status, 200)
+        self.assertEqual(rescan["schema"], "helm.chart_index.rescan.v1")
+        self.assertFalse(rescan["changed"])
+        self.assertEqual(rescan["packs"], 4)
+        self.assertRegex(rescan["fingerprint"], r"^[0-9a-f]{64}$")
+
+    def test_registered_roots_file_scans_multiple_roots_and_preserves_collisions(self):
+        with tempfile.TemporaryDirectory() as extra_tmp:
+            extra_root = Path(extra_tmp)
+            write_mbtiles(extra_root / "chart.mbtiles")
+            registry = self.tmp_path / "chart-roots.json"
+            registry.write_text(json.dumps({
+                "schema": "helm.chart_intake.roots.v1",
+                "roots": [
+                    {"id": "root-one", "path": self.tmp.name},
+                    {"id": "root-two", "path": extra_tmp},
+                ],
+            }), encoding="utf-8")
+            port = free_port()
+            env = os.environ.copy()
+            env["HELM_MBTILES_DIR"] = self.tmp.name
+            env["HELM_CHART_ROOTS_FILE"] = str(registry)
+            proc = subprocess.Popen(
+                [sys.executable, str(SERVER), str(port)],
+                cwd=str(ROOT), env=env, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, text=True,
+            )
+            try:
+                deadline = time.time() + 5
+                catalog = None
+                while time.time() < deadline:
+                    if proc.poll() is not None:
+                        output = proc.stdout.read() if proc.stdout else ""
+                        self.fail(f"multi-root server exited early: {output}")
+                    try:
+                        _, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                        if "chart--r2" in catalog:
+                            break
+                    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+                        time.sleep(0.05)
+                self.assertIsNotNone(catalog)
+                self.assertIn("chart", catalog)
+                self.assertIn("chart--r2", catalog)
+                self.assertEqual(len(catalog), 4)
+                self.assertNotIn(extra_tmp, json.dumps(catalog))
+            finally:
+                proc.terminate()
+                proc.wait(timeout=5)
+                if proc.stdout:
+                    proc.stdout.close()
+
+    def test_empty_library_starts_and_discovers_first_pack_without_restart(self):
+        with tempfile.TemporaryDirectory() as empty_tmp:
+            port = free_port()
+            env = os.environ.copy()
+            env["HELM_MBTILES_DIR"] = empty_tmp
+            env.pop("HELM_CHART_ROOTS", None)
+            env.pop("HELM_CHART_ROOTS_FILE", None)
+            proc = subprocess.Popen(
+                [sys.executable, str(SERVER), str(port)],
+                cwd=str(ROOT), env=env, stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT, text=True,
+            )
+            try:
+                deadline = time.time() + 5
+                while True:
+                    try:
+                        status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                        break
+                    except (OSError, urllib.error.URLError, json.JSONDecodeError):
+                        if time.time() >= deadline:
+                            self.fail("empty-library server did not become ready")
+                        time.sleep(0.05)
+                self.assertEqual(status, 200)
+                self.assertEqual(catalog, {})
+                write_mbtiles(Path(empty_tmp) / "first.mbtiles")
+                _, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                self.assertIn("first", catalog)
+            finally:
+                proc.terminate()
+                proc.wait(timeout=5)
+                if proc.stdout:
+                    proc.stdout.close()
+
+    def test_explicit_pack_map_remains_an_advanced_override(self):
+        port = free_port()
+        env = os.environ.copy()
+        env["HELM_MBTILES_DIR"] = self.tmp.name
+        env["HELM_MBTILES_PACKS"] = json.dumps({"selected": "chart.mbtiles"})
+        proc = subprocess.Popen(
+            [sys.executable, str(SERVER), str(port)], cwd=str(ROOT), env=env,
+            stdout=subprocess.PIPE, stderr=subprocess.STDOUT, text=True,
+        )
+        try:
+            deadline = time.time() + 5
+            while True:
+                try:
+                    _, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                    break
+                except (OSError, urllib.error.URLError, json.JSONDecodeError):
+                    if time.time() >= deadline:
+                        self.fail("override server did not become ready")
+                    time.sleep(0.05)
+            self.assertEqual(list(catalog), ["selected"])
+        finally:
+            proc.terminate()
+            proc.wait(timeout=5)
+            if proc.stdout:
+                proc.stdout.close()
 
     def test_bundle_endpoint_groups_catalog_and_prefetch_metadata(self):
         status, bundle = request_json(

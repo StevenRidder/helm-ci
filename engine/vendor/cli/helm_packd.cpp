@@ -12,6 +12,7 @@
 //   GET  /layer-manifest             -> helm.layer.manifest.v1 user overlays
 //   GET  /prefetch                   -> helm.prefetch.manifest.v1
 //   GET  /bundle                     -> helm.region_bundle.manifest.v1
+//   POST /rescan                     -> force a chart-root index rebuild
 
 #include <algorithm>
 #include <cerrno>
@@ -38,6 +39,7 @@
 #include <sys/mman.h>
 #include <sys/stat.h>
 #include <thread>
+#include <tuple>
 #include <unistd.h>
 #include <utility>
 #include <vector>
@@ -493,7 +495,7 @@ std::string content_type_for(const std::string& ext) {
 void base_headers(Headers& h) {
   h["Access-Control-Allow-Origin"] = "*";
   h["Access-Control-Allow-Headers"] = "Range, Content-Type";
-  h["Access-Control-Allow-Methods"] = "GET, HEAD, OPTIONS";
+  h["Access-Control-Allow-Methods"] = "GET, HEAD, POST, OPTIONS";
   h["Access-Control-Expose-Headers"] = "Accept-Ranges, Content-Length, Content-Range, ETag";
   h["Cache-Control"] = "no-cache";
 }
@@ -578,39 +580,7 @@ std::string kind_for(const std::string& id, const std::string& title, const std:
   return type == "vector" ? "vector" : "raster";
 }
 
-std::vector<std::pair<std::string, std::string>> parse_pack_map(const std::string& base) {
-  std::vector<std::pair<std::string, std::string>> packs;
-  const std::string raw = get_env("HELM_MBTILES_PACKS");
-  if (!raw.empty()) {
-    std::size_t pos = 0;
-    while (true) {
-      const std::size_t k1 = raw.find('"', pos);
-      if (k1 == std::string::npos) break;
-      const std::size_t k2 = raw.find('"', k1 + 1);
-      const std::size_t colon = raw.find(':', k2 == std::string::npos ? k1 : k2);
-      const std::size_t v1 = raw.find('"', colon == std::string::npos ? k1 : colon);
-      const std::size_t v2 = raw.find('"', v1 == std::string::npos ? k1 : v1 + 1);
-      if (k2 == std::string::npos || colon == std::string::npos || v1 == std::string::npos || v2 == std::string::npos) break;
-      packs.emplace_back(raw.substr(k1 + 1, k2 - k1 - 1), raw.substr(v1 + 1, v2 - v1 - 1));
-      pos = v2 + 1;
-    }
-    return packs;
-  }
-
-  DIR* dir = ::opendir(base.c_str());
-  if (!dir) return packs;
-  while (dirent* ent = ::readdir(dir)) {
-    const std::string filename = ent->d_name;
-    const std::string ext = extension_of(filename);
-    if (ext == ".mbtiles" || ext == ".pmtiles") {
-      packs.emplace_back(basename_no_ext(filename), filename);
-    }
-  }
-  ::closedir(dir);
-  std::sort(packs.begin(), packs.end());
-  return packs;
-}
-
+#include "helm_packd_chart_index.h"
 std::unique_ptr<rapidjson::Document> load_sidecar_metadata(const std::string& path) {
   const std::size_t dot = path.find_last_of('.');
   const std::string base = dot == std::string::npos ? path : path.substr(0, dot);
@@ -758,9 +728,10 @@ bool open_pmtiles_pack(const std::string& id, const std::string& path, const str
   return true;
 }
 
-std::map<std::string, std::shared_ptr<PackRecord>> build_pack_index(const std::string& base) {
+std::map<std::string, std::shared_ptr<PackRecord>> build_pack_index(
+    const std::string& base, const std::vector<std::string>& roots) {
   std::map<std::string, std::shared_ptr<PackRecord>> records;
-  for (const auto& entry : parse_pack_map(base)) {
+  for (const auto& entry : parse_pack_map(base, roots)) {
     const std::string id = entry.first;
     const std::string path = pack_path(base, entry.second);
     struct stat st {};
@@ -2286,10 +2257,12 @@ std::vector<std::string> split_path(const std::string& path) {
 
 class PackDaemon {
 public:
-  PackDaemon(std::string bind, int port, std::map<std::string, std::shared_ptr<PackRecord>> packs,
-             std::vector<EnvBundle> env_bundles)
-      : bind_(std::move(bind)), port_(port), packs_(std::move(packs)),
-        env_bundles_(std::move(env_bundles)), server_(port_, bind_) {}
+  PackDaemon(std::string bind, int port, std::string base, std::vector<std::string> roots,
+             std::map<std::string, std::shared_ptr<PackRecord>> packs,
+             std::vector<EnvBundle> env_bundles, std::string fingerprint)
+      : bind_(std::move(bind)), port_(port), base_(std::move(base)), roots_(std::move(roots)),
+        packs_(std::move(packs)), env_bundles_(std::move(env_bundles)),
+        fingerprint_(std::move(fingerprint)), server_(port_, bind_) {}
 
   bool start() {
     server_.setOnConnectionCallback(
@@ -2304,6 +2277,30 @@ public:
   }
 
 private:
+  struct PackSnapshot {
+    std::map<std::string, std::shared_ptr<PackRecord>> packs;
+    std::string fingerprint;
+    bool changed = false;
+  };
+
+  PackSnapshot refresh_pack_index(bool force) const {
+    std::lock_guard<std::mutex> lock(index_mutex_);
+    const std::vector<std::string> roots = registered_chart_roots(base_);
+    const std::string fingerprint = chart_tree_fingerprint(base_, roots);
+    const bool changed = fingerprint != fingerprint_;
+    if (force || changed) {
+      packs_ = build_pack_index(base_, roots);
+      roots_ = roots;
+      fingerprint_ = fingerprint;
+    }
+    return PackSnapshot{packs_, fingerprint_, changed};
+  }
+
+  PackSnapshot current_pack_index() const {
+    std::lock_guard<std::mutex> lock(index_mutex_);
+    return PackSnapshot{packs_, fingerprint_, false};
+  }
+
   ix::HttpResponsePtr handle(const ix::HttpRequestPtr& req) const {
     Headers h;
     base_headers(h);
@@ -2312,17 +2309,34 @@ private:
 
     if (req->method == "OPTIONS") return empty_response(204, "No Content", std::move(h));
 
+    if (path == "/rescan") {
+      if (req->method != "POST") return empty_response(405, "Method Not Allowed", std::move(h));
+      const PackSnapshot snapshot = refresh_pack_index(true);
+      h["Content-Type"] = "application/json";
+      h["Cache-Control"] = "no-store";
+      std::ostringstream body;
+      body << "{\"schema\":\"helm.chart_index.rescan.v1\",\"status\":\"ok\",\"changed\":"
+           << (snapshot.changed ? "true" : "false") << ",\"packs\":" << snapshot.packs.size()
+           << ",\"fingerprint\":\"" << snapshot.fingerprint << "\"}";
+      return response(200, "OK", std::move(h), body.str());
+    }
+
+    const bool detect_tree_change = path == "/" || path == "/health" || path == "/catalog" ||
+      path == "/prefetch" || path == "/bundle" || path == "/layers";
+    const PackSnapshot snapshot = detect_tree_change ? refresh_pack_index(false) : current_pack_index();
+    const auto& packs = snapshot.packs;
+
     if (path == "/" || path == "/health") {
       h["Content-Type"] = "application/json";
       h["Cache-Control"] = "no-store";
       std::ostringstream body;
-      body << "{\"status\":\"ok\",\"engine\":\"helm-packd\",\"packs\":" << packs_.size() << "}";
+      body << "{\"status\":\"ok\",\"engine\":\"helm-packd\",\"packs\":" << packs.size() << "}";
       return response(200, "OK", std::move(h), is_head ? std::string() : body.str());
     }
 
     if (path == "/catalog") {
       h["Content-Type"] = "application/json";
-      const std::string body = catalog_json(packs_, origin_for(req, bind_, port_));
+      const std::string body = catalog_json(packs, origin_for(req, bind_, port_));
       if (is_head) {
         h["Content-Length"] = std::to_string(body.size());
         return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string());
@@ -2354,9 +2368,9 @@ private:
         const Query query = parse_query_string(req->uri);
         const std::string origin = origin_for(req, bind_, port_);
         const std::string body = json_endpoint([&](JsonAllocator& a) -> JsonValue {
-          if (path == "/prefetch") return prefetch_value(packs_, env_bundles_, origin, query, a);
-          if (path == "/bundle") return bundle_value(packs_, env_bundles_, origin, query, a);
-          return layers_value(packs_, env_bundles_, origin, query, a);
+          if (path == "/prefetch") return prefetch_value(packs, env_bundles_, origin, query, a);
+          if (path == "/bundle") return bundle_value(packs, env_bundles_, origin, query, a);
+          return layers_value(packs, env_bundles_, origin, query, a);
         });
         if (is_head) {
           h["Content-Length"] = std::to_string(body.size());
@@ -2377,8 +2391,8 @@ private:
 
     if (ends_with(path, ".pmtiles")) {
       const std::string id = url_decode(path.substr(1, path.size() - 1 - 8));
-      const auto it = packs_.find(id);
-      if (it == packs_.end() || it->second->container != "pmtiles") return empty_response(404, "Not Found", std::move(h));
+      const auto it = packs.find(id);
+      if (it == packs.end() || it->second->container != "pmtiles") return empty_response(404, "Not Found", std::move(h));
       return serve_pmtiles(*it->second, req, is_head);
     }
 
@@ -2386,15 +2400,19 @@ private:
 
     const std::vector<std::string> parts = split_path(path);
     if (parts.empty()) return empty_response(404, "Not Found", std::move(h));
-    const auto it = packs_.find(parts[0]);
-    if (it == packs_.end() || it->second->container != "mbtiles") return empty_response(404, "Not Found", std::move(h));
+    const auto it = packs.find(parts[0]);
+    if (it == packs.end() || it->second->container != "mbtiles") return empty_response(404, "Not Found", std::move(h));
     return serve_mbtiles(*it->second, parts);
   }
 
   std::string bind_;
   int port_;
-  std::map<std::string, std::shared_ptr<PackRecord>> packs_;
+  std::string base_;
+  mutable std::vector<std::string> roots_;
+  mutable std::map<std::string, std::shared_ptr<PackRecord>> packs_;
   std::vector<EnvBundle> env_bundles_;
+  mutable std::string fingerprint_;
+  mutable std::mutex index_mutex_;
   ix::HttpServer server_;
 };
 
@@ -2407,15 +2425,15 @@ int main(int argc, char** argv) {
   const int port = argc > 1 ? std::atoi(argv[1]) : 8091;
   const std::string bind = get_env("HELM_BIND", "0.0.0.0");
   const std::string base = expand_user(get_env("HELM_MBTILES_DIR", "web/data"));
-  auto packs = build_pack_index(base);
+  const auto roots = registered_chart_roots(base);
+  auto packs = build_pack_index(base, roots);
+  const std::string fingerprint = chart_tree_fingerprint(base, roots);
   auto env_bundles = load_environmental_bundles();
   if (packs.empty()) {
-    std::fprintf(stderr, "FATAL: no .mbtiles or .pmtiles packs found under %s\n", base.c_str());
-    std::fprintf(stderr, "Set HELM_MBTILES_DIR or HELM_MBTILES_PACKS to point at local packs.\n");
-    return 1;
+    std::fprintf(stderr, "warning: no .mbtiles or .pmtiles packs found; catalog starts empty and remains rescan-capable\n");
   }
 
-  PackDaemon daemon(bind, port, std::move(packs), std::move(env_bundles));
+  PackDaemon daemon(bind, port, base, roots, std::move(packs), std::move(env_bundles), fingerprint);
   if (!daemon.start()) {
     std::fprintf(stderr, "helm-packd listen on %s:%d FAILED\n", bind.c_str(), port);
     return 2;

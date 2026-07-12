@@ -225,6 +225,12 @@ def request_json(url: str) -> tuple[int, dict]:
         return resp.status, json.loads(resp.read().decode("utf-8"))
 
 
+def post_json(url: str) -> tuple[int, dict]:
+    request = urllib.request.Request(url, data=b"", method="POST")
+    with urllib.request.urlopen(request, timeout=2) as resp:
+        return resp.status, json.loads(resp.read().decode("utf-8"))
+
+
 def request_json_allow_error(url: str) -> tuple[int, dict]:
     """Like request_json but returns (status, body) for 4xx/5xx instead of raising."""
     try:
@@ -392,6 +398,94 @@ class HelmPackdContractTest(unittest.TestCase):
             with urllib.request.urlopen(r, timeout=2) as resp:
                 self.assertEqual(resp.status, 206, f"range {start}-{stop}")
                 self.assertEqual(resp.read(), full[start:stop + 1], f"range {start}-{stop} bytes")
+
+    def test_recursive_discovery_auto_refresh_and_explicit_rescan(self) -> None:
+        nested = self.tmp_path / "FIJI" / "SAT"
+        nested.mkdir(parents=True)
+        write_mbtiles(nested / "lagoon.mbtiles")
+        (nested / "lagoon.metadata.json").write_text(
+            json.dumps({"title": "Fiji Lagoon", "license": "fixture-license"}),
+            encoding="utf-8",
+        )
+
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertEqual(catalog["lagoon"]["title"], "Fiji Lagoon")
+        self.assertEqual(catalog["lagoon"]["license"], "fixture-license")
+        self.assertNotIn(self.tmp.name, json.dumps(catalog))
+
+        (nested / "lagoon.metadata.json").write_text(
+            json.dumps({"title": "Fiji Lagoon Updated", "license": "fixture-license"}),
+            encoding="utf-8",
+        )
+        status, catalog = request_json(f"http://127.0.0.1:{self.port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertEqual(catalog["lagoon"]["title"], "Fiji Lagoon Updated")
+
+        status, rescan = post_json(f"http://127.0.0.1:{self.port}/rescan")
+        self.assertEqual(status, 200)
+        self.assertEqual(rescan["schema"], "helm.chart_index.rescan.v1")
+        self.assertFalse(rescan["changed"])
+        self.assertEqual(rescan["packs"], 3)
+        self.assertRegex(rescan["fingerprint"], r"^[0-9a-f]{16}$")
+
+    def test_registered_roots_file_scans_multiple_roots_and_preserves_collisions(self) -> None:
+        with tempfile.TemporaryDirectory() as extra_tmp:
+            extra_root = Path(extra_tmp)
+            write_mbtiles(extra_root / "chart.mbtiles")
+            registry = self.tmp_path / "chart-roots.json"
+            registry.write_text(json.dumps({
+                "schema": "helm.chart_intake.roots.v1",
+                "roots": [
+                    {"id": "root-one", "path": self.tmp.name},
+                    {"id": "root-two", "path": extra_tmp},
+                ],
+            }), encoding="utf-8")
+            proc, port = spawn_packd(self.bin, self.tmp_path, {
+                "HELM_CHART_ROOTS_FILE": str(registry),
+            })
+            try:
+                status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                self.assertEqual(status, 200)
+                self.assertIn("chart", catalog)
+                self.assertIn("chart--r2", catalog)
+                self.assertEqual(len(catalog), 3)
+                self.assertNotIn(extra_tmp, json.dumps(catalog))
+            finally:
+                proc.terminate()
+                proc.wait(timeout=5)
+                if proc.stdout:
+                    proc.stdout.close()
+
+    def test_empty_library_starts_and_discovers_first_pack_without_restart(self) -> None:
+        with tempfile.TemporaryDirectory() as empty_tmp:
+            proc, port = spawn_packd(self.bin, Path(empty_tmp), {})
+            try:
+                status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                self.assertEqual(status, 200)
+                self.assertEqual(catalog, {})
+                write_mbtiles(Path(empty_tmp) / "first.mbtiles")
+                _, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+                self.assertIn("first", catalog)
+            finally:
+                proc.terminate()
+                proc.wait(timeout=5)
+                if proc.stdout:
+                    proc.stdout.close()
+
+    def test_explicit_pack_map_remains_an_advanced_override(self) -> None:
+        proc, port = spawn_packd(self.bin, self.tmp_path, {
+            "HELM_MBTILES_PACKS": json.dumps({"selected": "chart.mbtiles"}),
+        })
+        try:
+            status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+            self.assertEqual(status, 200)
+            self.assertEqual(list(catalog), ["selected"])
+        finally:
+            proc.terminate()
+            proc.wait(timeout=5)
+            if proc.stdout:
+                proc.stdout.close()
 
     def test_offline17_layers_prefetch_and_bundle_endpoints(self) -> None:
         status, layers = request_json(

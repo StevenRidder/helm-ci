@@ -7,23 +7,29 @@
   GET /catalog                    -> JSON of available packs + bounds/zoom/URLs
   GET /layers                     -> local maritime layer inventory
   GET /layer-manifest             -> helm.layer.manifest.v1 overlay catalog
+  POST /rescan                    -> force a chart-root index rebuild
 
 Offline-first: everything is local and read-only. Bind 0.0.0.0 so an iPad or
 phone on the boat LAN can load the same packs through the boat server.
 
 Configuration:
   HELM_MBTILES_DIR=/path/to/local/packs
+  HELM_CHART_ROOTS_FILE=~/.helm/config/chart-roots.json
+  HELM_CHART_ROOTS='["~/.helm/charts", "/Volumes/ChartLocker"]'
   HELM_MBTILES_PACKS='{"chart":"my-chart.mbtiles","sat":"my-sat.pmtiles"}'
 
 If HELM_MBTILES_PACKS is omitted, every *.mbtiles and *.pmtiles file in
-HELM_MBTILES_DIR is exposed by its filename stem. Keep license-bound commercial
-packs local; do not commit them.
+the registered chart roots is discovered recursively and exposed by its filename
+stem. HELM_MBTILES_DIR remains the single-root compatibility fallback, while
+HELM_MBTILES_PACKS remains an advanced explicit override. Keep license-bound
+commercial packs local; do not commit them.
 """
 from __future__ import annotations
 
 import datetime as _dt
 import glob
 import gzip
+import hashlib
 import http.server
 import json
 import os
@@ -146,7 +152,69 @@ SIDECAR_METADATA_KEYS = PACK_METADATA_KEYS + SOURCE_METADATA_KEYS + (
 )
 
 
-def _pack_map() -> dict[str, str]:
+def _registered_roots() -> list[str]:
+    config_dir = os.path.abspath(os.path.expanduser(os.environ.get("HELM_CONFIG", "~/.helm/config")))
+    configured_file = os.environ.get("HELM_CHART_ROOTS_FILE", "").strip()
+    roots_file = os.path.abspath(os.path.expanduser(configured_file or os.path.join(config_dir, "chart-roots.json")))
+    if os.path.isfile(roots_file):
+        try:
+            with open(roots_file, "r", encoding="utf-8") as stream:
+                registry = json.load(stream)
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError) as e:
+            print(f"FATAL: cannot read HELM_CHART_ROOTS_FILE: {e}", file=sys.stderr)
+            sys.exit(2)
+        rows = registry.get("roots") if isinstance(registry, dict) else None
+        if not isinstance(registry, dict) or registry.get("schema") != "helm.chart_intake.roots.v1" or not isinstance(rows, list):
+            print("FATAL: chart roots registry is not helm.chart_intake.roots.v1", file=sys.stderr)
+            sys.exit(2)
+        roots = []
+        for row in rows:
+            value = row.get("path") if isinstance(row, dict) else None
+            if not isinstance(value, str) or not value.strip():
+                continue
+            root = os.path.abspath(os.path.expanduser(value.strip()))
+            if root not in roots:
+                roots.append(root)
+        return roots or [BASE]
+    if configured_file:
+        print(f"FATAL: HELM_CHART_ROOTS_FILE does not exist: {roots_file}", file=sys.stderr)
+        sys.exit(2)
+
+    raw = os.environ.get("HELM_CHART_ROOTS", "").strip()
+    if not raw:
+        return [BASE]
+    values = None
+    if raw.startswith("["):
+        try:
+            parsed = json.loads(raw)
+        except json.JSONDecodeError as e:
+            print(f"FATAL: HELM_CHART_ROOTS is not valid JSON: {e}", file=sys.stderr)
+            sys.exit(2)
+        if not isinstance(parsed, list):
+            print("FATAL: HELM_CHART_ROOTS JSON must be an array of paths", file=sys.stderr)
+            sys.exit(2)
+        values = parsed
+    else:
+        values = raw.split(os.pathsep)
+
+    roots = []
+    for value in values:
+        root = os.path.abspath(os.path.expanduser(str(value).strip()))
+        if root and root not in roots:
+            roots.append(root)
+    return roots or [BASE]
+
+
+ROOTS = _registered_roots()
+
+
+def _collision_id(relative_path: str) -> str:
+    stem = os.path.splitext(relative_path)[0].replace(os.sep, "--")
+    stem = re.sub(r"[^A-Za-z0-9._-]+", "-", stem).strip("-")
+    return stem or "pack"
+
+
+def _pack_map(roots: Optional[list[str]] = None) -> dict[str, str]:
     raw = os.environ.get("HELM_MBTILES_PACKS", "").strip()
     if raw:
         try:
@@ -156,11 +224,37 @@ def _pack_map() -> dict[str, str]:
             sys.exit(2)
         return {str(name): str(filename) for name, filename in packs.items()}
 
+    candidates = []
+    for root_index, root in enumerate(roots or _registered_roots()):
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames.sort()
+            for filename in sorted(filenames):
+                if os.path.splitext(filename)[1].lower() not in (".mbtiles", ".pmtiles"):
+                    continue
+                path = os.path.join(dirpath, filename)
+                if not os.path.isfile(path):
+                    continue
+                relative = os.path.relpath(path, root)
+                candidates.append((root_index, relative, path))
+    candidates.sort(key=lambda item: (item[0], item[1]))
+
+    stem_counts = {}
+    for _, relative, _ in candidates:
+        stem = os.path.splitext(os.path.basename(relative))[0]
+        stem_counts[stem] = stem_counts.get(stem, 0) + 1
+
     packs: dict[str, str] = {}
-    for pattern in ("*.mbtiles", "*.pmtiles"):
-        for path in sorted(glob.glob(os.path.join(BASE, pattern))):
-            name = os.path.splitext(os.path.basename(path))[0]
-            packs[name] = os.path.basename(path)
+    for root_index, relative, path in candidates:
+        stem = os.path.splitext(os.path.basename(relative))[0]
+        name = stem if stem_counts[stem] == 1 else _collision_id(relative)
+        if name in packs:
+            name = f"{name}--r{root_index + 1}"
+        suffix = 2
+        base_name = name
+        while name in packs:
+            name = f"{base_name}--{suffix}"
+            suffix += 1
+        packs[name] = path
     return packs
 
 
@@ -169,6 +263,43 @@ def _pack_path(filename: str) -> str:
     if os.path.isabs(filename) or filename.startswith("~"):
         return expanded
     return os.path.abspath(os.path.join(BASE, filename))
+
+
+def _tree_fingerprint() -> tuple[str, list[str]]:
+    roots = _registered_roots()
+    digest = hashlib.sha256()
+    override = os.environ.get("HELM_MBTILES_PACKS", "").strip()
+    digest.update(("override:" + override).encode("utf-8"))
+    if override:
+        paths = []
+        for filename in _pack_map(roots).values():
+            path = _pack_path(filename)
+            base, _ = os.path.splitext(path)
+            paths.extend((path, f"{base}.metadata.json", f"{base}.sidecar.json",
+                          f"{path}.metadata.json", f"{path}.sidecar.json"))
+        for path in sorted(set(paths)):
+            try:
+                st = os.stat(path)
+            except OSError:
+                continue
+            digest.update(f"{path}\0{st.st_size}\0{st.st_mtime_ns}\n".encode("utf-8"))
+        return digest.hexdigest(), roots
+
+    for root_index, root in enumerate(roots):
+        digest.update(f"root:{root_index}:{root}\n".encode("utf-8"))
+        for dirpath, dirnames, filenames in os.walk(root):
+            dirnames.sort()
+            for filename in sorted(filenames):
+                path = os.path.join(dirpath, filename)
+                try:
+                    st = os.stat(path)
+                except OSError:
+                    continue
+                if not os.path.isfile(path):
+                    continue
+                relative = os.path.relpath(path, root)
+                digest.update(f"{root_index}:{relative}\0{st.st_size}\0{st.st_mtime_ns}\n".encode("utf-8"))
+    return digest.hexdigest(), roots
 
 
 def _safe_int(value, default: int) -> int:
@@ -628,9 +759,9 @@ def _inspection_summary(rec: dict) -> dict:
     return {k: v for k, v in base.items() if v is not None}
 
 
-def _build_pack_records():
+def _build_pack_records(roots: Optional[list[str]] = None):
     records, conns, locks = {}, {}, {}
-    for name, filename in _pack_map().items():
+    for name, filename in _pack_map(roots).items():
         path = _pack_path(filename)
         if not os.path.exists(path):
             print(f"warning: pack {name!r} not found at {path}", file=sys.stderr)
@@ -647,7 +778,6 @@ def _build_pack_records():
             if fmt == "jpeg":
                 fmt = "jpg"
             pack_type = "vector" if fmt in ("pbf", "mvt") else "raster"
-            title = m.get("name") or name
             metadata = dict(m)
             metadata.update(_load_sidecar_metadata(path))
             metadata.update({
@@ -658,6 +788,7 @@ def _build_pack_records():
                 "description": metadata.get("description") or m.get("description"),
                 "scheme": m.get("scheme", "tms"),
             })
+            title = metadata.get("title") or metadata.get("name") or m.get("name") or name
             rec = _base_record(name, path, fmt, pack_type, title, metadata)
             rec["container"] = "mbtiles"
             rec["_path"] = path
@@ -673,7 +804,7 @@ def _build_pack_records():
             pm.update(_load_sidecar_metadata(path))
             fmt = pm["format"]
             pack_type = "vector" if pm["type"] == "vector" or fmt == "mvt" else "raster"
-            title = pm.get("name") or name
+            title = pm.get("title") or pm.get("name") or name
             rec = _base_record(name, path, fmt, pack_type, title, pm)
             rec["container"] = "pmtiles"
             rec["range"] = True
@@ -688,7 +819,29 @@ def _build_pack_records():
     return records, conns, locks
 
 
-PACKS, CONNS, LOCKS = _build_pack_records()
+_INDEX_LOCK = threading.RLock()
+_INDEX_FINGERPRINT = ""
+PACKS, CONNS, LOCKS = {}, {}, {}
+
+
+def _refresh_pack_index(force: bool = False) -> bool:
+    global PACKS, CONNS, LOCKS, ROOTS, _INDEX_FINGERPRINT
+    with _INDEX_LOCK:
+        fingerprint, roots = _tree_fingerprint()
+        changed = fingerprint != _INDEX_FINGERPRINT
+        if not force and not changed:
+            return False
+        new_packs, new_conns, new_locks = _build_pack_records(roots)
+        old_conns = list(CONNS.values())
+        PACKS, CONNS, LOCKS = new_packs, new_conns, new_locks
+        ROOTS = roots
+        _INDEX_FINGERPRINT = fingerprint
+        for conn in old_conns:
+            conn.close()
+        return changed
+
+
+_refresh_pack_index(force=True)
 ENV_BUNDLES = _load_environmental_bundles()
 
 
@@ -700,7 +853,9 @@ def _origin(handler: http.server.BaseHTTPRequestHandler) -> str:
 
 def _catalog(origin: str) -> dict:
     catalog = {}
-    for name, rec in sorted(PACKS.items()):
+    with _INDEX_LOCK:
+        records = sorted(PACKS.items())
+    for name, rec in records:
         item = {k: v for k, v in rec.items() if not k.startswith("_")}
         quoted = urllib.parse.quote(name, safe="")
         if rec["container"] == "mbtiles":
@@ -757,7 +912,7 @@ class H(http.server.BaseHTTPRequestHandler):
     def _cors(self):
         self.send_header("Access-Control-Allow-Origin", "*")
         self.send_header("Access-Control-Allow-Headers", "Range, Content-Type")
-        self.send_header("Access-Control-Allow-Methods", "GET, HEAD, OPTIONS")
+        self.send_header("Access-Control-Allow-Methods", "GET, HEAD, POST, OPTIONS")
         self.send_header("Access-Control-Expose-Headers", "Accept-Ranges, Content-Length, Content-Range, ETag")
 
     def _empty(self, code: int, *, content_range: Optional[str] = None):
@@ -834,7 +989,7 @@ class H(http.server.BaseHTTPRequestHandler):
         self._json_response(200, payload)
 
     def _serve_mbtiles(self, name: str, parts: list[str]):
-        if len(parts) != 4 or name not in CONNS:
+        if len(parts) != 4:
             self._empty(404)
             return
         try:
@@ -844,18 +999,25 @@ class H(http.server.BaseHTTPRequestHandler):
             self._empty(404)
             return
         tms_y = (1 << z) - 1 - y
-        with LOCKS[name]:
-            row = CONNS[name].execute(
-                "SELECT tile_data FROM tiles WHERE zoom_level=? AND tile_column=? AND tile_row=?",
-                (z, x, tms_y),
-            ).fetchone()
+        with _INDEX_LOCK:
+            conn = CONNS.get(name)
+            conn_lock = LOCKS.get(name)
+            rec = PACKS.get(name)
+            if conn is None or conn_lock is None or rec is None:
+                self._empty(404)
+                return
+            with conn_lock:
+                row = conn.execute(
+                    "SELECT tile_data FROM tiles WHERE zoom_level=? AND tile_column=? AND tile_row=?",
+                    (z, x, tms_y),
+                ).fetchone()
         if not row:
             self.send_response(204)
             self._cors()
             self.send_header("Content-Length", "0")
             self.end_headers()
             return
-        fmt = PACKS[name]["extension"]
+        fmt = rec["extension"]
         self.send_response(200)
         self.send_header("Content-Type", _content_type(fmt))
         self._cors()
@@ -865,10 +1027,12 @@ class H(http.server.BaseHTTPRequestHandler):
         self.wfile.write(row[0])
 
     def _serve_pmtiles(self, name: str, head_only: bool = False):
-        if name not in PACKS or PACKS[name]["container"] != "pmtiles":
+        with _INDEX_LOCK:
+            rec = PACKS.get(name)
+        if rec is None or rec["container"] != "pmtiles":
             self._empty(404)
             return
-        path = PACKS[name]["_path"]
+        path = rec["_path"]
         size = os.path.getsize(path)
         try:
             rng = _parse_range(self.headers.get("Range"), size)
@@ -901,6 +1065,8 @@ class H(http.server.BaseHTTPRequestHandler):
 
     def do_HEAD(self):
         path = urllib.parse.urlparse(self.path).path.strip("/")
+        if path in ("catalog", "layers"):
+            _refresh_pack_index()
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])
             self._serve_pmtiles(name, head_only=True)
@@ -944,6 +1110,8 @@ class H(http.server.BaseHTTPRequestHandler):
     def do_GET(self):
         parsed = urllib.parse.urlparse(self.path)
         path = parsed.path.strip("/")
+        if path in ("catalog", "prefetch", "bundle", "layers"):
+            _refresh_pack_index()
         if path == "catalog":
             self._catalog_response()
             return
@@ -969,6 +1137,23 @@ class H(http.server.BaseHTTPRequestHandler):
             return
         self._serve_mbtiles(parts[0], parts)
 
+    def do_POST(self):
+        path = urllib.parse.urlparse(self.path).path.strip("/")
+        if path != "rescan":
+            self._empty(404)
+            return
+        changed = _refresh_pack_index(force=True)
+        with _INDEX_LOCK:
+            count = len(PACKS)
+            fingerprint = _INDEX_FINGERPRINT
+        self._json_response(200, {
+            "schema": "helm.chart_index.rescan.v1",
+            "status": "ok",
+            "changed": changed,
+            "packs": count,
+            "fingerprint": fingerprint,
+        })
+
 
 class TS(socketserver.ThreadingMixIn, http.server.HTTPServer):
     daemon_threads = True
@@ -978,9 +1163,7 @@ class TS(socketserver.ThreadingMixIn, http.server.HTTPServer):
 if __name__ == "__main__":
     port = int(sys.argv[1]) if len(sys.argv) > 1 else 8091
     if not PACKS:
-        print(f"FATAL: no .mbtiles or .pmtiles packs found under {BASE}", file=sys.stderr)
-        print("Set HELM_MBTILES_DIR or HELM_MBTILES_PACKS to point at your local packs.", file=sys.stderr)
-        sys.exit(1)
+        print("warning: no .mbtiles or .pmtiles packs found; catalog starts empty and remains rescan-capable", file=sys.stderr)
     print(f"local pack server :{port} - packs: {list(PACKS.keys())}")
     for k, v in PACKS.items():
         zoom = f"z{v.get('minzoom', 0)}-{v.get('maxzoom', 17)}"
