@@ -236,7 +236,10 @@
   }
 
   function applyManifest(map, manifest) {
-    var summary = { schema: manifest && manifest.schema, loaded: [], degraded: [], skipped: [], rejected: [], errors: [] };
+    // CAT-1's /layer-manifest carries a top-level enc {expected, present, missing} summary; surface it
+    // verbatim (or null when absent — an absent manifest is NOT a fabricated ENC gap) so CAT-2's
+    // catalog-honesty banners can report an ENC coverage gap without re-fetching the manifest.
+    var summary = { schema: manifest && manifest.schema, enc: (manifest && manifest.enc) || null, loaded: [], degraded: [], skipped: [], rejected: [], errors: [] };
     if (!manifest || !Array.isArray(manifest.layers)) {
       state.lastError = { reason: 'malformed-manifest', message: 'manifest.layers is not an array' };
       summary.errors.push(state.lastError);
