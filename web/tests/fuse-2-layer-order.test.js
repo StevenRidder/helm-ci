@@ -28,7 +28,7 @@ const BUCKETS = [
   },
   {
     name: 'overlays',
-    ids: ['route-line']
+    ids: ['route-line', 'openseamap-seamarks']
   },
   {
     name: 'weather',
@@ -80,6 +80,7 @@ ok('manifest fragment order matches band boundaries', function () {
     'helm-chart-basemaps.json',
     'helm-chart-depth.json',
     'helm-route-line.json',
+    'helm-layer-seamarks.json',
     'helm-wx-wind.json',
     'helm-place-whereto.json',
     'helm-place-poi.json',

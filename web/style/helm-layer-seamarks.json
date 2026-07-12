@@ -1,0 +1,29 @@
+{
+  "_epic": "LAYER",
+  "_note": "LAYER-3 — OpenSeaMap seamarks overlay. Owned by LAYER. Public ODbL raster tile service (tiles.openseamap.org); augments the displayed chart without becoming chart data or chart portrayal (see docs/proposals/interfaces/layer-manifest-v1.md). Toggled via index.html's generic data-layer checkbox handler — no dedicated JS needed. Default OFF (internet-dependent live tiles, like helm-chart-online-fill) so the offline chart stack stays the baseline.",
+  "sources": {
+    "openseamap-seamarks": {
+      "type": "raster",
+      "tileSize": 256,
+      "tiles": [
+        "https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png"
+      ],
+      "minzoom": 9,
+      "maxzoom": 18,
+      "attribution": "OpenSeaMap seamarks — © OpenStreetMap contributors (ODbL)"
+    }
+  },
+  "layers": [
+    {
+      "id": "openseamap-seamarks",
+      "type": "raster",
+      "source": "openseamap-seamarks",
+      "layout": {
+        "visibility": "none"
+      },
+      "paint": {
+        "raster-opacity": 0.9
+      }
+    }
+  ]
+}

@@ -24,7 +24,7 @@
   var BANDS = [
     { tier: 'basemap', ids: ['ocean', 'helm-chart-online-fill', 'navionics', 'googlesat', 'bingsat', 'arcgis', 'satellite', 'charts'] },
     { tier: 'enc',     ids: ['enc-chart', 'depare-fill', 'depcnt-line', 'soundg-text'] },
-    { tier: 'overlay', ids: ['route-line'] },
+    { tier: 'overlay', ids: ['route-line', 'openseamap-seamarks'] },
     { tier: 'weather', ids: ['wind-arrows'] },
     { tier: 'nav',     ids: ['whereto-ring', 'whereto-rank', 'places-cluster', 'places-cluster-count', 'places-halo', 'places-icon', 'places-label', 'ais-vessels', 'ais-label', 'saved-halo', 'saved-icon', 'saved-label'] }
   ];

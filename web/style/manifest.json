@@ -6,6 +6,7 @@
     "helm-chart-basemaps.json",
     "helm-chart-depth.json",
     "helm-route-line.json",
+    "helm-layer-seamarks.json",
     "helm-wx-wind.json",
     "helm-place-whereto.json",
     "helm-place-poi.json",
