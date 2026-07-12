@@ -104,6 +104,6 @@ open http://127.0.0.1:9002/
 
 ## Next
 
-- Add your own NOAA ENC cells with `HELM_ENC=/path/to/CELL.000 scripts/start-helm.sh --port 9001`.
+- Register your existing ENC folder with `HELM_ENC_ROOT=/path/to/charts scripts/start-helm.sh --port 9001`; every nested `.000` cell is loaded in place. `HELM_ENC=/path/to/CELL.000` remains a legacy single-cell override.
 - Add your own MBTiles/PMTiles packs with `HELM_MBTILES_DIR=/path/to/packs scripts/start-helm.sh --port 9001 --basemap`.
 - Read [RUNBOOK.md](RUNBOOK.md) for weather, basemaps, NMEA/SignalK, and deeper verification.

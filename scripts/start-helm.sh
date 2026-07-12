@@ -26,7 +26,8 @@
 #    HELM_SERVER_BIN    helm-server binary (default $HELM_OCPN_DIR/build/cli/helm-server)
 #    HELM_WEB_ROOT      web/ dir (default: this repo's web/)
 #    HELM_CONFIG        durable config/runtime dir (default ~/.helm/config)
-#    HELM_ENC           NOAA ENC .000 cell for real S-52 charts
+#    HELM_ENC_ROOT      chart root scanned recursively for ENC .000 cells
+#    HELM_ENC           legacy single-cell override (used when HELM_ENC_ROOT is unset)
 #    HELM_MBTILES_DIR       dir of *.mbtiles/*.pmtiles for --basemap (optional; else demo web/data)
 #    HELM_BASEMAP_UPSTREAM  upstream :8091 URL for --basemap-proxy (example: http://192.168.1.137:8091)
 #
@@ -43,7 +44,6 @@ HELM_OCPN_DIR="${HELM_OCPN_DIR:-$HOME/.helm/build/helm-opencpn}"
 HELM_SERVER_BIN="${HELM_SERVER_BIN:-$HELM_OCPN_DIR/build/cli/helm-server}"
 HELM_WEB_ROOT="${HELM_WEB_ROOT:-$REPO_ROOT/web}"
 HELM_CONFIG="${HELM_CONFIG:-$HOME/.helm/config}"
-HELM_SAMPLE_ENC="${HELM_SAMPLE_ENC:-$HELM_RUNTIME_DIR/enc/US5FL4CR/US5FL4CR.000}"
 
 WANT_WEATHER=0; WANT_BASEMAP=0; WANT_BASEMAP_PROXY=0; WANT_FILL=0; WANT_BACKEND=0
 while [ $# -gt 0 ]; do
@@ -87,8 +87,8 @@ start_bg() { # $1=label  $2=port  shift 2; rest = command
 [ -d "$HELM_WEB_ROOT" ]   || die "web root not found: $HELM_WEB_ROOT (set HELM_WEB_ROOT)."
 mkdir -p "$HELM_CONFIG"
 
-if [ -z "${HELM_ENC:-}" ] && [ -f "$HELM_SAMPLE_ENC" ]; then
-  HELM_ENC="$HELM_SAMPLE_ENC"
+if [ -z "${HELM_ENC_ROOT:-}" ] && [ -z "${HELM_ENC:-}" ]; then
+  HELM_ENC_ROOT="$HELM_RUNTIME_DIR/enc"
 fi
 
 # macOS: helm-server links wxWidgets 3.2 from Homebrew at runtime.
@@ -96,23 +96,41 @@ if [ "$(uname)" = "Darwin" ]; then
   export DYLD_LIBRARY_PATH="/opt/homebrew/opt/wxwidgets@3.2/lib:/opt/homebrew/opt/libarchive/lib:${DYLD_LIBRARY_PATH:-}"
 fi
 
-[ -n "${HELM_ENC:-}" ] || die "no ENC chart found. Run scripts/install-sample-enc.sh or set HELM_ENC to a .000 chart cell."
+FIRST_ROOT_ENC=""
+if [ -n "${HELM_ENC_ROOT:-}" ]; then
+  FIRST_ROOT_ENC="$(find "$HELM_ENC_ROOT" -type f -name '*.000' -print -quit 2>/dev/null || true)"
+fi
+if [ -z "${HELM_ENC:-}" ] && [ -z "$FIRST_ROOT_ENC" ]; then
+  echo "start-helm: no ENC cells found — core will start basemap-only; add .000 cells under HELM_ENC_ROOT or run scripts/install-sample-enc.sh" >&2
+fi
 
 # ENC-4: ensure region depth GeoJSON lives in user-data (not bundled demo). Extracts via
 # GDAL or the pyogrio fallback; pass the resolved ENC so the extract targets the same cell
 # the server is about to load (HELM_ENC here is a local var, not exported).
 if [ -x "$REPO_ROOT/scripts/extract-user-depth.sh" ]; then
-  env ${HELM_ENC:+HELM_ENC="$HELM_ENC"} "$REPO_ROOT/scripts/extract-user-depth.sh" \
-    || echo "start-helm: depth extract skipped — depth-on-sat falls back to bundled demo vectors (reason above)" >&2
+  DEPTH_ENC="${HELM_ENC:-}"
+  [ -n "$DEPTH_ENC" ] || DEPTH_ENC="$FIRST_ROOT_ENC"
+  if [ -n "$DEPTH_ENC" ]; then
+    env HELM_ENC="$DEPTH_ENC" "$REPO_ROOT/scripts/extract-user-depth.sh" \
+      || echo "start-helm: depth extract skipped — depth-on-sat falls back to bundled demo vectors (reason above)" >&2
+  else
+    echo "start-helm: depth extract skipped — no ENC cell is available" >&2
+  fi
 else
   echo "start-helm: scripts/extract-user-depth.sh missing or not executable — depth extract skipped; depth-on-sat falls back to bundled demo vectors" >&2
 fi
 
 echo "start-helm: launching core helm-server on :$HELM_PORT (web=$HELM_WEB_ROOT)…"
 port_busy "$HELM_PORT" && die "port $HELM_PORT already serving /health — core not started (use --port N for a private port)."
-env HELM_PORT="$HELM_PORT" HELM_WEB_ROOT="$HELM_WEB_ROOT" HELM_CONFIG="$HELM_CONFIG" \
-    ${HELM_ENC:+HELM_ENC="$HELM_ENC"} HELM_TILES_NO_WARMUP="${HELM_TILES_NO_WARMUP:-1}" \
-    "$HELM_SERVER_BIN" &
+CORE_ENV=(
+  "HELM_PORT=$HELM_PORT"
+  "HELM_WEB_ROOT=$HELM_WEB_ROOT"
+  "HELM_CONFIG=$HELM_CONFIG"
+  "HELM_TILES_NO_WARMUP=${HELM_TILES_NO_WARMUP:-1}"
+)
+[ -n "${HELM_ENC_ROOT:-}" ] && CORE_ENV+=("HELM_ENC_ROOT=$HELM_ENC_ROOT")
+[ -n "${HELM_ENC:-}" ] && CORE_ENV+=("HELM_ENC=$HELM_ENC")
+env "${CORE_ENV[@]}" "$HELM_SERVER_BIN" &
 PIDS+=("$!"); STARTED+=("helm-server (core) :$HELM_PORT  (pid $!)")
 
 # ---- HELPERS (opt-in, prerequisite-checked) -------------------------------

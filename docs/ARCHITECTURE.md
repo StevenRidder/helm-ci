@@ -91,7 +91,10 @@ runtime caches stay outside Git.
 Helm does not ship chart packs. Users bring their own local data, like they do
 with OpenCPN:
 
-- `HELM_ENC` can point at an OpenCPN-compatible ENC `.000` cell for S-52 tiles;
+- `HELM_ENC_ROOT` points at a customer-owned chart folder; `helm-server` scans it
+  recursively for OpenCPN-compatible ENC `.000` cells, compiles the normal SENC
+  cache on load, and quilts every usable cell. `HELM_ENC` remains a legacy
+  single-cell override when no root is configured;
 - `HELM_USER_DATA_ROOT`, `HELM_CONFIG/data`, or `~/.helm/data` can hold
   generated depth overlays such as `depare.geojson`, `depcnt.geojson`, and
   `soundg.geojson`;

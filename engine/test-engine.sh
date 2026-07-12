@@ -106,8 +106,30 @@ livefix_status=$(python3 -c 'import json,sys; print(json.load(open(sys.argv[1]))
 h=$(curl -s -o /tmp/te-health.json -w '%{http_code}' "http://127.0.0.1:$SPORT/health" || echo ERR)
 [ "$h" = 200 ] && P "GET /health → 200 (liveness)" || F "GET /health → $h"
 chart_loaded=$(python3 -c 'import json,sys; print("true" if json.load(open(sys.argv[1])).get("chart_loaded", True) else "false")' /tmp/te-health.json 2>/dev/null || echo true)
-# real S-52 tile render off the Key West ENC, with immutable caching + 304 revalidation
-curl -s -D /tmp/te-th -o /tmp/te-tile.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png"
+# Pick a tile inside the first catalogued cell. INTAKE-4 makes the registered
+# chart root authoritative, so a host may legitimately have no Key West cell.
+curl -s -o /tmp/te-catalog.json "http://127.0.0.1:$SPORT/catalog" || echo '{"cells":[]}' >/tmp/te-catalog.json
+tile_url=$(python3 - /tmp/te-catalog.json "$SPORT" <<'PY'
+import json, math, sys
+cells = (json.load(open(sys.argv[1])).get("cells") or [])
+if not cells:
+    print(f"http://127.0.0.1:{sys.argv[2]}/chart/12/1117/1760.png")
+else:
+    cell = cells[0]
+    west, south, east, north = cell["bbox"]
+    lon, lat = (west + east) / 2, (south + north) / 2
+    scale = max(1, int(cell["scale"]))
+    zoom = round(math.log2(max(1.0, 559082264.029 * math.cos(math.radians(lat)) / scale)))
+    zoom = min(18, max(2, zoom))
+    n = 2 ** zoom
+    x = int((lon + 180.0) / 360.0 * n)
+    lat = min(85.05112878, max(-85.05112878, lat))
+    y = int((1.0 - math.asinh(math.tan(math.radians(lat))) / math.pi) / 2.0 * n)
+    print(f"http://127.0.0.1:{sys.argv[2]}/chart/{zoom}/{x}/{y}.png")
+PY
+)
+# Real S-52 render inside the registered root, with immutable caching + 304 revalidation.
+curl -s -D /tmp/te-th -o /tmp/te-tile.png "$tile_url"
 tcode=$(awk 'NR==1{print $2}' /tmp/te-th 2>/dev/null); tsz=$(wc -c </tmp/te-tile.png 2>/dev/null | tr -d ' ')
 ctype=$(grep -i '^content-type:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
 if [ "$chart_loaded" = true ]; then
@@ -124,19 +146,19 @@ grep -qi 'cache-control:.*immutable' /tmp/te-th 2>/dev/null \
   && P "tile: Cache-Control immutable (offline-friendly caching)" || F "tile not immutable-cached"
 etag=$(grep -i '^etag:' /tmp/te-th 2>/dev/null | tr -d '\r' | awk '{print $2}')
 if [ -n "${etag:-}" ]; then
-  c304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "http://127.0.0.1:$SPORT/chart/12/1117/1760.png" || echo ERR)
+  c304=$(curl -s -o /dev/null -w '%{http_code}' -H "If-None-Match: $etag" "$tile_url" || echo ERR)
   [ "$c304" = 304 ] && P "tile: If-None-Match → 304 (cache revalidation works)" || F "If-None-Match → $c304"
 else F "tile missing ETag"; fi
 # ENC-3: selective PNG profiles (?profile=depth|aids|standard)
-curl -s -D /tmp/te-th-aids -o /tmp/te-tile-aids.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png?profile=aids"
+curl -s -D /tmp/te-th-aids -o /tmp/te-tile-aids.png "${tile_url}?profile=aids"
 aids_prof=$(grep -i '^x-helm-profile:' /tmp/te-th-aids 2>/dev/null | tr -d '\r' | awk '{print $2}')
 aids_etag=$(grep -i '^etag:' /tmp/te-th-aids 2>/dev/null | tr -d '\r' | awk '{print $2}')
 [ "$aids_prof" = aids ] && P "tile ?profile=aids → X-Helm-Profile: aids (ENC-3)" || F "tile ?profile=aids profile header → ${aids_prof:-?}"
 [ -n "${aids_etag:-}" ] && [ "$aids_etag" != "$etag" ] && P "tile ?profile=aids → distinct ETag from default (ENC-3)" || F "profile=aids ETag not distinct (${aids_etag:-?} vs ${etag:-?})"
-curl -s -D /tmp/te-th-std -o /tmp/te-tile-std.png "http://127.0.0.1:$SPORT/chart/12/1117/1760.png?profile=standard"
+curl -s -D /tmp/te-th-std -o /tmp/te-tile-std.png "${tile_url}?profile=standard"
 std_prof=$(grep -i '^x-helm-profile:' /tmp/te-th-std 2>/dev/null | tr -d '\r' | awk '{print $2}')
 [ "$std_prof" = standard ] && P "tile ?profile=standard → X-Helm-Profile: standard (ENC-3)" || F "tile ?profile=standard profile header → ${std_prof:-?}"
-vurl="http://127.0.0.1:$SPORT/chart/12/1117/1760.png?renderer=vulkan"
+vurl="${tile_url}?renderer=vulkan"
 curl -s -D /tmp/te-vulkan-th -o /tmp/te-vulkan-tile.png "$vurl"
 vcode=$(awk 'NR==1{print $2}' /tmp/te-vulkan-th 2>/dev/null); vsz=$(wc -c </tmp/te-vulkan-tile.png 2>/dev/null | tr -d ' ')
 vrenderer=$(grep -i '^x-helm-renderer:' /tmp/te-vulkan-th 2>/dev/null | tr -d '\r' | awk '{print $2}')

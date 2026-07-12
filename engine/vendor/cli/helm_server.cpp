@@ -18,7 +18,8 @@
 //   HELM_BIND      bind address (default 127.0.0.1; 0.0.0.0 to serve the LAN)
 //   HELM_PORT      one origin port (default 8080)
 //   HELM_WEB_ROOT  static UI directory (default ./web)
-//   HELM_ENC       ENC cell .000 (default ~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000)
+//   HELM_ENC_ROOT  recursively-scanned ENC chart root (default ~/.helm/runtime/enc)
+//   HELM_ENC       legacy single-cell override; used only when HELM_ENC_ROOT is unset
 //
 // Links ocpn::chart-render (which pulls in model-src) + ixwebsocket — the helm-tiles
 // line. Bonjour uses the system dns_sd (libSystem on macOS, no extra link).
@@ -50,6 +51,7 @@
 #include <wx/app.h>
 #include <wx/bitmap.h>
 #include <wx/dcmemory.h>
+#include <wx/dir.h>
 #include <wx/filename.h>
 #include <wx/image.h>
 #include <wx/mstream.h>
@@ -149,8 +151,23 @@ static void resolve_runtime_paths() {
   kSencDir = senc;
 }
 
+// Loaded ENC cells. helm-server uses the same recursive, zoom-ranked quilt as
+// helm-tiles: coarse coverage is composited first and finer cells land on top.
+// g_chart/g_ext remain aliases for the primary (finest-scale) cell because the
+// render-artifact and Vulkan experiment contracts are still single-cell.
+struct Cell {
+  s57chart* chart;
+  Extent ext;
+  int scale;
+  std::string path;
+  std::string id;
+  std::string edition;
+  std::string edition_date;
+};
+static std::vector<Cell> g_cells;
+static std::vector<std::pair<std::string, std::string>> g_rejected_cells;
 static s57chart* g_chart = nullptr;
-static Extent    g_ext;
+static Extent g_ext;
 static std::string g_blank;
 static std::string g_chart_status = "not-initialized";
 static std::string g_chart_unavailable_reason;
@@ -161,6 +178,9 @@ static const int TS = 256;
 // per tile and pay the switch cost only when the requested palette actually changes.
 static std::string g_cell_name;                               // components of the per-palette ETag
 static int g_native_scale = 0;
+static std::string g_charts_version;
+static unsigned char g_nodtaR = 0, g_nodtaG = 0, g_nodtaB = 0;
+static bool g_nodtaOk = false;
 static ColorScheme g_color_scheme = GLOBAL_COLOR_SCHEME_DAY;  // currently-applied scheme
 static const char* palette_name(ColorScheme s) {
   return s == GLOBAL_COLOR_SCHEME_DUSK ? "dusk" : (s == GLOBAL_COLOR_SCHEME_NIGHT ? "night" : "day");
@@ -177,7 +197,7 @@ static ColorScheme palette_from_query(const std::string& uri) {   // ?p=day|dusk
 static void apply_palette(ColorScheme scheme) {               // main-thread only (called from render_tile)
   if (scheme == g_color_scheme) return;
   ps52plib->SetPLIBColorScheme(scheme, ChartCtx(false, 0));
-  if (g_chart) g_chart->SetColorScheme(scheme);
+  for (Cell& c : g_cells) c.chart->SetColorScheme(scheme);
   g_color_scheme = scheme;
 }
 
@@ -227,7 +247,7 @@ struct Job { JobKind kind = JobKind::Render;
              int z = 0; long x = 0, y = 0;                       // render inputs (z reused as the query zoom hint)
              double qlat = 0, qlon = 0; int qradius_px = 5;      // query inputs
              ColorScheme palette = GLOBAL_COLOR_SCHEME_DAY; DisCat cat = STANDARD;
-             EncPngProfile enc_profile = EncPngProfile::Standard; std::string result;
+             EncPngProfile enc_profile = EncPngProfile::Standard; std::string cells; double overzoom = 0.0; std::string result;
              TileStatus status = TileStatus::RenderFailed;
              bool done = false; std::mutex m; std::condition_variable cv; };
 static std::deque<Job*> g_jobs;
@@ -244,46 +264,138 @@ static double display_scale(int z, double lat) {
   return 559082264.029 * std::cos(lat * M_PI / 180.0) / std::pow(2.0, z);
 }
 
-static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat, EncPngProfile enc_profile, std::string& out) {
+static bool extent_hits(const Extent& e, double w, double s, double ee, double n) {
+  return !(ee < e.WLON || w > e.ELON || n < e.SLAT || s > e.NLAT);
+}
+
+static bool cell_in_set(const std::string& id, const std::string& set) {
+  if (set.empty()) return true;
+  return ("," + set + ",").find("," + id + ",") != std::string::npos;
+}
+
+static const double SCALE_WIN = 3.0;
+static const size_t MAX_LAYERS = 4;
+static void rank_cells(double w, double s, double e, double n, int z,
+                       const std::string& only, std::vector<Cell*>& out) {
+  out.clear();
+  const double ideal = display_scale(z, (n + s) / 2.0);
+  std::vector<Cell*> covering;
+  for (Cell& c : g_cells)
+    if (extent_hits(c.ext, w, s, e, n) && cell_in_set(c.id, only)) covering.push_back(&c);
+  if (covering.empty()) return;
+  for (Cell* c : covering) {
+    double ratio = c->scale / ideal;
+    if (ratio < 1.0) ratio = 1.0 / ratio;
+    if (ratio <= SCALE_WIN) out.push_back(c);
+  }
+  if (out.empty()) {
+    Cell* best = nullptr;
+    double error = 1e18;
+    for (Cell* c : covering) {
+      const double candidate = std::fabs(std::log((double)c->scale) - std::log(ideal));
+      if (candidate < error) { error = candidate; best = c; }
+    }
+    out.push_back(best);
+  }
+  std::sort(out.begin(), out.end(), [](Cell* a, Cell* b) { return a->scale > b->scale; });
+  if (out.size() > MAX_LAYERS) out.erase(out.begin(), out.end() - MAX_LAYERS);
+}
+
+static bool render_cell_to_image(Cell* cell, const ViewPort& base, wxImage& out) {
+  ViewPort vp = base;
+  vp.chart_scale = cell->chart->GetNativeScale();
+  vp.ref_scale = vp.chart_scale;
+  vp.SetBoxes(); vp.Validate();
+  wxBitmap bmp(TS, TS, BPP);
+  if (!bmp.IsOk()) return false;
+  wxMemoryDC dc(bmp);
+  if (!dc.IsOk()) return false;
+  OCPNRegion region(0, 0, TS, TS);
+  const bool ok = cell->chart->RenderRegionViewOnDC(dc, vp, region);
+  wxBitmap rendered = dc.GetSelectedBitmap();
+  dc.SelectObject(wxNullBitmap);
+  if (!ok || !rendered.IsOk()) return false;
+  out = rendered.ConvertToImage();
+  if (!out.IsOk()) return false;
+  if (!out.HasAlpha()) out.InitAlpha();
+  unsigned char* alpha = out.GetAlpha();
+  const unsigned char* data = out.GetData();
+  const int pixels = TS * TS;
+  if (g_nodtaOk && alpha && data) {
+    for (int i = 0; i < pixels; ++i)
+      alpha[i] = (data[3 * i] == g_nodtaR && data[3 * i + 1] == g_nodtaG &&
+                  data[3 * i + 2] == g_nodtaB) ? 0 : 255;
+  } else if (alpha) {
+    for (int i = 0; i < pixels; ++i) alpha[i] = 255;
+  }
+  return true;
+}
+
+static void composite_over(wxImage& acc, const wxImage& top) {
+  unsigned char* acc_data = acc.GetData();
+  unsigned char* acc_alpha = acc.GetAlpha();
+  const unsigned char* top_data = top.GetData();
+  const unsigned char* top_alpha = top.GetAlpha();
+  if (!acc_data || !acc_alpha || !top_data || !top_alpha) return;
+  const int pixels = TS * TS;
+  for (int i = 0; i < pixels; ++i) {
+    if (!top_alpha[i]) continue;
+    acc_data[3 * i] = top_data[3 * i];
+    acc_data[3 * i + 1] = top_data[3 * i + 1];
+    acc_data[3 * i + 2] = top_data[3 * i + 2];
+    acc_alpha[i] = 255;
+  }
+}
+
+static TileStatus render_tile(int z, long x, long y, ColorScheme palette, DisCat cat,
+                              EncPngProfile enc_profile, const std::string& cells,
+                              std::string& out, double& overzoom) {
+  overzoom = 0.0;
   if (z < 0 || z > 24 || x < 0 || y < 0 || x >= (1L << z) || y >= (1L << z)) {
     fprintf(stderr, "tile BAD REQUEST z%d/%ld/%ld\n", z, x, y);
     return TileStatus::BadRequest;
   }
-  if (!g_chart) return TileStatus::NoCoverage;
   double west = tile_lon(x, z), east = tile_lon(x + 1, z);
   double north = tile_lat(y, z), south = tile_lat(y + 1, z);
-  if (east < g_ext.WLON || west > g_ext.ELON || north < g_ext.SLAT || south > g_ext.NLAT)
-    return TileStatus::NoCoverage;
+  std::vector<Cell*> layers;
+  rank_cells(west, south, east, north, z, cells, layers);
+  if (layers.empty()) return TileStatus::NoCoverage;
   apply_palette(palette);   // CHART-8: switch the S-52 colour scheme if the requested palette changed
   apply_category(cat);      // CHART-9: switch the S-52 display category if the requested one changed
   enc_png_profile_apply(ps52plib, &g_enc_png_profile_state, enc_profile);   // ENC-3: depth|aids|standard selective PNG
   double clat = (north + south) / 2.0, clon = (west + east) / 2.0;
+  { const double ds = display_scale(z, clat); const int finest = layers.back()->scale;
+    overzoom = (ds > 0 && finest > 0 && (double)finest / ds >= 2.0) ? (double)finest / ds : 0.0; }
   double span_m = (north - south) * 1852.0 * 60.0;
   if (span_m <= 0) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: span\n", z, x, y); return TileStatus::RenderFailed; }
   double ppm = (double)TS / span_m;
-  ViewPort vp;
-  vp.clat = clat; vp.clon = clon; vp.view_scale_ppm = ppm;
-  vp.pix_width = TS; vp.pix_height = TS;
-  vp.rotation = 0; vp.skew = 0; vp.tilt = 0;
-  vp.m_projection_type = PROJECTION_MERCATOR;
-  vp.chart_scale = g_chart->GetNativeScale();
-  vp.ref_scale = vp.chart_scale;
-  vp.b_quilt = false;
-  vp.rv_rect = wxRect(0, 0, TS, TS);
-  vp.SetBoxes(); vp.Validate();
-  wxBitmap bmp(TS, TS, BPP);
-  if (!bmp.IsOk()) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: bmp\n", z, x, y); return TileStatus::RenderFailed; }
-  wxMemoryDC dc(bmp);
-  if (!dc.IsOk()) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: dc\n", z, x, y); return TileStatus::RenderFailed; }
-  OCPNRegion region(0, 0, TS, TS);
-  bool ok = g_chart->RenderRegionViewOnDC(dc, vp, region);
-  wxBitmap rendered = dc.GetSelectedBitmap();
-  dc.SelectObject(wxNullBitmap);
-  if (!ok || !rendered.IsOk()) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: render\n", z, x, y); return TileStatus::RenderFailed; }
-  wxImage img = rendered.ConvertToImage();
-  if (!img.IsOk()) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: img\n", z, x, y); return TileStatus::RenderFailed; }
+  ViewPort base;
+  base.clat = clat; base.clon = clon; base.view_scale_ppm = ppm;
+  base.pix_width = TS; base.pix_height = TS;
+  base.rotation = 0; base.skew = 0; base.tilt = 0;
+  base.m_projection_type = PROJECTION_MERCATOR;
+  base.chart_scale = layers.back()->chart->GetNativeScale();
+  base.ref_scale = base.chart_scale;
+  base.b_quilt = false;
+  base.rv_rect = wxRect(0, 0, TS, TS);
+  base.SetBoxes(); base.Validate();
+  wxImage acc;
+  bool any = false;
+  int failed = 0;
+  for (Cell* c : layers) {
+    wxImage image;
+    if (!render_cell_to_image(c, base, image)) { ++failed; continue; }
+    if (!any) { acc = image; any = true; }
+    else composite_over(acc, image);
+  }
+  if (!any) {
+    fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: all %zu layer(s) failed\n", z, x, y, layers.size());
+    return TileStatus::RenderFailed;
+  }
+  if (failed)
+    fprintf(stderr, "tile z%d/%ld/%ld: %d of %zu layer(s) failed; served the rest\n", z, x, y, failed, layers.size());
   wxMemoryOutputStream mos;
-  if (!img.SaveFile(mos, wxBITMAP_TYPE_PNG)) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: png\n", z, x, y); return TileStatus::RenderFailed; }
+  if (!acc.SaveFile(mos, wxBITMAP_TYPE_PNG)) { fprintf(stderr, "tile RENDER FAIL z%d/%ld/%ld: png\n", z, x, y); return TileStatus::RenderFailed; }
   out.resize(mos.GetSize());
   mos.CopyTo(&out[0], out.size());
   return TileStatus::Ok;
@@ -298,7 +410,9 @@ static std::string make_blank() {
 }
 
 static bool mark_chart_unavailable(const char* reason) {
-  if (g_chart) { delete g_chart; g_chart = nullptr; }
+  for (Cell& c : g_cells) delete c.chart;
+  g_cells.clear();
+  g_chart = nullptr;
   g_chart_status = "unavailable";
   g_chart_unavailable_reason = reason ? reason : "chart unavailable";
   g_ext = Extent();
@@ -314,7 +428,87 @@ static bool mark_chart_unavailable(const char* reason) {
   return true;
 }
 
-static bool init_chart(const wxString& enc_path) {
+static void reject_cell(const wxString& path, const std::string& reason) {
+  const std::string id = std::string((const char*)wxFileName(path).GetName().ToUTF8());
+  g_rejected_cells.push_back({id, reason});
+  fprintf(stderr, "ENC rejected (%s): %s\n", reason.c_str(), (const char*)path.ToUTF8());
+}
+
+static bool load_one_cell(const wxString& enc_path) {
+  const std::string id = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8());
+  for (const Cell& c : g_cells) {
+    if (c.id == id) {
+      reject_cell(enc_path, "duplicate cell id");
+      return false;
+    }
+  }
+  wxString load_path = enc_path;
+  const std::string s63_src = std::string((const char*)enc_path.ToUTF8());
+  if (s63::is_encrypted(s63_src)) {
+    static s63::Decoder s63dec = s63::Decoder::from_env();
+    std::string err;
+    if (!s63dec.enabled()) {
+      reject_cell(enc_path, "S-63 encrypted but no permit/HW_ID");
+      return false;
+    }
+    const std::string s63_dir = helm_runtime_path("s63");
+    ::wxFileName::Mkdir(wxString::FromUTF8(s63_dir.c_str()), 0755, wxPATH_MKDIR_FULL);
+    const std::string tmp = s63_dir + "/" + id + ".000";
+    if (!s63dec.decrypt_to_file(s63_src, id, tmp, err)) {
+      reject_cell(enc_path, "S-63 decrypt failed: " + err);
+      return false;
+    }
+    printf("S-63: decrypted %s -> plain S-57\n", id.c_str());
+    load_path = wxString::FromUTF8(tmp.c_str());
+  }
+
+  s57chart* chart = new s57chart();
+  chart->DisableBackgroundSENC();
+  if (chart->Init(load_path, FULL_INIT) != INIT_OK) {
+    delete chart;
+    reject_cell(enc_path, "chart Init failed");
+    return false;
+  }
+  chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
+  Extent extent;
+  if (!chart->GetChartExtent(&extent)) {
+    delete chart;
+    reject_cell(enc_path, "GetChartExtent failed");
+    return false;
+  }
+  const int scale = chart->GetNativeScale();
+  if (scale <= 1) {
+    delete chart;
+    reject_cell(enc_path, "invalid native scale");
+    return false;
+  }
+  const std::string edition = std::string(chart->GetSE().ToUTF8());
+  std::string edition_date;
+  const wxDateTime ed = chart->GetEditionDate();
+  if (ed.IsValid()) edition_date = std::string(ed.FormatISODate().ToUTF8());
+  g_cells.push_back({chart, extent, scale, s63_src, id, edition, edition_date});
+  printf("ENC loaded: %s  S %.4f N %.4f W %.4f E %.4f  nativeScale=%d edition=%s\n",
+         id.c_str(), extent.SLAT, extent.NLAT, extent.WLON, extent.ELON, scale,
+         edition.empty() ? "unknown" : edition.c_str());
+  return true;
+}
+
+static std::string charts_version_stamp() {
+  unsigned long long hash = 1469598103934665603ULL;
+  auto fold = [&](const std::string& value) {
+    for (unsigned char c : value) { hash ^= c; hash *= 1099511628211ULL; }
+  };
+  fold("helm-server-s52|");
+  for (const Cell& c : g_cells) {
+    fold(c.path); fold("@"); fold(std::to_string(c.scale)); fold("@");
+    fold(c.edition); fold("@"); fold(c.edition_date); fold(";");
+  }
+  char buf[17];
+  std::snprintf(buf, sizeof buf, "%016llx", hash);
+  return std::string(buf);
+}
+
+static bool init_charts(const wxString& enc_root) {
   setvbuf(stdout, nullptr, _IONBF, 0);
   resolve_runtime_paths();   // durable, env-overridable s57data / SENC paths
   wxImage::AddHandler(new wxPNGHandler);
@@ -332,46 +526,43 @@ static bool init_chart(const wxString& enc_path) {
   g_default_cat = g_display_cat = ps52plib->GetDisplayCategory();   // still defined in basemap-only mode
   g_blank = make_blank();
   if (g_blank.empty()) { printf("FATAL: blank tile gen failed\n"); return false; }
+  if (S52color* nodta = ps52plib->getColor("NODTA")) {
+    g_nodtaR = nodta->R; g_nodtaG = nodta->G; g_nodtaB = nodta->B; g_nodtaOk = true;
+    printf("NODTA no-data colour = rgb(%d,%d,%d) -> transparent\n", g_nodtaR, g_nodtaG, g_nodtaB);
+  } else {
+    printf("WARN: NODTA colour unavailable; no-data areas remain opaque\n");
+  }
   m_pRegistrarMan = new s57RegistrarMgr(kS57Data, stderr);
-  // CHART-12: if the cell is S-63 encrypted, decrypt it to a plain S-57 temp and load THAT (the
-  // catalog id below still uses the original cell name). A plain S-57 cell passes through unchanged.
-  wxString load_path = enc_path;
-  std::string s63_src = std::string((const char*)enc_path.ToUTF8());
-  if (s63::is_encrypted(s63_src)) {
-    static s63::Decoder s63dec = s63::Decoder::from_env();
-    std::string cn = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8()), err;
-    if (!s63dec.enabled()) {
-      char msg[256]; std::snprintf(msg, sizeof msg, "S-63 encrypted cell %s but no permit/HW_ID (set HELM_S63_PERMIT + HELM_S63_HWID)", cn.c_str());
-      return mark_chart_unavailable(msg);
-    }
-    std::string s63_dir = helm_runtime_path("s63");
-    ::wxFileName::Mkdir(wxString::FromUTF8(s63_dir.c_str()), 0755, wxPATH_MKDIR_FULL);
-    std::string tmp = s63_dir + "/" + cn + ".000";
-    if (!s63dec.decrypt_to_file(s63_src, cn, tmp, err)) {
-      std::string msg = "S-63 decrypt FAILED for " + cn + ": " + err;
-      return mark_chart_unavailable(msg.c_str());
-    }
-    printf("S-63: decrypted %s -> plain S-57\n", cn.c_str());
-    load_path = wxString::FromUTF8(tmp.c_str());
+
+  wxArrayString files;
+  if (wxDirExists(enc_root))
+    wxDir::GetAllFiles(enc_root, &files, wxT("*.000"), wxDIR_FILES | wxDIR_DIRS);
+  else if (wxFileExists(enc_root))
+    files.Add(enc_root);
+  files.Sort();
+  if (files.IsEmpty()) {
+    printf("no ENC (*.000) cells under '%s'\n", (const char*)enc_root.ToUTF8());
+    return mark_chart_unavailable("no ENC cells found");
   }
-  g_chart = new s57chart();
-  g_chart->DisableBackgroundSENC();
-  if (g_chart->Init(load_path, FULL_INIT) != INIT_OK) {
-    printf("chart Init FAILED — could not load ENC cell %s\n"
-           "  fix for S-52 charts: set HELM_ENC to a valid .000 cell; continuing basemap-only\n",
-           (const char*)load_path.ToUTF8());
-    return mark_chart_unavailable("chart Init failed");
-  }
-  g_chart->SetColorScheme(GLOBAL_COLOR_SCHEME_DAY);
-  if (!g_chart->GetChartExtent(&g_ext)) { printf("GetChartExtent FAILED\n"); return mark_chart_unavailable("GetChartExtent failed"); }
-  int ns = g_chart->GetNativeScale();
-  if (ns <= 1) { printf("chart native scale invalid (%d)\n", ns); return mark_chart_unavailable("chart native scale invalid"); }
-  g_chart_status = "loaded";
+
+  printf("scanning %zu ENC file(s) under '%s' …\n", (size_t)files.GetCount(),
+         (const char*)enc_root.ToUTF8());
+  g_rejected_cells.clear();
+  for (size_t i = 0; i < files.GetCount(); ++i) load_one_cell(files[i]);
+  if (g_cells.empty()) return mark_chart_unavailable("no usable ENC cells loaded");
+  std::sort(g_cells.begin(), g_cells.end(), [](const Cell& a, const Cell& b) {
+    return a.scale != b.scale ? a.scale < b.scale : a.id < b.id;
+  });
+
+  g_chart = g_cells.front().chart;
+  g_ext = g_cells.front().ext;
+  g_cell_name = g_cells.front().id;
+  g_native_scale = g_cells.front().scale;
+  g_charts_version = charts_version_stamp();
+  g_chart_status = g_rejected_cells.empty() ? "loaded" : "degraded";
   g_chart_unavailable_reason.clear();
-  g_cell_name = std::string((const char*)wxFileName(enc_path).GetName().ToUTF8());
-  g_native_scale = ns;   // CHART-8: ETag is built per-request as "<cell>.<palette>.<cat>.s<scale>"
-  printf("ENC loaded: S %.4f N %.4f W %.4f E %.4f  nativeScale=%d\n",
-         g_ext.SLAT, g_ext.NLAT, g_ext.WLON, g_ext.ELON, ns);
+  printf("loaded %zu ENC cell(s), rejected %zu; native scales 1:%d .. 1:%d\n",
+         g_cells.size(), g_rejected_cells.size(), g_cells.front().scale, g_cells.back().scale);
   return true;
 }
 
@@ -385,7 +576,9 @@ static void warmup_render() {
   long x = (long)((clon + 180.0) / 360.0 * n);
   double lr = clat * M_PI / 180.0;
   long y = (long)((1.0 - std::log(std::tan(lr) + 1.0 / std::cos(lr)) / M_PI) / 2.0 * n);
-  std::string scratch; TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, g_default_cat, EncPngProfile::Standard, scratch);
+  std::string scratch; double overzoom = 0.0;
+  TileStatus st = render_tile(z, x, y, GLOBAL_COLOR_SCHEME_DAY, g_default_cat,
+                              EncPngProfile::Standard, "", scratch, overzoom);
   printf("warmup render z%d/%ld/%ld -> status=%d (%zuB)\n", z, x, y, (int)st, scratch.size());
 }
 
@@ -2218,8 +2411,19 @@ static std::string tide_stations_json(const std::string& uri) {
 static const char* geo_str(GeoPrim_t t) { return t == GEO_POINT ? "point" : (t == GEO_LINE ? "line" : (t == GEO_AREA ? "area" : "")); }
 static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
                             ColorScheme palette, DisCat cat, std::string& out) {
-  if (!g_chart) { out = "[]"; return TileStatus::Ok; }
-  if (lon < g_ext.WLON || lon > g_ext.ELON || lat < g_ext.SLAT || lat > g_ext.NLAT) { out = "[]"; return TileStatus::Ok; }
+  Cell* selected = nullptr;
+  if (zhint > 0) {
+    std::vector<Cell*> ranked;
+    rank_cells(lon, lat, lon, lat, zhint, "", ranked);
+    if (!ranked.empty()) selected = ranked.back();
+  } else {
+    for (Cell& cell : g_cells) {
+      if (extent_hits(cell.ext, lon, lat, lon, lat)) { selected = &cell; break; }
+    }
+  }
+  if (!selected) { out = "[]"; return TileStatus::Ok; }
+  s57chart* chart = selected->chart;
+  const Extent& extent = selected->ext;
   apply_palette(palette); apply_category(cat);              // visibility parity with the tiles (main-thread only)
   double ppm;                                               // pixels/metre — from the zoom hint if given, else the cell span
   if (zhint > 0) {
@@ -2228,17 +2432,17 @@ static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
     double span_m = (tile_lat(yt, zhint) - tile_lat(yt + 1, zhint)) * 1852.0 * 60.0;
     ppm = span_m > 0 ? (double)TS / span_m : 1.0;
   } else {
-    double span_m = (g_ext.NLAT - g_ext.SLAT) * 1852.0 * 60.0;
+    double span_m = (extent.NLAT - extent.SLAT) * 1852.0 * 60.0;
     ppm = span_m > 0 ? (double)TS / span_m : 1.0;
   }
   ViewPort vp;
   vp.clat = lat; vp.clon = lon; vp.view_scale_ppm = ppm;
   vp.pix_width = TS; vp.pix_height = TS; vp.rotation = 0; vp.skew = 0; vp.tilt = 0;
   vp.m_projection_type = PROJECTION_MERCATOR;
-  vp.chart_scale = g_chart->GetNativeScale(); vp.ref_scale = vp.chart_scale;
+  vp.chart_scale = chart->GetNativeScale(); vp.ref_scale = vp.chart_scale;
   vp.b_quilt = false; vp.rv_rect = wxRect(0, 0, TS, TS); vp.SetBoxes(); vp.Validate();
   float sel_deg = (float)(radius_px / (vp.view_scale_ppm * 1852.0 * 60.0));
-  ListOfObjRazRules* rl = g_chart->GetObjRuleListAtLatLon((float)lat, (float)lon, sel_deg, &vp, MASK_ALL);
+  ListOfObjRazRules* rl = chart->GetObjRuleListAtLatLon((float)lat, (float)lon, sel_deg, &vp, MASK_ALL);
   std::string arr = "[";
   if (rl) {
     const std::string ocPath = std::string(g_csv_locn.mb_str()) + "/s57objectclasses.csv";
@@ -2254,7 +2458,7 @@ static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
       std::string class_desc = (cd && *cd) ? cd : acr;
       int objl = (cc && *cc) ? std::atoi(cc) : -1;
       if (!first) arr += ","; first = false; ++emitted;
-      arr += "{\"objl_code\":" + std::to_string(objl) + ",\"acronym\":\"" + json_escape(acr) +
+      arr += "{\"cell_id\":\"" + json_escape(selected->id) + "\",\"objl_code\":" + std::to_string(objl) + ",\"acronym\":\"" + json_escape(acr) +
              "\",\"class_desc\":\"" + json_escape(class_desc) + "\",\"geometry\":\"" + geo_str(o->Primitive_type) + "\"";
       std::string attrs = ",\"attributes\":{";
       std::string plain = ",\"plain_language\":[\"" + json_escape(class_desc + " (" + acr + ")") + "\"";
@@ -2262,7 +2466,7 @@ static TileStatus run_query(double lat, double lon, int zhint, int radius_px,
       for (int i = 0; o->att_array && i < o->n_attr; ++i, ca += 6) {
         wxString an = wxString(ca, wxConvUTF8, 6); an.Trim();
         std::string ak = std::string(an.ToUTF8());
-        std::string av = std::string(g_chart->GetObjectAttributeValueAsString(o, i, an).ToUTF8());
+        std::string av = std::string(chart->GetObjectAttributeValueAsString(o, i, an).ToUTF8());
         if (!af) attrs += ","; af = false;
         attrs += "\"" + json_escape(ak) + "\":{\"decoded\":\"" + json_escape(av) + "\"}";
         plain += ",\"" + json_escape(ak + ": " + av) + "\"";
@@ -4266,9 +4470,11 @@ public:
   ix::HttpServer* server = nullptr;
   bool OnInit() override {
     SetAppName(wxT("opencpn"));
+    const char* root = std::getenv("HELM_ENC_ROOT");
     const char* enc = std::getenv("HELM_ENC");
-    wxString encPath = enc && *enc ? wxString::FromUTF8(enc) : wxString::FromUTF8(helm_runtime_path("enc/US5FL4CR/US5FL4CR.000").c_str());
-    if (!init_chart(encPath)) return false;
+    wxString encPath = root && *root ? wxString::FromUTF8(root) :
+      (enc && *enc ? wxString::FromUTF8(enc) : wxString::FromUTF8(helm_runtime_path("enc").c_str()));
+    if (!init_charts(encPath)) return false;
     if (!std::getenv("HELM_TILES_NO_WARMUP")) warmup_render();
 
     const char* webroot = std::getenv("HELM_WEB_ROOT");
@@ -4323,6 +4529,7 @@ public:
           const ColorScheme pal = palette_from_query(req->uri);   // CHART-8: ?p=day|dusk|night
           const DisCat cat = category_from_query(req->uri);       // CHART-9: ?cat=base|std|all|mariner
           const EncPngProfile enc_profile = enc_png_profile_from_query(req->uri);   // ENC-3: ?profile=depth|aids|standard
+          const std::string cells = query_param(req->uri, "cells");                 // optional chart-group allow-list
           auto serve_legacy_tile = [&](const char* fallback_reason) -> ix::HttpResponsePtr {
             h.erase("X-Helm-Renderer-Sha");
             h.erase("X-Helm-Scene-Schema");
@@ -4336,25 +4543,30 @@ public:
             if (!g_chart_unavailable_reason.empty()) h["X-Helm-Chart-Unavailable-Reason"] = header_safe(g_chart_unavailable_reason);
             if (fallback_reason && *fallback_reason) h["X-Helm-Renderer-Fallback"] = fallback_reason;
             else h.erase("X-Helm-Renderer-Fallback");
-            char et[160]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%s.s%d\"", g_cell_name.c_str(), palette_name(pal), cat_name(cat), enc_png_profile_name(enc_profile), g_native_scale);
+            unsigned long long group_hash = 1469598103934665603ULL;
+            for (unsigned char c : cells) { group_hash ^= c; group_hash *= 1099511628211ULL; }
+            char et[224]; std::snprintf(et, sizeof et, "\"%s.%s.%s.%s.g%06llx.%d.%ld.%ld\"",
+              g_charts_version.empty() ? "no-enc" : g_charts_version.c_str(), palette_name(pal), cat_name(cat),
+              enc_png_profile_name(enc_profile), (unsigned long long)(group_hash & 0xffffff), z, x, y);
             const std::string etag(et);
             h["Cache-Control"] = "public, max-age=31536000, immutable"; h["ETag"] = etag;
             if (header_ci(req->headers, "If-None-Match") == etag)
               return std::make_shared<ix::HttpResponse>(304, "Not Modified", ix::HttpErrorCode::Ok, h, std::string());
-            Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat; job.enc_profile = enc_profile;
+            Job job; job.z = z; job.x = x; job.y = y; job.palette = pal; job.cat = cat;
+            job.enc_profile = enc_profile; job.cells = cells;
             { std::lock_guard<std::mutex> lk(g_jobs_m); g_jobs.push_back(&job); }
             g_jobs_cv.notify_one();
             { std::unique_lock<std::mutex> lk(job.m); job.cv.wait(lk, [&]{ return job.done; }); }
             switch (job.status) {
               case TileStatus::Ok: h["Content-Type"] = "image/png";
                 // CHART-9: overzoom warning — viewing finer than the cell's survey scale (SCAMIN hides detail).
-                { double ds = display_scale(z, tile_lat(y + 0.5, z));
-                  if (g_native_scale > 0 && ds > 0 && (double)g_native_scale / ds >= 2.0) {
-                    char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", (double)g_native_scale / ds);
-                    h["X-Helm-Overzoom"] = oz; } }
+                if (job.overzoom >= 2.0) {
+                  char oz[32]; std::snprintf(oz, sizeof oz, "%.1fx", job.overzoom);
+                  h["X-Helm-Overzoom"] = oz;
+                }
                 return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, job.result);
               case TileStatus::NoCoverage: h["Content-Type"] = "image/png";
-                if (!g_chart) h["X-Helm-Chart-Status"] = "unavailable";
+                if (g_cells.empty()) h["X-Helm-Chart-Status"] = "unavailable";
                 return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, g_blank);
               case TileStatus::BadRequest: h["Content-Type"] = "text/plain"; h["Cache-Control"] = "no-store"; h.erase("ETag");
                 return std::make_shared<ix::HttpResponse>(400, "Bad Request", ix::HttpErrorCode::Ok, h, std::string("invalid tile coordinates\n"));
@@ -4469,7 +4681,8 @@ public:
         }
         if (path == "/health") { h["Content-Type"] = "application/json";
           std::string body = "{\"status\":\"ok\",\"engine\":\"helm-server\",\"chart_loaded\":" +
-            std::string(g_chart ? "true" : "false") +
+            std::string(g_cells.empty() ? "false" : "true") +
+            ",\"chart_count\":" + std::to_string(g_cells.size()) +
             ",\"chart_status\":\"" + json_escape(g_chart_status) + "\"";
           if (!g_chart_unavailable_reason.empty())
             body += ",\"chart_unavailable_reason\":\"" + json_escape(g_chart_unavailable_reason) + "\"";
@@ -4493,22 +4706,45 @@ public:
         if (path == "/tides/stations") { h["Content-Type"] = "application/json"; h["Cache-Control"] = "no-store";   // TIDES: station markers (GeoJSON)
           return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, tide_stations_json(req->uri)); }
         if (path == "/catalog") { h["Content-Type"] = "application/json";   // CHART-11 inventory + CONTRACT-5b edition
-          if (!g_chart) {
+          h["Cache-Control"] = "no-store";
+          if (g_cells.empty()) {
             std::string cb = "{\"cells\":[],\"count\":0,\"chart_loaded\":false,\"chart_status\":\"" +
               json_escape(g_chart_status) + "\"";
             if (!g_chart_unavailable_reason.empty())
               cb += ",\"chart_unavailable_reason\":\"" + json_escape(g_chart_unavailable_reason) + "\"";
-            cb += "}";
+            cb += ",\"rejected_cells\":[";
+            bool first_rejected = true;
+            for (const auto& rejected : g_rejected_cells) {
+              if (!first_rejected) cb += ",";
+              first_rejected = false;
+              cb += "{\"id\":\"" + json_escape(rejected.first) + "\",\"reason\":\"" + json_escape(rejected.second) + "\"}";
+            }
+            cb += "]}";
             return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, cb);
           }
-          int band = (g_cell_name.size() >= 3 && g_cell_name[2] >= '0' && g_cell_name[2] <= '9') ? g_cell_name[2] - '0' : -1;
-          std::string edtn, eddate;                                             // CONTRACT-5b: cell edition from the loaded chart
-          if (g_chart) { edtn = std::string(g_chart->GetSE().ToUTF8());
-            wxDateTime ed = g_chart->GetEditionDate(); if (ed.IsValid()) eddate = std::string(ed.FormatISODate().ToUTF8()); }
-          char cb[420]; std::snprintf(cb, sizeof cb,
-            "{\"cells\":[{\"id\":\"%s\",\"scale\":%d,\"band\":%d,\"edition\":\"%s\",\"editionDate\":\"%s\",\"bbox\":[%.6f,%.6f,%.6f,%.6f]}],\"count\":1}",
-            g_cell_name.c_str(), g_native_scale, band, json_escape(edtn).c_str(), eddate.c_str(), g_ext.WLON, g_ext.SLAT, g_ext.ELON, g_ext.NLAT);
-          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, std::string(cb)); }
+          std::string cb = "{\"cells\":[";
+          bool first = true;
+          for (const Cell& cell : g_cells) {
+            if (!first) cb += ",";
+            first = false;
+            const int band = (cell.id.size() >= 3 && cell.id[2] >= '1' && cell.id[2] <= '6') ? cell.id[2] - '0' : -1;
+            char bbox[192]; std::snprintf(bbox, sizeof bbox, "[%.6f,%.6f,%.6f,%.6f]",
+              cell.ext.WLON, cell.ext.SLAT, cell.ext.ELON, cell.ext.NLAT);
+            cb += "{\"id\":\"" + json_escape(cell.id) + "\",\"scale\":" + std::to_string(cell.scale) +
+              ",\"band\":" + std::to_string(band) + ",\"edition\":\"" + json_escape(cell.edition) +
+              "\",\"editionDate\":\"" + json_escape(cell.edition_date) + "\",\"bbox\":" + bbox +
+              ",\"coverage\":{\"status\":\"available\",\"bbox\":" + bbox + "}}";
+          }
+          cb += "],\"count\":" + std::to_string(g_cells.size()) +
+            ",\"chart_loaded\":true,\"chart_status\":\"" + json_escape(g_chart_status) + "\",\"rejected_cells\":[";
+          first = true;
+          for (const auto& rejected : g_rejected_cells) {
+            if (!first) cb += ",";
+            first = false;
+            cb += "{\"id\":\"" + json_escape(rejected.first) + "\",\"reason\":\"" + json_escape(rejected.second) + "\"}";
+          }
+          cb += "]}";
+          return std::make_shared<ix::HttpResponse>(200, "OK", ix::HttpErrorCode::Ok, h, cb); }
         if (path.rfind("/user-data/", 0) == 0) {   // user-owned chart/depth/weather overlays live under HELM_USER_DATA_ROOT or HELM_CONFIG/data
           std::string body, mime;
           if (serve_user_data(path.substr(std::strlen("/user-data/")), body, mime)) {
@@ -4576,7 +4812,8 @@ int main(int argc, char** argv) {
     { std::unique_lock<std::mutex> lk(g_jobs_m); g_jobs_cv.wait(lk, [] { return !g_jobs.empty(); });
       j = g_jobs.front(); g_jobs.pop_front(); }
     if (j->kind == JobKind::Query) j->status = run_query(j->qlat, j->qlon, j->z, j->qradius_px, j->palette, j->cat, j->result);
-    else                           j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat, j->enc_profile, j->result);
+    else                           j->status = render_tile(j->z, j->x, j->y, j->palette, j->cat,
+                                                          j->enc_profile, j->cells, j->result, j->overzoom);
     { std::lock_guard<std::mutex> lk(j->m); j->done = true; } j->cv.notify_one();
   }
   wxEntryCleanup();

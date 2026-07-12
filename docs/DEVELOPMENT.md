@@ -114,7 +114,8 @@ Keep private/user-owned data outside Git:
 Useful runtime paths:
 
 ```text
-HELM_ENC=/path/to/chart.000
+HELM_ENC_ROOT=/path/to/chart-library
+# Legacy single-cell override: HELM_ENC=/path/to/chart.000
 HELM_USER_DATA_ROOT=/path/to/user-data
 ~/.helm/data/
 ```

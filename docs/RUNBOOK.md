@@ -150,14 +150,22 @@ scripts/install-sample-enc.sh
 # ~/.helm/runtime/enc/US5FL4CR/US5FL4CR.000
 ```
 
-`helm-server` reads a single ENC from `HELM_ENC` — a user-provided NOAA `.000`
-cell (Helm ships no chart packs). A valid cell is required for S-52 ENC tiles,
-but not for the server to boot. If the cell is missing or invalid, Helm starts in
-basemap-only mode: `/health` stays green, `/catalog` reports zero chart cells,
-`/chart/...png` returns transparent tiles, and local MBTiles/PMTiles or online
-fill can still paint underneath. The S-52 **presentation library** it renders
-with is installed durably by `bootstrap.sh` into `~/.helm/runtime/s57data`
-(override with `HELM_S57_DATA`) and survives a reboot.
+`helm-server` scans `HELM_ENC_ROOT` recursively (default
+`~/.helm/runtime/enc`) and loads every usable `.000` cell it finds. Region
+subfolders are preserved in place; Helm neither moves nor renames customer
+charts. The normal OpenCPN SENC compiler runs during load and writes its
+regenerable cache under `~/.helm/runtime/senc` (override with `HELM_SENC_DIR`).
+`HELM_ENC=/path/to/CELL.000` remains a legacy single-cell override when
+`HELM_ENC_ROOT` is unset.
+
+`/catalog` returns every loaded cell with its native scale, usage band, edition,
+edition date, bbox, and coverage bbox. A bad cell is rejected loudly and listed
+in `rejected_cells`; the remaining usable cells continue to serve with
+`chart_status:"degraded"`. If no cell is usable, Helm starts in basemap-only
+mode: `/health` stays green, `/catalog` reports zero chart cells, and
+`/chart/...png` returns transparent tiles. The S-52 **presentation library** is
+installed durably by `bootstrap.sh` into `~/.helm/runtime/s57data` (override
+with `HELM_S57_DATA`) and survives a reboot.
 
 ### Local Basemap Packs
 
@@ -391,7 +399,7 @@ pre-seeding.
 |---|---|
 | One-origin UI | `http://127.0.0.1:9001/` serves the browser app |
 | Health/catalog | `/health` and `/catalog` return JSON |
-| Charts | S-52 chart tiles render when `HELM_ENC` points at a valid NOAA cell; without one, Helm stays up in basemap-only mode |
+| Charts | S-52 chart tiles render and quilt for every valid cell below `HELM_ENC_ROOT`; without one, Helm stays up in basemap-only mode |
 | Data honesty | missing or stale data is shown as missing/stale, not silently live |
 | AIS | AIS targets appear after NMEA/AIS sentences reach the server |
 | Routes | route create/save/activate uses the command plane and navobj persistence |
@@ -403,7 +411,8 @@ pre-seeding.
 - Xcode license errors: run `sudo xcodebuild -license accept`.
 - `patch` errors during OpenCPN configure: install `gpatch`.
 - `dyld: library not loaded`: set `DYLD_LIBRARY_PATH` as shown above.
-- No ENC tiles: set `HELM_ENC` to a valid `.000` file. If none is configured,
+- No ENC tiles: put valid `.000` files below `HELM_ENC_ROOT` (or set the legacy
+  `HELM_ENC` single-cell override). If none is configured,
   Helm should still boot; `/health` reports `chart_loaded:false`.
 - UI loads but no boat movement: feed NMEA/SignalK; the server should not fake a
   live vessel.
