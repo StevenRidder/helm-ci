@@ -93,7 +93,11 @@ Chart library (chart-intake-v1 — the customer's folders, indexed in place):
   --chart-root DIR      Register an EXISTING chart folder as a chart root
                         (repeatable). Recursive scan; files are never moved.
                         ENC-only boxes point this at their *.000 tree, sat-first
-                        boxes at their *.mbtiles/*.pmtiles tree.
+                        boxes at their *.mbtiles/*.pmtiles tree. Under
+                        --staging-root/--dry-run the registry is not seeded on
+                        the build host; the roots are printed as the exact
+                        helm-first-run command to run on the target box (a
+                        staging build host need not have the target's charts).
   --default-chart-root DIR
                         Default chart root created on first run (user mode:
                         ~/.helm/charts; system mode: <state>/charts).
@@ -244,9 +248,15 @@ do
   require_abs "${pair%%:*}" "${pair#*:}"
 done
 [ -z "$STAGING_ROOT" ] || require_abs "staging-root" "$STAGING_ROOT"
+# A staging/dry-run render seeds nothing on this host (the roots become a
+# helm-first-run command for the target box), so a chart root only has to exist
+# on the target — don't demand it on the build host. Real installs still fail
+# loud on a bad path, since they seed the registry here and now.
 for chart_root in ${CHART_ROOTS[@]+"${CHART_ROOTS[@]}"}; do
   require_abs "chart-root" "$chart_root"
-  [ -d "$chart_root" ] || die "--chart-root is not a directory: $chart_root"
+  if [ -z "$STAGING_ROOT" ] && [ "$DRY_RUN" != 1 ]; then
+    [ -d "$chart_root" ] || die "--chart-root is not a directory: $chart_root"
+  fi
 done
 
 # Staging/dry-run render files but never touch the live service manager.
@@ -375,7 +385,15 @@ fi
 # renders — those must not touch the invoking user's real chart library.
 log "seeding the chart-roots registry (first-run bootstrap)"
 if [ "$DRY_RUN" = 1 ] || [ -n "$STAGING_ROOT" ]; then
-  log "  deferred ($([ "$DRY_RUN" = 1 ] && echo "dry-run" || echo "staging render")) — run $PREFIX/bin/helm-first-run on the target box"
+  log "  deferred ($([ "$DRY_RUN" = 1 ] && echo "dry-run" || echo "staging render")) — run this on the target box:"
+  # Surface the exact command instead of silently dropping --chart-root: a
+  # staging render can't write the target's registry, so the roots become a
+  # copy-pasteable helm-first-run invocation the operator runs on the boat.
+  defer_cmd="$PREFIX/bin/helm-first-run"
+  for chart_root in ${CHART_ROOTS[@]+"${CHART_ROOTS[@]}"}; do
+    defer_cmd="$defer_cmd --root '$chart_root'"
+  done
+  log "    $defer_cmd"
 else
   first_run_args=(--no-packd)
   for chart_root in ${CHART_ROOTS[@]+"${CHART_ROOTS[@]}"}; do
