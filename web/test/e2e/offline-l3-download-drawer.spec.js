@@ -144,3 +144,38 @@ test('keeps the legacy single-source fetch_tiles.py handoff', async ({ page }) =
   await expect(page.locator('[data-testid="dl-estimate"]')).toContainText('tiles');
   await expect(page.locator('[data-testid="dl-error"]')).toBeHidden();
 });
+
+// INTAKE-8: download and import are one library, two front doors. The handoff command carries the
+// provenance the sidecar needs (source label + license) and names no output path — fetch_tiles.py
+// deposits pack + sidecar into the registered chart library, where recursive discovery (INTAKE-3)
+// makes it a toggleable Chart Packs layer with no rescan step.
+test('legacy handoff deposits into the chart library with provenance (INTAKE-8)', async ({ page }) => {
+  await boot(page);
+  await openDrawer(page);
+  await page.evaluate(() => window.HelmDownloadDrawer.setSource('noaa'));
+  await page.evaluate(b => window.HelmDownloadDrawer.setBbox(b), FIJI_BBOX);
+
+  const cmd = page.locator('.dl-cmd');
+  await expect(cmd).toContainText('--filename noaa-');
+  await expect(cmd).toContainText('--source-label "NOAA ENC charts"');
+  await expect(cmd).toContainText('--license "Public domain (NOAA)"');
+  await expect(cmd).not.toContainText('--out');       // no path override: library is the destination
+  await expect(cmd).not.toContainText('web/data');    // the pre-INTAKE-8 landing spot is gone
+  await expect(page.locator('#drawer-download .hint')).toContainText(/chart library/i);
+  await expect(page.locator('#drawer-download .hint')).toContainText(/Chart Packs/i);
+});
+
+// A western/southern lasso yields a bbox that starts with '-'. The copied command MUST use the
+// --bbox= equals form, or argparse reads the leading-'-' value as an option flag and the download
+// dies with exit 2 (expected-one-argument) before a byte is fetched. Guard both handoff commands.
+test('emits the --bbox= equals form so a negative-coordinate lasso parses', async ({ page }) => {
+  await boot(page);
+  await openDrawer(page);
+  const keyWest = [-81.86, 24.44, -81.68, 24.60];
+
+  await page.evaluate(() => window.HelmDownloadDrawer.setSource('noaa'));   // legacy fetch_tiles handoff
+  await page.evaluate(b => window.HelmDownloadDrawer.setBbox(b), keyWest);
+  const legacy = page.locator('.dl-cmd');
+  await expect(legacy).toContainText('--bbox="-81.86,24.44,-81.68,24.6"');
+  await expect(legacy).not.toContainText('--bbox "');   // never the space form that swallows the sign
+});

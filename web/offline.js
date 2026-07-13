@@ -9,6 +9,9 @@
 //     number. The bake itself stays server-side (OFFLINE-L-2); this panel only scopes + estimates.
 //   • Single tile source (OFFLINE-3, legacy): pick an XYZ template, get a client-side estimate and a
 //     copyable pipeline/fetch_tiles.py command. deg2num mirrors fetch_tiles.py so the two agree.
+//     INTAKE-8: the command carries --source-label/--license and no --out, so fetch_tiles.py deposits
+//     the pack + metadata sidecar into the registered chart library (one tree with hand-placed packs);
+//     the recursive discovery (INTAKE-3) surfaces it as a toggleable Chart Packs layer, no rescan step.
 //
 // Stays in-lane: fills the EXISTING download drawer (rail button + opener already wired in
 // index.html); registers no second rail icon. All CSS scoped under #drawer-download. Owns no shell.
@@ -37,14 +40,16 @@
 
   // ---- sources. The sat-first region pack is the default (live, multi-layer, accurate); the XYZ
   //      single-source rows keep the OFFLINE-3 client-side estimate + fetch_tiles.py handoff. ----
+  // license rides into the fetch_tiles.py sidecar (INTAKE-8) so a downloaded pack lands in the
+  // chart library with its provenance attached, exactly like a hand-placed pack with a sidecar.
   var BUNDLE_SOURCE = { id: 'satfirst', label: 'Sat-first region pack (offline)', bundle: true, note: 'live estimate from the local pack server' };
   var SOURCES = [
     BUNDLE_SOURCE,
-    { id: 'noaa',      label: 'NOAA ENC charts',     url: 'https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png', fmt: 'png', kb: 12, note: 'public · free' },
-    { id: 'eox',       label: 'Sentinel-2 (EOX)',    url: 'http://localhost:8095/basemap/eox/{z}/{x}/{y}.jpg',                 fmt: 'jpg', kb: 26, note: 'needs :8095 online-fill' },
-    { id: 'navionics', label: 'Navionics (proxy)',   url: 'http://localhost:8091/navionics/{z}/{x}/{y}.png',                  fmt: 'png', kb: 22, note: 'needs :8091 basemap' },
-    { id: 'googlesat', label: 'Google satellite',    url: 'http://localhost:8091/googlesat/{z}/{x}/{y}.jpg',                  fmt: 'jpg', kb: 30, note: 'personal use' },
-    { id: 'custom',    label: 'Custom {z}/{x}/{y}…',  url: '',                                                                fmt: 'png', kb: 20, note: 'paste an XYZ template below' }
+    { id: 'noaa',      label: 'NOAA ENC charts',     url: 'https://tileservice.charts.noaa.gov/tiles/50000_1/{z}/{x}/{y}.png', fmt: 'png', kb: 12, note: 'public · free',              license: 'Public domain (NOAA)' },
+    { id: 'eox',       label: 'Sentinel-2 (EOX)',    url: 'http://localhost:8095/basemap/eox/{z}/{x}/{y}.jpg',                 fmt: 'jpg', kb: 26, note: 'needs :8095 online-fill',    license: 'CC BY 4.0 (EOX Sentinel-2 cloudless)' },
+    { id: 'navionics', label: 'Navionics (proxy)',   url: 'http://localhost:8091/navionics/{z}/{x}/{y}.png',                  fmt: 'png', kb: 22, note: 'needs :8091 basemap',        license: 'Commercial — personal use only' },
+    { id: 'googlesat', label: 'Google satellite',    url: 'http://localhost:8091/googlesat/{z}/{x}/{y}.jpg',                  fmt: 'jpg', kb: 30, note: 'personal use',               license: 'Google ToS — personal use only' },
+    { id: 'custom',    label: 'Custom {z}/{x}/{y}…',  url: '',                                                                fmt: 'png', kb: 20, note: 'paste an XYZ template below', license: '' }
   ];
 
   // Zoom caps — charts rarely render past ~16; the hard cap stops a deep span from queuing millions
@@ -193,9 +198,11 @@
   }
 
   // OFFLINE-3 legacy path: client-side estimate + copyable fetch_tiles.py command.
+  // INTAKE-8: the command has no --out — fetch_tiles.py deposits the pack + provenance sidecar
+  // into the registered chart library, where the recursive scan makes it a Chart Packs layer.
   function refreshLegacy(s) {
     breakdown.textContent = ''; errorEl.hidden = true;
-    hint.textContent = 'Safe handoff — runs pipeline/fetch_tiles.py (no fetch logic in the browser).';
+    hint.textContent = 'Safe handoff — runs pipeline/fetch_tiles.py (no fetch logic in the browser). The pack and its sidecar land in your chart library and appear under Chart Packs when the download finishes.';
     srcNote.textContent = s.note + (s.id === 'custom' ? '' : '  ·  ' + s.url);
     var z = clampZoom();
     if (!bbox) {
@@ -218,12 +225,17 @@
   }
 
   function fetchCommand(s, b, lo, hi) {
+    // --bbox= (equals form): the value starts with '-' for any western/southern lasso, and argparse
+    // reads a space-separated "-81.86,…" as an option flag (expected-one-argument, exit 2). Equals
+    // binds it as the value regardless of the leading sign, matching pipeline/build.sh.
     return 'python3 pipeline/fetch_tiles.py \\\n' +
       '  --source "' + (s.id === 'custom' ? (customUrl || '{z}/{x}/{y}.png') : s.url) + '" \\\n' +
-      '  --bbox "' + b.join(',') + '" \\\n' +
+      '  --bbox="' + b.join(',') + '" \\\n' +
       '  --minzoom ' + lo + ' --maxzoom ' + hi + ' --fmt ' + s.fmt + ' \\\n' +
-      '  --out web/data/' + slug() + '.mbtiles \\\n' +
-      '  --name "' + s.label + ' ' + b.join(',') + '"';
+      '  --filename ' + slug() + '.mbtiles \\\n' +
+      '  --name "' + s.label + ' ' + b.join(',') + '" \\\n' +
+      '  --source-label "' + s.label + '"' +
+      (s.license ? ' --license "' + s.license + '"' : '');
   }
 
   // OFFLINE-L-3 path: ask helm-packd for a live sat-first bundle estimate over the lassoed area.
@@ -302,9 +314,11 @@
   }
 
   function bundleCommand(b, z) {
+    // --bbox= (equals form): region_bundle.py parses argv the same way — a leading-'-' bbox in the
+    // space form is swallowed as an option flag. See fetchCommand() for the full rationale.
     return 'python3 pipeline/region_bundle.py \\\n' +
       '  --catalog "' + packdBase() + '/catalog" --profile sat_first \\\n' +
-      '  --bbox "' + b.join(',') + '" --minzoom ' + z[0] + ' --maxzoom ' + z[1] + ' \\\n' +
+      '  --bbox="' + b.join(',') + '" --minzoom ' + z[0] + ' --maxzoom ' + z[1] + ' \\\n' +
       '  --output web/data/' + slug() + '.bundle.json';
   }
 
