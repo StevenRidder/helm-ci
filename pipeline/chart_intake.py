@@ -159,6 +159,26 @@ def ensure_registry(roots_file: Path, default_root: Path) -> dict[str, Any]:
     return registry
 
 
+def load_registry_readonly(roots_file: Path, default_root: Path) -> dict[str, Any]:
+    """Read the registry without creating or mutating anything on disk.
+
+    When no registry file exists yet the default root is synthesized in memory
+    only — first-run GET surfaces must not flip a daemon onto a file registry
+    (or mkdir roots) as a side effect of being looked at.
+    """
+    if roots_file.exists():
+        registry = _read_json(roots_file)
+        _validate_registry(registry, roots_file.name)
+        return registry
+    root = _canonical(default_root, must_exist=False)
+    now = _utc_now()
+    return {
+        "schema": ROOTS_SCHEMA,
+        "updated_at": now,
+        "roots": [{"id": _root_id(root), "label": "Default charts", "path": str(root), "default": True, "added_at": now}],
+    }
+
+
 def register_root(roots_file: Path, default_root: Path, path: Path, label: str | None = None) -> tuple[dict[str, Any], bool]:
     registry = ensure_registry(roots_file, default_root)
     root_path = _canonical(path, must_exist=True)
@@ -854,11 +874,13 @@ def _depth_pass(
     return errors
 
 
-def rescan(roots_file: Path, index_file: Path, default_root: Path, *, depth_root: Path | None = None, extract_depth: bool | None = None) -> tuple[dict[str, Any], bool]:
-    registry = ensure_registry(roots_file, default_root)
-    resolved_depth_root = Path(depth_root).expanduser() if depth_root else default_depth_root()
-    resolved_extract = _depth_extract_enabled() if extract_depth is None else bool(extract_depth)
-    fingerprint = hashlib.sha256(f"chart-intake:{INDEXER_VERSION}:{_capability_fingerprint()}\n".encode())
+def _scan_roots(registry: dict[str, Any], fingerprint: "hashlib._Hash") -> tuple[list[dict[str, Any]], list[tuple[dict[str, Any], Path, list[Path]]], list[dict[str, Any]], list[dict[str, str]]]:
+    """Shared structural scan: walk every registered root, fold registry rows and
+    file stats into ``fingerprint`` (order-stable), and return
+    ``(charts, enc_cells, public_root_rows, scan_warnings)``. No writes and no
+    depth extraction — both the read-only build_index and the write-bearing
+    rescan build on this, so the two never diverge on structure or fingerprint
+    for a depth-free library."""
     charts: list[dict[str, Any]] = []
     enc_cells: list[tuple[dict[str, Any], Path, list[Path]]] = []
     public_root_rows: list[dict[str, Any]] = []
@@ -971,7 +993,47 @@ def rescan(roots_file: Path, index_file: Path, default_root: Path, *, depth_root
         root_row["chart_count"] = len(root_charts)
         root_row["group_count"] = len({item["group"] for item in root_charts})
         public_root_rows.append(root_row)
+    return charts, enc_cells, public_root_rows, scan_warnings
 
+
+def build_index(registry: dict[str, Any]) -> dict[str, Any]:
+    """Compute the ``helm.chart_intake.index.v1`` document for a registry.
+
+    Pure read: scans the registered roots but never writes the registry, the
+    index artifact, or any depth output. INTAKE-7's ENC depth extraction is a
+    write-bearing, rescan-only augmentation and is intentionally NOT run here —
+    that keeps GET /chart-index side-effect-free and in parity with the C++
+    helm-packd producer, which has no S-57 depth pipeline. For a library with no
+    ENC cells this returns byte-for-byte what ``rescan`` computes (the depth pass
+    is then a no-op)."""
+    fingerprint = hashlib.sha256(f"chart-intake:{INDEXER_VERSION}:{_capability_fingerprint()}\n".encode())
+    charts, _enc_cells, public_root_rows, scan_warnings = _scan_roots(registry, fingerprint)
+    fingerprint_value = "sha256:" + fingerprint.hexdigest()
+    invalid_count = sum(item["validation"]["status"] == "error" for item in charts)
+    warning_count = sum(item["validation"]["status"] == "warning" or bool(item["warnings"]) for item in charts) + len(scan_warnings)
+    status = "error" if invalid_count else ("warning" if warning_count else "ok")
+    return {
+        "schema": INDEX_SCHEMA,
+        "indexer_version": INDEXER_VERSION,
+        "chart_classes": CHART_CLASSES,
+        "generated_at": _utc_now(),
+        "fingerprint": fingerprint_value,
+        "status": status,
+        "chart_count": len(charts),
+        "invalid_count": invalid_count,
+        "warning_count": warning_count,
+        "roots": public_root_rows,
+        "charts": charts,
+        "warnings": scan_warnings,
+    }
+
+
+def rescan(roots_file: Path, index_file: Path, default_root: Path, *, depth_root: Path | None = None, extract_depth: bool | None = None) -> tuple[dict[str, Any], bool]:
+    registry = ensure_registry(roots_file, default_root)
+    resolved_depth_root = Path(depth_root).expanduser() if depth_root else default_depth_root()
+    resolved_extract = _depth_extract_enabled() if extract_depth is None else bool(extract_depth)
+    fingerprint = hashlib.sha256(f"chart-intake:{INDEXER_VERSION}:{_capability_fingerprint()}\n".encode())
+    charts, enc_cells, public_root_rows, scan_warnings = _scan_roots(registry, fingerprint)
     # INTAKE-7: indexing an ENC also produces its depth-on-sat GeoJSON. The pass runs
     # before the fingerprint is sealed so the depth outcome (and the output files
     # themselves) invalidate a stale index instead of hiding behind one.

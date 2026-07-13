@@ -180,6 +180,26 @@ management (`options.cpp`, `chartgroupsui.cpp`, `piano.cpp`) but adapted for tou
 This turns "hand-edited server + shell scripts" into a customer-usable flow, and gives the
 sat-first cockpit the chart-management surface OpenCPN users already expect.
 
+### HTTP seam (shipped with INTAKE-5, board decision #13)
+
+`helm-packd` (and the `pipeline/mbtiles_server.py` oracle) serve the panel's data plane —
+implemented in `web/chart-library.js` against these endpoints:
+
+| Route | Method | Contract |
+|---|---|---|
+| `/chart-index` | GET | The `helm.chart_intake.index.v1` document, computed live and **read-only** (never creates/writes `chart-roots.json` or `chart-index.json`). Privacy-safe: root labels + relative paths only. |
+| `/chart-roots` | GET | `{schema, roots: [{id, label, default, added_at, status}], source: "file"\|"env"\|"default"}` — never absolute paths. |
+| `/chart-roots` | POST | `{"path": ..., "label"?: ...}` → registers the folder via the INTAKE-2 registry semantics (dedupe by canonical path, private-path label guard) and force-rescans packs. `422` + named message on rejection; `409 chart_roots_env_managed` when `HELM_CHART_ROOTS` owns the roots. |
+| `/chart-roots/remove` | POST | `{"id"\|"path": ...}` → unregisters (files always stay put); the default root refuses with `422`. |
+| `/rescan` | POST | Pre-existing INTAKE-3 trigger; the panel's **Rescan** button. |
+
+Root and chart ids hash identically in C++ and Python (`root-`sha256(path)[:16],
+`chart-`sha256(root_id\0relative)[:20]), so HTTP- and CLI-registered roots are one registry.
+When the registry file is first created over HTTP, the daemon's own pack dir becomes the
+default root so `/catalog` continuity is preserved. The panel joins tile-pack freshness from
+CAT-1 `/catalog` staleness client-side; a chart-root overlay the layer manifest does not yet
+serve is shown as *indexed, not yet served* — never a fabricated layer.
+
 ## Failure rules
 
 - File contents don't match extension → flagged in the catalog with the mismatch named;

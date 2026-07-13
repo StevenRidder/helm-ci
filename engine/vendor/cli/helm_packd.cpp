@@ -13,6 +13,10 @@
 //   GET  /prefetch                   -> helm.prefetch.manifest.v1
 //   GET  /bundle                     -> helm.region_bundle.manifest.v1
 //   POST /rescan                     -> force a chart-root index rebuild
+//   GET  /chart-index                -> helm.chart_intake.index.v1 (read-only)
+//   GET  /chart-roots                -> registered chart roots, no paths
+//   POST /chart-roots                -> register a chart root {"path", "label"?}
+//   POST /chart-roots/remove         -> unregister a chart root {"id"|"path"}
 
 #include <algorithm>
 #include <cerrno>
@@ -2319,6 +2323,32 @@ private:
            << (snapshot.changed ? "true" : "false") << ",\"packs\":" << snapshot.packs.size()
            << ",\"fingerprint\":\"" << snapshot.fingerprint << "\"}";
       return response(200, "OK", std::move(h), body.str());
+    }
+
+    // INTAKE-5 chart-library seam; endpoint bodies live in helm_packd_chart_index.h.
+    if (path == "/chart-index" || path == "/chart-roots" || path == "/chart-roots/remove") {
+      h["Content-Type"] = "application/json";
+      h["Cache-Control"] = "no-store";
+      int status = 200;
+      if (req->method == "POST" && path != "/chart-index") {
+        rapidjson::Document result_doc;
+        result_doc.SetObject();
+        std::string body = chart_roots_mutate_json(base_, req->body, path == "/chart-roots/remove", status, result_doc);
+        if (body.empty()) {
+          const PackSnapshot snapshot = refresh_pack_index(true);
+          body = chart_roots_success_json(result_doc, snapshot.packs.size(), snapshot.fingerprint);
+        }
+        return response(status, intake_http_reason(status), std::move(h), body);
+      }
+      if (req->method != "GET" && !is_head) return empty_response(405, "Method Not Allowed", std::move(h));
+      if (path == "/chart-roots/remove") return empty_response(404, "Not Found", std::move(h));
+      const std::string body = path == "/chart-index"
+        ? chart_index_json(base_, status) : chart_roots_get_json(base_, status);
+      if (is_head) {
+        h["Content-Length"] = std::to_string(body.size());
+        return std::make_shared<ix::HttpResponse>(status, intake_http_reason(status), ix::HttpErrorCode::Ok, h, std::string());
+      }
+      return response(status, intake_http_reason(status), std::move(h), body);
     }
 
     const bool detect_tree_change = path == "/" || path == "/health" || path == "/catalog" ||

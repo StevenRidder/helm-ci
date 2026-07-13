@@ -7,6 +7,10 @@
   GET /catalog                    -> JSON of available packs + bounds/zoom/URLs
   GET /layers                     -> local maritime layer inventory
   GET /layer-manifest             -> helm.layer.manifest.v1 overlay catalog
+  GET /chart-index                -> helm.chart_intake.index.v1 library index (read-only)
+  GET /chart-roots                -> registered chart roots (public shape, no paths)
+  POST /chart-roots               -> register a chart root {"path": ..., "label"?: ...}
+  POST /chart-roots/remove        -> unregister a chart root {"id"|"path": ...}
   POST /rescan                    -> force a chart-root index rebuild
 
 Offline-first: everything is local and read-only. Bind 0.0.0.0 so an iPad or
@@ -39,10 +43,12 @@ import sqlite3
 import struct
 import sys
 import threading
+from pathlib import Path
 from typing import Optional, Tuple
 import urllib.parse
 import urllib.request
 
+import chart_intake
 from layer_inventory import LayerInventoryError, build_layer_inventory, build_layer_manifest
 from prefetch_manifest import PrefetchError, build_prefetch_manifest
 from region_bundle import BundleError, build_region_bundle
@@ -203,6 +209,47 @@ def _registered_roots() -> list[str]:
         if root and root not in roots:
             roots.append(root)
     return roots or [BASE]
+
+
+def _intake_paths() -> Tuple[Path, Path]:
+    """(roots_file, default_root) for chart-intake HTTP ops.
+
+    default_root is this daemon's BASE (not chart_intake's ~/.helm/charts) so the
+    first HTTP registration writes a registry whose default row keeps serving the
+    packs /catalog already exposed (decision #13: /catalog continuity).
+    """
+    config_dir = os.path.abspath(os.path.expanduser(os.environ.get("HELM_CONFIG", "~/.helm/config")))
+    configured_file = os.environ.get("HELM_CHART_ROOTS_FILE", "").strip()
+    roots_file = os.path.abspath(os.path.expanduser(configured_file or os.path.join(config_dir, "chart-roots.json")))
+    return Path(roots_file), Path(BASE)
+
+
+def _chart_roots_env_managed() -> bool:
+    roots_file, _ = _intake_paths()
+    return (not roots_file.exists()) and bool(os.environ.get("HELM_CHART_ROOTS", "").strip())
+
+
+def _intake_registry_readonly() -> dict:
+    """Registry document for GET surfaces — never writes registry/index files.
+
+    Env-managed roots (HELM_CHART_ROOTS with no registry file) are synthesized so
+    /chart-index reports what this daemon actually serves, honestly labeled.
+    """
+    roots_file, default_root = _intake_paths()
+    if _chart_roots_env_managed():
+        now = chart_intake._utc_now()
+        rows = []
+        for root in _registered_roots():
+            label = os.path.basename(root.rstrip(os.sep)) or "Charts"
+            rows.append({
+                "id": chart_intake._root_id(Path(root)),
+                "label": label,
+                "path": root,
+                "default": False,
+                "added_at": now,
+            })
+        return {"schema": chart_intake.ROOTS_SCHEMA, "updated_at": now, "roots": rows}
+    return chart_intake.load_registry_readonly(roots_file, default_root)
 
 
 ROOTS = _registered_roots()
@@ -943,6 +990,102 @@ class H(http.server.BaseHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(body)
 
+    def _read_json_body(self) -> Optional[dict]:
+        try:
+            length = int(self.headers.get("Content-Length") or 0)
+        except ValueError:
+            return None
+        if length <= 0 or length > 65536:
+            return None
+        try:
+            value = json.loads(self.rfile.read(length).decode("utf-8"))
+        except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+            return None
+        return value if isinstance(value, dict) else None
+
+    def _chart_index_response(self):
+        try:
+            payload = chart_intake.build_index(_intake_registry_readonly())
+        except chart_intake.IntakeError as e:
+            self._json_response(500, {"error": "chart_index_unavailable", "message": str(e)})
+            return
+        self._json_response(200, payload)
+
+    def _chart_roots_response(self):
+        try:
+            registry = _intake_registry_readonly()
+        except chart_intake.IntakeError as e:
+            self._json_response(500, {"error": "chart_roots_unavailable", "message": str(e)})
+            return
+        payload = chart_intake.public_roots(registry)
+        roots_file, _ = _intake_paths()
+        payload["source"] = "file" if roots_file.exists() else ("env" if _chart_roots_env_managed() else "default")
+        self._json_response(200, payload)
+
+    def _reject_env_managed_roots(self) -> bool:
+        if not _chart_roots_env_managed():
+            return False
+        self._json_response(409, {
+            "error": "chart_roots_env_managed",
+            "message": "chart roots come from HELM_CHART_ROOTS; unset it (or create chart-roots.json) to manage roots over HTTP",
+        })
+        return True
+
+    def _chart_roots_register(self, body: dict):
+        if self._reject_env_managed_roots():
+            return
+        path = body.get("path")
+        label = body.get("label")
+        if not isinstance(path, str) or not path.strip():
+            self._json_response(400, {"error": "bad_chart_root_request", "message": 'body must include a non-empty "path"'})
+            return
+        if label is not None and not isinstance(label, str):
+            self._json_response(400, {"error": "bad_chart_root_request", "message": '"label" must be a string'})
+            return
+        roots_file, default_root = _intake_paths()
+        try:
+            root, changed = chart_intake.register_root(roots_file, default_root, Path(path.strip()), label)
+        except chart_intake.IntakeError as e:
+            self._json_response(422, {"error": "chart_root_rejected", "message": str(e)})
+            return
+        _refresh_pack_index(force=True)
+        public = {key: root[key] for key in ("id", "label", "default", "added_at") if key in root}
+        public["status"] = "available" if os.path.isdir(root["path"]) else "unavailable"
+        with _INDEX_LOCK:
+            packs, fingerprint = len(PACKS), _INDEX_FINGERPRINT
+        self._json_response(200, {
+            "schema": chart_intake.ROOTS_SCHEMA,
+            "status": "ok",
+            "changed": changed,
+            "root": public,
+            "packs": packs,
+            "fingerprint": fingerprint,
+        })
+
+    def _chart_roots_remove(self, body: dict):
+        if self._reject_env_managed_roots():
+            return
+        ref = body.get("id") if isinstance(body.get("id"), str) else body.get("path")
+        if not isinstance(ref, str) or not ref.strip():
+            self._json_response(400, {"error": "bad_chart_root_request", "message": 'body must include "id" or "path"'})
+            return
+        roots_file, default_root = _intake_paths()
+        try:
+            removed = chart_intake.unregister_root(roots_file, default_root, ref.strip())
+        except chart_intake.IntakeError as e:
+            self._json_response(422, {"error": "chart_root_rejected", "message": str(e)})
+            return
+        _refresh_pack_index(force=True)
+        with _INDEX_LOCK:
+            packs, fingerprint = len(PACKS), _INDEX_FINGERPRINT
+        self._json_response(200, {
+            "schema": chart_intake.ROOTS_SCHEMA,
+            "status": "ok",
+            "removed": {key: removed[key] for key in ("id", "label") if key in removed},
+            "packs": packs,
+            "fingerprint": fingerprint,
+        })
+
     def _prefetch_response(self, query: dict):
         try:
             payload = build_prefetch_manifest(_catalog(_origin(self)), query, environmental_bundles=ENV_BUNDLES)
@@ -1127,6 +1270,12 @@ class H(http.server.BaseHTTPRequestHandler):
         if path == "layer-manifest":
             self._layer_manifest_response()
             return
+        if path == "chart-index":
+            self._chart_index_response()
+            return
+        if path == "chart-roots":
+            self._chart_roots_response()
+            return
         if path.endswith(".pmtiles"):
             name = urllib.parse.unquote(path[:-8])
             self._serve_pmtiles(name)
@@ -1139,20 +1288,30 @@ class H(http.server.BaseHTTPRequestHandler):
 
     def do_POST(self):
         path = urllib.parse.urlparse(self.path).path.strip("/")
-        if path != "rescan":
-            self._empty(404)
+        if path == "rescan":
+            changed = _refresh_pack_index(force=True)
+            with _INDEX_LOCK:
+                count = len(PACKS)
+                fingerprint = _INDEX_FINGERPRINT
+            self._json_response(200, {
+                "schema": "helm.chart_index.rescan.v1",
+                "status": "ok",
+                "changed": changed,
+                "packs": count,
+                "fingerprint": fingerprint,
+            })
             return
-        changed = _refresh_pack_index(force=True)
-        with _INDEX_LOCK:
-            count = len(PACKS)
-            fingerprint = _INDEX_FINGERPRINT
-        self._json_response(200, {
-            "schema": "helm.chart_index.rescan.v1",
-            "status": "ok",
-            "changed": changed,
-            "packs": count,
-            "fingerprint": fingerprint,
-        })
+        if path in ("chart-roots", "chart-roots/remove"):
+            body = self._read_json_body()
+            if body is None:
+                self._json_response(400, {"error": "bad_chart_root_request", "message": "body must be a JSON object"})
+                return
+            if path == "chart-roots":
+                self._chart_roots_register(body)
+            else:
+                self._chart_roots_remove(body)
+            return
+        self._empty(404)
 
 
 class TS(socketserver.ThreadingMixIn, http.server.HTTPServer):

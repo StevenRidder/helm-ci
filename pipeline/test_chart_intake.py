@@ -243,6 +243,34 @@ class ChartIntakeTest(unittest.TestCase):
         with self.assertRaises(chart_intake.IntakeError):
             chart_intake.register_root(self.roots_file, self.default_root, root, "/Users/customer/private")
 
+    def test_build_index_matches_rescan_and_never_writes(self) -> None:
+        root = self.base / "owned"
+        (root / "FIJI").mkdir(parents=True)
+        write_mbtiles(root / "FIJI" / "lagoon.mbtiles")
+        write_geojson(root / "anchorages.geojson")
+        chart_intake.register_root(self.roots_file, self.default_root, root)
+        persisted, _ = chart_intake.rescan(self.roots_file, self.index_file, self.default_root)
+
+        registry = chart_intake.load_registry_readonly(self.roots_file, self.default_root)
+        self.index_file.unlink()
+        live = chart_intake.build_index(registry)
+        self.assertFalse(self.index_file.exists())
+        for key in ("schema", "fingerprint", "status", "chart_count", "roots", "charts", "warnings"):
+            self.assertEqual(live[key], persisted[key])
+        self.assertEqual({item["group"] for item in live["charts"]}, {"FIJI", "."})
+
+    def test_load_registry_readonly_synthesizes_default_without_creating_files(self) -> None:
+        registry = chart_intake.load_registry_readonly(self.roots_file, self.default_root)
+        self.assertEqual(registry["schema"], chart_intake.ROOTS_SCHEMA)
+        self.assertTrue(registry["roots"][0]["default"])
+        self.assertFalse(self.roots_file.exists())
+        self.assertFalse(self.default_root.exists())
+        index = chart_intake.build_index(registry)
+        self.assertEqual(index["chart_count"], 0)
+        self.assertEqual(index["roots"][0]["status"], "unavailable")
+        self.assertFalse(self.roots_file.exists())
+        self.assertFalse(self.default_root.exists())
+
 
 def write_enc_cell(path: Path) -> None:
     """A .000 with a syntactically valid ISO 8211 leader (validation stubbed in tests)."""

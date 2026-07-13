@@ -783,5 +783,202 @@ class HelmPackdCatalogStalenessTest(unittest.TestCase):
         self.assertNotIn("age_days", nodate)
 
 
+def post_json_body(url: str, payload: dict) -> tuple[int, dict]:
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=5) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+
+class HelmPackdChartIntakeContractTest(unittest.TestCase):
+    """INTAKE-5 parity: /chart-index + /chart-roots vs the chart_intake.py oracle.
+
+    The .000 fixture is deliberately junk: a valid-leader cell diverges by
+    design (the oracle may have pyogrio, helm-packd never does), while junk
+    yields status+code parity on every interpreter. Fingerprints share the
+    sha256: prefix but differ by capability seed; generated_at is wall-clock.
+    Both are normalized out below.
+    """
+
+    VOLATILE_INDEX_KEYS = ("generated_at", "fingerprint")
+
+    def setUp(self) -> None:
+        self.bin = Path(os.environ["HELM_PACKD_BIN"])
+        if not self.bin.exists() or not os.access(self.bin, os.X_OK):
+            self.skipTest(f"HELM_PACKD_BIN is not executable: {self.bin}")
+        sys.path.insert(0, str(ROOT / "pipeline"))
+        import chart_intake  # noqa: PLC0415 - oracle import pinned to this repo
+
+        self.chart_intake = chart_intake
+        self.tmp = tempfile.TemporaryDirectory()
+        self.tmp_path = Path(self.tmp.name)
+        self.library = self.tmp_path / "library"
+        (self.library / "FIJI").mkdir(parents=True)
+        (self.library / "TONGA").mkdir(parents=True)
+        write_mbtiles(self.library / "FIJI" / "lagoon.mbtiles")
+        (self.library / "FIJI" / "lagoon.metadata.json").write_text(
+            json.dumps({"title": "Fiji Lagoon", "license": "fixture-license"}), encoding="utf-8"
+        )
+        write_pmtiles(self.library / "TONGA" / "reef.pmtiles")
+        (self.library / "FIJI" / "passage.geojson").write_text(
+            json.dumps({
+                "type": "FeatureCollection",
+                "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [178.2, -17.8]}, "properties": {}}],
+            }),
+            encoding="utf-8",
+        )
+        (self.library / "cell.000").write_bytes(b"not a real S-57 leader..")
+        (self.library / "cell.001").write_bytes(b"junk update")
+        self.config_dir = self.tmp_path / "config"
+        self.config_dir.mkdir()
+        self.roots_file = self.config_dir / "chart-roots.json"
+        self.user_data = self.tmp_path / "user-data"
+        self.user_data.mkdir()
+        write_user_data_fixtures(self.user_data)
+        self.proc = None
+
+    def tearDown(self) -> None:
+        self._stop()
+        self.tmp.cleanup()
+        sys.path.remove(str(ROOT / "pipeline"))
+
+    def _stop(self) -> None:
+        if self.proc is None:
+            return
+        self.proc.terminate()
+        try:
+            self.proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+        if self.proc.stdout:
+            self.proc.stdout.close()
+        self.proc = None
+
+    def _boot(self, extra_env: dict | None = None) -> int:
+        port = free_port()
+        env = os.environ.copy()
+        env.pop("HELM_CHART_ROOTS", None)
+        env.pop("HELM_CHART_ROOTS_FILE", None)
+        env["HELM_MBTILES_DIR"] = str(self.library)
+        env["HELM_CONFIG"] = str(self.config_dir)
+        env["HELM_USER_DATA_ROOT"] = str(self.user_data)
+        env["HELM_BIND"] = "127.0.0.1"
+        env.update(extra_env or {})
+        self.proc = subprocess.Popen(
+            [str(self.bin), str(port)],
+            cwd=str(ROOT), env=env, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, text=True,
+        )
+        deadline = time.time() + 5
+        last = None
+        while time.time() < deadline:
+            if self.proc.poll() is not None:
+                out = self.proc.stdout.read() if self.proc.stdout else ""
+                self.fail(f"helm-packd exited early with {self.proc.returncode}: {out}")
+            try:
+                status, data = request_json(f"http://127.0.0.1:{port}/health")
+                if status == 200 and data.get("engine") == "helm-packd":
+                    return port
+            except (OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
+                last = exc
+                time.sleep(0.05)
+        self.fail(f"helm-packd did not become ready: {last}")
+
+    def _oracle_index(self) -> dict:
+        registry = self.chart_intake.load_registry_readonly(self.roots_file, self.library)
+        return self.chart_intake.build_index(registry)
+
+    def _normalized(self, index: dict) -> dict:
+        pruned = {k: v for k, v in index.items() if k not in self.VOLATILE_INDEX_KEYS}
+        for chart in pruned.get("charts", []):
+            if chart.get("extension") == ".000":
+                # pyogrio-vs-no-driver divergence is message-level only; keep status+code.
+                chart.get("validation", {}).pop("message", None)
+        return pruned
+
+    def test_chart_index_matches_oracle_and_is_read_only(self) -> None:
+        port = self._boot()
+        status, served = request_json(f"http://127.0.0.1:{port}/chart-index")
+        self.assertEqual(status, 200)
+        self.assertTrue(served["fingerprint"].startswith("sha256:"))
+        expected = self._oracle_index()
+        self.assertEqual(self._normalized(served), self._normalized(expected))
+        self.assertNotIn(str(self.tmp_path), json.dumps(served))
+        self.assertFalse(self.roots_file.exists())
+        self.assertFalse((self.config_dir / "chart-index.json").exists())
+
+    def test_chart_roots_get_matches_oracle_shape(self) -> None:
+        port = self._boot()
+        status, served = request_json(f"http://127.0.0.1:{port}/chart-roots")
+        self.assertEqual(status, 200)
+        self.assertEqual(served["source"], "default")
+        registry = self.chart_intake.load_registry_readonly(self.roots_file, self.library)
+        expected = self.chart_intake.public_roots(registry)
+        served_rows = [{k: v for k, v in row.items() if k != "added_at"} for row in served["roots"]]
+        expected_rows = [{k: v for k, v in row.items() if k != "added_at"} for row in expected["roots"]]
+        self.assertEqual(served_rows, expected_rows)
+
+    def test_chart_roots_mutations_interoperate_with_cli_registry(self) -> None:
+        port = self._boot()
+        extra = self.tmp_path / "ChartLocker"
+        extra.mkdir()
+        write_mbtiles(extra / "harbor.mbtiles")
+
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(extra)})
+        self.assertEqual(status, 200)
+        self.assertEqual(body["status"], "ok")
+        self.assertTrue(body["changed"])
+        self.assertEqual(body["root"]["label"], "ChartLocker")
+        self.assertNotIn("path", body["root"])
+        # The registry the C++ daemon wrote is the CLI's registry: schema-valid,
+        # same sha256 root id, and idempotent when re-registered via the oracle.
+        registry = self.chart_intake.ensure_registry(self.roots_file, self.library)
+        self.assertEqual(body["root"]["id"], self.chart_intake._root_id(extra.resolve()))
+        oracle_row, oracle_changed = self.chart_intake.register_root(self.roots_file, self.library, extra)
+        self.assertFalse(oracle_changed)
+        self.assertEqual(oracle_row["id"], body["root"]["id"])
+        self.assertEqual({row["id"] for row in registry["roots"]},
+                         {row["id"] for row in self.chart_intake.ensure_registry(self.roots_file, self.library)["roots"]})
+
+        status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertIn("harbor", catalog)
+
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(extra)})
+        self.assertEqual(status, 200)
+        self.assertFalse(body["changed"])
+
+        default_id = self.chart_intake._root_id(self.library.resolve())
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots/remove", {"id": default_id})
+        self.assertEqual(status, 422)
+        self.assertEqual(body["error"], "chart_root_rejected")
+
+        added_id = self.chart_intake._root_id(extra.resolve())
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots/remove", {"id": added_id})
+        self.assertEqual(status, 200)
+        self.assertEqual(body["removed"]["id"], added_id)
+        self.assertTrue((extra / "harbor.mbtiles").is_file())
+        status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+        self.assertEqual(status, 200)
+        self.assertNotIn("harbor", catalog)
+
+    def test_env_managed_roots_reject_mutations_with_named_conflict(self) -> None:
+        port = self._boot({"HELM_CHART_ROOTS": json.dumps([str(self.library)])})
+        status, roots = request_json(f"http://127.0.0.1:{port}/chart-roots")
+        self.assertEqual(status, 200)
+        self.assertEqual(roots["source"], "env")
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(self.library)})
+        self.assertEqual(status, 409)
+        self.assertEqual(body["error"], "chart_roots_env_managed")
+        self.assertFalse(self.roots_file.exists())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)

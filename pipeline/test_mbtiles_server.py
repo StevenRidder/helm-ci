@@ -519,5 +519,190 @@ class PackServerTest(unittest.TestCase):
         self.assertEqual(body["profile"], "sat_first")
 
 
+def post_json_body(url, payload):
+    """POST a JSON object; returns (status, body) for 2xx and 4xx/5xx alike."""
+    request = urllib.request.Request(
+        url,
+        data=json.dumps(payload).encode("utf-8"),
+        method="POST",
+        headers={"Content-Type": "application/json"},
+    )
+    try:
+        with urllib.request.urlopen(request, timeout=5) as resp:
+            return resp.status, json.loads(resp.read().decode("utf-8"))
+    except urllib.error.HTTPError as exc:
+        return exc.code, json.loads(exc.read().decode("utf-8"))
+
+
+class ChartIntakeEndpointsTest(unittest.TestCase):
+    """INTAKE-5: /chart-index + /chart-roots HTTP seam over the INTAKE-2 registry."""
+
+    def setUp(self):
+        self.tmp = tempfile.TemporaryDirectory()
+        self.library = Path(self.tmp.name) / "library"
+        (self.library / "FIJI").mkdir(parents=True)
+        (self.library / "TONGA").mkdir(parents=True)
+        write_mbtiles(self.library / "FIJI" / "lagoon.mbtiles")
+        (self.library / "FIJI" / "passage.geojson").write_text(json.dumps({
+            "type": "FeatureCollection",
+            "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [178.2, -17.8]}, "properties": {}}],
+        }), encoding="utf-8")
+        write_pmtiles(self.library / "TONGA" / "reef.pmtiles")
+        (self.library / "cell.000").write_bytes(b"not a real S-57 leader")
+        (self.library / "cell.001").write_bytes(b"junk update")
+        self.config_dir = Path(self.tmp.name) / "config"
+        self.config_dir.mkdir()
+        self.proc = None
+
+    def tearDown(self):
+        self._stop()
+        self.tmp.cleanup()
+
+    def _stop(self):
+        if self.proc is None:
+            return
+        self.proc.terminate()
+        try:
+            self.proc.wait(timeout=5)
+        except subprocess.TimeoutExpired:
+            self.proc.kill()
+        if self.proc.stdout:
+            self.proc.stdout.close()
+        self.proc = None
+
+    def _boot(self, extra_env=None):
+        port = free_port()
+        env = os.environ.copy()
+        env.pop("HELM_CHART_ROOTS", None)
+        env.pop("HELM_CHART_ROOTS_FILE", None)
+        env["HELM_MBTILES_DIR"] = str(self.library)
+        env["HELM_CONFIG"] = str(self.config_dir)
+        env.update(extra_env or {})
+        self.proc = subprocess.Popen(
+            [sys.executable, str(SERVER), str(port)],
+            cwd=str(ROOT), env=env, stdout=subprocess.PIPE,
+            stderr=subprocess.STDOUT, text=True,
+        )
+        deadline = time.time() + 5
+        last = None
+        while time.time() < deadline:
+            if self.proc.poll() is not None:
+                out = self.proc.stdout.read() if self.proc.stdout else ""
+                self.fail(f"server exited early with {self.proc.returncode}: {out}")
+            try:
+                status, _ = request_json(f"http://127.0.0.1:{port}/catalog")
+                if status == 200:
+                    return port
+            except (OSError, urllib.error.URLError, json.JSONDecodeError) as exc:
+                last = exc
+                time.sleep(0.05)
+        self.fail(f"server did not become ready: {last}")
+
+    def test_chart_index_serves_library_inventory_read_only(self):
+        port = self._boot()
+        status, index = request_json(f"http://127.0.0.1:{port}/chart-index")
+        self.assertEqual(status, 200)
+        self.assertEqual(index["schema"], "helm.chart_intake.index.v1")
+        by_name = {item["filename"]: item for item in index["charts"]}
+        self.assertEqual(by_name["lagoon.mbtiles"]["chart_type"], "tile_pack")
+        self.assertEqual(by_name["lagoon.mbtiles"]["group"], "FIJI")
+        self.assertEqual(by_name["passage.geojson"]["chart_type"], "overlay")
+        self.assertEqual(by_name["reef.pmtiles"]["group"], "TONGA")
+        self.assertEqual(by_name["cell.000"]["chart_type"], "enc")
+        self.assertEqual(by_name["cell.000"]["group"], ".")
+        self.assertEqual(by_name["cell.000"]["update_count"], 1)
+        self.assertEqual(by_name["cell.000"]["validation"]["status"], "error")
+        self.assertEqual(len(index["roots"]), 1)
+        self.assertTrue(index["roots"][0]["default"])
+        self.assertEqual(index["roots"][0]["status"], "available")
+        # Privacy: labels + relative paths only, never the absolute library path.
+        self.assertNotIn(self.tmp.name, json.dumps(index))
+        # Read-only: looking at the index must not create registry/index files.
+        self.assertFalse((self.config_dir / "chart-roots.json").exists())
+        self.assertFalse((self.config_dir / "chart-index.json").exists())
+
+    def test_chart_roots_register_refresh_and_remove_over_http(self):
+        port = self._boot()
+        with tempfile.TemporaryDirectory() as extra_tmp:
+            extra = Path(extra_tmp) / "ChartLocker"
+            extra.mkdir()
+            write_mbtiles(extra / "harbor.mbtiles")
+
+            status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(extra)})
+            self.assertEqual(status, 200)
+            self.assertEqual(body["status"], "ok")
+            self.assertTrue(body["changed"])
+            self.assertEqual(body["root"]["label"], "ChartLocker")
+            self.assertNotIn("path", body["root"])
+            added_id = body["root"]["id"]
+            self.assertTrue((self.config_dir / "chart-roots.json").exists())
+
+            status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+            self.assertEqual(status, 200)
+            self.assertIn("harbor", catalog)
+            self.assertIn("lagoon", catalog)
+
+            status, roots = request_json(f"http://127.0.0.1:{port}/chart-roots")
+            self.assertEqual(status, 200)
+            self.assertEqual(roots["source"], "file")
+            self.assertEqual(len(roots["roots"]), 2)
+            self.assertNotIn(extra_tmp, json.dumps(roots))
+
+            status, index = request_json(f"http://127.0.0.1:{port}/chart-index")
+            self.assertEqual(status, 200)
+            self.assertIn("harbor.mbtiles", {item["filename"] for item in index["charts"]})
+
+            # Idempotent re-register of the same path reports changed=false.
+            status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(extra)})
+            self.assertEqual(status, 200)
+            self.assertFalse(body["changed"])
+
+            status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots/remove", {"id": added_id})
+            self.assertEqual(status, 200)
+            self.assertEqual(body["removed"]["id"], added_id)
+            self.assertTrue((extra / "harbor.mbtiles").is_file())  # unregister never deletes files
+
+            status, catalog = request_json(f"http://127.0.0.1:{port}/catalog")
+            self.assertEqual(status, 200)
+            self.assertNotIn("harbor", catalog)
+
+    def test_chart_roots_rejections_are_named(self):
+        port = self._boot()
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(self.library / "missing-dir")})
+        self.assertEqual(status, 422)
+        self.assertEqual(body["error"], "chart_root_rejected")
+
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"label": "no path"})
+        self.assertEqual(status, 400)
+        self.assertEqual(body["error"], "bad_chart_root_request")
+
+        # The default root row protects /catalog continuity; removing it is refused.
+        status, roots = request_json(f"http://127.0.0.1:{port}/chart-roots")
+        self.assertEqual(status, 200)
+        default_id = next(row["id"] for row in roots["roots"] if row["default"])
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots/remove", {"id": default_id})
+        self.assertEqual(status, 422)
+        self.assertEqual(body["error"], "chart_root_rejected")
+
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots/remove", {"id": "root-does-not-exist"})
+        self.assertEqual(status, 422)
+
+    def test_env_managed_roots_are_visible_but_not_mutable(self):
+        port = self._boot({"HELM_CHART_ROOTS": json.dumps([str(self.library)])})
+        status, roots = request_json(f"http://127.0.0.1:{port}/chart-roots")
+        self.assertEqual(status, 200)
+        self.assertEqual(roots["source"], "env")
+        self.assertEqual(roots["roots"][0]["label"], "library")
+
+        status, index = request_json(f"http://127.0.0.1:{port}/chart-index")
+        self.assertEqual(status, 200)
+        self.assertIn("lagoon.mbtiles", {item["filename"] for item in index["charts"]})
+
+        status, body = post_json_body(f"http://127.0.0.1:{port}/chart-roots", {"path": str(self.library)})
+        self.assertEqual(status, 409)
+        self.assertEqual(body["error"], "chart_roots_env_managed")
+        self.assertFalse((self.config_dir / "chart-roots.json").exists())
+
+
 if __name__ == "__main__":
     unittest.main(verbosity=2)
