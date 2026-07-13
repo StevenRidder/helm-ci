@@ -273,7 +273,7 @@ class LayerManifestTest(unittest.TestCase):
             # Honest enc coverage: depare present, depcnt/soundg missing (the enc gap CAT-2 renders).
             self.assertEqual(
                 payload["enc"],
-                {"expected": ["depare", "depcnt", "soundg"], "present": ["depare"], "missing": ["depcnt", "soundg"]},
+                {"expected": ["depare", "depcnt", "soundg"], "present": ["depare"], "missing": ["depcnt", "soundg"], "cells": []},
             )
             self.assertEqual(depare["freshness"]["status"], "ok")
             self.assertIn("age_days", depare["freshness"])
@@ -348,6 +348,93 @@ class LayerManifestTest(unittest.TestCase):
             self.assertNotIn("stale_at", layers["strwin"]["freshness"])
             self.assertEqual(layers["baddate"]["freshness"]["status"], "ok")
             self.assertIn("age_days", layers["baddate"]["freshness"])  # from mtime, not the bad date
+
+    def _write_enc_depth_cell(self, root: Path, cell: str, stems: list, render_date: str = "2026-05-01") -> None:
+        cell_dir = root / "enc-depth" / cell
+        cell_dir.mkdir(parents=True)
+        kinds = {"depare": "polygons", "depcnt": "lines", "soundg": "points"}
+        titles = {"depare": "Depth areas", "depcnt": "Depth contours", "soundg": "Soundings"}
+        for stem in stems:
+            (cell_dir / f"{stem}.geojson").write_text(
+                json.dumps({
+                    "type": "FeatureCollection",
+                    "features": [{"type": "Feature", "geometry": {"type": "Point", "coordinates": [-80.2, 25.7]}, "properties": {}}],
+                }),
+                encoding="utf-8",
+            )
+            (cell_dir / f"{stem}.metadata.json").write_text(
+                json.dumps({
+                    "id": f"enc-depth-{cell.lower()}-{stem}",
+                    "title": f"{cell} {titles[stem]}",
+                    "kind": kinds[stem],
+                    "tier": "enc",
+                    "source": {"label": "enc", "id": cell, "license": "enc-local"},
+                    "freshness": {"render_date": render_date},
+                }),
+                encoding="utf-8",
+            )
+
+    def test_intake7_enc_depth_cells_are_registered(self) -> None:
+        """INTAKE-7: per-cell depth under enc-depth/<CELL>/ flows through the one manifest."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_enc_depth_cell(root, "US5MIABB", ["depare", "depcnt", "soundg"])
+            self._write_enc_depth_cell(root, "NZ5FJ001", ["depare"])
+            payload = build_layer_manifest(tmp)
+            depare = next(layer for layer in payload["layers"] if layer["id"] == "enc-depth-us5miabb-depare")
+            self.assertEqual(depare["tier"], "enc")
+            self.assertEqual(depare["kind"], "polygons")
+            self.assertEqual(depare["title"], "US5MIABB Depth areas")
+            self.assertEqual(depare["url"], "/user-data/enc-depth/US5MIABB/depare.geojson")
+            self.assertEqual(depare["source"], {"label": "enc", "id": "US5MIABB", "license": "enc-local"})
+            self.assertIn("age_days", depare["freshness"])  # from sidecar render_date (decision #10)
+            ids = {layer["id"] for layer in payload["layers"]}
+            self.assertIn("enc-depth-us5miabb-soundg", ids)
+            self.assertIn("enc-depth-nz5fj001-depare", ids)
+            # The root trio stays the CAT-2 enc-gap contract; cells report per-cell coverage additively.
+            self.assertEqual(payload["enc"]["missing"], ["depare", "depcnt", "soundg"])
+            self.assertEqual(payload["enc"]["cells"], [
+                {"id": "NZ5FJ001", "present": ["depare"]},
+                {"id": "US5MIABB", "present": ["depare", "depcnt", "soundg"]},
+            ])
+            self.assertNotIn(tmp, json.dumps(payload))
+
+    def test_intake7_sidecarless_cell_gets_deterministic_defaults(self) -> None:
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            cell_dir = root / "enc-depth" / "US5GA2BC"
+            cell_dir.mkdir(parents=True)
+            (cell_dir / "depcnt.geojson").write_text(
+                json.dumps({"type": "FeatureCollection", "features": [
+                    {"type": "Feature", "geometry": {"type": "LineString", "coordinates": [[-81.0, 30.7], [-81.1, 30.8]]}, "properties": {}}]}),
+                encoding="utf-8",
+            )
+            payload = build_layer_manifest(tmp)
+            depcnt = next(layer for layer in payload["layers"] if layer["id"] == "enc-depth-us5ga2bc-depcnt")
+            self.assertEqual(depcnt["title"], "US5GA2BC Depth contours")
+            self.assertEqual(depcnt["kind"], "lines")
+            self.assertEqual(depcnt["tier"], "enc")
+            self.assertEqual(depcnt["source"], {"label": "enc", "license": "enc-local"})
+
+    def test_intake7_manifest_dedups_by_layer_id_first_wins(self) -> None:
+        """Decision #11: one manifest, several scan roots, dedup by id (first wins)."""
+        with tempfile.TemporaryDirectory() as tmp:
+            root = Path(tmp)
+            self._write_enc_depth_cell(root, "US5MIABB", ["depare"])
+            layers_dir = root / "layers"
+            layers_dir.mkdir()
+            (layers_dir / "dup.geojson").write_text(
+                json.dumps({"type": "FeatureCollection", "features": [
+                    {"type": "Feature", "geometry": {"type": "Point", "coordinates": [0.0, 0.0]}, "properties": {}}]}),
+                encoding="utf-8",
+            )
+            (layers_dir / "dup.metadata.json").write_text(
+                json.dumps({"id": "enc-depth-us5miabb-depare"}), encoding="utf-8"
+            )
+            payload = build_layer_manifest(tmp)
+            matches = [layer for layer in payload["layers"] if layer["id"] == "enc-depth-us5miabb-depare"]
+            self.assertEqual(len(matches), 1)
+            self.assertEqual(matches[0]["url"], "/user-data/enc-depth/US5MIABB/depare.geojson")
 
 
 if __name__ == "__main__":

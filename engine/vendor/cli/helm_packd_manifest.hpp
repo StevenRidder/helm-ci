@@ -103,11 +103,29 @@ JsonValue manifest_inspection_json(const JsonValue* sidecar, JsonAllocator& a) {
   return inspection;
 }
 
+// Same rule as pipeline/layer_inventory.py _slug so the two /layer-manifest
+// producers derive identical sidecar-less default ids.
+std::string manifest_slug(const std::string& text) {
+  std::string slug;
+  bool pending_dash = false;
+  for (char raw : text) {
+    const char c = static_cast<char>(std::tolower(static_cast<unsigned char>(raw)));
+    if ((c >= 'a' && c <= 'z') || (c >= '0' && c <= '9')) {
+      if (pending_dash && !slug.empty()) slug.push_back('-');
+      pending_dash = false;
+      slug.push_back(c);
+    } else {
+      pending_dash = true;
+    }
+  }
+  return slug;
+}
+
 bool append_manifest_geojson_layer(JsonValue& layers, const std::string& root, const std::string& rel_path,
                                    const std::string& layer_id, const std::string& title,
                                    const std::string& kind, const std::string& tier,
                                    const std::string& default_label, const std::string& default_license,
-                                   JsonAllocator& a) {
+                                   std::set<std::string>& seen_ids, JsonAllocator& a) {
   const std::string path = root + "/" + rel_path;
   struct stat st {};
   if (!stat_file(path, st) || !S_ISREG(st.st_mode)) return false;
@@ -116,8 +134,12 @@ bool append_manifest_geojson_layer(JsonValue& layers, const std::string& root, c
   auto sidecar = load_sidecar_metadata(path);
   const JsonValue* sidecar_obj = sidecar.get();
   const std::string stem = basename_no_ext(rel_path.substr(rel_path.find_last_of('/') + 1));
+  const std::string resolved_id =
+      sidecar_obj ? rj_string(*sidecar_obj, "id", layer_id.empty() ? stem : layer_id) : (layer_id.empty() ? stem : layer_id);
+  // One manifest, several scan roots (decision #11): dedup by layer id, first wins.
+  if (!seen_ids.insert(resolved_id).second) return false;
   JsonValue layer(rapidjson::kObjectType);
-  add_string_allow_empty(layer, "id", sidecar_obj ? rj_string(*sidecar_obj, "id", layer_id.empty() ? stem : layer_id) : (layer_id.empty() ? stem : layer_id), a);
+  add_string_allow_empty(layer, "id", resolved_id, a);
   add_string_allow_empty(layer, "title", sidecar_obj ? rj_string(*sidecar_obj, "title", title.empty() ? stem : title) : (title.empty() ? stem : title), a);
   add_string_allow_empty(layer, "kind", sidecar_obj ? rj_string(*sidecar_obj, "kind", kind.empty() ? "geojson" : kind) : (kind.empty() ? "geojson" : kind), a);
   add_string(layer, "format", "geojson", a);
@@ -160,13 +182,54 @@ JsonValue layer_manifest_value(JsonAllocator& a) {
   JsonValue enc_expected(rapidjson::kArrayType);
   JsonValue enc_present(rapidjson::kArrayType);
   JsonValue enc_missing(rapidjson::kArrayType);
+  std::set<std::string> seen_ids;
   for (const EncLayerSpec& spec : enc_layers) {
     const bool present = append_manifest_geojson_layer(layers, root, std::string(spec.stem) + ".geojson",
-                                  spec.stem, spec.title, spec.kind, spec.tier, "enc", "enc-local", a);
+                                  spec.stem, spec.title, spec.kind, spec.tier, "enc", "enc-local", seen_ids, a);
     JsonValue e1(spec.stem, a);
     enc_expected.PushBack(e1, a);
     JsonValue e2(spec.stem, a);
     (present ? enc_present : enc_missing).PushBack(e2, a);
+  }
+  // INTAKE-7: per-cell depth extracted when an ENC is indexed (enc-depth/<CELL>/).
+  // Extraction sidecars normally carry id/title/tier/freshness; the defaults below
+  // only cover hand-dropped files with no sidecar. Mirrors build_layer_manifest.
+  JsonValue enc_cells(rapidjson::kArrayType);
+  const std::string enc_depth_dir = root + "/enc-depth";
+  DIR* depth_dir = ::opendir(enc_depth_dir.c_str());
+  if (depth_dir) {
+    std::vector<std::string> cells;
+    while (dirent* ent = ::readdir(depth_dir)) {
+      const std::string name = ent->d_name;
+      if (name.empty() || name[0] == '.') continue;
+      struct stat st {};
+      // stat_file() is regular-files-only; cell entries are directories.
+      if (::stat((enc_depth_dir + "/" + name).c_str(), &st) != 0 || !S_ISDIR(st.st_mode)) continue;
+      cells.push_back(name);
+    }
+    ::closedir(depth_dir);
+    std::sort(cells.begin(), cells.end());
+    for (const std::string& cell : cells) {
+      JsonValue present(rapidjson::kArrayType);
+      for (const EncLayerSpec& spec : enc_layers) {
+        const std::string rel = "enc-depth/" + cell + "/" + spec.stem + ".geojson";
+        std::string cell_slug = manifest_slug(cell);
+        if (cell_slug.empty()) cell_slug = "cell";  // parity with chart_intake writer + Python reader
+        const std::string default_id = "enc-depth-" + cell_slug + "-" + spec.stem;
+        const std::string default_title = cell + " " + spec.title;
+        if (append_manifest_geojson_layer(layers, root, rel, default_id, default_title,
+                                          spec.kind, spec.tier, "enc", "enc-local", seen_ids, a)) {
+          JsonValue stem_value(spec.stem, a);
+          present.PushBack(stem_value, a);
+        }
+      }
+      if (!present.Empty()) {
+        JsonValue cell_row(rapidjson::kObjectType);
+        add_string_allow_empty(cell_row, "id", cell, a);
+        cell_row.AddMember("present", present, a);
+        enc_cells.PushBack(cell_row, a);
+      }
+    }
   }
   const std::string overlay_dir = root + "/layers";
   DIR* dir = ::opendir(overlay_dir.c_str());
@@ -181,16 +244,18 @@ JsonValue layer_manifest_value(JsonAllocator& a) {
     ::closedir(dir);
     std::sort(names.begin(), names.end());
     for (const std::string& filename : names) {
-      append_manifest_geojson_layer(layers, root, "layers/" + filename, "", "", "", "overlay", "owned", "private-local", a);
+      append_manifest_geojson_layer(layers, root, "layers/" + filename, "", "", "", "overlay", "owned", "private-local", seen_ids, a);
     }
   }
   manifest.AddMember("layers", layers, a);
   // Honest coverage of the expected ENC layer set so CAT-2 can surface an "enc gap"
-  // without inventing placeholder layers. present + missing partition expected.
+  // without inventing placeholder layers. present + missing partition expected;
+  // cells lists the INTAKE-7 per-cell depth coverage additively.
   JsonValue enc(rapidjson::kObjectType);
   enc.AddMember("expected", enc_expected, a);
   enc.AddMember("present", enc_present, a);
   enc.AddMember("missing", enc_missing, a);
+  enc.AddMember("cells", enc_cells, a);
   manifest.AddMember("enc", enc, a);
   return manifest;
 }

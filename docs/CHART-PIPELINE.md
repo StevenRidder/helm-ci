@@ -101,6 +101,27 @@ does not rewrite the index, so repeated scans are idempotent. The index is the h
 the type-specific runtime consumers: INTAKE-3 makes `helm-packd` serve tile packs from all
 registered roots, while the ENC and overlay paths continue to own their bytes/rendering.
 
+### Depth extraction on ENC index (INTAKE-7)
+
+Indexing a new or updated `.000` cell also runs the ENC-4 depth extraction (`ogr2ogr`
+when GDAL is installed, else the pyogrio+geopandas fallback — never a system-GDAL
+requirement), so adding an ENC yields both the S-52 chart and depth-on-satellite with no
+separate pipeline run:
+
+- Output: `HELM_USER_DATA_ROOT/enc-depth/<CELL>/{depare,depcnt,soundg}.geojson` (only the
+  layers the cell actually has) + `depth-provenance.json` + per-file `.metadata.json`
+  sidecars carrying `render_date` = the cell's DSID issue/update date (CAT-1 freshness).
+- Both `/layer-manifest` producers (`helm-packd` and `pipeline/layer_inventory.py`) scan
+  `enc-depth/*/` and register the layers in the `enc` tier, deduped by id; the manifest's
+  `enc.cells` lists per-cell coverage additively.
+- A `<CELL>.depth-provenance.json` sidecar is deposited next to the customer's cell (the
+  one sanctioned intake write into a chart root, with INTAKE-8's download deposits).
+- Idempotent: a fingerprint over the base cell + its update files skips unchanged cells;
+  deleting outputs re-extracts. A cell that can't be extracted is a named error in the
+  chart item (`depth.status/code`), the index `warnings`, the index `status`, and the
+  customer-side sidecar — never a silent skip. `--no-depth-extract` or
+  `HELM_INTAKE_DEPTH_EXTRACT=0` skips extraction as a named, visible warning.
+
 ## First run: point Helm at your charts (INTAKE-6)
 
 Both customer shapes run the **same** first-run flow; only the folder contents differ.

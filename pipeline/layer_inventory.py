@@ -953,6 +953,20 @@ def _overlay_geojson_paths(root: str) -> list[str]:
     return paths
 
 
+def _enc_depth_cell_dirs(root: str) -> list[str]:
+    """Per-cell depth output dirs written by INTAKE-7 (enc-depth/<CELL>/)."""
+    depth_dir = os.path.join(root, "enc-depth")
+    if not os.path.isdir(depth_dir):
+        return []
+    cells = []
+    for name in sorted(os.listdir(depth_dir)):
+        if name.startswith("."):
+            continue
+        if os.path.isdir(os.path.join(depth_dir, name)):
+            cells.append(name)
+    return cells
+
+
 def _default_user_data_root() -> str:
     explicit = os.environ.get("HELM_USER_DATA_ROOT")
     if explicit:
@@ -968,11 +982,21 @@ def build_layer_manifest(user_data_root: Optional[str] = None) -> dict:
 
     root = os.path.expanduser(user_data_root or _default_user_data_root())
     layers: list[dict] = []
+    seen_ids: set[str] = set()
     enc_expected: list[str] = []
     enc_present: list[str] = []
     enc_missing: list[str] = []
+
+    def _add(layer: Optional[dict]) -> bool:
+        # One manifest, several scan roots (decision #11): dedup by layer id, first wins.
+        if not layer or str(layer.get("id")) in seen_ids:
+            return False
+        seen_ids.add(str(layer.get("id")))
+        layers.append(layer)
+        return True
+
     for stem, spec in ENC_GEOJSON_LAYERS.items():
-        layer = _layer_from_geojson_file(
+        added = _add(_layer_from_geojson_file(
             root,
             f"{stem}.geojson",
             layer_id=stem,
@@ -981,24 +1005,41 @@ def build_layer_manifest(user_data_root: Optional[str] = None) -> dict:
             tier=spec["tier"],
             default_label="enc",
             default_license="enc-local",
-        )
+        ))
         enc_expected.append(stem)
-        if layer:
-            layers.append(layer)
-            enc_present.append(stem)
-        else:
-            enc_missing.append(stem)
+        (enc_present if added else enc_missing).append(stem)
+    # INTAKE-7: per-cell depth extracted when an ENC is indexed (enc-depth/<CELL>/).
+    # The extraction sidecars carry id/title/tier/freshness(render_date); the defaults
+    # below only cover hand-dropped files with no sidecar.
+    enc_cells: list[dict] = []
+    for cell in _enc_depth_cell_dirs(root):
+        present: list[str] = []
+        for stem, spec in ENC_GEOJSON_LAYERS.items():
+            if _add(_layer_from_geojson_file(
+                root,
+                os.path.join("enc-depth", cell, f"{stem}.geojson"),
+                # Fallback "cell" matches chart_intake's writer slug, so a sidecar-less
+                # cell dir yields the same default id across both /layer-manifest producers.
+                layer_id="enc-depth-%s-%s" % (re.sub(r"[^a-z0-9]+", "-", cell.lower()).strip("-") or "cell", stem),
+                title="%s %s" % (cell, spec["title"]),
+                kind=spec["kind"],
+                tier=spec["tier"],
+                default_label="enc",
+                default_license="enc-local",
+            )):
+                present.append(stem)
+        if present:
+            enc_cells.append({"id": cell, "present": present})
     for rel_path in _overlay_geojson_paths(root):
-        layer = _layer_from_geojson_file(root, rel_path)
-        if layer:
-            layers.append(layer)
+        _add(_layer_from_geojson_file(root, rel_path))
     layers.sort(key=lambda item: (str(item.get("tier")), str(item.get("id"))))
     return {
         "schema": LAYER_MANIFEST_SCHEMA,
         "layers": layers,
         # Honest coverage of the expected ENC set so CAT-2 can surface an "enc gap"
-        # without inventing placeholder layers. present + missing partition expected.
-        "enc": {"expected": enc_expected, "present": enc_present, "missing": enc_missing},
+        # without inventing placeholder layers. present + missing partition expected;
+        # cells lists the INTAKE-7 per-cell depth coverage additively.
+        "enc": {"expected": enc_expected, "present": enc_present, "missing": enc_missing, "cells": enc_cells},
     }
 
 

@@ -218,6 +218,56 @@ def write_user_data_fixtures(user_root: Path) -> None:
         ),
         encoding="utf-8",
     )
+    # INTAKE-7: per-cell depth extracted when an ENC is indexed lands under
+    # enc-depth/<CELL>/ with .metadata.json sidecars; the manifest registers it.
+    cell_dir = user_root / "enc-depth" / "US5FJ001"
+    cell_dir.mkdir(parents=True)
+    (cell_dir / "depare.geojson").write_text(
+        json.dumps(
+            {
+                "type": "FeatureCollection",
+                "features": [
+                    {
+                        "type": "Feature",
+                        "geometry": {
+                            "type": "Polygon",
+                            "coordinates": [[[178.6, -18.0], [178.9, -18.0], [178.9, -17.8], [178.6, -17.8], [178.6, -18.0]]],
+                        },
+                        "properties": {"DRVAL1": 0},
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    (cell_dir / "depare.metadata.json").write_text(
+        json.dumps(
+            {
+                "id": "enc-depth-us5fj001-depare",
+                "title": "US5FJ001 Depth areas",
+                "kind": "polygons",
+                "tier": "enc",
+                "source": {"label": "enc", "id": "US5FJ001", "license": "enc-local"},
+                "freshness": {"render_date": _iso_days_ago(30)[:10]},
+            }
+        ),
+        encoding="utf-8",
+    )
+    (cell_dir / "depth-provenance.json").write_text(
+        json.dumps({"schema": "helm.depth_provenance.v1", "source": "enc", "cell": "US5FJ001"}),
+        encoding="utf-8",
+    )
+    # Colliding id in the layers/ drop folder: the manifest keeps ONE entry per id
+    # (first wins — the enc-depth cell), never a double-draw (decision #11).
+    (layers_dir / "dup_depth.geojson").write_text(
+        json.dumps({"type": "FeatureCollection", "features": [
+            {"type": "Feature", "geometry": {"type": "Point", "coordinates": [178.0, -18.0]}, "properties": {}}]}),
+        encoding="utf-8",
+    )
+    (layers_dir / "dup_depth.metadata.json").write_text(
+        json.dumps({"id": "enc-depth-us5fj001-depare", "title": "Dup of the depth layer"}),
+        encoding="utf-8",
+    )
 
 
 def request_json(url: str) -> tuple[int, dict]:
@@ -606,6 +656,19 @@ class HelmPackdContractTest(unittest.TestCase):
         self.assertEqual(manifest["enc"]["expected"], ["depare", "depcnt", "soundg"])
         self.assertEqual(manifest["enc"]["present"], ["depare"])
         self.assertEqual(manifest["enc"]["missing"], ["depcnt", "soundg"])
+        # INTAKE-7: the per-cell auto-extracted depth registers through the same manifest.
+        cell_depare = next(layer for layer in manifest["layers"] if layer["id"] == "enc-depth-us5fj001-depare")
+        self.assertEqual(cell_depare["tier"], "enc")
+        self.assertEqual(cell_depare["kind"], "polygons")
+        self.assertEqual(cell_depare["title"], "US5FJ001 Depth areas")
+        self.assertEqual(cell_depare["url"], "/user-data/enc-depth/US5FJ001/depare.geojson")
+        self.assertEqual(cell_depare["source"], {"label": "enc", "id": "US5FJ001", "license": "enc-local"})
+        self.assertIn("age_days", cell_depare["freshness"])  # from the sidecar render_date (decision #10)
+        self.assertEqual(manifest["enc"]["cells"], [{"id": "US5FJ001", "present": ["depare"]}])
+        # Decision #11: one manifest, dedup by id — the colliding layers/ overlay must not double-draw.
+        self.assertEqual(
+            len([layer for layer in manifest["layers"] if layer["id"] == "enc-depth-us5fj001-depare"]), 1)
+        self.assertNotIn("Dup of the depth layer", json.dumps(manifest))
         self.assertEqual(depare["freshness"]["status"], "ok")
         self.assertIn("age_days", depare["freshness"])
         # CAT-1: an overlay past its declared freshness window is honestly reported stale.

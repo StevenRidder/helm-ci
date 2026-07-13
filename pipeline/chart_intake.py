@@ -15,8 +15,11 @@ import hashlib
 import json
 import math
 import os
+import re
+import shutil
 import sqlite3
 import struct
+import subprocess
 import sys
 import tempfile
 import urllib.parse
@@ -26,7 +29,7 @@ from typing import Any, Iterable
 
 ROOTS_SCHEMA = "helm.chart_intake.roots.v1"
 INDEX_SCHEMA = "helm.chart_intake.index.v1"
-INDEXER_VERSION = 1
+INDEXER_VERSION = 2
 RECOGNIZED = {".mbtiles": "tile_pack", ".pmtiles": "tile_pack", ".000": "enc", ".geojson": "overlay"}
 CHART_CLASSES = [
     {"chart_type": "tile_pack", "extensions": [".mbtiles", ".pmtiles"], "consumer": "helm-packd"},
@@ -34,9 +37,27 @@ CHART_CLASSES = [
     {"chart_type": "overlay", "extensions": [".geojson"], "consumer": "layer-manifest"},
 ]
 
+# INTAKE-7 — ENC-4 depth extraction wired into the index flow. Same layer set, GDAL
+# options, and provenance schema as pipeline/extract_depth.sh and
+# scripts/extract-enc-depth-pyogrio.py; per-cell output under the served user-data root.
+DEPTH_PROVENANCE_SCHEMA = "helm.depth_provenance.v1"
+DEPTH_DIR = "enc-depth"
+DEPTH_S57_LAYERS = {"depare": "DEPARE", "depcnt": "DEPCNT", "soundg": "SOUNDG"}
+DEPTH_TITLES = {"depare": "Depth areas", "depcnt": "Depth contours", "soundg": "Soundings"}
+DEPTH_KINDS = {"depare": "polygons", "depcnt": "lines", "soundg": "points"}
+OGR_S57_OPTIONS = "SPLIT_MULTIPOINT=ON,ADD_SOUNDG_DEPTH=ON,RETURN_PRIMITIVES=OFF,RETURN_LINKAGES=OFF,LNAM_REFS=OFF"
+
 
 class IntakeError(ValueError):
     """A named, user-actionable chart-intake failure."""
+
+
+class DepthExtractError(RuntimeError):
+    """A named per-cell depth-extraction failure (fails loud in the catalog)."""
+
+    def __init__(self, code: str, message: str) -> None:
+        super().__init__(message)
+        self.code = code
 
 
 def _utc_now() -> str:
@@ -457,10 +478,389 @@ def _capability_fingerprint() -> str:
         return "pyogrio:unavailable"
 
 
-def rescan(roots_file: Path, index_file: Path, default_root: Path) -> tuple[dict[str, Any], bool]:
+def default_depth_root() -> Path:
+    """The served user-data root (depth/overlays), mirroring web/serve.py and
+    helm_server's /user-data resolution — NOT default_paths' HELM_CONFIG config dir."""
+    explicit = os.environ.get("HELM_USER_DATA_ROOT")
+    if explicit:
+        return Path(explicit).expanduser()
+    config = os.environ.get("HELM_CONFIG")
+    if config:
+        return Path(config).expanduser() / "data"
+    return Path("~/.helm/data").expanduser()
+
+
+def _depth_extract_enabled() -> bool:
+    return os.environ.get("HELM_INTAKE_DEPTH_EXTRACT", "1").strip().lower() not in ("0", "false", "no", "off")
+
+
+def _depth_extractor() -> str | None:
+    """Same preference and gating as scripts/extract-user-depth.sh (ENC-4)."""
+    if shutil.which("ogr2ogr"):
+        return "gdal"
+    try:
+        import geopandas  # type: ignore  # noqa: F401
+        import pyogrio  # type: ignore  # noqa: F401
+        return "pyogrio"
+    except ImportError:
+        return None
+
+
+def _enc_fingerprint(base: Path, updates: list[Path]) -> str:
+    digest = hashlib.sha256(f"enc-depth:{INDEXER_VERSION}\n".encode())
+    for path in [base, *sorted(updates)]:
+        stat = path.stat()
+        digest.update(f"{path.name}\0{stat.st_size}\0{stat.st_mtime_ns}\n".encode("utf-8", "surrogateescape"))
+    return "sha256:" + digest.hexdigest()
+
+
+# Absolute/home/file-URL/Windows paths with >=2 components — GDAL error text echoes the
+# customer's datasource path, which must never enter the privacy-safe index or sidecars.
+_ABS_PATH_RE = re.compile(
+    r"""(?:file://)?/(?:[^\s/'"]+/)+[^\s'"]*   # unix absolute path, >=2 components
+      | [A-Za-z]:\\(?:[^\s\\'"]+\\?)+           # windows path
+      | ~/[^\s'"]+                               # home-relative path
+    """,
+    re.VERBOSE,
+)
+
+
+def _scrub_message(text: Any, limit: int = 280) -> str:
+    """Redact filesystem paths from a tool/exception message, keeping only basenames so
+    the error stays actionable ("cannot open US5FJ001.000") without leaking the tree."""
+    value = text if isinstance(text, str) else str(text)
+
+    def _basename(match: "re.Match[str]") -> str:
+        token = match.group(0).rstrip("/\\")
+        base = re.split(r"[/\\]", token)[-1] if token else ""
+        return f"<path>/{base}" if base else "<path>"
+
+    scrubbed = _ABS_PATH_RE.sub(_basename, value).strip()
+    return scrubbed[-limit:] if len(scrubbed) > limit else scrubbed
+
+
+def _run_ogr(cmd: list[str], what: str) -> subprocess.CompletedProcess:
+    """Run a GDAL tool. A timeout or spawn failure becomes a named DepthExtractError so a
+    single stuck cell fails loud per-cell instead of aborting the whole rescan."""
+    env = dict(os.environ)
+    env.setdefault("OGR_S57_OPTIONS", OGR_S57_OPTIONS)
+    try:
+        return subprocess.run(cmd, capture_output=True, text=True, timeout=600, env=env)
+    except subprocess.TimeoutExpired as exc:
+        raise DepthExtractError("depth_extract_timeout", f"{what} timed out after 600s") from exc
+    except (OSError, subprocess.SubprocessError) as exc:
+        raise DepthExtractError("depth_extract_failed", f"{what} could not run: {_scrub_message(exc)}") from exc
+
+
+def _list_enc_layers(enc: Path, extractor: str) -> list[str]:
+    if extractor == "gdal":
+        proc = _run_ogr(["ogrinfo", "-ro", "-q", str(enc)], "ogrinfo")
+        if proc.returncode != 0:
+            raise DepthExtractError("depth_cell_unreadable", f"ogrinfo could not open the cell: {_scrub_message(proc.stderr)}")
+        return re.findall(r"^\d+:\s+(\S+)", proc.stdout, flags=re.MULTILINE)
+    try:
+        import pyogrio  # type: ignore
+        return [str(row[0]) for row in pyogrio.list_layers(str(enc))]
+    except Exception as exc:
+        raise DepthExtractError("depth_cell_unreadable", f"pyogrio could not open the cell: {exc}") from exc
+
+
+def _enc_render_date(enc: Path, extractor: str) -> str | None:
+    """ENC data-valid-as-of date from the cell's DSID (UADT else ISDT), for the
+    CAT-1 freshness contract. None when not derivable — never fabricated."""
+    raw: dict[str, str] = {}
+    try:
+        if extractor == "gdal":
+            proc = _run_ogr(["ogrinfo", "-ro", "-q", str(enc), "DSID"], "ogrinfo")
+            if proc.returncode != 0:
+                return None
+            for key, value in re.findall(r"DSID_(UADT|ISDT) \(String\) = (\d{8})", proc.stdout):
+                raw[key] = value
+        else:
+            from pyogrio import read_dataframe  # type: ignore
+            frame = read_dataframe(str(enc), layer="DSID", read_geometry=False)
+            for key in ("UADT", "ISDT"):
+                column = f"DSID_{key}"
+                if column in frame.columns and len(frame):
+                    value = str(frame[column].iloc[0]).strip()
+                    if re.fullmatch(r"\d{8}", value):
+                        raw[key] = value
+    except Exception:
+        return None
+    value = raw.get("UADT") or raw.get("ISDT")
+    return f"{value[0:4]}-{value[4:6]}-{value[6:8]}" if value else None
+
+
+def _extract_cell(enc: Path, out_dir: Path, extractor: str) -> dict[str, Any]:
+    """Run the ENC-4 extraction (ogr2ogr, else pyogrio+geopandas) per present layer.
+    Writes <stem>.geojson atomically into out_dir; raises DepthExtractError loudly."""
+    names = _list_enc_layers(enc, extractor)
+    present = [stem for stem, s57 in DEPTH_S57_LAYERS.items() if s57 in names]
+    if not present:
+        raise DepthExtractError("no_depth_layers_in_cell", "cell has none of DEPARE/DEPCNT/SOUNDG")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    layers: dict[str, Any] = {}
+    for stem in present:
+        s57 = DEPTH_S57_LAYERS[stem]
+        dst = out_dir / f"{stem}.geojson"
+        tmp = out_dir / f".{stem}.geojson.tmp"
+        try:
+            if extractor == "gdal":
+                tmp.unlink(missing_ok=True)
+                proc = _run_ogr(["ogr2ogr", "-f", "GeoJSON", "-t_srs", "EPSG:4326", str(tmp), str(enc), s57], f"ogr2ogr {s57}")
+                if proc.returncode != 0:
+                    raise DepthExtractError("depth_extract_failed", f"ogr2ogr {s57}: {_scrub_message(proc.stderr)}")
+                layers[stem] = {}
+            else:
+                from pyogrio import read_dataframe, write_dataframe  # type: ignore
+                os.environ.setdefault("OGR_S57_OPTIONS", OGR_S57_OPTIONS)
+                frame = read_dataframe(str(enc), layer=s57)
+                if frame.crs and frame.crs.to_epsg() != 4326:
+                    frame = frame.to_crs(4326)
+                write_dataframe(frame, str(tmp), driver="GeoJSON")
+                layers[stem] = {"features": int(len(frame))}
+            os.replace(tmp, dst)
+        except DepthExtractError:
+            tmp.unlink(missing_ok=True)
+            raise
+        except Exception as exc:
+            tmp.unlink(missing_ok=True)
+            raise DepthExtractError("depth_extract_failed", f"{extractor} {s57}: {_scrub_message(exc)}") from exc
+    return {"layers": layers, "render_date": _enc_render_date(enc, extractor)}
+
+
+def _remove_depth_outputs(out_dir: Path) -> None:
+    """Remove this cell's managed depth outputs so a failed/errored cell never leaves
+    stale or partial GeoJSON that the /layer-manifest producers would serve as valid."""
+    if not out_dir.is_dir():
+        return
+    names = [f"{stem}.geojson" for stem in DEPTH_S57_LAYERS] + \
+            [f"{stem}.metadata.json" for stem in DEPTH_S57_LAYERS] + ["depth-provenance.json"]
+    for name in names:
+        try:
+            (out_dir / name).unlink(missing_ok=True)
+        except OSError:
+            pass
+    try:
+        out_dir.rmdir()  # only succeeds if we left nothing behind (never force customer files)
+    except OSError:
+        pass
+
+
+def _write_json_if_changed(path: Path, payload: dict[str, Any]) -> None:
+    data = json.dumps(payload, indent=2, sort_keys=True) + "\n"
+    try:
+        if path.is_file() and path.read_text(encoding="utf-8") == data:
+            return
+    except (OSError, UnicodeDecodeError):
+        pass
+    path.write_text(data, encoding="utf-8")
+
+
+def _write_depth_sidecars(out_dir: Path, cell: str, present: list[str], render_date: str | None) -> None:
+    """Per-layer .metadata.json consumed by the /layer-manifest producers (decision #10:
+    render_date = the ENC edition/issue date so CAT-1 freshness is honest, never fabricated)."""
+    for stem in DEPTH_S57_LAYERS:
+        sidecar = out_dir / f"{stem}.metadata.json"
+        if stem not in present:
+            (out_dir / f"{stem}.geojson").unlink(missing_ok=True)
+            sidecar.unlink(missing_ok=True)
+            continue
+        payload: dict[str, Any] = {
+            "id": f"enc-depth-{_slug(cell)}-{stem}",
+            "title": f"{cell} {DEPTH_TITLES[stem]}",
+            "kind": DEPTH_KINDS[stem],
+            "tier": "enc",
+            "source": {"label": "enc", "id": cell, "license": "enc-local"},
+        }
+        if render_date:
+            payload["freshness"] = {"render_date": render_date}
+        _write_json_if_changed(sidecar, payload)
+
+
+def _slug(text: str) -> str:
+    # Same rule as pipeline/layer_inventory.py _slug so sidecar ids and the
+    # manifest producers' sidecar-less defaults can never diverge.
+    slug = re.sub(r"[^a-z0-9]+", "-", text.lower()).strip("-")
+    return slug or "cell"
+
+
+def _depth_dir_name(cell: str) -> str:
+    name = re.sub(r"[^A-Za-z0-9._-]+", "-", cell).strip("-.")
+    return name or "cell"
+
+
+def _read_depth_provenance(out_dir: Path) -> dict[str, Any] | None:
+    try:
+        value = json.loads((out_dir / "depth-provenance.json").read_text(encoding="utf-8"))
+    except (OSError, UnicodeDecodeError, json.JSONDecodeError):
+        return None
+    return value if isinstance(value, dict) and value.get("schema") == DEPTH_PROVENANCE_SCHEMA else None
+
+
+def _depth_outputs_current(out_dir: Path, provenance: dict[str, Any] | None, enc_fingerprint: str) -> bool:
+    if not provenance or provenance.get("enc_fingerprint") != enc_fingerprint:
+        return False
+    layers = provenance.get("layers")
+    if not isinstance(layers, dict) or not layers:
+        return False
+    for stem in layers:
+        if stem not in DEPTH_S57_LAYERS:
+            return False
+        if not (out_dir / f"{stem}.geojson").is_file() or not (out_dir / f"{stem}.metadata.json").is_file():
+            return False
+    return True
+
+
+def _depth_state_for_fingerprint(depth_root: Path, cells: list[str]) -> list[dict[str, Any]]:
+    """Deterministic depth-output state folded into the index fingerprint, so deleted or
+    hand-edited outputs honestly invalidate a previously green index."""
+    state = []
+    for cell in sorted(cells):
+        out_dir = depth_root / DEPTH_DIR / cell
+        files = []
+        for name in sorted([f"{stem}.geojson" for stem in DEPTH_S57_LAYERS] + [f"{stem}.metadata.json" for stem in DEPTH_S57_LAYERS] + ["depth-provenance.json"]):
+            path = out_dir / name
+            if path.is_file():
+                stat = path.stat()
+                files.append([name, stat.st_size, stat.st_mtime_ns])
+        state.append({"cell": cell, "files": files})
+    return state
+
+
+def _customer_depth_sidecar(cell_path: Path, payload: dict[str, Any], warnings: list[dict[str, str]], root_id: str, relative: str) -> None:
+    """Deposit the depth-provenance sidecar alongside the customer's cell (chart-intake-v1:
+    the ENC depth extract is one of the two writers allowed into a chart root)."""
+    sidecar = cell_path.with_suffix(".depth-provenance.json")
+    try:
+        _write_json_if_changed(sidecar, payload)
+    except OSError as exc:
+        warnings.append({
+            "code": "depth_sidecar_unwritable",
+            "root_id": root_id,
+            "relative_path": relative,
+            "message": f"cannot write depth-provenance sidecar next to the cell: {exc.strerror or exc}",
+        })
+
+
+def _depth_pass(
+    enc_cells: list[tuple[dict[str, Any], Path, list[Path]]],
+    depth_root: Path,
+    extract_depth: bool,
+    scan_warnings: list[dict[str, str]],
+) -> int:
+    """INTAKE-7: run the ENC-4 depth extraction for every indexed .000 cell.
+    Mutates each chart item with a public `depth` record; returns the error count.
+    Idempotent via enc_fingerprint; failures are named in the item, the scan
+    warnings, and the customer-side sidecar — never a silent skip."""
+    errors = 0
+    extractor = _depth_extractor()
+    seen_cells: dict[str, str] = {}
+    for item, cell_path, update_paths in enc_cells:
+        cell = cell_path.name[: -len(".000")]
+        dir_name = _depth_dir_name(cell)
+        output_rel = f"{DEPTH_DIR}/{dir_name}/"
+        if item["validation"]["status"] == "error":
+            item["depth"] = {"status": "skipped", "code": "chart_invalid",
+                             "message": "cell failed chart validation; depth extraction not attempted"}
+            continue
+        if dir_name in seen_cells:
+            item["depth"] = {"status": "skipped", "code": "duplicate_enc_cell",
+                             "message": f"cell already extracted from {seen_cells[dir_name]}"}
+            scan_warnings.append({"code": "duplicate_enc_cell_depth_skipped", "root_id": item["root_id"],
+                                  "relative_path": item["relative_path"],
+                                  "message": "duplicate ENC cell; depth extracted once from the first indexed copy"})
+            continue
+        seen_cells[dir_name] = item["relative_path"]
+
+        out_dir = depth_root / DEPTH_DIR / dir_name
+        enc_fingerprint = _enc_fingerprint(cell_path, update_paths)
+        provenance = _read_depth_provenance(out_dir)
+        depth: dict[str, Any]
+        sidecar_payload: dict[str, Any] | None = None
+        if _depth_outputs_current(out_dir, provenance, enc_fingerprint):
+            depth = {"status": "ok", "code": "up_to_date", "output": output_rel,
+                     "layers": sorted(provenance["layers"]), "extracted_at": provenance.get("extracted_at")}
+            if provenance.get("render_date"):
+                depth["render_date"] = provenance["render_date"]
+        elif not extract_depth:
+            depth = {"status": "skipped", "code": "depth_extract_disabled",
+                     "message": "depth extraction disabled (HELM_INTAKE_DEPTH_EXTRACT=0 or --no-depth-extract)"}
+            scan_warnings.append({"code": "depth_extract_disabled", "root_id": item["root_id"],
+                                  "relative_path": item["relative_path"],
+                                  "message": "ENC cell indexed without depth extraction; depth-on-sat will be missing or stale"})
+        elif extractor is None:
+            depth = {"status": "error", "code": "depth_extractor_unavailable",
+                     "message": "no ENC depth extractor — install GDAL (ogr2ogr) or pip3 install pyogrio geopandas"}
+        else:
+            try:
+                result = _extract_cell(cell_path, out_dir, extractor)
+                render_date = result.get("render_date")
+                present = sorted(result["layers"])
+                _write_depth_sidecars(out_dir, cell, present, render_date)
+                provenance_payload: dict[str, Any] = {
+                    "schema": DEPTH_PROVENANCE_SCHEMA,
+                    "source": "enc",
+                    "cell": cell,
+                    "root_id": item["root_id"],
+                    "relative_path": item["relative_path"],
+                    "enc_mtime": int(cell_path.stat().st_mtime),
+                    "enc_fingerprint": enc_fingerprint,
+                    "update_count": len(update_paths),
+                    "extractor": extractor,
+                    "extracted_at": _utc_now(),
+                    "layers": result["layers"],
+                }
+                if render_date:
+                    provenance_payload["render_date"] = render_date
+                else:
+                    scan_warnings.append({"code": "enc_render_date_unavailable", "root_id": item["root_id"],
+                                          "relative_path": item["relative_path"],
+                                          "message": "cell DSID has no usable ISDT/UADT; manifest freshness falls back to file dates"})
+                _write_json_if_changed(out_dir / "depth-provenance.json", provenance_payload)
+                depth = {"status": "ok", "code": "extracted", "output": output_rel,
+                         "layers": present, "extracted_at": provenance_payload["extracted_at"]}
+                if render_date:
+                    depth["render_date"] = render_date
+            except DepthExtractError as exc:
+                depth = {"status": "error", "code": exc.code, "message": _scrub_message(exc)}
+            except OSError as exc:
+                depth = {"status": "error", "code": "depth_output_unwritable",
+                         "message": f"cannot write depth output under {DEPTH_DIR}/: {_scrub_message(exc.strerror or exc)}"}
+            except Exception as exc:
+                # Defense in depth: no single cell may abort the whole rescan with an
+                # unhandled traceback — it fails loud per-cell like every other error.
+                depth = {"status": "error", "code": "depth_unexpected_error",
+                         "message": f"unexpected extraction error: {_scrub_message(exc)}"}
+        if depth["status"] == "error":
+            errors += 1
+            # A cell we could not extract must not leave stale/partial GeoJSON that the
+            # manifest would serve as valid — show the honest enc gap instead.
+            _remove_depth_outputs(out_dir)
+            scan_warnings.append({"code": depth["code"], "root_id": item["root_id"],
+                                  "relative_path": item["relative_path"], "message": depth["message"]})
+            sidecar_payload = {"schema": DEPTH_PROVENANCE_SCHEMA, "source": "enc", "cell": cell,
+                               "status": "error", "error": {"code": depth["code"], "message": depth["message"]},
+                               "enc_fingerprint": enc_fingerprint}
+        elif depth["status"] == "ok":
+            sidecar_payload = {"schema": DEPTH_PROVENANCE_SCHEMA, "source": "enc", "cell": cell,
+                               "status": "ok", "output": output_rel, "enc_fingerprint": enc_fingerprint,
+                               "extracted_at": depth.get("extracted_at")}
+            if depth.get("render_date"):
+                sidecar_payload["render_date"] = depth["render_date"]
+        item["depth"] = depth
+        if sidecar_payload is not None:
+            _customer_depth_sidecar(cell_path, sidecar_payload, scan_warnings, item["root_id"], item["relative_path"])
+    return errors
+
+
+def rescan(roots_file: Path, index_file: Path, default_root: Path, *, depth_root: Path | None = None, extract_depth: bool | None = None) -> tuple[dict[str, Any], bool]:
     registry = ensure_registry(roots_file, default_root)
+    resolved_depth_root = Path(depth_root).expanduser() if depth_root else default_depth_root()
+    resolved_extract = _depth_extract_enabled() if extract_depth is None else bool(extract_depth)
     fingerprint = hashlib.sha256(f"chart-intake:{INDEXER_VERSION}:{_capability_fingerprint()}\n".encode())
     charts: list[dict[str, Any]] = []
+    enc_cells: list[tuple[dict[str, Any], Path, list[Path]]] = []
     public_root_rows: list[dict[str, Any]] = []
     scan_warnings: list[dict[str, str]] = []
 
@@ -563,6 +963,8 @@ def rescan(roots_file: Path, index_file: Path, default_root: Path) -> tuple[dict
                 item["update_count"] = len(enc_updates)
                 if enc_updates:
                     item["latest_update"] = max(enc_updates)
+                update_paths = [path.with_suffix(f".{number:03d}") for number in enc_updates]
+                enc_cells.append((item, path, [update for update in update_paths if update.is_file()]))
             root_charts.append(item)
 
         charts.extend(root_charts)
@@ -570,10 +972,27 @@ def rescan(roots_file: Path, index_file: Path, default_root: Path) -> tuple[dict
         root_row["group_count"] = len({item["group"] for item in root_charts})
         public_root_rows.append(root_row)
 
+    # INTAKE-7: indexing an ENC also produces its depth-on-sat GeoJSON. The pass runs
+    # before the fingerprint is sealed so the depth outcome (and the output files
+    # themselves) invalidate a stale index instead of hiding behind one.
+    depth_error_count = _depth_pass(enc_cells, resolved_depth_root, resolved_extract, scan_warnings)
+    for entry in _depth_state_for_fingerprint(resolved_depth_root, sorted({_depth_dir_name(path.name[: -len(".000")]) for _, path, _ in enc_cells})):
+        fingerprint.update(json.dumps(entry, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+        fingerprint.update(b"\n")
+    for item, _, _ in enc_cells:
+        # Normalized: a fresh "extracted" and a later "up_to_date" describe the same
+        # outputs, and extracted_at is already pinned by the provenance file stats above —
+        # only real outcome changes (ok/skipped/error, layers, errors) reshape the index.
+        normalized = {key: value for key, value in item["depth"].items() if key != "extracted_at"}
+        if normalized.get("status") == "ok":
+            normalized["code"] = "ok"
+        fingerprint.update(json.dumps({"depth": normalized}, sort_keys=True, separators=(",", ":")).encode("utf-8"))
+        fingerprint.update(b"\n")
+
     fingerprint_value = "sha256:" + fingerprint.hexdigest()
     invalid_count = sum(item["validation"]["status"] == "error" for item in charts)
     warning_count = sum(item["validation"]["status"] == "warning" or bool(item["warnings"]) for item in charts) + len(scan_warnings)
-    status = "error" if invalid_count else ("warning" if warning_count else "ok")
+    status = "error" if invalid_count or depth_error_count else ("warning" if warning_count else "ok")
     payload = {
         "schema": INDEX_SCHEMA,
         "indexer_version": INDEXER_VERSION,
@@ -584,6 +1003,7 @@ def rescan(roots_file: Path, index_file: Path, default_root: Path) -> tuple[dict
         "chart_count": len(charts),
         "invalid_count": invalid_count,
         "warning_count": warning_count,
+        "depth_error_count": depth_error_count,
         "roots": public_root_rows,
         "charts": charts,
         "warnings": scan_warnings,
@@ -610,6 +1030,7 @@ def _summary(index: dict[str, Any], changed: bool) -> dict[str, Any]:
         "chart_count": index["chart_count"],
         "invalid_count": index["invalid_count"],
         "warning_count": index["warning_count"],
+        "depth_error_count": index.get("depth_error_count", 0),
     }
 
 
@@ -619,6 +1040,10 @@ def _parser() -> argparse.ArgumentParser:
     parser.add_argument("--roots-file", type=Path, default=roots_file)
     parser.add_argument("--index-file", type=Path, default=index_file)
     parser.add_argument("--default-root", type=Path, default=default_root)
+    parser.add_argument("--depth-root", type=Path, default=None,
+                        help="user-data root for extracted ENC depth GeoJSON (default: HELM_USER_DATA_ROOT / HELM_CONFIG/data / ~/.helm/data)")
+    parser.add_argument("--no-depth-extract", action="store_true",
+                        help="index without running the INTAKE-7 ENC depth extraction (skips are named in the catalog)")
     commands = parser.add_subparsers(dest="command", required=True)
     register = commands.add_parser("register", help="register an existing chart folder and rescan")
     register.add_argument("path", type=Path)
@@ -634,27 +1059,28 @@ def _parser() -> argparse.ArgumentParser:
 
 def main(argv: list[str] | None = None) -> int:
     args = _parser().parse_args(argv)
+    depth_options = {"depth_root": args.depth_root, "extract_depth": False if args.no_depth_extract else None}
     try:
         if args.command == "register":
             root, registry_changed = register_root(args.roots_file, args.default_root, args.path, args.label)
-            index, index_changed = rescan(args.roots_file, args.index_file, args.default_root)
+            index, index_changed = rescan(args.roots_file, args.index_file, args.default_root, **depth_options)
             result = _summary(index, index_changed)
             result.update({"registered": {key: root[key] for key in ("id", "label", "default")}, "registry_changed": registry_changed})
         elif args.command == "unregister":
             removed = unregister_root(args.roots_file, args.default_root, args.root_or_path)
-            index, changed = rescan(args.roots_file, args.index_file, args.default_root)
+            index, changed = rescan(args.roots_file, args.index_file, args.default_root, **depth_options)
             result = _summary(index, changed)
             result["unregistered"] = {key: removed[key] for key in ("id", "label", "default")}
         elif args.command == "list":
             result = public_roots(ensure_registry(args.roots_file, args.default_root), args.show_paths)
         elif args.command == "catalog":
             if not args.index_file.exists():
-                result, _ = rescan(args.roots_file, args.index_file, args.default_root)
+                result, _ = rescan(args.roots_file, args.index_file, args.default_root, **depth_options)
             else:
                 _secure_private_file(args.index_file)
                 result = json.loads(args.index_file.read_text(encoding="utf-8"))
         else:
-            index, changed = rescan(args.roots_file, args.index_file, args.default_root)
+            index, changed = rescan(args.roots_file, args.index_file, args.default_root, **depth_options)
             result = _summary(index, changed)
         json.dump(result, sys.stdout, indent=2, sort_keys=True)
         sys.stdout.write("\n")

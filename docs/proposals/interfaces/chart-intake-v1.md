@@ -212,6 +212,8 @@ sat-first cockpit the chart-management surface OpenCPN users already expect.
 - ENC load + recursive cell scan: `helm_server`/`helm_tiles.cpp:366` (`HELM_ENC`/`HELM_ENC_ROOT`),
   OpenCPN SENC at `~/.helm/runtime/senc/`
 - Overlays: `docs/proposals/interfaces/layer-manifest-v1.md`, LAYER-4 drop-folder
+- Depth-on-index (INTAKE-7): `pipeline/chart_intake.py` depth pass -> `user-data/enc-depth/<CELL>/`;
+  manifest scan in `engine/vendor/cli/helm_packd_manifest.hpp` + `pipeline/layer_inventory.py`
 - Freshness: CAT-1 (`/catalog` + `/layer-manifest` staleness), CAT-2 (UI banners)
 - Pipeline overview: `docs/CHART-PIPELINE.md`; ports in `docs/PORTS.md`
 
