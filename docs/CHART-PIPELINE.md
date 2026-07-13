@@ -101,6 +101,61 @@ does not rewrite the index, so repeated scans are idempotent. The index is the h
 the type-specific runtime consumers: INTAKE-3 makes `helm-packd` serve tile packs from all
 registered roots, while the ENC and overlay paths continue to own their bytes/rendering.
 
+## First run: point Helm at your charts (INTAKE-6)
+
+Both customer shapes run the **same** first-run flow; only the folder contents differ.
+There is no per-persona switch — each consumer claims its own extensions from the
+registered trees:
+
+- **ENC-only** (the OpenCPN audience): your folders hold S-57 `*.000` cells. The registry
+  indexes and catalogs them; **rendering** is rooted at `HELM_ENC_ROOT` (recursive scan,
+  default `~/.helm/runtime/enc`; `HELM_ENC` remains the legacy single-cell override), and
+  the SENC compile + depth extract happen on the cells it finds.
+- **Sat-first** (the North Star default): your folders hold `*.mbtiles`/`*.pmtiles`
+  satellite/raster packs (plus optional ENC cells and `*.geojson` overlays alongside).
+  `helm-packd` serves every pack found in the registered roots; MapLibre composites the
+  ENC/depth/aids overlays on top.
+
+One command bootstraps a box — it creates the registry + default root, registers your
+existing folders in place, rebuilds the index, live-rescans a running `helm-packd`, and
+prints what it found per type:
+
+```bash
+scripts/helm-first-run.sh \
+  --root "$HOME/Charts/South Pacific" --label "South Pacific"
+```
+
+The packaged runtime does the same at install time — `helm-first-run` ships in the
+prefix (`<prefix>/bin/helm-first-run`) and the installer seeds the registry:
+
+```bash
+scripts/install-helmcxx-runtime.sh --user \
+  --chart-root "$HOME/Charts/South Pacific"   # repeatable, existing folders only
+```
+
+`helm-packd` resolves roots as: `HELM_CHART_ROOTS_FILE` → `$HELM_CONFIG/chart-roots.json`
+→ `HELM_CHART_ROOTS` (JSON array or colon-separated, for throwaway dev runs) → the legacy
+`HELM_MBTILES_DIR` single-dir scan. The hand-wired `HELM_MBTILES_PACKS` name→file map
+still works as an **advanced override** (it disables recursive discovery) but is no
+longer how a boat is set up.
+
+### The reference boat runs this convention (zero reorganization)
+
+The live Fiji rig was migrated off its hand-wired setup by *registering* its existing
+folders — no file moved, renamed, or copied:
+
+- `~/.helm/charts` — the default root; its `fiji/` subfolder (the region group) holds the
+  converted `navionics/googlesat/bingsat/arcgis` PMTiles, so the cockpit's pack ids are
+  unchanged (unique filename stems stay the pack id).
+- The ChartLocker Dropbox source folder (`…/COS/Charts/South Pacific/Fiji`, the original
+  `Fiji_TCL2407_*.mbtiles`) — registered as a second root, replacing the hand-edited
+  `HELM_MBTILES_PACKS` map in the retired `~/.helm/basemap-packs/run.sh`.
+
+The launchd `helm-packd` unit carries `HELM_CONFIG` (the installer now writes it) and
+serves both roots from `<config>/chart-roots.json`; `POST /rescan` picks up dropped-in
+files with no restart. The rig's ENC path is unchanged (`HELM_ENC` pin for the depth
+extract shim).
+
 ## Depth-on-satellite (the wholybee technique, generalized)
 
 [wholybee/chartplotter](https://github.com/wholybee/chartplotter) is a Qt6 + GDAL **S-57

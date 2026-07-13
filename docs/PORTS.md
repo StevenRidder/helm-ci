@@ -9,7 +9,7 @@ machine, boat server, or demo process is safe to stop or replace.
 |------|---------|-------|
 | 8080 | Default `helm-server` port | Product default only. In shared environments this may already be reserved. |
 | 8090 | Optional backend service | AI, places, community/LLM, and agent weather-at-point prototype endpoints. Non-safety companion only; not required for chart/nav runtime. |
-| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by C++ `helm-packd`; `pipeline/mbtiles_server.py` remains the Python reference/oracle. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
+| 8091 | Optional BYO local pack server | Local MBTiles/PMTiles packs served by C++ `helm-packd` from the **registered chart roots** (`$HELM_CONFIG/chart-roots.json`, chart-intake-v1; `POST /rescan` picks up new files live). `HELM_MBTILES_DIR` is the legacy single-dir fallback and `HELM_MBTILES_PACKS` an advanced override. `pipeline/mbtiles_server.py` remains the Python reference/oracle. Packs are not committed. **Reserved for basemaps — other services must NOT bind it.** |
 | 8093 | RETIRED + DELETED | The Python bundle gateway (`services/wx/app.py`) was retired (WX-26) and DELETED (CLIENT-28) — `helm-envd` (:8094, C++) replaced it. Port stays reserved so nothing else squats it. |
 | 8094 | Weather data plane | C++ `helm-envd` — serves validated `helm.env.grid.v1` chunks to the cockpit (`/chunk`), plus `/health` and `/packs`. Started by `scripts/start-helm.sh --weather` from the baked release tree. |
 | 8095 | Optional basemap-fill proxy | Online Sentinel-2 fill/cache service. |
@@ -24,11 +24,20 @@ Run examples on a private port:
 scripts/start-helm.sh --port 9001 --weather --fill
 ```
 
-For BYO MBTiles or PMTiles, point the helper at a local directory:
+For BYO MBTiles or PMTiles, register your chart folder once (the boat convention —
+see `docs/CHART-PIPELINE.md`, "First run"):
 
 ```bash
-HELM_MBTILES_DIR="$HOME/Charts/local-packs" \
-  /path/to/build/cli/helm-packd 8091
+scripts/helm-first-run.sh --root "$HOME/Charts/local-packs" --label "Local packs"
+```
+
+For a throwaway dev run on a private port, skip the registry entirely with
+`HELM_CHART_ROOTS` (JSON array or colon-separated; `HELM_MBTILES_DIR` remains the
+legacy single-dir fallback):
+
+```bash
+HELM_CHART_ROOTS="$HOME/Charts/local-packs" HELM_BIND=127.0.0.1 \
+  /path/to/build/cli/helm-packd 9120
 ```
 
 OFFLINE-16/17 moved the runtime helper to C++ as `helm-packd`: MBTiles/PMTiles
@@ -39,7 +48,7 @@ as the reference/oracle and use private test ports for agent runs:
 ```bash
 HELM_OCPN_DIR=/private/tmp/helm-offline16-ocpn \
   engine/bootstrap.sh --dir /private/tmp/helm-offline16-ocpn --jobs 4
-HELM_MBTILES_DIR="$HOME/Charts/local-packs" HELM_BIND=127.0.0.1 \
+HELM_CHART_ROOTS="$HOME/Charts/local-packs" HELM_BIND=127.0.0.1 \
   /private/tmp/helm-offline16-ocpn/build/cli/helm-packd 9120
 ```
 

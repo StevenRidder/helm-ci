@@ -53,6 +53,11 @@ ENC_OVERRIDE="${HELM_INSTALL_ENC:-}"
 MBTILES_OVERRIDE="${HELM_INSTALL_MBTILES_DIR:-}"
 WEBROOT_OVERRIDE="${HELM_INSTALL_WEB_ROOT:-}"
 
+# Chart library (chart-intake-v1): existing customer folders registered as chart
+# roots at install time, plus the default root the registry is created with.
+CHART_ROOTS=()
+DEFAULT_CHART_ROOT="${HELM_INSTALL_DEFAULT_CHART_ROOT:-}"
+
 usage() {
   cat <<'USAGE'
 Usage: scripts/install-helmcxx-runtime.sh [options]
@@ -81,8 +86,19 @@ Sources:
 
 Point at existing data instead of copying (for dogfooding a live box):
   --enc PATH            HELM_ENC chart to run (default: <state>/runtime/enc sample).
-  --mbtiles-dir DIR     HELM_MBTILES_DIR local pack dir (default: --packs-dir).
+  --mbtiles-dir DIR     HELM_MBTILES_DIR legacy pack-dir fallback (default: --packs-dir).
   --serve-web DIR       HELM_WEB_ROOT to serve (default: <prefix>/web).
+
+Chart library (chart-intake-v1 — the customer's folders, indexed in place):
+  --chart-root DIR      Register an EXISTING chart folder as a chart root
+                        (repeatable). Recursive scan; files are never moved.
+                        ENC-only boxes point this at their *.000 tree, sat-first
+                        boxes at their *.mbtiles/*.pmtiles tree.
+  --default-chart-root DIR
+                        Default chart root created on first run (user mode:
+                        ~/.helm/charts; system mode: <state>/charts).
+                        The registry lands at <config>/chart-roots.json and
+                        helm-packd serves packs straight from it.
 
 Weather refresh (optional):
   --wx-env-file FILE    Env file with HELM_WX_OPENMETEO_KEY (+ tuning). Enables a
@@ -177,6 +193,8 @@ while [ $# -gt 0 ]; do
     --wx-packs-dir) shift; WX_PACKS_DIR="${1:-}" ;;
     --enc) shift; ENC_OVERRIDE="${1:-}" ;;
     --mbtiles-dir) shift; MBTILES_OVERRIDE="${1:-}" ;;
+    --chart-root) shift; [ -n "${1:-}" ] || die "--chart-root needs a directory"; CHART_ROOTS+=("$1") ;;
+    --default-chart-root) shift; DEFAULT_CHART_ROOT="${1:-}" ;;
     --serve-web) shift; WEBROOT_OVERRIDE="${1:-}" ;;
     --wx-env-file) shift; WX_ENV_FILE="${1:-}" ;;
     --wx-interval) shift; WX_REFRESH_INTERVAL="${1:-}" ;;
@@ -211,14 +229,25 @@ else
   : "${WX_PACKS_DIR:=/srv/helm/wx-packs}"
 fi
 
+# The default chart root is the customer-facing "drop charts here" folder — in
+# user mode the compiled-in ~/.helm/charts convention, in system mode a durable
+# state path (the service account owns no meaningful $HOME).
+if [ -z "$DEFAULT_CHART_ROOT" ]; then
+  if [ "$MODE" = "user" ]; then DEFAULT_CHART_ROOT="$HOME/.helm/charts"; else DEFAULT_CHART_ROOT="$STATE_DIR/charts"; fi
+fi
+
 for pair in \
   "prefix:$PREFIX" "config-dir:$CONFIG_DIR" "state-dir:$STATE_DIR" \
   "cache-dir:$CACHE_DIR" "log-dir:$LOG_DIR" "packs-dir:$PACKS_DIR" \
-  "wx-packs-dir:$WX_PACKS_DIR"
+  "wx-packs-dir:$WX_PACKS_DIR" "default-chart-root:$DEFAULT_CHART_ROOT"
 do
   require_abs "${pair%%:*}" "${pair#*:}"
 done
 [ -z "$STAGING_ROOT" ] || require_abs "staging-root" "$STAGING_ROOT"
+for chart_root in ${CHART_ROOTS[@]+"${CHART_ROOTS[@]}"}; do
+  require_abs "chart-root" "$chart_root"
+  [ -d "$chart_root" ] || die "--chart-root is not a directory: $chart_root"
+done
 
 # Staging/dry-run render files but never touch the live service manager.
 BOOTSTRAP=1
@@ -289,6 +318,10 @@ install_file "$ROOT/services/wx/fixtures/wx-openmeteo-source.json" \
 log "installing helmctl control script"
 install_file "$ROOT/scripts/helmctl" "$PREFIX_DST/bin/helmctl" 0755
 
+log "installing chart intake tools (registry CLI + first-run bootstrap)"
+install_file "$ROOT/pipeline/chart_intake.py" "$PREFIX_DST/pipeline/chart_intake.py" 0755
+install_file "$ROOT/scripts/helm-first-run.sh" "$PREFIX_DST/bin/helm-first-run" 0755
+
 log "installing durable runtime assets"
 copy_dir "$RUNTIME_SOURCE/s57data" "$STATE_DST/runtime/s57data"
 if [ -d "$RUNTIME_SOURCE/tcdata" ]; then
@@ -320,6 +353,7 @@ HELM_FILL_CACHE=$CACHE_DIR/basemap-fill
 HELM_USER_DATA_ROOT=$STATE_DIR/data
 HELM_ENC=$HELM_ENC_VALUE
 HELM_MBTILES_DIR=$HELM_MBTILES_VALUE
+HELM_DEFAULT_CHART_ROOT=$DEFAULT_CHART_ROOT
 HELM_WX_PACKS_DIR=$WX_PACKS_DIR
 HELM_ENV_GRID_MANIFESTS=$HELM_ENVD_MANIFEST
 HELM_PACKD_PORT=8091
@@ -333,6 +367,22 @@ EOF
 if [ -n "$WX_ENV_FILE" ]; then
   [ -f "$WX_ENV_FILE" ] || die "--wx-env-file not found: $WX_ENV_FILE"
   install_file "$WX_ENV_FILE" "$CONFIG_DST/helm-wx.env" 0600
+fi
+
+# Seed the chart-roots registry (chart-intake-v1) so helm-packd boots
+# registry-backed from the very first start, and register any existing
+# customer folders passed via --chart-root. Deferred for staging/dry-run
+# renders — those must not touch the invoking user's real chart library.
+log "seeding the chart-roots registry (first-run bootstrap)"
+if [ "$DRY_RUN" = 1 ] || [ -n "$STAGING_ROOT" ]; then
+  log "  deferred ($([ "$DRY_RUN" = 1 ] && echo "dry-run" || echo "staging render")) — run $PREFIX/bin/helm-first-run on the target box"
+else
+  first_run_args=(--no-packd)
+  for chart_root in ${CHART_ROOTS[@]+"${CHART_ROOTS[@]}"}; do
+    first_run_args+=(--root "$chart_root")
+  done
+  HELM_CONFIG="$CONFIG_DST" HELM_DEFAULT_CHART_ROOT="$DEFAULT_CHART_ROOT" \
+    "$PREFIX_DST/bin/helm-first-run" "${first_run_args[@]}"
 fi
 
 # helmctl layout descriptor (prefix-local; helmctl self-locates it at ../etc).
@@ -349,9 +399,12 @@ EOF
 # ===========================================================================
 LABEL_PREFIX="com.6thelement"
 # daemon spec: "name|port|extra-env(space-separated KEY=VAL)". server has no positional port.
+# helm-packd gets HELM_CONFIG so it finds <config>/chart-roots.json — launchd
+# units inherit no env file, and without it the daemon would fall back to the
+# legacy HELM_MBTILES_DIR single-dir scan instead of the registered chart roots.
 DAEMONS=(
   "helm-server||"
-  "helm-packd|8091|HELM_MBTILES_DIR=$HELM_MBTILES_VALUE"
+  "helm-packd|8091|HELM_CONFIG=$CONFIG_DIR HELM_MBTILES_DIR=$HELM_MBTILES_VALUE"
   "helm-basemap-cache|8095|"
   "helm-envd|8094|HELM_ENV_GRID_MANIFESTS=$HELM_ENVD_MANIFEST"
 )
