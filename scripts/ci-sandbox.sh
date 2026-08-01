@@ -169,7 +169,14 @@ cmd_push() {
   local sha
   sha="$(git -C "$ROOT" rev-parse "$branch")"
   echo "ci-sandbox: pushing $branch @ ${sha:0:12} -> $CI_REPO"
-  git -C "$ROOT" push -u "$CI_REMOTE" "refs/heads/${branch}:refs/heads/${branch}"
+  # Deliberately no -u. The sandbox is a disposable verification target, never a
+  # branch's upstream: cmd_prove resolves the canonical SHA through
+  # $ORIGIN_REMOTE, and the code_strict work-session policy expects upstream to
+  # be the canonical repo. `-u` here repoints the branch at the sandbox — and
+  # for `main` it silently detaches the local branch from origin, so a later
+  # `git pull` fetches the sandbox instead of code truth. Only cmd_open_pr sets
+  # an upstream, and it sets origin.
+  git -C "$ROOT" push "$CI_REMOTE" "refs/heads/${branch}:refs/heads/${branch}"
 
   local dispatch_since=""
   if [ "$dispatch" = 1 ]; then
@@ -293,13 +300,19 @@ cmd_prove() {
   [ "$ci_branch" = "$sha" ] || die "$CI_REPO branch $branch is not the local tested SHA ${sha:0:12}"
   [ "$origin_branch" = "$sha" ] || die "$CANONICAL_REPO branch $branch is not the local tested SHA ${sha:0:12}; push it first"
 
-  if assert_sandbox_green_for_sha "$branch" "$sha"; then
+  # Capture the classifier's exit code directly. `local result=$?` after an
+  # `if` block reads the compound statement's status (always 0 when there is no
+  # else branch), not the function's — which would silently turn every real
+  # failure into "could not be evaluated" instead of state=failure.
+  local result=0
+  assert_sandbox_green_for_sha "$branch" "$sha" || result=$?
+
+  if [ "$result" -eq 0 ]; then
     set_canonical_status "$sha" "success" "Full helm-ci suite passed for exact SHA ${sha:0:12}" "$target_url"
     echo "ci-sandbox: proof stamped on $CANONICAL_REPO for ${sha:0:12}"
     return 0
   fi
 
-  local result=$?
   case "$result" in
     10)
       set_canonical_status "$sha" "pending" "Waiting for full helm-ci workflow_dispatch suite" "$target_url"
@@ -386,12 +399,28 @@ wait_for_runs() {
     fi
 
     if [ "$pending" = "0" ]; then
-      local failed
-      failed="$(printf '%s' "$matching" | jq '[.[] | select(.conclusion != "success" and .conclusion != "skipped")] | length')"
+      # `cancelled` is not a failure. A workflow with concurrency +
+      # cancel-in-progress deliberately kills the older run when the same ref is
+      # dispatched and pushed, and this wait can see push-event runs that
+      # cmd_prove's workflow_dispatch filter never looks at — so counting a
+      # cancellation as red reports a failure for a commit that prove stamps
+      # green, and a tool that cries wolf gets ignored. A cancelled run is
+      # absent evidence, so it cannot make the branch green either: at least one
+      # genuine success is still required.
+      local failed superseded succeeded
+      failed="$(printf '%s' "$matching" | jq '[.[] | select(.conclusion != "success" and .conclusion != "skipped" and .conclusion != "cancelled")] | length')"
+      superseded="$(printf '%s' "$matching" | jq '[.[] | select(.conclusion == "cancelled")] | length')"
+      succeeded="$(printf '%s' "$matching" | jq '[.[] | select(.conclusion == "success")] | length')"
       echo ""
       summarize_runs "$branch" || true
       if [ "$failed" != "0" ]; then
-        die "CI sandbox failed ($failed run(s) not success/skipped) — see https://github.com/${CI_REPO}/actions?query=branch%3A${branch}"
+        die "CI sandbox failed ($failed run(s) not success/skipped/cancelled) — see https://github.com/${CI_REPO}/actions?query=branch%3A${branch}"
+      fi
+      if [ "$succeeded" = "0" ]; then
+        die "no successful run for ${head_sha:0:12} ($superseded cancelled) — see https://github.com/${CI_REPO}/actions?query=branch%3A${branch}"
+      fi
+      if [ "$superseded" != "0" ]; then
+        echo "ci-sandbox: $superseded run(s) superseded by a newer run for the same ref (concurrency), not counted as failures"
       fi
       echo "ci-sandbox: all Actions green for ${head_sha:0:12} on $CI_REPO"
       return 0
@@ -441,10 +470,15 @@ doctor_fail() {
   echo "fail: $*"
 }
 
+# Prints the remote SHA, or nothing when the remote is unreachable/unauthenticated.
+# Never propagates git's failure: under `set -e -o pipefail` a bare `git ls-remote |
+# awk` in a command substitution kills the whole script, so `doctor` would abort
+# mid-report instead of listing the wiring problem it exists to find. Every caller
+# already handles an empty result.
 ls_remote_sha() {
   local remote="$1"
   local ref="$2"
-  git -C "$ROOT" ls-remote "$remote" "$ref" 2>/dev/null | awk '{print $1}'
+  { GIT_TERMINAL_PROMPT=0 git -C "$ROOT" ls-remote "$remote" "$ref" 2>/dev/null || true; } | awk '{print $1}'
 }
 
 repo_visibility() {
@@ -507,6 +541,25 @@ EOF
     doctor_ok "canonical remote '$ORIGIN_REMOTE' exists"
   else
     doctor_fail "canonical remote '$ORIGIN_REMOTE' is missing"
+  fi
+
+  # No local branch may track the sandbox. An earlier version of cmd_push passed
+  # -u, so a checkout that ran it still has branches pointing at the disposable
+  # remote; for `main` that silently detaches it from origin and a later `git
+  # pull` fetches the sandbox instead of code truth. Report it rather than
+  # assuming the fix was always in place.
+  local tracking_ci
+  tracking_ci="$(git -C "$ROOT" for-each-ref --format='%(refname:short) %(upstream:short)' refs/heads \
+    | awk -v r="$CI_REMOTE/" '$2 ~ "^"r {print $1}')"
+  if [ -z "$tracking_ci" ]; then
+    doctor_ok "no local branch tracks the sandbox remote '$CI_REMOTE'"
+  else
+    while IFS= read -r stray; do
+      [ -n "$stray" ] || continue
+      doctor_fail "local branch '$stray' tracks '$CI_REMOTE'; repoint it: git branch -u $ORIGIN_REMOTE/$stray $stray"
+    done <<EOF
+$tracking_ci
+EOF
   fi
 
   local local_main origin_main ci_main
