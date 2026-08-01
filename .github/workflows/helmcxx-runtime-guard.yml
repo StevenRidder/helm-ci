@@ -1,6 +1,16 @@
 name: HELMC++ runtime guard
 
 on:
+  # Called by verify.yml on the CI sandbox's trusted default branch. source_ref is
+  # the disposable refs/tags/ci/** tag holding the exact canonical SHA under test;
+  # it is empty for push/pull_request, where checkout falls back to the event ref.
+  workflow_call:
+    inputs:
+      source_ref:
+        description: "Exact ref to check out; empty means the triggering ref"
+        required: false
+        type: string
+        default: ""
   push:
     paths:
       - "docs/runtime-inventory.json"
@@ -50,6 +60,8 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"

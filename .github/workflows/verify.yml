@@ -1,0 +1,179 @@
+# Trusted public-mirror verification for Helm (INFRA-5).
+#
+# This file is authored here but *runs* from StevenRidder/helm-ci's default
+# branch. `scripts/ci-sandbox.sh refresh-main` force-syncs helm-ci's main from
+# Helm's main, so main is the only way to install it — and that is also what
+# makes it trusted: main is branch-protected and reviewed, while the code under
+# test arrives on a disposable refs/tags/ci/** tag.
+#
+# The dispatcher (external_ci_mirror, switchboard CI-19) mirrors an exact
+# canonical SHA to that tag, then invokes this workflow on the trusted default
+# branch with the tag as input. Because the six suites below are reached with
+# `uses: ./.github/workflows/...`, they resolve from *this* workflow's ref —
+# helm-ci main — never from the mirrored tag. Agent-authored workflow files on
+# the branch under test are therefore never executed. That is the property the
+# current push path lacks: today helm-ci runs the six workflows exactly as they
+# exist on the mirrored branch.
+#
+# This workflow posts no commit status. Helm's terminal helm-ci/full-suite
+# status is stamped canonical-side by external_ci_mirror using the
+# switchboard-fleet App installation token, which keeps the App private key out
+# of a public repo's secret store entirely. Nothing here needs a secret.
+name: verify
+run-name: verify ${{ inputs.source_sha }} (${{ inputs.purpose }})
+
+on:
+  workflow_dispatch:
+    inputs:
+      source_ref:
+        description: "Disposable helm-ci refs/tags/ci/** tag holding the exact canonical SHA"
+        required: true
+        type: string
+      source_sha:
+        description: "Exact canonical SHA to verify"
+        required: true
+        type: string
+      base_sha:
+        description: "Exact merge-group base SHA; empty outside merge_group"
+        required: false
+        default: ""
+        type: string
+      purpose:
+        description: "Trusted lane selector"
+        required: true
+        default: head
+        type: choice
+        options:
+          - head
+          - merge_group
+          - ci_repair
+
+permissions: {}
+
+# Dispatching a ref that also received a push deliberately kills the older run.
+# Consumers must treat `cancelled` as superseded rather than failed — see the
+# INFRA-3 fix to wait_for_runs in scripts/ci-sandbox.sh, which is a prerequisite
+# for this workflow, not something it makes moot.
+concurrency:
+  group: verify-${{ inputs.source_sha }}
+  cancel-in-progress: true
+
+jobs:
+  # Fail closed before any suite burns a runner: a malformed ref, a short or
+  # non-hex SHA, or an unknown purpose means the dispatcher is wrong and the
+  # result would not be attributable to a canonical commit.
+  guard:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Validate exact-SHA request
+        env:
+          SOURCE_REF: ${{ inputs.source_ref }}
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          BASE_SHA: ${{ inputs.base_sha }}
+          PURPOSE: ${{ inputs.purpose }}
+        run: |
+          set -euo pipefail
+          [[ "$SOURCE_REF" =~ ^refs/tags/ci/[A-Za-z0-9._/-]+$ ]]
+          [[ "$SOURCE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ -z "$BASE_SHA" || "$BASE_SHA" =~ ^[0-9a-f]{40}$ ]]
+          [[ "$PURPOSE" =~ ^(head|merge_group|ci_repair)$ ]]
+
+      - name: Check out the exact mirrored ref
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
+          persist-credentials: false
+
+      # The tag is disposable and rewritable, so trusting its name is not enough:
+      # prove the ref really resolves to the SHA the status will be stamped on.
+      - name: Confirm the tag resolves to the claimed SHA
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+        run: |
+          set -euo pipefail
+          test "$(git rev-parse HEAD)" = "$SOURCE_SHA"
+
+  backend-tests:
+    needs: guard
+    uses: ./.github/workflows/backend-tests.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  engine-fresh-clone-smoke:
+    needs: guard
+    uses: ./.github/workflows/engine-fresh-clone-smoke.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  helmcxx-runtime-guard:
+    needs: guard
+    uses: ./.github/workflows/helmcxx-runtime-guard.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  symbol-selection-smoke:
+    needs: guard
+    uses: ./.github/workflows/symbol-selection-smoke.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  web-e2e:
+    needs: guard
+    uses: ./.github/workflows/web-e2e.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  web-tests:
+    needs: guard
+    uses: ./.github/workflows/web-tests.yml
+    with:
+      source_ref: ${{ inputs.source_ref }}
+
+  # One required status means one verdict. GitHub already fails the run when a
+  # job fails, but `skipped` and `cancelled` do not, and absent evidence must
+  # never read as a pass — so require every lane to have actually succeeded.
+  report:
+    if: always()
+    needs:
+      - guard
+      - backend-tests
+      - engine-fresh-clone-smoke
+      - helmcxx-runtime-guard
+      - symbol-selection-smoke
+      - web-e2e
+      - web-tests
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Require every lane to have succeeded
+        env:
+          SOURCE_SHA: ${{ inputs.source_sha }}
+          # Bracket notation, not needs.backend-tests.result: `-` is the
+          # subtraction operator in GitHub's expression language, so a
+          # hyphenated job id must be dereferenced as a quoted key.
+          RESULTS: >-
+            guard=${{ needs.guard.result }}
+            backend-tests=${{ needs['backend-tests'].result }}
+            engine-fresh-clone-smoke=${{ needs['engine-fresh-clone-smoke'].result }}
+            helmcxx-runtime-guard=${{ needs['helmcxx-runtime-guard'].result }}
+            symbol-selection-smoke=${{ needs['symbol-selection-smoke'].result }}
+            web-e2e=${{ needs['web-e2e'].result }}
+            web-tests=${{ needs['web-tests'].result }}
+        run: |
+          set -euo pipefail
+          echo "verify ${SOURCE_SHA:0:12}: $RESULTS"
+          failed=0
+          for entry in $RESULTS; do
+            lane="${entry%%=*}"
+            result="${entry#*=}"
+            if [ "$result" != "success" ]; then
+              echo "::error::lane $lane did not succeed (result=$result)"
+              failed=1
+            fi
+          done
+          if [ "$failed" != "0" ]; then
+            echo "verify: NOT green for ${SOURCE_SHA:0:12}"
+            exit 1
+          fi
+          echo "verify: all lanes green for ${SOURCE_SHA:0:12}"

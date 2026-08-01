@@ -1,6 +1,16 @@
 name: Engine fresh-clone smoke
 
 on:
+  # Called by verify.yml on the CI sandbox's trusted default branch. source_ref is
+  # the disposable refs/tags/ci/** tag holding the exact canonical SHA under test;
+  # it is empty for push/pull_request, where checkout falls back to the event ref.
+  workflow_call:
+    inputs:
+      source_ref:
+        description: "Exact ref to check out; empty means the triggering ref"
+        required: false
+        type: string
+        default: ""
   pull_request:
     paths:
       - ".github/workflows/engine-fresh-clone-smoke.yml"
@@ -28,6 +38,8 @@ jobs:
     steps:
       - name: Check out Helm
         uses: actions/checkout@v4
+        with:
+          ref: ${{ inputs.source_ref }}
 
       - name: Install build dependencies
         run: brew install cmake gpatch lame libarchive libsndfile libusb mpg123 node openssl@3 wxwidgets@3.2
